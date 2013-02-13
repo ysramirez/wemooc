@@ -1,0 +1,360 @@
+<?xml version="1.0"?>
+<!DOCTYPE liferay-portlet-app PUBLIC "-//Liferay//DTD Portlet Application 6.1.0//EN" "http://www.liferay.com/dtd/liferay-portlet-app_6_1_0.dtd">
+
+<liferay-portlet-app>
+
+	<portlet>
+		<portlet-name>lmsactivitieslist</portlet-name>
+		<icon>/icon.png</icon>
+		<indexer-class>com.liferay.lms.search.LearningActivityIndexer</indexer-class>
+		<asset-renderer-factory>com.liferay.lms.asset.LearningActivityAssetRendererFactory</asset-renderer-factory>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>lmsactivitieslist-portlet</css-class-wrapper>
+	</portlet>
+
+	<portlet>
+		<portlet-name>execactivity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>execactivity-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>gradebook</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>gradebook-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>gradebook</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>gradebook-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>module-portlet</portlet-name>
+		<icon>/icons/icon.png</icon>
+		<portlet-data-handler-class>com.liferay.lms.lar.ModuleDataHandlerImpl</portlet-data-handler-class>
+	    <custom-attributes-display>com.liferay.lms.expando.ModuleCustomAttributesDisplay</custom-attributes-display>
+		<action-url-redirect>true</action-url-redirect>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>module-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>resourceactivity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>resourceactivity-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>changeEditingMode</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>changeeditingmode-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>activityNavigator</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>activitynavigator-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>moduleDescription</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>moduledescription-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>p2ptaskactivity</portlet-name>
+		<icon>/icon.png</icon>
+		<scheduler-entry>
+			<scheduler-description>
+			Cron para comprobar cada noche a las 3 AM si ya hay suficientes tareas para el P2P.
+			</scheduler-description>
+			<scheduler-event-listener-class>com.liferay.util.P2pCheckActivity</scheduler-event-listener-class>
+			<trigger>
+				<cron>
+					<cron-trigger-value>0 3 0 * * ?</cron-trigger-value>
+				</cron>
+			</trigger>
+		</scheduler-entry> 
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>p2ptaskactivity-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>ModuleTitle</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>moduletitle-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>modulelist</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>modulelist-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>inscriptioncommunity</portlet-name>
+		<icon>/icon.png</icon>
+		<action-url-redirect>true</action-url-redirect>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>inscriptioncommunity-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>mycourses</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>mycourses-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>coursetoolsmanage</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>coursetoolsmanage-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>courseadmin</portlet-name>
+		<icon>/icon.png</icon>
+		<indexer-class>com.liferay.lms.indexer.CourseIndexer</indexer-class>
+		<control-panel-entry-category>content</control-panel-entry-category>
+		<control-panel-entry-weight>17.5</control-panel-entry-weight>
+		<asset-renderer-factory>com.liferay.lms.asset.CourseAssetRendererFactory</asset-renderer-factory>
+	   	<custom-attributes-display>com.liferay.lms.expando.CourseCustomAttributesDisplay</custom-attributes-display>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>courseadmin-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>editactivity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>editactivity-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>coursestats</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>coursestats-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>myuniversity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>myuniversity-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>coursedescription</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>coursedescription-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>lmsconfig</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>lmsconfig-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>courseextradata</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>courseextradata-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>courseteachers</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>courseteachers-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>courseexpandovalue</portlet-name>
+		<icon>/icon.png</icon>
+		<configuration-action-class>com.liferay.lms.actions.CourseExpandoValueConfigurationAction</configuration-action-class>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>courseexpandovalue-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>orgofcourse</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>orgofcourse-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>coursesummary</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>coursesummary-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>coursecategories</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>coursecategories-portlet</css-class-wrapper>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>coursesearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>coursesearch-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>studentsearch</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>studentsearch-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>CourseRatings</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>courseratings-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>CourseComments</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>coursecomments-portlet</css-class-wrapper>
+	</portlet>
+	<!-- 
+	<portlet>
+		<portlet-name>taskactivity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>taskactivity-portlet</css-class-wrapper>
+	</portlet>
+	-->
+	<portlet>
+		<portlet-name>surveyactivity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>surveyactivity-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>studentmanage</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>studentmanage-portlet</css-class-wrapper>
+	</portlet>
+	<role-mapper>
+		<role-name>administrator</role-name>
+		<role-link>Administrator</role-link>
+	</role-mapper>
+	<role-mapper>
+		<role-name>guest</role-name>
+		<role-link>Guest</role-link>
+	</role-mapper>
+	<role-mapper>
+		<role-name>power-user</role-name>
+		<role-link>Power User</role-link>
+	</role-mapper>
+	<role-mapper>
+		<role-name>user</role-name>
+		<role-link>User</role-link>
+	</role-mapper>
+</liferay-portlet-app>

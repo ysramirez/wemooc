@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<!DOCTYPE display PUBLIC "-//Liferay//DTD Display 6.1.0//EN" "http://www.liferay.com/dtd/liferay-display_6_1_0.dtd">
+
+<display>
+	<category name="LMS">
+		<portlet id="lmsactivitieslist"></portlet>
+		<portlet id="execactivity"></portlet>
+		<portlet id="gradebook"></portlet>
+		<portlet id="module-portlet"></portlet>
+		<portlet id="p2ptaskactivity"></portlet>
+		<portlet id="resourceactivity"></portlet>
+		<portlet id="changeEditingMode"></portlet>
+		<portlet id="activityNavigator"></portlet>
+		<portlet id="moduleDescription"></portlet>
+		<portlet id="ModuleTitle"></portlet>
+		<portlet id="modulelist"></portlet>
+		<portlet id="inscriptioncommunity"></portlet>
+		<portlet id="mycourses"></portlet>
+		<portlet id="coursetoolsmanage"></portlet>
+		<portlet id="courseadmin"></portlet>
+		<portlet id="editactivity"></portlet>
+		<portlet id="coursestats"></portlet>
+		<portlet id="myuniversity"></portlet>
+		<portlet id="coursedescription"></portlet>
+		<portlet id="lmsconfig"></portlet>
+		<portlet id="courseextradata"></portlet>
+		<portlet id="courseteachers"></portlet>
+		<portlet id="courseexpandovalue"></portlet>
+		<portlet id="orgofcourse"></portlet>
+		<portlet id="coursesummary"></portlet>
+		<portlet id="coursecategories"></portlet>
+		<portlet id="coursesearch"></portlet>
+		<portlet id="studentsearch"></portlet>
+		<portlet id="CourseRatings"></portlet>
+		<portlet id="CourseComments"></portlet>
+		<portlet id="taskactivity"></portlet>
+		<portlet id="SurveyActivity"></portlet>
+		<portlet id="studentmanage"></portlet>
+		<portlet id="tutoring"></portlet>
+	</category>
+</display>
