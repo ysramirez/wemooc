@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="java.util.Set"%>
 <%@page import="com.liferay.lms.LearningTypesProperties"%>
 <%@page import="com.liferay.lms.model.LearningType"%>
@@ -14,9 +15,7 @@
 
 <portlet:actionURL var="saveactivityURL" name="saveActivity" />
 
-<liferay-util:buffer var="inputEditorHTML" >
-	<liferay-ui:input-editor />
-</liferay-util:buffer>
+
 
 <%
 long moduleId=ParamUtil.getLong(request,"moduleId",0);
@@ -160,32 +159,15 @@ else
 
 		<aui:input name="title" label="title"></aui:input>
 		<liferay-ui:error key="title-required" message="title-required" />
-		<aui:field-wrapper label="description">
-			<div id="<portlet:namespace/>DescripcionRichTxt"></div>
+	<aui:field-wrapper label="description">
+			<liferay-ui:input-editor name="description" width="100%" />
 			<aui:input name="description" type="hidden" />
-			
-			<script type="text/javascript">
-		    <!--
-			    function <portlet:namespace />initEditor()
-			    {
-			    	return "<%=JavaScriptUtil.markupToStringLiteral(description)%>";
-			    }
-			
-			    function <portlet:namespace />extractCodeFromEditor()
-			    {
-			    	document.<portlet:namespace />fm.<portlet:namespace />description.value = window.<portlet:namespace />editor.getHTML();
-			    }
-			    var func = function ()
-			    {
-			    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
-			    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
-			    };
-			
-			    AUI().on('domready', func);
-		        //-->
-		    </script>
-		    <liferay-ui:error key="description-required" message="description-required" />
+				<script type="text/javascript">
+        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
+    </script>
 		</aui:field-wrapper>
+		    <liferay-ui:error key="description-required" message="description-required" />
+	
 		<aui:field-wrapper label="start-date">
 			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
 				 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>

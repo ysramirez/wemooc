@@ -9,10 +9,10 @@ if(actionEditing)
 }
 %>
 
-<portlet:renderURL var="changeEditingMode">
-<portlet:param name="actionEditing" value="<%=Boolean.toString(!actionEditing)%>">
-</portlet:param>
-</portlet:renderURL>
+<liferay-portlet:renderURL var="changeEditingMode">
+<liferay-portlet:param name="actionEditing" value="<%=Boolean.toString(!actionEditing)%>"/>
+
+</liferay-portlet:renderURL>
 <%
 String redirect="self.location='"+changeEditingMode.toString()+"'";
 %>

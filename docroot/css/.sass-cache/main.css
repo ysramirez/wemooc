@@ -7,3 +7,7 @@
 .questiontext {
   margin: 4px; }
 
+.teacher {
+  margin: 5px;
+  display: inline-block; }
+

@@ -88,7 +88,7 @@ if((Boolean)request.getAttribute("hasAddPermission")&&actionEditing)
 	</liferay-ui:search-container-results>
 
 	<liferay-ui:search-container-row
-		className="com.liferay.lms.model.module"
+		className="com.liferay.lms.model.Module"
 		keyProperty="moduleId"
 		modelVar="module"
 	>

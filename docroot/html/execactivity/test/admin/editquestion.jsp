@@ -1,18 +1,16 @@
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@ include file="/html/execactivity/test/admin/init.jsp" %>
 
 <%
 TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(request,"questionId"));
+String text=question.getText();
 %>
 <portlet:actionURL var="editquestionURL" name="editquestion" />
 <portlet:renderURL var="backToQuestionsURL">
 	<portlet:param name="jspPage" value="/html/execactivity/test/admin/edit.jsp"></portlet:param>
 	<portlet:param name="actId" value="<%=Long.toString(question.getActId()) %>" />
 </portlet:renderURL>
-
-<liferay-util:buffer var="inputEditorHTML" >
-	<liferay-ui:input-editor  width="80%"/>
-</liferay-util:buffer>
 
 
 <a href="<%=backToQuestionsURL.toString() %>"><%=LanguageUtil.get(pageContext,"back.to.questions")%></a>
@@ -21,28 +19,12 @@ TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.g
 	<aui:input name="actId" type="hidden" value="<%=question.getActId() %>"></aui:input>
 	<aui:input name="questionId" type="hidden" value="<%=question.getQuestionId() %>"></aui:input>
 	<aui:field-wrapper label="enunciado">
-		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
-		<aui:input name="text" type="hidden" />
-		<script type="text/javascript">
-		    <!--
-			    function <portlet:namespace />initEditor()
-			    {
-			    	return "<%=JavaScriptUtil.markupToStringLiteral(question.getText())%>";
-			    }
-			
-			    function <portlet:namespace />extractCodeFromEditor()
-			    {
-			    	document.<portlet:namespace />qfm.<portlet:namespace />text.value =	window.<portlet:namespace />editor.getHTML();
-			    }
-			    var func = function ()
-			    {
-			    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
-			    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
-			    };
-			
-			    AUI().on('domready', func);
-		        //-->
-		    </script>	
+
+			<liferay-ui:input-editor name="text" width="100%" />
+			<aui:input name="text" type="hidden" />
+				<script type="text/javascript">
+        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(text) %>"; }
+    </script>
 	</aui:field-wrapper>
 	<aui:select name="typeId" label="qtype">
 		<aui:option value="0" label="options"></aui:option>
