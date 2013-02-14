@@ -1,5 +1,5 @@
 /**
- * Copyright (c)2013 Telefonica Learning Services. All rights reserved.
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -75,7 +75,7 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 			{ "date_", Types.TIMESTAMP },
 			{ "fileEntryId", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivityCorrections (uuid_ VARCHAR(75) null,p2pActivityCorrectionsId LONG not null primary key,p2pActivityId LONG,userId LONG,actId LONG,description VARCHAR(75) null,date_ DATE null,fileEntryId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivityCorrections (uuid_ VARCHAR(75) null,p2pActivityCorrectionsId LONG not null primary key,p2pActivityId LONG,userId LONG,actId LONG,description TEXT null,date_ DATE null,fileEntryId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_P2pActivityCorrections";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";

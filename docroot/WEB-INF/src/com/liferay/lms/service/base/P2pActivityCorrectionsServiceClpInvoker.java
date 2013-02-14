@@ -1,5 +1,5 @@
 /**
- * Copyright (c)2013 Telefonica Learning Services. All rights reserved.
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -42,6 +42,8 @@ public class P2pActivityCorrectionsServiceClpInvoker {
 		if (_methodName103.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes103, parameterTypes)) {
 			P2pActivityCorrectionsServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		throw new UnsupportedOperationException();

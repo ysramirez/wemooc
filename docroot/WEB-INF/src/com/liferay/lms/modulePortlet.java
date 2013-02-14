@@ -558,12 +558,12 @@ public static String SEPARATOR = "_";
 		module.setGroupId(themeDisplay.getScopeGroupId());
 		module.setUserId(themeDisplay.getUserId());
 		module.setPrecedence(precedence);
-		module.setExpandoBridgeAttributes(serviceContext);
-		
+		//module.setExpandoBridgeAttributes(serviceContext);	
 		//Saving image
 		String fileName = request.getFileName("fileName");
 		String title = fileName;// + " uploaded by " + user.getFullName();
 		File file = request.getFile("fileName");
+		/*TODO no funciona
 		if(fileName!=null && !fileName.equals("")){
 			createIGFolders(actRequest, themeDisplay.getUserId(),themeDisplay.getScopeGroupId(), serviceContext);
 			String imFormat="jpg";
@@ -578,12 +578,11 @@ public static String SEPARATOR = "_";
 			String contentType = MimeTypesUtil.getContentType(fileName);
 			
 			FileEntry image=DLAppServiceUtil.addFileEntry(module.getGroupId(), igFolderId, fileName, contentType, title, title, "", file, serviceContext2);
-					/*DLFileEntry image=  DLFileEntryLocalServiceUtil.addFileEntry(themeDisplay.getUserId(),themeDisplay.getScopeGroupId(),
-					igFolderId, fileName, fileName, file,imFormat, serviceContext);
-					*/
+					
 			module.setIcon(image.getFileEntryId());			
-		}
 			
+		}
+			*/
 		return module;
 	}
 
