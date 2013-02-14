@@ -7,6 +7,7 @@
 <%@ taglib uri="http://liferay.com/tld/util" prefix="liferay-util" %>
 <%@ taglib uri="http://liferay.com/tld/security" prefix="liferay-security" %>
 <%@taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <%@ page import="com.liferay.portal.NoSuchUserException" %>
 <%@ page import="com.liferay.portal.kernel.dao.search.ResultRow" %>
 <%@ page import="com.liferay.portal.kernel.dao.search.SearchContainer" %>
