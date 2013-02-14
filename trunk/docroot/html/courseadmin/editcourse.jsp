@@ -85,7 +85,8 @@ else
 	<%
 }
 %>
-<aui:form name="fm" action="<%=savecourseURL%>"  method="post"  enctype="multipart/form-data">
+
+<aui:form name="fm" action="<%=savecourseURL%>"  method="post" >
 
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
@@ -100,6 +101,7 @@ else
 		value=course.getFriendlyURL();
 	}
 %>
+
 	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=value %> </aui:input>
 
 <aui:field-wrapper label="description">
@@ -116,12 +118,7 @@ else
 	<aui:input type="textarea" cols="100" rows="4" name="summary" label="summary" value="<%=summary %>"/>
 	
 	
-	<aui:fieldset>
-		<aui:field-wrapper label="file" >
-	    			<aui:input inlineLabel="left" inlineField="true"
-					  	name="fileName" label="" id="fileName" type="file" value="" />
-		</aui:field-wrapper>
-	</aui:fieldset>
+
 	
 	<aui:field-wrapper label="start-inscription-date">
 		<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
