@@ -1,11 +1,41 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.liferay.lms.model.LearningType">
+	<model name="com.liferay.lms.model.CheckP2pMailing">
+		<field name="checkP2pId" type="long" />
+		<field name="actId" type="long" />
+		<field name="date" type="Date" />
+	</model>
+	<model name="com.liferay.lms.model.Course">
 		<field name="uuid" type="String" />
-		<field name="typeId" type="long" />
-		<field name="name" type="String" />
-		<field name="className" type="String" />
+		<field name="courseId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="groupCreatedId" type="long" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="title" type="String" localized="true">
+			<hint name="max-length">500000</hint>
+		</field>
+		<field name="description" type="String" localized="true">
+			<hint name="display-width">1024</hint>
+			<hint name="max-length">500000</hint>
+		</field>
+		<field name="friendlyURL" type="String" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="icon" type="long" />
+	</model>
+	<model name="com.liferay.lms.model.CourseResult">
+		<field name="crId" type="long" />
+		<field name="courseId" type="long" />
+		<field name="result" type="long" />
+		<field name="comments" type="String" />
+		<field name="userId" type="long" />
+		<field name="passed" type="boolean" />
 	</model>
 	<model name="com.liferay.lms.model.LearningActivity">
 		<field name="uuid" type="String" />
@@ -43,47 +73,20 @@
 		<field name="feedbackNoCorrect" type="String" />
 		<field name="weightinmodule" type="long" />
 	</model>
-	<model name="com.liferay.lms.model.TestQuestion">
+	<model name="com.liferay.lms.model.LearningActivityResult">
 		<field name="uuid" type="String" />
-		<field name="questionId" type="long" />
-		<field name="actId" type="long" />
-		<field name="text" type="String" />
-		<field name="questionType" type="long" />
-	</model>
-	<model name="com.liferay.lms.model.P2pActivity">
-		<field name="uuid" type="String" />
-		<field name="p2pActivityId" type="long" />
+		<field name="larId" type="long" />
 		<field name="actId" type="long" />
 		<field name="userId" type="long" />
-		<field name="fileEntryId" type="long" />
-		<field name="countCorrections" type="long" />
-		<field name="description" type="String">
+		<field name="result" type="long" />
+		<field name="startDate" type="Date" />
+		<field name="endDate" type="Date" />
+		<field name="latId" type="long" />
+		<field name="comments" type="String">
+			<hint name="display-width">200</hint>
 			<hint name="max-length">500000</hint>
 		</field>
-		<field name="date" type="Date" />
-	</model>
-	<model name="com.liferay.lms.model.P2pActivityCorrections">
-		<field name="uuid" type="String" />
-		<field name="p2pActivityCorrectionsId" type="long" />
-		<field name="p2pActivityId" type="long" />
-		<field name="userId" type="long" />
-		<field name="actId" type="long" />
-		<field name="description" type="String">
-			<hint name="max-length">500000</hint>
-		</field>
-		<field name="date" type="Date" />
-		<field name="fileEntryId" type="long" />
-	</model>
-	<model name="com.liferay.lms.model.TestAnswer">
-		<field name="uuid" type="String" />
-		<field name="answerId" type="long" />
-		<field name="questionId" type="long" />
-		<field name="actId" type="long" />
-		<field name="precedence" type="long" />
-		<field name="answer" type="String" />
-		<field name="isCorrect" type="boolean" />
-		<field name="feedbackCorrect" type="String" />
-		<field name="feedbacknocorrect" type="String" />
+		<field name="passed" type="boolean" />
 	</model>
 	<model name="com.liferay.lms.model.LearningActivityTry">
 		<field name="uuid" type="String" />
@@ -100,20 +103,17 @@
 		</field>
 		<field name="comments" type="String" />
 	</model>
-	<model name="com.liferay.lms.model.LearningActivityResult">
+	<model name="com.liferay.lms.model.LearningType">
 		<field name="uuid" type="String" />
-		<field name="larId" type="long" />
-		<field name="actId" type="long" />
-		<field name="userId" type="long" />
-		<field name="result" type="long" />
-		<field name="startDate" type="Date" />
-		<field name="endDate" type="Date" />
-		<field name="latId" type="long" />
-		<field name="comments" type="String">
-			<hint name="display-width">200</hint>
-			<hint name="max-length">500000</hint>
-		</field>
-		<field name="passed" type="boolean" />
+		<field name="typeId" type="long" />
+		<field name="name" type="String" />
+		<field name="className" type="String" />
+	</model>
+	<model name="com.liferay.lms.model.LmsPrefs">
+		<field name="companyId" type="long" />
+		<field name="teacherRole" type="long" />
+		<field name="editorRole" type="long" />
+		<field name="lmsTemplates" type="String" />
 	</model>
 	<model name="com.liferay.lms.model.Module">
 		<field name="uuid" type="String" />
@@ -142,47 +142,29 @@
 		<field name="passed" type="boolean" />
 		<field name="mrId" type="long" />
 	</model>
-	<model name="com.liferay.lms.model.Course">
+	<model name="com.liferay.lms.model.P2pActivity">
 		<field name="uuid" type="String" />
-		<field name="courseId" type="long" />
-		<field name="companyId" type="long" />
-		<field name="groupId" type="long" />
-		<field name="userId" type="long" />
-		<field name="groupCreatedId" type="long" />
-		<field name="status" type="int" />
-		<field name="statusByUserId" type="long" />
-		<field name="statusByUserName" type="String" />
-		<field name="statusDate" type="Date" />
-		<field name="title" type="String" localized="true">
-			<hint name="max-length">500000</hint>
-		</field>
-		<field name="description" type="String" localized="true">
-			<hint name="display-width">1024</hint>
-			<hint name="max-length">500000</hint>
-		</field>
-		<field name="friendlyURL" type="String" />
-		<field name="startDate" type="Date" />
-		<field name="endDate" type="Date" />
-		<field name="icon" type="long" />
-	</model>
-	<model name="com.liferay.lms.model.CourseResult">
-		<field name="crId" type="long" />
-		<field name="courseId" type="long" />
-		<field name="result" type="long" />
-		<field name="comments" type="String" />
-		<field name="userId" type="long" />
-		<field name="passed" type="boolean" />
-	</model>
-	<model name="com.liferay.lms.model.CheckP2pMailing">
-		<field name="checkP2pId" type="long" />
+		<field name="p2pActivityId" type="long" />
 		<field name="actId" type="long" />
+		<field name="userId" type="long" />
+		<field name="fileEntryId" type="long" />
+		<field name="countCorrections" type="long" />
+		<field name="description" type="String">
+			<hint name="max-length">500000</hint>
+		</field>
 		<field name="date" type="Date" />
 	</model>
-	<model name="com.liferay.lms.model.LmsPrefs">
-		<field name="companyId" type="long" />
-		<field name="teacherRole" type="long" />
-		<field name="editorRole" type="long" />
-		<field name="lmsTemplates" type="String" />
+	<model name="com.liferay.lms.model.P2pActivityCorrections">
+		<field name="uuid" type="String" />
+		<field name="p2pActivityCorrectionsId" type="long" />
+		<field name="p2pActivityId" type="long" />
+		<field name="userId" type="long" />
+		<field name="actId" type="long" />
+		<field name="description" type="String">
+			<hint name="max-length">500000</hint>
+		</field>
+		<field name="date" type="Date" />
+		<field name="fileEntryId" type="long" />
 	</model>
 	<model name="com.liferay.lms.model.SurveyResult">
 		<field name="uuid" type="String" />
@@ -192,5 +174,23 @@
 		<field name="questionId" type="long" />
 		<field name="answerId" type="long" />
 		<field name="userId" type="long" />
+	</model>
+	<model name="com.liferay.lms.model.TestAnswer">
+		<field name="uuid" type="String" />
+		<field name="answerId" type="long" />
+		<field name="questionId" type="long" />
+		<field name="actId" type="long" />
+		<field name="precedence" type="long" />
+		<field name="answer" type="String" />
+		<field name="isCorrect" type="boolean" />
+		<field name="feedbackCorrect" type="String" />
+		<field name="feedbacknocorrect" type="String" />
+	</model>
+	<model name="com.liferay.lms.model.TestQuestion">
+		<field name="uuid" type="String" />
+		<field name="questionId" type="long" />
+		<field name="actId" type="long" />
+		<field name="text" type="String" />
+		<field name="questionType" type="long" />
 	</model>
 </model-hints>

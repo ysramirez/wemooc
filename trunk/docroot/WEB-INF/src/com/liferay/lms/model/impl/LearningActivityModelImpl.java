@@ -1,5 +1,5 @@
 /**
- * Copyright (c)2013 Telefonica Learning Services. All rights reserved.
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -100,7 +100,7 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 			{ "feedbackNoCorrect", Types.VARCHAR },
 			{ "weightinmodule", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_LearningActivity (uuid_ VARCHAR(75) null,actId LONG not null primary key,companyId LONG,userId LONG,groupId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,typeId INTEGER,startdate DATE null,enddate DATE null,precedence LONG,tries LONG,passpuntuation INTEGER,priority LONG,moduleId LONG,extracontent VARCHAR(75) null,feedbackCorrect VARCHAR(75) null,feedbackNoCorrect VARCHAR(75) null,weightinmodule LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_LearningActivity (uuid_ VARCHAR(75) null,actId LONG not null primary key,companyId LONG,userId LONG,groupId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,typeId INTEGER,startdate DATE null,enddate DATE null,precedence LONG,tries LONG,passpuntuation INTEGER,priority LONG,moduleId LONG,extracontent TEXT null,feedbackCorrect VARCHAR(75) null,feedbackNoCorrect VARCHAR(75) null,weightinmodule LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_LearningActivity";
 	public static final String ORDER_BY_JPQL = " ORDER BY learningActivity.moduleId ASC, learningActivity.priority ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_LearningActivity.moduleId ASC, Lms_LearningActivity.priority ASC";

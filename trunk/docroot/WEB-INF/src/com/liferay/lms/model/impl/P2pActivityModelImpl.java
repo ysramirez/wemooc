@@ -1,5 +1,5 @@
 /**
- * Copyright (c)2013 Telefonica Learning Services. All rights reserved.
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -75,7 +75,7 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 			{ "description", Types.VARCHAR },
 			{ "date_", Types.TIMESTAMP }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivity (uuid_ VARCHAR(75) null,p2pActivityId LONG not null primary key,actId LONG,userId LONG,fileEntryId LONG,countCorrections LONG,description VARCHAR(75) null,date_ DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivity (uuid_ VARCHAR(75) null,p2pActivityId LONG not null primary key,actId LONG,userId LONG,fileEntryId LONG,countCorrections LONG,description TEXT null,date_ DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_P2pActivity";
 	public static final String ORDER_BY_JPQL = " ORDER BY p2pActivity.countCorrections ASC, p2pActivity.p2pActivityId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_P2pActivity.countCorrections ASC, Lms_P2pActivity.p2pActivityId ASC";

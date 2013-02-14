@@ -1,5 +1,5 @@
 /**
- * Copyright (c)2013 Telefonica Learning Services. All rights reserved.
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -312,6 +312,8 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName130.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
 			LearningActivityLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName135.equals(name) &&
@@ -384,6 +386,8 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName144.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes144, parameterTypes)) {
 			LearningActivityLocalServiceUtil.deleteLearningactivity((com.liferay.lms.model.LearningActivity)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName145.equals(name) &&
@@ -399,11 +403,15 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName147.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes147, parameterTypes)) {
 			LearningActivityLocalServiceUtil.goUpLearningActivity(((Long)arguments[0]).longValue());
+
+			return null;
 		}
 
 		if (_methodName148.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes148, parameterTypes)) {
 			LearningActivityLocalServiceUtil.goDownLearningActivity(((Long)arguments[0]).longValue());
+
+			return null;
 		}
 
 		if (_methodName149.equals(name) &&
@@ -419,6 +427,8 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName151.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes151, parameterTypes)) {
 			LearningActivityLocalServiceUtil.deleteLearningactivity(((Long)arguments[0]).longValue());
+
+			return null;
 		}
 
 		throw new UnsupportedOperationException();

@@ -1,5 +1,5 @@
 /**
- * Copyright (c)2013 Telefonica Learning Services. All rights reserved.
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -264,6 +264,8 @@ public class LearningActivityTryLocalServiceClpInvoker {
 		if (_methodName119.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes119, parameterTypes)) {
 			LearningActivityTryLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName124.equals(name) &&
@@ -281,6 +283,8 @@ public class LearningActivityTryLocalServiceClpInvoker {
 				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
 			LearningActivityTryLocalServiceUtil.deleteUserTries(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
+
+			return null;
 		}
 
 		if (_methodName127.equals(name) &&

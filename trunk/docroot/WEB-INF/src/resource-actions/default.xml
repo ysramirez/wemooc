@@ -107,7 +107,7 @@
 	</model-resource>
 	
 	<model-resource>
-		<model-name>com.liferay.lms.model.module</model-name>
+		<model-name>com.liferay.lms.model.Module</model-name>
 		<portlet-ref>
 			<portlet-name>module-portlet</portlet-name>
 			<portlet-name>moduleDescription</portlet-name>

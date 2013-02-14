@@ -1,5 +1,5 @@
 /**
- * Copyright (c)2013 Telefonica Learning Services. All rights reserved.
+ * Copyright (c) 2000-2012 Liferay, Inc. All rights reserved.
  *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
@@ -273,6 +273,8 @@ public class CourseLocalServiceClpInvoker {
 		if (_methodName130.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
 			CourseLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName135.equals(name) &&
@@ -318,6 +320,8 @@ public class CourseLocalServiceClpInvoker {
 				Arrays.deepEquals(_methodParameterTypes145, parameterTypes)) {
 			CourseLocalServiceUtil.setVisible(((Long)arguments[0]).longValue(),
 				((Boolean)arguments[1]).booleanValue());
+
+			return null;
 		}
 
 		if (_methodName146.equals(name) &&
