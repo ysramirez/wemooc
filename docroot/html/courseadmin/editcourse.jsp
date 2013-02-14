@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
@@ -12,10 +13,6 @@
 
 <portlet:actionURL var="savecourseURL" name="saveCourse" />
 <portlet:renderURL var="cancel" />
-
-<liferay-util:buffer var="inputEditorHTML" >
-	<liferay-ui:input-editor />
-</liferay-util:buffer>
 
 <a href="<%=cancel.toString()%>"><liferay-ui:message key="back" /></a>
 <%
@@ -105,32 +102,13 @@ else
 %>
 	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=value %> </aui:input>
 
-	<aui:field-wrapper label="description">
-		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
-		<aui:input name="description" type="hidden" />
-		<script type="text/javascript">
-	    <!--
-		    function <portlet:namespace />initEditor()
-		    {
-		    	return "<%=JavaScriptUtil.markupToStringLiteral(description)%>";
-		    }
-		
-		    function <portlet:namespace />extractCodeFromEditor()
-		    {
-		    	
-		    	document.<portlet:namespace />fm.<portlet:namespace />description.value = window.<portlet:namespace />editor.getHTML();
-		    	
-		    }
-		    var func = function ()
-		    {
-		    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
-		    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
-		    };
-		
-		    AUI().on('domready', func);
-	        //-->
-	    </script>
-	</aui:field-wrapper>
+<aui:field-wrapper label="description">
+			<liferay-ui:input-editor name="description" width="100%" />
+			<aui:input name="description" type="hidden" />
+				<script type="text/javascript">
+        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
+    </script>
+		</aui:field-wrapper>
 		
 	<c:if test="<%= permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),0,publishPermission) %>">
 		<aui:input type="checkbox" name="visible" label="published-in-catalog" value="<%=visibleencatalogo %>" />
