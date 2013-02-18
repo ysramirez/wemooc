@@ -88,7 +88,14 @@
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>moduledescription-portlet</css-class-wrapper>
 	</portlet>
-	
+	<portlet>
+		<portlet-name>moduleEditing</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>moduleediting-portlet</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>p2ptaskactivity</portlet-name>
 		<icon>/icon.png</icon>
@@ -204,7 +211,14 @@
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>coursedescription-portlet</css-class-wrapper>
 	</portlet>
-	
+	<portlet>
+		<portlet-name>moduleediting</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>coursedescription-portlet</css-class-wrapper>
+	</portlet>
 	<portlet>
 		<portlet-name>lmsconfig</portlet-name>
 		<icon>/icon.png</icon>
