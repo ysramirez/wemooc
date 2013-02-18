@@ -12,7 +12,7 @@
 %>
 
 <liferay-portlet:renderURL var="returnurl">
-<liferay-portlet:param name="jspPage" value="/html/studentmanage/view.jsp">"></liferay-portlet:param>
+<liferay-portlet:param name="jspPage" value="/html/studentmanage/view.jsp"></liferay-portlet:param>
 
 			
 </liferay-portlet:renderURL>
@@ -44,8 +44,8 @@
 				
 				OrderByComparator obc = null;
 				
-				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, true, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, true, params);
+				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, 0, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, params);
 						
 				pageContext.setAttribute("results", userListPage);
 			    pageContext.setAttribute("total", userCount);
@@ -59,7 +59,7 @@
 		<liferay-ui:search-container-column-text>
 			<liferay-portlet:renderURL var="viewGradeURL">
 			<liferay-portlet:param name="jspPage" value="/html/gradebook/userdetails.jsp"></liferay-portlet:param>
-			<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>">"></liferay-portlet:param>
+			<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
 			<liferay-portlet:param name="returnurl" value="<%=returnurl %>"></liferay-portlet:param>
 			
 			</liferay-portlet:renderURL>
