@@ -381,7 +381,71 @@
         <supported-public-render-parameter>moduleId</supported-public-render-parameter>
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 	</portlet>	
-	
+	<portlet>
+		<portlet-name>moduleEditing</portlet-name>
+		<display-name>moduleEditing</display-name>
+		<portlet-class>com.liferay.lms.modulePortlet</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/void.jsp</value>
+		</init-param>
+		<init-param>
+			<name>edit-jsp</name>
+			<value>/JSPs/module/edit.jsp</value>
+		</init-param>
+		<init-param>
+			<name>edit-module-jsp</name>
+			<value>/JSPs/module/editmodule.jsp</value>
+		</init-param>
+		<init-param>
+			<name>help-jsp</name>
+			<value>/JSPs/module/help.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<resource-bundle>content/Language</resource-bundle>
+		<portlet-info>
+			<title>moduleEditing</title>
+			<short-title>moduleEditing</short-title>
+			<keywords></keywords>
+		</portlet-info>
+        <portlet-preferences>
+            <preference>
+                <name>portlet-setup-show-borders-default</name>
+                <value>false</value>
+            </preference>
+
+			<preference>
+				<name>module-rows-per-page</name>
+				<value>20</value>
+			</preference>
+			<preference>
+				<name>module-date-format</name>
+				<value>yyyy/MM/dd</value>
+			</preference>
+			<preference>
+				<name>module-datetime-format</name>
+				<value>yyyy/MM/dd hh:mm</value>
+			</preference>
+        </portlet-preferences>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+		
+	</portlet>	
 	<portlet>
 		<portlet-name>p2ptaskactivity</portlet-name>
 		<display-name>P2PTaskActivity</display-name>

@@ -12,6 +12,7 @@
 		<portlet id="changeEditingMode"></portlet>
 		<portlet id="activityNavigator"></portlet>
 		<portlet id="moduleDescription"></portlet>
+		<portlet id="moduleEditing"></portlet>
 		<portlet id="ModuleTitle"></portlet>
 		<portlet id="modulelist"></portlet>
 		<portlet id="inscriptioncommunity"></portlet>
