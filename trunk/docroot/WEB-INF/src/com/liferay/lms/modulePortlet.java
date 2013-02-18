@@ -23,6 +23,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.impl.ModuleImpl;
@@ -35,6 +36,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -126,7 +128,6 @@ public static String SEPARATOR = "_";
 			}
 		}
 	}
-
 	public void doEdit(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
 
@@ -170,10 +171,11 @@ public static String SEPARATOR = "_";
 
 		LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)renderResponse;
 		PortletURL addmoduleURL = liferayPortletResponse.createActionURL(
-		 "moduleDescription_WAR_liferaylmsportlet");
+		 "moduleEditing_WAR_liferaylmsportlet");
+		addmoduleURL.setWindowState(LiferayWindowState.POP_UP);
 		addmoduleURL.setParameter("javax.portlet.action", "newmodule");
 		renderRequest.setAttribute("addmoduleURL", addmoduleURL.toString());
-
+		
 		PortletURL moduleFilterURL = renderResponse.createRenderURL();
 		moduleFilterURL.setParameter("javax.portlet.action", "doView");
 		renderRequest.setAttribute("moduleFilterURL", moduleFilterURL.toString());
@@ -193,7 +195,7 @@ public static String SEPARATOR = "_";
 
 		LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)renderResponse;
 		PortletURL editmoduleURL = liferayPortletResponse.createActionURL(
-		 "moduleDescription_WAR_liferaylmsportlet");
+		 "moduleEditing_WAR_liferaylmsportlet");
 
 		String editType = (String) renderRequest.getParameter("editType");
 		if (editType.equalsIgnoreCase("edit")) {
@@ -327,7 +329,7 @@ public static String SEPARATOR = "_";
             if (errors.isEmpty()) {
 				try {
 					ModuleLocalServiceUtil.addmodule(module);
-                	MultiVMPoolUtil.clear();
+                	
                 	response.setRenderParameter("view", "");
                 	SessionMessages.add(request, "module-added-successfully");
             	} catch (Exception cvex) {
