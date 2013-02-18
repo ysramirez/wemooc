@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.security.permission.ResourceActionsUtil"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@include file="../init.jsp" %>
 
 <%@ page import="com.liferay.lms.model.Module"%>
@@ -16,12 +18,15 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE))
 	{	
 	%>
-		<liferay-portlet:actionURL portletName="moduleDescription_WAR_liferaylmsportlet" name="editmodule" var="editmoduleURL">
+		<liferay-portlet:actionURL portletName="moduleEditing_WAR_liferaylmsportlet" name="editmodule" var="editmoduleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<liferay-portlet:param name="resourcePrimKey" value="<%=primKey %>" />
 			<liferay-portlet:param name="actId" value="0" />
 		</liferay-portlet:actionURL>
-
-		<liferay-ui:icon image="edit" url="<%=editmoduleURL.toString() %>" />
+	<%
+	String taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal:true,destroyOnClose: true}, id: 'editModule', title: '" +
+	ResourceActionsUtil.getModelResource(locale, Module.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editmoduleURL) + "'});";
+	%>
+		<liferay-ui:icon image="edit" url="<%=taglibEditURL%>" />
 
 		<%
 	}
