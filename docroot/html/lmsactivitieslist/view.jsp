@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@page import="com.liferay.portal.security.permission.ResourceActionsUtil"%>
 <%@page import="com.liferay.lms.LmsActivitiesList"%>
 <%@page import="com.liferay.lms.asset.LearningActivityAssetRendererFactory"%>
 <%@page import="java.util.Enumeration"%>
@@ -20,10 +22,23 @@
 
 <%@ include file="/init.jsp"%>
 
-<liferay-portlet:actionURL portletName="editactivity_WAR_liferaylmsportlet" name="editactivityoptions" var="newactivityURL">
+<liferay-portlet:actionURL portletName="editactivity_WAR_liferaylmsportlet" name="editactivityoptions" var="newactivityURL"  windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 <liferay-portlet:param name="actId" value="0" />
 <liferay-portlet:param name="resId" value="0" />
+<script>
+function <portlet:namespace />closedialog()
+{
+	alert("a");
+	}
+</script>
 </liferay-portlet:actionURL>
+<% 
+String newactivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
+		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(newactivityURL) + "'});";
+		
+		
+
+%>
 <div class="portlet-toolbar search-form lms-tree">
 <%
 long moduleId = ParamUtil.getLong(request, "moduleId", 0);
@@ -89,7 +104,7 @@ if (actionEditing
 	%>
 	<div class="newitem">
 	<liferay-ui:icon image="add" label="<%=true%>" message="new"
-		url='<%=newactivityURL%>' />
+		url="<%=newactivitypopup%>" />
 		</div>
 <%
 }

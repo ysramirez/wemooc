@@ -7,7 +7,7 @@
 <%@page import="com.liferay.lms.model.Module"%>
 <%@ include file="/init.jsp" %>
 <%
-long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),true);
+long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),0);
 %>
 <div class="registered"><liferay-ui:message key="coursestats.hay" /> <%=registered %> <liferay-ui:message key="coursestats.inscription.users" /></div>
 <%
@@ -45,7 +45,7 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 	%>
 
 	</liferay-ui:search-container-results>
-	<liferay-ui:search-container-row className="com.liferay.lms.model.module"
+	<liferay-ui:search-container-row className="com.liferay.lms.model.Module"
 		keyProperty="moduleId"
 		modelVar="module"
 	>

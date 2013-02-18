@@ -1,11 +1,10 @@
+<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.ModuleResult"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.ModuleResultLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.servlet.ImageServletTokenUtil"%>
-<%@page import="com.liferay.portlet.imagegallery.model.IGImage"%>
-<%@page import="com.liferay.portlet.imagegallery.service.IGImageLocalServiceUtil"%>
 <%@page import="com.liferay.portal.service.ImageLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
@@ -33,7 +32,7 @@ for(Module theModule:theModules)
 	long entryId=theModule.getIcon();
 	if(entryId!=0)
 	{
-		IGImage image=IGImageLocalServiceUtil.getIGImage(entryId);
+		FileEntry image=DLAppLocalServiceUtil.getFileEntry(entryId);
 		if(image!=null)
 		{
 %>

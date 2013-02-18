@@ -1,7 +1,5 @@
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.ModuleResult"%>
-<%@page import="com.liferay.portlet.imagegallery.service.IGImageLocalServiceUtil"%>
-<%@page import="com.liferay.portlet.imagegallery.model.IGImage"%>
 <%@page import="com.liferay.lms.service.ModuleResultLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>

@@ -4,12 +4,12 @@
 <%@page import="com.liferay.lms.service.ModuleResultLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
-<%@page import="com.liferay.lms.model.odule"%>
+<%@page import="com.liferay.lms.model.Module"%>
 <%@ include file="/init.jsp" %>
 <%
-long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),true);
+long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),0);
 long moduleId=ParamUtil.getLong(request,"moduleId",0);
-Module theModule=ModuleLocalServiceUtil.getmodule(moduleId);
+Module theModule=ModuleLocalServiceUtil.getModule(moduleId);
 %>
 <portlet:renderURL var="cancelURL" />
 

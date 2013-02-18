@@ -98,8 +98,8 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 
 	OrderByComparator obc = null;
 
-	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, true, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
-	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, true, params, andSearch);
+	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
+	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
 
 	pageContext.setAttribute("results", userListPage);
     pageContext.setAttribute("total", userCount);
