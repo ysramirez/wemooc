@@ -95,7 +95,7 @@ public class StartupAction extends SimpleAction {
 			"course");
 		layoutSetPrototype =
 			LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(
-				defaultUserId, companyId, nameMap, "course", true,false,null);
+				defaultUserId, companyId, nameMap, "course", true,true,new ServiceContext());
 		LayoutSet layoutSet = layoutSetPrototype.getLayoutSet();
 		ServiceContext serviceContext=new ServiceContext();
 		Group group = layoutSet.getGroup();
