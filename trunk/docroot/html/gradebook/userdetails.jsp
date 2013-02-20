@@ -12,6 +12,10 @@
 
 <%
 long userId=ParamUtil.getLong(request,"userId",0);
+if(userId==0)
+{
+	userId=themeDisplay.getUserId();
+}
 String returnurl=ParamUtil.getString(request,"returnurl","");
 User usuario=UserLocalServiceUtil.getUser(userId);
 java.util.List<LearningActivity> activities = null;

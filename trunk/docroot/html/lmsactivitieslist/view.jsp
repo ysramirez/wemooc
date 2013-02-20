@@ -191,7 +191,7 @@ if (actionEditing
 									activity.getActId(),
 									ActionKeys.PERMISSIONS))) {
 				%>
-				<div class="iconsedit"><%@ include file="/html/lmsactivitieslist/admin_actions.jsp" %></div>
+				<div class="iconsedit"><%@ include file="/html/lmsactivitieslist/admin_actions.jspf" %></div>
 				
 				<%
 				}
