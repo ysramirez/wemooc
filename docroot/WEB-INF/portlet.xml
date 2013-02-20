@@ -1302,6 +1302,37 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<portlet>
+		<portlet-name>userprogress</portlet-name>
+		<display-name>User Progress</display-name>
+		<portlet-class>com.liferay.lms.UserProgress</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/userprogress/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>User Progress</title>
+			<short-title>User Progress</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	<public-render-parameter>    
         <identifier>actId</identifier>
         <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:actId</qname>
@@ -1314,5 +1345,6 @@
         <identifier>actionEditing</identifier>
         <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:actionEditing</qname>
     </public-render-parameter>
+
 
 </portlet-app>

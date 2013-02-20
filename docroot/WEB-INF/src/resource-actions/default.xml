@@ -10,9 +10,9 @@
 				<action-key>CONFIGURATION</action-key>
 				<action-key>VIEW</action-key>
 			</supports>
-			<community-defaults>
+			<site-member-defaults>
 				<action-key>VIEW</action-key>
-			</community-defaults>
+			</site-member-defaults>
 			<guest-defaults>
 				<action-key>VIEW</action-key>
 			</guest-defaults>
@@ -32,9 +32,9 @@
 				<action-key>CONFIGURATION</action-key>
 				<action-key>VIEW</action-key>
 			</supports>
-			<community-defaults>
+			<site-member-defaults>
 				<action-key>VIEW</action-key>
-			</community-defaults>
+			</site-member-defaults>
 			<guest-defaults>
 				<action-key>VIEW</action-key>
 			</guest-defaults>
@@ -51,9 +51,9 @@
 			<action-key>CONFIGURATION</action-key>
 			<action-key>VIEW</action-key>
 		</supports>
-		<community-defaults>
+		<site-member-defaults>
 			<action-key>VIEW</action-key>
-		</community-defaults>
+		</site-member-defaults>
 		<guest-defaults>
 			<action-key>VIEW</action-key>
 		</guest-defaults>
@@ -70,7 +70,7 @@
 			
 			<action-key>PERMISSIONS</action-key>
 		</supports>
-		<community-defaults/>
+		<site-member-defaults/>
 		<guest-defaults/>
 		<guest-unsupported>
 			<action-key>ADD_MODULE</action-key>
@@ -92,9 +92,9 @@
 				<action-key>VIEW</action-key>
 				<action-key>CORRECT</action-key>
 			</supports>
-			<community-defaults>
+			<site-member-defaults>
 				<action-key>VIEW</action-key>
-			</community-defaults>
+			</site-member-defaults>
 			<guest-defaults>
 			</guest-defaults>
 			<guest-unsupported>
@@ -122,9 +122,9 @@
 			<action-key>UPDATE_DISCUSSION</action-key>
             <action-key>DELETE_DISCUSSION</action-key>
 		</supports>
-		<community-defaults>
+		<site-member-defaults>
 			<action-key>VIEW</action-key>
-		</community-defaults>
+		</site-member-defaults>
 		<guest-defaults>
 			<action-key>VIEW</action-key>
 		</guest-defaults>
@@ -162,10 +162,10 @@
 				<action-key>ASSIGN_MEMBERS</action-key>	
 				<action-key>ACCESS</action-key>
 			</supports>
-			<community-defaults>
+			<site-member-defaults>
 				<action-key>VIEW</action-key>
 				<action-key>REGISTER</action-key>
-			</community-defaults>
+			</site-member-defaults>
 			<guest-defaults>
 				<action-key>VIEW</action-key>
 			</guest-defaults>
