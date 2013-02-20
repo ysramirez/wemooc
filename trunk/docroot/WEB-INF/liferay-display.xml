@@ -38,5 +38,6 @@
 		<portlet id="SurveyActivity"></portlet>
 		<portlet id="studentmanage"></portlet>
 		<portlet id="tutoring"></portlet>
+		<portlet id="userprogress"></portlet>
 	</category>
 </display>
