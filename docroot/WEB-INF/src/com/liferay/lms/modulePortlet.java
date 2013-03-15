@@ -24,6 +24,7 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
+import javax.portlet.WindowStateException;
 
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.impl.ModuleImpl;
@@ -170,8 +171,7 @@ public static String SEPARATOR = "_";
 		renderRequest.setAttribute("hasAddPermission", hasAddPermission);
 
 		LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)renderResponse;
-		PortletURL addmoduleURL = liferayPortletResponse.createActionURL(
-		 "moduleEditing_WAR_liferaylmsportlet");
+		PortletURL addmoduleURL = liferayPortletResponse.createActionURL();
 		addmoduleURL.setWindowState(LiferayWindowState.POP_UP);
 		addmoduleURL.setParameter("javax.portlet.action", "newmodule");
 		renderRequest.setAttribute("addmoduleURL", addmoduleURL.toString());
@@ -194,8 +194,8 @@ public static String SEPARATOR = "_";
 		.getAttribute(WebKeys.THEME_DISPLAY);
 
 		LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)renderResponse;
-		PortletURL editmoduleURL = liferayPortletResponse.createActionURL(
-		 "moduleEditing_WAR_liferaylmsportlet");
+		PortletURL editmoduleURL = liferayPortletResponse.createActionURL();
+		editmoduleURL.setWindowState(LiferayWindowState.POP_UP);
 
 		String editType = (String) renderRequest.getParameter("editType");
 		if (editType.equalsIgnoreCase("edit")) {
@@ -273,15 +273,9 @@ public static String SEPARATOR = "_";
 
 	
 		renderRequest.setAttribute("editmoduleURL", editmoduleURL.toString());
-		if(ParamUtil.getLong(renderRequest, "actId",0)==0)
-		{
-			
+		
 			include(editmoduleJSP, renderRequest, renderResponse);
-		}
-		else
-		{
-			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-		}
+		
 	}
 
 	private String dateToJsp(ActionRequest request, Date date) {
@@ -314,6 +308,12 @@ public static String SEPARATOR = "_";
 	@ProcessAction(name = "newmodule")
 	public void newmodule(ActionRequest request, ActionResponse response) {
 		response.setRenderParameter("view", "editmodule");
+		try {
+			response.setWindowState(LiferayWindowState.POP_UP);
+		} catch (WindowStateException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		response.setRenderParameter("moduleId", "0");
 		response.setRenderParameter("editType", "add");
 	}
@@ -403,6 +403,12 @@ public static String SEPARATOR = "_";
 		long key = ParamUtil.getLong(request, "resourcePrimKey");
 		if (Validator.isNotNull(key)) {
 			response.setRenderParameter("moduleId", Long.toString(key));
+			try {
+				response.setWindowState(LiferayWindowState.POP_UP);
+			} catch (WindowStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			response.setRenderParameter("view", "editmodule");
 			response.setRenderParameter("editType", "edit");
 		}
@@ -618,33 +624,7 @@ public static String SEPARATOR = "_";
 	    }
 	}
 
-	public void invokeTaglibDiscussion(ActionRequest actionRequest, ActionResponse actionResponse)
-	    throws Exception 
-	{
-	
-	// Ver notas en el invokeTaglibDiscussion llamado
-		 PortalClassInvokerPatched.invoke(  // Notar el "Patched"
-	             true,
-	             "com.liferay.portlet.messageboards.action.EditDiscussionAction",
-	             "processAction",
-	             new String[] {
-	                     "org.apache.struts.action.ActionMapping",
-	                     "org.apache.struts.action.ActionForm",
-	                     PortletConfig.class.getName(), ActionRequest.class.getName(),
-	                     ActionResponse.class.getName()
-	             },
-	             null, null, this.getPortletConfig(), actionRequest, actionResponse);	}
 
-	/**
-	 * Create folders for upload images from our portlet to ImageGallery portlet
-	 * @param request
-	 * @param userId
-	 * @param groupId
-	 * @param serviceContext
-	 * @return
-	 * @throws PortalException
-	 * @throws SystemException
-	 */
 	private void createIGFolders(ActionRequest request,long userId,long groupId, ServiceContext serviceContext) throws PortalException, SystemException{
 		//Variables for folder ids
 		Long igMainFolderId = 0L;

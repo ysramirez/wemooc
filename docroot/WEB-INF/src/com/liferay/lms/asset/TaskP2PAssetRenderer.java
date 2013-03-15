@@ -8,6 +8,7 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -22,7 +23,7 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 
-public class TaskP2PAssetRenderer extends BaseAssetRenderer {
+public class TaskP2PAssetRenderer extends  BaseAssetRenderer{
 
 	private LearningActivity _learningactivity;
 	private static Log _log = LogFactoryUtil.getLog(TaskP2PAssetRenderer.class);
@@ -150,4 +151,5 @@ public class TaskP2PAssetRenderer extends BaseAssetRenderer {
 		return null;
 	}
 
-}
+	
+	}

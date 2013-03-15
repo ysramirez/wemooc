@@ -9,6 +9,7 @@ import javax.portlet.RenderResponse;
 import javax.portlet.WindowStateException;
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
@@ -161,5 +162,7 @@ public class TestAssetRenderer extends BaseAssetRenderer {
 		// TODO Auto-generated method stub
 		return null;
 	}
+
+
 
 }
