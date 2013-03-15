@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
+<%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
@@ -48,6 +50,7 @@ else
 }
 ParamUtil.print(request);
 String typeName=classTypes.get(typeId);
+LearningActivityType larntype=new LearningActivityTypeRegistry().getLearningActivityType(typeId);
 
 String description="";
 SimpleDateFormat formatDay    = new SimpleDateFormat("dd");
@@ -176,10 +179,79 @@ else
 				 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 			<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time></br>
 		</aui:field-wrapper>
-		<aui:input size="5" name="tries" label="tries" ></aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
-		<aui:input size="5" name="passpuntuation" label="passpuntuation" ></aui:input>	
-		<aui:input name="feedbackCorrect" label="feedbackCorrect" ></aui:input>	
-		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" ></aui:input>	
+		<%
+		if(larntype.isTriesConfigurable())
+		{
+			long tries=larntype.getDefaultTries();
+			if(learnact!=null)
+			{
+				tries=learnact.getTries();
+			}
+		%>
+		
+		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>"></aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
+		<%
+		}
+		else
+		{
+			%>
+			<aui:input type="hidden" name="tries" value="<%=larntype.getDefaultTries() %>" />
+			<% 
+		}
+		if(larntype.isScoreConfigurable())
+		{
+			long score=larntype.getDefaultScore();
+			if(learnact!=null)
+			{
+				score=learnact.getPasspuntuation();
+			}
+		%>
+		<aui:input size="5" name="passpuntuation" label="passpuntuation" value="<%=Long.toString(score) %>"></aui:input>
+		<%
+		}
+		else
+		{
+			%>
+			<aui:input type="hidden" name="passpuntuation" value="<%=larntype.getDefaultScore() %>" />
+			<% 
+		}
+		if(larntype.isFeedbackCorrectConfigurable())
+		{
+			String  feedbacCorrect=larntype.getDefaultFeedbackCorrect();
+			if(learnact!=null)
+			{
+				feedbacCorrect=learnact.getFeedbackCorrect();
+			}
+		%>	
+		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" ></aui:input>	
+		<%
+		}
+		else
+		{
+			
+			%>
+			<aui:input type="hidden" name="feedbackCorrect" value="<%=larntype.getDefaultFeedbackCorrect() %>" />
+			<% 
+		}
+		if(larntype.isFeedbackNoCorrectConfigurable())
+		{
+			String  feedbacNoCorrect=larntype.getDefaultFeedbackCorrect();
+			if(learnact!=null)
+			{
+				feedbacNoCorrect=learnact.getFeedbackCorrect();
+			}
+		%>
+		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" ></aui:input>	
+		<%
+		}
+		else
+		{
+			%>
+			<aui:input type="hidden" name="feedbackNoCorrect" value="<%=larntype.getDefaultFeedbackNoCorrect() %>" />
+			<% 
+		}
+		
+		%>
 <%
 	boolean optional=false;
 	if(learnact!=null)
