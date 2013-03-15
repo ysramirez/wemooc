@@ -23,9 +23,12 @@ java.util.List<LearningActivity> activities = null;
 	java.util.List<Module> modules = ModuleLocalServiceUtil
 			.findAllInGroup(themeDisplay.getScopeGroupId());
 %>
-<liferay-ui:header title="Resultados" backURL="<%=returnurl %>"></liferay-ui:header>
+<liferay-ui:header title="Resultados" backURL="<%=returnurl %>" backLabel="back"></liferay-ui:header>
+<div class="userdisplay">
 <liferay-ui:user-display userId="<%=userId %>">
 </liferay-ui:user-display>
+</div>
+<liferay-ui:panel-container >
 <%
 	for(Module theModule:modules)
 	{
@@ -35,6 +38,9 @@ java.util.List<LearningActivity> activities = null;
 
 
 %>
+
+
+<liferay-ui:panel id="<%=Long.toString(theModule.getModuleId()) %>" title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" collapsible="true" extended="false" defaultState="collapsed">
 
 <h2><%=theModule.getTitle(themeDisplay.getLocale()) %>
 <%
@@ -70,29 +76,13 @@ java.util.List<LearningActivity> activities = null;
 	%>
 	</h2>
 <table class="gradeuser">
-<tr>
-
-<%
-for(LearningActivity learningActivity:activities)
-{
-	%>
-	<th>
-	<%=learningActivity.getTitle(themeDisplay.getLocale()) %>
-	</th>
-	<%
-}
-	%>
-	</tr>
-<%
-
-	%>
-	<tr>
-	
+	<tr><th><liferay-ui:message key="activity" /></th><th><liferay-ui:message key="score" /></th><th><liferay-ui:message key="activity.status" /></th><th><liferay-ui:message key="activity.comments" /></th><tr>
 	<%
 for(LearningActivity learningActivity:activities)
 {
 	long result=0;
 	String status="not-started";
+	String comments="";
 	if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(learningActivity.getActId(), usuario.getUserId()))
 			{
 		status="started";
@@ -100,6 +90,10 @@ for(LearningActivity learningActivity:activities)
 			LearningActivityResult learningActivityResult=
 				LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), usuario.getUserId());
 			result=learningActivityResult.getResult();
+			if(learningActivityResult.getComments()!=null)
+			{
+				comments=learningActivityResult.getComments();
+			}
 			if(learningActivityResult.getEndDate()!=null)
 			{
 				status="not-passed"	;
@@ -111,8 +105,14 @@ for(LearningActivity learningActivity:activities)
 			
 			}
 	%>
+	<tr>
+	<td>
+	<%=learningActivity.getTitle(themeDisplay.getLocale()) %>
+	</td>
 	<td>
 	<%=result %>
+	</td>
+	<td>
 	<%if(status.equals("passed"))
 		{%>
 	 <liferay-ui:icon image="checked"></liferay-ui:icon>
@@ -129,16 +129,17 @@ for(LearningActivity learningActivity:activities)
 	 <%}
 	%>
 	</td>
-	<%
-}
-	%>
+	<td>
+	<%=comments %>
+	</td>
 	</tr>
 	<%
-
+}
 %>
 </table>
-
+</liferay-ui:panel>
 <%
 }
 
 %>
+</liferay-ui:panel-container>

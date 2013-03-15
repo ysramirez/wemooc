@@ -80,7 +80,7 @@ String iconUnchecked = "unchecked";
 
 		<liferay-ui:search-container-column-text >
 			<portlet:actionURL var="editanswerURL" name="editanswer" />
-			<aui:form id="f_<%=testanswer.getAnswerid() %>" action="<%=editanswerURL %>" method="post">
+			<aui:form id="f_<%=testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 			
 				<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 			

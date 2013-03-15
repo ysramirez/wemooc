@@ -37,11 +37,10 @@ else
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>" backURL="<%=backURL %>"></liferay-ui:header>
 <h2><%=role.getTitle(themeDisplay.getLocale()) %></h2>
 <portlet:renderURL var="adduserURL">
-<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp">
+<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
 <liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
 <liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 
-</portlet:param>
 </portlet:renderURL>
 
 <liferay-ui:icon
