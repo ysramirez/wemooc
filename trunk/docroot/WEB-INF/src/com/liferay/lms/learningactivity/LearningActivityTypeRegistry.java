@@ -1,8 +1,8 @@
 package com.liferay.lms.learningactivity;
 
-public class LearnintActivityTypeRegistry 
+public class LearningActivityTypeRegistry 
 {
-	LearningActivityType getLearningActivityType(long typeId)
+	public LearningActivityType getLearningActivityType(long typeId)
 	{
 		if(typeId==0)
 		{
