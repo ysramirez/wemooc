@@ -22,7 +22,7 @@ java.util.List<LearningActivity> activities = null;
 
 
 %>
-<liferay-ui:panel id="<%=Long.toString(theModule.getModuleId()) %>" title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" collapsible="true" extended="true" defaultState="collapsed">
+<liferay-ui:panel id="<%=Long.toString(theModule.getModuleId()) %>" title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" collapsible="true" extended="false" defaultState="collapsed">
 
 <table>
 <tr>

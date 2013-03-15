@@ -1,3 +1,8 @@
+<%@page import="java.util.Map"%>
+<%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
+<%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
+<%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistry"%>
+<%@page import="com.liferay.lms.asset.LearningActivityAssetRendererFactory"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="java.util.Set"%>
 <%@page import="com.liferay.lms.LearningTypesProperties"%>
@@ -21,12 +26,17 @@
 long moduleId=ParamUtil.getLong(request,"moduleId",0);
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
+long typeId=ParamUtil.getLong(request, "typeId");
+AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
+Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
+
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 long actId=ParamUtil.getLong(request, "actId",0);
 LearningActivity learnact=null;
 if(request.getAttribute("activity")!=null)
 {
 	learnact=(LearningActivity)request.getAttribute("activity");
+	typeId=learnact.getTypeId();
 }
 else
 {
@@ -37,7 +47,7 @@ else
 	
 }
 ParamUtil.print(request);
-
+String typeName=classTypes.get(typeId);
 
 String description="";
 SimpleDateFormat formatDay    = new SimpleDateFormat("dd");
@@ -56,6 +66,9 @@ int endMonth=Integer.parseInt(formatMonth.format(today))-1;
 int endYear=Integer.parseInt(formatYear.format(today))+1;
 int endHour=Integer.parseInt(formatHour.format(today));
 int endMin=Integer.parseInt(formatMin.format(today));
+%>
+<liferay-ui:header title="<%=typeName %>"></liferay-ui:header>
+<%
 if(learnact!=null)
 {
 	actId=learnact.getActId();
@@ -137,22 +150,7 @@ else
 	if(actId==0)
 	{
 	%>
-		<aui:select name="type" label="type">
-		<%
-		Set<String> names = LearningTypesProperties.getNames();
-		for(String name: names) //for(LearningType type:types)
-		{
-			String []prop = name.split("\\.");
-			if(prop.length-1>0){
-				String word = prop[prop.length-1].substring(0, 1).toUpperCase()+prop[prop.length-1].substring(1, prop[prop.length-1].length());
-			
-		%>	
-			<aui:option value="<%=LearningTypesProperties.get(name) %>" label="<%=word %>"></aui:option>
-		<%
-			}
-		}
-		%>
-		</aui:select>
+	<aui:input type="hidden" name="type" value="<%=typeId %>"></aui:input>
 	<% 
 		}
 	%>
@@ -178,7 +176,7 @@ else
 				 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 			<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time></br>
 		</aui:field-wrapper>
-		<aui:input size="5" name="tries" label="tries" ></aui:input>
+		<aui:input size="5" name="tries" label="tries" ></aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
 		<aui:input size="5" name="passpuntuation" label="passpuntuation" ></aui:input>	
 		<aui:input name="feedbackCorrect" label="feedbackCorrect" ></aui:input>	
 		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" ></aui:input>	

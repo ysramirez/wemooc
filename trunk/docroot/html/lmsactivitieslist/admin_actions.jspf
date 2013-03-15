@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%
 
 LearningActivity myActivity = activity;
@@ -13,11 +14,16 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 				ActionKeys.PERMISSIONS)%>">
 				
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE) %>">
-	<liferay-portlet:actionURL portletName="editactivity_WAR_liferaylmsportlet" name="editactivityoptions" var="editoptionsURL">
+	<liferay-portlet:actionURL  name="editactivityoptions" var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<liferay-portlet:param name="resId" value="<%=primKey %>" />
 		<portlet:param name="actId" value="0" />
 	</liferay-portlet:actionURL>
-	<liferay-ui:icon image="edit" message="edit" url="<%=editoptionsURL.toString() %>" />
+	<%
+String editctivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
+		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "'});";
+
+%>
+	<liferay-ui:icon image="edit" message="edit" url="<%=editctivitypopup %>" />
 </c:if>
 
 
