@@ -1,6 +1,11 @@
 package com.liferay.lms.asset;
 
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
+
 import javax.portlet.PortletURL;
+import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
@@ -8,12 +13,29 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
 
 public class LearningActivityAssetRendererFactory extends BaseAssetRendererFactory
  {
+
+	@Override
+	public Map<Long, String> getClassTypes(long[] groupId, Locale locale)
+			throws Exception {
+		Map<Long, String> classTypes = new HashMap<Long, String>();
+		classTypes.put(0l,"test");
+		classTypes.put(1l,"task");
+		classTypes.put(2l,"resource");
+		classTypes.put(3l,"taskp2p");
+		classTypes.put(4l,"survey");
+		return classTypes;
+
+	}
 
 	public static final String CLASS_NAME = LearningActivity.class.getName();
 	public static final String TYPE = "learningactivity";
@@ -53,9 +75,7 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
             LiferayPortletRequest liferayPortletRequest,
             LiferayPortletResponse liferayPortletResponse)
         {
-		
-        return null;
-/*
+	/*	
         HttpServletRequest request =
             liferayPortletRequest.getHttpServletRequest();
 
@@ -64,6 +84,10 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 
       try
       {
+    	  long classTypeId = GetterUtil.getLong(
+    				liferayPortletRequest.getAttribute(
+    					WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID));
+
     	  PortletURL portletURL= 
     			  PortletURLFactoryUtil.create(request,"lmsactivitieslist_WAR_liferaylmsportlet",getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
           portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/editactivity.jsp");
@@ -73,9 +97,8 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
       {
     	  e.printStackTrace();
     	  
-      }
+      }*/
         return null;
-        */
     }
 	@Override
 	public boolean hasPermission(PermissionChecker permissionChecker,

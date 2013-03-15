@@ -1,7 +1,11 @@
 package com.liferay.lms;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -14,10 +18,12 @@ import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -33,9 +39,12 @@ import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLFolderLocalService;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
+import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -122,18 +131,23 @@ public class ResourceActivity extends MVCPortlet {
 	if(fileName!=null && !fileName.equals(""))
 	{
 		File file = request.getFile("fileName");
+		long filesize=	request.getSize("fileName");
+		
 		Element video=rootElement.element("video");
 		if(video!=null &&!video.attributeValue("id","").equals(""))
 		{
 			AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(video.attributeValue("id")));
 			DLFileEntry videofile=DLFileEntryLocalServiceUtil.getDLFileEntry(videoAsset.getClassPK());
 			DLFileVersion videofileVersion = videofile.getFileVersion();
-			DLFileEntryLocalServiceUtil.deleteFileEntry(videofile);
+			DLFileEntryLocalServiceUtil.deleteFileEntry(videofile.getFileEntryId());
 		}
 		long folderId=createDLFolders(actionRequest, themeDisplay.getUserId(),themeDisplay.getScopeGroupId(), serviceContext);
-	
+		InputStream istrem=new FileInputStream(file);
+		String mimeType=MimeTypesUtil.getContentType(file.getName());
 		DLFileEntry dlDocument = DLFileEntryLocalServiceUtil.addFileEntry(
-				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), folderId, fileName, title, fileName, "", "", file, serviceContext);
+				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), themeDisplay.getScopeGroupId(), folderId, fileName,mimeType,
+				title, title,"",0,new HashMap<String,Fields>(), file,
+				istrem,filesize, serviceContext);
 			
 			//Damos permisos al archivo para usuarios de comunidad.
 		DLFileEntryLocalServiceUtil.addFileEntryResources(dlDocument, true, false);
@@ -143,17 +157,23 @@ public class ResourceActivity extends MVCPortlet {
 	if(fileName2!=null && !fileName2.equals(""))
 	{
 		File file = request.getFile("fileName2");
+		long filesize=	request.getSize("fileName2");
 		Element documento=rootElement.element("document");
 		if(documento!=null&&!documento.attributeValue("id","").equals(""))
 		{
 			AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(documento.attributeValue("id")));
 			DLFileEntry videofile=DLFileEntryLocalServiceUtil.getDLFileEntry(videoAsset.getClassPK());
 			DLFileVersion videofileVersion = videofile.getFileVersion();
-			DLFileEntryLocalServiceUtil.deleteFileEntry(videofile);
+			DLFileEntryLocalServiceUtil.deleteFileEntry(videofile.getFileEntryId());
 		}
 		long folderId=createDLFolders(actionRequest, themeDisplay.getUserId(),themeDisplay.getScopeGroupId(), serviceContext);
+		InputStream istrem=new FileInputStream(file);
+		String mimeType=MimeTypesUtil.getContentType(file.getName());
+		
 		DLFileEntry dlDocument = DLFileEntryLocalServiceUtil.addFileEntry(
-				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), folderId, fileName2, fileName2, fileName2, "", "", file, serviceContext);
+				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), themeDisplay.getScopeGroupId(), folderId, fileName,mimeType,
+				title, title,"",0,new HashMap<String,Fields>(), file,
+				istrem,filesize, serviceContext);
 			
 			//Damos permisos al archivo para usuarios de comunidad.
 		DLFileEntryLocalServiceUtil.addFileEntryResources(dlDocument, true, false);
@@ -245,7 +265,7 @@ else
         //Get main folder
         try {
         	//Get main folder
-        	DLFolder dlFolderMain = DLFolderLocalServiceUtil.getFolder(groupId,0,DOCUMENTLIBRARY_MAINFOLDER);
+        	Folder dlFolderMain = DLAppLocalServiceUtil.getFolder(groupId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,DOCUMENTLIBRARY_MAINFOLDER);
         	dlMainFolderId = dlFolderMain.getFolderId();
         	dlMainFolderFound = true;
         	//Get portlet folder
@@ -254,8 +274,7 @@ else
         }
         //Create main folder if not exist
         if(!dlMainFolderFound){
-        	Folder newDocumentMainFolder = DLAppLocalServiceUtil.addFolder(userId, groupId, 0, DOCUMENTLIBRARY_MAINFOLDER, DOCUMENTLIBRARY_MAINFOLDER, serviceContext);
-        	DLAppLocalServiceUtil.addFolderResources(newDocumentMainFolder, true, false);
+        	Folder newDocumentMainFolder = DLAppLocalServiceUtil.addFolder(userId, groupId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DOCUMENTLIBRARY_MAINFOLDER, DOCUMENTLIBRARY_MAINFOLDER, serviceContext);
         	dlMainFolderId = newDocumentMainFolder.getFolderId();
         	dlMainFolderFound = true;
         }
