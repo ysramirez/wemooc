@@ -1,6 +1,7 @@
 package com.liferay.lms.learningactivity;
 
-public class BaseLearningActivityType implements LearningActivityType{
+
+public abstract class BaseLearningActivityType implements LearningActivityType{
 
 	@Override
 	public long getDefaultScore() {		
@@ -42,5 +43,7 @@ public class BaseLearningActivityType implements LearningActivityType{
 	public boolean isFeedbackNoCorrectConfigurable() {
 		return false;
 	}
+
+	
 
 }

@@ -126,7 +126,7 @@ public class LearningActivityLocalServiceImpl
 			true, true);
 			assetEntryLocalService.updateEntry(
 					userId, larn.getGroupId(), LearningActivity.class.getName(),
-					larn.getActId(), larn.getUuid(),0, serviceContext.getAssetCategoryIds(),
+					larn.getActId(), larn.getUuid(),typeId, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
@@ -167,7 +167,7 @@ public class LearningActivityLocalServiceImpl
 				
 				assetEntryLocalService.updateEntry(
 						userId, larn.getGroupId(), LearningActivity.class.getName(),
-						larn.getActId(), larn.getUuid(),0, serviceContext.getAssetCategoryIds(),
+						larn.getActId(), larn.getUuid(),larn.getTypeId(), serviceContext.getAssetCategoryIds(),
 						serviceContext.getAssetTagNames(), true, null, null,
 						new java.util.Date(System.currentTimeMillis()), null,
 						ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
@@ -190,7 +190,7 @@ public class LearningActivityLocalServiceImpl
 	
 			assetEntryLocalService.updateEntry(
 					userId, larn.getGroupId(), LearningActivity.class.getName(),
-					larn.getActId(), larn.getUuid(),0, serviceContext.getAssetCategoryIds(),
+					larn.getActId(), larn.getUuid(),larn.getTypeId(), serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null, 
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,

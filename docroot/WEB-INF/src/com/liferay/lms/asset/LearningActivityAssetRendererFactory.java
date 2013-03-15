@@ -7,6 +7,8 @@ import java.util.Map;
 import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.lms.learningactivity.LearningActivityType;
+import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -14,6 +16,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -28,12 +31,13 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 	public Map<Long, String> getClassTypes(long[] groupId, Locale locale)
 			throws Exception {
 		Map<Long, String> classTypes = new HashMap<Long, String>();
-		classTypes.put(0l,"test");
-		classTypes.put(1l,"task");
-		classTypes.put(2l,"resource");
-		classTypes.put(3l,"taskp2p");
-		classTypes.put(4l,"survey");
+		LearningActivityTypeRegistry ltr=new LearningActivityTypeRegistry();
+		for(LearningActivityType lat:ltr.getLearningActivityTypes())
+		{
+			classTypes.put(lat.getTypeId(),lat.getName(locale));
+		}
 		return classTypes;
+		
 
 	}
 
@@ -49,27 +53,10 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 	public AssetRenderer getAssetRenderer(long classPK, int type)
 	throws PortalException, SystemException {
 	LearningActivity learningactivity = LearningActivityLocalServiceUtil.getLearningActivity(classPK);
-		if(learningactivity.getTypeId()==0)
-		{
-		return new TestAssetRenderer(learningactivity);
-		}
-		if(learningactivity.getTypeId()==1)
-		{
-		return new TaskAssetRenderer(learningactivity);
-		}
-		if(learningactivity.getTypeId()==2)
-		{
-		return new ResourceAssetRenderer(learningactivity);
-		}
-		if(learningactivity.getTypeId()==3)
-		{
-		return new TaskP2PAssetRenderer(learningactivity);
-		}
-		if(learningactivity.getTypeId()==4)
-		{
-		return new SurveyAssetRenderer(learningactivity);
-		}
-		return null;
+	LearningActivityTypeRegistry ltr=new LearningActivityTypeRegistry();
+	LearningActivityType lat=ltr.getLearningActivityType(learningactivity.getTypeId());
+	return lat.getAssetRenderer(learningactivity);
+
 	}
 	public PortletURL getURLAdd(
             LiferayPortletRequest liferayPortletRequest,
