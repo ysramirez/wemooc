@@ -7,7 +7,16 @@
 
 <%
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
-Module module = (Module)row.getObject();
+Module module=null;
+if(row==null)
+{
+	long moduleId=ParamUtil.getLong(request, "modId");
+	module=ModuleLocalServiceUtil.getModule(moduleId);
+}
+else
+{
+	module = (Module)row.getObject();
+}
 
 long groupId = module.getGroupId();
 String name = Module.class.getName();
@@ -18,7 +27,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE))
 	{	
 	%>
-		<liferay-portlet:actionURL portletName="moduleEditing_WAR_liferaylmsportlet" name="editmodule" var="editmoduleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:actionURL  name="editmodule" var="editmoduleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 			<liferay-portlet:param name="resourcePrimKey" value="<%=primKey %>" />
 			<liferay-portlet:param name="actId" value="0" />
 		</liferay-portlet:actionURL>
