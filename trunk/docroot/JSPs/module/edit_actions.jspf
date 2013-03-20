@@ -1,0 +1,66 @@
+
+
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%
+ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+Module module=theModule;
+
+
+long groupId = module.getGroupId();
+String name = Module.class.getName();
+String primKey = String.valueOf(module.getPrimaryKey());
+
+%>
+
+	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE))
+	{	
+	%>
+	
+		<liferay-portlet:actionURL portletName="moduleportlet_WAR_liferaylmsportlet" name="editmodule" var="editmoduleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<liferay-portlet:param name="resourcePrimKey" value="<%=primKey %>" />
+			<liferay-portlet:param name="actId" value="0" />
+		</liferay-portlet:actionURL>
+	<%
+	String taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal:true,destroyOnClose: true}, id: 'editModule', title: '" +
+	ResourceActionsUtil.getModelResource(locale, Module.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editmoduleURL) + "'});";
+	%>
+		<liferay-ui:icon image="edit" url="<%=taglibEditURL%>" />
+
+		<%
+	}
+	%>
+	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.DELETE))
+	{
+		
+	%>
+	
+		<liferay-portlet:actionURL portletName="moduleportlet_WAR_liferaylmsportlet" name="deletemodule" var="deletemoduleURL">
+			<liferay-portlet:param name="resourcePrimKey" value="<%= primKey %>" />
+			<liferay-portlet:param name="actId" value="0" />
+		</liferay-portlet:actionURL>
+
+		<liferay-ui:icon-delete url="<%=deletemoduleURL.toString() %>" />
+<%
+	}
+	%>
+	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE))
+	{
+		
+	%>
+		<liferay-portlet:actionURL portletName="moduleportlet_WAR_liferaylmsportlet" name="upmodule" var="upURL">
+<liferay-portlet:param name="moduleId" value="<%=primKey %>" />
+		<liferay-portlet:param name="actId" value="0" />
+		</liferay-portlet:actionURL>
+		<liferay-portlet:actionURL portletName="moduleportlet_WAR_liferaylmsportlet" name="downmodule" var="downURL">
+<liferay-portlet:param name="moduleId" value="<%=primKey %>" />
+		<liferay-portlet:param name="actId" value="0" />
+	</liferay-portlet:actionURL>
+
+<liferay-ui:icon image="bottom"  url="<%=downURL.toString() %>" />
+<liferay-ui:icon image="top"  url="<%=upURL.toString() %>" />
+
+	<%
+	}
+	%>
+
+
