@@ -34,7 +34,7 @@ for(Group groupCourse:groups)
 		}
 				
 		%>
-			<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a> <span class="challenges"><%=passed %>/<%= modulescount%> terminados</span><span class="ico-desplegable"></span>
+			<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a> <span class="challenges"><%=passed %>/<%= modulescount%><liferay-ui:message key="finished.modules" /></span><span class="ico-desplegable"></span>
 			<div class="collapsable">
 				<table class="moduleList">
 		<%
@@ -85,7 +85,7 @@ for(Group groupCourse:groups)
 					</td>
 				<td class="result">
 					
-					<%=done %>% hecho
+					<%=done %>% <liferay-ui:message key="test.done" />
 					</td>
 			
 					</tr>

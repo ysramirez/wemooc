@@ -23,10 +23,18 @@ boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
 	}
 	else
 	{
-		java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
-		if(modules.size()>0)
+		if(actId!=0)
 		{
-			theModule=modules.get(0);
+			LearningActivity larn=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			theModule=ModuleLocalServiceUtil.getModule(larn.getModuleId());
+		}
+		else
+		{
+			java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+			if(modules.size()>0)
+			{
+				theModule=modules.get(0);
+			}
 		}
 	}
 	if(theModule!=null)

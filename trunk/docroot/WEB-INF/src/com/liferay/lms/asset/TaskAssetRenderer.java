@@ -26,7 +26,7 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 
-public class TaskAssetRenderer extends  BaseAssetRenderer{
+public class TaskAssetRenderer extends BaseAssetRenderer {
 
 	private LearningActivity _learningactivity;
 	private static Log _log = LogFactoryUtil.getLog(TaskP2PAssetRenderer.class);

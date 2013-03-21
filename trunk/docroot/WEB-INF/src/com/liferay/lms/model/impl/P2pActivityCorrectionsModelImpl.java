@@ -73,9 +73,10 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 			{ "actId", Types.BIGINT },
 			{ "description", Types.VARCHAR },
 			{ "date_", Types.TIMESTAMP },
-			{ "fileEntryId", Types.BIGINT }
+			{ "fileEntryId", Types.BIGINT },
+			{ "result", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivityCorrections (uuid_ VARCHAR(75) null,p2pActivityCorrectionsId LONG not null primary key,p2pActivityId LONG,userId LONG,actId LONG,description TEXT null,date_ DATE null,fileEntryId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivityCorrections (uuid_ VARCHAR(75) null,p2pActivityCorrectionsId LONG not null primary key,p2pActivityId LONG,userId LONG,actId LONG,description TEXT null,date_ DATE null,fileEntryId LONG,result LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_P2pActivityCorrections";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -116,6 +117,7 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		model.setDescription(soapModel.getDescription());
 		model.setDate(soapModel.getDate());
 		model.setFileEntryId(soapModel.getFileEntryId());
+		model.setResult(soapModel.getResult());
 
 		return model;
 	}
@@ -183,6 +185,7 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		attributes.put("description", getDescription());
 		attributes.put("date", getDate());
 		attributes.put("fileEntryId", getFileEntryId());
+		attributes.put("result", getResult());
 
 		return attributes;
 	}
@@ -236,6 +239,12 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 
 		if (fileEntryId != null) {
 			setFileEntryId(fileEntryId);
+		}
+
+		Long result = (Long)attributes.get("result");
+
+		if (result != null) {
+			setResult(result);
 		}
 	}
 
@@ -373,6 +382,15 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		_fileEntryId = fileEntryId;
 	}
 
+	@JSON
+	public long getResult() {
+		return _result;
+	}
+
+	public void setResult(long result) {
+		_result = result;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -413,6 +431,7 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		p2pActivityCorrectionsImpl.setDescription(getDescription());
 		p2pActivityCorrectionsImpl.setDate(getDate());
 		p2pActivityCorrectionsImpl.setFileEntryId(getFileEntryId());
+		p2pActivityCorrectionsImpl.setResult(getResult());
 
 		p2pActivityCorrectionsImpl.resetOriginalValues();
 
@@ -523,12 +542,14 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 
 		p2pActivityCorrectionsCacheModel.fileEntryId = getFileEntryId();
 
+		p2pActivityCorrectionsCacheModel.result = getResult();
+
 		return p2pActivityCorrectionsCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(17);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -546,13 +567,15 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		sb.append(getDate());
 		sb.append(", fileEntryId=");
 		sb.append(getFileEntryId());
+		sb.append(", result=");
+		sb.append(getResult());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(28);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.P2pActivityCorrections");
@@ -590,6 +613,10 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 			"<column><column-name>fileEntryId</column-name><column-value><![CDATA[");
 		sb.append(getFileEntryId());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>result</column-name><column-value><![CDATA[");
+		sb.append(getResult());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -616,6 +643,7 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 	private String _description;
 	private Date _date;
 	private long _fileEntryId;
+	private long _result;
 	private long _columnBitmask;
 	private P2pActivityCorrections _escapedModelProxy;
 }

@@ -1,10 +1,14 @@
 package com.liferay.lms.portlet.inscriptioncommunity;
 
+import java.util.Date;
+
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -26,7 +30,18 @@ public class CommunityInscription extends MVCPortlet {
 		long[] groupId = new long[1];
     	groupId[0] = themeDisplay.getScopeGroupId();	
     	
-    	GroupLocalServiceUtil.addUserGroups(themeDisplay.getUserId(), groupId);
+    	long userId = themeDisplay.getUserId();
+		GroupLocalServiceUtil.addUserGroups(userId, groupId);
+		// Informamos que se ha inscrito.
+		Date hoy = new Date();
+		String userName = ""+userId;
+		String groupName = ""+groupId[0];
+		try {
+			userName = userId + "[" + UserLocalServiceUtil.getUser(userId).getFullName() + "]";
+			groupName = groupId[0] + "[" + GroupLocalServiceUtil.getGroup(groupId[0]).getName() + "]";
+		}
+		catch (Exception e) {}
+    	_log.info("INSCRIBIR: "+userName +" se ha incrito de la comunidad "+groupName+" el "+hoy.toString());
     	
     	// Enviar un email al usuario cuando se inscribe al curso.
     	
@@ -52,18 +67,7 @@ public class CommunityInscription extends MVCPortlet {
     	if(body!=null &&!body.equals("")){
 	    	
     		body = createMessage(body, portal, curso, user, fromName ,url,urlcourse);
-	    	
-
-//		    	System.out.println("");
-//				System.out.println("----------------------");
-//				System.out.println(" from: "+from.getAddress());
-//				System.out.println(" to: "+to.getAddress());
-//				System.out.println(" subject: "+subject);
-//				System.out.println(" body: "+body);
-//				System.out.println("----------------------");
-//				System.out.println("");
-    		
-	    	
+	    	    	
 			try{
 				MailMessage mailm = new MailMessage(from, to, subject, body, true);
 				MailServiceUtil.sendEmail(mailm);
@@ -95,7 +99,22 @@ public class CommunityInscription extends MVCPortlet {
 
 		long[] groupId = new long[1];
     	groupId[0] = themeDisplay.getScopeGroupId();						
-		GroupLocalServiceUtil.unsetUserGroups(themeDisplay.getUserId(), groupId);
+		long userId = themeDisplay.getUserId();
+		GroupLocalServiceUtil.unsetUserGroups(userId, groupId);
+		// Informamos de que lo ha dejado.
+		Date hoy = new Date();
+		String userName = ""+userId;
+		String groupName = ""+groupId[0];
+		try {
+			userName = userId + "[" + UserLocalServiceUtil.getUser(userId).getFullName() + "]";
+			groupName = groupId[0] + "[" + GroupLocalServiceUtil.getGroup(groupId[0]).getName() + "]";
+		}
+		catch (Exception e) {}
+		
+		_log.warn("DESINSCRIBIR: "+userName +" se ha desincrito de la comunidad "+groupName+" el "+hoy.toString());
 				
 	}
+	
+	private static Log _log = LogFactoryUtil.getLog(CommunityInscription.class);
+
 }

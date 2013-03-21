@@ -73,7 +73,7 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 			{ "feedbackCorrect", Types.VARCHAR },
 			{ "feedbacknocorrect", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_TestAnswer (uuid_ VARCHAR(75) null,answerId LONG not null primary key,questionId LONG,actId LONG,precedence LONG,answer VARCHAR(75) null,isCorrect BOOLEAN,feedbackCorrect VARCHAR(75) null,feedbacknocorrect VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_TestAnswer (uuid_ VARCHAR(75) null,answerId LONG not null primary key,questionId LONG,actId LONG,precedence LONG,answer TEXT null,isCorrect BOOLEAN,feedbackCorrect VARCHAR(1000) null,feedbacknocorrect VARCHAR(1000) null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_TestAnswer";
 	public static final String ORDER_BY_JPQL = " ORDER BY testAnswer.answerId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_TestAnswer.answerId ASC";

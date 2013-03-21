@@ -75,7 +75,6 @@ public class SurveyResultLocalServiceImpl
 			res = results.get(0) / (double)total * 100;
 		}
 				
-		//System.out.println("   answerId: "+answerId+" = "+res);
 		return res;
 	}
 	
@@ -93,7 +92,6 @@ public class SurveyResultLocalServiceImpl
 		if(results.size()>0)
 			res = results.get(0);
 		
-		//System.out.println("questionId: "+questionId+" = "+res);
 		return res;
 	}
 }

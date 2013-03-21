@@ -132,7 +132,7 @@ public class ResourceAssetRenderer extends BaseAssetRenderer {
 				// TODO Auto-generated method stub
 				return null;
 			}
-			
+   
 	
 
 }

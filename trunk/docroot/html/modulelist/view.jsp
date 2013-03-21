@@ -1,5 +1,3 @@
-<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
-<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.ModuleResult"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
@@ -12,6 +10,8 @@
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@ include file="/init.jsp"%>
 <table class="coursemodule">
@@ -85,7 +85,10 @@ image.getGroupId() %>" />
 	<td class="access">
 	<%
 	java.util.Date now=new java.util.Date(System.currentTimeMillis());
-	if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()))
+	if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId())
+		||
+		permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(), "ACCESSLOCK")	
+			)
 	{
 	
 	Group grupo=themeDisplay.getScopeGroup();

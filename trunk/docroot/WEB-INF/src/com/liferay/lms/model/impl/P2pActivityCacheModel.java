@@ -35,7 +35,7 @@ public class P2pActivityCacheModel implements CacheModel<P2pActivity>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(17);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -53,6 +53,8 @@ public class P2pActivityCacheModel implements CacheModel<P2pActivity>,
 		sb.append(description);
 		sb.append(", date=");
 		sb.append(date);
+		sb.append(", asignationsCompleted=");
+		sb.append(asignationsCompleted);
 		sb.append("}");
 
 		return sb.toString();
@@ -88,6 +90,8 @@ public class P2pActivityCacheModel implements CacheModel<P2pActivity>,
 			p2pActivityImpl.setDate(new Date(date));
 		}
 
+		p2pActivityImpl.setAsignationsCompleted(asignationsCompleted);
+
 		p2pActivityImpl.resetOriginalValues();
 
 		return p2pActivityImpl;
@@ -101,4 +105,5 @@ public class P2pActivityCacheModel implements CacheModel<P2pActivity>,
 	public long countCorrections;
 	public String description;
 	public long date;
+	public boolean asignationsCompleted;
 }

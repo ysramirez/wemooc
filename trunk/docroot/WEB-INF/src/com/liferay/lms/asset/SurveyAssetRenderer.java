@@ -33,12 +33,10 @@ public class SurveyAssetRenderer extends BaseAssetRenderer {
 		return _learningactivity.getGroupId();
 	}
 
-
 	public String getSummary() {
 		return _learningactivity.getDescription();
 	}
 
-	
 	public String getTitle() {
 		return _learningactivity.getTitle();
 	}
@@ -67,7 +65,7 @@ public class SurveyAssetRenderer extends BaseAssetRenderer {
 	@Override
 	public PortletURL getURLEdit(LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse) throws Exception {
-		PortletURL portletURL = liferayPortletResponse.createActionURL( "surveyactivity_WAR_liferaylmsportlet");
+		PortletURL portletURL = liferayPortletResponse.createActionURL("surveyactivity_WAR_liferaylmsportlet");
 		portletURL.setParameter("javax.portlet.action", "edit");
 			
 		portletURL.setParameter("mvcPath", "/html/surveyactivity/admin/edit.jsp");
@@ -86,7 +84,7 @@ public class SurveyAssetRenderer extends BaseAssetRenderer {
 		PortletURL portletURL = liferayPortletResponse.createRenderURL("execactivity_WAR_liferaylmsportlet");
 		portletURL.setParameter("jspPage", "/html/execactivity/test/view.jsp");
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
-	
+		
 		return portletURL.toString();
 	}
 
@@ -111,7 +109,7 @@ public class SurveyAssetRenderer extends BaseAssetRenderer {
 	public String getTitle(Locale arg0){
 		return getTitle();
 	}
-
+	
 	@Override
 	public String getUserName() {
 		// TODO Auto-generated method stub

@@ -513,6 +513,7 @@ public class P2pActivityCorrectionsPersistenceImpl extends BasePersistenceImpl<P
 		p2pActivityCorrectionsImpl.setDescription(p2pActivityCorrections.getDescription());
 		p2pActivityCorrectionsImpl.setDate(p2pActivityCorrections.getDate());
 		p2pActivityCorrectionsImpl.setFileEntryId(p2pActivityCorrections.getFileEntryId());
+		p2pActivityCorrectionsImpl.setResult(p2pActivityCorrections.getResult());
 
 		return p2pActivityCorrectionsImpl;
 	}

@@ -176,6 +176,7 @@
 		<property name="countCorrections" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="date" type="org.hibernate.type.TimestampType" column="date_" />
+		<property name="asignationsCompleted" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.P2pActivityCorrectionsImpl" table="Lms_P2pActivityCorrections">
 		<cache usage="read-write" />
@@ -189,6 +190,7 @@
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="date" type="org.hibernate.type.TimestampType" column="date_" />
 		<property name="fileEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="result" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.SurveyResultImpl" table="Lms_SurveyResult">
 		<cache usage="read-write" />

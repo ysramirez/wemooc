@@ -8,16 +8,36 @@
 	<portlet:param name="actId" value="<%=Long.toString(learnact.getActId()) %>" />
 </portlet:renderURL>
 
+<liferay-util:buffer var="inputEditorHTML" >
+	<liferay-ui:input-editor width="80%" />
+</liferay-util:buffer>
 
 
 <aui:form name="qfm" action="<%=addquestionURL%>"  method="post">
 	<aui:input name="actId" type="hidden" value="<%= learnact.getActId()%>"></aui:input>
-	<aui:field-wrapper label="enunciado">
-		<liferay-ui:input-editor name="text" width="100%" />
-			<aui:input name="text" type="hidden" />
-				<script type="text/javascript">
-        function <portlet:namespace />initEditor() { return ""; }
-    </script>
+	<aui:field-wrapper label="enunciation">
+		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
+		<aui:input name="text" type="hidden" />
+		<script type="text/javascript">
+	    <!--
+		    function <portlet:namespace />initEditor()
+		    {
+		    	return "";
+		    }
+		
+		    function <portlet:namespace />extractCodeFromEditor()
+		    {
+		    	document.<portlet:namespace />qfm.<portlet:namespace />text.value =	window.<portlet:namespace />editor.getHTML();
+		    }
+		    var func = function ()
+		    {
+		    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
+		    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
+		    };
+		
+		    AUI().on('domready', func);
+	        //-->
+	    </script>
 	</aui:field-wrapper>
 	<aui:select name="typeId" label="qtype">
 		<aui:option value="0" label="options"></aui:option>

@@ -1,4 +1,5 @@
 <%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
+<%@page import="com.liferay.portal.util.comparator.*"%>
 <%@include file="/init.jsp" %>
 
 <%
@@ -37,10 +38,10 @@
 		
 				LinkedHashMap<String,Object> params=null;			
 				
-				OrderByComparator obc = null;
+				OrderByComparator obc = new UserFirstNameComparator(true);
 			
-				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, 0, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, params);
+				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, true, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, true, params);
 						
 				pageContext.setAttribute("results", userListPage);
 			    pageContext.setAttribute("total", userCount);

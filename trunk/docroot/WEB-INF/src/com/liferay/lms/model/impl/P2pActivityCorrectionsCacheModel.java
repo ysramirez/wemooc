@@ -35,7 +35,7 @@ public class P2pActivityCorrectionsCacheModel implements CacheModel<P2pActivityC
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(17);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -53,6 +53,8 @@ public class P2pActivityCorrectionsCacheModel implements CacheModel<P2pActivityC
 		sb.append(date);
 		sb.append(", fileEntryId=");
 		sb.append(fileEntryId);
+		sb.append(", result=");
+		sb.append(result);
 		sb.append("}");
 
 		return sb.toString();
@@ -88,6 +90,7 @@ public class P2pActivityCorrectionsCacheModel implements CacheModel<P2pActivityC
 		}
 
 		p2pActivityCorrectionsImpl.setFileEntryId(fileEntryId);
+		p2pActivityCorrectionsImpl.setResult(result);
 
 		p2pActivityCorrectionsImpl.resetOriginalValues();
 
@@ -102,4 +105,5 @@ public class P2pActivityCorrectionsCacheModel implements CacheModel<P2pActivityC
 	public String description;
 	public long date;
 	public long fileEntryId;
+	public long result;
 }

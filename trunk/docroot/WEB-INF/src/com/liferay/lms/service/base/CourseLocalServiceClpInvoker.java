@@ -168,6 +168,10 @@ public class CourseLocalServiceClpInvoker {
 		_methodName149 = "deleteCourse";
 
 		_methodParameterTypes149 = new String[] { "long" };
+
+		_methodName150 = "getCourseByGroupCreatedId";
+
+		_methodParameterTypes150 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -347,6 +351,11 @@ public class CourseLocalServiceClpInvoker {
 			return CourseLocalServiceUtil.deleteCourse(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName150.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes150, parameterTypes)) {
+			return CourseLocalServiceUtil.getCourseByGroupCreatedId(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -410,4 +419,6 @@ public class CourseLocalServiceClpInvoker {
 	private String[] _methodParameterTypes148;
 	private String _methodName149;
 	private String[] _methodParameterTypes149;
+	private String _methodName150;
+	private String[] _methodParameterTypes150;
 }

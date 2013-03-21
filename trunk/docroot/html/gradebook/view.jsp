@@ -22,8 +22,12 @@ java.util.List<LearningActivity> activities = null;
 
 
 %>
-<liferay-ui:panel id="<%=Long.toString(theModule.getModuleId()) %>" title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" collapsible="true" extended="false" defaultState="collapsed">
-
+<liferay-ui:panel id="<%=Long.toString(theModule.getModuleId()) %>" title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" collapsible="true" extended="true" defaultState="collapsed">
+<liferay-portlet:resourceURL var="exportURL" >
+	<portlet:param name="action" value="export"/>
+	<portlet:param name="moduleId" value="<%=Long.toString(theModule.getModuleId()) %>"/>
+</liferay-portlet:resourceURL>
+<liferay-ui:icon image="export" label="<%= true %>" message="offlinetaskactivity.csv.export" method="get" url="<%=exportURL%>" />
 <table>
 <tr>
 <th>

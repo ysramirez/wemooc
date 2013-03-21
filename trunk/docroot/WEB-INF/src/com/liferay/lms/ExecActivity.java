@@ -6,7 +6,9 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -21,12 +23,13 @@ import org.jsoup.Jsoup;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
-import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
@@ -35,18 +38,20 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -57,7 +62,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class ExecActivity extends MVCPortlet 
 {
 	HashMap<Long, TestAnswer> answersMap = new HashMap<Long, TestAnswer>(); 
-	
+		
 	public void correct
 	(
 			ActionRequest actionRequest,ActionResponse actionResponse)
@@ -67,7 +72,7 @@ public class ExecActivity extends MVCPortlet
 		long latId=ParamUtil.getLong(actionRequest,"latId" );
 		
 		LearningActivityTry larntry=LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
-		
+				    
 		//Comprobar que el usuario tenga intentos posibles.
 		if (larntry.getEndDate() == null)
 		{
@@ -75,7 +80,11 @@ public class ExecActivity extends MVCPortlet
 			long correctanswers=0;
 			Enumeration<String> params=actionRequest.getParameterNames();
 			List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
-			java.util.Hashtable<TestQuestion, TestAnswer> resultados=new java.util.Hashtable<TestQuestion, TestAnswer>();
+			Map<Long,Long> resultadosIds=new Hashtable<Long,Long>();
+			Map<Long, TestAnswer> resultados=new Hashtable<Long, TestAnswer>();
+			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"random"));
+			long[] questionIds = ParamUtil.getLongValues(actionRequest, "question");
+
 			
 			while(params.hasMoreElements())
 			{
@@ -83,12 +92,11 @@ public class ExecActivity extends MVCPortlet
 				if(param.startsWith("question_"))
 				{
 					String squestionId=param.substring("question_".length());
-					long questionId=Long.parseLong(squestionId);
-					TestQuestion question=new TestQuestionLocalServiceUtil().getTestQuestion(questionId);
-					
+					long questionId=Long.parseLong(squestionId);					
 					long answerId=ParamUtil.getLong(actionRequest, param);
 					TestAnswer testAnswer=TestAnswerLocalServiceUtil.getTestAnswer(answerId);
-					resultados.put(question, testAnswer);
+					resultadosIds.put(questionId, answerId);
+					resultados.put(questionId, testAnswer);
 					if(testAnswer.isIsCorrect())
 					{
 						correctanswers++;
@@ -98,25 +106,46 @@ public class ExecActivity extends MVCPortlet
 			
 			Element resultadosXML=SAXReaderUtil.createElement("results");
 			Document resultadosXMLDoc=SAXReaderUtil.createDocument(resultadosXML);
-			for(TestQuestion question:resultados.keySet())
+			
+			if(random==0){
+				for(Map.Entry<Long, Long> questionEntry:resultadosIds.entrySet()){
+					Element questionXML=SAXReaderUtil.createElement("question");
+					questionXML.addAttribute("id", Long.toString(questionEntry.getKey()));
+					Element answerXML=SAXReaderUtil.createElement("answer");
+					answerXML.addAttribute("id", Long.toString(questionEntry.getValue()));
+					questionXML.add(answerXML);
+					resultadosXML.add(questionXML);						
+				}
+			}
+			else
 			{
-				TestAnswer answer=resultados.get(question);
-				Element questionXML=SAXReaderUtil.createElement("question");
-				questionXML.addAttribute("id", Long.toString(question.getQuestionId()));
-				Element answerXML=SAXReaderUtil.createElement("answer");
-				answerXML.addAttribute("id", Long.toString(answer.getAnswerId()));
-				questionXML.add(answerXML);
-				resultadosXML.add(questionXML);
-				
+				for (long questionId : questionIds) {
+					Element questionXML=SAXReaderUtil.createElement("question");
+					questionXML.addAttribute("id", Long.toString(questionId));
+					if(resultadosIds.containsKey(questionId)) {
+						Element answerXML=SAXReaderUtil.createElement("answer");
+						answerXML.addAttribute("id", Long.toString(resultadosIds.get(questionId)));
+						questionXML.add(answerXML);
+					}
+					resultadosXML.add(questionXML);											
+				}
+			}
+						
+			long score=correctanswers*100/((random!=0 && random<questions.size())?random:questions.size());
+		 	
+			LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, PortalUtil.getUserId(actionRequest));
+			long oldResult=-1;
+			if(learningActivityResult!=null){
+				oldResult=learningActivityResult.getResult();
 			}
 			
-			long score=correctanswers*100/questions.size();
 			larntry.setResult(score);
 			larntry.setTryResultData(resultadosXMLDoc.formattedString());
 			larntry.setEndDate(new java.util.Date(System.currentTimeMillis()));
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(larntry);
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
 			actionRequest.setAttribute("resultados", resultados);
+			actionRequest.setAttribute("oldResult", oldResult);
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/results.jsp");
 		}
 		else
@@ -127,6 +156,39 @@ public class ExecActivity extends MVCPortlet
 		}						
 		
 	}
+		
+	public void camposExtra(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws Exception {
+		
+			long actId = ParamUtil.getLong(actionRequest, "actId", 0);
+			long randomString=ParamUtil.getLong(actionRequest, "randomString",0);
+			String passwordString=ParamUtil.getString(actionRequest, "passwordString",StringPool.BLANK);
+			long hourDurationString=ParamUtil.getLong(actionRequest, "hourDurationString",0);
+			long minuteDurationString=ParamUtil.getLong(actionRequest, "minuteDurationString",0);
+			long secondDurationString=ParamUtil.getLong(actionRequest, "secondDurationString",0);
+			long timeStamp = hourDurationString * 3600 + minuteDurationString * 60 + secondDurationString;
+			
+			if(randomString==0) {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", StringPool.BLANK);
+			}
+			else {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", Long.toString(randomString));
+			}
+			
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "password", HtmlUtil.escape(passwordString.trim()));
+			
+			if(timeStamp==0) {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "timeStamp", StringPool.BLANK);
+			}
+			else {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "timeStamp", Long.toString(timeStamp));
+			}
+			
+
+			SessionMessages.add(actionRequest, "activity-saved-successfully");
+			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
+						
+		}
 
 	public void addanswer(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
@@ -136,11 +198,17 @@ public class ExecActivity extends MVCPortlet
 		boolean correct = ParamUtil.getBoolean(actionRequest, "correct");
 		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
-	
-		TestAnswer answer = TestAnswerLocalServiceUtil.addTestAnswer(questionId, answers, feedbackCorrect, feedbackNoCorrect, correct);
-		SessionMessages.add(actionRequest, "answer-added-successfully");
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(answer.getQuestionId()).getActId());
-		actionResponse.setRenderParameter("questionId", Long.toString(answer.getQuestionId()));
+		
+		if(Validator.isNull(answers)) {
+			SessionErrors.add(actionRequest, "answer-test-required");
+		}
+		else{
+			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answers, feedbackCorrect, feedbackNoCorrect, correct);
+			SessionMessages.add(actionRequest, "answer-added-successfully");
+		}
+		
+		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
+		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
 		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
 		if (learnact.getTypeId() == 0) {
 	
@@ -234,12 +302,19 @@ public class ExecActivity extends MVCPortlet
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 	
 		TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(answerId);
-		testanswer.setAnswer(answer);
-		testanswer.setIsCorrect(correct);
-		testanswer.setFeedbackCorrect(feedbackCorrect);
-		testanswer.setFeedbacknocorrect(feedbackNoCorrect);
-		TestAnswerLocalServiceUtil.updateTestAnswer(testanswer);
-		SessionMessages.add(actionRequest, "answer-added-successfully");
+		
+		if(Validator.isNull(answer)) {
+			SessionErrors.add(actionRequest, "answer-test-required_"+answerId);
+		}
+		else{
+			testanswer.setAnswer(answer);
+			testanswer.setIsCorrect(correct);
+			testanswer.setFeedbackCorrect(feedbackCorrect);
+			testanswer.setFeedbacknocorrect(feedbackNoCorrect);
+			TestAnswerLocalServiceUtil.updateTestAnswer(testanswer);
+			SessionMessages.add(actionRequest, "answer-added-successfully");
+	    }
+		
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(testanswer.getQuestionId()).getActId());
 		actionResponse.setRenderParameter("questionId", Long.toString(testanswer.getQuestionId()));
 		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
@@ -402,8 +477,8 @@ public class ExecActivity extends MVCPortlet
 			    			//Array con los resultados de los intentos.
 			        		String[] resultados = new String[questionOrder.length+2];
 			        		//En la primera columna del csv introducidos el nombre del estudiante.
-			        		//resultados[0]=user.getFullName()+" ("+user.getUserId()+")";
-			        		resultados[0] = String.valueOf(user.getUuid());
+			        		resultados[0]=user.getFullName()+" ("+user.getUserId()+")";
+			        		//resultados[0] = String.valueOf(user.getUuid());
 			        		
 			        		//En la segunda columna metemos la fecha del try.
 			        		resultados[1] = String.valueOf(activity.getEndDate());
@@ -445,8 +520,18 @@ public class ExecActivity extends MVCPortlet
 	}
 	
 	 private String formatString(String str) {
-		 	//Jsoup elimina todas la etiquetas html del string que se le pasa, devolviendo únicamente el texto plano.
-	        return Jsoup.parse(str).text();
+		 
+		 String res = "";
+		 
+		//Jsoup elimina todas la etiquetas html del string que se le pasa, devolviendo únicamente el texto plano.
+		 res = Jsoup.parse(str).text();
+		 
+		//Si el texto es muy largo, lo recortamos para que sea más legible.
+		 if(res.length() > 50){
+			 res = res.substring(0, 50);
+		 }
+		 	
+	      return res;
 	    }
 	 
 	 private String getAnswerTextByAnswerId(Long answerId) throws PortalException, SystemException{

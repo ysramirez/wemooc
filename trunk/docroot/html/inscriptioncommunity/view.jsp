@@ -4,6 +4,7 @@
 <%@page import="java.net.URLEncoder"%>
 <%@page import="javax.portlet.PortletPreferences"%>
 <%@page import="com.liferay.util.LiferayViewUtil"%>
+<%@page import="com.liferay.util.JavaScriptUtil"%>
 
 <div id="caja_inscripcion">
 	
@@ -16,18 +17,20 @@ if(themeDisplay.isSignedIn())
 	if(GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),themeDisplay.getScopeGroupId()))
 	{
 		%>
-			<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.inscrito" /></div>	
-		<%
-		Date now=new Date(System.currentTimeMillis());
-		if((course.getStartDate().before(now)&&course.getEndDate().after(now))&&permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER"))
-		{
-		%>
 			<portlet:actionURL name="desinscribir"  var="desinscribirURL" windowState="NORMAL"/>
+			<script type="text/javascript">
+				function <portlet:namespace />enviar() {
+					if(confirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "inscripcion.desinscribete.seguro")) %>')) {
+						window.location.href = "<%=desinscribirURL %>";
+					}
+				}
+			</script>
+			<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.inscrito" /></div>	
 			<div class="boton_inscibirse ">
-				<a href="<%=desinscribirURL %>"><liferay-ui:message key="inscripcion.desinscribete" /></a>
+				<a href="#" onclick="javascript:<portlet:namespace />enviar();"><liferay-ui:message key="inscripcion.desinscribete" /></a>
 			</div>			
 		<%
-		}
+		
 	} else {
 		Date now=new Date(System.currentTimeMillis());
 		if((course.getStartDate().before(now)&&course.getEndDate().after(now))&&permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER"))

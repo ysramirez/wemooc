@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.impl.LearningActivityLocalServiceImpl"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.P2pActivityCorrections"%>
@@ -217,6 +218,7 @@ if(actId!=0)
 			for (P2pActivityCorrections myP2PActCor : p2pActCorList){
 					
 				cont++;
+				dlfile = null;
 				User propietary = UserLocalServiceUtil.getUser(myP2PActCor.getUserId());
 				String correctionText = myP2PActCor.getDescription();
 				if(myP2PActCor.getFileEntryId()!=0)
@@ -227,9 +229,30 @@ if(actId!=0)
 					correctionDate = dateFormat.format(date);
 				}
 				
+				boolean anonimous = false;
+				String anonimousString = LearningActivityLocalServiceUtil.getExtraContentValue(actId,"anonimous");
+				
+				if(anonimousString.equals("true")){
+					anonimous = true;
+				}
+				
 				%>
 				<div class="option-more">
-				<span class="label-col"><liferay-ui:message key="p2ptask-correction-title" /> <span class="name"><liferay-ui:message key="by" /> <%=propietary.getFullName() %></span><span class="number"><liferay-ui:message key="number" /> <%=cont%></span> <%=correctionDate %></span>
+				<span class="label-col">
+					<liferay-ui:message key="p2ptask-correction-title" /> 
+					<c:if test="<%=!anonimous %>">
+						<span class="name">
+							<liferay-ui:message key="by" /> 
+							<%=propietary.getFullName() %>
+						</span>
+					</c:if>
+
+					<span class="number">
+						<liferay-ui:message key="number" /> 
+						<%=cont%>
+					</span> 
+					<%=correctionDate %>
+				</span>
 					<div class="collapsable" style="padding-left:10px">
 						<div class="container-textarea">
 							<textarea rows="6" cols="90" readonly="readonly" ><%=correctionText %></textarea>

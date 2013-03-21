@@ -192,7 +192,7 @@ public class LiferayViewUtil
     	return portalURL + publicGroup + groupFriendlyURL;  
     }	    
 	
-	public static PortletPreferences getPortletPreferences(PortletRequest portletRequest) throws PortalException, SystemException
+	public static PortletPreferences getPortletPreferences(PortletRequest portletRequest) throws SystemException, PortalException
 	{
 		// En la documentación de Liferay sobre el modo configuración de un portlet pone que para acceder
 		// a las preferences hay que llamar a PortletPreferencesFactoryUtil.getPortletSetup(portletRequest)

@@ -253,6 +253,7 @@
 				<column name="DATE_" />
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="asignationsCompleted" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
@@ -274,6 +275,7 @@
 				<temporal>TIMESTAMP</temporal>
 			</basic>
 			<basic name="fileEntryId" />
+			<basic name="result" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

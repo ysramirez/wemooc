@@ -14,12 +14,13 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.Module;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
-import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
-import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -30,9 +31,15 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 /**
  * The implementation of the learning activity local service.
@@ -54,12 +61,14 @@ import com.liferay.portal.service.ServiceContext;
  */
 public class LearningActivityLocalServiceImpl
 	extends LearningActivityLocalServiceBaseImpl {
+
+	
 	public boolean islocked(long actId, long userId) throws Exception
 	{
 		LearningActivity larn =
 			learningActivityPersistence.fetchByPrimaryKey(actId);
 		java.util.Date now=new java.util.Date(System.currentTimeMillis());
-		Module theModule=moduleLocalService.getModule(larn.getModuleId());
+		
 		if(moduleLocalService.isLocked(larn.getModuleId(), userId))
 		{
 			return true;
@@ -75,7 +84,7 @@ public class LearningActivityLocalServiceImpl
 		}
 		return false;
 	}
-	
+	@Override
 	public LearningActivity addLearningActivity(
 			LearningActivity learningActivity,ServiceContext serviceContext) throws SystemException, PortalException {
 	
@@ -124,6 +133,7 @@ public class LearningActivityLocalServiceImpl
 					serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
 			LearningActivity.class.getName(), larn.getPrimaryKey(), false,
 			true, true);
+			
 			assetEntryLocalService.updateEntry(
 					userId, larn.getGroupId(), LearningActivity.class.getName(),
 					larn.getActId(), larn.getUuid(),typeId, serviceContext.getAssetCategoryIds(),
@@ -131,8 +141,10 @@ public class LearningActivityLocalServiceImpl
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
 					null, false);
-			
-					
+			SocialActivityLocalServiceUtil.addUniqueActivity(
+					larn.getUserId(), larn.getGroupId(),
+					LearningActivity.class.getName(), larn.getActId(),
+					0, StringPool.BLANK, 0);
 			}
 			catch(Exception e)
 			{
@@ -165,15 +177,18 @@ public class LearningActivityLocalServiceImpl
 			try
 			{
 				
-				assetEntryLocalService.updateEntry(
-						userId, larn.getGroupId(), LearningActivity.class.getName(),
-						larn.getActId(), larn.getUuid(),larn.getTypeId(), serviceContext.getAssetCategoryIds(),
-						serviceContext.getAssetTagNames(), true, null, null,
-						new java.util.Date(System.currentTimeMillis()), null,
-						ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
-						null, false);
 			
-					
+			assetEntryLocalService.updateEntry(
+					userId, larn.getGroupId(), LearningActivity.class.getName(),
+						larn.getActId(), larn.getUuid(),larn.getTypeId(), serviceContext.getAssetCategoryIds(),
+					serviceContext.getAssetTagNames(), true, null, null,
+					new java.util.Date(System.currentTimeMillis()), null,
+						ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
+					null, false);
+			SocialActivityLocalServiceUtil.addActivity(
+					larn.getUserId(), larn.getGroupId(),
+					LearningActivity.class.getName(), larn.getActId(),
+					1, StringPool.BLANK, 0);
 			}
 			catch(Exception e)
 			{
@@ -195,8 +210,10 @@ public class LearningActivityLocalServiceImpl
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
 					null, false);
-	
-					
+			SocialActivityLocalServiceUtil.addActivity(
+					larn.getUserId(), larn.getGroupId(),
+					LearningActivity.class.getName(), larn.getActId(),
+					1, StringPool.BLANK, 0);
 			return larn;
 		
 			}
@@ -237,6 +254,10 @@ public class LearningActivityLocalServiceImpl
 	assetEntryLocalService.deleteEntry(
 			LearningActivity.class.getName(), lernact.getActId());
 	learningActivityPersistence.remove(lernact);
+	SocialActivityLocalServiceUtil.addActivity(
+			lernact.getUserId(), lernact.getGroupId(),
+			LearningActivity.class.getName(), lernact.getActId(),
+			2, StringPool.BLANK, 0);
 	}
 	
 	public LearningActivity getPreviusLearningActivity(long actId) throws SystemException
@@ -255,6 +276,7 @@ public class LearningActivityLocalServiceImpl
 		Order createOrder=OrderFactoryUtil.getOrderFactory().desc("priority");
 		dq.addOrder(createOrder);
 
+		@SuppressWarnings("unchecked")
 		java.util.List<LearningActivity> larnsp=(java.util.List<LearningActivity>)learningActivityLocalService.dynamicQuery(dq,0,1);
 		if(larnsp!=null&& larnsp.size()>0)
 		{
@@ -326,5 +348,131 @@ public class LearningActivityLocalServiceImpl
 	this.deleteLearningactivity(LearningActivityLocalServiceUtil.getLearningActivity(actId));
 	}
 	
+	public String getExtraContentValue(long actId, String key) throws SystemException{
+
+		try {
+			LearningActivity activity = learningActivityPersistence.fetchByPrimaryKey(actId);
+			
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+			
+			if(activity != null){
+
+				hashMap = convertXMLExtraContentToHashMap(actId);
+				//Para evitar que retorne null si no existe la clave.
+				if(hashMap.containsKey(key)){
+					return hashMap.get(key);
+				}
+				else{
+					return "";
+				}
+			}
+		} catch (Exception e) {
+			//e.printStackTrace();
+		}
+		
+		return "";
+	}
+	
+	
+	public void setExtraContentValue(long actId, String name, String val) throws SystemException{
+
+		try {
+			LearningActivity activity = learningActivityPersistence.fetchByPrimaryKey(actId);
+
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+			
+			if(activity != null){
+				hashMap = convertXMLExtraContentToHashMap(actId);
+				hashMap.put(name, val);
+			}
+					
+			saveHashMapToXMLExtraContent(actId, hashMap);
+			
+		} catch (PortalException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private HashMap<String, String> convertXMLExtraContentToHashMap(long actId) throws SystemException, PortalException 
+	{
+		HashMap<String, String> hashMap = new HashMap<String, String>();
+		String xml ="";
+
+		try {			
+			LearningActivity activity = learningActivityPersistence.fetchByPrimaryKey(actId);
+			
+			if(activity != null  && !activity.getExtracontent().equals("")){
+				xml = activity.getExtracontent();
+			}
+			else{
+				return hashMap;
+			}
+			Document document;
+			
+			document = SAXReaderUtil.read(xml);
+			Element rootElement = document.getRootElement();
+			
+			for(Element key:rootElement.elements()){
+				hashMap.put(key.getName(), key.getText());
+			}
+			
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}
+		
+		return hashMap;
+	}
+	
+	@SuppressWarnings("rawtypes")
+	private void saveHashMapToXMLExtraContent(long actId, HashMap<String, String> map) throws SystemException, PortalException 
+	{
+		try {
+			LearningActivity activity = learningActivityPersistence.fetchByPrimaryKey(actId);
+			
+			if(activity != null  && !map.isEmpty()){
+
+				//Element resultadosXML=SAXReaderUtil.createElement("p2p");
+				Element resultadosXML=SAXReaderUtil.createElement(getNameLearningActivity(activity.getTypeId()));
+				Document resultadosXMLDoc=SAXReaderUtil.createDocument(resultadosXML);
+				
+				Iterator it = map.entrySet().iterator();
+
+				while (it.hasNext()) {
+					Map.Entry e = (Map.Entry)it.next();
+					Element eleXML=SAXReaderUtil.createElement(String.valueOf(e.getKey()));
+					eleXML.addText(String.valueOf(e.getValue()));
+					resultadosXML.add(eleXML);
+				}
+				activity.setExtracontent(resultadosXMLDoc.formattedString());
+				learningActivityPersistence.update(activity, true);
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private String getNameLearningActivity(int type) throws SystemException{
+		String res = "";
+
+		switch(type){
+			//test
+			case 0: res = "test"; break;
+			//activity undefined
+			case 1: res = "activity"; break;
+			//resource
+			case 2: res = "multimediaentry"; break;
+			//taskp2p
+			case 3: res = "p2p"; break;
+			//survey
+			case 4: res = "survey"; break;
+			//offline
+			case 5: res = "offline"; break;
+			//online
+			case 6: res = "online"; break;
+		}
+		
+		return res;
+	}
 
 }

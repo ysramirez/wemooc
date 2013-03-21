@@ -220,7 +220,7 @@ protected PortletPreferences doImportData(PortletDataContext context,
 		String portletId, PortletPreferences preferences, String data)
 		throws Exception {
 	context.importPermissions(
-			"com.liferay.lms.model.module", context.getSourceGroupId(),
+			"com.liferay.lms.model.Module", context.getSourceGroupId(),
 			context.getScopeGroupId());
 
 		Document document = SAXReaderUtil.read(data);

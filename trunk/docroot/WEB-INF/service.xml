@@ -95,6 +95,7 @@
 		<column name="countCorrections" type="long" />
 		<column name="description" type="String" />
 		<column name="date" type="Date" />
+        <column name="asignationsCompleted" type="boolean" />
 		<order by="asc">
 			<order-column name="countCorrections" />
 			<order-column name="p2pActivityId"  />
@@ -116,6 +117,7 @@
 		<column name="description" type="String" />
 		<column name="date" type="Date" />
 		<column name="fileEntryId" type="long" />
+		<column name="result" type="long" />
 		
 		<finder name="P2pActivityId" return-type="Collection">
 			<finder-column name="p2pActivityId" />

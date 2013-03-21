@@ -73,9 +73,10 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 			{ "fileEntryId", Types.BIGINT },
 			{ "countCorrections", Types.BIGINT },
 			{ "description", Types.VARCHAR },
-			{ "date_", Types.TIMESTAMP }
+			{ "date_", Types.TIMESTAMP },
+			{ "asignationsCompleted", Types.BOOLEAN }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivity (uuid_ VARCHAR(75) null,p2pActivityId LONG not null primary key,actId LONG,userId LONG,fileEntryId LONG,countCorrections LONG,description TEXT null,date_ DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_P2pActivity (uuid_ VARCHAR(75) null,p2pActivityId LONG not null primary key,actId LONG,userId LONG,fileEntryId LONG,countCorrections LONG,description TEXT null,date_ DATE null,asignationsCompleted BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_P2pActivity";
 	public static final String ORDER_BY_JPQL = " ORDER BY p2pActivity.countCorrections ASC, p2pActivity.p2pActivityId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_P2pActivity.countCorrections ASC, Lms_P2pActivity.p2pActivityId ASC";
@@ -116,6 +117,7 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 		model.setCountCorrections(soapModel.getCountCorrections());
 		model.setDescription(soapModel.getDescription());
 		model.setDate(soapModel.getDate());
+		model.setAsignationsCompleted(soapModel.getAsignationsCompleted());
 
 		return model;
 	}
@@ -182,6 +184,7 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 		attributes.put("countCorrections", getCountCorrections());
 		attributes.put("description", getDescription());
 		attributes.put("date", getDate());
+		attributes.put("asignationsCompleted", getAsignationsCompleted());
 
 		return attributes;
 	}
@@ -234,6 +237,13 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 
 		if (date != null) {
 			setDate(date);
+		}
+
+		Boolean asignationsCompleted = (Boolean)attributes.get(
+				"asignationsCompleted");
+
+		if (asignationsCompleted != null) {
+			setAsignationsCompleted(asignationsCompleted);
 		}
 	}
 
@@ -363,6 +373,19 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 		_date = date;
 	}
 
+	@JSON
+	public boolean getAsignationsCompleted() {
+		return _asignationsCompleted;
+	}
+
+	public boolean isAsignationsCompleted() {
+		return _asignationsCompleted;
+	}
+
+	public void setAsignationsCompleted(boolean asignationsCompleted) {
+		_asignationsCompleted = asignationsCompleted;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -403,6 +426,7 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 		p2pActivityImpl.setCountCorrections(getCountCorrections());
 		p2pActivityImpl.setDescription(getDescription());
 		p2pActivityImpl.setDate(getDate());
+		p2pActivityImpl.setAsignationsCompleted(getAsignationsCompleted());
 
 		p2pActivityImpl.resetOriginalValues();
 
@@ -529,12 +553,14 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 			p2pActivityCacheModel.date = Long.MIN_VALUE;
 		}
 
+		p2pActivityCacheModel.asignationsCompleted = getAsignationsCompleted();
+
 		return p2pActivityCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(17);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -552,13 +578,15 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 		sb.append(getDescription());
 		sb.append(", date=");
 		sb.append(getDate());
+		sb.append(", asignationsCompleted=");
+		sb.append(getAsignationsCompleted());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(28);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.P2pActivity");
@@ -596,6 +624,10 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 			"<column><column-name>date</column-name><column-value><![CDATA[");
 		sb.append(getDate());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>asignationsCompleted</column-name><column-value><![CDATA[");
+		sb.append(getAsignationsCompleted());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -620,6 +652,7 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 	private long _countCorrections;
 	private String _description;
 	private Date _date;
+	private boolean _asignationsCompleted;
 	private long _columnBitmask;
 	private P2pActivity _escapedModelProxy;
 }
