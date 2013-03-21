@@ -318,22 +318,10 @@
 	<portlet>
 		<portlet-name>moduleDescription</portlet-name>
 		<display-name>moduleDescription</display-name>
-		<portlet-class>com.liferay.lms.modulePortlet</portlet-class>
+		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
 			<value>/html/moduledescription/view.jsp</value>
-		</init-param>
-		<init-param>
-			<name>edit-jsp</name>
-			<value>/JSPs/module/edit.jsp</value>
-		</init-param>
-		<init-param>
-			<name>edit-module-jsp</name>
-			<value>/JSPs/module/editmodule.jsp</value>
-		</init-param>
-		<init-param>
-			<name>help-jsp</name>
-			<value>/JSPs/module/help.jsp</value>
 		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
@@ -343,7 +331,7 @@
 		<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>moduleDescription</title>
-			<short-title>NewPortlet</short-title>
+			<short-title>ModuleDescription</short-title>
 			<keywords></keywords>
 		</portlet-info>
         <portlet-preferences>
@@ -690,6 +678,7 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
+        <supported-public-render-parameter>categoryId</supported-public-render-parameter>
 	</portlet>
 	
 	<portlet>
@@ -1454,5 +1443,9 @@
         <identifier>actionEditing</identifier>
         <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:actionEditing</qname>
     </public-render-parameter>
+    <public-render-parameter>
+		<identifier>categoryId</identifier>
+		<qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryId</qname>
+		</public-render-parameter>
 
 </portlet-app>
