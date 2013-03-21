@@ -194,7 +194,7 @@ else
 		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>">
 		<aui:validator name="required"/>
 		<aui:validator name="number" />
-		<aui:validator name="min">0</aui:validator>
+		<aui:validator name="range">[0,1000]</aui:validator>
 		</aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
 		<%
 		}
