@@ -76,9 +76,7 @@ else
 
 <p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 <liferay-portlet:renderURL var="returnurl">
-<liferay-portlet:param name="jspPage" value="/html/onlineactivity/view.jsp">"></liferay-portlet:param>
-
-			
+<liferay-portlet:param name="jspPage" value="/html/onlineactivity/view.jsp" />	
 </liferay-portlet:renderURL>
 
 <% 
