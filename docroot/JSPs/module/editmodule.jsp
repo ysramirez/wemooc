@@ -1,3 +1,5 @@
+<%@page import="javax.portlet.WindowState"%>
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@ page import="com.liferay.lms.model.Module" %>
 <%@ page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
