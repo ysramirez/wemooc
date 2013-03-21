@@ -1,3 +1,8 @@
+<%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
+<%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryQuery"%>
+<%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.asset.model.AssetCategory"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.CourseServiceUtil"%>
@@ -8,7 +13,33 @@
 </portlet:renderURL>
 <div class="portlet-toolbar search-form">
 <%
-java.util.List<Course> courses=CourseServiceUtil.getCoursesOfGroup(scopeGroupId);
+java.util.List<Course> courses=null;
+long catId=ParamUtil.getLong(request, "categoryId",0);
+AssetCategory category=null;
+if(catId!=0)
+{
+	category=AssetCategoryLocalServiceUtil.getCategory(catId);
+	%>
+	<h1><%=category.getTitle(themeDisplay.getLocale()) %></h1>
+	<%
+	AssetEntryQuery entryQuery=new AssetEntryQuery();
+	long[] catIds={catId};
+	long[] groupIds={themeDisplay.getScopeGroupId()};
+	entryQuery.setAllCategoryIds(catIds);
+	entryQuery.setGroupIds(groupIds);
+	entryQuery.setClassName(Course.class.getName());
+	courses=new ArrayList<Course>();
+	java.util.List<AssetEntry> entries=AssetEntryLocalServiceUtil.getEntries(entryQuery);
+	for(AssetEntry entry:entries)
+	{
+		courses.add(CourseLocalServiceUtil.getCourse(entry.getClassPK()));
+	}
+}
+else
+{
+	courses=CourseServiceUtil.getCoursesOfGroup(scopeGroupId);
+}
+
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),0,ActionKeys.ADD_ENTRY))
 {
 %>
