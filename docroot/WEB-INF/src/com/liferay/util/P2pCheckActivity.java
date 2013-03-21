@@ -46,7 +46,7 @@ import com.liferay.util.mail.MailEngineException;
 
 public class P2pCheckActivity implements MessageListener
 {
-	@SuppressWarnings("unchecked")
+	@Override
 	public void receive(Message message) {
 		
 		if(log.isDebugEnabled()){log.debug("P2pCheckActivity::receive:: Entra en la funcion");}
@@ -64,7 +64,8 @@ public class P2pCheckActivity implements MessageListener
 			{
 				for(LearningActivity lAct:listActivities){
 					if(CheckP2pMailingLocalServiceUtil.findByActId(lAct.getActId())==null){
-						String sNumFilesToPass = lAct.getExtracontent();
+						//String sNumFilesToPass = lAct.getExtracontent();
+						String sNumFilesToPass = LearningActivityLocalServiceUtil.getExtraContentValue(lAct.getActId(), "validaciones");
 						if(sNumFilesToPass.equals(""))
 						{
 							sNumFilesToPass="3";
@@ -116,8 +117,7 @@ public class P2pCheckActivity implements MessageListener
 			StringBundler sb = new StringBundler();
 			
 			sb.append("http://");
-			//TODO
-			//sb.append(company.getVirtualHost());
+			sb.append(company.getVirtualHostname());
 			sb.append("/web");
 			sb.append(group.getFriendlyURL());
 			sb.append("/reto");
@@ -146,6 +146,8 @@ public class P2pCheckActivity implements MessageListener
 			//url += sharedParam;
 			
 			String firmaPortal  = PrefsPropsUtil.getString(company.getCompanyId(),"firma.email.admin");
+			// JOD
+			firmaPortal = (firmaPortal!=null?firmaPortal:"");
 			
 			if(log.isDebugEnabled()){log.debug("P2pCheckActivity::sendMail::URL:"+url);}
 			
@@ -154,9 +156,10 @@ public class P2pCheckActivity implements MessageListener
 			
 			if(log.isDebugEnabled()){log.debug("P2pCheckActivity::sendMail::subject:"+subject);}
 			
+			// JOD: duplicar la url.
 			String body=new String(LanguageUtil.format(user.getLocale(), 
 					"you-can-pass-activity-p2p-body", 
-					new Object[]{user.getFullName(),url,firmaPortal},
+					new Object[]{user.getFullName(),url,url,firmaPortal},
 					false).getBytes(), Charset.forName("UTF-8"));
 			
 			if(log.isDebugEnabled()){log.debug("P2pCheckActivity::sendMail::body:"+body);}

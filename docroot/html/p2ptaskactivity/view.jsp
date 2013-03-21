@@ -44,6 +44,10 @@
 <%
 long actId=ParamUtil.getLong(request,"actId",0);
 
+boolean uploadCorrect = ParamUtil.getBoolean(request,"uploadCorrect", false);
+String uploadCorrectString = request.getParameter("uploadCorrect");
+String correctionsCompletedString = request.getParameter("correctionsCompleted");
+
 if(actId==0)
 {
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
@@ -92,7 +96,9 @@ else
 			<span id="span3"><liferay-ui:message key="p2ptask-step3" /></span>
 		</div>
 		<div class="preg_content" id="capa1">
-			<jsp:include page="inc/uploadActivity.jsp" />
+			<jsp:include page="inc/uploadActivity.jsp" >
+				<jsp:param value="<%=uploadCorrectString %>" name="uploadCorrect"/>
+			</jsp:include>
 		</div>
 		<div class="preg_content" id="capa2" style="display:none"></div>
 		<div class="preg_content" id="capa3" style="display:none"></div>
@@ -131,7 +137,9 @@ else
 			<jsp:include page="inc/uploadActivity.jsp" />
 		</div>
 		<div class="preg_content" id="capa2" style="display:none">
-			<jsp:include page="inc/correctActivities.jsp" />
+			<jsp:include page="inc/correctActivities.jsp" >
+				<jsp:param value="<%=correctionsCompletedString %>" name="correctionsCompleted"/>
+			</jsp:include>
 		</div>
 		<div class="preg_content" id="capa3" style="display:none">
 			<jsp:include page="inc/myCorrections.jsp" />

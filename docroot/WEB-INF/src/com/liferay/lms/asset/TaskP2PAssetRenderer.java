@@ -23,7 +23,7 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 
-public class TaskP2PAssetRenderer extends  BaseAssetRenderer{
+public class TaskP2PAssetRenderer extends BaseAssetRenderer {
 
 	private LearningActivity _learningactivity;
 	private static Log _log = LogFactoryUtil.getLog(TaskP2PAssetRenderer.class);
@@ -107,7 +107,6 @@ public class TaskP2PAssetRenderer extends  BaseAssetRenderer{
 		viewPortletURL.setParameter("jspPage", "/html/p2ptaskactivity/view.jsp");
 		viewPortletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 
-
 	return viewPortletURL.toString();
 	}
 
@@ -152,4 +151,4 @@ public class TaskP2PAssetRenderer extends  BaseAssetRenderer{
 	}
 
 	
-	}
+}

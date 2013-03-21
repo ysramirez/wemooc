@@ -65,6 +65,7 @@ public class CourseResultLocalServiceImpl
 				courseResult=courseResultPersistence.create(counterLocalService.increment(CourseResult.class.getName()));
 				courseResult.setUserId(mresult.getUserId());
 				courseResult.setCourseId(course.getCourseId());
+				courseResult.setResult(0);
 				courseResult.setPassed(false);
 				courseResultPersistence.update(courseResult, false);
 			}
@@ -72,18 +73,29 @@ public class CourseResultLocalServiceImpl
 			{
 				java.util.List<Module> modules=moduleLocalService.findAllInGroup(theModule.getGroupId());
 				boolean passed=true;
+				long cuantospasados=0;
 				for(Module thmodule:modules)
 				{
 					if(!moduleLocalService.isUserPassed(thmodule.getModuleId(), mresult.getUserId()))
 					{
 						passed=false;
-						break;
+						
+					}
+					else
+					{
+						cuantospasados++;
 					}
 				}
-				if(passed){
-					courseResult.setPassed(true);
-					courseResultPersistence.update(courseResult, false);
+				long result=0;
+				if(modules.size()>0)
+				{
+					result=100*cuantospasados/modules.size();
 				}
+				
+					courseResult.setResult(result);
+					courseResult.setPassed(passed);
+					courseResultPersistence.update(courseResult, false);
+				
 			}
 		}
 	}

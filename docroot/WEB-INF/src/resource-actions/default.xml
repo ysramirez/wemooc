@@ -141,10 +141,10 @@
 		<social-equity>
 			 <social-equity-mapping>
 			    <action-key>ADD_COURSE</action-key>
-			    <information-value>1</information-value>
-			    <information-lifespan>0</information-lifespan>
-			    <participation-value>1</participation-value>
-			    <participation-lifespan>1</participation-lifespan>
+			    <information-value>50</information-value>
+			    <information-lifespan>60</information-lifespan>
+			    <participation-value>100</participation-value>
+			    <participation-lifespan>60</participation-lifespan>
 			 </social-equity-mapping>
 		</social-equity>
 		<portlet-ref>
@@ -159,6 +159,7 @@
 				<action-key>VIEW</action-key>
 				<action-key>PUBLISH</action-key>
 				<action-key>REGISTER</action-key>
+				<action-key>ACCESSLOCK</action-key>
 				<action-key>ASSIGN_MEMBERS</action-key>	
 				<action-key>ACCESS</action-key>
 			</supports>

@@ -18,7 +18,8 @@ groupIds[0]=themeDisplay.getScopeGroupId();
 total=0;
 if(keywords.length()>0)
 {
-Hits hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(),groupIds,className,keywords,searchContainer.getStart(), searchContainer.getEnd());
+
+Hits hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(),groupIds,selarf.getPortletId(),keywords,keywords,keywords,null,null,false,searchContainer.getStart(), searchContainer.getEnd());
 
 
 results = new ArrayList<AssetEntry>();

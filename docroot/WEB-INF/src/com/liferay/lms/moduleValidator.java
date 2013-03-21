@@ -41,6 +41,12 @@ public class moduleValidator {
 			errors.add("module-description-required");
 		}
 	//Field order
+		
+	//Date validation
+	if (module.getStartDate().after(module.getEndDate())){
+		errors.add("module-startDate-before-endDate");			
+	}
+
 
 		return errors;
 	}

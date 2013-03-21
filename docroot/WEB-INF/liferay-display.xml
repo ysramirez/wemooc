@@ -35,9 +35,13 @@
 		<portlet id="CourseRatings"></portlet>
 		<portlet id="CourseComments"></portlet>
 		<portlet id="taskactivity"></portlet>
-		<portlet id="SurveyActivity"></portlet>
+		<portlet id="surveyactivity"></portlet>
+		<portlet id="onlinetaskactivity"></portlet>
+		<portlet id="offlinetaskactivity"></portlet>
 		<portlet id="studentmanage"></portlet>
+		<portlet id="portaladmin"></portlet>
 		<portlet id="tutoring"></portlet>
 		<portlet id="userprogress"></portlet>
 	</category>
+
 </display>

@@ -60,7 +60,7 @@ import com.liferay.portal.service.UserLocalServiceUtil;
  */
 public class LearningActivityTryLocalServiceImpl
 	extends LearningActivityTryLocalServiceBaseImpl {
-	
+	@Override
 	public LearningActivityTry updateLearningActivityTry(
 			LearningActivityTry learningActivityTry) throws SystemException {
 		
@@ -102,7 +102,7 @@ public class LearningActivityTryLocalServiceImpl
 	{
 		return learningActivityTryPersistence.findByact_u(actId, userId);
 	}
-	
+	@Override
 	public LearningActivityTry updateLearningActivityTry(
 			LearningActivityTry learningActivityTry, boolean merge)
 			throws SystemException{
@@ -113,7 +113,7 @@ public class LearningActivityTryLocalServiceImpl
 			LearningActivityResultLocalServiceUtil.update(learningActivityTry)	;
 		}
 		return super.updateLearningActivityTry(learningActivityTry, merge);
-		}
+	}
 		catch(PortalException e)
 		{
 			throw new SystemException(e);
@@ -207,7 +207,6 @@ public class LearningActivityTryLocalServiceImpl
 			
 			for(Element question:rootElement.elements("question")){
 				for(Element answer:question.elements("answer")){
-					//System.out.println("### "+Long.valueOf(question.attributeValue("id"))+" + "+ Long.valueOf(answer.attributeValue("id"))) ;
 	    			answersMap.put(Long.valueOf(question.attributeValue("id")), Long.valueOf(answer.attributeValue("id"))) ;
 				}
 			}
@@ -246,7 +245,8 @@ public class LearningActivityTryLocalServiceImpl
 				.add(PropertyFactoryUtil.forName("userId").eq(new Long(userId)))
 				.add(PropertyFactoryUtil.forName("endDate").isNull());
 				
-		long opened = learningActivityTryPersistence.countWithDynamicQuery(consulta);		
+		long opened = learningActivityTryPersistence.countWithDynamicQuery(consulta);
+			
 		//Si tiene menos intentos de los que se puede hacer.
 		return Long.valueOf(userTries-opened) < activityTries;
 	}

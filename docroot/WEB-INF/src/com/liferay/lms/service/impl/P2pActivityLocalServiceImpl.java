@@ -14,11 +14,17 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.P2pActivity;
-import com.liferay.lms.model.Module;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
 import com.liferay.lms.service.base.P2pActivityLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
@@ -27,9 +33,12 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.Order;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
  * The implementation of the p2p activity local service.
@@ -103,6 +112,20 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 			return null;
 		}
 	}
+	public List<P2pActivity> findByActId(long actId, int start, int end)
+			throws SystemException {
+		try{
+			return p2pActivityPersistence.findByActId(actId, start, end);
+		}
+		catch(Exception e){
+			if (_log.isErrorEnabled()) { 
+				_log.error("Error getting P2pActivityLocalService.findByActId(Start-End)");
+				_log.error(e.getMessage());
+			}
+			return null;
+		}
+	}
+	@SuppressWarnings("unchecked")
 	public List<P2pActivity> findByActIdOrderByP2pId(long actId)
 			throws SystemException {
 		try{
@@ -127,6 +150,182 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 			return null;
 		}
 	}
+	
+	@SuppressWarnings("unchecked")
+	public List<User> getUsersToCorrectP2P(long actId, long userId, int numUsers, Calendar calendar) throws SystemException, PortalException{
+		List<User> users = new ArrayList<User>();
+		
+		Calendar calendarStar = Calendar.getInstance();
+		calendarStar.setTime(calendar.getTime());
+		Calendar calendarEnd = Calendar.getInstance();
+		calendarEnd.setTime(calendar.getTime());
+
+		calendarStar.set(Calendar.HOUR_OF_DAY, 0);
+		calendarStar.set(Calendar.MINUTE, 0);
+		calendarStar.set(Calendar.SECOND, 0);
+		
+		calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+		calendarEnd.set(Calendar.MINUTE, 59);
+		calendarEnd.set(Calendar.SECOND, 59);
+		
+		int selected = 0;
+	
+		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+				.add(PropertyFactoryUtil.forName("actId").eq(actId))
+				.add(PropertyFactoryUtil.forName("userId").ne(userId))
+				.add(PropertyFactoryUtil.forName("date").between(calendarStar.getTime(), calendarEnd.getTime()))
+				.addOrder(OrderFactoryUtil.getOrderFactory().asc("countCorrections"));
+	
+		List<P2pActivity> activities = (List<P2pActivity>)p2pActivityPersistence.findWithDynamicQuery(consulta);
+
+		for(P2pActivity activity:activities){
+
+			Long uId = activity.getUserId();
+			User u = UserLocalServiceUtil.getUserById(uId.longValue());
+			int correctionsAsigned = P2pActivityCorrectionsLocalServiceUtil.getNumCorrectionsAsignToP2P(activity.getP2pActivityId());
+
+			if(u!=null && !users.contains(u) ){
+				users.add(u);
+				selected++;
+			}
+			if(selected >= numUsers){
+				return users;
+			}
+		}
+		
+		//Si no tenemos suficientes usuarios, buscamos otras 24 horas atrás. Llamada recursiva con un día menos.
+		LearningActivity l = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+
+		Calendar calendarAct = Calendar.getInstance();
+		calendarAct.setTime(calendar.getTime());
+
+		calendarAct.set(Calendar.HOUR_OF_DAY,23);
+		calendarAct.set(Calendar.MINUTE, 59);
+		calendarAct.set(Calendar.SECOND, 59);
+		
+		Calendar dayBefore = Calendar.getInstance();
+		dayBefore.setTime(calendarAct.getTime());
+		dayBefore.set(Calendar.DAY_OF_YEAR, dayBefore.get(Calendar.DAY_OF_YEAR)-1);
+		
+		Calendar endDay =  Calendar.getInstance();
+		endDay.setTime(l.getStartdate());
+		
+		//Paramos la recursividad cuando no tengamos más días en los que buscar.
+		if(l.getStartdate().compareTo(dayBefore.getTime())<=0){
+			
+			List<User> usersBefore = getUsersToCorrectP2P(actId, userId, numUsers, dayBefore);
+			
+			for(User usu:usersBefore){
+				if(usu!=null && !users.contains(usu))
+					users.add(usu);
+				
+				selected++;
+				if(selected >= numUsers){
+					return users;
+				}
+			}
+		}
+		
+		return users;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<P2pActivity> getP2pActivitiesToCorrect(long actId, long p2pActivityId, int numValidaciones) throws SystemException, PortalException{
+		List<P2pActivity> res = new ArrayList<P2pActivity>();
+		
+		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+				.add(PropertyFactoryUtil.forName("actId").eq(actId))
+				.add(PropertyFactoryUtil.forName("p2pActivityId").ne(p2pActivityId))
+				.addOrder(OrderFactoryUtil.getOrderFactory().asc("countCorrections"));
+	
+		List<P2pActivity> activities = p2pActivityPersistence.findWithDynamicQuery(consulta,0,numValidaciones);
+		
+		//Si no es null ni está vacía, la asignamos para devolver, sino devolveremos vacía.
+		if(activities!=null && !activities.isEmpty()){
+			res = activities;
+		}
+				
+		return res;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public List<P2pActivity> getP2PActivitiesInDay(Calendar calendar) throws SystemException, PortalException{
+		List<P2pActivity> activities = new ArrayList<P2pActivity>();
+		List<P2pActivity> res = new ArrayList<P2pActivity>();
+		
+		GregorianCalendar calendarStar =  new GregorianCalendar();
+		calendarStar.setTime(calendar.getTime());
+		GregorianCalendar calendarEnd = new GregorianCalendar();
+		calendarEnd.setTime(calendar.getTime());
+
+		calendarStar.set(Calendar.MILLISECOND, 0);
+		calendarStar.set(Calendar.SECOND, 0);
+		calendarStar.set(Calendar.MINUTE, 0);
+		calendarStar.set(Calendar.HOUR_OF_DAY, 0);
+		
+		calendarEnd.set(Calendar.MILLISECOND, 0);
+		calendarEnd.set(Calendar.SECOND, 59);
+		calendarEnd.set(Calendar.MINUTE, 59);
+		calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+
+		int numAsigns = 3;
+	
+		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+				.add(PropertyFactoryUtil.forName("date").between(calendarStar.getTime(), calendarEnd.getTime()));
+		
+		activities = (List<P2pActivity>)p2pActivityPersistence.findWithDynamicQuery(consulta);
+		
+		//Creamos una lista con sólo las p2pactivities que les falten asignar correctores.
+		for(P2pActivity activity:activities){
+
+			String validations = LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"validaciones");
+			
+			try {
+				numAsigns = Integer.valueOf(validations);
+			} catch (Exception e) {}
+			
+			int correctionsAsigned = P2pActivityCorrectionsLocalServiceUtil.getNumCorrectionsAsignToP2P(activity.getP2pActivityId());
+			if(correctionsAsigned < numAsigns ){
+				res.add(activity);
+			}
+		}
+
+		return res;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public int getNumCorrectsByDayP2P(long actId, Calendar calendar) throws SystemException, PortalException{
+		int res = 0;
+
+		Calendar calendarStar = Calendar.getInstance();
+		Calendar calendarEnd = Calendar.getInstance();
+
+		calendarStar.set(Calendar.HOUR_OF_DAY, 0);
+		calendarStar.set(Calendar.MINUTE, 0);
+		calendarStar.set(Calendar.SECOND, 0);
+		
+		calendarEnd.set(Calendar.HOUR_OF_DAY, 23);
+		calendarEnd.set(Calendar.MINUTE, 59);
+		calendarEnd.set(Calendar.SECOND, 59);
+		
+		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+				.add(PropertyFactoryUtil.forName("actId").eq(actId))
+				.add(PropertyFactoryUtil.forName("date").between(calendarStar, calendarEnd))
+				.addOrder(OrderFactoryUtil.getOrderFactory().asc("countCorrections"));
+	
+		List<P2pActivity> activities = (List<P2pActivity>)p2pActivityPersistence.findWithDynamicQuery(consulta,0,1);
+
+		for(P2pActivity activity:activities){
+			if(activity!=null)
+				return (int)activity.getCountCorrections();
+		}
+		return res;
+	}
+	
 	@Override
 	public P2pActivity addP2pActivity(P2pActivity newp2pAct)
 			throws SystemException {
@@ -139,12 +338,12 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 			fileobj.setActId(newp2pAct.getActId());
 			fileobj.setP2pActivityId(actP2PId);
 			fileobj.setCountCorrections(0);
+			fileobj.setDate(newp2pAct.getDate());
 			fileobj.setDescription(newp2pAct.getDescription());
 			fileobj.setFileEntryId(newp2pAct.getFileEntryId());
 			fileobj.setUserId(newp2pAct.getUserId());
 
 			return p2pActivityPersistence.update(fileobj, false);
-			
 		}
 		catch(Exception e){
 			if (_log.isErrorEnabled()) { 

@@ -52,7 +52,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
 {
 %>
-<liferay-ui:icon image="group" message="teachers" url="<%=teachersURL.toString() %>" />
+<liferay-ui:icon image="group" message="courseadmin.adminactions.teachers" url="<%=teachersURL.toString() %>" />
 
 <%
 }
@@ -66,7 +66,7 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class
 if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
 {
 %>
-<liferay-ui:icon image="group" message="editors" url="<%=editorsURL.toString() %>" />
+<liferay-ui:icon image="group" message="courseadmin.adminactions.editors" url="<%=editorsURL.toString() %>" />
 
 <%
 }
@@ -81,7 +81,7 @@ Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleC
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
 {
 %>
-<liferay-ui:icon image="group" message="students" url="<%=studentsURL.toString() %>" />
+<liferay-ui:icon image="group" message="courseadmin.adminactions.students" url="<%=studentsURL.toString() %>" />
 
 <%
 }
@@ -94,7 +94,7 @@ ActionKeys.PERMISSIONS) %>">
 					resourcePrimKey="<%= String.valueOf(myCourse.getCourseId()) %>"
 					var="permissionsURL"
 				/>
-				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			
+				<liferay-ui:icon image="permissions" message="courseadmin.adminactions.permissions" url="<%=permissionsURL %>" />			
 			</c:if>
 
 </liferay-ui:icon-menu>

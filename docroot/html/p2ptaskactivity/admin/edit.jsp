@@ -1,35 +1,88 @@
+<%@page import="com.liferay.lms.service.P2pActivityLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.impl.LearningActivityLocalServiceImpl"%>
 <%@page	import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
 <%@page	import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
+<%@page import="com.liferay.lms.model.P2pActivity"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page	import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@ include file="init.jsp"%>
 
+<div class="p2ptaskactivity admin edit">
 <%
-	long numEvaluaciones = 0;
+	long numEvaluaciones = 3;
+	boolean anonimous = false;
+	String anonimousString = "";
+	boolean result = false;
+	String resultString = "";
+	int numActivity =0;
+	boolean disabled=false;
+	String type="text";
+	boolean deshabilitar= false;
+	
 	if (learnact.getExtracontent() != null && !learnact.getExtracontent().trim().equals("")) {
-		numEvaluaciones = Long.valueOf(learnact.getExtracontent());
+
+		String evaluaciones = LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"validaciones");
+		
+		try{
+			numEvaluaciones = Long.parseLong(evaluaciones);
+		}catch(Exception e){}
+		
+		anonimousString = LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"anonimous");
+	
+		if(anonimousString.equals("true")){
+			anonimous = true;
+		}
+		
+		resultString = LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"result");
+		
+		if(resultString.equals("true")){
+			result = true;
+		}
+			
+		List<P2pActivity> p = P2pActivityLocalServiceUtil.findByActId(learnact.getActId());
+		if( p!=null && p.size()>0){
+			deshabilitar=true;
+		}
 		%>
 		<liferay-ui:message key="numEval" />:
 		<%=numEvaluaciones%>
 		<%
 	}
 %>
-<portlet:actionURL var="numValidacionesURL" name="numValidaciones">
-</portlet:actionURL>
-<portlet:renderURL var="cancel">
-	<portlet:param name="actId" value="0"></portlet:param>
-</portlet:renderURL>
 
-<aui:form action="<%=numValidacionesURL%>" method="post">
-	<aui:input name="actId" type="hidden" value="<%=learnact.getActId()%>"></aui:input>
-	<aui:input size="5" name="numValidaciones" label="numValidaciones" value="<%=numEvaluaciones%>"></aui:input>
+	<portlet:actionURL var="numValidacionesURL" name="numValidaciones">
+	</portlet:actionURL>
+	<portlet:renderURL var="cancel">
+		
+		<portlet:param name="actId" value="<%=Long.toString(learnact.getActId()) %>"></portlet:param>
+		<portlet:param name="moduleId" value="<%=Long.toString(learnact.getModuleId()) %>"></portlet:param>
+		<portlet:param name="jspPage" value="/html/p2ptaskactivity/admin/edit.jsp" />
+	</portlet:renderURL>
+	
+	<aui:form action="<%=numValidacionesURL%>" method="post">
+		<aui:input name="actId" type="hidden" value="<%=learnact.getActId()%>"></aui:input>
+		
+		<aui:input type="checkbox" name="anonimous" label="p2ptaskactivity.edit.anonimous" checked="<%=anonimous %>"></aui:input>
+		
+		<c:if test="<%=deshabilitar %>">
+			<aui:input type="hidden" size="5" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" ></aui:input>
+			<aui:input type="checkbox" name="r" label="test.result" checked="<%=result %>" disabled="<%=true %>"></aui:input>
+			<aui:input size="3" name="n" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>"  disabled="<%=true %>"></aui:input>
+			<aui:input type="hidden" name="result" label="test.result" value="<%=result %>" ></aui:input>
+		</c:if>
+		<c:if test="<%=!deshabilitar %>">
+			<aui:input type="checkbox" name="result" label="test.result" checked="<%=result %>" ></aui:input>
+			<aui:input size="3" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" ></aui:input>
+		</c:if>
+		
+		<aui:button-row>
+			<aui:button type="submit">Submit</aui:button>
+			<aui:button onClick="<%=cancel %>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
+		</aui:button-row>
+	</aui:form>
 
-	<aui:button-row>
-		<aui:button type="submit">Submit</aui:button>
-		<aui:button onclick="<%=cancel%>" type="cancel" />
-	</aui:button-row>
-</aui:form>
+</div>

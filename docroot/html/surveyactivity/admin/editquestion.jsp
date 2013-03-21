@@ -1,4 +1,7 @@
+<%@page import="javax.portlet.PortletRequest"%>
+<%@page import="com.liferay.portal.kernel.util.JavaConstants"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@ include file="/html/surveyactivity/admin/init.jsp" %>
 
 <%
@@ -22,7 +25,7 @@
 	<aui:form name="qfm" action="<%=editquestionURL %>" method="post">
 		<aui:input name="actId" type="hidden" value="<%=question.getActId() %>"></aui:input>
 		<aui:input name="questionId" type="hidden" value="<%=question.getQuestionId() %>"></aui:input>
-		<aui:field-wrapper label="enunciado">
+		<aui:field-wrapper label="enunciation">
 			<div id="<portlet:namespace/>DescripcionRichTxt"></div>
 			<aui:input name="text" type="hidden" />
 			<script type="text/javascript">
@@ -62,7 +65,8 @@
 	<portlet:actionURL var="addanswerURL" name="addanswer" />
 	<h3><liferay-ui:message key="add-answer"></liferay-ui:message></h3>
 	<aui:form action="<%=addanswerURL%>" method="post">
-		<aui:input type="textarea" cols="130" rows="4" name="answer" label="Answer"></aui:input>
+		<aui:input type="textarea" cols="130" rows="4" name="answer" label="answer"></aui:input>
+		<liferay-ui:error key="answer-test-required" message="answer-test-required" />
 		<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
 		<aui:column>
 			<aui:button type="submit" value="add"></aui:button>
@@ -90,6 +94,13 @@
 				<aui:form id="f_<%=testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 					<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 					<aui:input type="textarea" cols="130" rows="4" name="answer" value="<%=testanswer.getAnswer() %>"></aui:input>
+					<% 
+					PortletRequest portletRequest = (PortletRequest)request.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
+					if(SessionErrors.contains(portletRequest, "answer-test-required_"+testanswer.getAnswerId())){ %>
+					<div class="portlet-msg-error">
+						<liferay-ui:message key="answer-test-required" />
+					</div>
+					<% } %>
 					<aui:column>
 						<aui:button type="submit" value="modify"></aui:button>
 					</aui:column>

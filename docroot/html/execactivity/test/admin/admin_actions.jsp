@@ -17,7 +17,7 @@ String actId = String.valueOf(question.getActId());
 <portlet:param name="questionId" value="<%=primKey %>" />
 <portlet:param name="actId" value="<%= actId %>" />
 </portlet:renderURL>
-<liferay-ui:icon image="edit" message="Edit" url="<%=editURL.toString() %>" />
+<liferay-ui:icon image="edit" message="edit" url="<%=editURL.toString() %>" />
 <portlet:actionURL name="deletequestion" var="deleteURL">
 <portlet:param name="questionId" value="<%= primKey %>" />
 <portlet:param name="actId" value="<%= actId %>" />

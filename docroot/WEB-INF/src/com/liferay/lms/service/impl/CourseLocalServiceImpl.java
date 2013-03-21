@@ -15,7 +15,6 @@
 package com.liferay.lms.service.impl;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -25,8 +24,10 @@ import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
-import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.base.CourseLocalServiceBaseImpl;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
@@ -42,7 +43,6 @@ import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
-import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
@@ -127,7 +127,6 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
 			}
 			//creating group
 			Group group = GroupLocalServiceUtil.addGroup(userId,null, 0,
@@ -195,7 +194,6 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		}
 		catch(Exception e)
 		{
-			e.printStackTrace();
 		}
 		FileUtil.delete(fileIni);
 		
@@ -296,5 +294,20 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	PortalException {
 	this.deleteCourse(CourseLocalServiceUtil.getCourse(courseId));
 	return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public Course getCourseByGroupCreatedId(long groupCreatedId) throws SystemException{
+		
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(Course.class)
+				.add(PropertyFactoryUtil.forName("groupCreatedId").eq(groupCreatedId));
+	
+		List<Course> list = (List<Course>)coursePersistence.findWithDynamicQuery(consulta);
+		
+		if(!list.isEmpty() && list.size()>0){
+			return list.get(0);
+		}
+
+		return null;
 	}
 }

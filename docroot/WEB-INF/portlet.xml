@@ -417,7 +417,7 @@
                 <name>portlet-setup-show-borders-default</name>
                 <value>false</value>
             </preference>
-
+	
 			<preference>
 				<name>module-rows-per-page</name>
 				<value>20</value>
@@ -1271,6 +1271,84 @@
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 	</portlet>
 	<portlet>
+		<portlet-name>onlinetaskactivity</portlet-name>
+		<display-name>onlinetaskActivity</display-name>
+		<portlet-class>com.liferay.lms.OnlineActivity</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/onlinetaskactivity/view.jsp</value>
+		</init-param>
+		<init-param>
+		      <name>add-process-action-success-action</name>
+		      <value>false</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+			<portlet-mode>EDIT</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>OnlineTaskActivity</title>
+			<short-title>OnlineTaskActivity</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-public-render-parameter>actId</supported-public-render-parameter>
+		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+	</portlet>	
+	<portlet>
+		<portlet-name>offlinetaskactivity</portlet-name>
+		<display-name>offlinetaskActivity</display-name>
+		<portlet-class>com.liferay.lms.OfflineActivity</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/offlinetaskactivity/view.jsp</value>
+		</init-param>
+		<init-param>
+		      <name>add-process-action-success-action</name>
+		      <value>false</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+			<portlet-mode>EDIT</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>OfflineTaskActivity</title>
+			<short-title>OfflineTaskActivity</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-public-render-parameter>actId</supported-public-render-parameter>
+		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+	</portlet>
+	<portlet>
 		<portlet-name>studentmanage</portlet-name>
 		<display-name>Studen tManage</display-name>
 		<portlet-class>com.liferay.lms.StudentManage</portlet-class>
@@ -1303,6 +1381,37 @@
 		</security-role-ref>
 	</portlet>
 	<portlet>
+		<portlet-name>portaladmin</portlet-name>
+		<display-name>PortalAdmin</display-name>
+		<portlet-class>com.liferay.lms.PortalAdmin</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/portaladmin/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>PortalAdmin</title>
+			<short-title>PortalAdmin</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
+		<portlet>
 		<portlet-name>userprogress</portlet-name>
 		<display-name>User Progress</display-name>
 		<portlet-class>com.liferay.lms.UserProgress</portlet-class>
@@ -1345,6 +1454,5 @@
         <identifier>actionEditing</identifier>
         <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:actionEditing</qname>
     </public-render-parameter>
-
 
 </portlet-app>

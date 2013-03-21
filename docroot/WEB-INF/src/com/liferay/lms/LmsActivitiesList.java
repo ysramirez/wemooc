@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.StringTokenizer;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -161,9 +162,9 @@ public class LmsActivitiesList extends MVCPortlet {
 		  if(paramName.startsWith("title_")&&paramName.length()>6)
 		  {
 			  if(actionRequest.getParameter(paramName)!=null && actionRequest.getParameter(paramName).length()>0)
-			  hasTitle=true;
-		  }
-		}
+					  hasTitle=true;
+				  }
+			  }
 		if(!hasTitle)
 		{
 			SessionErrors.add(actionRequest, "title-required");
@@ -177,6 +178,12 @@ public class LmsActivitiesList extends MVCPortlet {
 		{
 			SessionErrors.add(actionRequest, "module-required");
 		}
+		
+		//Date validation
+		if (startDate.after(stopDate)){
+			SessionErrors.add(actionRequest, "activity-startDate-before-endDate");
+		}
+		
 		LearningActivity larn=null;
 		if (actId == 0) {
 

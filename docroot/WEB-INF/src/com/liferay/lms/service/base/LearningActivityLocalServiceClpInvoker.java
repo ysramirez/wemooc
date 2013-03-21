@@ -207,6 +207,16 @@ public class LearningActivityLocalServiceClpInvoker {
 		_methodName151 = "deleteLearningactivity";
 
 		_methodParameterTypes151 = new String[] { "long" };
+
+		_methodName152 = "getExtraContentValue";
+
+		_methodParameterTypes152 = new String[] { "long", "java.lang.String" };
+
+		_methodName153 = "setExtraContentValue";
+
+		_methodParameterTypes153 = new String[] {
+				"long", "java.lang.String", "java.lang.String"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -431,6 +441,20 @@ public class LearningActivityLocalServiceClpInvoker {
 			return null;
 		}
 
+		if (_methodName152.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes152, parameterTypes)) {
+			return LearningActivityLocalServiceUtil.getExtraContentValue(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName153.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes153, parameterTypes)) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1], (java.lang.String)arguments[2]);
+
+			return null;
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -506,4 +530,8 @@ public class LearningActivityLocalServiceClpInvoker {
 	private String[] _methodParameterTypes150;
 	private String _methodName151;
 	private String[] _methodParameterTypes151;
+	private String _methodName152;
+	private String[] _methodParameterTypes152;
+	private String _methodName153;
+	private String[] _methodParameterTypes153;
 }

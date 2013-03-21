@@ -10,51 +10,52 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.portal.service.ServiceContextFactory"%>
 <%@page import="com.liferay.portal.service.ServiceContext"%>
+<%@page import="javax.portlet.RenderResponse"%>
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+
+
+
 <%@ include file="/init.jsp" %>
 
 <%
 	long actId = ParamUtil.getLong(request,"actId",0);
-	
+	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 	if(actId==0)
 	{
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 	}
 	else
 	{
-		LearningActivity activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-		long typeId=activity.getTypeId();
 		
+		LearningActivity activity=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		long typeId=activity.getTypeId();
 		boolean isSurvey = activity.getTypeId() == 4;
 		
-		if(isSurvey && (!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
+		
+		if(typeId==4&&(!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
 				permissionChecker.hasPermission(
 				activity.getGroupId(),
 				LearningActivity.class.getName(),
-				actId, ActionKeys.UPDATE)))
+				actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
 		{
-		%>
 
+	
+		%>
+          
 			<div class="surveyactivity view">
 				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
+				<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
 				
-				<%
-				if (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),actId, ActionKeys.UPDATE)){		
-				%>
+			
 					<portlet:renderURL var="stadisticsURL">
 						<portlet:param name="jspPage" value="/html/surveyactivity/stadistics.jsp"></portlet:param>
 						<portlet:param name="actId" value="<%=String.valueOf(actId) %>" />
 					</portlet:renderURL>
 					<liferay-ui:icon image="view" message="surveyactivity.stadistics" label="true" url="<%=stadisticsURL.toString() %>" />
 				<%
-				}
 				
-				if((!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
-						permissionChecker.hasPermission(
-								activity.getGroupId(),
-								LearningActivity.class.getName(),
-								actId, ActionKeys.UPDATE)))
-				{		
+				
 					if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 					{
 					%>
@@ -73,6 +74,35 @@
 							<portlet:param name="actId" value="<%=Long.toString(actId) %>"></portlet:param>
 							<portlet:param name="latId" value="<%=Long.toString(learningTry.getLatId()) %>"></portlet:param>
 						</portlet:actionURL>
+																	
+						<script type="text/javascript">
+						<!--
+							function <%= renderResponse.getNamespace() %>formValidation(e){
+								var returnValue=true;
+								
+								AUI().use('node', function(Y){
+								    var questions = Y.all('div.question')
+			
+								    for(var i=0;i<questions.size();i++){
+								        if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
+								        	if(!confirm('<liferay-ui:message key="execativity.test.questions.without.response" />')) {
+			
+												if (e.target) targ = e.target.blur();
+												else if (e.srcElement) targ = e.srcElement.blur();
+										        
+										        returnValue=false;  
+								        	}
+								        	 i=questions.size();
+									    }
+									}
+								    
+								});
+			
+								return returnValue; 
+												    
+							}
+						//-->
+						</script>
 						
 						<aui:form name="formulario" action="<%=correctURL %>" method="POST">
 						<%
@@ -98,15 +128,14 @@
 						if(questions.size() > 0)
 						{
 						%>
-						<aui:button type="submit"></aui:button>
+						<aui:button type="submit"  onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event);" %>' > ></aui:button>
 						<%}%>
 						</aui:form>
 						<%
+						}
 					}	
 				}
 			%>
+
 			</div>
-			<%
-		}
-	}
-%>
+			

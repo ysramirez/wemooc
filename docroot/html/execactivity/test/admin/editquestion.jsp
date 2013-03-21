@@ -1,10 +1,14 @@
-<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
+<%@page import="javax.portlet.PortletRequest"%>
+<%@page import="com.liferay.portal.kernel.util.JavaConstants"%>
+<%@page import="com.liferay.util.JavaScriptUtil"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
+
 <%@ include file="/html/execactivity/test/admin/init.jsp" %>
+
 
 <%
 TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(request,"questionId"));
-String text=question.getText();
 %>
 <portlet:actionURL var="editquestionURL" name="editquestion" />
 <portlet:renderURL var="backToQuestionsURL">
@@ -12,19 +16,39 @@ String text=question.getText();
 	<portlet:param name="actId" value="<%=Long.toString(question.getActId()) %>" />
 </portlet:renderURL>
 
+<liferay-util:buffer var="inputEditorHTML" >
+	<liferay-ui:input-editor  width="80%"/>
+</liferay-util:buffer>
+
 
 <a href="<%=backToQuestionsURL.toString() %>"><%=LanguageUtil.get(pageContext,"back.to.questions")%></a>
 
 <aui:form name="qfm" action="<%=editquestionURL %>" method="post">
 	<aui:input name="actId" type="hidden" value="<%=question.getActId() %>"></aui:input>
 	<aui:input name="questionId" type="hidden" value="<%=question.getQuestionId() %>"></aui:input>
-	<aui:field-wrapper label="enunciado">
-
-			<liferay-ui:input-editor name="text" width="100%" />
-			<aui:input name="text" type="hidden" />
-				<script type="text/javascript">
-        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(text) %>"; }
-    </script>
+	<aui:field-wrapper label="enunciation">
+		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
+		<aui:input name="text" type="hidden" />
+		<script type="text/javascript">
+		    <!--
+			    function <portlet:namespace />initEditor()
+			    {
+			    	return "<%=JavaScriptUtil.markupToStringLiteral(question.getText())%>";
+			    }
+			
+			    function <portlet:namespace />extractCodeFromEditor()
+			    {
+			    	document.<portlet:namespace />qfm.<portlet:namespace />text.value =	window.<portlet:namespace />editor.getHTML();
+			    }
+			    var func = function ()
+			    {
+			    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
+			    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
+			    };
+			
+			    AUI().on('domready', func);
+		        //-->
+		    </script>	
 	</aui:field-wrapper>
 	<aui:select name="typeId" label="qtype">
 		<aui:option value="0" label="options"></aui:option>
@@ -45,7 +69,8 @@ String iconUnchecked = "unchecked";
 <portlet:actionURL var="addanswerURL" name="addanswer" />
 <h3><liferay-ui:message key="add-answer"></liferay-ui:message></h3>
 <aui:form action="<%=addanswerURL%>" method="post">
-	<aui:input type="textarea" cols="130" rows="4" name="answer" label="Answer"></aui:input>
+	<aui:input type="textarea" cols="130" rows="4" name="answer" label="answer"></aui:input>
+	<liferay-ui:error key="answer-test-required" message="answer-test-required" />
 	<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
 	<aui:input size="120" name="feedbackCorrect" label="feedback"></aui:input>
 	<br/>
@@ -85,6 +110,13 @@ String iconUnchecked = "unchecked";
 				<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 			
 				<aui:input type="textarea" cols="130" rows="4" name="answer" value="<%=testanswer.getAnswer() %>"></aui:input>
+				<% 
+				PortletRequest portletRequest = (PortletRequest)request.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
+				if(SessionErrors.contains(portletRequest, "answer-test-required_"+testanswer.getAnswerId())){ %>
+				<div class="portlet-msg-error">
+					<liferay-ui:message key="answer-test-required" />
+				</div>
+				<% } %>
 				<aui:input size="120" name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
 				<br />
 				<aui:column>

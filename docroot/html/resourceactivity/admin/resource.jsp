@@ -22,7 +22,7 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 	String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
 
 %>
-	<liferay-ui:header title="<%=assetRenderer.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
+	<liferay-ui:header title="<%=assetRenderer.getTitle()%>"></liferay-ui:header>
 	<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
 	<%
 }

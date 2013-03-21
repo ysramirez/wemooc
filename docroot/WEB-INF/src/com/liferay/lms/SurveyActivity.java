@@ -21,8 +21,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -186,11 +188,16 @@ public class SurveyActivity extends MVCPortlet {
 		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 	
-		TestAnswer answer = TestAnswerLocalServiceUtil.addTestAnswer(questionId, answers, feedbackCorrect, feedbackNoCorrect, correct);
-		SessionMessages.add(actionRequest, "answer-added-successfully");
+		if(Validator.isNull(answers)) {
+			SessionErrors.add(actionRequest, "answer-test-required");
+		}
+		else{
+			TestAnswer answer = TestAnswerLocalServiceUtil.addTestAnswer(questionId, answers, feedbackCorrect, feedbackNoCorrect, correct);
+			SessionMessages.add(actionRequest, "answer-added-successfully");
+		}
 		
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(answer.getQuestionId()).getActId());
-		actionResponse.setRenderParameter("questionId", Long.toString(answer.getQuestionId()));
+		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
+		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
 		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
 
 		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestion.jsp");
@@ -206,13 +213,19 @@ public class SurveyActivity extends MVCPortlet {
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 	
 		TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(answerId);
-		testanswer.setAnswer(answer);
-		testanswer.setIsCorrect(correct);
-		testanswer.setFeedbackCorrect(feedbackCorrect);
-		testanswer.setFeedbacknocorrect(feedbackNoCorrect);
 		
-		TestAnswerLocalServiceUtil.updateTestAnswer(testanswer);
-		SessionMessages.add(actionRequest, "answer-added-successfully");
+		if(Validator.isNull(answer)) {
+			SessionErrors.add(actionRequest, "answer-test-required_"+answerId);
+		}
+		else{		
+			testanswer.setAnswer(answer);
+			testanswer.setIsCorrect(correct);
+			testanswer.setFeedbackCorrect(feedbackCorrect);
+			testanswer.setFeedbacknocorrect(feedbackNoCorrect);
+			
+			TestAnswerLocalServiceUtil.updateTestAnswer(testanswer);
+			SessionMessages.add(actionRequest, "answer-added-successfully");
+		}
 		
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(testanswer.getQuestionId()).getActId());
 		actionResponse.setRenderParameter("questionId", Long.toString(testanswer.getQuestionId()));

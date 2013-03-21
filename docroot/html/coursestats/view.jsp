@@ -58,7 +58,7 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 	<liferay-portlet:param name="jspPage" value="/html/coursestats/viewmodule.jsp"></liferay-portlet:param>
 	<liferay-portlet:param name="moduleId" value="<%= Long.toString(module.getModuleId())%>"></liferay-portlet:param>
 	</liferay-portlet:renderURL>
-	<liferay-ui:search-container-column-text name="Módulo"><a href="<%=viewModuleURL%>"><%=module.getTitle(themeDisplay.getLocale()) %></a></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text name="coursestats.module"><a href="<%=viewModuleURL%>"><%=module.getTitle(themeDisplay.getLocale()) %></a></liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="coursestats.start.date">
 		<%if(module.getStartDate()!=null)
 			{

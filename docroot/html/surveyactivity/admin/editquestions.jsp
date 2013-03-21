@@ -39,7 +39,7 @@
 			<portlet:param name="actId" value="<%=String.valueOf(learnact.getActId()) %>" />
 			<portlet:param name="jspPage" value="/html/surveyactivity/admin/newquestion.jsp"></portlet:param>
 		</portlet:renderURL>
-		<liferay-ui:icon image="add" label="<%= true %>" message="new Question" url='<%= newquestionURL %>' />
+		<liferay-ui:icon image="add" label="<%= true %>" message="newquestion" url='<%= newquestionURL %>' />
 	</div>
 	<%
 		java.util.List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(learnact.getActId());

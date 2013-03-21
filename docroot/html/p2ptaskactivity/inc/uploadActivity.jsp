@@ -7,14 +7,19 @@
 
 <%@include file="/init.jsp" %>
 
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+
 <portlet:actionURL name="addP2PActivity" var="addP2PActivity">
 </portlet:actionURL> 
 
 <liferay-ui:error key="campos-necesarios-vacios" message="campos-necesarios-vacios" />
 <liferay-ui:error key="error-subir-p2p" message="error-subir-p2p" />
+<liferay-ui:error key="p2ptaskactivity-error-file-type" message="p2ptaskactivity.error.file.type" />
 <%
 long actId = ParamUtil.getLong(request, "actId",0);
 String textCorrection = LanguageUtil.get(pageContext,"p2ptask-text-upload");
+
+String uploadCorrect = ParamUtil.getString(request, "uploadCorrect", "false");
 
 Long userId = themeDisplay.getUserId();
 P2pActivity myP2PActivity = P2pActivityLocalServiceUtil.findByActIdAndUserId(actId, userId);
@@ -58,40 +63,55 @@ function clearText(){
 }
 function commitForm(){
 	var idForm = "#<portlet:namespace />fm_1";
-	$(idForm).submit();
+	$("#buttonSendP2P").attr("disabled", "disabled");
+	$(idForm).submit();	
+}
+
+function openConfirmation(){
+	$("#p2puploaded").modal();
 }
 
 </script>
-<!-- Start PopUp confirmation -->
-<style type="text/css">
-	#simplemodal-container{width:auto;height:380px;}
-	#simplemodal-container p{color:#000;font-size:1.4em;}
-	#simplemodal-container p span.label{font-weight: bold}
-	#simplemodal-container div.desc{font-size:1.4em;color:#006C68;font-weight: bold}
-</style>
 
+<!-- Start PopUp confirmation -->
 <div id="p2pconfirmation" style="display:none">
 	<h1><liferay-ui:message key="p2ptask-upload-confirmation" /></h1>
-	<div class="desc"><liferay-ui:message key="p2ptask-upload-description" /></div>
+	<div class="desc color_tercero"><liferay-ui:message key="p2ptask-upload-description" /></div>
 	<br />
 	<p><span class="label"><liferay-ui:message key="p2ptask-file-name" />:</span> <span id="contentFile"></span></p>
-	<p><span class="label"><liferay-ui:message key="p2ptask-description-task" />:</span> <span id="contentDescription"></span></p>
-	<div style="text-align:center">
+	<div class="contDesc">
+		<p><span class="label"><liferay-ui:message key="p2ptask-description-task" />:</span> <span id="contentDescription"></span></p>
+		<p><liferay-ui:message key="p2ptask-description-task-confirmation-message" /></p>
+	</div>
+	<div class="buttons">
 		<input type="button" class="button simplemodal-close" value="<liferay-ui:message key="cancel" />" />
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<input type="button" class="button" value="<liferay-ui:message key="p2ptask-send" />" onclick="commitForm()" />
+		<input type="button" class="button" id="buttonSendP2P" value="<liferay-ui:message key="p2ptask-send" />" onclick="commitForm()" />
 	</div>
 </div>
 <!-- End PopUp confrimation -->
+
+<div id="p2puploaded" style="display:none">
+	<h1><liferay-ui:message key="p2ptaskactivity.inc.p2puploaded.title" /></h1>
+	<div class="desc color_tercero"><liferay-ui:message key="p2ptaskactivity.inc.p2puploaded.subtitle" /></div>
+	<br />
+	<div class="contDesc bg-icon-check">
+		<p><liferay-ui:message key="p2ptaskactivity.inc.p2puploaded.message" /></p>
+	</div>
+	<div class="buttons">
+		<input type="button" class="button simplemodal-close" id="buttonClose" value="<liferay-ui:message key="close" />" onclick="closeForm()" />
+	</div>
+</div>
+
 <div>
-	<%
+
+<%
 	if(myP2PActivity!=null){
 
 		DLFileEntry dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
 		String urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
 		textCorrection = myP2PActivity.getDescription();
 		p2pActivityId = myP2PActivity.getP2pActivityId();
-		
 		%>
 		<div class="container-textarea">
 			<textarea rows="6" cols="90" readonly="readonly" ><%=textCorrection %></textarea>
@@ -112,6 +132,7 @@ function commitForm(){
 			<div class="container-textarea">
 				<aui:input name="description" type="textarea" label="" onfocus="clearText()" rows="6" cols="90" value="<%=textCorrection %>" id="description" />
 			</div>
+			<liferay-ui:error key="p2ptaskactivity-error-file-size" message="p2ptaskactivity.error.file.size" />
 			<div class="container-file">
 				<aui:input inlineLabel="left" inlineField="true"
 						  	name="fileName" id="fileName" type="file" value="" />
@@ -127,3 +148,11 @@ function commitForm(){
 		</form>
 <%	}%>
 </div>
+
+<%
+if(uploadCorrect.equals("true")){
+	uploadCorrect="false";
+	request.setAttribute("uploadCorrect", uploadCorrect);
+	%><script>openConfirmation();</script><%
+}
+%>

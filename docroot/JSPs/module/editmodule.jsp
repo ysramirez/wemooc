@@ -1,4 +1,3 @@
-<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@ page import="com.liferay.lms.model.Module" %>
 <%@ page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
@@ -20,7 +19,9 @@
 
 <portlet:defineObjects />
 
-
+<liferay-util:buffer var="inputEditorHTML" >
+	<liferay-ui:input-editor />
+</liferay-util:buffer>
 
 <%
 
@@ -55,12 +56,30 @@ else
 	<aui:input name="title" label="title" />
 	<liferay-ui:error key="module-title-required" message="module-title-required" />
 	<aui:field-wrapper label="description">
-			<liferay-ui:input-editor name="description" width="100%" />
-			<aui:input name="description" type="hidden" />
-				<script type="text/javascript">
-        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
-    </script>
-		</aui:field-wrapper>
+		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
+		<aui:input id="descriptionhidden" name="description" type="hidden" />
+		
+		<script type="text/javascript">
+	    <!--
+		    function <portlet:namespace />initEditor()
+		    {
+		    	return "<%=JavaScriptUtil.markupToStringLiteral(description)%>";
+		    }
+		
+		    function <portlet:namespace />extractCodeFromEditor()
+		    {
+		    	document.<portlet:namespace />addmodule.<portlet:namespace />description.value = window.<portlet:namespace />editor.getHTML();
+		    }
+		    var func = function ()
+		    {
+		    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
+		    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
+		    };
+		
+		    AUI().on('domready', func);
+	        //-->
+	    </script>
+	</aui:field-wrapper>
 	<liferay-ui:error key="module-description-required" message="module-description-required" />
 	<aui:input type="hidden" name="icon" />
 	<br />
@@ -88,11 +107,12 @@ else
 				 dayNullable="false" monthNullable="false" ></liferay-ui:input-date>
 	</aui:field-wrapper>
 	<liferay-ui:error key="module-endDate-required" message="module-endDate-required" />
-	<aui:select label="Modulo predecesor" name="precedence">
+	<liferay-ui:error key="module-startDate-before-endDate" message="module-startDate-before-endDate" />
+	<aui:select label="modulo-predecesor" name="precedence">
 <%
 	java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 %>
-		<aui:option value="0" >Ninguno</aui:option>
+		<aui:option value="0" ><liferay-ui:message key="module-nothing" /></aui:option>
 <%
 	for(Module theModule2:modules)
 	{

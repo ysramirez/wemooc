@@ -443,6 +443,7 @@ public class P2pActivityPersistenceImpl extends BasePersistenceImpl<P2pActivity>
 		p2pActivityImpl.setCountCorrections(p2pActivity.getCountCorrections());
 		p2pActivityImpl.setDescription(p2pActivity.getDescription());
 		p2pActivityImpl.setDate(p2pActivity.getDate());
+		p2pActivityImpl.setAsignationsCompleted(p2pActivity.isAsignationsCompleted());
 
 		return p2pActivityImpl;
 	}
