@@ -158,7 +158,9 @@ else
 		}
 	%>
 
-		<aui:input name="title" label="title"></aui:input>
+		<aui:input name="title" label="title">
+		<aui:validator name="required" />
+		</aui:input>
 		<liferay-ui:error key="title-required" message="title-required" />
 	<aui:field-wrapper label="description">
 			<liferay-ui:input-editor name="description" width="100%" />
@@ -189,7 +191,11 @@ else
 			}
 		%>
 		
-		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>"></aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
+		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>">
+		<aui:validator name="required"/>
+		<aui:validator name="number" />
+		<aui:validator name="min">0</aui:validator>
+		</aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
 		<%
 		}
 		else
@@ -206,7 +212,11 @@ else
 				score=learnact.getPasspuntuation();
 			}
 		%>
-		<aui:input size="5" name="passpuntuation" label="passpuntuation" value="<%=Long.toString(score) %>"></aui:input>
+		<aui:input size="5" name="passpuntuation" label="passpuntuation" value="<%=Long.toString(score) %>">
+			<aui:validator name="required"/>
+		<aui:validator name="number" />
+		<aui:validator name="range">[0,100]</aui:validator>
+		</aui:input>
 		<%
 		}
 		else
