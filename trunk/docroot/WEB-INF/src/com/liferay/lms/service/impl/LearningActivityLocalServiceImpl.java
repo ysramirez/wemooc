@@ -297,8 +297,12 @@ public class LearningActivityLocalServiceImpl
 			long priority=larn.getPriority();
 			larn.setPriority(previusActivity.getPriority());
 			previusActivity.setPriority(priority);
+			if(priority>previusActivity.getPriority())
+			{
 			learningActivityPersistence.update(larn, true);
 			learningActivityPersistence.update(previusActivity, true);
+			}
+			
 		}
 		
 	}
@@ -312,8 +316,11 @@ public class LearningActivityLocalServiceImpl
 			long priority=larn.getPriority();
 			larn.setPriority(previusActivity.getPriority());
 			previusActivity.setPriority(priority);
+			if(priority<previusActivity.getPriority())
+			{
 			learningActivityPersistence.update(larn, true);
 			learningActivityPersistence.update(previusActivity, true);
+			}
 		}
 		
 	}
