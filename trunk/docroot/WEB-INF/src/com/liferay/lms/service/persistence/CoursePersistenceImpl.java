@@ -608,6 +608,8 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 		courseImpl.setStartDate(course.getStartDate());
 		courseImpl.setEndDate(course.getEndDate());
 		courseImpl.setIcon(course.getIcon());
+		courseImpl.setCourseEvalId(course.getCourseEvalId());
+		courseImpl.setCourseExtraData(course.getCourseExtraData());
 
 		return courseImpl;
 	}

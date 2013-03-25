@@ -88,9 +88,11 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			{ "friendlyURL", Types.VARCHAR },
 			{ "startDate", Types.TIMESTAMP },
 			{ "endDate", Types.TIMESTAMP },
-			{ "icon", Types.BIGINT }
+			{ "icon", Types.BIGINT },
+			{ "CourseEvalId", Types.BIGINT },
+			{ "CourseExtraData", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,groupCreatedId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,groupCreatedId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Course";
 	public static final String ORDER_BY_JPQL = " ORDER BY course.courseId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_Course.courseId ASC";
@@ -141,6 +143,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		model.setStartDate(soapModel.getStartDate());
 		model.setEndDate(soapModel.getEndDate());
 		model.setIcon(soapModel.getIcon());
+		model.setCourseEvalId(soapModel.getCourseEvalId());
+		model.setCourseExtraData(soapModel.getCourseExtraData());
 
 		return model;
 	}
@@ -215,6 +219,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		attributes.put("startDate", getStartDate());
 		attributes.put("endDate", getEndDate());
 		attributes.put("icon", getIcon());
+		attributes.put("CourseEvalId", getCourseEvalId());
+		attributes.put("CourseExtraData", getCourseExtraData());
 
 		return attributes;
 	}
@@ -315,6 +321,18 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 		if (icon != null) {
 			setIcon(icon);
+		}
+
+		Long CourseEvalId = (Long)attributes.get("CourseEvalId");
+
+		if (CourseEvalId != null) {
+			setCourseEvalId(CourseEvalId);
+		}
+
+		String CourseExtraData = (String)attributes.get("CourseExtraData");
+
+		if (CourseExtraData != null) {
+			setCourseExtraData(CourseExtraData);
 		}
 	}
 
@@ -717,6 +735,29 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_icon = icon;
 	}
 
+	@JSON
+	public long getCourseEvalId() {
+		return _CourseEvalId;
+	}
+
+	public void setCourseEvalId(long CourseEvalId) {
+		_CourseEvalId = CourseEvalId;
+	}
+
+	@JSON
+	public String getCourseExtraData() {
+		if (_CourseExtraData == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _CourseExtraData;
+		}
+	}
+
+	public void setCourseExtraData(String CourseExtraData) {
+		_CourseExtraData = CourseExtraData;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -854,6 +895,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		courseImpl.setStartDate(getStartDate());
 		courseImpl.setEndDate(getEndDate());
 		courseImpl.setIcon(getIcon());
+		courseImpl.setCourseEvalId(getCourseEvalId());
+		courseImpl.setCourseExtraData(getCourseExtraData());
 
 		courseImpl.resetOriginalValues();
 
@@ -1022,12 +1065,22 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 		courseCacheModel.icon = getIcon();
 
+		courseCacheModel.CourseEvalId = getCourseEvalId();
+
+		courseCacheModel.CourseExtraData = getCourseExtraData();
+
+		String CourseExtraData = courseCacheModel.CourseExtraData;
+
+		if ((CourseExtraData != null) && (CourseExtraData.length() == 0)) {
+			courseCacheModel.CourseExtraData = null;
+		}
+
 		return courseCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1061,13 +1114,17 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		sb.append(getEndDate());
 		sb.append(", icon=");
 		sb.append(getIcon());
+		sb.append(", CourseEvalId=");
+		sb.append(getCourseEvalId());
+		sb.append(", CourseExtraData=");
+		sb.append(getCourseExtraData());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(52);
+		StringBundler sb = new StringBundler(58);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -1137,6 +1194,14 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			"<column><column-name>icon</column-name><column-value><![CDATA[");
 		sb.append(getIcon());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>CourseEvalId</column-name><column-value><![CDATA[");
+		sb.append(getCourseEvalId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>CourseExtraData</column-name><column-value><![CDATA[");
+		sb.append(getCourseExtraData());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1176,6 +1241,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	private Date _startDate;
 	private Date _endDate;
 	private long _icon;
+	private long _CourseEvalId;
+	private String _CourseExtraData;
 	private long _columnBitmask;
 	private Course _escapedModelProxy;
 }

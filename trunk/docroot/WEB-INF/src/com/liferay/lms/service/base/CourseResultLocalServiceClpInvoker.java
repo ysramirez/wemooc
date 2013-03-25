@@ -120,9 +120,19 @@ public class CourseResultLocalServiceClpInvoker {
 
 		_methodParameterTypes125 = new String[] { "long", "boolean" };
 
-		_methodName126 = "update";
+		_methodName126 = "create";
 
-		_methodParameterTypes126 = new String[] {
+		_methodParameterTypes126 = new String[] { "long", "long" };
+
+		_methodName127 = "update";
+
+		_methodParameterTypes127 = new String[] {
+				"com.liferay.lms.model.CourseResult"
+			};
+
+		_methodName128 = "update";
+
+		_methodParameterTypes128 = new String[] {
 				"com.liferay.lms.model.ModuleResult"
 			};
 	}
@@ -242,6 +252,19 @@ public class CourseResultLocalServiceClpInvoker {
 
 		if (_methodName126.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
+			return CourseResultLocalServiceUtil.create(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName127.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+			CourseResultLocalServiceUtil.update((com.liferay.lms.model.CourseResult)arguments[0]);
+
+			return null;
+		}
+
+		if (_methodName128.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
 			CourseResultLocalServiceUtil.update((com.liferay.lms.model.ModuleResult)arguments[0]);
 
 			return null;
@@ -292,4 +315,8 @@ public class CourseResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes125;
 	private String _methodName126;
 	private String[] _methodParameterTypes126;
+	private String _methodName127;
+	private String[] _methodParameterTypes127;
+	private String _methodName128;
+	private String[] _methodParameterTypes128;
 }
