@@ -281,7 +281,9 @@
 	    <column name="startDate" type="Date"></column>
         <column name="endDate" type="Date"></column>
         <column name="icon" type="long"></column>
-		<order by="asc">
+        <column name="CourseEvalId" type="long"></column>
+        <column name="CourseExtraData" type="String"></column>
+ 		<order by="asc">
 			<order-column name="courseId" />
 		</order>
 		<!-- Finder Methods Standard -->
