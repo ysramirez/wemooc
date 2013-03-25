@@ -14,6 +14,8 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.learningactivity.courseeval.CourseEval;
+import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.ModuleResult;
@@ -52,51 +54,30 @@ public class CourseResultLocalServiceImpl
 	{
 		return courseResultPersistence.countByc(courseId, passed);
 	}
-	
+	public CourseResult create(long courseId, long userId) throws SystemException
+	{
+		CourseResult courseResult=courseResultPersistence.create(counterLocalService.increment(CourseResult.class.getName()));
+		courseResult.setUserId(userId);
+		courseResult.setCourseId(courseId);
+		courseResult.setResult(0);
+		courseResult.setPassed(false);
+		courseResultPersistence.update(courseResult, false);
+		return courseResult;
+	}
+	public void update(CourseResult cresult) throws SystemException
+	{
+		courseResultPersistence.update(cresult, false);
+	}
 	public void update(ModuleResult mresult) throws PortalException, SystemException
 	{
 		Module theModule=moduleLocalService.getModule(mresult.getModuleId());
 		Course course=coursePersistence.fetchByGroupCreatedId(theModule.getGroupId());
 		if(course!=null)
 		{
-			CourseResult courseResult=courseResultPersistence.fetchByuc(mresult.getUserId(), course.getCourseId());
-			if(courseResult==null)
-			{
-				courseResult=courseResultPersistence.create(counterLocalService.increment(CourseResult.class.getName()));
-				courseResult.setUserId(mresult.getUserId());
-				courseResult.setCourseId(course.getCourseId());
-				courseResult.setResult(0);
-				courseResult.setPassed(false);
-				courseResultPersistence.update(courseResult, false);
-			}
-			if(mresult.isPassed())
-			{
-				java.util.List<Module> modules=moduleLocalService.findAllInGroup(theModule.getGroupId());
-				boolean passed=true;
-				long cuantospasados=0;
-				for(Module thmodule:modules)
-				{
-					if(!moduleLocalService.isUserPassed(thmodule.getModuleId(), mresult.getUserId()))
-					{
-						passed=false;
-						
-					}
-					else
-					{
-						cuantospasados++;
-					}
-				}
-				long result=0;
-				if(modules.size()>0)
-				{
-					result=100*cuantospasados/modules.size();
-				}
-				
-					courseResult.setResult(result);
-					courseResult.setPassed(passed);
-					courseResultPersistence.update(courseResult, false);
-				
-			}
+			CourseEvalRegistry cer=new CourseEvalRegistry();
+			long courseEvalTypeId=course.getCourseEvalId();
+			CourseEval ceval=cer.getCourseEval(courseEvalTypeId);
+			ceval.updateCourse(course, mresult);
 		}
 	}
 }
