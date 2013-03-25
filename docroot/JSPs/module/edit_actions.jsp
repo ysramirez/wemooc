@@ -27,10 +27,12 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE))
 	{	
 	%>
-		<liferay-portlet:actionURL  name="editmodule" var="editmoduleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:renderURL var="editmoduleURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+			<liferay-portlet:param name="popUpAction" value="editmodule" />
+			<liferay-portlet:param name="view" value="editmodule" />
 			<liferay-portlet:param name="resourcePrimKey" value="<%=primKey %>" />
 			<liferay-portlet:param name="actId" value="0" />
-		</liferay-portlet:actionURL>
+		</liferay-portlet:renderURL>
 	<%
 	String taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal:true,destroyOnClose: true}, id: 'editModule', title: '" +
 	ResourceActionsUtil.getModelResource(locale, Module.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editmoduleURL) + "'});";
