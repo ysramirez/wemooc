@@ -275,26 +275,24 @@ if(isTeacher){
 	<% if((activity.getTries()==0)||(activity.getTries()>LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId, user.getUserId()))){ 
 	
 	if(isSetTextoEnr){ %>
-	<liferay-util:buffer var="inputEditorHTML" >
-		<liferay-ui:input-editor />
-	</liferay-util:buffer>
+	<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initEditor"  />
 	
 	<script type="text/javascript">
     <!--
-	    function <portlet:namespace />initEditor()
-	    {
-	    	return "";
-	    }
-	
+
+		function <portlet:namespace />initEditor() {
+			return "";
+		}
+
 	    function <portlet:namespace />extractCodeFromEditor()
 	    {
-	    	document.<portlet:namespace />fm.<portlet:namespace />text.value =	window.<portlet:namespace />editor.getHTML();
+			try {
+				document.<portlet:namespace />fm['<portlet:namespace />text'].value = window['<portlet:namespace />DescripcionRichTxt'].getHTML();
+			}
+			catch (e) {
+			}
+	    	
 	    }
-	
-	    AUI().on('domready', function ()
-	    {
-	    	document.getElementById("<portlet:namespace/>DescripcionRichTxt").innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
-	    });
 
     -->
 	</script>
