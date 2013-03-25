@@ -45,6 +45,8 @@
 		<property name="startDate" type="org.hibernate.type.TimestampType" />
 		<property name="endDate" type="org.hibernate.type.TimestampType" />
 		<property name="icon" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="CourseEvalId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="CourseExtraData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CourseResultImpl" table="Lms_CourseResult">
 		<cache usage="read-write" />

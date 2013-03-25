@@ -46,6 +46,8 @@
 				<temporal>TIMESTAMP</temporal>
 			</basic>
 			<basic name="icon" />
+			<basic name="CourseEvalId" />
+			<basic name="CourseExtraData" />
 			<transient name="descriptionCurrentLanguageId" />
 			<transient name="descriptionMap" />
 			<transient name="modelAttributes" />
