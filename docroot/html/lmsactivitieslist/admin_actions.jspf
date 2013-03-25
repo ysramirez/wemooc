@@ -19,9 +19,26 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 		<portlet:param name="actId" value="0" />
 	</liferay-portlet:actionURL>
 	<%
-String editctivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
-		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "'});";
+	String portletnamespace = renderResponse.getNamespace();
 
+	String editctivitypopup = "javascript:Liferay.Util.openWindow("+
+"			{dialog:"+
+"				{width: 960,modal: true,xy:[50,50]  ,destroyOnClose: true, on: "+
+				"	{"+
+	         "  close: function() {" +
+		 "      console.log(2);"+
+	     "Liferay.Util.getOpener()."+portletnamespace+"refreshPortlet();"+
+		 "           }"+
+		 "        	}}"+
+	" ,id: 'editlesson', title: '" +
+			ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "',"+
+			"uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "',}"+
+	");";
+		 
+	
+/*String editctivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
+		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "'});";
+*/
 %>
 	<liferay-ui:icon image="edit" message="edit" url="<%=editctivitypopup %>" />
 </c:if>
