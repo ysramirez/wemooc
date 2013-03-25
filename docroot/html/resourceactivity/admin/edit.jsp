@@ -37,10 +37,6 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 
 %>
 
-<liferay-util:buffer var="inputEditorHTML" >
-	<liferay-ui:input-editor />
-</liferay-util:buffer>
-
 <aui:model-context bean="<%= learnact %>" model="<%= LearningActivity.class %>" />
 <portlet:renderURL var="cancel">
 	<portlet:param name="actId" value="0" />
@@ -52,6 +48,7 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 <aui:form name="fm" action="<%=editresourceURL%>"  method="post" enctype="multipart/form-data">
 	<aui:fieldset>
 		<aui:field-wrapper label="description">
+			<liferay-ui:input-editor name="DescripcionRichTxt"  initMethod="initEditor" />
 			<div id="<portlet:namespace/>DescripcionRichTxt"></div>
 			<aui:input name="description" type="hidden" />
 			<script type="text/javascript">
@@ -60,18 +57,17 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 			    {
 			    	return "<%=JavaScriptUtil.markupToStringLiteral(description)%>";
 			    }
-			
+			    
 			    function <portlet:namespace />extractCodeFromEditor()
 			    {
-			    	document.<portlet:namespace />fm.<portlet:namespace />description.value = window.<portlet:namespace />editor.getHTML();
+					try {
+						document.<portlet:namespace />fm['<portlet:namespace />description'].value = window['<portlet:namespace />DescripcionRichTxt'].getHTML();
+					}
+					catch (e) {
+					}
+			    	
 			    }
-			    var func = function ()
-			    {
-			    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
-			    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
-			    };
-			
-			    AUI().on('domready', func);
+			    
 		        //-->
 		    </script>
 			<liferay-ui:error key="description-required" message="description-required" />

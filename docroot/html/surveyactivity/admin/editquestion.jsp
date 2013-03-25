@@ -16,16 +16,13 @@
 		<portlet:param name="actId" value="<%=Long.toString(question.getActId()) %>" />
 	</portlet:renderURL>
 	
-	<liferay-util:buffer var="inputEditorHTML" >
-		<liferay-ui:input-editor  width="80%"/>
-	</liferay-util:buffer>
-	
 	<a href="<%=backToQuestionsURL.toString() %>"><%=LanguageUtil.get(pageContext,"back.to.questions")%></a>
 	
 	<aui:form name="qfm" action="<%=editquestionURL %>" method="post">
 		<aui:input name="actId" type="hidden" value="<%=question.getActId() %>"></aui:input>
 		<aui:input name="questionId" type="hidden" value="<%=question.getQuestionId() %>"></aui:input>
 		<aui:field-wrapper label="enunciation">
+			<liferay-ui:input-editor name="DescripcionRichTxt"  initMethod="initEditor" width="80%" />
 			<div id="<portlet:namespace/>DescripcionRichTxt"></div>
 			<aui:input name="text" type="hidden" />
 			<script type="text/javascript">
@@ -35,17 +32,17 @@
 				    	return "<%=JavaScriptUtil.markupToStringLiteral(question.getText())%>";
 				    }
 				
+					
 				    function <portlet:namespace />extractCodeFromEditor()
 				    {
-				    	document.<portlet:namespace />qfm.<portlet:namespace />text.value =	window.<portlet:namespace />editor.getHTML();
+						try {
+							document.<portlet:namespace />qfm['<portlet:namespace />text'].value = window['<portlet:namespace />DescripcionRichTxt'].getHTML();
+						}
+						catch (e) {
+						}
+				    	
 				    }
-				    var func = function ()
-				    {
-				    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
-				    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
-				    };
-				
-				    AUI().on('domready', func);
+
 			        //-->
 			    </script>	
 		</aui:field-wrapper>
