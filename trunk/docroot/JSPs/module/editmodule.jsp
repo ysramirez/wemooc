@@ -8,7 +8,6 @@
 
 <jsp:useBean id="editmoduleURL" class="java.lang.String" scope="request" />
 <jsp:useBean id="module" type="com.liferay.lms.model.Module" scope="request"/>
-<jsp:useBean id="moduleId" class="java.lang.String" scope="request" />
 <jsp:useBean id="title" class="java.lang.String" scope="request" />
 <jsp:useBean id="description" class="java.lang.String" scope="request" />
 <jsp:useBean id="icon" class="java.lang.String" scope="request" />
@@ -21,64 +20,61 @@
 
 <portlet:defineObjects />
 
-<liferay-util:buffer var="inputEditorHTML" >
-	<liferay-ui:input-editor />
-</liferay-util:buffer>
-
-<%
-
-long moduleIde = ParamUtil.getLong(request,"moduleId",0);
-Module theModule=null;
-if(moduleIde>0)
-{
-	theModule=ModuleLocalServiceUtil.getModule(moduleIde);
-%>
-<aui:model-context bean="<%= theModule %>" model="<%= Module.class %>" />
-<%
-}
-else
-{
-%>
-<aui:model-context  model="<%= Module.class %>" />
-<%
-}
-%>
+<aui:model-context bean="module" model="<%= Module.class %>" />
 <liferay-ui:success key="module-added-successfully" message="module-added-successfully" />
 
 <aui:form name="addmodule" action="<%=editmoduleURL %>" method="POST" enctype="multipart/form-data">
 	<input type="hidden" name="resourcePrimKey" value="<%=module.getPrimaryKey() %>">
 <%
-	if(moduleIde>0)
+	Long moduleId;
+
+	if(module.getModuleId()!=0){
+		moduleId=module.getModuleId();
+	}
+	else{
+		moduleId=ParamUtil.getLong(renderRequest, "moduleId");
+		if(moduleId!=0){
+			module=ModuleLocalServiceUtil.getModule(moduleId);
+		}
+		
+	}
+
+	if(moduleId>0)
 	{
-%>
-	<aui:input type="hidden" name="ordern" value="<%=Long.toString(theModule.getOrdern()) %>" />
-<%
+%>	<aui:model-context bean="<%= module %>" model="<%= Module.class %>"/>
+	<aui:input type="hidden" name="ordern" value="<%=Long.toString(module.getOrdern()) %>" />
+<% 
+	}
+	else {
+		%>	<aui:model-context model="<%= Module.class %>"/>
+	<% 
 	}
 %>
-	<aui:input name="title" label="title" />
+	<aui:input name="title" label="title">
+		<aui:validator name="required" />
+	</aui:input>
 	<liferay-ui:error key="module-title-required" message="module-title-required" />
 	<aui:field-wrapper label="description">
 		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
+		<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initDescripcion" />
 		<aui:input id="descriptionhidden" name="description" type="hidden" />
 		
 		<script type="text/javascript">
 	    <!--
-		    function <portlet:namespace />initEditor()
-		    {
-		    	return "<%=JavaScriptUtil.markupToStringLiteral(description)%>";
-		    }
-		
+			function <portlet:namespace />initDescripcion() {
+				return "<%= JavaScriptUtil.markupToStringLiteral(description) %>";
+			}
+
 		    function <portlet:namespace />extractCodeFromEditor()
 		    {
-		    	document.<portlet:namespace />addmodule.<portlet:namespace />description.value = window.<portlet:namespace />editor.getHTML();
+				try {
+					document.<portlet:namespace />addmodule['<portlet:namespace />description'].value = window['<portlet:namespace />DescripcionRichTxt'].getHTML();
+				}
+				catch (e) {
+				}
+		    	
 		    }
-		    var func = function ()
-		    {
-		    	var elem = document.getElementById("<portlet:namespace/>DescripcionRichTxt");
-		    	elem.innerHTML = "<%=JavaScriptUtil.markupToStringLiteral(inputEditorHTML)%>";
-		    };
-		
-		    AUI().on('domready', func);
+
 	        //-->
 	    </script>
 	</aui:field-wrapper>
@@ -119,9 +115,9 @@ else
 	for(Module theModule2:modules)
 	{
 		boolean selected=false;
-		if(moduleIde!= theModule2.getModuleId())
+		if(moduleId!= theModule2.getModuleId())
 		{
-			if(moduleIde>0&& theModule2.getModuleId()==module.getPrecedence())
+			if(moduleId>0&& theModule2.getModuleId()==module.getPrecedence())
 			{
 				selected=true;
 			}
@@ -136,7 +132,7 @@ else
 	String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
 	%>	
 	<portlet:renderURL var="cancelURL">
-		<portlet:param name="moduleId" value="<%=Long.toString(moduleIde) %>"></portlet:param>
+		<portlet:param name="moduleId" value="<%=Long.toString(moduleId) %>"></portlet:param>
 	</portlet:renderURL>
 	<aui:button-row>
 	<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>

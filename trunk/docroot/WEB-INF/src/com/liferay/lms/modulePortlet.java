@@ -15,30 +15,27 @@ import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.PortletURL;
 import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.WindowState;
 import javax.portlet.WindowStateException;
 
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.impl.ModuleImpl;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
-
-
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -46,7 +43,6 @@ import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
-import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -56,15 +52,11 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLAppServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
-
 import com.liferay.util.bridges.mvc.MVCPortlet;
 import com.tls.util.liferay.patch.MethodKeyPatched;
-import com.tls.util.liferay.patch.PortalClassInvokerPatched;
 
 /**
  * Portlet implementation class module
@@ -112,7 +104,31 @@ public static String SEPARATOR = "_";
 
 	public void doView(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
+		
+		if(renderRequest.getWindowState().equals(LiferayWindowState.POP_UP)){
+			String popUpAction = ParamUtil.getString(renderRequest, "popUpAction");
+			if("addmodule".equals(popUpAction)){
 
+					try {
+						addmodulePopUp(renderRequest,renderResponse);
+					} catch (NestableException e) {
+					} 
+
+			}
+			else if("updatemodule".equals(popUpAction)){
+
+					try {
+						updatemodulePopUp(renderRequest,renderResponse);
+					} catch (NestableException e) {
+					} 		
+					
+			}
+			else if("editmodule".equals(popUpAction)){
+				editmodulePopUp(renderRequest,renderResponse);				
+		}
+		}
+		
+		
 		String jsp = (String) renderRequest.getParameter("view");
 		if (jsp == null || jsp.equals("")) {
 			showViewDefault(renderRequest, renderResponse);
@@ -171,9 +187,12 @@ public static String SEPARATOR = "_";
 		renderRequest.setAttribute("hasAddPermission", hasAddPermission);
 
 		LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)renderResponse;
-		PortletURL addmoduleURL = liferayPortletResponse.createActionURL();
+		PortletURL addmoduleURL = liferayPortletResponse.createRenderURL();
 		addmoduleURL.setWindowState(LiferayWindowState.POP_UP);
-		addmoduleURL.setParameter("javax.portlet.action", "newmodule");
+		addmoduleURL.setParameter("view", "editmodule");
+		addmoduleURL.setParameter("moduleId", "0");
+		addmoduleURL.setParameter("editType", "add");
+		
 		renderRequest.setAttribute("addmoduleURL", addmoduleURL.toString());
 		
 		PortletURL moduleFilterURL = renderResponse.createRenderURL();
@@ -185,6 +204,7 @@ public static String SEPARATOR = "_";
 
 	public void showViewEditmodule(RenderRequest renderRequest, RenderResponse renderResponse) throws Exception {
 
+		boolean isPopUp = renderRequest.getWindowState().equals(LiferayWindowState.POP_UP);
 		SimpleDateFormat formatDia    = new SimpleDateFormat("dd");
 		SimpleDateFormat formatMes    = new SimpleDateFormat("MM");
 		SimpleDateFormat formatAno    = new SimpleDateFormat("yyyy");
@@ -194,13 +214,35 @@ public static String SEPARATOR = "_";
 		.getAttribute(WebKeys.THEME_DISPLAY);
 
 		LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)renderResponse;
-		PortletURL editmoduleURL = liferayPortletResponse.createActionURL();
+		PortletURL editmoduleURL = null;
+		
+		if(isPopUp){
+			editmoduleURL = liferayPortletResponse.createRenderURL();
+			editmoduleURL.setParameter("view", "editmodule");
+		}
+		else
+		{
+			editmoduleURL = liferayPortletResponse.createActionURL();
+		}
 		editmoduleURL.setWindowState(LiferayWindowState.POP_UP);
-
-		String editType = (String) renderRequest.getParameter("editType");
+		
+		String editType = ParamUtil.getString(renderRequest, "editType",(String)renderRequest.getAttribute("editType"));
 		if (editType.equalsIgnoreCase("edit")) {
-			editmoduleURL.setParameter("javax.portlet.action", "updatemodule");
-			long moduleId = Long.parseLong(renderRequest.getParameter("moduleId"));
+			if(isPopUp){
+				editmoduleURL.setParameter("popUpAction", "updatemodule");
+			}
+			else{
+				editmoduleURL.setParameter("javax.portlet.action", "updatemodule");
+			}
+			
+			long moduleId = 0;
+			if(renderRequest.getAttribute("moduleId")!=null){
+				moduleId = (Long)renderRequest.getAttribute("moduleId");
+			}
+			else{
+				moduleId = ParamUtil.getLong(renderRequest, "moduleId");
+			}
+			
 			Module module = ModuleLocalServiceUtil.getModule(moduleId);
 			String title = module.getTitle();
 			renderRequest.setAttribute("title", title);
@@ -230,7 +272,12 @@ public static String SEPARATOR = "_";
 			renderRequest.setAttribute("endDate", endDate);
             renderRequest.setAttribute("module", module);
 		} else {
-			editmoduleURL.setParameter("javax.portlet.action", "addmodule");
+			if(isPopUp){
+				editmoduleURL.setParameter("popUpAction", "addmodule");
+			}
+			else{
+				editmoduleURL.setParameter("javax.portlet.action", "addmodule");
+			}
 			Module errormodule = (Module) renderRequest.getAttribute("errormodule");
 			if (errormodule != null) {
 				if (editType.equalsIgnoreCase("update")) {
@@ -336,7 +383,7 @@ public static String SEPARATOR = "_";
             		SessionErrors.add(request, "please-enter-a-unique-code");
                     response.setRenderParameter("view", "editmodule");
                     response.setRenderParameter("editType", "add");
-                    response.setRenderParameter("moduleId", module.getModuleId()+"");
+                    response.setRenderParameter("moduleId",Long.toString(module.getModuleId()));
                     response.setRenderParameter("title", module.getTitle()+"");
                     response.setRenderParameter("description", module.getDescription(themeDisplay.getLocale())+"");
                     response.setRenderParameter("icon", module.getIcon()+"");
@@ -349,7 +396,7 @@ public static String SEPARATOR = "_";
                 }
                 response.setRenderParameter("view", "editmodule");
                 response.setRenderParameter("editType", "add");
-                    response.setRenderParameter("moduleId", module.getModuleId()+"");
+                    response.setRenderParameter("moduleId",Long.toString(module.getModuleId()));
                     response.setRenderParameter("title", module.getTitle()+"");
                     response.setRenderParameter("description", module.getDescription(themeDisplay.getLocale())+"");
                     response.setRenderParameter("ordern", module.getOrdern()+"");
@@ -357,6 +404,45 @@ public static String SEPARATOR = "_";
                     response.setRenderParameter("startDate", module.getStartDate()+"");
                     response.setRenderParameter("endDate", module.getEndDate()+"");
             }
+	}
+	
+	private void addmodulePopUp(RenderRequest request, RenderResponse response) throws IOException, PortalException, SystemException  {
+        Module module = moduleFromRequest(request);
+        ArrayList<String> errors = moduleValidator.validatemodule(module, request);
+        ThemeDisplay themeDisplay = (ThemeDisplay) request
+		.getAttribute(WebKeys.THEME_DISPLAY);
+
+        if (errors.isEmpty()) {
+			try {
+				ModuleLocalServiceUtil.addmodule(module);
+            	
+				request.setAttribute("view", "");
+            	SessionMessages.add(request, "module-added-successfully");
+        	} catch (Exception cvex) {
+        		SessionErrors.add(request, "please-enter-a-unique-code");
+        		request.setAttribute("view", "editmodule");
+        		request.setAttribute("editType", "add");
+        		request.setAttribute("moduleId", module.getModuleId());
+        		request.setAttribute("title", module.getTitle()+"");
+        		request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
+        		request.setAttribute("icon", module.getIcon()+"");
+        		request.setAttribute("startDate", module.getStartDate()+"");
+        		request.setAttribute("endDate", module.getEndDate()+"");
+        	}
+        } else {
+            for (String error : errors) {
+                    SessionErrors.add(request, error);
+            }
+            	request.setAttribute("view", "editmodule");
+            	request.setAttribute("editType", "add");
+            	request.setAttribute("moduleId", module.getModuleId());
+            	request.setAttribute("title", module.getTitle()+"");
+            	request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
+            	request.setAttribute("ordern", module.getOrdern()+"");
+            	request.setAttribute("icon", module.getIcon()+"");
+            	request.setAttribute("startDate", module.getStartDate()+"");
+            	request.setAttribute("endDate", module.getEndDate()+"");
+        }
 	}
 
 	@ProcessAction(name = "eventmodule")
@@ -413,6 +499,15 @@ public static String SEPARATOR = "_";
 			response.setRenderParameter("editType", "edit");
 		}
 	}
+	
+	private void editmodulePopUp(RenderRequest request, RenderResponse renderResponse) {
+		long key = ParamUtil.getLong(request, "resourcePrimKey");
+		if (Validator.isNotNull(key)) {
+			request.setAttribute("moduleId",key);
+			request.setAttribute("view", "editmodule");
+			request.setAttribute("editType", "edit");
+		}
+	}
 
 	@ProcessAction(name = "deletemodule")
 	public void deletemodule(ActionRequest request, ActionResponse response)throws Exception {
@@ -444,7 +539,7 @@ public static String SEPARATOR = "_";
             		SessionErrors.add(request, "please-enter-a-unique-code");
                     response.setRenderParameter("view", "editmodule");
                     response.setRenderParameter("editType", "edit");
-                    response.setRenderParameter("moduleId", module.getModuleId()+"");
+                    response.setRenderParameter("moduleId",Long.toString(module.getModuleId()));
                     response.setRenderParameter("title", module.getTitle()+"");
                     response.setRenderParameter("description", module.getDescription(themeDisplay.getLocale())+"");
                     response.setRenderParameter("ordern", module.getOrdern()+"");
@@ -459,7 +554,7 @@ public static String SEPARATOR = "_";
 				response.setRenderParameter("moduleId)",Long.toString(module.getPrimaryKey()));
 				response.setRenderParameter("view", "editmodule");
 				response.setRenderParameter("editType", "edit");
-                    response.setRenderParameter("moduleId", module.getModuleId()+"");
+                    response.setRenderParameter("moduleId",Long.toString(module.getModuleId()));
                     response.setRenderParameter("title", module.getTitle()+"");
                     response.setRenderParameter("description", module.getDescription(themeDisplay.getLocale())+"");
                     response.setRenderParameter("ordern", module.getOrdern()+"");
@@ -468,6 +563,47 @@ public static String SEPARATOR = "_";
                     response.setRenderParameter("endDate", module.getEndDate()+"");
             }
         }
+	
+	private void updatemodulePopUp(RenderRequest request, RenderResponse response) throws PortalException, SystemException, IOException {
+        Module module = moduleFromRequest(request);
+        ArrayList<String> errors = moduleValidator.validatemodule(module, request);
+        ThemeDisplay themeDisplay = (ThemeDisplay) request
+		.getAttribute(WebKeys.THEME_DISPLAY);
+        
+        if (errors.isEmpty()) {
+        	try {
+            	ModuleLocalServiceUtil.updateModule(module);
+            	MultiVMPoolUtil.clear();
+            	request.setAttribute("view", "");
+            	SessionMessages.add(request, "module-updated-successfully");
+        	} catch (Exception cvex) {
+        		SessionErrors.add(request, "please-enter-a-unique-code");
+        		request.setAttribute("view", "editmodule");
+        		request.setAttribute("editType", "edit");
+        		request.setAttribute("moduleId", module.getModuleId());
+        		request.setAttribute("title", module.getTitle()+"");
+        		request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
+        		request.setAttribute("ordern", module.getOrdern()+"");
+        		request.setAttribute("icon", module.getIcon()+"");
+        		request.setAttribute("startDate", module.getStartDate()+"");
+        		request.setAttribute("endDate", module.getEndDate()+"");
+        	}
+        } else {
+            for (String error : errors) {
+                    SessionErrors.add(request, error);
+            }
+            	request.setAttribute("moduleId)",Long.toString(module.getPrimaryKey()));
+            	request.setAttribute("view", "editmodule");
+            	request.setAttribute("editType", "edit");
+            	request.setAttribute("moduleId", module.getModuleId());
+            	request.setAttribute("title", module.getTitle()+"");
+            	request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
+            	request.setAttribute("ordern", module.getOrdern()+"");
+            	request.setAttribute("icon", module.getIcon()+"");
+            	request.setAttribute("startDate", module.getStartDate()+"");
+            	request.setAttribute("endDate", module.getEndDate()+"");
+        }
+    }
 
 	@ProcessAction(name = "setmodulePref")
 	public void setmodulePref(ActionRequest request, ActionResponse response) throws Exception {
@@ -492,7 +628,7 @@ public static String SEPARATOR = "_";
 		}
 	}
 
-	private Module moduleFromRequest(ActionRequest actRequest) throws PortalException, SystemException {
+	private Module moduleFromRequest(PortletRequest actRequest) throws PortalException, SystemException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) actRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actRequest);
 		ServiceContext serviceContext = null;

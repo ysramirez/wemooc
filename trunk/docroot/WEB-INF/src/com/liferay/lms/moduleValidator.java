@@ -7,16 +7,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
 
-import javax.portlet.ActionRequest;
+import javax.portlet.PortletRequest;
 
 import com.liferay.lms.model.Module;
-
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 public class moduleValidator {
 
-	public static ArrayList<String> validatemodule(Module module, ActionRequest request) throws IOException {
+	public static ArrayList<String> validatemodule(Module module, PortletRequest request) throws IOException {
 		ArrayList<String> errors = new ArrayList<String>();
 		Properties props = new Properties();
 		ClassLoader classLoader = moduleValidator.class.getClassLoader();
