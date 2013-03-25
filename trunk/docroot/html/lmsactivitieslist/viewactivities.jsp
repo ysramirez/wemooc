@@ -1,3 +1,4 @@
+<%@page import="javax.portlet.RenderResponse"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.portal.security.permission.ResourceActionsUtil"%>
@@ -90,17 +91,40 @@ if (actionEditing
 
 
 <script>
-function <portlet:namespace />closedialog()
-{
-	alert("a");
-	}
+
+Liferay.provide(
+        window,
+        '<portlet:namespace />refreshPortlet',
+        function() {
+		     <%-- refreshing the portlet [Liferay.Util.getOpener().] --%>
+            var curPortletBoundaryId = '#p_p_id<portlet:namespace />';
+
+            Liferay.Portlet.refresh(curPortletBoundaryId);
+        },
+        ['aui-dialog','aui-dialog-iframe']
+    );
+    
 </script>
 <liferay-portlet:renderURL var="newactivityURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 <liferay-portlet:param name="jspPage" value="/html/lmsactivitieslist/newactivity.jsp"/>
 </liferay-portlet:renderURL>
 	<%
-		String newactivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
-		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(newactivityURL) + "'});";
+
+	String portletnamespace = renderResponse.getNamespace();
+		String newactivitypopup = "javascript:Liferay.Util.openWindow("+
+	"			{dialog:"+
+	"				{width: 960,modal: true,xy:[50,50]  ,destroyOnClose: true, on: "+
+					"	{"+
+		         "  close: function() {" +
+			 ""+
+		     "Liferay.Util.getOpener()."+portletnamespace+"refreshPortlet();"+
+			 "           }"+
+			 "        	}}"+
+		" ,id: 'editlesson', title: '" +
+				ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "',"+
+				"uri:'" + HtmlUtil.escapeURL(newactivityURL) + "',}"+
+		");";
+			 
 		%>
 		<liferay-ui:icon image="add" label="<%=true%>" message="add"
 		url="<%=newactivitypopup%>" />
