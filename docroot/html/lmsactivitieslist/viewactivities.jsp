@@ -95,36 +95,16 @@ function <portlet:namespace />closedialog()
 	alert("a");
 	}
 </script>
-<liferay-ui:icon-menu  icon="add" message="new">
-<%
-AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
-Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
-for(Long key:classTypes.keySet())
-{
-	
-%>	
-<liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL"  windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-<liferay-portlet:param name="actId" value="0" />
-<liferay-portlet:param name="resId" value="0" />
-<liferay-portlet:param name="typeId" value="<%=key.toString() %>" />
-</liferay-portlet:actionURL>
-<%
-	String classname=classTypes.get(key);
-
-String newactivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
+<liferay-portlet:renderURL var="newactivityURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+<liferay-portlet:param name="jspPage" value="/html/lmsactivitieslist/newactivity.jsp"/>
+</liferay-portlet:renderURL>
+	<%
+		String newactivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
 		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(newactivityURL) + "'});";
-		
-		
-
-%>
-	<div class="newitem">
-	<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>"
+		%>
+		<liferay-ui:icon image="add" label="<%=true%>" message="add"
 		url="<%=newactivitypopup%>" />
-		</div>
-<%
-}
-%>
-</liferay-ui:icon-menu>
+		
 <%
 }
 %>
