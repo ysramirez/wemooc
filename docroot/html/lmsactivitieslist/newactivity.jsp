@@ -19,12 +19,11 @@ for(Long key:classTypes.keySet())
 </liferay-portlet:actionURL>
 <%
 	String classname=classTypes.get(key);		
-
 %>
 	<div class="newitem">
-	<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>"
-		url="<%=newactivityURL%>" />
-		</div>
+		<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>"
+			url="<%=newactivityURL%>" />
+	</div>
 <%
 }
 %>
