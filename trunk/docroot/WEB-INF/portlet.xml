@@ -188,12 +188,12 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>resourceactivity</portlet-name>
-		<display-name>ResourceActivity</display-name>
-		<portlet-class>com.liferay.lms.ResourceActivity</portlet-class>
+		<portlet-name>resourceExternalActivity</portlet-name>
+		<display-name>ResourceExternalActivity</display-name>
+		<portlet-class>com.liferay.lms.ResourceExternalActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
-			<value>/html/resourceactivity/view.jsp</value>
+			<value>/html/resourceExternalActivity/view.jsp</value>
 		</init-param>
 		<init-param>
 			<name>add-process-action-success-action</name>
@@ -206,8 +206,54 @@
 		</supports>
 		<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
-			<title>ResourceActivity</title>
-			<short-title>ResourceActivity</short-title>
+			<title>ResourceExternalActivity</title>
+			<short-title>ResourceExternalActivity</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		 <portlet-preferences>
+            <preference>
+                <name>portlet-setup-show-borders-default</name>
+                <value>false</value>
+            </preference>
+        </portlet-preferences>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-public-render-parameter>actId</supported-public-render-parameter>
+        <supported-public-render-parameter>moduleId</supported-public-render-parameter>
+        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>resourceInternalActivity</portlet-name>
+		<display-name>ResourceInternalActivity</display-name>
+		<portlet-class>com.liferay.lms.ResourceInternalActivity</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/resourceInternalActivity/view.jsp</value>
+		</init-param>
+		<init-param>
+			<name>add-process-action-success-action</name>
+			<value>false</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<resource-bundle>content/Language</resource-bundle>
+		<portlet-info>
+			<title>ResourceInternalActivity</title>
+			<short-title>ResourceInternalActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		 <portlet-preferences>

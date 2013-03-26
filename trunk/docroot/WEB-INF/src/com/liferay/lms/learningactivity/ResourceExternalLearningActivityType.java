@@ -2,16 +2,15 @@ package com.liferay.lms.learningactivity;
 
 import java.util.Locale;
 
-import com.liferay.lms.asset.ResourceAssetRenderer;
+import com.liferay.lms.asset.ResourceExternalAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
-public class ResourceLearningActivityType extends BaseLearningActivityType 
+public class ResourceExternalLearningActivityType extends BaseLearningActivityType 
 {
 
 	@Override
 	public boolean gradebook() {
-		// TODO Auto-generated method stub
 		return false;
 	}
 
@@ -25,14 +24,14 @@ public class ResourceLearningActivityType extends BaseLearningActivityType
 	@Override
 	public String getName(Locale locale) {
 		
-		return "resource";
+		return "resourceExternal";
 	}
 
 
 	@Override
 	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) {
 		
-		return new ResourceAssetRenderer(learningactivity);
+		return new ResourceExternalAssetRenderer(learningactivity);
 	}
 
 
