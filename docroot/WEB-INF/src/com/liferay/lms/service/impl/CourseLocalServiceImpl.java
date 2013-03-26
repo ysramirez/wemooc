@@ -115,13 +115,12 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
 			Course.class.getName(), course.getPrimaryKey(), false,
 			true, true);
-			
 			assetEntryLocalService.updateEntry(
 					userId, course.getGroupId(), Course.class.getName(),
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(),null, null, 0, 0,
+					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(locale),null, null, 0, 0,
 					null, false);
 					
 			}
@@ -264,7 +263,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(),null, null, 0, 0,
+					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(locale),null, null, 0, 0,
 					null, false);
 			return course;
 		
