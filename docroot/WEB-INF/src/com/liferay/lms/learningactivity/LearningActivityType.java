@@ -21,5 +21,6 @@ public interface LearningActivityType
 	public AssetRenderer getAssetRenderer(LearningActivity larn);
 	public String getUrlIcon();
 	public String getDescription(Locale locale);
+	public boolean gradebook();
 
 }

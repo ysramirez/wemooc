@@ -10,6 +10,13 @@ public class ResourceLearningActivityType extends BaseLearningActivityType
 {
 
 	@Override
+	public boolean gradebook() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+
+	@Override
 	public long getDefaultScore() {
 		return 0;
 	}
