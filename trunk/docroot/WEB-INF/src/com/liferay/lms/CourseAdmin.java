@@ -96,6 +96,7 @@ public class CourseAdmin extends MVCPortlet {
 		int startAMPM = ParamUtil.getInteger(actionRequest, "startAMPM");
 		String summary = ParamUtil.getString(actionRequest, "summary", "");
 		boolean visible = ParamUtil.getBoolean(actionRequest, "visible", false);
+		long courseEvalId=ParamUtil.getLong(actionRequest, "courseEvalId", 0);
 
 		if (friendlyURL.equals("") && !title.equals("")) {
 			friendlyURL = StringPool.BLANK;
@@ -205,7 +206,7 @@ public class CourseAdmin extends MVCPortlet {
 					"/html/courseadmin/editcourse.jsp");
 			return;
 		}
-
+		course.setCourseEvalId(courseEvalId);
 		com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
 				summary, serviceContext);
 		PermissionChecker permissionChecker = PermissionCheckerFactoryUtil
