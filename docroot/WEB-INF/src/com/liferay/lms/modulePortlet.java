@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -45,6 +46,7 @@ import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -52,7 +54,9 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
+import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -71,7 +75,7 @@ public static String SEPARATOR = "_";
 	public static String IMAGEGALLERY_MAINFOLDER_DESCRIPTION = "Module Image Uploads";
 	public static String IMAGEGALLERY_PORTLETFOLDER_DESCRIPTION = "";
 	
-	private long igFolderId;
+	//private long igFolderId;
 
 	public void init() throws PortletException {
 
@@ -707,26 +711,25 @@ public static String SEPARATOR = "_";
 		String fileName = request.getFileName("fileName");
 		String title = fileName;// + " uploaded by " + user.getFullName();
 		File file = request.getFile("fileName");
-		/*TODO no funciona
+		
+
 		if(fileName!=null && !fileName.equals("")){
-			createIGFolders(actRequest, themeDisplay.getUserId(),themeDisplay.getScopeGroupId(), serviceContext);
-			String imFormat="jpg";
-			if(fileName.toLowerCase().endsWith(".png"))
-			{
-				imFormat="png";
-			}
-			if(fileName.toLowerCase().endsWith(".gif"))
-			{
-				imFormat="gif";
-			}
-			String contentType = MimeTypesUtil.getContentType(fileName);
 			
-			FileEntry image=DLAppServiceUtil.addFileEntry(module.getGroupId(), igFolderId, fileName, contentType, title, title, "", file, serviceContext2);
+			String contentType = request.getContentType("fileName");
+			long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+			long igFolderId=createIGFolders(actRequest, themeDisplay.getUserId(),repositoryId);
+						
+			//Subimos el Archivo en la Document Library
+			ServiceContext serviceContextImg= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
+			//Damos permisos al archivo para usuarios de comunidad.
+			serviceContextImg.setAddGroupPermissions(true);
+			FileEntry image = DLAppLocalServiceUtil.addFileEntry(
+				                      themeDisplay.getUserId(), repositoryId , igFolderId , fileName, contentType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContextImg ) ;
 					
 			module.setIcon(image.getFileEntryId());			
 			
 		}
-			*/
+
 		return module;
 	}
 
@@ -761,7 +764,7 @@ public static String SEPARATOR = "_";
 	}
 
 
-	private void createIGFolders(ActionRequest request,long userId,long groupId, ServiceContext serviceContext) throws PortalException, SystemException{
+	private long createIGFolders(PortletRequest request,long userId,long repositoryId) throws PortalException, SystemException{
 		//Variables for folder ids
 		Long igMainFolderId = 0L;
 		Long igPortletFolderId = 0L;
@@ -771,25 +774,29 @@ public static String SEPARATOR = "_";
 	    boolean igPortletFolderFound = false;
 	    try {
 	    	//Get the main folder
-	    	DLFolder igMainFolder = DLFolderLocalServiceUtil.getFolder(groupId,0,IMAGEGALLERY_MAINFOLDER);
+	    	Folder igMainFolder = DLAppLocalServiceUtil.getFolder(repositoryId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,IMAGEGALLERY_MAINFOLDER);
 	    	igMainFolderId = igMainFolder.getFolderId();
 	    	igMainFolderFound = true;
 	    	//Get the portlet folder
-	    	DLFolder igPortletFolder = DLFolderLocalServiceUtil.getFolder(groupId,igMainFolderId,IMAGEGALLERY_PORTLETFOLDER);
+	    	DLFolder igPortletFolder = DLFolderLocalServiceUtil.getFolder(repositoryId,igMainFolderId,IMAGEGALLERY_PORTLETFOLDER);
 	    	igPortletFolderId = igPortletFolder.getFolderId();
 	    	igPortletFolderFound = true;
 	    } catch (Exception ex) {
-	    	ex.printStackTrace(); //Not found main folder
 	    }
+	    
+		ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFolder.class.getName(), request);
+		//Damos permisos al archivo para usuarios de comunidad.
+		serviceContext.setAddGroupPermissions(true);
+	    
 	    //Create main folder if not exist
 	    if(!igMainFolderFound) {
-	    	Folder newImageMainFolder=DLAppLocalServiceUtil.addFolder(userId, groupId, 0, IMAGEGALLERY_MAINFOLDER, IMAGEGALLERY_MAINFOLDER_DESCRIPTION, serviceContext);
+	    	Folder newImageMainFolder=DLAppLocalServiceUtil.addFolder(userId, repositoryId, 0, IMAGEGALLERY_MAINFOLDER, IMAGEGALLERY_MAINFOLDER_DESCRIPTION, serviceContext);
 	    	igMainFolderId = newImageMainFolder.getFolderId();
 	    	igMainFolderFound = true;
 	    }
 	    //Create portlet folder if not exist
 	    if(igMainFolderFound && !igPortletFolderFound){
-	    	Folder newImagePortletFolder = DLAppLocalServiceUtil.addFolder(userId, groupId, igMainFolderId, IMAGEGALLERY_PORTLETFOLDER, IMAGEGALLERY_PORTLETFOLDER_DESCRIPTION, serviceContext);	    	
+	    	Folder newImagePortletFolder = DLAppLocalServiceUtil.addFolder(userId, repositoryId, igMainFolderId, IMAGEGALLERY_PORTLETFOLDER, IMAGEGALLERY_PORTLETFOLDER_DESCRIPTION, serviceContext);	    	
 	    	igPortletFolderFound = true;
 	    	igPortletFolderId = newImagePortletFolder.getFolderId();
 	    }
@@ -798,10 +805,10 @@ public static String SEPARATOR = "_";
 	    	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMddHHmmss");
 	    	Date date = new Date();
 	    	String igRecordFolderName=dateFormat.format(date)+SEPARATOR+userId;
-	    	Folder newImageRecordFolder = DLAppLocalServiceUtil.addFolder(userId,groupId, igPortletFolderId,igRecordFolderName, "", serviceContext);
+	    	Folder newImageRecordFolder = DLAppLocalServiceUtil.addFolder(userId,repositoryId, igPortletFolderId,igRecordFolderName, igRecordFolderName, serviceContext);
 	    	igRecordFolderId = newImageRecordFolder.getFolderId();
 	    }
-	    igFolderId = igRecordFolderId;
+	    return igRecordFolderId;
 	  }
 
 	protected String editmoduleJSP;
