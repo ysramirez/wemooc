@@ -41,6 +41,11 @@
 		</portlet:renderURL>
 		<liferay-ui:icon image="add" label="<%= true %>" message="newquestion" url='<%= newquestionURL %>' />
 	</div>
+	<liferay-portlet:resourceURL var="exportURL" >
+		<portlet:param name="action" value="export"/>
+		<portlet:param name="actId" value="<%=Long.toString(learnact.getActId()) %>"/>
+	</liferay-portlet:resourceURL>
+	<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
 	<%
 		java.util.List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(learnact.getActId());
 	%>

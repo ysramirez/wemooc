@@ -429,19 +429,21 @@ public class ExecActivity extends MVCPortlet
 	
 		        //Crear la cabecera con las preguntas.
 		        List<TestQuestion> questionsTitle = TestQuestionLocalServiceUtil.getQuestions(actId);
-		        //Añadimos 2 columnas para mostrar el nombre del usuario y la fecha del try
-		        String[] cabeceras = new String[questionsTitle.size()+2];
+		        //Añadimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
+		        int numExtraCols = 3;
+		        String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
 		        
 		        //Guardamos el orden en que obtenemos las preguntas de la base de datos para poner las preguntas en el mismo orden.
 		        Long []questionOrder = new Long[questionsTitle.size()];
 		        
-		        //En esta columna vamos a tener el nombre del usuario.
+		        //En las columnas extra ponemos la cabecera
 		        cabeceras[0]="User";
-		        cabeceras[1]="Date";
+		        cabeceras[1]="UserId";
+		        cabeceras[2]="Date";
 		        
-		        for(int i=2;i<questionsTitle.size()+2;i++){
-		        	cabeceras[i]=formatString(questionsTitle.get(i-2).getText())+" ("+questionsTitle.get(i-2).getQuestionId()+")";
-		        	questionOrder[i-2]=questionsTitle.get(i-2).getQuestionId();
+		        for(int i=numExtraCols;i<questionsTitle.size()+numExtraCols;i++){
+		        	cabeceras[i]=formatString(questionsTitle.get(i-numExtraCols).getText())+" ("+questionsTitle.get(i-numExtraCols).getQuestionId()+")";
+		        	questionOrder[i-numExtraCols]=questionsTitle.get(i-numExtraCols).getQuestionId();
 		        }
 		        writer.writeNext(cabeceras);
 		        
@@ -475,20 +477,20 @@ public class ExecActivity extends MVCPortlet
 			        		}
 			        		
 			    			//Array con los resultados de los intentos.
-			        		String[] resultados = new String[questionOrder.length+2];
-			        		//En la primera columna del csv introducidos el nombre del estudiante.
-			        		resultados[0]=user.getFullName()+" ("+user.getUserId()+")";
-			        		//resultados[0] = String.valueOf(user.getUuid());
+			        		String[] resultados = new String[questionOrder.length+numExtraCols];
 			        		
-			        		//En la segunda columna metemos la fecha del try.
-			        		resultados[1] = String.valueOf(activity.getEndDate());
-			        		for(int i=2;i <questionOrder.length+2 ; i++){
+			        		//Introducimos los datos de las columnas extra
+			        		resultados[0]=user.getFullName();
+			        		resultados[1] = String.valueOf(user.getUserId());
+			        		resultados[2] = String.valueOf(activity.getEndDate());
+			        		
+			        		for(int i=numExtraCols;i <questionOrder.length+numExtraCols ; i++){
 			        			//Si no tenemos respuesta para la pregunta, guardamos ""
 			        			resultados[i] = "";
 			        			
 			        			for(int j=0;j <answersIds.size() ; j++){
 			        				//Cuando la respuesta se corresponda con la pregunta que corresponde.
-			        				if(Long.valueOf(getQuestionIdByAnswerId(answersIds.get(j))).compareTo(Long.valueOf(questionOrder[i-2])) == 0){
+			        				if(Long.valueOf(getQuestionIdByAnswerId(answersIds.get(j))).compareTo(Long.valueOf(questionOrder[i-numExtraCols])) == 0){
 			        					//Guardamos la respuesta en el array de resultados
 				        				resultados[i]=getAnswerTextByAnswerId(answersIds.get(j));
 				        			}
