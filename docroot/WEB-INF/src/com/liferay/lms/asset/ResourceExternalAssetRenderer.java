@@ -23,10 +23,10 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 
-public class ResourceAssetRenderer extends BaseAssetRenderer {
+public class ResourceExternalAssetRenderer extends BaseAssetRenderer {
 
 	private LearningActivity _learningactivity;
-	public ResourceAssetRenderer (LearningActivity learningactivity) {
+	public ResourceExternalAssetRenderer (LearningActivity learningactivity) {
 		_learningactivity = learningactivity;
 		}
 		public long getClassPK() {
@@ -72,12 +72,12 @@ public class ResourceAssetRenderer extends BaseAssetRenderer {
 			            WebKeys.THEME_DISPLAY);
 		
 			 PortletURL portletURL = liferayPortletResponse.createRenderURL(
-					 "resourceactivity_WAR_liferaylmsportlet");
+					 "resourceExternalActivity_WAR_liferaylmsportlet");
 
-			  portletURL.setParameter("mvcPath", "/html/resourceactivity/admin/edit.jsp");
-			  portletURL.setParameter("jspPage", "/html/resourceactivity/admin/edit.jsp");
-			     
-	          portletURL.setParameter(
+			 portletURL.setParameter("mvcPath", "/html/resourceExternalActivity/admin/edit.jsp");
+			 portletURL.setParameter("jspPage", "/html/resourceExternalActivity/admin/edit.jsp");
+
+	         portletURL.setParameter(
 						"actId",Long.toString( _learningactivity.getActId()));
 				return portletURL;
 			}
@@ -87,10 +87,10 @@ public class ResourceAssetRenderer extends BaseAssetRenderer {
 					LiferayPortletResponse liferayPortletResponse,
 					String noSuchEntryRedirect) throws Exception {
 				// TODO Auto-generated method stub
-				PortletURL viewPortletURL = liferayPortletResponse.createRenderURL("resourceactivity_WAR_liferaylmsportlet");
+				PortletURL viewPortletURL = liferayPortletResponse.createRenderURL("resourceExternalActivity_WAR_liferaylmsportlet");
 	            viewPortletURL.setWindowState(LiferayWindowState.NORMAL);
 				viewPortletURL.setParameter(
-					"jspPage", "/html/resourceactivity/view.jsp");
+					"jspPage", "/html/resourceExternalActivity/view.jsp");
 				viewPortletURL.setParameter(
 					"actId",Long.toString( _learningactivity.getActId()));
 			

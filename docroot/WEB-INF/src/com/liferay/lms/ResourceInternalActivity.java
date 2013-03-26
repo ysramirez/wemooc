@@ -50,7 +50,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 /**
  * Portlet implementation class ResourceActivity
  */
-public class ResourceActivity extends MVCPortlet {
+public class ResourceInternalActivity extends MVCPortlet {
 	public static String DOCUMENTLIBRARY_MAINFOLDER = "ResourceUploads";
 
 	public void selectResource(ActionRequest actionRequest, ActionResponse actionResponse)

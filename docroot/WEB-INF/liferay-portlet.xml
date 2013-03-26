@@ -54,12 +54,21 @@
 	</portlet>
 	
 	<portlet>
-		<portlet-name>resourceactivity</portlet-name>
+		<portlet-name>resourceInternalActivity</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
-		<css-class-wrapper>resourceactivity-portlet</css-class-wrapper>
+		<css-class-wrapper>resourceInternalActivity-portlet</css-class-wrapper>
+	</portlet>
+		
+	<portlet>
+		<portlet-name>resourceExternalActivity</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<css-class-wrapper>resourceExternalActivity-portlet</css-class-wrapper>
 	</portlet>
 	
 	<portlet>
