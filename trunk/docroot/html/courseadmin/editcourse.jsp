@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.learningactivity.courseeval.CourseEval"%>
+<%@page import="com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
@@ -117,7 +119,23 @@ else
 	</c:if>
 	<aui:input type="textarea" cols="100" rows="4" name="summary" label="summary" value="<%=summary %>"/>
 	
-	
+	<aui:select name="courseEvalId" label="course-correction-method">
+	<%
+	CourseEvalRegistry cer=new CourseEvalRegistry();
+	for(CourseEval ce:cer.getCourseEvals())
+	{
+		String selected="false";
+		if(course.getCourseEvalId()==ce.getTypeId())
+		{
+			selected="true";
+		}
+		
+		%>
+		<aui:option value="<%=ce.getTypeId() %>" selected="<%=selected %>"><%=ce.getName(locale) %></aui:option>
+		<%
+	}
+	%>
+	</aui:select>
 
 	
 	<aui:field-wrapper label="start-inscription-date">
