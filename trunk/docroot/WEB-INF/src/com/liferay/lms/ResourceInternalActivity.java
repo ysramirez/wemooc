@@ -240,7 +240,7 @@ else
 			activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest, "actId", 0));
 			long typeId=activity.getTypeId();
 			
-			if(typeId==2)
+			if(typeId==7)
 			{
 				super.render(renderRequest, renderResponse);
 			}
