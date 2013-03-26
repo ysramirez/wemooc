@@ -12,6 +12,12 @@ public abstract class BaseLearningActivityType implements LearningActivityType{
 	}
 
 	@Override
+	public boolean gradebook() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
 	public String getDescription(Locale locale) {
 		// TODO Auto-generated method stub
 		return "";
