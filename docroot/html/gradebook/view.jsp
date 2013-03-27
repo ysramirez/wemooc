@@ -54,7 +54,7 @@ for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId
 	
 	boolean isTeacher=false; 
 	for(Role role : RoleServiceUtil.getUserGroupRoles(usuario.getUserId(), themeDisplay.getScopeGroupId())){
-		if(("courseTeacher".equals(role.getName()))||(RoleConstants.ADMINISTRATOR.equals(role.getName()))) {
+		if(("courseTeacher".equals(role.getName()))||("Site Owner".equals(role.getName()))||("courseEditor".equals(role.getName()))) {
 			isTeacher=true;
 			break;
 		}
