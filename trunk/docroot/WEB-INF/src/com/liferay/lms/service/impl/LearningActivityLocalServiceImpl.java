@@ -139,7 +139,7 @@ public class LearningActivityLocalServiceImpl
 					larn.getActId(), larn.getUuid(),typeId, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
+					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(serviceContext.getLocale()),null, null, 0, 0,
 					null, false);
 			SocialActivityLocalServiceUtil.addUniqueActivity(
 					larn.getUserId(), larn.getGroupId(),
@@ -183,7 +183,7 @@ public class LearningActivityLocalServiceImpl
 						larn.getActId(), larn.getUuid(),larn.getTypeId(), serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-						ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(),null, null, 0, 0,
+						ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(serviceContext.getLocale()),null, null, 0, 0,
 					null, false);
 			SocialActivityLocalServiceUtil.addActivity(
 					larn.getUserId(), larn.getGroupId(),
