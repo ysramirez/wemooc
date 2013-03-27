@@ -12,7 +12,7 @@ AssetEntry asset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(),cour
 if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW))
 {
 %>
-<p><%=asset.getSummary(themeDisplay.getLocale() %></p>
+<p><%=asset.getSummary(themeDisplay.getLocale()) %></p>
 
 <%}
 else
