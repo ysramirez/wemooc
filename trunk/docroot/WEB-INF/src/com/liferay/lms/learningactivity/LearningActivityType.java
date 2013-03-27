@@ -22,5 +22,7 @@ public interface LearningActivityType
 	public String getUrlIcon();
 	public String getDescription(Locale locale);
 	public boolean gradebook();
+	String getMesageEditDetails(Locale locale);
+	public boolean hasEditDetails();
 
 }
