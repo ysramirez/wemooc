@@ -18,6 +18,7 @@
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.portal.util.comparator.UserFirstNameComparator"%>
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 
 <%
@@ -51,10 +52,20 @@
 
 			
 			boolean isTeacher=false;
-			for(Role role : themeDisplay.getUser().getRoles()){
-				if(("courseTeacher".equals(role.getName()))||(RoleConstants.ADMINISTRATOR.equals(role.getName()))) {
+					
+			for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUserId(), themeDisplay.getScopeGroupId())){
+				if("courseTeacher".equals(role.getName())) {
 					isTeacher=true;
 					break;
+				}
+			}
+				
+			if(isTeacher==false){
+				for(Role role : themeDisplay.getUser().getRoles()){
+					if(RoleConstants.ADMINISTRATOR.equals(role.getName())) {
+						isTeacher=true;
+						break;
+					}
 				}
 			}
 		%>

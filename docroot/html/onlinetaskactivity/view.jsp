@@ -24,6 +24,7 @@
 <%@page import="com.liferay.portal.kernel.util.PropsKeys"%>
 <%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 
 <%@ include file="/init.jsp" %>
 
@@ -80,13 +81,23 @@ else
 </liferay-portlet:renderURL>
 
 <% 
-		boolean isTeacher=false;
+	boolean isTeacher=false;
+	
+	for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUserId(), themeDisplay.getScopeGroupId())){
+		if("courseTeacher".equals(role.getName())) {
+			isTeacher=true;
+			break;
+		}
+	}
+		
+	if(isTeacher==false){
 		for(Role role : themeDisplay.getUser().getRoles()){
-			if(("courseTeacher".equals(role.getName()))||(RoleConstants.ADMINISTRATOR.equals(role.getName()))) {
+			if(RoleConstants.ADMINISTRATOR.equals(role.getName())) {
 				isTeacher=true;
 				break;
 			}
 		}
+	}
 %>
 		        
 <portlet:renderURL var="viewUrlPopGrades" windowState="<%= LiferayWindowState.POP_UP.toString() %>">   
