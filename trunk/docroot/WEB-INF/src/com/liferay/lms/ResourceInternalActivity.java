@@ -5,11 +5,11 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
+import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -18,13 +18,13 @@ import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
@@ -37,13 +37,10 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
-import com.liferay.portlet.documentlibrary.model.DLFileVersion;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFolderLocalService;
-import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
@@ -56,7 +53,6 @@ public class ResourceInternalActivity extends MVCPortlet {
 	public void selectResource(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 	
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		String jspPage = ParamUtil.getString(actionRequest, "jspPage");
 		long actId = ParamUtil.getLong(actionRequest, "actId", 0);
 		long entryId = ParamUtil.getLong(actionRequest, "entryId", 0);
@@ -78,14 +74,14 @@ public class ResourceInternalActivity extends MVCPortlet {
 	
 	String jspPage = ParamUtil.getString(actionRequest, "jspPage");
 	long actId = ParamUtil.getLong(actionRequest, "actId", 0);
-	long entryId = ParamUtil.getLong(actionRequest, "entryId", 0);
 	ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivity.class.getName(), actionRequest);
 	String fileName = request.getFileName("fileName");
+	String mimeTypeFileName = request.getContentType("fileName");
 	String fileName2 = request.getFileName("fileName2");
+	String mimeTypeFileName2 = request.getContentType("fileName2");
 	boolean deleteVideo=ParamUtil.getBoolean(request, "deletevideo",false);
 	boolean deleteComplementary=ParamUtil.getBoolean(request, "deletecomplementary",false);
 	String description = request.getParameter("description");
-	String youtubecode=ParamUtil.getString(request,"youtubecode","");
 	String title = fileName;// + " uploaded by " + user.getFullName();
 	AssetEntry entry=null;
 	AssetEntry entry2=null;
@@ -128,56 +124,48 @@ public class ResourceInternalActivity extends MVCPortlet {
 		
 	}
 	
+	long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+	
 	if(fileName!=null && !fileName.equals(""))
 	{
-		File file = request.getFile("fileName");
-		long filesize=	request.getSize("fileName");
-		
+		File file = request.getFile("fileName");		
 		Element video=rootElement.element("video");
 		if(video!=null &&!video.attributeValue("id","").equals(""))
 		{
 			AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(video.attributeValue("id")));
 			DLFileEntry videofile=DLFileEntryLocalServiceUtil.getDLFileEntry(videoAsset.getClassPK());
-			DLFileVersion videofileVersion = videofile.getFileVersion();
 			DLFileEntryLocalServiceUtil.deleteFileEntry(videofile.getFileEntryId());
 		}
-		long folderId=createDLFolders(actionRequest, themeDisplay.getUserId(),themeDisplay.getScopeGroupId(), serviceContext);
-		InputStream istrem=new FileInputStream(file);
-		String mimeType=MimeTypesUtil.getContentType(file.getName());
-		DLFileEntry dlDocument = DLFileEntryLocalServiceUtil.addFileEntry(
-				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), themeDisplay.getScopeGroupId(), folderId, fileName,mimeType,
-				title, title,"",0,new HashMap<String,Fields>(), file,
-				istrem,filesize, serviceContext);
-			
-			//Damos permisos al archivo para usuarios de comunidad.
-		DLFileEntryLocalServiceUtil.addFileEntryResources(dlDocument, true, false);
-		entry=AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), dlDocument.getPrimaryKey())	;
+		
+		
+		long folderId=createDLFolders(themeDisplay.getUserId(),repositoryId,actionRequest);
+		
+		ServiceContext serviceContextFile= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), actionRequest);
+		//Damos permisos al archivo para usuarios de comunidad.
+		serviceContext.setAddGroupPermissions(true);
+		FileEntry dlDocument = DLAppLocalServiceUtil.addFileEntry(
+			                      themeDisplay.getUserId(), repositoryId , folderId , fileName, mimeTypeFileName, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContextFile ) ;
+		entry=AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), dlDocument.getPrimaryKey());
 		}
 
 	if(fileName2!=null && !fileName2.equals(""))
 	{
-		File file = request.getFile("fileName2");
-		long filesize=	request.getSize("fileName2");
+		File file2 = request.getFile("fileName2");
 		Element documento=rootElement.element("document");
 		if(documento!=null&&!documento.attributeValue("id","").equals(""))
 		{
 			AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(documento.attributeValue("id")));
 			DLFileEntry videofile=DLFileEntryLocalServiceUtil.getDLFileEntry(videoAsset.getClassPK());
-			DLFileVersion videofileVersion = videofile.getFileVersion();
 			DLFileEntryLocalServiceUtil.deleteFileEntry(videofile.getFileEntryId());
 		}
-		long folderId=createDLFolders(actionRequest, themeDisplay.getUserId(),themeDisplay.getScopeGroupId(), serviceContext);
-		InputStream istrem=new FileInputStream(file);
-		String mimeType=MimeTypesUtil.getContentType(file.getName());
-		
-		DLFileEntry dlDocument = DLFileEntryLocalServiceUtil.addFileEntry(
-				themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), themeDisplay.getScopeGroupId(), folderId, fileName,mimeType,
-				title, title,"",0,new HashMap<String,Fields>(), file,
-				istrem,filesize, serviceContext);
-			
-			//Damos permisos al archivo para usuarios de comunidad.
-		DLFileEntryLocalServiceUtil.addFileEntryResources(dlDocument, true, false);
-		entry2=AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), dlDocument.getPrimaryKey())	;
+		long folderId=createDLFolders(themeDisplay.getUserId(),repositoryId, actionRequest);
+		ServiceContext serviceContextFile2= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), actionRequest);
+		//Damos permisos al archivo para usuarios de comunidad.
+		serviceContext.setAddGroupPermissions(true);
+		FileEntry dlDocument = DLAppLocalServiceUtil.addFileEntry(
+			                      themeDisplay.getUserId(), repositoryId , folderId , fileName2, mimeTypeFileName2, fileName2, StringPool.BLANK, StringPool.BLANK, file2 , serviceContextFile2 ) ;
+		entry2=AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), dlDocument.getPrimaryKey());
+
 		if(entry2!=null)
 		{
 			if(documento!=null)
@@ -191,7 +179,7 @@ public class ResourceInternalActivity extends MVCPortlet {
 		}
 	}
 	
-	if(entry!=null || !"".equals(youtubecode))
+	if(entry!=null)
 	{
 		Element video=rootElement.element("video");
 		if(video!=null)
@@ -200,17 +188,8 @@ public class ResourceInternalActivity extends MVCPortlet {
 			rootElement.remove(video);
 		}
 		video = SAXReaderUtil.createElement("video");
-		if(entry!=null)
-		{
-			video.addAttribute("id", Long.toString(entry.getEntryId()));
-			video.setText("");
-		}
-		else
-		{
-			
-			video.setText(youtubecode);
-		}
-		
+		video.addAttribute("id", Long.toString(entry.getEntryId()));
+		video.setText("");
 		rootElement.add(video);
 		
 		
@@ -257,7 +236,7 @@ else
 		}			
 }
 }
-	private long createDLFolders(ActionRequest request,Long userId,Long groupId,ServiceContext serviceContext) throws PortalException, SystemException{
+	private long createDLFolders(Long userId,Long repositoryId,PortletRequest portletRequest) throws PortalException, SystemException{
 		//Variables for folder ids
 		Long dlMainFolderId = 0L;
 		//Search for folder in Document Library
@@ -265,18 +244,22 @@ else
         //Get main folder
         try {
         	//Get main folder
-        	Folder dlFolderMain = DLAppLocalServiceUtil.getFolder(groupId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,DOCUMENTLIBRARY_MAINFOLDER);
+        	Folder dlFolderMain = DLAppLocalServiceUtil.getFolder(repositoryId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,DOCUMENTLIBRARY_MAINFOLDER);
         	dlMainFolderId = dlFolderMain.getFolderId();
         	dlMainFolderFound = true;
         	//Get portlet folder
         } catch (Exception ex){
-        	ex.printStackTrace();//Not found Main Folder
         }
+        
+		ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFolder.class.getName(), portletRequest);
+		//Damos permisos al archivo para usuarios de comunidad.
+		serviceContext.setAddGroupPermissions(true);
+        
         //Create main folder if not exist
         if(!dlMainFolderFound){
-        	Folder newDocumentMainFolder = DLAppLocalServiceUtil.addFolder(userId, groupId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DOCUMENTLIBRARY_MAINFOLDER, DOCUMENTLIBRARY_MAINFOLDER, serviceContext);
-        	dlMainFolderId = newDocumentMainFolder.getFolderId();
+        	Folder newDocumentMainFolder = DLAppLocalServiceUtil.addFolder(userId, repositoryId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DOCUMENTLIBRARY_MAINFOLDER, DOCUMENTLIBRARY_MAINFOLDER, serviceContext);
         	dlMainFolderFound = true;
+        	dlMainFolderId = newDocumentMainFolder.getFolderId();
         }
         //Create portlet folder if not exist
      
