@@ -124,10 +124,10 @@ else
 	CourseEvalRegistry cer=new CourseEvalRegistry();
 	for(CourseEval ce:cer.getCourseEvals())
 	{
-		String selected="false";
+		boolean selected=false;
 		if(course.getCourseEvalId()==ce.getTypeId())
 		{
-			selected="true";
+			selected=true;
 		}
 		
 		%>
