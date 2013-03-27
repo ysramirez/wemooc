@@ -87,11 +87,7 @@ if(learnact!=null)
 	endHour=Integer.parseInt(formatHour.format(learnact.getEnddate()));
 	endMin=Integer.parseInt(formatMin.format(learnact.getEnddate()));
 	%>
-
-	<portlet:actionURL name="editactivity" var="editURL">
-		<portlet:param name="actId" value="<%=Long.toString(learnact.getActId()) %>" />
-	</portlet:actionURL>
-
+	
 	<portlet:actionURL name="deleteMyTries" var="deleteMyTriesURL">
 		<portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
 		<portlet:param name="actId" value="0" />
@@ -102,7 +98,16 @@ if(learnact!=null)
 	<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 	
 	<div class="acticons"> 
-		<liferay-ui:icon image="edit" message="edit-activity-details" label="true" url="<%=editURL.toString() %>" />
+		<%
+		if(larntype.hasEditDetails()){
+		%>
+			<portlet:actionURL name="editactivity" var="editURL">
+				<portlet:param name="actId" value="<%=Long.toString(learnact.getActId()) %>" />
+			</portlet:actionURL>
+			<liferay-ui:icon image="edit" message="edit-activity-details" label="true" url="<%=editURL.toString() %>" />
+		<%
+		}
+		%>
 		<liferay-ui:icon-delete label="false" url="<%=deleteMyTriesURL.toString() %>" />
 		<a href="<%=deleteMyTriesURL.toString() %>"><liferay-ui:message key="delete-mi-tries"></liferay-ui:message></a>
 	</div>
