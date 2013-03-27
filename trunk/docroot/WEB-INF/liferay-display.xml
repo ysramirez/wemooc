@@ -39,6 +39,7 @@
 		<portlet id="surveyactivity"></portlet>
 		<portlet id="onlinetaskactivity"></portlet>
 		<portlet id="offlinetaskactivity"></portlet>
+		<portlet id="evaluationtaskactivity"></portlet>
 		<portlet id="studentmanage"></portlet>
 		<portlet id="portaladmin"></portlet>
 		<portlet id="tutoring"></portlet>
