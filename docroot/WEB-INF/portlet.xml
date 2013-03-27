@@ -1384,6 +1384,45 @@
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 	</portlet>
 	<portlet>
+	<portlet-name>evaluationtaskactivity</portlet-name>
+		<display-name>evaluationtaskActivity</display-name>
+		<portlet-class>com.liferay.lms.EvaluationActivity</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/evaluationtaskactivity/view.jsp</value>
+		</init-param>
+		<init-param>
+		      <name>add-process-action-success-action</name>
+		      <value>false</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+			<portlet-mode>EDIT</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>EvaluationTaskActivity</title>
+			<short-title>EvaluationTaskActivity</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-public-render-parameter>actId</supported-public-render-parameter>
+		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+	</portlet>
+	<portlet>
 		<portlet-name>studentmanage</portlet-name>
 		<display-name>Studen tManage</display-name>
 		<portlet-class>com.liferay.lms.StudentManage</portlet-class>
