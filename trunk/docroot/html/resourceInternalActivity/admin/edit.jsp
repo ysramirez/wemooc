@@ -22,18 +22,6 @@ String advancedKey="ADVANCED";
 AssetEntry pentry=null;
 String description=learnact.getDescription(themeDisplay.getLocale(),true);
 long actId=learnact.getActId();
-if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals("") )
-{
-	/*
-	long pentryId=Long.valueOf(learnact.getExtracontent());
-	//pentry=AssetEntryLocalServiceUtil.getEntry(entryId);
-	AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());
-
-	//AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
-	//String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
-	*/
-
-}
 
 %>
 
@@ -72,97 +60,33 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 		    </script>
 			<liferay-ui:error key="description-required" message="description-required" />
 		</aui:field-wrapper>
+		
 		<%
-		if(learnact.getExtracontent()==null||learnact.getExtracontent().trim().equals("")|| !Validator.isNumber(learnact.getExtracontent()))
+		if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals("") )
 		{
-			String youtubecode="";
-			DLFileVersion previusvideo=null;
-			DLFileVersion previusaditionalfile=null;
-			if(learnact.getExtracontent()!=null&&!learnact.getExtracontent().trim().equals(""))
-			{
-			Document document = SAXReaderUtil.read(learnact.getExtracontent());
-			Element root=document.getRootElement();
-			Element video=root.element("video");
 			
-			if(video!=null)
-			{
-				if(!video.attributeValue("id","").equals(""))
-				{
-					AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(video.attributeValue("id")));
-					DLFileEntry videofile=DLFileEntryLocalServiceUtil.getDLFileEntry(videoAsset.getClassPK());
-					DLFileVersion videofileVersion = videofile.getFileVersion();
-					String videoURL=themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + videofileVersion.getGroupId() + StringPool.SLASH + videofileVersion.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(videofileVersion.getTitle()));
-					previusvideo=videofileVersion;
-				}
-				else
-				{
-					youtubecode=video.getText();
-				}
-			}
-			Element documento=root.element("document");
-			if(documento!=null)
-			{
-				if(!documento.attributeValue("id","").equals(""))
-				{
-				AssetEntry docAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(documento.attributeValue("id")));
-				DLFileEntry docfile=DLFileEntryLocalServiceUtil.getDLFileEntry(docAsset.getClassPK());
-				DLFileVersion docfileVersion = docfile.getFileVersion();
-				previusaditionalfile=docfileVersion;
-				String docURL=themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + docfileVersion.getGroupId() + StringPool.SLASH + docfileVersion.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(docfileVersion.getTitle()));
-			
-				}
-			}
-			}
-		%>   
-		       
-        <aui:field-wrapper label="video" >
-				<aui:field-wrapper label="mp4-file" >
-	    			<aui:input inlineLabel="left" inlineField="true"
-					  	name="fileName" label="" id="fileName" type="file" value="" />
-					  	<%if(previusvideo!=null)
-			  	{
-			  	%><br>
-			  		<liferay-ui:message key="actual-file" /><aui:a href='<%= themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + previusvideo.getGroupId() + StringPool.SLASH + previusvideo.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(previusvideo.getTitle())) %>'>
-			<img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= previusvideo.getIcon() %>.png" /><%= HtmlUtil.escape(previusvideo.getTitle()) %>
-		</aui:a><aui:input type="checkbox" label="delete" name="deletevideo" value="false" inlineLabel="left"/>
-			  	<%
-			  	}
-			  	%>
-				</aui:field-wrapper>
-		</aui:field-wrapper>
-		<%
-		
+			long entryId=Long.valueOf(learnact.getExtracontent());
+			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(entryId);
+			AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());
+
+			AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
+			String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
+
 		%>
-		
-		<aui:field-wrapper label="complementary-file">		  	
-			<aui:input inlineLabel="left" inlineField="true"
-			  	name="fileName2" label="" id="fileName" type="file" value="" />
-			  	<%if(previusaditionalfile!=null)
-			  	{
-			  	%><br>
-			  		<liferay-ui:message key="actual-file" />
-			  					<aui:a href='<%= themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + previusaditionalfile.getGroupId() + StringPool.SLASH + previusaditionalfile.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(previusaditionalfile.getTitle())) %>'>
-			<img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= previusaditionalfile.getIcon() %>.png" /><%= HtmlUtil.escape(previusaditionalfile.getTitle()) %>
-		</aui:a>
-			<aui:input type="checkbox" label="delete" name="deletecomplementary" value="false" inlineLabel="left"/>
-	
-			  	<%
-			  	}
-			  	%>
-		</aui:field-wrapper>	  
-		<%
+			<h2><liferay-ui:message key="selected-content"></liferay-ui:message></h2>
+			<liferay-ui:header title="<%=assetRenderer.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
+			<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
+			<%
 		}
 		if(learnact.getExtracontent()==null||learnact.getExtracontent().trim().equals("")|| Validator.isNumber(learnact.getExtracontent()))
 		{
 		%>			   
-		<c:if test="<%= permissionChecker.hasPermission(learnact.getGroupId(), LearningActivity.class.getName(), learnact.getActId(),
-			advancedKey) %>">
+			
 	    	<liferay-portlet:renderURL var="searchResource">
 				<liferay-portlet:param name="jspPage" value="/html/resourceInternalActivity/admin/searchresource.jsp"/>
 		 		<liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
 			</liferay-portlet:renderURL>
 			<a href="<%=searchResource.toString() %>"><liferay-ui:message key="select-resource"></liferay-ui:message></a>
-	   </c:if> 
 		<%} %>
 	</aui:fieldset>
 	<aui:button-row>

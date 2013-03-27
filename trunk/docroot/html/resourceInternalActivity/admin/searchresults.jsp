@@ -12,14 +12,15 @@
 <%
 String className=ParamUtil.getString(request,"className","");
 String keywords=ParamUtil.getString(request,"keywords","");
+long groupIdSelected=ParamUtil.getLong(request,"groupId",themeDisplay.getScopeGroupId());
 AssetRendererFactory selarf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
 long[] groupIds=new long[1];
-groupIds[0]=themeDisplay.getScopeGroupId();
+groupIds[0]=groupIdSelected;
 total=0;
 if(keywords.length()>0)
 {
 
-Hits hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(),groupIds,selarf.getPortletId(),keywords,keywords,keywords,null,null,false,searchContainer.getStart(), searchContainer.getEnd());
+Hits hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(),groupIds,selarf.getPortletId(),keywords,searchContainer.getStart(), searchContainer.getEnd());
 
 
 results = new ArrayList<AssetEntry>();
@@ -59,7 +60,7 @@ orderable="false"
 />
 <liferay-portlet:actionURL name="selectResource" var="selectResourceURL">
  <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
- <liferay-portlet:param value="/html/resourceInternalActivity/admin/resource.jsp" name="jspPage"/>
+ <liferay-portlet:param value="/html/resourceInternalActivity/admin/edit.jsp" name="jspPage"/>
  <liferay-portlet:param value="<%=Long.toString(assetEntry.getEntryId()) %>" name="entryId"/>
 </liferay-portlet:actionURL>
 <liferay-ui:search-container-column-text>

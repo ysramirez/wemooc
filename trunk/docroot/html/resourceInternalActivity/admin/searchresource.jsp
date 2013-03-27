@@ -1,3 +1,5 @@
+<%@page import="org.apache.commons.lang.ArrayUtils"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
@@ -15,19 +17,27 @@ List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetR
 <aui:form name="<portlet:namespace />ressearch" action="<%=selectResource %>" method="POST">
 <aui:select name="className" label="asset-type">
 <% 
-for(AssetRendererFactory arf:factories)
-{
-	if(!arf.getClassName().equals(LearningActivity.class.getName()))
-	{
-		String assettypename=LanguageUtil.get(pageContext, "model.resource." + arf.getClassName());
+
+String assetTypes=PropsUtil.get("lms.internalresource.assettypes");
+String[] allowedAssetTypes=assetTypes.split(",");
+
+for(String className:allowedAssetTypes)
+{	
+	String assettypename=LanguageUtil.get(pageContext, "model.resource." + className);	
 	%>
-	<aui:option value="<%=arf.getClassName()%>" label="<%=assettypename%>"></aui:option>
+	<aui:option value="<%=className%>" label="<%=assettypename%>"></aui:option>
 	<%
-	}
+	
 }
 %>
-<br>
-<aui:input name="keywords" size="20" type="text"/>
 </aui:select>
+<aui:input name="keywords" size="20" type="text"/>
+<aui:select name="groupId" label="ambito">
+
+<aui:option value="<%=themeDisplay.getScopeGroupId() %>" label="course"></aui:option>
+<aui:option value="<%=themeDisplay.getCompanyGroupId() %>" label="global-contents"></aui:option>
+<aui:option value="<%=themeDisplay.getUser().getGroupId() %>" label="personal-contents"></aui:option>
+</aui:select>
+
 <aui:button type="submit" value="search" />
 </aui:form>
