@@ -6,6 +6,18 @@ import java.util.Locale;
 public abstract class BaseLearningActivityType implements LearningActivityType{
 
 	@Override
+	public String getMesageEditDetails(Locale locale) {
+		// TODO Auto-generated method stub
+		return "Edit activity details";
+	}
+
+	@Override
+	public boolean hasEditDetails() {
+		// TODO Auto-generated method stub
+		return true;
+	}
+
+	@Override
 	public String getUrlIcon() {
 		// TODO Auto-generated method stub
 		return null;
