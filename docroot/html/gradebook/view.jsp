@@ -1,5 +1,4 @@
-<%@page import="com.liferay.portal.service.RoleServiceUtil"%>
-<%@page import="com.liferay.portal.service.WebsiteServiceUtil"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
@@ -15,8 +14,7 @@
 <%
 java.util.List<LearningActivity> activities = null;
 
-	java.util.List<Module> modules = ModuleLocalServiceUtil
-			.findAllInGroup(themeDisplay.getScopeGroupId());
+	java.util.List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 
 	for(Module theModule:modules)
 	{
@@ -53,7 +51,8 @@ for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId
 {
 	
 	boolean isTeacher=false; 
-	for(Role role : RoleServiceUtil.getUserGroupRoles(usuario.getUserId(), themeDisplay.getScopeGroupId())){
+	for(Role role : RoleLocalServiceUtil.getUserGroupRoles(usuario.getUserId(), themeDisplay.getScopeGroupId())){
+		System.out.println(usuario.getFirstName() + " - " + role.getName());
 		if(("courseTeacher".equals(role.getName()))||("Site Owner".equals(role.getName()))||("courseEditor".equals(role.getName()))) {
 			isTeacher=true;
 			break;
