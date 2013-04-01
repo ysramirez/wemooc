@@ -125,7 +125,7 @@ else
 	for(CourseEval ce:cer.getCourseEvals())
 	{
 		boolean selected=false;
-		if(course.getCourseEvalId()==ce.getTypeId())
+		if(course!=null&&course.getCourseEvalId()==ce.getTypeId())
 		{
 			selected=true;
 		}
