@@ -31,7 +31,7 @@ long started=ModuleResultLocalServiceUtil.countByModule(theModule.getModuleId())
 		<%
 		}
 		%>
-		/
+		
 			
 			<%if(theModule.getEndDate()!=null)
 			{
