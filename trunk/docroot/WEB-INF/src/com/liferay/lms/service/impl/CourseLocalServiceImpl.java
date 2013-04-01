@@ -206,6 +206,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			new String[] {Boolean.TRUE.toString()});
 			//new String[] {Boolean.FALSE.toString()});
 		parameterMap.put(
+				PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE,
+				new String[] {PortletDataHandlerKeys.
+					LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE});
+		parameterMap.put(
 			PortletDataHandlerKeys.DATA_STRATEGY,
 			new String[] {PortletDataHandlerKeys.DATA_STRATEGY_MIRROR});
 		parameterMap.put(
