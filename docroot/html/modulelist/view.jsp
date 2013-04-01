@@ -75,8 +75,11 @@ image.getGroupId() %>" />
 		if(theModule.getEndDate()!=null&&today.before(theModule.getEndDate()))
 		{
 			%>
+			<liferay-ui:message key="fecha-inicio"></liferay-ui:message><br />
+			<%=	dateFormatDateTime.format(theModule.getStartDate())%><br /><br />
+
 			<liferay-ui:message key="fecha-fin"></liferay-ui:message><br />
-			<%=	dateFormatDate.format(theModule.getEndDate())%>
+			<%=	dateFormatDateTime.format(theModule.getEndDate())%>
 			<%
 		}
 	}

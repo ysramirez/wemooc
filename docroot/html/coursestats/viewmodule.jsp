@@ -132,6 +132,7 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.trials.numbers"><%=numberFormat.format(activity.getTries()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=LanguageUtil.get(pageContext, "dependencies."+String.valueOf(hasPrecedence)) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=types.get(activity.getTypeId()) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text name="coursestats.modulestats.obligatory"><%=activity.getWeightinmodule() == 1 ? "Si":"No" %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-jsp name=" " align="right" path="/html/coursestats/viewextras.jsp" />
 	</liferay-ui:search-container-row>
 	

@@ -1,3 +1,4 @@
+<%@page import="java.util.Locale"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseResultLocalServiceUtil"%>
@@ -45,7 +46,7 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 	%>
 
 	</liferay-ui:search-container-results>
-	<liferay-ui:search-container-row className="com.liferay.lms.model.Module"
+	<liferay-ui:search-container-row className="com.liferay.lms.model.module"
 		keyProperty="moduleId"
 		modelVar="module"
 	>
@@ -80,6 +81,16 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 	
 	<liferay-ui:search-container-column-text name="coursestats.start.student"><%=started %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.end.student"><%=finished %></liferay-ui:search-container-column-text>
+	
+		
+	<% if(module.getPrecedence() != 0) {
+		
+		Module modulePredence = ModuleLocalServiceUtil.getmodule(module.getPrecedence());
+	%>
+	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=modulePredence.getTitle(Locale.getDefault()) %></liferay-ui:search-container-column-text>
+	<%}else{ %>
+	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies">No</liferay-ui:search-container-column-text>
+	<%} %>
 	
 	</liferay-ui:search-container-row>
 	
