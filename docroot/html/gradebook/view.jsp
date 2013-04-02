@@ -9,6 +9,8 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.portal.model.Role"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@page import="javax.portlet.RenderResponse"%>
 <%@ include file="/init.jsp" %>
 <liferay-ui:panel-container >
 <%
@@ -19,8 +21,7 @@ java.util.List<LearningActivity> activities = null;
 	for(Module theModule:modules)
 	{
 
-	activities = LearningActivityServiceUtil
-			.getLearningActivitiesOfModule(theModule.getModuleId());
+	activities = LearningActivityServiceUtil.getLearningActivitiesOfModule(theModule.getModuleId());
 
 
 %>
@@ -58,6 +59,14 @@ for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId
 		}
 	}
 	
+	boolean isUserWatchingATeacher=false;
+	for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId())){
+		if(("courseTeacher".equals(role.getName()))||("Site Owner".equals(role.getName()))||("courseEditor".equals(role.getName()))||(RoleConstants.ADMINISTRATOR.equals(role.getName()))) {
+			isUserWatchingATeacher=true;
+			break;
+		}
+	}
+	
 	if(!isTeacher){
 		%>
 		<liferay-portlet:renderURL var="userDetailsURL">
@@ -91,23 +100,92 @@ for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId
 					
 					}
 			%>
+			
+			<portlet:renderURL var="viewUrlPopGrades" windowState="<%= LiferayWindowState.POP_UP.toString() %>">   
+				<portlet:param name="actId" value="<%=String.valueOf(learningActivity.getActId()) %>" />      
+			    <portlet:param name="jspPage" value="/html/gradebook/popups/grades.jsp" />           
+			</portlet:renderURL>
+			<portlet:renderURL var="setGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
+				<portlet:param name="ajaxAction" value="setGrades" />      
+			   	<portlet:param name="jspPage" value="/html/gradebook/popups/grades.jsp" />           
+			</portlet:renderURL>
+			<script type="text/javascript">
+			function <portlet:namespace />showPopupGrades(studentId, actId) {
+
+					AUI().use('aui-dialog','liferay-portlet-url', function(A){
+						var renderUrl = Liferay.PortletURL.createRenderURL();							
+						renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
+						renderUrl.setPortletId('<%=portletDisplay.getId()%>');
+						renderUrl.setParameter('actId', actId);
+						renderUrl.setParameter('studentId', studentId);
+						renderUrl.setParameter('jspPage', '/html/gradebook/popups/grades.jsp');
+
+						window.<portlet:namespace />popupGrades = new A.Dialog({
+							id:'<portlet:namespace />showPopupGrades',
+				            title: '<liferay-ui:message key="offlinetaskactivity.set.grades" />',
+				            centered: true,
+				            modal: true,
+				            width: 370,
+				            height: 300,
+				            after: {   
+					          	close: function(event){ 
+					          		document.location.reload();
+				            	}
+				            }
+				        }).plug(A.Plugin.IO, {
+				            uri: renderUrl.toString()
+				        }).render();
+						window.<portlet:namespace />popupGrades.show();   
+					});
+			    }
+			    
+				function <portlet:namespace />doClosePopupGrades(){
+				    AUI().use('aui-dialog', function(A) {
+				    	window.<portlet:namespace />popupGrades.close();
+				    });
+				}
+				
+				function <portlet:namespace />doSaveGrades(studentId, actId) {
+			        AUI().use('aui-io-request','io-form', function(A) {
+			            A.io.request('<%= setGradesURL %>', { 
+			                method : 'POST', 
+			                form: {
+			                    id: '<portlet:namespace />fn_grades'
+			                },
+			                dataType : 'html', 
+			                headers:{
+			                	actId: actId,
+			                	studentId: studentId
+			                },
+			                on : { 
+			                    success : function() { 
+			                    	A.one('.aui-dialog-bd').set('innerHTML',this.get('responseData'));				                    	
+			                    } 
+			                } 
+			            });
+			        });
+			    }
+				
+				</script>
+			
 			<td>
+			
 			<%=result %>
-			<%if(status.equals("passed"))
-				{%>
-			 <liferay-ui:icon image="checked"></liferay-ui:icon>
-			 <%}
-			%>
-			<%if(status.equals("not-passed"))
-				{%>
-			 <liferay-ui:icon image="close"></liferay-ui:icon>
-			 <%}
-			%>
-			<%if(status.equals("started"))
-				{%>
-			 <liferay-ui:icon image="unchecked"></liferay-ui:icon>
-			 <%}
-			%>
+			<%if(status.equals("passed")){%>
+			 	<liferay-ui:icon image="checked"></liferay-ui:icon>
+			 	<%if(isUserWatchingATeacher){%>
+			 		<liferay-ui:icon image="edit" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupGrades("+Long.toString(usuario.getUserId())+","+String.valueOf(learningActivity.getActId())+");" %>' />
+			  <%}
+			}
+			if(status.equals("not-passed")){%>
+			 	<liferay-ui:icon image="close"></liferay-ui:icon>
+			 	<%if(isUserWatchingATeacher){%>
+			 		<liferay-ui:icon image="edit" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupGrades("+Long.toString(usuario.getUserId())+","+String.valueOf(learningActivity.getActId())+");" %>' />
+			 	<%}
+			}
+			if(status.equals("started")){%>
+			 	<liferay-ui:icon image="unchecked"></liferay-ui:icon>
+			<%}%>
 			</td>
 			<%
 		}
