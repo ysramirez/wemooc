@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.model.LearningActivity"%>
 
 <%
 
