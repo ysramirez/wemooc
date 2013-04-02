@@ -1,0 +1,24 @@
+
+<aui:form  name="fm_activities" method="post" >
+	<aui:fieldset>
+		<aui:input type="hidden" name="actId" value='<%=Long.toString(actId) %>' />
+		<aui:input type="hidden" name="evalActId" value='' />
+		<aui:input type="checkbox"
+				   name="state"
+				   inlineLabel="left" 
+			       label="Obligatorio" />
+		<aui:input type="text" 
+				   name="weight"
+				   inlineLabel="left" 
+			       label="Peso"  />
+		<div id="<portlet:namespace />weightError"></div>
+	</aui:fieldset>
+	<aui:button-row>
+	<button name="Save" value="save" onclick="<portlet:namespace />saveActivity();" type="button">
+		<liferay-ui:message key="offlinetaskactivity.save" />
+	</button>
+	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
+		<liferay-ui:message key="offlinetaskactivity.cancel" />
+	</button>
+	</aui:button-row>
+</aui:form>
