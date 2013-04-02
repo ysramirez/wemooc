@@ -174,7 +174,6 @@ public class GradeBook extends MVCPortlet {
 	protected void doDispatch(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
 		String ajaxAction = renderRequest.getParameter("ajaxAction");
-		System.out.println("aloja!: " + ajaxAction);
 		if(ajaxAction!=null) {
 			if("setGrades".equals(ajaxAction)) {
 				setGrades(renderRequest, renderResponse);
