@@ -18,6 +18,11 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 		
 		return "onLine";
 	}
+	
+	@Override
+	public boolean isScoreConfigurable() {
+		return true;
+	}
 
 	@Override
 	public long getTypeId() {

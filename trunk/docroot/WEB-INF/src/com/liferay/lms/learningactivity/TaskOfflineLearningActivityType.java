@@ -20,6 +20,11 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 	}
 
 	@Override
+	public boolean isScoreConfigurable() {
+		return true;
+	}
+	
+	@Override
 	public long getTypeId() {
 		// TODO Auto-generated method stub
 		return 5;
