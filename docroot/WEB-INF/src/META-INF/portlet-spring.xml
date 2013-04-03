@@ -19,9 +19,6 @@
 	<bean id="com.liferay.lms.service.LearningActivityTryLocalService" class="com.liferay.lms.service.impl.LearningActivityTryLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.LearningActivityTryService" class="com.liferay.lms.service.impl.LearningActivityTryServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.LearningActivityTryPersistence" class="com.liferay.lms.service.persistence.LearningActivityTryPersistenceImpl" parent="basePersistence" />
-	<bean id="com.liferay.lms.service.LearningTypeLocalService" class="com.liferay.lms.service.impl.LearningTypeLocalServiceImpl" />
-	<bean id="com.liferay.lms.service.LearningTypeService" class="com.liferay.lms.service.impl.LearningTypeServiceImpl" />
-	<bean id="com.liferay.lms.service.persistence.LearningTypePersistence" class="com.liferay.lms.service.persistence.LearningTypePersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.LmsPrefsLocalService" class="com.liferay.lms.service.impl.LmsPrefsLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.LmsPrefsPersistence" class="com.liferay.lms.service.persistence.LmsPrefsPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.ModuleLocalService" class="com.liferay.lms.service.impl.ModuleLocalServiceImpl" />

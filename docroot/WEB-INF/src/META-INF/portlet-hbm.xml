@@ -8,7 +8,6 @@
 	<import class="com.liferay.lms.model.LearningActivity" />
 	<import class="com.liferay.lms.model.LearningActivityResult" />
 	<import class="com.liferay.lms.model.LearningActivityTry" />
-	<import class="com.liferay.lms.model.LearningType" />
 	<import class="com.liferay.lms.model.LmsPrefs" />
 	<import class="com.liferay.lms.model.Module" />
 	<import class="com.liferay.lms.model.ModuleResult" />
@@ -119,15 +118,6 @@
 		<property name="tryData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="tryResultData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="comments" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-	</class>
-	<class name="com.liferay.lms.model.impl.LearningTypeImpl" table="Lms_LearningType">
-		<cache usage="read-write" />
-		<id name="typeId" type="long">
-			<generator class="assigned" />
-		</id>
-		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
-		<property name="name" type="com.liferay.portal.dao.orm.hibernate.StringType" />
-		<property name="className" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.LmsPrefsImpl" table="Lms_LmsPrefs">
 		<cache usage="read-write" />
