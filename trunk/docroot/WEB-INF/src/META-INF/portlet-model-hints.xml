@@ -107,12 +107,6 @@
 		</field>
 		<field name="comments" type="String" />
 	</model>
-	<model name="com.liferay.lms.model.LearningType">
-		<field name="uuid" type="String" />
-		<field name="typeId" type="long" />
-		<field name="name" type="String" />
-		<field name="className" type="String" />
-	</model>
 	<model name="com.liferay.lms.model.LmsPrefs">
 		<field name="companyId" type="long" />
 		<field name="teacherRole" type="long" />
