@@ -49,13 +49,8 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 	public ModuleResult getByModuleAndUser(long moduleId, long userId)
 		throws SystemException {
 
-		java.util.List<ModuleResult> moduleResults = moduleResultPersistence.findBymu(userId, moduleId);
-		if (moduleResults == null || moduleResults.size() == 0) {
-			return null;
-		}
-		else {
-			return moduleResults.get(0);
-		}
+		ModuleResult moduleResult = moduleResultPersistence.fetchBymu(userId, moduleId);
+		return moduleResult;	
 	}
 
 	public long countByModule(long moduleId)
@@ -87,7 +82,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 												 */lactr.getPassed()) {
 			long moduleId = learningActivity.getModuleId();
 			if (moduleResultPersistence.countBymu(userId, moduleId) > 0) {
-				moduleResult = moduleResultPersistence.findBymu(userId, moduleId).get(0);
+				moduleResult = moduleResultPersistence.fetchBymu(userId, moduleId, false);
 				if (moduleResult.getPassed()) {
 					return;
 				}

@@ -793,7 +793,7 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYRESULT_WHERE);
@@ -813,6 +813,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1080,6 +1084,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			}
 		}
 
+		else {
+			query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1191,13 +1199,15 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 		}
 
 		if (result == null) {
-			StringBundler query = new StringBundler(3);
+			StringBundler query = new StringBundler(4);
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYRESULT_WHERE);
 
 			query.append(_FINDER_COLUMN_ACT_USER_ACTID_2);
 
 			query.append(_FINDER_COLUMN_ACT_USER_USERID_2);
+
+			query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
 
 			String sql = query.toString();
 
@@ -1350,7 +1360,7 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(3);
+				query = new StringBundler(4);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYRESULT_WHERE);
@@ -1362,6 +1372,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1632,6 +1646,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			}
 		}
 
+		else {
+			query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1758,7 +1776,7 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(4);
+				query = new StringBundler(5);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYRESULT_WHERE);
@@ -1777,6 +1795,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -2073,6 +2095,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			}
 		}
 
+		else {
+			query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -2188,7 +2214,7 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYRESULT_WHERE);
@@ -2198,6 +2224,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -2453,6 +2483,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			}
 		}
 
+		else {
+			query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -2562,7 +2596,7 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYRESULT_WHERE);
@@ -2572,6 +2606,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -2827,6 +2865,10 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 			}
 		}
 
+		else {
+			query.append(LearningActivityResultModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -2930,7 +2972,7 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_LEARNINGACTIVITYRESULT;
+				sql = _SQL_SELECT_LEARNINGACTIVITYRESULT.concat(LearningActivityResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			Session session = null;
@@ -3505,8 +3547,6 @@ public class LearningActivityResultPersistenceImpl extends BasePersistenceImpl<L
 	protected LearningActivityResultPersistence learningActivityResultPersistence;
 	@BeanReference(type = LearningActivityTryPersistence.class)
 	protected LearningActivityTryPersistence learningActivityTryPersistence;
-	@BeanReference(type = LearningTypePersistence.class)
-	protected LearningTypePersistence learningTypePersistence;
 	@BeanReference(type = LmsPrefsPersistence.class)
 	protected LmsPrefsPersistence lmsPrefsPersistence;
 	@BeanReference(type = ModulePersistence.class)

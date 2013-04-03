@@ -638,7 +638,7 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYTRY_WHERE);
@@ -658,6 +658,10 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityTryModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -925,6 +929,10 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 			}
 		}
 
+		else {
+			query.append(LearningActivityTryModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1036,7 +1044,7 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYTRY_WHERE);
@@ -1046,6 +1054,10 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityTryModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1301,6 +1313,10 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 			}
 		}
 
+		else {
+			query.append(LearningActivityTryModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1420,7 +1436,7 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(3);
+				query = new StringBundler(4);
 			}
 
 			query.append(_SQL_SELECT_LEARNINGACTIVITYTRY_WHERE);
@@ -1432,6 +1448,10 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(LearningActivityTryModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1702,6 +1722,10 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 			}
 		}
 
+		else {
+			query.append(LearningActivityTryModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1807,7 +1831,7 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_LEARNINGACTIVITYTRY;
+				sql = _SQL_SELECT_LEARNINGACTIVITYTRY.concat(LearningActivityTryModelImpl.ORDER_BY_JPQL);
 			}
 
 			Session session = null;
@@ -2154,8 +2178,6 @@ public class LearningActivityTryPersistenceImpl extends BasePersistenceImpl<Lear
 	protected LearningActivityResultPersistence learningActivityResultPersistence;
 	@BeanReference(type = LearningActivityTryPersistence.class)
 	protected LearningActivityTryPersistence learningActivityTryPersistence;
-	@BeanReference(type = LearningTypePersistence.class)
-	protected LearningTypePersistence learningTypePersistence;
 	@BeanReference(type = LmsPrefsPersistence.class)
 	protected LmsPrefsPersistence lmsPrefsPersistence;
 	@BeanReference(type = ModulePersistence.class)

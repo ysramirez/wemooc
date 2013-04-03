@@ -79,6 +79,8 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		};
 	public static final String TABLE_SQL_CREATE = "create table Lms_LearningActivityResult (uuid_ VARCHAR(75) null,larId LONG not null primary key,actId LONG,userId LONG,result LONG,startDate DATE null,endDate DATE null,latId LONG,comments TEXT null,passed BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_LearningActivityResult";
+	public static final String ORDER_BY_JPQL = " ORDER BY learningActivityResult.larId ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY Lms_LearningActivityResult.larId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -285,6 +287,8 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 	}
 
 	public void setLarId(long larId) {
+		_columnBitmask = -1L;
+
 		_larId = larId;
 	}
 
@@ -472,17 +476,23 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 	}
 
 	public int compareTo(LearningActivityResult learningActivityResult) {
-		long primaryKey = learningActivityResult.getPrimaryKey();
+		int value = 0;
 
-		if (getPrimaryKey() < primaryKey) {
-			return -1;
+		if (getLarId() < learningActivityResult.getLarId()) {
+			value = -1;
 		}
-		else if (getPrimaryKey() > primaryKey) {
-			return 1;
+		else if (getLarId() > learningActivityResult.getLarId()) {
+			value = 1;
 		}
 		else {
-			return 0;
+			value = 0;
 		}
+
+		if (value != 0) {
+			return value;
+		}
+
+		return 0;
 	}
 
 	@Override

@@ -29,8 +29,6 @@ import com.liferay.lms.service.LearningActivityResultService;
 import com.liferay.lms.service.LearningActivityService;
 import com.liferay.lms.service.LearningActivityTryLocalService;
 import com.liferay.lms.service.LearningActivityTryService;
-import com.liferay.lms.service.LearningTypeLocalService;
-import com.liferay.lms.service.LearningTypeService;
 import com.liferay.lms.service.LmsPrefsLocalService;
 import com.liferay.lms.service.ModuleLocalService;
 import com.liferay.lms.service.ModuleResultLocalService;
@@ -51,7 +49,6 @@ import com.liferay.lms.service.persistence.CourseResultPersistence;
 import com.liferay.lms.service.persistence.LearningActivityPersistence;
 import com.liferay.lms.service.persistence.LearningActivityResultPersistence;
 import com.liferay.lms.service.persistence.LearningActivityTryPersistence;
-import com.liferay.lms.service.persistence.LearningTypePersistence;
 import com.liferay.lms.service.persistence.LmsPrefsPersistence;
 import com.liferay.lms.service.persistence.ModulePersistence;
 import com.liferay.lms.service.persistence.ModuleResultPersistence;
@@ -432,62 +429,6 @@ public abstract class TestAnswerServiceBaseImpl extends BaseServiceImpl
 	public void setLearningActivityTryPersistence(
 		LearningActivityTryPersistence learningActivityTryPersistence) {
 		this.learningActivityTryPersistence = learningActivityTryPersistence;
-	}
-
-	/**
-	 * Returns the learning type local service.
-	 *
-	 * @return the learning type local service
-	 */
-	public LearningTypeLocalService getLearningTypeLocalService() {
-		return learningTypeLocalService;
-	}
-
-	/**
-	 * Sets the learning type local service.
-	 *
-	 * @param learningTypeLocalService the learning type local service
-	 */
-	public void setLearningTypeLocalService(
-		LearningTypeLocalService learningTypeLocalService) {
-		this.learningTypeLocalService = learningTypeLocalService;
-	}
-
-	/**
-	 * Returns the learning type remote service.
-	 *
-	 * @return the learning type remote service
-	 */
-	public LearningTypeService getLearningTypeService() {
-		return learningTypeService;
-	}
-
-	/**
-	 * Sets the learning type remote service.
-	 *
-	 * @param learningTypeService the learning type remote service
-	 */
-	public void setLearningTypeService(LearningTypeService learningTypeService) {
-		this.learningTypeService = learningTypeService;
-	}
-
-	/**
-	 * Returns the learning type persistence.
-	 *
-	 * @return the learning type persistence
-	 */
-	public LearningTypePersistence getLearningTypePersistence() {
-		return learningTypePersistence;
-	}
-
-	/**
-	 * Sets the learning type persistence.
-	 *
-	 * @param learningTypePersistence the learning type persistence
-	 */
-	public void setLearningTypePersistence(
-		LearningTypePersistence learningTypePersistence) {
-		this.learningTypePersistence = learningTypePersistence;
 	}
 
 	/**
@@ -1119,12 +1060,6 @@ public abstract class TestAnswerServiceBaseImpl extends BaseServiceImpl
 	protected LearningActivityTryService learningActivityTryService;
 	@BeanReference(type = LearningActivityTryPersistence.class)
 	protected LearningActivityTryPersistence learningActivityTryPersistence;
-	@BeanReference(type = LearningTypeLocalService.class)
-	protected LearningTypeLocalService learningTypeLocalService;
-	@BeanReference(type = LearningTypeService.class)
-	protected LearningTypeService learningTypeService;
-	@BeanReference(type = LearningTypePersistence.class)
-	protected LearningTypePersistence learningTypePersistence;
 	@BeanReference(type = LmsPrefsLocalService.class)
 	protected LmsPrefsLocalService lmsPrefsLocalService;
 	@BeanReference(type = LmsPrefsPersistence.class)

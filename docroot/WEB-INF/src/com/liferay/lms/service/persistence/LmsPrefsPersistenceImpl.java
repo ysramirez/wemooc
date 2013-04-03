@@ -611,8 +611,6 @@ public class LmsPrefsPersistenceImpl extends BasePersistenceImpl<LmsPrefs>
 	protected LearningActivityResultPersistence learningActivityResultPersistence;
 	@BeanReference(type = LearningActivityTryPersistence.class)
 	protected LearningActivityTryPersistence learningActivityTryPersistence;
-	@BeanReference(type = LearningTypePersistence.class)
-	protected LearningTypePersistence learningTypePersistence;
 	@BeanReference(type = LmsPrefsPersistence.class)
 	protected LmsPrefsPersistence lmsPrefsPersistence;
 	@BeanReference(type = ModulePersistence.class)
