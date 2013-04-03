@@ -3,13 +3,6 @@
 <service-builder package-path="com.liferay.lms">
 	<author>TLS</author>
 	<namespace>Lms</namespace>
-
-	<entity name="LearningType" uuid="true" local-service="true"
-		remote-service="true">
-		<column name="typeId" type="long" primary="true" />
-		<column name="name" type="String" />
-		<column name="className" type="String" />
-	</entity>
 	
 	<entity name="LearningActivity" uuid="true" local-service="true" remote-service="true">
 
@@ -164,6 +157,9 @@
 		<column name="tryData" type="String" />
 		<column name="tryResultData" type="String" />
 		<column name="comments" type="String" />
+        <order>
+            <order-column name="latId"></order-column>
+        </order>
 		
 		<finder name="act" return-type="Collection">
 			<finder-column name="actId" />
@@ -186,8 +182,11 @@
 		<column name="latId" type="long" />
 		<column name="comments" type="String" />
 		<column name="passed" type="boolean" />
+        <order>
+            <order-column name="larId"></order-column>
+        </order>
 		
-		<finder name="act_user" return-type="LearningActivityResult">
+		<finder name="act_user" return-type="LearningActivityResult" unique="true">
 			<finder-column name="actId" />
 			<finder-column name="userId" />
 		</finder>
@@ -248,9 +247,12 @@
 		<column name="userId" type="long" primary="false"></column>
 		<column name="passed" type="boolean"></column>
 		<column name="mrId" type="long" primary="true"></column>
-		<finder name="mu" return-type="Collection">
+        <order>
+            <order-column name="mrId"></order-column>
+        </order>
+		<finder name="mu" return-type="ModuleResult" unique="true">
 			<finder-column name="userId" />
-			<finder-column name="moduleId" />
+			<finder-column name="moduleId" />	
 		</finder>
 		<finder name="m" return-type="Collection">
 			<finder-column name="moduleId" />
@@ -318,11 +320,11 @@
 		<column name="userId" type="long" primary="false"></column>
 		<column name="passed" type="boolean"></column>
 
-		<finder name="uc" return-type="CourseResult">
+		<finder name="uc" return-type="CourseResult" unique="true">
 			<finder-column name="userId" />
 			<finder-column name="courseId" />
 		</finder>
-		<finder name="c" return-type="CourseResult">
+		<finder name="c" return-type="Collection">
 			<finder-column name="courseId" />
 			<finder-column name="passed" />
 		</finder>
