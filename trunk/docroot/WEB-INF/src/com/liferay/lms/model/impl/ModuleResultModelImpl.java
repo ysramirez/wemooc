@@ -74,6 +74,8 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Lms_ModuleResult (moduleId LONG,result LONG,comments VARCHAR(75) null,userId LONG,passed BOOLEAN,mrId LONG not null primary key)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_ModuleResult";
+	public static final String ORDER_BY_JPQL = " ORDER BY moduleResult.mrId ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY Lms_ModuleResult.mrId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -320,6 +322,8 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 	}
 
 	public void setMrId(long mrId) {
+		_columnBitmask = -1L;
+
 		_mrId = mrId;
 	}
 
@@ -368,17 +372,23 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 	}
 
 	public int compareTo(ModuleResult moduleResult) {
-		long primaryKey = moduleResult.getPrimaryKey();
+		int value = 0;
 
-		if (getPrimaryKey() < primaryKey) {
-			return -1;
+		if (getMrId() < moduleResult.getMrId()) {
+			value = -1;
 		}
-		else if (getPrimaryKey() > primaryKey) {
-			return 1;
+		else if (getMrId() > moduleResult.getMrId()) {
+			value = 1;
 		}
 		else {
-			return 0;
+			value = 0;
 		}
+
+		if (value != 0) {
+			return value;
+		}
+
+		return 0;
 	}
 
 	@Override

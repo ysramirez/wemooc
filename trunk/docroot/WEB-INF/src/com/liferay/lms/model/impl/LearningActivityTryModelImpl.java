@@ -79,6 +79,8 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		};
 	public static final String TABLE_SQL_CREATE = "create table Lms_LearningActivityTry (uuid_ VARCHAR(75) null,latId LONG not null primary key,actId LONG,userId LONG,startDate DATE null,result LONG,endDate DATE null,tryData VARCHAR(75) null,tryResultData TEXT null,comments VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_LearningActivityTry";
+	public static final String ORDER_BY_JPQL = " ORDER BY learningActivityTry.latId ASC";
+	public static final String ORDER_BY_SQL = " ORDER BY Lms_LearningActivityTry.latId ASC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -282,6 +284,8 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 	}
 
 	public void setLatId(long latId) {
+		_columnBitmask = -1L;
+
 		_latId = latId;
 	}
 
@@ -453,17 +457,23 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 	}
 
 	public int compareTo(LearningActivityTry learningActivityTry) {
-		long primaryKey = learningActivityTry.getPrimaryKey();
+		int value = 0;
 
-		if (getPrimaryKey() < primaryKey) {
-			return -1;
+		if (getLatId() < learningActivityTry.getLatId()) {
+			value = -1;
 		}
-		else if (getPrimaryKey() > primaryKey) {
-			return 1;
+		else if (getLatId() > learningActivityTry.getLatId()) {
+			value = 1;
 		}
 		else {
-			return 0;
+			value = 0;
 		}
+
+		if (value != 0) {
+			return value;
+		}
+
+		return 0;
 	}
 
 	@Override

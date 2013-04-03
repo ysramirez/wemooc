@@ -77,18 +77,9 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 		".List1";
 	public static final String FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION = FINDER_CLASS_NAME_ENTITY +
 		".List2";
-	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_MU = new FinderPath(ModuleResultModelImpl.ENTITY_CACHE_ENABLED,
+	public static final FinderPath FINDER_PATH_FETCH_BY_MU = new FinderPath(ModuleResultModelImpl.ENTITY_CACHE_ENABLED,
 			ModuleResultModelImpl.FINDER_CACHE_ENABLED, ModuleResultImpl.class,
-			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findBymu",
-			new String[] {
-				Long.class.getName(), Long.class.getName(),
-				
-			"java.lang.Integer", "java.lang.Integer",
-				"com.liferay.portal.kernel.util.OrderByComparator"
-			});
-	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MU = new FinderPath(ModuleResultModelImpl.ENTITY_CACHE_ENABLED,
-			ModuleResultModelImpl.FINDER_CACHE_ENABLED, ModuleResultImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findBymu",
+			FINDER_CLASS_NAME_ENTITY, "fetchBymu",
 			new String[] { Long.class.getName(), Long.class.getName() },
 			ModuleResultModelImpl.USERID_COLUMN_BITMASK |
 			ModuleResultModelImpl.MODULEID_COLUMN_BITMASK);
@@ -152,6 +143,12 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 		EntityCacheUtil.putResult(ModuleResultModelImpl.ENTITY_CACHE_ENABLED,
 			ModuleResultImpl.class, moduleResult.getPrimaryKey(), moduleResult);
 
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MU,
+			new Object[] {
+				Long.valueOf(moduleResult.getUserId()),
+				Long.valueOf(moduleResult.getModuleId())
+			}, moduleResult);
+
 		moduleResult.resetOriginalValues();
 	}
 
@@ -207,6 +204,8 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		clearUniqueFindersCache(moduleResult);
 	}
 
 	@Override
@@ -217,7 +216,17 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 		for (ModuleResult moduleResult : moduleResults) {
 			EntityCacheUtil.removeResult(ModuleResultModelImpl.ENTITY_CACHE_ENABLED,
 				ModuleResultImpl.class, moduleResult.getPrimaryKey());
+
+			clearUniqueFindersCache(moduleResult);
 		}
+	}
+
+	protected void clearUniqueFindersCache(ModuleResult moduleResult) {
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MU,
+			new Object[] {
+				Long.valueOf(moduleResult.getUserId()),
+				Long.valueOf(moduleResult.getModuleId())
+			});
 	}
 
 	/**
@@ -347,27 +356,6 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 
 		else {
 			if ((moduleResultModelImpl.getColumnBitmask() &
-					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MU.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(moduleResultModelImpl.getOriginalUserId()),
-						Long.valueOf(moduleResultModelImpl.getOriginalModuleId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MU, args);
-				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MU,
-					args);
-
-				args = new Object[] {
-						Long.valueOf(moduleResultModelImpl.getUserId()),
-						Long.valueOf(moduleResultModelImpl.getModuleId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MU, args);
-				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MU,
-					args);
-			}
-
-			if ((moduleResultModelImpl.getColumnBitmask() &
 					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_M.getColumnBitmask()) != 0) {
 				Object[] args = new Object[] {
 						Long.valueOf(moduleResultModelImpl.getOriginalModuleId())
@@ -410,6 +398,33 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 
 		EntityCacheUtil.putResult(ModuleResultModelImpl.ENTITY_CACHE_ENABLED,
 			ModuleResultImpl.class, moduleResult.getPrimaryKey(), moduleResult);
+
+		if (isNew) {
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MU,
+				new Object[] {
+					Long.valueOf(moduleResult.getUserId()),
+					Long.valueOf(moduleResult.getModuleId())
+				}, moduleResult);
+		}
+		else {
+			if ((moduleResultModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_MU.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(moduleResultModelImpl.getOriginalUserId()),
+						Long.valueOf(moduleResultModelImpl.getOriginalModuleId())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_MU, args);
+
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MU, args);
+
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MU,
+					new Object[] {
+						Long.valueOf(moduleResult.getUserId()),
+						Long.valueOf(moduleResult.getModuleId())
+					}, moduleResult);
+			}
+		}
 
 		return moduleResult;
 	}
@@ -533,96 +548,85 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 	}
 
 	/**
-	 * Returns all the module results where userId = &#63; and moduleId = &#63;.
+	 * Returns the module result where userId = &#63; and moduleId = &#63; or throws a {@link com.liferay.lms.NoSuchModuleResultException} if it could not be found.
 	 *
 	 * @param userId the user ID
 	 * @param moduleId the module ID
-	 * @return the matching module results
+	 * @return the matching module result
+	 * @throws com.liferay.lms.NoSuchModuleResultException if a matching module result could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<ModuleResult> findBymu(long userId, long moduleId)
+	public ModuleResult findBymu(long userId, long moduleId)
+		throws NoSuchModuleResultException, SystemException {
+		ModuleResult moduleResult = fetchBymu(userId, moduleId);
+
+		if (moduleResult == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("userId=");
+			msg.append(userId);
+
+			msg.append(", moduleId=");
+			msg.append(moduleId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchModuleResultException(msg.toString());
+		}
+
+		return moduleResult;
+	}
+
+	/**
+	 * Returns the module result where userId = &#63; and moduleId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param userId the user ID
+	 * @param moduleId the module ID
+	 * @return the matching module result, or <code>null</code> if a matching module result could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public ModuleResult fetchBymu(long userId, long moduleId)
 		throws SystemException {
-		return findBymu(userId, moduleId, QueryUtil.ALL_POS, QueryUtil.ALL_POS,
-			null);
+		return fetchBymu(userId, moduleId, true);
 	}
 
 	/**
-	 * Returns a range of all the module results where userId = &#63; and moduleId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
-	 * </p>
+	 * Returns the module result where userId = &#63; and moduleId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
 	 * @param userId the user ID
 	 * @param moduleId the module ID
-	 * @param start the lower bound of the range of module results
-	 * @param end the upper bound of the range of module results (not inclusive)
-	 * @return the range of matching module results
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching module result, or <code>null</code> if a matching module result could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<ModuleResult> findBymu(long userId, long moduleId, int start,
-		int end) throws SystemException {
-		return findBymu(userId, moduleId, start, end, null);
-	}
+	public ModuleResult fetchBymu(long userId, long moduleId,
+		boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { userId, moduleId };
 
-	/**
-	 * Returns an ordered range of all the module results where userId = &#63; and moduleId = &#63;.
-	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
-	 * </p>
-	 *
-	 * @param userId the user ID
-	 * @param moduleId the module ID
-	 * @param start the lower bound of the range of module results
-	 * @param end the upper bound of the range of module results (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching module results
-	 * @throws SystemException if a system exception occurred
-	 */
-	public List<ModuleResult> findBymu(long userId, long moduleId, int start,
-		int end, OrderByComparator orderByComparator) throws SystemException {
-		FinderPath finderPath = null;
-		Object[] finderArgs = null;
+		Object result = null;
 
-		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
-				(orderByComparator == null)) {
-			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_MU;
-			finderArgs = new Object[] { userId, moduleId };
-		}
-		else {
-			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_MU;
-			finderArgs = new Object[] {
-					userId, moduleId,
-					
-					start, end, orderByComparator
-				};
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_MU,
+					finderArgs, this);
 		}
 
-		List<ModuleResult> list = (List<ModuleResult>)FinderCacheUtil.getResult(finderPath,
-				finderArgs, this);
+		if (result instanceof ModuleResult) {
+			ModuleResult moduleResult = (ModuleResult)result;
 
-		if ((list != null) && !list.isEmpty()) {
-			for (ModuleResult moduleResult : list) {
-				if ((userId != moduleResult.getUserId()) ||
-						(moduleId != moduleResult.getModuleId())) {
-					list = null;
-
-					break;
-				}
+			if ((userId != moduleResult.getUserId()) ||
+					(moduleId != moduleResult.getModuleId())) {
+				result = null;
 			}
 		}
 
-		if (list == null) {
-			StringBundler query = null;
-
-			if (orderByComparator != null) {
-				query = new StringBundler(4 +
-						(orderByComparator.getOrderByFields().length * 3));
-			}
-			else {
-				query = new StringBundler(3);
-			}
+		if (result == null) {
+			StringBundler query = new StringBundler(4);
 
 			query.append(_SQL_SELECT_MODULERESULT_WHERE);
 
@@ -630,10 +634,7 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 
 			query.append(_FINDER_COLUMN_MU_MODULEID_2);
 
-			if (orderByComparator != null) {
-				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
-					orderByComparator);
-			}
+			query.append(ModuleResultModelImpl.ORDER_BY_JPQL);
 
 			String sql = query.toString();
 
@@ -650,287 +651,49 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 
 				qPos.add(moduleId);
 
-				list = (List<ModuleResult>)QueryUtil.list(q, getDialect(),
-						start, end);
+				List<ModuleResult> list = q.list();
+
+				result = list;
+
+				ModuleResult moduleResult = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MU,
+						finderArgs, list);
+				}
+				else {
+					moduleResult = list.get(0);
+
+					cacheResult(moduleResult);
+
+					if ((moduleResult.getUserId() != userId) ||
+							(moduleResult.getModuleId() != moduleId)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_MU,
+							finderArgs, moduleResult);
+					}
+				}
+
+				return moduleResult;
 			}
 			catch (Exception e) {
 				throw processException(e);
 			}
 			finally {
-				if (list == null) {
-					FinderCacheUtil.removeResult(finderPath, finderArgs);
-				}
-				else {
-					cacheResult(list);
-
-					FinderCacheUtil.putResult(finderPath, finderArgs, list);
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_MU,
+						finderArgs);
 				}
 
 				closeSession(session);
 			}
 		}
-
-		return list;
-	}
-
-	/**
-	 * Returns the first module result in the ordered set where userId = &#63; and moduleId = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @param moduleId the module ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching module result
-	 * @throws com.liferay.lms.NoSuchModuleResultException if a matching module result could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ModuleResult findBymu_First(long userId, long moduleId,
-		OrderByComparator orderByComparator)
-		throws NoSuchModuleResultException, SystemException {
-		ModuleResult moduleResult = fetchBymu_First(userId, moduleId,
-				orderByComparator);
-
-		if (moduleResult != null) {
-			return moduleResult;
-		}
-
-		StringBundler msg = new StringBundler(6);
-
-		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		msg.append("userId=");
-		msg.append(userId);
-
-		msg.append(", moduleId=");
-		msg.append(moduleId);
-
-		msg.append(StringPool.CLOSE_CURLY_BRACE);
-
-		throw new NoSuchModuleResultException(msg.toString());
-	}
-
-	/**
-	 * Returns the first module result in the ordered set where userId = &#63; and moduleId = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @param moduleId the module ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching module result, or <code>null</code> if a matching module result could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ModuleResult fetchBymu_First(long userId, long moduleId,
-		OrderByComparator orderByComparator) throws SystemException {
-		List<ModuleResult> list = findBymu(userId, moduleId, 0, 1,
-				orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the last module result in the ordered set where userId = &#63; and moduleId = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @param moduleId the module ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching module result
-	 * @throws com.liferay.lms.NoSuchModuleResultException if a matching module result could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ModuleResult findBymu_Last(long userId, long moduleId,
-		OrderByComparator orderByComparator)
-		throws NoSuchModuleResultException, SystemException {
-		ModuleResult moduleResult = fetchBymu_Last(userId, moduleId,
-				orderByComparator);
-
-		if (moduleResult != null) {
-			return moduleResult;
-		}
-
-		StringBundler msg = new StringBundler(6);
-
-		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		msg.append("userId=");
-		msg.append(userId);
-
-		msg.append(", moduleId=");
-		msg.append(moduleId);
-
-		msg.append(StringPool.CLOSE_CURLY_BRACE);
-
-		throw new NoSuchModuleResultException(msg.toString());
-	}
-
-	/**
-	 * Returns the last module result in the ordered set where userId = &#63; and moduleId = &#63;.
-	 *
-	 * @param userId the user ID
-	 * @param moduleId the module ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching module result, or <code>null</code> if a matching module result could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ModuleResult fetchBymu_Last(long userId, long moduleId,
-		OrderByComparator orderByComparator) throws SystemException {
-		int count = countBymu(userId, moduleId);
-
-		List<ModuleResult> list = findBymu(userId, moduleId, count - 1, count,
-				orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the module results before and after the current module result in the ordered set where userId = &#63; and moduleId = &#63;.
-	 *
-	 * @param mrId the primary key of the current module result
-	 * @param userId the user ID
-	 * @param moduleId the module ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next module result
-	 * @throws com.liferay.lms.NoSuchModuleResultException if a module result with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public ModuleResult[] findBymu_PrevAndNext(long mrId, long userId,
-		long moduleId, OrderByComparator orderByComparator)
-		throws NoSuchModuleResultException, SystemException {
-		ModuleResult moduleResult = findByPrimaryKey(mrId);
-
-		Session session = null;
-
-		try {
-			session = openSession();
-
-			ModuleResult[] array = new ModuleResultImpl[3];
-
-			array[0] = getBymu_PrevAndNext(session, moduleResult, userId,
-					moduleId, orderByComparator, true);
-
-			array[1] = moduleResult;
-
-			array[2] = getBymu_PrevAndNext(session, moduleResult, userId,
-					moduleId, orderByComparator, false);
-
-			return array;
-		}
-		catch (Exception e) {
-			throw processException(e);
-		}
-		finally {
-			closeSession(session);
-		}
-	}
-
-	protected ModuleResult getBymu_PrevAndNext(Session session,
-		ModuleResult moduleResult, long userId, long moduleId,
-		OrderByComparator orderByComparator, boolean previous) {
-		StringBundler query = null;
-
-		if (orderByComparator != null) {
-			query = new StringBundler(6 +
-					(orderByComparator.getOrderByFields().length * 6));
-		}
 		else {
-			query = new StringBundler(3);
-		}
-
-		query.append(_SQL_SELECT_MODULERESULT_WHERE);
-
-		query.append(_FINDER_COLUMN_MU_USERID_2);
-
-		query.append(_FINDER_COLUMN_MU_MODULEID_2);
-
-		if (orderByComparator != null) {
-			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
-
-			if (orderByConditionFields.length > 0) {
-				query.append(WHERE_AND);
+			if (result instanceof List<?>) {
+				return null;
 			}
-
-			for (int i = 0; i < orderByConditionFields.length; i++) {
-				query.append(_ORDER_BY_ENTITY_ALIAS);
-				query.append(orderByConditionFields[i]);
-
-				if ((i + 1) < orderByConditionFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(WHERE_GREATER_THAN_HAS_NEXT);
-					}
-					else {
-						query.append(WHERE_LESSER_THAN_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(WHERE_GREATER_THAN);
-					}
-					else {
-						query.append(WHERE_LESSER_THAN);
-					}
-				}
+			else {
+				return (ModuleResult)result;
 			}
-
-			query.append(ORDER_BY_CLAUSE);
-
-			String[] orderByFields = orderByComparator.getOrderByFields();
-
-			for (int i = 0; i < orderByFields.length; i++) {
-				query.append(_ORDER_BY_ENTITY_ALIAS);
-				query.append(orderByFields[i]);
-
-				if ((i + 1) < orderByFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(ORDER_BY_ASC_HAS_NEXT);
-					}
-					else {
-						query.append(ORDER_BY_DESC_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(ORDER_BY_ASC);
-					}
-					else {
-						query.append(ORDER_BY_DESC);
-					}
-				}
-			}
-		}
-
-		String sql = query.toString();
-
-		Query q = session.createQuery(sql);
-
-		q.setFirstResult(0);
-		q.setMaxResults(2);
-
-		QueryPos qPos = QueryPos.getInstance(q);
-
-		qPos.add(userId);
-
-		qPos.add(moduleId);
-
-		if (orderByComparator != null) {
-			Object[] values = orderByComparator.getOrderByConditionValues(moduleResult);
-
-			for (Object value : values) {
-				qPos.add(value);
-			}
-		}
-
-		List<ModuleResult> list = q.list();
-
-		if (list.size() == 2) {
-			return list.get(1);
-		}
-		else {
-			return null;
 		}
 	}
 
@@ -1013,7 +776,7 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_MODULERESULT_WHERE);
@@ -1023,6 +786,10 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(ModuleResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1275,6 +1042,10 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 			}
 		}
 
+		else {
+			query.append(ModuleResultModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1394,7 +1165,7 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(3);
+				query = new StringBundler(4);
 			}
 
 			query.append(_SQL_SELECT_MODULERESULT_WHERE);
@@ -1406,6 +1177,10 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(ModuleResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1676,6 +1451,10 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 			}
 		}
 
+		else {
+			query.append(ModuleResultModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1781,7 +1560,7 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_MODULERESULT;
+				sql = _SQL_SELECT_MODULERESULT.concat(ModuleResultModelImpl.ORDER_BY_JPQL);
 			}
 
 			Session session = null;
@@ -1823,17 +1602,18 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 	}
 
 	/**
-	 * Removes all the module results where userId = &#63; and moduleId = &#63; from the database.
+	 * Removes the module result where userId = &#63; and moduleId = &#63; from the database.
 	 *
 	 * @param userId the user ID
 	 * @param moduleId the module ID
+	 * @return the module result that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void removeBymu(long userId, long moduleId)
-		throws SystemException {
-		for (ModuleResult moduleResult : findBymu(userId, moduleId)) {
-			remove(moduleResult);
-		}
+	public ModuleResult removeBymu(long userId, long moduleId)
+		throws NoSuchModuleResultException, SystemException {
+		ModuleResult moduleResult = findBymu(userId, moduleId);
+
+		return remove(moduleResult);
 	}
 
 	/**
@@ -2124,8 +1904,6 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 	protected LearningActivityResultPersistence learningActivityResultPersistence;
 	@BeanReference(type = LearningActivityTryPersistence.class)
 	protected LearningActivityTryPersistence learningActivityTryPersistence;
-	@BeanReference(type = LearningTypePersistence.class)
-	protected LearningTypePersistence learningTypePersistence;
 	@BeanReference(type = LmsPrefsPersistence.class)
 	protected LmsPrefsPersistence lmsPrefsPersistence;
 	@BeanReference(type = ModulePersistence.class)
