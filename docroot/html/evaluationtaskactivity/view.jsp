@@ -139,11 +139,12 @@
 			<script type="text/javascript">
 		    <!--
 
-		    	AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
+		    	AUI().ready('node-base' ,'aui-form-validator', function(A) {
 			    	
 		    		A.mix(
 		    				YUI.AUI.defaults.FormValidator.STRINGS,
 		    				{
+		    					required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>',
 		    					weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>'
 		    				},
 		    				true
@@ -165,7 +166,9 @@
 	    					required: function(val, fieldNode, ruleValue) {
 	    						switch (fieldNode.get('name')) {
 	    					    case "<portlet:namespace />weight":
-	    							return true;	        
+	    					    	if(A.Node.getDOMNode(fieldNode).form.<portlet:namespace />weight.disabled){
+	    								return true;	 
+	    					    	}       
 	    					    default:
 	    					    	return oldRequired(val, fieldNode, ruleValue);
 	    						}				
@@ -183,7 +186,7 @@
 		    
 			    function <portlet:namespace />showPopupActivities(activityId)
 			    {
-					AUI().use('node','aui-dialog', function(A){
+					AUI().use('node','aui-form-validator','aui-dialog', function(A){
 
 						if(A.one('#<portlet:namespace />activityPopup')){
 							window.<portlet:namespace />popupActivitiesBody = A.one('#<portlet:namespace />activityPopup').get('innerHTML');
@@ -197,13 +200,14 @@
 				            centered: true,
 				            modal: true,
 				            width: 370,
-				            height: 300
+				            height: 270
 				        }).render();
 
 						A.one('#<portlet:namespace />evalActId').set ('value',activityId);
 						A.one('#<portlet:namespace />state').set ('value',A.one('#<portlet:namespace />selected_'+activityId).get ('value'));
 						A.one('#<portlet:namespace />stateCheckbox').set ('checked',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'checked':'');
 						A.one('#<portlet:namespace />weight').set ('value',A.one('#<portlet:namespace />weight_'+activityId).get ('innerHTML'));
+						A.one('#<portlet:namespace />weight').set ('disabled',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'':'disabled');
 						
 						window.<portlet:namespace />validator = new A.FormValidator({
 							boundingBox: '#<portlet:namespace />fm_activities',
@@ -222,7 +226,8 @@
 
 					        fieldStrings: {
 					        	<portlet:namespace />weight: {
-					    			weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>',
+					        		required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>',
+					    			weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>'
 					            }
 					        },
 							
@@ -249,6 +254,14 @@
 						window.<portlet:namespace />popupActivities.show();   
 					});
 			    }
+
+			    function <portlet:namespace />stateActivitiesChange(stateCheckbox)
+			    {
+			        AUI().use('node','aui-form-validator', function(A) {
+			        	A.one('#<portlet:namespace />weight').set ('disabled',(stateCheckbox.checked)?'':'disabled');
+			        	window.<portlet:namespace />validator.validate();
+			        });
+			    }
 	
 			    function <portlet:namespace />doClosePopupActivities()
 			    {
@@ -258,26 +271,48 @@
 			    }
 		    
 		    	function <portlet:namespace />saveActivity(){
-		    		AUI().use('liferay-portlet-url','aui-io-request', function(A){
 
-						A.io.request('<%=updateEvaluationURL.toString()%>', 
-							{ 
-							  method : 'POST', 
-				              form: {
-				                id: '<portlet:namespace />fm_activities'
-				              },
-							  dataType: 'json',
-							  on: { 
-								success: function() {    
-									<portlet:namespace />doClosePopupActivities();   
-								},  
-								failure: function() {
-									alert('Error deleting the notification.');
+		    		AUI().use('node','liferay-portlet-url','aui-io-request','aui-form-validator', function(A){
+
+		    			window.<portlet:namespace />validator.validate();
+		    			if(!window.<portlet:namespace />validator.hasErrors()){
+
+							A.io.request('<%=updateEvaluationURL.toString()%>', 
+								{ 
+								  method : 'POST', 
+					              form: {
+					                id: '<portlet:namespace />fm_activities'
+					              },
+								  dataType: 'json',
+								  on: { 
+									success: function() {
+										var divError = A.one('#<portlet:namespace />fm_activitiesError');    
+										if(this.get('responseData').returnStatus){
+											if(divError) {
+												var activityId = A.one('#<portlet:namespace />evalActId').get ('value');
+												A.one('#<portlet:namespace />selected_'+activityId).set ('value',A.one('#<portlet:namespace />state').get ('value'));
+												A.one('#<portlet:namespace />selected_'+activityId+'Checkbox').set ('checked',(A.one('#<portlet:namespace />state').get ('value')=='true')?'checked':'');
+												A.one('#<portlet:namespace />weight_'+activityId).set ('innerHTML',A.one('#<portlet:namespace />weight').get ('value'));
+												divError.addClass('portlet-msg-success');
+												divError.setContent(this.get('responseData').returnMessage);
+											}
+										}
+										else{
+											
+											if(divError) {
+												divError.addClass('portlet-msg-error');
+												divError.setContent(this.get('responseData').returnMessage);
+											}
+										}
+										  
+									},  
+									failure: function() {
+										alert('Error deleting the notification.');
+									} 
 								} 
-							} 
-						});
+							});
 
-						
+		    			}
 		    		});
 			    }
  

@@ -6,7 +6,9 @@
 		<aui:input type="checkbox"
 				   name="state"
 				   inlineLabel="left" 
-			       label="Obligatorio" />
+			       label="Obligatorio" 
+			       onChange="<%=renderResponse.getNamespace()+\"stateActivitiesChange(this)\" %>"
+			       />
 		<aui:input type="text" 
 				   name="weight"
 				   inlineLabel="left" 
@@ -20,5 +22,6 @@
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
 		<liferay-ui:message key="offlinetaskactivity.cancel" />
 	</button>
+	<div id="<portlet:namespace />fm_activitiesError"></div>
 	</aui:button-row>
 </aui:form>

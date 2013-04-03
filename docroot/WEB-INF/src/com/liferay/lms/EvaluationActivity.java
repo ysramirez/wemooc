@@ -31,7 +31,7 @@ public class EvaluationActivity extends MVCPortlet {
 	public void serveResource(ResourceRequest resourceRequest,
 			ResourceResponse resourceResponse) throws IOException,
 			PortletException {
-		if("updateEvaluation".equals(resourceRequest.getAttribute("ajaxAction"))){
+		if("updateEvaluation".equals(resourceRequest.getParameter("ajaxAction"))){
 			resourceResponse.setContentType("text/javascript");
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 			try{
@@ -55,21 +55,17 @@ public class EvaluationActivity extends MVCPortlet {
 					return;
 				} 
 				
-				int state=ParamUtil.getInteger(resourceRequest, "state",-1);
-				if((state!=0)&&(state!=1)) {
-					jsonObject.put("returnStatus", false);
-					jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "KO"));	
-					return;					
+				boolean state=ParamUtil.getBoolean(resourceRequest, "state", false);
+
+				long weight=0;		
+				if(state){
+					weight=ParamUtil.getLong(resourceRequest, "weight",-1);
+					if(weight==-1) {
+						jsonObject.put("returnStatus", false);
+						jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "KO"));	
+						return;					
+					}
 				}
-				
-				
-				long weight=ParamUtil.getLong(resourceRequest, "weight",-1);
-				if(weight==-1) {
-					jsonObject.put("returnStatus", false);
-					jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "KO"));	
-					return;					
-				}
-				
 								
 				Document extraContentDocument =null;
 				try{
@@ -94,11 +90,12 @@ public class EvaluationActivity extends MVCPortlet {
 								try{
 									long activityNodeId=Long.valueOf(activity.attribute("id").getValue());
 									if(learningActivity.getActId()==activityNodeId){
-										if(state==0){
-											element.remove(activity);
+										
+										if(state){
+											activity.setText(Long.toString(weight));
 										}
 										else {
-											element.setText(Long.toString(weight));
+											element.remove(activity);
 										}
 										
 										existNode=true;
@@ -111,7 +108,7 @@ public class EvaluationActivity extends MVCPortlet {
 						}
 						
 						if(existNode==false){
-							if(state==1) {
+							if(state) {
 								Element activity = element.addElement("activity");
 								activity.addAttribute("id", Long.toString(learningActivity.getActId()));
 								activity.setText(Long.toString(weight));	
@@ -124,7 +121,7 @@ public class EvaluationActivity extends MVCPortlet {
 					}
 				}
 				
-				if((existNode==false)&&(state==1)){
+				if((existNode==false)&&(state)){
 					Element activity = rootElement.addElement("activities").addElement("activity");
 					activity.addAttribute("id", Long.toString(learningActivity.getActId()));
 					activity.setText(Long.toString(weight));	
