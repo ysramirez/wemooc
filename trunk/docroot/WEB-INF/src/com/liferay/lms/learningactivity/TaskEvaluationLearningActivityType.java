@@ -23,6 +23,12 @@ public class TaskEvaluationLearningActivityType extends BaseLearningActivityType
 		
 		return "evaluation";
 	}
+	
+	
+	@Override
+	public boolean isScoreConfigurable() {
+		return true;
+	}
 
 	@Override
 	public long getTypeId() {

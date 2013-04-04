@@ -153,7 +153,7 @@
 	    			A.mix(
 	    					YUI.AUI.defaults.FormValidator.REGEX,
 	    					{
-	    						positiveLong: /^[0-9]*$/			
+	    						positiveLong: /^[1-9][0-9]*$/			
 	    					},
 	    					true
 	    				);
@@ -208,6 +208,7 @@
 						A.one('#<portlet:namespace />stateCheckbox').set ('checked',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'checked':'');
 						A.one('#<portlet:namespace />weight').set ('value',A.one('#<portlet:namespace />weight_'+activityId).get ('innerHTML'));
 						A.one('#<portlet:namespace />weight').set ('disabled',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'':'disabled');
+						A.one('#<portlet:namespace />weight').ancestor('.aui-field-content').setStyle('display',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'inline':'none');
 						
 						window.<portlet:namespace />validator = new A.FormValidator({
 							boundingBox: '#<portlet:namespace />fm_activities',
@@ -259,6 +260,7 @@
 			    {
 			        AUI().use('node','aui-form-validator', function(A) {
 			        	A.one('#<portlet:namespace />weight').set ('disabled',(stateCheckbox.checked)?'':'disabled');
+						A.one('#<portlet:namespace />weight').ancestor('.aui-field-content').setStyle('display',(stateCheckbox.checked)?'inline':'none');
 			        	window.<portlet:namespace />validator.validate();
 			        });
 			    }
@@ -292,7 +294,8 @@
 												var activityId = A.one('#<portlet:namespace />evalActId').get ('value');
 												A.one('#<portlet:namespace />selected_'+activityId).set ('value',A.one('#<portlet:namespace />state').get ('value'));
 												A.one('#<portlet:namespace />selected_'+activityId+'Checkbox').set ('checked',(A.one('#<portlet:namespace />state').get ('value')=='true')?'checked':'');
-												A.one('#<portlet:namespace />weight_'+activityId).set ('innerHTML',A.one('#<portlet:namespace />weight').get ('value'));
+												A.one('#<portlet:namespace />weight_'+activityId).set ('innerHTML',
+														(A.one('#<portlet:namespace />state').get ('value')=='true')?A.one('#<portlet:namespace />weight').get ('value'):'');
 												divError.addClass('portlet-msg-success');
 												divError.setContent(this.get('responseData').returnMessage);
 											}
@@ -406,6 +409,35 @@
 
 					<liferay-ui:search-iterator />
 				</liferay-ui:search-container>
+				
+				<liferay-portlet:actionURL var="execEvaluationURL" name="execEvaluation">
+					<liferay-portlet:param name="actId" value="<%=Long.toString(actId) %>"/>
+				</liferay-portlet:actionURL>
+				
+				<aui:button  href="<%=execEvaluationURL %>" value="Mensaje" />
+				
+					<div class="nota"> 
+
+						<%if ((result!=null)&&(result.getResult()>0)){ %>
+							<%if (!result.getComments().trim().equals("")){ %>
+								<h4>Comentario del profesor:<%=result.getComments() %></h4>
+							<% } %>
+							<h4><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></h4>
+							<%
+							if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
+							%>
+								<h4><liferay-ui:message key="your-result-pass" /> </h4>
+							<%
+							}else{
+								Object  [] arg =  new Object[]{learningActivity.getPasspuntuation()};
+							%>	
+								<h4><liferay-ui:message key="your-result-dont-pass"  arguments="<%=arg %>" /> </h4>
+							<%
+								
+							}
+						}%>
+					
+					</div>
 			
 			</div>
 			<%
