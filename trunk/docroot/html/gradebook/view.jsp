@@ -10,7 +10,10 @@
 <%@page import="com.liferay.portal.model.Role"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
-<%@page import="javax.portlet.RenderResponse"%>
+<%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
+<%@page import="com.liferay.lms.asset.LearningActivityAssetRendererFactory"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
 <%@ include file="/init.jsp" %>
 <liferay-ui:panel-container >
 <%
@@ -110,6 +113,43 @@ for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId
 			   	<portlet:param name="jspPage" value="/html/gradebook/popups/grades.jsp" />           
 			</portlet:renderURL>
 			<script type="text/javascript">
+			function <portlet:namespace />showPopupActivity(studentId, actId, actType) {
+				
+				var url = '/html/gradebook/popups/activity.jsp';
+				AUI().use('aui-dialog','liferay-portlet-url', function(A){
+					var renderUrl = Liferay.PortletURL.createRenderURL();							
+					renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
+					renderUrl.setPortletId('<%=portletDisplay.getId()%>');
+					renderUrl.setParameter('actId', actId);
+					renderUrl.setParameter('studentId', studentId);
+					renderUrl.setParameter('actType', actType);
+					renderUrl.setParameter('jspPage', url);
+
+					window.<portlet:namespace />popupActivity = new A.Dialog({
+						id:'<portlet:namespace />showPopupActivity',
+			            title: '<liferay-ui:message key="coursestats.modulestats.activity" />',
+			            centered: true,
+			            modal: true,
+			            width: 700,
+			            height: 800,
+			            after: {   
+				          	close: function(event){ 
+				          		document.location.reload();
+			            	}
+			            }
+			        }).plug(A.Plugin.IO, {
+			            uri: renderUrl.toString()
+			        }).render();
+					window.<portlet:namespace />popupActivity.show();   
+				});
+		    }
+			
+			function <portlet:namespace />doClosePopupActivity(){
+			    AUI().use('aui-dialog', function(A) {
+			    	window.<portlet:namespace />popupActivity.close();
+			    });
+			}
+			
 			function <portlet:namespace />showPopupGrades(studentId, actId) {
 
 					AUI().use('aui-dialog','liferay-portlet-url', function(A){
@@ -169,36 +209,32 @@ for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId
 				</script>
 			
 			<td>
-			
-			<%=result %>
-			<%if(status.equals("passed")){%>
-			 	<liferay-ui:icon image="checked"></liferay-ui:icon>
-			 	<%if(isUserWatchingATeacher){%>
-			 		<liferay-ui:icon image="edit" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupGrades("+Long.toString(usuario.getUserId())+","+String.valueOf(learningActivity.getActId())+");" %>' />
-			  <%}
-			}
-			if(status.equals("not-passed")){%>
-			 	<liferay-ui:icon image="close"></liferay-ui:icon>
-			 	<%if(isUserWatchingATeacher){%>
-			 		<liferay-ui:icon image="edit" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupGrades("+Long.toString(usuario.getUserId())+","+String.valueOf(learningActivity.getActId())+");" %>' />
+				<%=result %>
+				<%
+				if(status.equals("passed")){%>
+				 	<liferay-ui:icon image="checked"></liferay-ui:icon>
+				<%} else if(status.equals("not-passed")){%>
+				 	<liferay-ui:icon image="close"></liferay-ui:icon>
+				<%} else if(status.equals("started")){%>
+			 		<liferay-ui:icon image="unchecked"></liferay-ui:icon>
 			 	<%}
-			}
-			if(status.equals("started")){%>
-			 	<liferay-ui:icon image="unchecked"></liferay-ui:icon>
-			<%}%>
+				
+	 			if(status.equals("passed") || status.equals("not-passed")){
+	 				if(isUserWatchingATeacher){%>
+			 			<liferay-ui:icon image="edit" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupGrades("+Long.toString(usuario.getUserId())+","+String.valueOf(learningActivity.getActId())+");" %>' />
+				 		<% String typesThatCanBeSeen = "0,3,6";
+				 		if(typesThatCanBeSeen.contains(String.valueOf(learningActivity.getTypeId()))){
+				 			%>
+				 			<liferay-ui:icon image="view" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupActivity("+Long.toString(usuario.getUserId())+","+String.valueOf(learningActivity.getActId())+","+String.valueOf(learningActivity.getTypeId())+");" %>'/>
+				 		<%}
+			  		}
+	 			}%>
 			</td>
-			<%
-		}
-		%>
+		<%}%>
 		</tr>
-		<%
-	}
-}
-%>
+	<%}
+}%>
 </table>
 </liferay-ui:panel>
-<%
-}
-
-%>
+<%}%>
 </liferay-ui:panel-container>
