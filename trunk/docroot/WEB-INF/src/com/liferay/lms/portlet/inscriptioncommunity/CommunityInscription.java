@@ -74,7 +74,6 @@ public class CommunityInscription extends MVCPortlet {
 			}
 			catch(Exception ex)
 			{
-				ex.printStackTrace();
 			}		
     	}
 	}

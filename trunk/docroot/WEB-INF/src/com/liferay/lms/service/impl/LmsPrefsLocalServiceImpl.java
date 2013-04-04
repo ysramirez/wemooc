@@ -66,7 +66,6 @@ public class LmsPrefsLocalServiceImpl extends LmsPrefsLocalServiceBaseImpl
 				return lmsPrefs;
 			} catch (Exception e) 
 			{
-				e.printStackTrace();
 				// TODO Auto-generated catch block
 				throw new PortalException(e);
 			}

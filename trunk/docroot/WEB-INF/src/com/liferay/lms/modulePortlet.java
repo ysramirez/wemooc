@@ -363,7 +363,6 @@ public static String SEPARATOR = "_";
 			response.setWindowState(LiferayWindowState.POP_UP);
 		} catch (WindowStateException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		response.setRenderParameter("moduleId", "0");
 		response.setRenderParameter("editType", "add");
@@ -497,7 +496,6 @@ public static String SEPARATOR = "_";
 				response.setWindowState(LiferayWindowState.POP_UP);
 			} catch (WindowStateException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 			response.setRenderParameter("view", "editmodule");
 			response.setRenderParameter("editType", "edit");
@@ -642,9 +640,7 @@ public static String SEPARATOR = "_";
 
 			serviceContext2 = ServiceContextFactory.getInstance(actRequest);
 		} catch (PortalException e1) {
-			e1.printStackTrace();
 		} catch (SystemException e1) {
-			e1.printStackTrace();
 		}
 		Module module = null;
         long moduleId=ParamUtil.getLong(request, "resourcePrimKey",0);

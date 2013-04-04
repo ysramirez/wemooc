@@ -282,10 +282,8 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 			
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} 
 	}
 	
@@ -407,7 +405,6 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 			
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		return res;
 	}

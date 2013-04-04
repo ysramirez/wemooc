@@ -377,11 +377,8 @@ public class SurveyActivity extends MVCPortlet {
 				response.getPortletOutputStream().close();
 
 			} catch (PortalException e) {
-				e.printStackTrace();
 			} catch (SystemException e) {
-				e.printStackTrace();
 			} catch (DocumentException e) {
-				e.printStackTrace();
 			}finally{
 				response.getPortletOutputStream().flush();
 				response.getPortletOutputStream().close();

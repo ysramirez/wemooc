@@ -273,7 +273,7 @@ public class moduleUpload {
         	igPortletFolderId = igPortletFolder.getFolderId();
         	igPortletFolderFound = true;
         } catch (Exception ex) {
-        	ex.printStackTrace(); //Not found main folder
+        	//Not found main folder
         }
         //Create main folder if not exist
         if(!igMainFolderFound) {
@@ -329,7 +329,7 @@ public class moduleUpload {
         	dlPortletFolderId = dlFolderPortlet.getFolderId();
         	dlPortletFolderFound = true;
         } catch (Exception ex){
-        	ex.printStackTrace();//Not found Main Folder
+        	//Not found Main Folder
         }
         
         ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFolder.class.getName(), request);

@@ -211,7 +211,6 @@ public class LearningActivityTryLocalServiceImpl
 				}
 			}
 		} catch (DocumentException e) {
-			e.printStackTrace();
 		}
 		
 		return answersMap;

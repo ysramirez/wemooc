@@ -169,7 +169,6 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 		}
 		catch(Exception e){
-			e.printStackTrace();
 			if (_log.isErrorEnabled()) {
 				_log.error("Error P2pActivityPortlet.addP2PActivity");
 				_log.error(e.getMessage());
@@ -312,7 +311,6 @@ public class P2PActivityPortlet extends MVCPortlet {
 					
 				}
 				catch(Exception e){
-					e.printStackTrace();
 					if (_log.isErrorEnabled()) {
 						_log.error("Error getting P2pActivityPortlet.saveCorrection");
 						_log.error(e);
@@ -347,7 +345,7 @@ public class P2PActivityPortlet extends MVCPortlet {
         	dlPortletFolderId = dlFolderPortlet.getFolderId();
         	dlPortletFolderFound = true;
         } catch (Exception ex){
-        	ex.printStackTrace();//Not found Main Folder
+        	//Not found Main Folder
         }
         
 		ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFolder.class.getName(), portletRequest);
@@ -666,10 +664,8 @@ public class P2PActivityPortlet extends MVCPortlet {
 				}
 			} catch (PortalException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			} catch (SystemException e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}			
 		}
 	}

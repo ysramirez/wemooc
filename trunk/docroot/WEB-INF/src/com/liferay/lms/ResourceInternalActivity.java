@@ -229,10 +229,8 @@ else
 			}
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}			
 }
 }

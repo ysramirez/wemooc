@@ -140,7 +140,6 @@ public class PortalAdmin extends MVCPortlet {
 					//LearningActivityLocalServiceUtil.setExtraContentValue(activity.getActId(), "document", documentToUpdate);
 					
 				} catch (DocumentException e) {
-					e.printStackTrace();
 				}
 		
 				//System.out.println(" :: xml multimedia new :: "+activity.getExtracontent());

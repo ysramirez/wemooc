@@ -148,7 +148,6 @@ public class LearningActivityLocalServiceImpl
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
 			}
 			return larn;
 			}
@@ -192,7 +191,6 @@ public class LearningActivityLocalServiceImpl
 			}
 			catch(Exception e)
 			{
-				e.printStackTrace();
 			}
 			return larn;
 			}
@@ -374,7 +372,6 @@ public class LearningActivityLocalServiceImpl
 				}
 			}
 		} catch (Exception e) {
-			//e.printStackTrace();
 		}
 		
 		return "";
@@ -396,7 +393,6 @@ public class LearningActivityLocalServiceImpl
 			saveHashMapToXMLExtraContent(actId, hashMap);
 			
 		} catch (PortalException e) {
-			e.printStackTrace();
 		}
 	}
 	
@@ -424,7 +420,6 @@ public class LearningActivityLocalServiceImpl
 			}
 			
 		} catch (DocumentException e) {
-			e.printStackTrace();
 		}
 		
 		return hashMap;
@@ -455,7 +450,6 @@ public class LearningActivityLocalServiceImpl
 			}
 			
 		} catch (Exception e) {
-			e.printStackTrace();
 		}
 	}
 	
