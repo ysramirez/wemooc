@@ -982,6 +982,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>CourseExpandoValue</title>
 			<short-title>CourseExpandoValue</short-title>
@@ -1150,6 +1151,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>StudentSearch</title>
 			<short-title>StudentSearch</short-title>
@@ -1181,6 +1183,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>CourseRatings</title>
 			<short-title>CourseRatings</short-title>
@@ -1212,6 +1215,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>CourseComments</title>
 			<short-title>CourseComments</short-title>
@@ -1284,6 +1288,7 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>SurveyActivity</title>
 			<short-title>SurveyActivity</short-title>
@@ -1327,6 +1332,7 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>OnlineTaskActivity</title>
 			<short-title>OnlineTaskActivity</short-title>
@@ -1370,6 +1376,7 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>OfflineTaskActivity</title>
 			<short-title>OfflineTaskActivity</short-title>
@@ -1409,6 +1416,7 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>EvaluationTaskActivity</title>
 			<short-title>EvaluationTaskActivity</short-title>
@@ -1475,6 +1483,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>PortalAdmin</title>
 			<short-title>PortalAdmin</short-title>
@@ -1506,6 +1515,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+			<resource-bundle>content/Language</resource-bundle>
 		<portlet-info>
 			<title>User Progress</title>
 			<short-title>User Progress</short-title>
