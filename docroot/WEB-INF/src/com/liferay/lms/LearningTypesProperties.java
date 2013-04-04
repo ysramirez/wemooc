@@ -42,9 +42,7 @@ public class LearningTypesProperties {
 			ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
 			prop.load(classLoader.getResourceAsStream("learningtype.properties"));
 		} catch (FileNotFoundException e) {
-			e.printStackTrace();
 		} catch (IOException e) {
-			e.printStackTrace();
 		}
 	}
 }

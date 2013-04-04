@@ -31,10 +31,8 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 			assetEntry=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 		}
 		public long getClassPK() {

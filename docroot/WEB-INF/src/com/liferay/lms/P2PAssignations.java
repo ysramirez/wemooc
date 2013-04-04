@@ -56,10 +56,8 @@ public class P2PAssignations implements MessageListener {
 
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	
 	}
@@ -111,10 +109,8 @@ public class P2PAssignations implements MessageListener {
 
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	
 	}

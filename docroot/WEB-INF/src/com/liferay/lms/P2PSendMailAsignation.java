@@ -37,7 +37,6 @@ public class P2PSendMailAsignation {
 		}
 		catch(Exception ex)
 		{
-			ex.printStackTrace();
 		}	
 	
 	}
