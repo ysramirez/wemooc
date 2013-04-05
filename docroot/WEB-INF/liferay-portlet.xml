@@ -392,6 +392,29 @@
 		<css-class-wrapper>offlinetaskactivity-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>portaladmin</portlet-name>
+		<icon>/icon.png</icon>
+		<!--scheduler-entry>
+			<scheduler-description>
+			Lanzar el delete de los module result que estén repetidos.
+			0/30 * * * * ? es cada 30 segundos.
+			0 0 2 * * ? A las 2 de la madrugada de todos los días.
+			</scheduler-description>
+			<scheduler-event-listener-class>com.liferay.lms.PortalAdminScheduler</scheduler-event-listener-class>
+			<trigger>
+				<cron>
+					<cron-trigger-value>0 0 2 * * ?</cron-trigger-value>
+				</cron>
+			</trigger>
+		</scheduler-entry-->
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>portaladmin-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>evaluationtaskactivity</portlet-name>
 		<icon>/icon.png</icon>
 		<scheduler-entry>
@@ -409,6 +432,7 @@
 		</scheduler-entry> 
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-javascript>/js/jquery.min.js</header-portlet-javascript>
 		<footer-portlet-javascript>
 			/js/main.js
 		</footer-portlet-javascript>
