@@ -133,7 +133,7 @@
 			</div>
 			
 			<portlet:resourceURL var="updateEvaluationURL" >   
-				<portlet:param name="ajaxAction" value="updateEvaluation" />                 
+				<portlet:param name="ajaxAction" value="updateEvaluation" />
 	        </portlet:resourceURL>
 			
 			<script type="text/javascript">
@@ -144,8 +144,8 @@
 		    		A.mix(
 		    				YUI.AUI.defaults.FormValidator.STRINGS,
 		    				{
-		    					required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>',
-		    					weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>'
+		    					required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.required")) %>',
+		    					weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.format")) %>'
 		    				},
 		    				true
 		    			);
@@ -153,7 +153,7 @@
 	    			A.mix(
 	    					YUI.AUI.defaults.FormValidator.REGEX,
 	    					{
-	    						positiveLong: /^[1-9][0-9]*$/			
+	    						positiveLong: /^[0-9]*[1-9][0-9]*$/			
 	    					},
 	    					true
 	    				);
@@ -227,8 +227,8 @@
 
 					        fieldStrings: {
 					        	<portlet:namespace />weight: {
-					        		required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>',
-					    			weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(themeDisplay.getLocale(), "execActivity.options.error.weight")) %>'
+					        		required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.required")) %>',
+					    			weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.format")) %>'
 					            }
 					        },
 							
@@ -295,7 +295,7 @@
 												A.one('#<portlet:namespace />selected_'+activityId).set ('value',A.one('#<portlet:namespace />state').get ('value'));
 												A.one('#<portlet:namespace />selected_'+activityId+'Checkbox').set ('checked',(A.one('#<portlet:namespace />state').get ('value')=='true')?'checked':'');
 												A.one('#<portlet:namespace />weight_'+activityId).set ('innerHTML',
-														(A.one('#<portlet:namespace />state').get ('value')=='true')?A.one('#<portlet:namespace />weight').get ('value'):'');
+														(A.one('#<portlet:namespace />state').get ('value')=='true')?A.one('#<portlet:namespace />weight').get ('value').replace(/^[0]+/g,""):'');
 												divError.addClass('portlet-msg-success');
 												divError.setContent(this.get('responseData').returnMessage);
 											}
@@ -385,7 +385,7 @@
 					
 					
 					%>
-						<liferay-ui:search-container-column-text name="selected">
+						<liferay-ui:search-container-column-text name="evaluationTask.selected">
 							<aui:input type="checkbox" 
 							           inlineLabel="right" 
 							           label="" 
@@ -394,15 +394,15 @@
 							           disabled="true"
 							></aui:input>
 						</liferay-ui:search-container-column-text>
-						<liferay-ui:search-container-column-text name="weight">
+						<liferay-ui:search-container-column-text name="evaluationTask.weight">
 							<span id="<portlet:namespace />weight_<%=learningActivityModel.getActId() %>"
 								><%=(activities.containsKey(learningActivityModel.getActId()))?activities.get(learningActivityModel.getActId()):StringPool.BLANK %></span>
 						</liferay-ui:search-container-column-text>
-						<liferay-ui:search-container-column-text name="title">
+						<liferay-ui:search-container-column-text name="evaluationTask.title">
 							<span id="<portlet:namespace />title_<%=learningActivityModel.getActId() %>"
 								><%=learningActivityModel.getTitle(themeDisplay.getLocale()) %></span>
 						</liferay-ui:search-container-column-text>
-						<liferay-ui:search-container-column-text name="Configuration">
+						<liferay-ui:search-container-column-text name="evaluationTask.configuration">
 							<liferay-ui:icon image="configuration" toolTip="config" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"showPopupActivities(\"+learningActivityModel.getActId()+\");\" %>" />
 						</liferay-ui:search-container-column-text>
 					</liferay-ui:search-container-row>
@@ -422,16 +422,16 @@
 							<%if (!result.getComments().trim().equals("")){ %>
 								<h4>Comentario del profesor:<%=result.getComments() %></h4>
 							<% } %>
-							<h4><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></h4>
+							<h4><liferay-ui:message key="evaluationTask.result" arguments="<%=arguments %>" /></h4>
 							<%
 							if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
 							%>
-								<h4><liferay-ui:message key="your-result-pass" /> </h4>
+								<h4><liferay-ui:message key="evaluationTask.result.pass" /> </h4>
 							<%
 							}else{
 								Object  [] arg =  new Object[]{learningActivity.getPasspuntuation()};
 							%>	
-								<h4><liferay-ui:message key="your-result-dont-pass"  arguments="<%=arg %>" /> </h4>
+								<h4><liferay-ui:message key="evaluationTask.result.fail"  arguments="<%=arg %>" /> </h4>
 							<%
 								
 							}
