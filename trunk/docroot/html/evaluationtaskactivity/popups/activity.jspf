@@ -6,21 +6,21 @@
 		<aui:input type="checkbox"
 				   name="state"
 				   inlineLabel="left" 
-			       label="Obligatorio" 
+			       label="evaluationTask.activity.selected" 
 			       onChange="<%=renderResponse.getNamespace()+\"stateActivitiesChange(this)\" %>"
 			       />
 		<aui:input type="text" 
 				   name="weight"
 				   inlineLabel="left" 
-			       label="Peso"  />
+			       label="evaluationTask.activity.weight"  />
 		<div id="<portlet:namespace />weightError"></div>
 	</aui:fieldset>
 	<aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />saveActivity();" type="button">
-		<liferay-ui:message key="offlinetaskactivity.save" />
+	<button name="Save" value="Save" onclick="<portlet:namespace />saveActivity();" type="button">
+		<liferay-ui:message key="evaluationTask.activity.save" />
 	</button>
-	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
-		<liferay-ui:message key="offlinetaskactivity.cancel" />
+	<button name="Close" value="Close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
+		<liferay-ui:message key="evaluationTask.activity.cancel" />
 	</button>
 	<div id="<portlet:namespace />fm_activitiesError"></div>
 	</aui:button-row>
