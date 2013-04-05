@@ -399,10 +399,8 @@ public class ExecActivity extends MVCPortlet
 					}
 				} catch (PortalException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (SystemException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}			
 		}
 	}
@@ -509,11 +507,8 @@ public class ExecActivity extends MVCPortlet
 		        response.getPortletOutputStream().close();
 			
 			} catch (PortalException e) {
-				e.printStackTrace();
 			} catch (SystemException e) {
-				e.printStackTrace();
 			} catch (DocumentException e) {
-				e.printStackTrace();
 			}finally{
 				response.getPortletOutputStream().flush();
 		        response.getPortletOutputStream().close();

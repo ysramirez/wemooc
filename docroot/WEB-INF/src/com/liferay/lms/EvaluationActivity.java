@@ -10,6 +10,7 @@ import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.ProcessAction;
 import javax.portlet.ResourceRequest;
@@ -36,6 +37,7 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -215,6 +217,8 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 	public void serveResource(ResourceRequest resourceRequest,
 			ResourceResponse resourceResponse) throws IOException,
 			PortletException {
+		PortletConfig portletConfig = (PortletConfig)resourceRequest.getAttribute(JavaConstants.JAVAX_PORTLET_CONFIG);
+		
 		if("updateEvaluation".equals(resourceRequest.getParameter("ajaxAction"))){
 			resourceResponse.setContentType("text/javascript");
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
@@ -226,7 +230,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 					evaluationLearningActivity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(resourceRequest, "actId",-1));
 				} catch (NestableException e) {
 					jsonObject.put("returnStatus", false);
-					jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "KO"));	
+					jsonObject.put("returnMessage", LanguageUtil.get(portletConfig,resourceRequest.getLocale(), "evaluationTask.ajax.error.badEvaluationActivity"));	
 					return;
 				} 
 				
@@ -235,7 +239,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 					learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(resourceRequest, "evalActId",-1));
 				} catch (NestableException e) {
 					jsonObject.put("returnStatus", false);
-					jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "KO"));	
+					jsonObject.put("returnMessage", LanguageUtil.get(portletConfig,resourceRequest.getLocale(), "evaluationTask.ajax.error.badActivity"));	
 					return;
 				} 
 				
@@ -246,7 +250,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 					weight=ParamUtil.getLong(resourceRequest, "weight",0);
 					if(weight==0) {
 						jsonObject.put("returnStatus", false);
-						jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "KO"));	
+						jsonObject.put("returnMessage", LanguageUtil.get(portletConfig,resourceRequest.getLocale(), "evaluationTask.ajax.error.weight"));	
 						return;					
 					}
 				}
@@ -316,14 +320,14 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 					LearningActivityLocalServiceUtil.updateLearningActivity(evaluationLearningActivity);
 				} catch (NestableException e) {
 					jsonObject.put("returnStatus", false);
-					jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "OK"));	
+					jsonObject.put("returnMessage", LanguageUtil.get(portletConfig,resourceRequest.getLocale(), "evaluationTask.ajax.error.updating"));	
 					return;
 				} 
 					
 	
 	
 				jsonObject.put("returnStatus", true);
-				jsonObject.put("returnMessage", LanguageUtil.get(resourceRequest.getLocale(), "OK"));			
+				jsonObject.put("returnMessage", LanguageUtil.get(portletConfig,resourceRequest.getLocale(), "evaluationTask.ajax.ok"));			
 			}finally{
 				PrintWriter writer = resourceResponse.getWriter();
 				writer.write(jsonObject.toString());			
