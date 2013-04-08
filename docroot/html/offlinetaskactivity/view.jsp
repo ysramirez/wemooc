@@ -162,7 +162,8 @@
 					            	}
 					            }
 					        }).plug(A.Plugin.IO, {
-					            uri: renderUrl.toString()
+					            uri: renderUrl.toString(),
+					            parseContent: true
 					        }).render();
 							window.<portlet:namespace />popupGrades.show();   
 						});
@@ -186,7 +187,8 @@
 				                dataType : 'html', 
 				                on : { 
 				                    success : function() { 
-				                    	A.one('.aui-dialog-bd').set('innerHTML',this.get('responseData'));				                    	
+				                    	A.one('.aui-dialog-bd form').set('innerHTML',A.Node.create('<div>'+this.get('responseData')+'</div>').one('form').get('innerHTML'));	
+				                    	createValidator();			                    	
 				                    } 
 				                } 
 				            });
