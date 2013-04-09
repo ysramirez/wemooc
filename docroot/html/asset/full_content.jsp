@@ -1,3 +1,4 @@
+<%@ include file="/init.jsp" %>
 <%@page import="com.liferay.lms.model.TestQuestion"%>
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.lms.service.TestQuestionLocalServiceUtil"%>
@@ -5,5 +6,5 @@
 <%
 LearningActivity larn=(LearningActivity)request.getAttribute("learningactivity");
 %>
-<h1><%=larn.getTitle() %></h1>
-<p><%=larn.getDescription() %></p>
+<h1><%=larn.getTitle(themeDisplay.getLocale()) %></h1>
+<p><%=larn.getDescription(themeDisplay.getLocale()) %></p>
