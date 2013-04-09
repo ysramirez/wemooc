@@ -13,6 +13,7 @@
 	<import class="com.liferay.lms.model.ModuleResult" />
 	<import class="com.liferay.lms.model.P2pActivity" />
 	<import class="com.liferay.lms.model.P2pActivityCorrections" />
+	<import class="com.liferay.lms.model.SCORMContent" />
 	<import class="com.liferay.lms.model.SurveyResult" />
 	<import class="com.liferay.lms.model.TestAnswer" />
 	<import class="com.liferay.lms.model.TestQuestion" />
@@ -183,6 +184,23 @@
 		<property name="date" type="org.hibernate.type.TimestampType" column="date_" />
 		<property name="fileEntryId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="result" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.liferay.lms.model.impl.SCORMContentImpl" table="Lms_SCORMContent">
+		<cache usage="read-write" />
+		<id name="scormId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="statusByUserId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="statusByUserName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="statusDate" type="org.hibernate.type.TimestampType" />
+		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="index" type="com.liferay.portal.dao.orm.hibernate.StringType" column="index_" />
 	</class>
 	<class name="com.liferay.lms.model.impl.SurveyResultImpl" table="Lms_SurveyResult">
 		<cache usage="read-write" />
