@@ -1,5 +1,6 @@
 
 
+<%@page import="com.liferay.portal.security.permission.ActionKeys"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
@@ -64,5 +65,15 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	<%
 	}
 	%>
+<c:if test="<%= permissionChecker.hasPermission(groupId, Module.class.getName(),primKey,
+ActionKeys.PERMISSIONS) %>">
+				<liferay-security:permissionsURL
+					modelResource="<%=Module.class.getName() %>"
+					modelResourceDescription="<%= module.getTitle(themeDisplay.getLocale()) %>"
+					resourcePrimKey="<%= String.valueOf(primKey) %>"
+					var="permissionsURL"
+				/>
+				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			
+			</c:if>
 
 
