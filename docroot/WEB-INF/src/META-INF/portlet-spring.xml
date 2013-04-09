@@ -32,6 +32,9 @@
 	<bean id="com.liferay.lms.service.P2pActivityCorrectionsLocalService" class="com.liferay.lms.service.impl.P2pActivityCorrectionsLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.P2pActivityCorrectionsService" class="com.liferay.lms.service.impl.P2pActivityCorrectionsServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.P2pActivityCorrectionsPersistence" class="com.liferay.lms.service.persistence.P2pActivityCorrectionsPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.lms.service.SCORMContentLocalService" class="com.liferay.lms.service.impl.SCORMContentLocalServiceImpl" />
+	<bean id="com.liferay.lms.service.SCORMContentService" class="com.liferay.lms.service.impl.SCORMContentServiceImpl" />
+	<bean id="com.liferay.lms.service.persistence.SCORMContentPersistence" class="com.liferay.lms.service.persistence.SCORMContentPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.SurveyResultLocalService" class="com.liferay.lms.service.impl.SurveyResultLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.SurveyResultService" class="com.liferay.lms.service.impl.SurveyResultServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.SurveyResultPersistence" class="com.liferay.lms.service.persistence.SurveyResultPersistenceImpl" parent="basePersistence" />
