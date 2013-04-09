@@ -44,6 +44,7 @@
 		<portlet id="portaladmin"></portlet>
 		<portlet id="tutoring"></portlet>
 		<portlet id="userprogress"></portlet>
+		<portlet id="scormadmin"></portlet>
 	</category>
 
 </display>
