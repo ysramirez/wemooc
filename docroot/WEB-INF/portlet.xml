@@ -1498,7 +1498,39 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-	<public-render-parameter>    
+		<portlet>
+			<portlet-name>scormadmin</portlet-name>
+			<display-name>SCORM Admin</display-name>
+			<portlet-class>com.liferay.lms.SCORMAdmin</portlet-class>
+			<init-param>
+				<name>view-template</name>
+				<value>/html/scormadmin/view.jsp</value>
+			</init-param>
+			<expiration-cache>0</expiration-cache>
+			<supports>
+				<mime-type>text/html</mime-type>
+				<portlet-mode>view</portlet-mode>
+			</supports>
+			<resource-bundle>content/Language</resource-bundle>
+			<portlet-info>
+				<title>SCORM Admin</title>
+				<short-title>SCORM Admin</short-title>
+				<keywords></keywords>
+			</portlet-info>
+			<security-role-ref>
+				<role-name>administrator</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>guest</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>power-user</role-name>
+			</security-role-ref>
+			<security-role-ref>
+				<role-name>user</role-name>
+			</security-role-ref>
+		</portlet>
+		<public-render-parameter>    
         <identifier>actId</identifier>
         <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:actId</qname>
     </public-render-parameter>
@@ -1514,5 +1546,6 @@
 		<identifier>categoryId</identifier>
 		<qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryId</qname>
 		</public-render-parameter>
+
 
 </portlet-app>
