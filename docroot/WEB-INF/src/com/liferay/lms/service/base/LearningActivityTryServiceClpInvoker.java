@@ -23,35 +23,35 @@ import java.util.Arrays;
  */
 public class LearningActivityTryServiceClpInvoker {
 	public LearningActivityTryServiceClpInvoker() {
-		_methodName96 = "getBeanIdentifier";
+		_methodName102 = "getBeanIdentifier";
 
-		_methodParameterTypes96 = new String[] {  };
+		_methodParameterTypes102 = new String[] {  };
 
-		_methodName97 = "setBeanIdentifier";
+		_methodName103 = "setBeanIdentifier";
 
-		_methodParameterTypes97 = new String[] { "java.lang.String" };
+		_methodParameterTypes103 = new String[] { "java.lang.String" };
 
-		_methodName102 = "createLearningActivityTry";
+		_methodName108 = "createLearningActivityTry";
 
-		_methodParameterTypes102 = new String[] { "long", "long" };
+		_methodParameterTypes108 = new String[] { "long", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName96.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes96, parameterTypes)) {
+		if (_methodName102.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes102, parameterTypes)) {
 			return LearningActivityTryServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName97.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes97, parameterTypes)) {
+		if (_methodName103.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes103, parameterTypes)) {
 			LearningActivityTryServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName102.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes102, parameterTypes)) {
+		if (_methodName108.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes108, parameterTypes)) {
 			return LearningActivityTryServiceUtil.createLearningActivityTry(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
@@ -59,10 +59,10 @@ public class LearningActivityTryServiceClpInvoker {
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName96;
-	private String[] _methodParameterTypes96;
-	private String _methodName97;
-	private String[] _methodParameterTypes97;
 	private String _methodName102;
 	private String[] _methodParameterTypes102;
+	private String _methodName103;
+	private String[] _methodParameterTypes103;
+	private String _methodName108;
+	private String[] _methodParameterTypes108;
 }

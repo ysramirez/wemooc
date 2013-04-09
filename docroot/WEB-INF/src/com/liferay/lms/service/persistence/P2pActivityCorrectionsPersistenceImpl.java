@@ -2735,6 +2735,8 @@ public class P2pActivityCorrectionsPersistenceImpl extends BasePersistenceImpl<P
 	protected P2pActivityPersistence p2pActivityPersistence;
 	@BeanReference(type = P2pActivityCorrectionsPersistence.class)
 	protected P2pActivityCorrectionsPersistence p2pActivityCorrectionsPersistence;
+	@BeanReference(type = SCORMContentPersistence.class)
+	protected SCORMContentPersistence scormContentPersistence;
 	@BeanReference(type = SurveyResultPersistence.class)
 	protected SurveyResultPersistence surveyResultPersistence;
 	@BeanReference(type = TestAnswerPersistence.class)
