@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.OrderFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
@@ -17,12 +19,15 @@
 <%
 long actId=ParamUtil.getLong(request,"actId",0);
 long userId = themeDisplay.getUserId();
+boolean improve =ParamUtil.getBoolean(request, "improve",false);
+
+Course course = CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
 if(actId==0)
 {
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 }
-else if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
+else if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()) && !improve)
 {	
 	request.setAttribute("learningActivity",LearningActivityLocalServiceUtil.getLearningActivity(actId));
 	request.setAttribute("larntry",(LearningActivityTry) LearningActivityTryLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class)
@@ -43,10 +48,10 @@ else
 	LearningActivity activity=LearningActivityLocalServiceUtil.getLearningActivity(actId);
 	long typeId=activity.getTypeId();
 
-	if((typeId==0 && (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId)) || permissionChecker.hasPermission(
-			activity.getGroupId(),
-			LearningActivity.class.getName(),
-			actId, ActionKeys.UPDATE))  )
+	if((	typeId==0 
+			&& (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId)) 
+			|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),actId, ActionKeys.UPDATE))
+			|| improve)
 	{
 		int tries = LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId, themeDisplay.getUserId());
 		
@@ -71,6 +76,7 @@ else
 		
 		<portlet:renderURL var="correctURL">
 			<portlet:param name="actId" value="<%=Long.toString(actId) %>"></portlet:param>
+			<portlet:param name="improve" value="true"></portlet:param>
 			<portlet:param name="jspPage" value="/html/execactivity/test/view.jsp" />
 		</portlet:renderURL>
 			
@@ -86,20 +92,35 @@ else
 			<p class="negrita"><liferay-ui:message key="execativity.test.no.question" /></p>
 		<% }  %>
 <%
+	}
+	else if(typeId==0 
+			&& permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")){	
+		%>
+				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+				<liferay-util:include page="/html/execactivity/test/view.jsp" servletContext="<%=this.getServletContext() %>">
+					<liferay-util:param value="<%=Long.toString(actId) %>" name="actId"/>
+				</liferay-util:include>
+		<%
 	}else{
-		request.setAttribute("learningActivity",activity);
-		request.setAttribute("larntry",(LearningActivityTry) LearningActivityTryLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class)
+		List<LearningActivityTry> larntry = LearningActivityTryLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId))
 				.add(PropertyFactoryUtil.forName("endDate").isNotNull())
 				.addOrder(OrderFactoryUtil.desc("result"))
-				.addOrder(OrderFactoryUtil.asc("endDate")),0,1).get(0));
+				.addOrder(OrderFactoryUtil.asc("endDate")),0,1);
+		
+		if(!larntry.isEmpty()) {
+			request.setAttribute("larntry",larntry.get(0));
+		}
+		
+		request.setAttribute("learningActivity",activity);
+		
 		%>
-		h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-		<liferay-util:include page="/html/execactivity/test/results.jsp" servletContext="<%=this.getServletContext() %>">
+				<liferay-util:include page="/html/execactivity/test/results.jsp" servletContext="<%=this.getServletContext() %>">
 			<liferay-util:param value="<%=Long.toString(actId) %>" name="actId"/>
 		</liferay-util:include>
 		<% 
+		
 	}
 %></div><%
 }%>
