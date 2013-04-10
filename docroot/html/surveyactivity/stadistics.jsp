@@ -44,10 +44,12 @@
 			%>
 
 			<div class="question">
-				<h3><%=question.getText() %></h3>
-				<span class="total">Total de respuestas: <%=SurveyResultLocalServiceUtil.getTotalAnswersByQuestionId(question.getQuestionId()) %></span>
-			</div>
-			<ul class="answer">
+				<div  class="questiontext">
+					<p><%=question.getText() %></p>
+				</div>
+				<span class="total color_tercero"><liferay-ui:message key="surveyactivity.stadistics.total" />: <%=SurveyResultLocalServiceUtil.getTotalAnswersByQuestionId(question.getQuestionId()) %></span>
+			
+			
 				<%
 				List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 				for(TestAnswer answer:testAnswers)
@@ -56,19 +58,20 @@
 					DecimalFormat df = new DecimalFormat("###.##");
 					String percent = df.format(SurveyResultLocalServiceUtil.getPercentageByQuestionIdAndAnswerId(question.getQuestionId(), answer.getAnswerId()));
 				%>
-					<li>
+					<div class="answer">
 						<%=texto %>
-						<span  class="porcentaje">Porcentaje: <%=percent %></span>
-					</li>
+						<span class="porcentaje negrita"><liferay-ui:message key="surveyactivity.stadistics.percent" />: <%=percent %></span>
+					</div>
 				<%
 				}
 				%>
-			</ul>
+			</div>
+		
 			<%
 			} 
 			%>
 				
-			<a href="<%=backToQuestionsURL.toString() %>">Volver</a>
+			<a href="<%=backToQuestionsURL.toString() %>" ><liferay-ui:message key="back" /></a>
 		</div>
 		
 	<%	
