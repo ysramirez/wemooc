@@ -9,7 +9,13 @@
 <%@page import="com.liferay.lms.model.P2pActivity"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page	import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
+<%@ page import="com.liferay.lms.model.Module" %>
+<%@ page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+
 <%@ include file="init.jsp"%>
+
 
 <div class="p2ptaskactivity admin edit">
 <%
@@ -79,8 +85,37 @@
 			<aui:input size="3" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" ></aui:input>
 		</c:if>
 		
+		<%
+		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+		long moduleIde = ParamUtil.getLong(request,"moduleId",0);
+		module theModule=null;
+		if(moduleIde>0)
+		{
+			theModule=ModuleLocalServiceUtil.getModule(moduleIde);
+		%>
+		<aui:model-context bean="<%= theModule %>" model="<%= Module.class %>" />
+		<%
+		}
+		else
+		{
+		%>
+		<aui:model-context  model="<%= Module.class %>" />
+		<%
+		}
+
+		boolean canEdit2 = true;
+		if(theModule!= null && theModule.getStartDate()!=null && theModule.getStartDate().before(new Date())
+				&&!permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR")){
+			canEdit2 = false;
+		}
+		%>
 		<aui:button-row>
+		<% 
+			String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
+		%>									
+		<% if(canEdit2){ %>
 			<aui:button type="submit">Submit</aui:button>
+		<% } %>
 			<aui:button onClick="<%=cancel %>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
 		</aui:button-row>
 	</aui:form>
