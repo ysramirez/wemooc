@@ -1,4 +1,3 @@
-<%@page import="com.liferay.portal.model.UserConstants"%>
 <%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
 <%@page import="com.liferay.portal.util.comparator.*"%>
 <%@include file="/init.jsp" %>
@@ -37,7 +36,8 @@
 			<%
 				String middleName = null;
 		
-				LinkedHashMap<String,Object> params=null;			
+				LinkedHashMap<String,Object> params=new LinkedHashMap<String, Object>();			
+				params.put("usersGroups", new Long(themeDisplay.getScopeGroupId()));			
 				
 				OrderByComparator obc = new UserFirstNameComparator(true);
 			
