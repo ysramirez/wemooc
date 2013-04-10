@@ -49,6 +49,8 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
+import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
 
 
 
@@ -157,18 +159,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			coursePersistence.update(course, true);
 			LayoutSetPrototype lsProto=LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
-			/* activamos social equity para la comunidad creada */ 
-			/*
-			SocialEquityGroupSettingLocalServiceUtil.updateEquityGroupSetting(
-					group.getGroupId(), Group.class.getName(),
-					SocialActivitySettingConstants.TYPE_INFORMATION, true);
-
-			SocialEquityGroupSettingLocalServiceUtil.updateEquityGroupSetting(
-					group.getGroupId(), Group.class.getName(),
-					SocialActivitySettingConstants.TYPE_PARTICIPATION, true);
-            */
-			
-			
+			/* activamos social activity para la comunidad creada */ 		
+			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);
+						
 			return course;
 		
 	}
