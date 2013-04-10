@@ -135,6 +135,10 @@ public class CourseResultLocalServiceClpInvoker {
 		_methodParameterTypes128 = new String[] {
 				"com.liferay.lms.model.ModuleResult"
 			};
+
+		_methodName129 = "getCourseResultByCourseAndUser";
+
+		_methodParameterTypes129 = new String[] { "long", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -270,6 +274,12 @@ public class CourseResultLocalServiceClpInvoker {
 			return null;
 		}
 
+		if (_methodName129.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
+			return CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -319,4 +329,6 @@ public class CourseResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes127;
 	private String _methodName128;
 	private String[] _methodParameterTypes128;
+	private String _methodName129;
+	private String[] _methodParameterTypes129;
 }

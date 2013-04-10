@@ -11,9 +11,9 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.ProcessAction;
 
-import com.liferay.lms.model.module;
+import com.liferay.lms.model.Module;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
-import com.liferay.lms.service.moduleLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -43,7 +43,7 @@ public class ModuleUpdateResult extends MVCPortlet {
 			String allUsers =request.getParameter("allusers");
 			String allCourses =request.getParameter("allcourses");
 			
-			module m = moduleLocalServiceUtil.getmodule(moduleId);
+			Module m = ModuleLocalServiceUtil.getModule(moduleId);
 			
 			//System.out.println("email: "+emailAddress+", moduleId: "+moduleId+", allUsers: "+allUsers);
 			

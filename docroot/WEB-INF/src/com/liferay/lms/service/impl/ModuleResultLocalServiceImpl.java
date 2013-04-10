@@ -24,12 +24,12 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.model.P2pActivity;
-import com.liferay.lms.model.module;
+import com.liferay.lms.model.Module;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
-import com.liferay.lms.service.moduleLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.ModuleResultLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -234,7 +234,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 		//Obtenemos el moduleResult que tiene el usuario.Si no lo tiene, no lo creamos.
 		if (moduleResultPersistence.countBymu(userId, moduleId) > 0) {
 			
-			moduleResult = moduleResultPersistence.findBymu(userId, moduleId).get(0);
+			moduleResult = moduleResultPersistence.findBymu(userId, moduleId);
 			
 			List<LearningActivity> learnActList = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(moduleId);
 
@@ -278,7 +278,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 				//Traza
 				User user = UserLocalServiceUtil.getUser(userId);
 				//System.out.println("    *** USER: "+ user.getFullName() +" ("+ userId +")  ***\n           resultOLD: "+moduleResult.getResult()+", passedOLD: "+moduleResult.getPassed()+"\n           resultNEW: "+result+", passedNEW: "+passedModule);
-				module m = moduleLocalServiceUtil.getmodule(moduleId);
+				Module m = ModuleLocalServiceUtil.getModule(moduleId);
 				Course c = CourseLocalServiceUtil.getCourseByGroupCreatedId(m.getGroupId());
 				
 				String text = (moduleResult.getResult()<result)?"Sube":"Baja";
@@ -298,7 +298,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 				return true;
 			}else if(moduleResult.getResult() > result){
 				User user = UserLocalServiceUtil.getUser(userId);
-				module m = moduleLocalServiceUtil.getmodule(moduleId);
+				Module m = ModuleLocalServiceUtil.getModule(moduleId);
 				Course c = CourseLocalServiceUtil.getCourseByGroupCreatedId(m.getGroupId());
 				
 				System.out.println(c.getTitle(Locale.getDefault()) +" ("+ c.getCourseId() +")|"+m.getTitle(Locale.getDefault())+" ("+m.getModuleId()+")|"+moduleResult.getMrId()+"|"+user.getFullName() +" ("+ userId +")|"+moduleResult.getPassed()+"|"+passedModule+"|"+moduleResult.getResult() +"|"+result+"|Baja");
