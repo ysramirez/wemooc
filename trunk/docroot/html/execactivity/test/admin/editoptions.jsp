@@ -15,8 +15,14 @@
 <%@page	import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
 <%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
+<%@ page import="com.liferay.lms.model.Module" %>
+<%@ page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+
 <%@ include file="/init.jsp" %>
-<liferay-ui:header title="Opciones"></liferay-ui:header>
+
+<p class="negrita linea"><liferay-ui:message key="execActivity.options" /></p>
 <%
 
 	LearningActivity learnact=null;
@@ -46,6 +52,18 @@
 		secondDurationString = timestamp % 60;
 	}
 	
+	boolean showCorrectAnswer= false, improve = false;
+	String showCorrectAnswerStr = LearningActivityLocalServiceUtil.getExtraContentValue(ParamUtil.getLong(request,"actId"), "showCorrectAnswer");
+	String improveStr = LearningActivityLocalServiceUtil.getExtraContentValue(ParamUtil.getLong(request,"actId"), "improve");
+	
+	if(showCorrectAnswerStr.equals("true")){
+		showCorrectAnswer = true;
+	}
+	
+	if(improveStr.equals("true")){
+		improve = true;
+	}
+	
 	/*
     DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
   	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learnact.getActId());
@@ -70,50 +88,39 @@
 
 	<aui:input type="text" name="randomString" label="execActivity.options.random" value='<%=(random>0)?Long.toString(random):StringPool.BLANK %>'></aui:input>
 	<div id="<portlet:namespace />randomStringError"></div>
-
+	
+	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>"></aui:input>
+	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>"></aui:input>
+	
+<!-- 
 	<aui:input type="text" name="passwordString" label="execActivity.options.password" value='<%=password %>'></aui:input>
 	<div id="<portlet:namespace />passwordStringError"></div>
+ -->
+<%
+Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+long moduleIde = ParamUtil.getLong(request,"moduleId",0);
+module theModule=null;
+if(moduleIde>0){
 
-	<aui:field-wrapper label="execActivity.options.timestamp">
-	<%
-	NumberFormat timeNumberFormat = NumberFormat.getInstance(locale);
-	timeNumberFormat.setMinimumIntegerDigits(2);
-	%>
-		<select name="<portlet:namespace />hourDurationString" <%-- if(existTries){ %> disabled="disabled" <% } --%> >
-			<%
-			for (int i = 0; i < 60; i++) {
-				String hour = timeNumberFormat.format(i);
-			%>
-					<option <%= (hourDurationString == i) ? "selected" : "" %> value="<%= i %>"><%= hour %></option>
-			<%
-			}
-			%>
-		</select>
-		<select name="<portlet:namespace />minuteDurationString" <%-- if(existTries){ %> disabled="disabled" <% } --%> >
-			<%
-			for (int i = 0; i < 60; i++) {
-				String minute = timeNumberFormat.format(i);
-			%>
-					<option <%= (minuteDurationString == i) ? "selected" : "" %> value="<%= i %>">:<%= minute %></option>
-			<%
-			}
-			%>
-		</select>	
-		<select name="<portlet:namespace />secondDurationString" <%-- if(existTries){ %> disabled="disabled" <% } --%> > 
-			<%
-			for (int i = 0; i < 60; i++) {
-				String second = timeNumberFormat.format(i);
-			%>
-					<option <%= (secondDurationString == i) ? "selected" : "" %> value="<%= i %>">:<%= second %></option>
-			<%
-			}
-			%>
-		</select>			
-	</aui:field-wrapper>
-	<div id="<portlet:namespace />timeStampStringError"></div>
-		
+	theModule=moduleLocalServiceUtil.getmodule(moduleIde); 
+}
+
+
+boolean canEdit = true;
+if(theModule!=null && theModule.getStartDate() != null && theModule.getStartDate().before(new Date())
+		&&!permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR")){
+	canEdit = false;
+}
+%>
 	<aui:button-row>
+	<% 
+		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
+		%>									
+	<% if(canEdit){ %>
+		
 		<aui:button onclick="<%=renderResponse.getNamespace()+\"submit();\"%>" type="button" value="execActivity.options.save" />
+	<% } %>
+	
 		<aui:button onclick="<%=\"window.location='\"+cancel+\"';\"%>" type="button" value="execActivity.options.cancel" />
 	</aui:button-row>
 </aui:form>
