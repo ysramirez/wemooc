@@ -12,11 +12,11 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.ModuleResult;
-import com.liferay.lms.model.module;
+import com.liferay.lms.model.Module;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
-import com.liferay.lms.service.moduleLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -51,7 +51,7 @@ public class courseupdateresult extends MVCPortlet {
 					List<User> usersList = UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId());
 					
 					//Obtenemos todos los modulos del curso.
-					List<module> moduleList = moduleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
+					List<Module> moduleList = ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
 					
 					for(User user:usersList){
 						
@@ -66,7 +66,7 @@ public class courseupdateresult extends MVCPortlet {
 						
 						//System.out.println("   user: "+user.getFullName()+" ("+ user.getUserId() +")");
 						
-						for(module mod:moduleList){
+						for(Module mod:moduleList){
 														
 							//Obtenemos todos los resultados que ha obtenidos el usuario del curso.
 							ModuleResult moduleResult = ModuleResultLocalServiceUtil.getByModuleAndUser(mod.getModuleId(), user.getUserId());
