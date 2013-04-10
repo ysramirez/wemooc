@@ -15,6 +15,7 @@
 package com.liferay.lms.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +24,7 @@ import java.util.Map;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
+import com.liferay.lms.model.P2pActivityCorrections;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.base.CourseLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -49,6 +51,8 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.social.model.SocialEquitySettingConstants;
+import com.liferay.portlet.social.service.SocialEquityGroupSettingLocalServiceUtil;
 
 
 /**
@@ -130,12 +134,43 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			//creating group
 			Group group = GroupLocalServiceUtil.addGroup(userId,null, 0,
 					title,summary,GroupConstants.TYPE_SITE_PRIVATE,friendlyURL,true,true,serviceContext);
+			
+			//Añadimos el rol Teacher al usuario que crea el blog
+			//System.out.println("Add TO ROL::UserId "+userId);
+			long[] usuarios = new long[1];
+			usuarios[0] = userId;
+			try
+			{
+			UserLocalServiceUtil.addRoleUsers(lmsPrefs.getTeacherRole(), usuarios);
+			}
+			catch (Exception e)
+			{
+				
+			}
+			try
+			{
+			UserLocalServiceUtil.addRoleUsers(lmsPrefs.getEditorRole(), usuarios);
+			}
+			catch (Exception e)
+			{
+			}
+			Group group = GroupLocalServiceUtil.addGroup(getAdministratorUser(serviceContext.getCompanyId()).getUserId(),null, 0,
+					title,summary,GroupConstants.TYPE_COMMUNITY_PRIVATE,friendlyURL,true,serviceContext);
 			course.setGroupCreatedId(group.getGroupId());
 			GroupLocalServiceUtil.addUserGroups(userId, new long[] { group.getGroupId() });
 			course.setFriendlyURL(group.getFriendlyURL());
 			coursePersistence.update(course, true);
 			LayoutSetPrototype lsProto=LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
+			/* activamos social equity para la comunidad creada */ 
+			SocialEquityGroupSettingLocalServiceUtil.updateEquityGroupSetting(
+					group.getGroupId(), Group.class.getName(),
+					SocialEquitySettingConstants.TYPE_INFORMATION, true);
+
+			SocialEquityGroupSettingLocalServiceUtil.updateEquityGroupSetting(
+					group.getGroupId(), Group.class.getName(),
+					SocialEquitySettingConstants.TYPE_PARTICIPATION, true);
+			
 			
 			return course;
 		
@@ -283,6 +318,13 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	public Course deleteCourse(Course course) throws SystemException,
 	PortalException {
 	long companyId = course.getCompanyId();
+	
+	//Cambia el titulo y la friendlyurl y desactiva el grupo
+	Group theGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+	theGroup.setName("desactivado("+course.getGroupCreatedId()+")");
+	theGroup.setFriendlyURL(course.getFriendlyURL()+"_desac");
+	GroupLocalServiceUtil.updateGroup(theGroup);
+	
 	assetEntryLocalService.deleteEntry(Course.class.getName(),course.getCourseId());
 	resourceLocalService.deleteResource(
 	companyId, Course.class.getName(),
@@ -297,6 +339,23 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	PortalException {
 	this.deleteCourse(CourseLocalServiceUtil.getCourse(courseId));
 	return null;
+	}
+	
+	//Siguiendo el indice IX_5DE0BE11 de la tabla group_
+	public boolean existsCourseName(long companyId, long classNameId, long liveGroupId, String name){
+		boolean res = false;
+		
+		try {
+			Group group = GroupLocalServiceUtil.getGroup(companyId, name);
+			if(group != null && group.getClassNameId() == classNameId && group.getLiveGroupId() == liveGroupId ){
+				res = true;
+			}
+			
+		} catch (Exception e) {
+			res = false;
+		}
+
+		return res;
 	}
 	
 	@SuppressWarnings("unchecked")
