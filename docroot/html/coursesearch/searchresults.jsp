@@ -66,7 +66,7 @@ String path=renderer.render(renderRequest,renderResponse,AssetRenderer.TEMPLATE_
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 <liferay-util:include page="<%= path %>" portletId="<%= rendererFactory.getPortletId() %>" />
 <div class="asset-more">
-<a href="/web/<%=course.getFriendlyURL()%>">Ver ficha del curso.</a>
+<a href="/web/<%=course.getFriendlyURL()%>" ><liferay-ui:message key="searchresults.seecoursecard" /></a>
 </div>
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
@@ -75,9 +75,4 @@ String path=renderer.render(renderRequest,renderResponse,AssetRenderer.TEMPLATE_
 <%
 }
 %>
-<portlet:renderURL var="cancelURL" windowState="NORMAL">
-<portlet:param name="text" value=""></portlet:param>
-</portlet:renderURL>
-<aui:form action="<%=cancelURL %>" method="post">
-<aui:button type="submit" value="cancel"></aui:button>
-</aui:form>
+
