@@ -15,12 +15,21 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.learningactivity.courseeval.CourseEval;
+
+
+import java.util.ArrayList;
 import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
+import java.util.List;
+
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.ModuleResult;
+import com.liferay.lms.model.P2pActivityCorrections;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.service.base.CourseResultLocalServiceBaseImpl;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 
@@ -79,5 +88,23 @@ public class CourseResultLocalServiceImpl
 			CourseEval ceval=cer.getCourseEval(courseEvalTypeId);
 			ceval.updateCourse(course, mresult);
 		}
+	}
+	
+	@SuppressWarnings("unchecked")
+	public CourseResult getCourseResultByCourseAndUser(long courseId,long userId) throws SystemException{
+
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(CourseResult.class)
+				.add(PropertyFactoryUtil.forName("courseId").eq(courseId))
+				.add(PropertyFactoryUtil.forName("userId").eq(userId));
+	
+		List<CourseResult> list = (List<CourseResult>)courseResultPersistence.findWithDynamicQuery(consulta);
+		
+		if(list!=null){
+			if(list.size() > 0){
+				return list.get(0);
+			}
+		}
+		
+		return null;
 	}
 }
