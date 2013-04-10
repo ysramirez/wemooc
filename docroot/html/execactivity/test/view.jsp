@@ -37,6 +37,22 @@ boolean improve =ParamUtil.getBoolean(request, "improve",false);
 long userId = themeDisplay.getUserId();
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
+
+//Obtener si puede hacer un intento de mejorar el resultado.
+boolean improving = false;
+LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+if(result != null){
+	int done =  LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId,userId);
+	LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+	if(result.getResult() < 100
+	   && !LearningActivityLocalServiceUtil.islocked(actId, userId)
+	   && LearningActivityResultLocalServiceUtil.userPassed(actId, userId)
+	   && done < act.getTries()){
+		improving = true;
+	}
+}
+
+
 if(actId==0)
 {
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
@@ -46,11 +62,10 @@ else
 	LearningActivity activity=LearningActivityLocalServiceUtil.getLearningActivity(actId);
 	long typeId=activity.getTypeId();
 	
-	if(typeId==0&&(!LearningActivityLocalServiceUtil.islocked(actId,userId)||
-			permissionChecker.hasPermission(
-			activity.getGroupId(),
-			LearningActivity.class.getName(),
-			actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+	if( typeId==0
+			&& (!LearningActivityLocalServiceUtil.islocked(actId,userId)
+			|| permissionChecker.hasPermission( activity.getGroupId(),LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
+			|| permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
 	{
 		%>
 
@@ -58,13 +73,11 @@ else
 		<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 		
 		<%
-		if((!LearningActivityLocalServiceUtil.islocked(actId,userId)||
-				permissionChecker.hasPermission(
-						activity.getGroupId(),
-						LearningActivity.class.getName(),
-						actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+		if((!LearningActivityLocalServiceUtil.islocked(actId,userId)
+			|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
+			|| permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
 		{		
-		if((!improve)&&(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())))
+		if((!improve) && (LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())))
 		{
 			request.setAttribute("learningActivity",activity);
 			request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
@@ -74,10 +87,10 @@ else
 			</liferay-util:include>
 			<% 
 		}
-		else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) ||  permissionChecker.hasPermission(
-				activity.getGroupId(),
-				LearningActivity.class.getName(),
-				actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK"))
+		else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
+				|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
+				|| permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"ACCESSLOCK")
+			    || improving )
 		{
 			String passwordParam = ParamUtil.getString(renderRequest, "password",StringPool.BLANK).trim();
 			String password = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "password"),StringPool.BLANK).trim();
@@ -323,7 +336,7 @@ else
 		//Si no ha pasado el test, ni tiene mas intentos.
 		else 
 		{
-			LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+			//LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
 			Object  [] arguments =  new Object[]{result.getResult()};
 			Object  [] arg =  new Object[]{activity.getPasspuntuation()};
 			%>
