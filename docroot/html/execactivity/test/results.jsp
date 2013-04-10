@@ -71,8 +71,14 @@ else
 		userPassed=learningActivity.getPasspuntuation()<=larntry.getResult();
 		oldResult=(Long)request.getAttribute("oldResult");
 	%>
+	<% 
+	//Cuando estamos mejorando la nota no mostramos el popup.
+	if(oldResult <= 0){
+	%>
 	<jsp:include page="/html/shared/popResult.jsp" />
+	<%}%>
 	
+
 	<h2><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
 	<% } %>
 	<p><liferay-ui:message key="test-done" /></p>
@@ -169,9 +175,12 @@ else
 				}
 			
 			String correct="";
-			if(answer.isIsCorrect())
-			{
-				correct="font_14 color_cuarto negrita";
+			String showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(ParamUtil.getLong(request,"actId"), "showCorrectAnswer");
+			if(showCorrectAnswer.equals("true")){
+				if(answer.isIsCorrect())
+				{
+					correct="font_14 color_cuarto negrita";
+				}
 			}
 			%>
 			<div class="answer <%=correct%>">
@@ -215,28 +224,33 @@ else
 		}
 		else
 		{
+			
 			if(result.getResult()<100)
 			{
-				if(tries>0)
-				{	
-				%>
-					<p class="negrita"><liferay-ui:message key="execativity.test.try.count" arguments="<%=new Object[]{userTries,tries} %>" /></p>
-					<p class="color_tercero textcenter negrita"><liferay-ui:message key="execativity.test.try.confirmation.again" /></p>
-				<%
+				String improveStr = LearningActivityLocalServiceUtil.getExtraContentValue(ParamUtil.getLong(request,"actId"), "improve");
+				
+				if(improveStr.equals("true")){
+				
+					if(tries>0)
+					{	
+					%>
+						<p class="negrita"><liferay-ui:message key="execativity.test.try.count" arguments="<%=new Object[]{userTries,tries} %>" /></p>
+						<p class="color_tercero textcenter negrita"><liferay-ui:message key="execativity.test.try.confirmation.again" /></p>
+					<%
+					}
+					%>
+					<liferay-portlet:renderURL var="mejorardir">
+						<liferay-portlet:param name="actId" value="<%=Long.toString(learningActivity.getActId()) %>"></liferay-portlet:param>
+						<liferay-portlet:param name="improve" value="true"></liferay-portlet:param>
+						<liferay-portlet:param name="jspPage" value="/html/execactivity/test/preview.jsp" />
+					</liferay-portlet:renderURL>
+					<%String enlace="self.location='"+mejorardir.toString()+"'"; %>
+					<aui:button name="repetir" value="<%=LanguageUtil.get(pageContext,\"execativity.test.try.again.improve\")%>" onClick="<%=enlace %>"></aui:button>
+					<%
+				
 				}
-				%>
-				<liferay-portlet:renderURL var="mejorardir">
-					<liferay-portlet:param name="actId" value="<%=Long.toString(learningActivity.getActId()) %>"></liferay-portlet:param>
-					<liferay-portlet:param name="improve" value="true"></liferay-portlet:param>
-					<liferay-portlet:param name="jspPage" value="/html/execactivity/test/view.jsp" />
-				</liferay-portlet:renderURL>
-				<%String enlace="self.location='"+mejorardir.toString()+"'"; %>
-				<aui:button name="repetir" value="<%=LanguageUtil.get(pageContext,\"execativity.test.try.again.improve\")%>" onClick="<%=enlace %>"></aui:button>
-				<%
-
 			}
 		}
-	
 	}
 	
 }
