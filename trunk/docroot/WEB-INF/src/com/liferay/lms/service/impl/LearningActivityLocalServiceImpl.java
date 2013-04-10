@@ -17,10 +17,14 @@ package com.liferay.lms.service.impl;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityTry;
+import com.liferay.lms.model.module;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
+import com.liferay.lms.service.moduleLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -38,7 +42,9 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 /**
@@ -439,7 +445,11 @@ public class LearningActivityLocalServiceImpl
 				while (it.hasNext()) {
 					Map.Entry e = (Map.Entry)it.next();
 					Element eleXML=SAXReaderUtil.createElement(String.valueOf(e.getKey()));
-					eleXML.addText(String.valueOf(e.getValue()));
+					if(e.getKey().equals("document")){
+						eleXML.addAttribute("id", String.valueOf(e.getValue()));
+					}else{
+						eleXML.addText(String.valueOf(e.getValue()));
+					}
 					resultadosXML.add(eleXML);
 				}
 				activity.setExtracontent(resultadosXMLDoc.formattedString());
