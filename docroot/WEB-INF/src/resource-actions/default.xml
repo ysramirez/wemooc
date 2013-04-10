@@ -201,7 +201,7 @@
 		</permissions>
 	</model-resource>
 	<model-resource>
-		<model-name>com.liferay.lms.SCORMContent</model-name>		
+		<model-name>com.liferay.lms.model.SCORMContent</model-name>		
 		
 		<portlet-ref>
 			<portlet-name>scormadmin</portlet-name>

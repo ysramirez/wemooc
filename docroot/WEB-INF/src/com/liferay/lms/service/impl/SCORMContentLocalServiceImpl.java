@@ -157,6 +157,7 @@ public class SCORMContentLocalServiceImpl
 			}
 			catch(Exception e)
 			{
+				e.printStackTrace();
 			}
 				
 			return scocontent;
