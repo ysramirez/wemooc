@@ -114,7 +114,7 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 	}
 	
 	boolean hasPrecedence = false;
-	System.out.println("number of precedence: " + activity.getPrecedence());
+	//System.out.println("number of precedence: " + activity.getPrecedence());
 	if(activity.getPrecedence() > 0)
 		hasPrecedence = true;
 		%>
