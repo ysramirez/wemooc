@@ -168,6 +168,9 @@ public class ExecActivity extends MVCPortlet
 			long secondDurationString=ParamUtil.getLong(actionRequest, "secondDurationString",0);
 			long timeStamp = hourDurationString * 3600 + minuteDurationString * 60 + secondDurationString;
 			
+			String showCorrectAnswer=ParamUtil.getString(actionRequest, "showCorrectAnswer", "false");
+			String improve=ParamUtil.getString(actionRequest, "improve", "false");
+			
 			if(randomString==0) {
 				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", StringPool.BLANK);
 			}
@@ -184,6 +187,17 @@ public class ExecActivity extends MVCPortlet
 				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "timeStamp", Long.toString(timeStamp));
 			}
 			
+			if(showCorrectAnswer.equals("true")) {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "true");
+			}else if(showCorrectAnswer.equals("false")){
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "false");
+			}
+			
+			if(improve.equals("true")) {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "true");
+			}else if(improve.equals("false")) {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "false");
+			}
 
 			SessionMessages.add(actionRequest, "activity-saved-successfully");
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
@@ -399,8 +413,10 @@ public class ExecActivity extends MVCPortlet
 					}
 				} catch (PortalException e) {
 					// TODO Auto-generated catch block
+					e.printStackTrace();
 				} catch (SystemException e) {
 					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}			
 		}
 	}
@@ -507,8 +523,11 @@ public class ExecActivity extends MVCPortlet
 		        response.getPortletOutputStream().close();
 			
 			} catch (PortalException e) {
+				e.printStackTrace();
 			} catch (SystemException e) {
+				e.printStackTrace();
 			} catch (DocumentException e) {
+				e.printStackTrace();
 			}finally{
 				response.getPortletOutputStream().flush();
 		        response.getPortletOutputStream().close();

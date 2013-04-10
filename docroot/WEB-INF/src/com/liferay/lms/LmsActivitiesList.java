@@ -161,10 +161,15 @@ public class LmsActivitiesList extends MVCPortlet {
 		  String paramName=parNams.nextElement();
 		  if(paramName.startsWith("title_")&&paramName.length()>6)
 		  {
-			  if(actionRequest.getParameter(paramName)!=null && actionRequest.getParameter(paramName).length()>0)
+			  if(actionRequest.getParameter(paramName)!=null && actionRequest.getParameter(paramName).length()>0){
+				  String title = actionRequest.getParameter(paramName);
+				  StringTokenizer tokens = new StringTokenizer(title);
+				  if(tokens.countTokens() > 0 ){
 					  hasTitle=true;
 				  }
 			  }
+		  }
+		}
 		if(!hasTitle)
 		{
 			SessionErrors.add(actionRequest, "title-required");
@@ -182,6 +187,12 @@ public class LmsActivitiesList extends MVCPortlet {
 		//Date validation
 		if (startDate.after(stopDate)){
 			SessionErrors.add(actionRequest, "activity-startDate-before-endDate");
+		}
+		
+		//Type validation
+		if (type == -1){
+			SessionErrors.add(actionRequest, "activity-type-not-selected");
+			return;
 		}
 		
 		LearningActivity larn=null;
