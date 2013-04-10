@@ -208,12 +208,20 @@ LearningActivityTry larEntry=LearningActivityTryLocalServiceUtil.getLearningActi
 
 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 
-String []arg = {String.valueOf(numCorrecl)};
+List<P2pActivityCorrections> listDone = P2pActivityCorrectionsLocalServiceUtil.getCorrectionsDoneByUserInP2PActivity(actId, userId);
+
+String []arg = {String.valueOf(numCorrecl-listDone.size()) , String.valueOf(numCorrecl)};
 
 %>
-
 	<div class="numbervalidations color_tercero font_13">
-		<p><liferay-ui:message key="p2ptaskactivity.inc.numbervalidations" arguments="<%=arg %>" /> </p>
+		<p>
+			<c:if test="<%=numCorrecl-listDone.size() > 0 %>">
+				<liferay-ui:message key="p2ptaskactivity.inc.numbervalidations" arguments="<%=arg %>" /> 
+			</c:if>
+			<c:if test="<%=numCorrecl-listDone.size() == 0 %>">
+				<liferay-ui:message key="p2ptaskactivity.inc.validationscompleted" /> 
+			</c:if>
+		</p>
 	</div>
 
 <%

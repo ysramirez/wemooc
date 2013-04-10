@@ -28,7 +28,7 @@
 			<div class="message">
 				<%=learningActivity.getFeedbackCorrect() %>
 			</div>
-			<a href="<%=backToQuestionsURL.toString() %>">Volver</a>
+			<a href="<%=backToQuestionsURL.toString() %>" ><liferay-ui:message key="back" /></a>
 		</div>
 		
 	<%	

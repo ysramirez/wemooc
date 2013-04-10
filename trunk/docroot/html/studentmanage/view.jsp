@@ -63,7 +63,7 @@
 			<liferay-portlet:param name="returnurl" value="<%=returnurl %>"></liferay-portlet:param>
 			
 			</liferay-portlet:renderURL>
-			<a href="<%=viewGradeURL %>">Ver resultados.</a>
+			<a href="<%=viewGradeURL %>" ><liferay-ui:message key="searchresults.viewresults" /></a>
 		</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		
