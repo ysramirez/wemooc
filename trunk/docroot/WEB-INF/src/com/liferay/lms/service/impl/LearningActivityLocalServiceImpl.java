@@ -154,6 +154,7 @@ public class LearningActivityLocalServiceImpl
 			}
 			catch(Exception e)
 			{
+				throw new SystemException(e);
 			}
 			return larn;
 			}
@@ -231,9 +232,12 @@ public class LearningActivityLocalServiceImpl
 	
 	public java.util.List<LearningActivity> getLearningActivitiesOfGroup(long groupId) throws SystemException
 	{
-		return learningActivityPersistence.findByg(groupId, 0, 1000);
+		return learningActivityPersistence.findByg(groupId);
 	}
-	
+	public java.util.List<LearningActivity> getLearningActivitiesOfGroupAndType(long groupId,int typeId) throws SystemException
+	{
+		return learningActivityPersistence.findByg_t(groupId, typeId);
+	}
 	public java.util.List<LearningActivity> getLearningActivitiesOfModule(long moduleId) throws SystemException
 	{
 		return learningActivityPersistence.findBym(moduleId, 0, 1000);
