@@ -59,7 +59,7 @@
 					if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 					{
 					%>
-						<h2><liferay-ui:message key="surveyactivity.survey.done" />.</h2>
+						<h2><liferay-ui:message key="surveyactivity.survey.done" /></h2>
 					<%
 					}
 					else
@@ -133,9 +133,10 @@
 						</aui:form>
 						<%
 						}
+					%></div> <%
 					}	
 				}
 			%>
 
-			</div>
+
 			
