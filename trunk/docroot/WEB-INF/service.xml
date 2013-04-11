@@ -4,7 +4,7 @@
 	<author>TLS</author>
 	<namespace>Lms</namespace>
 	
-	<entity name="LearningActivity" uuid="true" local-service="true" remote-service="true">
+	<entity name="LearningActivity" uuid="true" local-service="true" remote-service="true" json-enabled="false">
 
 		<!-- PK fields -->
 		<column name="actId" type="long" primary="true" />
@@ -63,7 +63,7 @@
 
 	</entity>
 	
-	<entity name="TestQuestion" uuid="true" local-service="true" remote-service="true">
+	<entity name="TestQuestion" uuid="true" local-service="true" remote-service="true" json-enabled="false">
 
 		<!-- PK fields -->
 
@@ -79,7 +79,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="P2pActivity" uuid="true" local-service="true" remote-service="true">
+	<entity name="P2pActivity" uuid="true" local-service="true" remote-service="true" json-enabled="false">
 		<!-- PK fields -->
 		<column name="p2pActivityId" type="long" primary="true" />
 		<column name="actId" type="long" />
@@ -102,7 +102,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="P2pActivityCorrections" uuid="true" local-service="true" remote-service="true">
+	<entity name="P2pActivityCorrections" uuid="true" local-service="true" remote-service="true" json-enabled="false">
 		<column name="p2pActivityCorrectionsId" type="long" primary="true" />
 		<column name="p2pActivityId" type="long" />
 		<column name="userId" type="long" />
@@ -126,7 +126,7 @@
 	</entity>
 	
 	<entity name="TestAnswer" uuid="true" local-service="true"
-		remote-service="true">
+		remote-service="true" json-enabled="false">
 		<column name="answerId" type="long" primary="true" />
 		<column name="questionId" type="long" />
 		<column name="actId" type="long" />
@@ -147,7 +147,7 @@
 	</entity>
 	
 	<entity name="LearningActivityTry" uuid="true" local-service="true"
-		remote-service="true">
+		remote-service="true" json-enabled="false" cache-enabled="false">
 		<column name="latId" type="long" primary="true" />
 		<column name="actId" type="long" />
 		<column name="userId" type="long" />
@@ -171,7 +171,7 @@
 	</entity>
 	
 	<entity name="LearningActivityResult" uuid="true" local-service="true"
-		remote-service="true">
+		remote-service="true" json-enabled="false" cache-enabled="false">
 
 		<column name="larId" type="long" primary="true" />
 		<column name="actId" type="long" />
@@ -207,7 +207,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="Module" local-service="true" remote-service="false" uuid="true">
+	<entity name="Module" local-service="true" remote-service="true" uuid="true" json-enabled="false">
 		<!-- Primary key column -->
 		<column name="moduleId" type="long" primary="true" />
 
@@ -240,7 +240,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="ModuleResult" local-service="true">
+	<entity name="ModuleResult" local-service="true" json-enabled="false" cache-enabled="false">
 		<column name="moduleId" type="long" primary="false"></column>
 		<column name="result" type="long"></column>
 		<column name="comments" type="String"></column>
@@ -263,7 +263,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="Course" local-service="true" remote-service="true" uuid="true">
+	<entity name="Course" local-service="true" remote-service="true" uuid="true" json-enabled="false">
 		<!-- Primary key column -->
 		<column name="courseId" type="long" primary="true" />
 		<!-- Foreign key columns -->
@@ -312,7 +312,7 @@
 			entity="RatingsStats" />
 	</entity>
 	
-	<entity name="CourseResult" local-service="true">
+	<entity name="CourseResult" local-service="true" json-enabled="false" cache-enabled="false">
 		<column name="crId" type="long" primary="true"></column>
 		<column name="courseId" type="long" primary="false"></column>
 		<column name="result" type="long"></column>
@@ -330,7 +330,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="CheckP2pMailing" local-service="true">
+	<entity name="CheckP2pMailing" local-service="true" json-enabled="false">
 		<column name="checkP2pId" type="long" primary="true"></column>
 		<column name="actId" type="long"></column>
 		<column name="date" type="Date"></column>
@@ -340,7 +340,7 @@
 		</finder>
 	</entity>
 	
-    <entity name="LmsPrefs" local-service="true" remote-service="false">
+    <entity name="LmsPrefs" local-service="true" remote-service="false" json-enabled="false">
         <column name="companyId" type="long" primary="true"></column>
         <column name="teacherRole" type="long"></column>
     	<column name="editorRole" type="long"></column>
@@ -348,7 +348,7 @@
         <column name="lmsTemplates" type="String"></column>
     </entity>
         
-	<entity name="SurveyResult" uuid="true" local-service="true" remote-service="true">
+	<entity name="SurveyResult" uuid="true" local-service="true" remote-service="true" json-enabled="false">
 		<column name="surveyResultId" type="long" primary="true" />
 		<column name="actId" type="long" />
 		<column name="latId" type="long" />
@@ -356,7 +356,7 @@
 		<column name="answerId" type="long" />
 		<column name="userId" type="long" />
 	</entity>        
-     <entity name="SCORMContent" local-service="true" remote-service="true" uuid="true">
+     <entity name="SCORMContent" local-service="true" remote-service="true" uuid="true" json-enabled="false">
 		<!-- Primary key column -->
 		<column name="scormId" type="long" primary="true" />
 		<!-- Foreign key columns -->
