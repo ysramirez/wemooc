@@ -63,7 +63,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.LearningActivityModel
  * @generated
  */
-@JSON(strict = true)
 public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 	implements LearningActivityModel {
 	/*
@@ -408,7 +407,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -430,7 +428,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -439,7 +436,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_actId = actId;
 	}
 
-	@JSON
 	public long getCompanyId() {
 		return _companyId;
 	}
@@ -448,7 +444,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_companyId = companyId;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -465,7 +460,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_userUuid = userUuid;
 	}
 
-	@JSON
 	public long getGroupId() {
 		return _groupId;
 	}
@@ -486,7 +480,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		return _originalGroupId;
 	}
 
-	@JSON
 	public String getUserName() {
 		if (_userName == null) {
 			return StringPool.BLANK;
@@ -500,7 +493,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_userName = userName;
 	}
 
-	@JSON
 	public Date getCreateDate() {
 		return _createDate;
 	}
@@ -509,7 +501,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_createDate = createDate;
 	}
 
-	@JSON
 	public Date getModifiedDate() {
 		return _modifiedDate;
 	}
@@ -518,7 +509,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_modifiedDate = modifiedDate;
 	}
 
-	@JSON
 	public int getStatus() {
 		return _status;
 	}
@@ -527,7 +517,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_status = status;
 	}
 
-	@JSON
 	public long getStatusByUserId() {
 		return _statusByUserId;
 	}
@@ -545,7 +534,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_statusByUserUuid = statusByUserUuid;
 	}
 
-	@JSON
 	public String getStatusByUserName() {
 		if (_statusByUserName == null) {
 			return StringPool.BLANK;
@@ -559,7 +547,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_statusByUserName = statusByUserName;
 	}
 
-	@JSON
 	public Date getStatusDate() {
 		return _statusDate;
 	}
@@ -568,7 +555,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_statusDate = statusDate;
 	}
 
-	@JSON
 	public String getTitle() {
 		if (_title == null) {
 			return StringPool.BLANK;
@@ -658,7 +644,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		}
 	}
 
-	@JSON
 	public String getDescription() {
 		if (_description == null) {
 			return StringPool.BLANK;
@@ -751,7 +736,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		}
 	}
 
-	@JSON
 	public int getTypeId() {
 		return _typeId;
 	}
@@ -772,7 +756,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		return _originalTypeId;
 	}
 
-	@JSON
 	public Date getStartdate() {
 		return _startdate;
 	}
@@ -781,7 +764,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_startdate = startdate;
 	}
 
-	@JSON
 	public Date getEnddate() {
 		return _enddate;
 	}
@@ -790,7 +772,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_enddate = enddate;
 	}
 
-	@JSON
 	public long getPrecedence() {
 		return _precedence;
 	}
@@ -799,7 +780,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_precedence = precedence;
 	}
 
-	@JSON
 	public long getTries() {
 		return _tries;
 	}
@@ -808,7 +788,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_tries = tries;
 	}
 
-	@JSON
 	public int getPasspuntuation() {
 		return _passpuntuation;
 	}
@@ -817,7 +796,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_passpuntuation = passpuntuation;
 	}
 
-	@JSON
 	public long getPriority() {
 		return _priority;
 	}
@@ -828,7 +806,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_priority = priority;
 	}
 
-	@JSON
 	public long getModuleId() {
 		return _moduleId;
 	}
@@ -849,7 +826,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		return _originalModuleId;
 	}
 
-	@JSON
 	public String getExtracontent() {
 		if (_extracontent == null) {
 			return StringPool.BLANK;
@@ -863,7 +839,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_extracontent = extracontent;
 	}
 
-	@JSON
 	public String getFeedbackCorrect() {
 		if (_feedbackCorrect == null) {
 			return StringPool.BLANK;
@@ -877,7 +852,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_feedbackCorrect = feedbackCorrect;
 	}
 
-	@JSON
 	public String getFeedbackNoCorrect() {
 		if (_feedbackNoCorrect == null) {
 			return StringPool.BLANK;
@@ -891,7 +865,6 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		_feedbackNoCorrect = feedbackNoCorrect;
 	}
 
-	@JSON
 	public long getWeightinmodule() {
 		return _weightinmodule;
 	}

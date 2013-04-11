@@ -21,6 +21,8 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.lms.service.base.TestQuestionServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 
@@ -43,6 +45,7 @@ import com.liferay.portal.security.permission.ActionKeys;
  * @see com.liferay.lms.service.base.TestQuestionServiceBaseImpl
  * @see com.liferay.lms.service.TestQuestionServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class TestQuestionServiceImpl extends TestQuestionServiceBaseImpl 
 {
 	public TestQuestion addQuestion(long actId,String text,long questionType) throws SystemException,PortalException

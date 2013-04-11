@@ -20,7 +20,6 @@ import com.liferay.lms.model.SurveyResultSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -55,7 +54,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.SurveyResultModel
  * @generated
  */
-@JSON(strict = true)
 public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 	implements SurveyResultModel {
 	/*
@@ -223,7 +221,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -245,7 +242,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getSurveyResultId() {
 		return _surveyResultId;
 	}
@@ -254,7 +250,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 		_surveyResultId = surveyResultId;
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -263,7 +258,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 		_actId = actId;
 	}
 
-	@JSON
 	public long getLatId() {
 		return _latId;
 	}
@@ -272,7 +266,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 		_latId = latId;
 	}
 
-	@JSON
 	public long getQuestionId() {
 		return _questionId;
 	}
@@ -281,7 +274,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 		_questionId = questionId;
 	}
 
-	@JSON
 	public long getAnswerId() {
 		return _answerId;
 	}
@@ -290,7 +282,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 		_answerId = answerId;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}

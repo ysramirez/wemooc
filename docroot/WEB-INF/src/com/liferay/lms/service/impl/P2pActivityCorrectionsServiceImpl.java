@@ -15,6 +15,8 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.service.base.P2pActivityCorrectionsServiceBaseImpl;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the p2p activity corrections remote service.
@@ -35,6 +37,7 @@ import com.liferay.lms.service.base.P2pActivityCorrectionsServiceBaseImpl;
  * @see com.liferay.lms.service.base.P2pActivityCorrectionsServiceBaseImpl
  * @see com.liferay.lms.service.P2pActivityCorrectionsServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class P2pActivityCorrectionsServiceImpl
 	extends P2pActivityCorrectionsServiceBaseImpl {
 }

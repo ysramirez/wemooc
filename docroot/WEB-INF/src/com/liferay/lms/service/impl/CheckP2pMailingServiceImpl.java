@@ -15,6 +15,8 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.service.base.CheckP2pMailingServiceBaseImpl;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the check p2p mailing remote service.
@@ -35,5 +37,6 @@ import com.liferay.lms.service.base.CheckP2pMailingServiceBaseImpl;
  * @see com.liferay.lms.service.base.CheckP2pMailingServiceBaseImpl
  * @see com.liferay.lms.service.CheckP2pMailingServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class CheckP2pMailingServiceImpl extends CheckP2pMailingServiceBaseImpl {
 }

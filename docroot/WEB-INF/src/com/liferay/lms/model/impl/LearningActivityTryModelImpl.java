@@ -20,7 +20,6 @@ import com.liferay.lms.model.LearningActivityTrySoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -56,7 +55,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.LearningActivityTryModel
  * @generated
  */
-@JSON(strict = true)
 public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivityTry>
 	implements LearningActivityTryModel {
 	/*
@@ -86,10 +84,10 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 	public static final String TX_MANAGER = "liferayTransactionManager";
 	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.entity.cache.enabled.com.liferay.lms.model.LearningActivityTry"),
-			true);
+			false);
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.lms.model.LearningActivityTry"),
-			true);
+			false);
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.LearningActivityTry"),
 			true);
@@ -256,7 +254,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -278,7 +275,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getLatId() {
 		return _latId;
 	}
@@ -289,7 +285,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		_latId = latId;
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -310,7 +305,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		return _originalActId;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -339,7 +333,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		return _originalUserId;
 	}
 
-	@JSON
 	public Date getStartDate() {
 		return _startDate;
 	}
@@ -348,7 +341,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		_startDate = startDate;
 	}
 
-	@JSON
 	public long getResult() {
 		return _result;
 	}
@@ -357,7 +349,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		_result = result;
 	}
 
-	@JSON
 	public Date getEndDate() {
 		return _endDate;
 	}
@@ -366,7 +357,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		_endDate = endDate;
 	}
 
-	@JSON
 	public String getTryData() {
 		if (_tryData == null) {
 			return StringPool.BLANK;
@@ -380,7 +370,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		_tryData = tryData;
 	}
 
-	@JSON
 	public String getTryResultData() {
 		if (_tryResultData == null) {
 			return StringPool.BLANK;
@@ -394,7 +383,6 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 		_tryResultData = tryResultData;
 	}
 
-	@JSON
 	public String getComments() {
 		if (_comments == null) {
 			return StringPool.BLANK;

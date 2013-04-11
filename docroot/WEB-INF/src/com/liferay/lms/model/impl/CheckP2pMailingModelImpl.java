@@ -19,7 +19,6 @@ import com.liferay.lms.model.CheckP2pMailingModel;
 import com.liferay.lms.model.CheckP2pMailingSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -53,7 +52,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.CheckP2pMailingModel
  * @generated
  */
-@JSON(strict = true)
 public class CheckP2pMailingModelImpl extends BaseModelImpl<CheckP2pMailing>
 	implements CheckP2pMailingModel {
 	/*
@@ -186,7 +184,6 @@ public class CheckP2pMailingModelImpl extends BaseModelImpl<CheckP2pMailing>
 		}
 	}
 
-	@JSON
 	public long getCheckP2pId() {
 		return _checkP2pId;
 	}
@@ -195,7 +192,6 @@ public class CheckP2pMailingModelImpl extends BaseModelImpl<CheckP2pMailing>
 		_checkP2pId = checkP2pId;
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -216,7 +212,6 @@ public class CheckP2pMailingModelImpl extends BaseModelImpl<CheckP2pMailing>
 		return _originalActId;
 	}
 
-	@JSON
 	public Date getDate() {
 		return _date;
 	}

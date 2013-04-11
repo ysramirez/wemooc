@@ -24,6 +24,8 @@ import com.liferay.lms.service.TestQuestionLocalServiceWrapper;
 import com.liferay.lms.service.base.TestAnswerServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.security.permission.ActionKeys;
 
 /**
@@ -45,7 +47,7 @@ import com.liferay.portal.security.permission.ActionKeys;
  * @see com.liferay.lms.service.base.TestAnswerServiceBaseImpl
  * @see com.liferay.lms.service.TestAnswerServiceUtil
  */
-
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class TestAnswerServiceImpl extends TestAnswerServiceBaseImpl
 {
 	public java.util.List<TestAnswer> getTestAnswersByQuestionId(long questionId) throws SystemException,PortalException

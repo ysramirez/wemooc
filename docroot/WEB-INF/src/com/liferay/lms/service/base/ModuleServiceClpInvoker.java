@@ -14,15 +14,15 @@
 
 package com.liferay.lms.service.base;
 
-import com.liferay.lms.service.P2pActivityCorrectionsServiceUtil;
+import com.liferay.lms.service.ModuleServiceUtil;
 
 import java.util.Arrays;
 
 /**
  * @author Brian Wing Shun Chan
  */
-public class P2pActivityCorrectionsServiceClpInvoker {
-	public P2pActivityCorrectionsServiceClpInvoker() {
+public class ModuleServiceClpInvoker {
+	public ModuleServiceClpInvoker() {
 		_methodName104 = "getBeanIdentifier";
 
 		_methodParameterTypes104 = new String[] {  };
@@ -30,20 +30,47 @@ public class P2pActivityCorrectionsServiceClpInvoker {
 		_methodName105 = "setBeanIdentifier";
 
 		_methodParameterTypes105 = new String[] { "java.lang.String" };
+
+		_methodName110 = "findAllInGroup";
+
+		_methodParameterTypes110 = new String[] { "long" };
+
+		_methodName111 = "isLocked";
+
+		_methodParameterTypes111 = new String[] { "long" };
+
+		_methodName112 = "isUserPassed";
+
+		_methodParameterTypes112 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
 		if (_methodName104.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes104, parameterTypes)) {
-			return P2pActivityCorrectionsServiceUtil.getBeanIdentifier();
+			return ModuleServiceUtil.getBeanIdentifier();
 		}
 
 		if (_methodName105.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes105, parameterTypes)) {
-			P2pActivityCorrectionsServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+			ModuleServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
+		}
+
+		if (_methodName110.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes110, parameterTypes)) {
+			return ModuleServiceUtil.findAllInGroup(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName111.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes111, parameterTypes)) {
+			return ModuleServiceUtil.isLocked(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName112.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes112, parameterTypes)) {
+			return ModuleServiceUtil.isUserPassed(((Long)arguments[0]).longValue());
 		}
 
 		throw new UnsupportedOperationException();
@@ -53,4 +80,10 @@ public class P2pActivityCorrectionsServiceClpInvoker {
 	private String[] _methodParameterTypes104;
 	private String _methodName105;
 	private String[] _methodParameterTypes105;
+	private String _methodName110;
+	private String[] _methodParameterTypes110;
+	private String _methodName111;
+	private String[] _methodParameterTypes111;
+	private String _methodName112;
+	private String[] _methodParameterTypes112;
 }

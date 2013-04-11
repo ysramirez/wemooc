@@ -79,5 +79,19 @@ public class CourseServiceSoap {
 		}
 	}
 
+	public static com.liferay.lms.model.CourseSoap[] myCourses()
+		throws RemoteException {
+		try {
+			java.util.List<com.liferay.lms.model.Course> returnValue = CourseServiceUtil.myCourses();
+
+			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(CourseServiceSoap.class);
 }

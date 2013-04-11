@@ -15,8 +15,15 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.model.Course;
+import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.User;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 
 /**
  * The implementation of the course remote service.
@@ -37,10 +44,31 @@ import com.liferay.portal.kernel.exception.SystemException;
  * @see com.liferay.lms.service.base.CourseServiceBaseImpl
  * @see com.liferay.lms.service.CourseServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class CourseServiceImpl extends CourseServiceBaseImpl {
 	public java.util.List<Course> getCoursesOfGroup(long groupId) throws SystemException
 	{
 		return coursePersistence.filterFindByGroupId(groupId);
-		//this.
+		
+	
+	}
+	@JSONWebService
+	public java.util.List<Course> myCourses() throws PortalException, SystemException
+	{
+		User usuario= this.getUser();
+		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
+		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		for(Group groupCourse:groups)
+		{
+			
+			
+			Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
+			if(course!=null)
+			{
+				results.add(course);
+			}
+		}
+		return results;
+
 	}
 }

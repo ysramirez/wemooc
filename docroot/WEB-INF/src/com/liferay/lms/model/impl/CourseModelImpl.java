@@ -63,7 +63,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.CourseModel
  * @generated
  */
-@JSON(strict = true)
 public class CourseModelImpl extends BaseModelImpl<Course>
 	implements CourseModel {
 	/*
@@ -336,7 +335,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -358,7 +356,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getCourseId() {
 		return _courseId;
 	}
@@ -369,7 +366,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_courseId = courseId;
 	}
 
-	@JSON
 	public long getCompanyId() {
 		return _companyId;
 	}
@@ -390,7 +386,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		return _originalCompanyId;
 	}
 
-	@JSON
 	public long getGroupId() {
 		return _groupId;
 	}
@@ -411,7 +406,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		return _originalGroupId;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -440,7 +434,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		return _originalUserId;
 	}
 
-	@JSON
 	public long getGroupCreatedId() {
 		return _groupCreatedId;
 	}
@@ -461,7 +454,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		return _originalGroupCreatedId;
 	}
 
-	@JSON
 	public int getStatus() {
 		return _status;
 	}
@@ -470,7 +462,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_status = status;
 	}
 
-	@JSON
 	public long getStatusByUserId() {
 		return _statusByUserId;
 	}
@@ -488,7 +479,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_statusByUserUuid = statusByUserUuid;
 	}
 
-	@JSON
 	public String getStatusByUserName() {
 		if (_statusByUserName == null) {
 			return StringPool.BLANK;
@@ -502,7 +492,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_statusByUserName = statusByUserName;
 	}
 
-	@JSON
 	public Date getStatusDate() {
 		return _statusDate;
 	}
@@ -511,7 +500,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_statusDate = statusDate;
 	}
 
-	@JSON
 	public String getTitle() {
 		if (_title == null) {
 			return StringPool.BLANK;
@@ -601,7 +589,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		}
 	}
 
-	@JSON
 	public String getDescription() {
 		if (_description == null) {
 			return StringPool.BLANK;
@@ -694,7 +681,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		}
 	}
 
-	@JSON
 	public String getFriendlyURL() {
 		if (_friendlyURL == null) {
 			return StringPool.BLANK;
@@ -708,7 +694,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_friendlyURL = friendlyURL;
 	}
 
-	@JSON
 	public Date getStartDate() {
 		return _startDate;
 	}
@@ -717,7 +702,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_startDate = startDate;
 	}
 
-	@JSON
 	public Date getEndDate() {
 		return _endDate;
 	}
@@ -726,7 +710,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_endDate = endDate;
 	}
 
-	@JSON
 	public long getIcon() {
 		return _icon;
 	}
@@ -735,7 +718,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_icon = icon;
 	}
 
-	@JSON
 	public long getCourseEvalId() {
 		return _CourseEvalId;
 	}
@@ -744,7 +726,6 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_CourseEvalId = CourseEvalId;
 	}
 
-	@JSON
 	public String getCourseExtraData() {
 		if (_CourseExtraData == null) {
 			return StringPool.BLANK;
