@@ -46,7 +46,7 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 	%>
 
 	</liferay-ui:search-container-results>
-	<liferay-ui:search-container-row className="com.liferay.lms.model.module"
+	<liferay-ui:search-container-row className="com.liferay.lms.model.Module"
 		keyProperty="moduleId"
 		modelVar="module"
 	>
@@ -85,7 +85,7 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 		
 	<% if(module.getPrecedence() != 0) {
 		
-		Module modulePredence = ModuleLocalServiceUtil.getmodule(module.getPrecedence());
+		Module modulePredence = ModuleLocalServiceUtil.getModule(module.getPrecedence());
 	%>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=modulePredence.getTitle(Locale.getDefault()) %></liferay-ui:search-container-column-text>
 	<%}else{ %>
