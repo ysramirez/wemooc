@@ -18,6 +18,9 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.base.LearningActivityServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
+import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
 
@@ -40,14 +43,14 @@ import com.liferay.portal.service.ServiceContext;
  * @see com.liferay.lms.service.base.LearningActivityServiceBaseImpl
  * @see com.liferay.lms.service.LearningActivityServiceUtil
  */
-
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl 
 {
 	public java.util.List<LearningActivity> getLearningActivitiesOfGroup(long groupId) throws SystemException
 	{
 		return learningActivityPersistence.filterFindByg(groupId, 0, 1000);
 	}
-	
+	@JSONWebService
 	public java.util.List<LearningActivity> getLearningActivitiesOfModule(long moduleId) throws SystemException
 	{
 		
@@ -71,6 +74,7 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			learningActivityLocalService.deleteLearningactivity(lernact);
 		}
 	}
+	@JSONWebService
 	public LearningActivity getLearningActivity(long actId) throws PortalException, SystemException 
 	{
 		
@@ -137,4 +141,11 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			return null;
 		}
 	}
+	@JSONWebService
+	public boolean isLocked(long actId) throws Exception
+	{
+		User user=this.getUser();
+		return learningActivityLocalService.islocked(actId, user.getUserId());
+	}
+	
 }

@@ -15,6 +15,8 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.service.base.P2pActivityServiceBaseImpl;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the p2p activity remote service.
@@ -35,5 +37,6 @@ import com.liferay.lms.service.base.P2pActivityServiceBaseImpl;
  * @see com.liferay.lms.service.base.P2pActivityServiceBaseImpl
  * @see com.liferay.lms.service.P2pActivityServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class P2pActivityServiceImpl extends P2pActivityServiceBaseImpl {
 }

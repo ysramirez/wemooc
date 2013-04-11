@@ -20,7 +20,6 @@ import com.liferay.lms.model.CourseResultSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -55,7 +54,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.CourseResultModel
  * @generated
  */
-@JSON(strict = true)
 public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 	implements CourseResultModel {
 	/*
@@ -79,10 +77,10 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 	public static final String TX_MANAGER = "liferayTransactionManager";
 	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.entity.cache.enabled.com.liferay.lms.model.CourseResult"),
-			true);
+			false);
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.lms.model.CourseResult"),
-			true);
+			false);
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.CourseResult"),
 			true);
@@ -216,7 +214,6 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		}
 	}
 
-	@JSON
 	public long getCrId() {
 		return _crId;
 	}
@@ -225,7 +222,6 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		_crId = crId;
 	}
 
-	@JSON
 	public long getCourseId() {
 		return _courseId;
 	}
@@ -246,7 +242,6 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		return _originalCourseId;
 	}
 
-	@JSON
 	public long getResult() {
 		return _result;
 	}
@@ -255,7 +250,6 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		_result = result;
 	}
 
-	@JSON
 	public String getComments() {
 		if (_comments == null) {
 			return StringPool.BLANK;
@@ -269,7 +263,6 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		_comments = comments;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -298,7 +291,6 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		return _originalUserId;
 	}
 
-	@JSON
 	public boolean getPassed() {
 		return _passed;
 	}

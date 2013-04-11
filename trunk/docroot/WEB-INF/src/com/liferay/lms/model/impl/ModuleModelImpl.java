@@ -16,6 +16,7 @@ package com.liferay.lms.model.impl;
 
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleModel;
+import com.liferay.lms.model.ModuleSoap;
 
 import com.liferay.portal.LocaleException;
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
@@ -41,8 +42,10 @@ import java.io.Serializable;
 
 import java.sql.Types;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -100,6 +103,56 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 	public static long GROUPID_COLUMN_BITMASK = 1L;
 	public static long USERID_COLUMN_BITMASK = 2L;
 	public static long UUID_COLUMN_BITMASK = 4L;
+
+	/**
+	 * Converts the soap model instance into a normal model instance.
+	 *
+	 * @param soapModel the soap model instance to convert
+	 * @return the normal model instance
+	 */
+	public static Module toModel(ModuleSoap soapModel) {
+		if (soapModel == null) {
+			return null;
+		}
+
+		Module model = new ModuleImpl();
+
+		model.setUuid(soapModel.getUuid());
+		model.setModuleId(soapModel.getModuleId());
+		model.setCompanyId(soapModel.getCompanyId());
+		model.setGroupId(soapModel.getGroupId());
+		model.setUserId(soapModel.getUserId());
+		model.setTitle(soapModel.getTitle());
+		model.setDescription(soapModel.getDescription());
+		model.setOrdern(soapModel.getOrdern());
+		model.setStartDate(soapModel.getStartDate());
+		model.setEndDate(soapModel.getEndDate());
+		model.setIcon(soapModel.getIcon());
+		model.setPrecedence(soapModel.getPrecedence());
+
+		return model;
+	}
+
+	/**
+	 * Converts the soap model instances into normal model instances.
+	 *
+	 * @param soapModels the soap model instances to convert
+	 * @return the normal model instances
+	 */
+	public static List<Module> toModels(ModuleSoap[] soapModels) {
+		if (soapModels == null) {
+			return null;
+		}
+
+		List<Module> models = new ArrayList<Module>(soapModels.length);
+
+		for (ModuleSoap soapModel : soapModels) {
+			models.add(toModel(soapModel));
+		}
+
+		return models;
+	}
+
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.lms.model.Module"));
 

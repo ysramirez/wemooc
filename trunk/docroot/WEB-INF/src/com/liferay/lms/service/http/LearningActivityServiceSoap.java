@@ -206,5 +206,18 @@ public class LearningActivityServiceSoap {
 		}
 	}
 
+	public static boolean isLocked(long actId) throws RemoteException {
+		try {
+			boolean returnValue = LearningActivityServiceUtil.isLocked(actId);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(LearningActivityServiceSoap.class);
 }

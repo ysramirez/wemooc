@@ -6,7 +6,6 @@ import java.io.FileInputStream;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,7 +16,7 @@ import com.liferay.portal.kernel.util.MimeTypesUtil;
 /**
  * Servlet implementation class SCORMFileServerServlet
  */
-@WebServlet("/scorm/*")
+
 public class SCORMFileServerServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

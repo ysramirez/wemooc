@@ -18,6 +18,8 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.base.LearningActivityTryServiceBaseImpl;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the learning activity try remote service.
@@ -38,6 +40,7 @@ import com.liferay.portal.kernel.exception.SystemException;
  * @see com.liferay.lms.service.base.LearningActivityTryServiceBaseImpl
  * @see com.liferay.lms.service.LearningActivityTryServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class LearningActivityTryServiceImpl
 	extends LearningActivityTryServiceBaseImpl 
 	{

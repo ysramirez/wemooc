@@ -14,7 +14,7 @@
 
 package com.liferay.lms.service.http;
 
-import com.liferay.lms.service.LearningActivityResultServiceUtil;
+import com.liferay.lms.service.ModuleServiceUtil;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -24,7 +24,7 @@ import java.rmi.RemoteException;
 /**
  * <p>
  * This class provides a SOAP utility for the
- * {@link com.liferay.lms.service.LearningActivityResultServiceUtil} service utility. The
+ * {@link com.liferay.lms.service.ModuleServiceUtil} service utility. The
  * static methods of this class calls the same methods of the service utility.
  * However, the signatures are different because it is difficult for SOAP to
  * support certain types.
@@ -33,10 +33,10 @@ import java.rmi.RemoteException;
  * <p>
  * ServiceBuilder follows certain rules in translating the methods. For example,
  * if the method in the service utility returns a {@link java.util.List}, that
- * is translated to an array of {@link com.liferay.lms.model.LearningActivityResultSoap}.
+ * is translated to an array of {@link com.liferay.lms.model.ModuleSoap}.
  * If the method in the service utility returns a
- * {@link com.liferay.lms.model.LearningActivityResult}, that is translated to a
- * {@link com.liferay.lms.model.LearningActivityResultSoap}. Methods that SOAP cannot
+ * {@link com.liferay.lms.model.Module}, that is translated to a
+ * {@link com.liferay.lms.model.ModuleSoap}. Methods that SOAP cannot
  * safely wire are skipped.
  * </p>
  *
@@ -59,18 +59,18 @@ import java.rmi.RemoteException;
  * </p>
  *
  * @author    TLS
- * @see       LearningActivityResultServiceHttp
- * @see       com.liferay.lms.model.LearningActivityResultSoap
- * @see       com.liferay.lms.service.LearningActivityResultServiceUtil
+ * @see       ModuleServiceHttp
+ * @see       com.liferay.lms.model.ModuleSoap
+ * @see       com.liferay.lms.service.ModuleServiceUtil
  * @generated
  */
-public class LearningActivityResultServiceSoap {
-	public static com.liferay.lms.model.LearningActivityResultSoap getByActId(
-		long actId) throws RemoteException {
+public class ModuleServiceSoap {
+	public static com.liferay.lms.model.ModuleSoap[] findAllInGroup(
+		long groupId) throws RemoteException {
 		try {
-			com.liferay.lms.model.LearningActivityResult returnValue = LearningActivityResultServiceUtil.getByActId(actId);
+			java.util.List<com.liferay.lms.model.Module> returnValue = ModuleServiceUtil.findAllInGroup(groupId);
 
-			return com.liferay.lms.model.LearningActivityResultSoap.toSoapModel(returnValue);
+			return com.liferay.lms.model.ModuleSoap.toSoapModels(returnValue);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -79,9 +79,9 @@ public class LearningActivityResultServiceSoap {
 		}
 	}
 
-	public static boolean userPassed(long actId) throws RemoteException {
+	public static boolean isLocked(long moduleId) throws RemoteException {
 		try {
-			boolean returnValue = LearningActivityResultServiceUtil.userPassed(actId);
+			boolean returnValue = ModuleServiceUtil.isLocked(moduleId);
 
 			return returnValue;
 		}
@@ -92,5 +92,18 @@ public class LearningActivityResultServiceSoap {
 		}
 	}
 
-	private static Log _log = LogFactoryUtil.getLog(LearningActivityResultServiceSoap.class);
+	public static boolean isUserPassed(long moduleId) throws RemoteException {
+		try {
+			boolean returnValue = ModuleServiceUtil.isUserPassed(moduleId);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	private static Log _log = LogFactoryUtil.getLog(ModuleServiceSoap.class);
 }

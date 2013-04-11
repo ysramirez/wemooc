@@ -15,6 +15,8 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.service.base.ModuleResultServiceBaseImpl;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the module result remote service.
@@ -35,5 +37,6 @@ import com.liferay.lms.service.base.ModuleResultServiceBaseImpl;
  * @see com.liferay.lms.service.base.ModuleResultServiceBaseImpl
  * @see com.liferay.lms.service.ModuleResultServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class ModuleResultServiceImpl extends ModuleResultServiceBaseImpl {
 }

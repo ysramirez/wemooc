@@ -15,6 +15,8 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.service.base.SurveyResultServiceBaseImpl;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the survey result remote service.
@@ -35,5 +37,6 @@ import com.liferay.lms.service.base.SurveyResultServiceBaseImpl;
  * @see com.liferay.lms.service.base.SurveyResultServiceBaseImpl
  * @see com.liferay.lms.service.SurveyResultServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class SurveyResultServiceImpl extends SurveyResultServiceBaseImpl {
 }

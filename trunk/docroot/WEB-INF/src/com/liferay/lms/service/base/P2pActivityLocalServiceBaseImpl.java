@@ -33,6 +33,7 @@ import com.liferay.lms.service.LmsPrefsLocalService;
 import com.liferay.lms.service.ModuleLocalService;
 import com.liferay.lms.service.ModuleResultLocalService;
 import com.liferay.lms.service.ModuleResultService;
+import com.liferay.lms.service.ModuleService;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalService;
 import com.liferay.lms.service.P2pActivityCorrectionsService;
 import com.liferay.lms.service.P2pActivityLocalService;
@@ -707,6 +708,24 @@ public abstract class P2pActivityLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the module remote service.
+	 *
+	 * @return the module remote service
+	 */
+	public ModuleService getModuleService() {
+		return moduleService;
+	}
+
+	/**
+	 * Sets the module remote service.
+	 *
+	 * @param moduleService the module remote service
+	 */
+	public void setModuleService(ModuleService moduleService) {
+		this.moduleService = moduleService;
+	}
+
+	/**
 	 * Returns the module persistence.
 	 *
 	 * @return the module persistence
@@ -1346,6 +1365,8 @@ public abstract class P2pActivityLocalServiceBaseImpl
 	protected LmsPrefsPersistence lmsPrefsPersistence;
 	@BeanReference(type = ModuleLocalService.class)
 	protected ModuleLocalService moduleLocalService;
+	@BeanReference(type = ModuleService.class)
+	protected ModuleService moduleService;
 	@BeanReference(type = ModulePersistence.class)
 	protected ModulePersistence modulePersistence;
 	@BeanReference(type = ModuleResultLocalService.class)

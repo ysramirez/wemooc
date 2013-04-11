@@ -19,7 +19,6 @@ import com.liferay.lms.model.TestQuestionModel;
 import com.liferay.lms.model.TestQuestionSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -53,7 +52,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.TestQuestionModel
  * @generated
  */
-@JSON(strict = true)
 public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 	implements TestQuestionModel {
 	/*
@@ -206,7 +204,6 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -228,7 +225,6 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getQuestionId() {
 		return _questionId;
 	}
@@ -239,7 +235,6 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		_questionId = questionId;
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -260,7 +255,6 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		return _originalActId;
 	}
 
-	@JSON
 	public String getText() {
 		if (_text == null) {
 			return StringPool.BLANK;
@@ -274,7 +268,6 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		_text = text;
 	}
 
-	@JSON
 	public long getQuestionType() {
 		return _questionType;
 	}

@@ -20,7 +20,6 @@ import com.liferay.lms.model.SCORMContentSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -57,7 +56,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.SCORMContentModel
  * @generated
  */
-@JSON(strict = true)
 public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 	implements SCORMContentModel {
 	/*
@@ -275,7 +273,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -297,7 +294,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getScormId() {
 		return _scormId;
 	}
@@ -308,7 +304,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_scormId = scormId;
 	}
 
-	@JSON
 	public long getCompanyId() {
 		return _companyId;
 	}
@@ -329,7 +324,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		return _originalCompanyId;
 	}
 
-	@JSON
 	public long getGroupId() {
 		return _groupId;
 	}
@@ -350,7 +344,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		return _originalGroupId;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -379,7 +372,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		return _originalUserId;
 	}
 
-	@JSON
 	public int getStatus() {
 		return _status;
 	}
@@ -388,7 +380,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_status = status;
 	}
 
-	@JSON
 	public long getStatusByUserId() {
 		return _statusByUserId;
 	}
@@ -406,7 +397,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_statusByUserUuid = statusByUserUuid;
 	}
 
-	@JSON
 	public String getStatusByUserName() {
 		if (_statusByUserName == null) {
 			return StringPool.BLANK;
@@ -420,7 +410,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_statusByUserName = statusByUserName;
 	}
 
-	@JSON
 	public Date getStatusDate() {
 		return _statusDate;
 	}
@@ -429,7 +418,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_statusDate = statusDate;
 	}
 
-	@JSON
 	public String getTitle() {
 		if (_title == null) {
 			return StringPool.BLANK;
@@ -443,7 +431,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_title = title;
 	}
 
-	@JSON
 	public String getDescription() {
 		if (_description == null) {
 			return StringPool.BLANK;
@@ -457,7 +444,6 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_description = description;
 	}
 
-	@JSON
 	public String getIndex() {
 		if (_index == null) {
 			return StringPool.BLANK;

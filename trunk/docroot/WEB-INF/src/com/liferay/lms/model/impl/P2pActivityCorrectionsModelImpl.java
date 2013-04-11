@@ -20,7 +20,6 @@ import com.liferay.lms.model.P2pActivityCorrectionsSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -56,7 +55,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.P2pActivityCorrectionsModel
  * @generated
  */
-@JSON(strict = true)
 public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCorrections>
 	implements P2pActivityCorrectionsModel {
 	/*
@@ -248,7 +246,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -270,7 +267,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getP2pActivityCorrectionsId() {
 		return _p2pActivityCorrectionsId;
 	}
@@ -279,7 +275,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		_p2pActivityCorrectionsId = p2pActivityCorrectionsId;
 	}
 
-	@JSON
 	public long getP2pActivityId() {
 		return _p2pActivityId;
 	}
@@ -300,7 +295,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		return _originalP2pActivityId;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -329,7 +323,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		return _originalUserId;
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -350,7 +343,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		return _originalActId;
 	}
 
-	@JSON
 	public String getDescription() {
 		if (_description == null) {
 			return StringPool.BLANK;
@@ -364,7 +356,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		_description = description;
 	}
 
-	@JSON
 	public Date getDate() {
 		return _date;
 	}
@@ -373,7 +364,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		_date = date;
 	}
 
-	@JSON
 	public long getFileEntryId() {
 		return _fileEntryId;
 	}
@@ -382,7 +372,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 		_fileEntryId = fileEntryId;
 	}
 
-	@JSON
 	public long getResult() {
 		return _result;
 	}

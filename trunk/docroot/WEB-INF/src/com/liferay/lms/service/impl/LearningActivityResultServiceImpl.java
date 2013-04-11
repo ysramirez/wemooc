@@ -14,7 +14,13 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.service.base.LearningActivityResultServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
+import com.liferay.portal.model.User;
 
 /**
  * The implementation of the learning activity result remote service.
@@ -35,6 +41,20 @@ import com.liferay.lms.service.base.LearningActivityResultServiceBaseImpl;
  * @see com.liferay.lms.service.base.LearningActivityResultServiceBaseImpl
  * @see com.liferay.lms.service.LearningActivityResultServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class LearningActivityResultServiceImpl
-	extends LearningActivityResultServiceBaseImpl {
+	extends LearningActivityResultServiceBaseImpl 
+	{
+	@JSONWebService
+	public LearningActivityResult getByActId(long actId) throws PortalException, SystemException
+	{
+		User user=this.getUser();
+		return learningActivityResultLocalService.getByActIdAndUserId(actId, user.getUserId());
+	}
+	@JSONWebService
+	public boolean userPassed(long actId) throws PortalException, SystemException
+	{
+		User user=this.getUser();
+		return learningActivityResultLocalService.userPassed(actId, user.getUserId());
+	}
 }

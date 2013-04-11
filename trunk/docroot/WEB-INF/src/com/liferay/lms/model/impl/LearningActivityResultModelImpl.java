@@ -20,7 +20,6 @@ import com.liferay.lms.model.LearningActivityResultSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -56,7 +55,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.LearningActivityResultModel
  * @generated
  */
-@JSON(strict = true)
 public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActivityResult>
 	implements LearningActivityResultModel {
 	/*
@@ -86,10 +84,10 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 	public static final String TX_MANAGER = "liferayTransactionManager";
 	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.entity.cache.enabled.com.liferay.lms.model.LearningActivityResult"),
-			true);
+			false);
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.lms.model.LearningActivityResult"),
-			true);
+			false);
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.LearningActivityResult"),
 			true);
@@ -259,7 +257,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -281,7 +278,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getLarId() {
 		return _larId;
 	}
@@ -292,7 +288,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		_larId = larId;
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -313,7 +308,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		return _originalActId;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -342,7 +336,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		return _originalUserId;
 	}
 
-	@JSON
 	public long getResult() {
 		return _result;
 	}
@@ -351,7 +344,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		_result = result;
 	}
 
-	@JSON
 	public Date getStartDate() {
 		return _startDate;
 	}
@@ -360,7 +352,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		_startDate = startDate;
 	}
 
-	@JSON
 	public Date getEndDate() {
 		return _endDate;
 	}
@@ -379,7 +370,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		return _originalEndDate;
 	}
 
-	@JSON
 	public long getLatId() {
 		return _latId;
 	}
@@ -388,7 +378,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		_latId = latId;
 	}
 
-	@JSON
 	public String getComments() {
 		if (_comments == null) {
 			return StringPool.BLANK;
@@ -402,7 +391,6 @@ public class LearningActivityResultModelImpl extends BaseModelImpl<LearningActiv
 		_comments = comments;
 	}
 
-	@JSON
 	public boolean getPassed() {
 		return _passed;
 	}

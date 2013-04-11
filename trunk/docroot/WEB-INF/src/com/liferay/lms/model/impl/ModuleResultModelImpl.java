@@ -20,7 +20,6 @@ import com.liferay.lms.model.ModuleResultSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -55,7 +54,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.ModuleResultModel
  * @generated
  */
-@JSON(strict = true)
 public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 	implements ModuleResultModel {
 	/*
@@ -81,10 +79,10 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 	public static final String TX_MANAGER = "liferayTransactionManager";
 	public static final boolean ENTITY_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.entity.cache.enabled.com.liferay.lms.model.ModuleResult"),
-			true);
+			false);
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.lms.model.ModuleResult"),
-			true);
+			false);
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.ModuleResult"),
 			true);
@@ -218,7 +216,6 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 		}
 	}
 
-	@JSON
 	public long getModuleId() {
 		return _moduleId;
 	}
@@ -239,7 +236,6 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 		return _originalModuleId;
 	}
 
-	@JSON
 	public long getResult() {
 		return _result;
 	}
@@ -248,7 +244,6 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 		_result = result;
 	}
 
-	@JSON
 	public String getComments() {
 		if (_comments == null) {
 			return StringPool.BLANK;
@@ -262,7 +257,6 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 		_comments = comments;
 	}
 
-	@JSON
 	public long getUserId() {
 		return _userId;
 	}
@@ -291,7 +285,6 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 		return _originalUserId;
 	}
 
-	@JSON
 	public boolean getPassed() {
 		return _passed;
 	}
@@ -316,7 +309,6 @@ public class ModuleResultModelImpl extends BaseModelImpl<ModuleResult>
 		return _originalPassed;
 	}
 
-	@JSON
 	public long getMrId() {
 		return _mrId;
 	}

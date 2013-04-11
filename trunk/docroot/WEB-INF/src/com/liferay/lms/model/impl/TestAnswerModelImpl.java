@@ -19,7 +19,6 @@ import com.liferay.lms.model.TestAnswerModel;
 import com.liferay.lms.model.TestAnswerSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
-import com.liferay.portal.kernel.json.JSON;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -53,7 +52,6 @@ import java.util.Map;
  * @see com.liferay.lms.model.TestAnswerModel
  * @generated
  */
-@JSON(strict = true)
 public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 	implements TestAnswerModel {
 	/*
@@ -243,7 +241,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		}
 	}
 
-	@JSON
 	public String getUuid() {
 		if (_uuid == null) {
 			return StringPool.BLANK;
@@ -265,7 +262,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		return GetterUtil.getString(_originalUuid);
 	}
 
-	@JSON
 	public long getAnswerId() {
 		return _answerId;
 	}
@@ -276,7 +272,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		_answerId = answerId;
 	}
 
-	@JSON
 	public long getQuestionId() {
 		return _questionId;
 	}
@@ -297,7 +292,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		return _originalQuestionId;
 	}
 
-	@JSON
 	public long getActId() {
 		return _actId;
 	}
@@ -318,7 +312,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		return _originalActId;
 	}
 
-	@JSON
 	public long getPrecedence() {
 		return _precedence;
 	}
@@ -327,7 +320,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		_precedence = precedence;
 	}
 
-	@JSON
 	public String getAnswer() {
 		if (_answer == null) {
 			return StringPool.BLANK;
@@ -341,7 +333,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		_answer = answer;
 	}
 
-	@JSON
 	public boolean getIsCorrect() {
 		return _isCorrect;
 	}
@@ -354,7 +345,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		_isCorrect = isCorrect;
 	}
 
-	@JSON
 	public String getFeedbackCorrect() {
 		if (_feedbackCorrect == null) {
 			return StringPool.BLANK;
@@ -368,7 +358,6 @@ public class TestAnswerModelImpl extends BaseModelImpl<TestAnswer>
 		_feedbackCorrect = feedbackCorrect;
 	}
 
-	@JSON
 	public String getFeedbacknocorrect() {
 		if (_feedbacknocorrect == null) {
 			return StringPool.BLANK;
