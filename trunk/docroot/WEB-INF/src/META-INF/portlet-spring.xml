@@ -22,6 +22,7 @@
 	<bean id="com.liferay.lms.service.LmsPrefsLocalService" class="com.liferay.lms.service.impl.LmsPrefsLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.LmsPrefsPersistence" class="com.liferay.lms.service.persistence.LmsPrefsPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.ModuleLocalService" class="com.liferay.lms.service.impl.ModuleLocalServiceImpl" />
+	<bean id="com.liferay.lms.service.ModuleService" class="com.liferay.lms.service.impl.ModuleServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.ModulePersistence" class="com.liferay.lms.service.persistence.ModulePersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.ModuleResultLocalService" class="com.liferay.lms.service.impl.ModuleResultLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.ModuleResultService" class="com.liferay.lms.service.impl.ModuleResultServiceImpl" />
