@@ -29,6 +29,11 @@
       <url-pattern>/api/secure/jsonws/*</url-pattern> 
       </filter-mapping>
      <servlet>
+        <servlet-name>scormfileservlet</servlet-name>
+        <servlet-class>com.liferay.lms.servlet.SCORMFileServerServlet</servlet-class>
+        <load-on-startup>0</load-on-startup>
+    </servlet>
+    <servlet>
         <servlet-name>JSON Web Service Servlet</servlet-name>
         <servlet-class>com.liferay.portal.kernel.servlet.PortalClassLoaderServlet</servlet-class>
         <init-param>
@@ -38,6 +43,10 @@
         <load-on-startup>0</load-on-startup>
     </servlet>
     <servlet-mapping>
+        <servlet-name>scormfileservlet</servlet-name>
+        <url-pattern>/scorm/*</url-pattern>
+    </servlet-mapping>
+     <servlet-mapping>
         <servlet-name>JSON Web Service Servlet</servlet-name>
         <url-pattern>/api/jsonws/*</url-pattern>
     </servlet-mapping>
