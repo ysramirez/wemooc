@@ -169,9 +169,15 @@ public class CourseLocalServiceClpInvoker {
 
 		_methodParameterTypes151 = new String[] { "long" };
 
-		_methodName152 = "getCourseByGroupCreatedId";
+		_methodName152 = "existsCourseName";
 
-		_methodParameterTypes152 = new String[] { "long" };
+		_methodParameterTypes152 = new String[] {
+				"long", "long", "long", "java.lang.String"
+			};
+
+		_methodName153 = "getCourseByGroupCreatedId";
+
+		_methodParameterTypes153 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -353,6 +359,13 @@ public class CourseLocalServiceClpInvoker {
 
 		if (_methodName152.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes152, parameterTypes)) {
+			return CourseLocalServiceUtil.existsCourseName(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				((Long)arguments[2]).longValue(), (java.lang.String)arguments[3]);
+		}
+
+		if (_methodName153.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes153, parameterTypes)) {
 			return CourseLocalServiceUtil.getCourseByGroupCreatedId(((Long)arguments[0]).longValue());
 		}
 
@@ -421,4 +434,6 @@ public class CourseLocalServiceClpInvoker {
 	private String[] _methodParameterTypes151;
 	private String _methodName152;
 	private String[] _methodParameterTypes152;
+	private String _methodName153;
+	private String[] _methodParameterTypes153;
 }

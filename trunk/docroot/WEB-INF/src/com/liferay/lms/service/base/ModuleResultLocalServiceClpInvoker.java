@@ -116,19 +116,35 @@ public class ModuleResultLocalServiceClpInvoker {
 
 		_methodParameterTypes126 = new String[] { "long", "long" };
 
-		_methodName127 = "countByModule";
+		_methodName127 = "getListModuleResultByModuleAndUser";
 
-		_methodParameterTypes127 = new String[] { "long" };
+		_methodParameterTypes127 = new String[] { "long", "long" };
 
-		_methodName128 = "countByModulePassed";
+		_methodName128 = "countByModule";
 
-		_methodParameterTypes128 = new String[] { "long", "boolean" };
+		_methodParameterTypes128 = new String[] { "long" };
 
-		_methodName129 = "update";
+		_methodName129 = "countByModulePassed";
 
-		_methodParameterTypes129 = new String[] {
+		_methodParameterTypes129 = new String[] { "long", "boolean" };
+
+		_methodName130 = "update";
+
+		_methodParameterTypes130 = new String[] {
 				"com.liferay.lms.model.LearningActivityResult"
 			};
+
+		_methodName131 = "updateAllUsers";
+
+		_methodParameterTypes131 = new String[] { "long", "long" };
+
+		_methodName132 = "updateAllCoursesAllModulesAllUsers";
+
+		_methodParameterTypes132 = new String[] {  };
+
+		_methodName133 = "update";
+
+		_methodParameterTypes133 = new String[] { "long", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -240,20 +256,45 @@ public class ModuleResultLocalServiceClpInvoker {
 
 		if (_methodName127.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
-			return ModuleResultLocalServiceUtil.countByModule(((Long)arguments[0]).longValue());
+			return ModuleResultLocalServiceUtil.getListModuleResultByModuleAndUser(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName128.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
-			return ModuleResultLocalServiceUtil.countByModulePassed(((Long)arguments[0]).longValue(),
-				((Boolean)arguments[1]).booleanValue());
+			return ModuleResultLocalServiceUtil.countByModule(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName129.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
+			return ModuleResultLocalServiceUtil.countByModulePassed(((Long)arguments[0]).longValue(),
+				((Boolean)arguments[1]).booleanValue());
+		}
+
+		if (_methodName130.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
 			ModuleResultLocalServiceUtil.update((com.liferay.lms.model.LearningActivityResult)arguments[0]);
 
 			return null;
+		}
+
+		if (_methodName131.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
+			return ModuleResultLocalServiceUtil.updateAllUsers(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName132.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes132, parameterTypes)) {
+			ModuleResultLocalServiceUtil.updateAllCoursesAllModulesAllUsers();
+
+			return null;
+		}
+
+		if (_methodName133.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes133, parameterTypes)) {
+			return ModuleResultLocalServiceUtil.update(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
 		}
 
 		throw new UnsupportedOperationException();
@@ -303,4 +344,12 @@ public class ModuleResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes128;
 	private String _methodName129;
 	private String[] _methodParameterTypes129;
+	private String _methodName130;
+	private String[] _methodParameterTypes130;
+	private String _methodName131;
+	private String[] _methodParameterTypes131;
+	private String _methodName132;
+	private String[] _methodParameterTypes132;
+	private String _methodName133;
+	private String[] _methodParameterTypes133;
 }
