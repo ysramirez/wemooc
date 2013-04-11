@@ -49,7 +49,6 @@
 		<property name="CourseExtraData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CourseResultImpl" table="Lms_CourseResult">
-		<cache usage="read-write" />
 		<id name="crId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -91,7 +90,6 @@
 		<property name="weightinmodule" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.LearningActivityResultImpl" table="Lms_LearningActivityResult">
-		<cache usage="read-write" />
 		<id name="larId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -106,7 +104,6 @@
 		<property name="passed" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.LearningActivityTryImpl" table="Lms_LearningActivityTry">
-		<cache usage="read-write" />
 		<id name="latId" type="long">
 			<generator class="assigned" />
 		</id>
@@ -147,7 +144,6 @@
 		<property name="precedence" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.ModuleResultImpl" table="Lms_ModuleResult">
-		<cache usage="read-write" />
 		<id name="mrId" type="long">
 			<generator class="assigned" />
 		</id>
