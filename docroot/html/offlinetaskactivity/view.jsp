@@ -1,4 +1,4 @@
-<%@page import="com.liferay.lms.service.LearningTypeLocalServiceUtil"%>
+
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
