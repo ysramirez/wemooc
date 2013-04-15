@@ -87,7 +87,6 @@
 		</portlet-ref>
 		<supports>
 			<action-key>ADD_MODULE</action-key>
-			
 			<action-key>PERMISSIONS</action-key>
 		</supports>
 		<site-member-defaults/>
@@ -98,19 +97,38 @@
 	</model-resource>
 	
 	<model-resource>
+		<model-name>com.liferay.lms.coursemodel</model-name>
+		<portlet-ref>
+			<portlet-name>courseadmin</portlet-name>
+		</portlet-ref>
+		<supports>
+			<action-key>ADD_COURSE</action-key>
+			<action-key>PERMISSIONS</action-key>
+		</supports>
+		<site-member-defaults/>
+		<guest-defaults/>
+		<guest-unsupported>
+			<action-key>ADD_COURSE</action-key>
+			<action-key>PERMISSIONS</action-key>
+	
+		</guest-unsupported>
+	</model-resource>
+	<model-resource>
 		<model-name>com.liferay.lms.model.LearningActivity</model-name>
 		<portlet-ref>
 			<portlet-name>lmsactivitieslist</portlet-name>
 		</portlet-ref>
 		<permissions>
 			<supports>
-				<action-key>ADD_ENTRY</action-key>
 				<action-key>ADVANCED</action-key>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>VIEW</action-key>
 				<action-key>CORRECT</action-key>
+				<action-key>ADD_DISCUSSION</action-key>				
+				<action-key>UPDATE_DISCUSSION</action-key>
+            	<action-key>DELETE_DISCUSSION</action-key>
 			</supports>
 			<site-member-defaults>
 				<action-key>VIEW</action-key>
@@ -157,7 +175,8 @@
 	</model-resource>
 	
 	<model-resource>
-		<model-name>com.liferay.lms.model.Course</model-name>		
+		<model-name>com.liferay.lms.model.Course</model-name>	
+		<portlet-name>courseadmin</portlet-name>	
 		<social-equity>
 			 <social-equity-mapping>
 			    <action-key>ADD_COURSE</action-key>
@@ -172,7 +191,6 @@
 		</portlet-ref>
 		<permissions>
 			<supports>
-				<action-key>ADD_ENTRY</action-key>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
@@ -188,10 +206,8 @@
 				<action-key>REGISTER</action-key>
 			</site-member-defaults>
 			<guest-defaults>
-				<action-key>VIEW</action-key>
 			</guest-defaults>
 			<guest-unsupported>
-				<action-key>ADD_ENTRY</action-key>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
