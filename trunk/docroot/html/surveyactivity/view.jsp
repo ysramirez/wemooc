@@ -1,4 +1,4 @@
-<%@page import="com.liferay.lms.service.LearningTypeLocalServiceUtil"%>
+
 <%@page import="com.liferay.lms.service.TestAnswerLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.TestAnswer"%>
 <%@page import="com.liferay.lms.model.TestQuestion"%>
