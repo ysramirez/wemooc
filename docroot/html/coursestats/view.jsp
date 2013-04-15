@@ -9,13 +9,17 @@
 <%@ include file="/init.jsp" %>
 <%
 long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),0);
+Course curso = CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+long finalizados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(), true);
+long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(), false) + finalizados;
 %>
+<liferay-portlet:resourceURL var="exportURL" >
+	<portlet:param name="action" value="export"/>
+	<portlet:param name="courseId" value="<%=Long.toString(curso.getCourseId()) %>"/>
+</liferay-portlet:resourceURL>
+<liferay-ui:icon image="export" label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
 <div class="registered"><liferay-ui:message key="coursestats.hay" /> <%=registered %> <liferay-ui:message key="coursestats.inscription.users" /></div>
-<%
-	Course curso = CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-	long finalizados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(), true);
-	long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(), false) + finalizados;
-%>
+
 <div class="coursestart"><liferay-ui:message key="coursestats.start.course" /> <%= iniciados %> <liferay-ui:message key="coursestats.end.course" /> <%= finalizados %>.</div>
 <liferay-ui:search-container  deltaConfigurable="true" emptyResultsMessage="module-empty-results-message" delta="20" >
 	<liferay-ui:search-container-results>
@@ -59,7 +63,7 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 	<liferay-portlet:param name="jspPage" value="/html/coursestats/viewmodule.jsp"></liferay-portlet:param>
 	<liferay-portlet:param name="moduleId" value="<%= Long.toString(module.getModuleId())%>"></liferay-portlet:param>
 	</liferay-portlet:renderURL>
-	<liferay-ui:search-container-column-text name="coursestats.module"><a href="<%=viewModuleURL%>"><%=module.getTitle(themeDisplay.getLocale()) %></a></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text name="module"><a href="<%=viewModuleURL%>"><%=module.getTitle(themeDisplay.getLocale()) %></a></liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="coursestats.start.date">
 		<%if(module.getStartDate()!=null)
 			{

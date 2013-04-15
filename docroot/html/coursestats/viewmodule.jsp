@@ -14,6 +14,12 @@ long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGro
 long moduleId=ParamUtil.getLong(request,"moduleId",0);
 Module theModule=ModuleLocalServiceUtil.getModule(moduleId);
 %>
+
+<liferay-portlet:resourceURL var="exportURL" >
+	<portlet:param name="action" value="exportModule"/>
+	<portlet:param name="moduleId" value="<%=Long.toString(moduleId) %>"/>
+</liferay-portlet:resourceURL>
+<liferay-ui:icon image="export" label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
 <portlet:renderURL var="cancelURL" />
 
 <liferay-ui:header backLabel="back" title="<%=theModule.getTitle(themeDisplay.getLocale())%>" backURL="<%=cancelURL.toString() %>"></liferay-ui:header>
