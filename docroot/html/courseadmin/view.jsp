@@ -40,7 +40,7 @@ else
 	courses=CourseServiceUtil.getCoursesOfGroup(scopeGroupId);
 }
 
-if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),0,ActionKeys.ADD_ENTRY))
+if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.coursemodel",themeDisplay.getScopeGroupId(),"ADD_COURSE"))
 {
 %>
 <div class="newitem">
