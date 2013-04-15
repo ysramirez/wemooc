@@ -8,8 +8,6 @@
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="java.util.Set"%>
 <%@page import="com.liferay.lms.LearningTypesProperties"%>
-<%@page import="com.liferay.lms.model.LearningType"%>
-<%@page import="com.liferay.lms.service.LearningTypeLocalServiceUtil"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
