@@ -19,6 +19,8 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.StringTokenizer;
 
+
+
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.Module;
@@ -135,6 +137,25 @@ public class LearningActivityLocalServiceImpl
 			learningActivityPersistence.update(larn, true);
 			try
 			{
+				// Resources
+				if (serviceContext.isAddGroupPermissions() ||
+					serviceContext.isAddGuestPermissions()) {
+					resourceLocalService.addResources(
+							serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
+					LearningActivity.class.getName(), larn.getPrimaryKey(), false,
+					serviceContext.isAddGroupPermissions(),
+					serviceContext.isAddGuestPermissions());			
+				}
+				else {
+					
+					resourceLocalService.addModelResources(
+							serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
+					LearningActivity.class.getName(), larn.getPrimaryKey(),
+					serviceContext.getGroupPermissions(),
+					serviceContext.getGuestPermissions());
+					
+					
+				}
 			resourceLocalService.addResources(
 					serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
 			LearningActivity.class.getName(), larn.getPrimaryKey(), false,
