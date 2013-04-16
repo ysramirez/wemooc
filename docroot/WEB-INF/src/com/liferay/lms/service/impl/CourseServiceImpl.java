@@ -58,17 +58,17 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		return null;
 	}
 	@JSONWebService
-	public java.util.List<User> getCourseStudents(long courseId)
+	public java.util.List<String> getCourseStudents(long courseId)
 	{
 		return null;
 	}
 	@JSONWebService
-	public java.util.List<User> getCourseTeachers(long courseId)
+	public java.util.List<String> getCourseTeachers(long courseId)
 	{
 		return null;
 	}
 	@JSONWebService
-	public java.util.List<User> getCourseEditors(long courseId)
+	public java.util.List<String> getCourseEditors(long courseId)
 	{
 		return null;
 	}
