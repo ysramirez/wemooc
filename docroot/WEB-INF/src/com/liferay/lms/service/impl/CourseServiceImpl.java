@@ -15,7 +15,6 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.model.Course;
-import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -113,6 +112,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		User usuario= this.getUser();
 		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
 		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		
 		for(Group groupCourse:groups)
 		{
 			
