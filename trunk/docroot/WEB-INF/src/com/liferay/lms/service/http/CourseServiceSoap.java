@@ -93,12 +93,12 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static com.liferay.lms.model.CourseSoap[] getCourseStudents(
-		long courseId) throws RemoteException {
+	public static java.lang.String[] getCourseStudents(long courseId)
+		throws RemoteException {
 		try {
-			java.util.List<com.liferay.portal.model.User> returnValue = CourseServiceUtil.getCourseStudents(courseId);
+			java.util.List<java.lang.String> returnValue = CourseServiceUtil.getCourseStudents(courseId);
 
-			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+			return returnValue.toArray(new java.lang.String[returnValue.size()]);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -107,12 +107,12 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static com.liferay.lms.model.CourseSoap[] getCourseTeachers(
-		long courseId) throws RemoteException {
+	public static java.lang.String[] getCourseTeachers(long courseId)
+		throws RemoteException {
 		try {
-			java.util.List<com.liferay.portal.model.User> returnValue = CourseServiceUtil.getCourseTeachers(courseId);
+			java.util.List<java.lang.String> returnValue = CourseServiceUtil.getCourseTeachers(courseId);
 
-			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+			return returnValue.toArray(new java.lang.String[returnValue.size()]);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -121,12 +121,12 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static com.liferay.lms.model.CourseSoap[] getCourseEditors(
-		long courseId) throws RemoteException {
+	public static java.lang.String[] getCourseEditors(long courseId)
+		throws RemoteException {
 		try {
-			java.util.List<com.liferay.portal.model.User> returnValue = CourseServiceUtil.getCourseEditors(courseId);
+			java.util.List<java.lang.String> returnValue = CourseServiceUtil.getCourseEditors(courseId);
 
-			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+			return returnValue.toArray(new java.lang.String[returnValue.size()]);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
