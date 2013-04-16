@@ -1,8 +1,16 @@
-
+<%@page import="com.liferay.util.JavaScriptUtil"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%
 
 LearningActivity myActivity = activity;
+
+JavaScriptUtil.markupToStringLiteral(
+((LiferayPortletURL)new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).getURLEdit((LiferayPortletRequest)renderRequest,
+		(LiferayPortletResponse)renderResponse)).getPortletId());
 
 String name = LearningActivity.class.getName();
 String primKey = String.valueOf(myActivity.getActId());
@@ -16,7 +24,6 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE) %>">
 	<liferay-portlet:actionURL  name="editactivityoptions" var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<liferay-portlet:param name="resId" value="<%=primKey %>" />
-		<portlet:param name="actId" value="0" />
 	</liferay-portlet:actionURL>
 	<%
 	String portletnamespace = renderResponse.getNamespace();
@@ -25,9 +32,13 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 "			{dialog:"+
 "				{width: 960,modal: true,xy:[50,50]  ,destroyOnClose: true, on: "+
 				"	{"+
-	         "  close: function() {" +
-		 "      console.log(2);"+
-	     "Liferay.Util.getOpener()."+portletnamespace+"refreshPortlet();"+
+	     "      close: function() {" +
+		 "      var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(
+				 ((LiferayPortletURL)new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).getURLEdit((LiferayPortletRequest)renderRequest,
+							(LiferayPortletResponse)renderResponse)).getPortletId())+"_');"+
+		 "      if(activityTitlePortlet!=null) {  "+
+		 "		Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+		 "	}  "+	
 		 "           }"+
 		 "        	}}"+
 	" ,id: 'editlesson', title: '" +
@@ -56,14 +67,12 @@ ActionKeys.DELETE) %>">
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
 ActionKeys.UPDATE) %>">
 <portlet:actionURL name="downactivity" var="downURL">
-<portlet:param name="actId" value="<%=primKey %>" />
 <portlet:param name="resId" value="<%=primKey %>" />
 </portlet:actionURL>
 
 
 <liferay-ui:icon image="bottom"  url="<%=downURL.toString() %>" />
 <portlet:actionURL name="upactivity" var="upURL">
-<portlet:param name="actId" value="<%=primKey %>" />
 <portlet:param name="resId" value="<%=primKey %>" />
 </portlet:actionURL>
 

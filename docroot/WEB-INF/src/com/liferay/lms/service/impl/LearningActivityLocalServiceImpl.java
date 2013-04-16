@@ -17,16 +17,10 @@ package com.liferay.lms.service.impl;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.StringTokenizer;
-
-
 
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.LearningActivityTry;
-import com.liferay.lms.model.Module;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
-import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -44,9 +38,7 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 /**
@@ -342,11 +334,8 @@ public class LearningActivityLocalServiceImpl
 			long priority=larn.getPriority();
 			larn.setPriority(previusActivity.getPriority());
 			previusActivity.setPriority(priority);
-			if(priority<previusActivity.getPriority())
-			{
 			learningActivityPersistence.update(larn, true);
 			learningActivityPersistence.update(previusActivity, true);
-			}
 		}
 		
 	}
