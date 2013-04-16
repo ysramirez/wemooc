@@ -198,16 +198,18 @@ public class CourseStats extends MVCPortlet {
 		    	if(activity.getPrecedence() > 0)
 		    		hasPrecedence = true;
 		    	
+		    	NumberFormat numberFormat = NumberFormat.getNumberInstance(themeDisplay.getLocale());
+		    	
 		    	resultados[0]=activity.getTitle(themeDisplay.getLocale());
 		    	resultados[1]=sdf.format(activity.getStartdate());
 		    	resultados[2]=sdf.format(activity.getEnddate());
 		    	resultados[3]=Long.toString(started);
 		    	resultados[4]=Long.toString(finished);
 		    	resultados[5]=Long.toString(notpassed);
-		    	resultados[6]=Double.toString(triesPerUser);
-		    	resultados[7]=Double.toString(avgResult);
-		    	resultados[8]=Integer.toString(activity.getPasspuntuation());
-		    	resultados[9]=Long.toString(activity.getTries());
+		    	resultados[6]=numberFormat.format(triesPerUser);
+		    	resultados[7]=numberFormat.format(avgResult);
+		    	resultados[8]=numberFormat.format(activity.getPasspuntuation());
+		    	resultados[9]=numberFormat.format(activity.getTries());
 		    	resultados[10]=String.valueOf(hasPrecedence);
 		    	resultados[11]=Integer.toString(activity.getTypeId());
 		    	resultados[12]=activity.getWeightinmodule() == 1 ? "Si":"No";
