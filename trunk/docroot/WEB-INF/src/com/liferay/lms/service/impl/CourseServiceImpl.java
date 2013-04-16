@@ -53,6 +53,61 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	
 	}
 	@JSONWebService
+	public Course createCourse(String name)
+	{
+		return null;
+	}
+	@JSONWebService
+	public java.util.List<User> getCourseStudents(long courseId)
+	{
+		return null;
+	}
+	@JSONWebService
+	public java.util.List<User> getCourseTeachers(long courseId)
+	{
+		return null;
+	}
+	@JSONWebService
+	public java.util.List<User> getCourseEditors(long courseId)
+	{
+		return null;
+	}
+	@JSONWebService
+	public void addStudentToCourse(long courseId,String login)
+	{
+		
+	}
+	@JSONWebService
+	public void addTeacherToCourse(long courseId,String login)
+	{
+		
+	}
+	@JSONWebService
+	public void addEditorToCourse(long courseId,String login)
+	{
+		
+	}
+	@JSONWebService
+	public void removeStudentFromCourse(long courseId,String login)
+	{
+		
+	}
+	@JSONWebService
+	public void removeTeacherFromCourse(long courseId,String login)
+	{
+		
+	}
+	@JSONWebService
+	public void removeEditorFromCourse(long courseId,String login)
+	{
+		
+	}
+	@JSONWebService
+	public long getUserResult(long courseId,String login)
+	{
+		return 0;
+	}
+	@JSONWebService
 	public java.util.List<Course> myCourses() throws PortalException, SystemException
 	{
 		User usuario= this.getUser();
@@ -70,5 +125,35 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		}
 		return results;
 
+	}
+	@JSONWebService
+	public User addUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
+	{
+		return null;
+	}
+	@JSONWebService
+	public User updateUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
+	{
+		return null;
+	}
+	@JSONWebService
+	public void setParent(String parentLogin,String studentLogin)
+	{
+		
+	}
+	@JSONWebService
+	public void unsetParent(String parentLogin,String studentLogin)
+	{
+		
+	}
+	@JSONWebService
+	public void setTutor(String parentLogin,String studentLogin)
+	{
+		
+	}
+	@JSONWebService
+	public void unsetTutor(String parentLogin,String studentLogin)
+	{
+		
 	}
 }

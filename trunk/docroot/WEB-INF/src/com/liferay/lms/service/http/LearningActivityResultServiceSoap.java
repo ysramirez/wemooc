@@ -79,9 +79,39 @@ public class LearningActivityResultServiceSoap {
 		}
 	}
 
+	public static com.liferay.lms.model.LearningActivityResultSoap getByActIdAndUser(
+		long actId, java.lang.String login) throws RemoteException {
+		try {
+			com.liferay.lms.model.LearningActivityResult returnValue = LearningActivityResultServiceUtil.getByActIdAndUser(actId,
+					login);
+
+			return com.liferay.lms.model.LearningActivityResultSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static boolean userPassed(long actId) throws RemoteException {
 		try {
 			boolean returnValue = LearningActivityResultServiceUtil.userPassed(actId);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static boolean userLoginPassed(long actId, java.lang.String login)
+		throws RemoteException {
+		try {
+			boolean returnValue = LearningActivityResultServiceUtil.userLoginPassed(actId,
+					login);
 
 			return returnValue;
 		}
