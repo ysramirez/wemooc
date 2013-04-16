@@ -36,7 +36,7 @@ public class moduleValidator {
 		if(!validateDescription(props, ParamUtil.getString(request, "description"))){
 		    errors.add("error");
 		}
-		if (Validator.isNull(module.getDescription())) {
+		if (Validator.isNull(module.getDescription(request.getLocale(), true))) {
 			errors.add("module-description-required");
 		}
 	//Field order

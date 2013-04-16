@@ -31,6 +31,42 @@ if (moduleId == 0)
 		moduleId = theModule.getModuleId();
 	}
 }
+%>
+<script type="text/javascript">
+<!--
+
+AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe',function(A) {
+	A.one(window).on('message', 
+		function(event){
+			var html5Event=event._event;
+			if(html5Event.data.name=='reloadModule'){
+				if(html5Event.data.moduleId==<%=Long.toString(moduleId)%>){
+					var moduleTitlePortlet=A.one('#p_p_id<%=StringPool.UNDERLINE+PortalUtil.getJsSafePortletId("ModuleTitle"+
+							PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
+					if(moduleTitlePortlet!=null) {
+						Liferay.Portlet.refresh(moduleTitlePortlet);
+					}
+
+					var moduleDescriptionPortlet=A.one('#p_p_id<%=PortalUtil.getJsSafePortletId(StringPool.UNDERLINE+"moduleDescription"+
+							PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
+					if(moduleDescriptionPortlet!=null) {
+						Liferay.Portlet.refresh(moduleDescriptionPortlet);
+					}
+				}
+				Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'));	
+  
+			}
+			else if(html5Event.data.name=='closeModule'){
+				A.DialogManager.closeByChild('#editModule');
+			} 
+
+		});
+});
+
+//-->
+</script>
+<%
+renderRequest.setAttribute("moduleId", Long.toString(moduleId));
 boolean registrado=UserLocalServiceUtil.hasGroupUser(themeDisplay.getScopeGroupId(),themeDisplay.getUserId());
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW))
@@ -40,7 +76,6 @@ Date today=new java.util.Date(System.currentTimeMillis());
 for(Module theModule:theModules)
 {
 	%>
-
 	<div class="modulo">
 	<%
 	

@@ -194,7 +194,7 @@ public static String SEPARATOR = "_";
 		PortletURL addmoduleURL = liferayPortletResponse.createRenderURL();
 		addmoduleURL.setWindowState(LiferayWindowState.POP_UP);
 		addmoduleURL.setParameter("view", "editmodule");
-		addmoduleURL.setParameter("moduleId", "0");
+		//addmoduleURL.setParameter("moduleId", "0");
 		addmoduleURL.setParameter("editType", "add");
 		
 		renderRequest.setAttribute("addmoduleURL", addmoduleURL.toString());
@@ -231,7 +231,7 @@ public static String SEPARATOR = "_";
 		editmoduleURL.setWindowState(LiferayWindowState.POP_UP);
 		
 		String editType = ParamUtil.getString(renderRequest, "editType",(String)renderRequest.getAttribute("editType"));
-		if (editType.equalsIgnoreCase("edit")) {
+		if ("edit".equalsIgnoreCase(editType)) {
 			if(isPopUp){
 				editmoduleURL.setParameter("popUpAction", "updatemodule");
 			}
@@ -244,7 +244,7 @@ public static String SEPARATOR = "_";
 				moduleId = (Long)renderRequest.getAttribute("moduleId");
 			}
 			else{
-				moduleId = ParamUtil.getLong(renderRequest, "moduleId");
+				moduleId = ParamUtil.getLong(renderRequest, "resourcePrimKey");
 			}
 			
 			Module module = ModuleLocalServiceUtil.getModule(moduleId);
@@ -417,20 +417,17 @@ public static String SEPARATOR = "_";
 
         if (errors.isEmpty()) {
 			try {
-				ModuleLocalServiceUtil.addmodule(module);
-            	
-				request.setAttribute("view", "");
+				module=ModuleLocalServiceUtil.addmodule(module);
+   				request.setAttribute("moduleId",module.getModuleId());
+				request.setAttribute("view", "editmodule");
+				request.setAttribute("editType", "edit");
+							
             	SessionMessages.add(request, "module-added-successfully");
         	} catch (Exception cvex) {
         		SessionErrors.add(request, "please-enter-a-unique-code");
         		request.setAttribute("view", "editmodule");
         		request.setAttribute("editType", "add");
-        		request.setAttribute("moduleId", module.getModuleId());
-        		request.setAttribute("title", module.getTitle()+"");
-        		request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
-        		request.setAttribute("icon", module.getIcon()+"");
-        		request.setAttribute("startDate", module.getStartDate()+"");
-        		request.setAttribute("endDate", module.getEndDate()+"");
+        		request.setAttribute("errormodule", module);
         	}
         } else {
             for (String error : errors) {
@@ -438,13 +435,7 @@ public static String SEPARATOR = "_";
             }
             	request.setAttribute("view", "editmodule");
             	request.setAttribute("editType", "add");
-            	request.setAttribute("moduleId", module.getModuleId());
-            	request.setAttribute("title", module.getTitle()+"");
-            	request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
-            	request.setAttribute("ordern", module.getOrdern()+"");
-            	request.setAttribute("icon", module.getIcon()+"");
-            	request.setAttribute("startDate", module.getStartDate()+"");
-            	request.setAttribute("endDate", module.getEndDate()+"");
+            	request.setAttribute("errormodule", module);
         }
 	}
 
@@ -465,7 +456,7 @@ public static String SEPARATOR = "_";
 
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 	String portletId = PortalUtil.getPortletId(actionRequest);
-	long moduleId = ParamUtil.getLong(actionRequest, "moduleId",0);
+	long moduleId = ParamUtil.getLong(actionRequest, "resourcePrimKey",0);
 	
 	if(moduleId>0)
 	{
@@ -478,7 +469,7 @@ public static String SEPARATOR = "_";
 
 	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 	String portletId = PortalUtil.getPortletId(actionRequest);
-	long moduleId = ParamUtil.getLong(actionRequest, "moduleId",0);
+	long moduleId = ParamUtil.getLong(actionRequest, "resourcePrimKey",0);
 	
 	if(moduleId>0)
 	{
@@ -568,6 +559,10 @@ public static String SEPARATOR = "_";
 	
 	private void updatemodulePopUp(RenderRequest request, RenderResponse response) throws PortalException, SystemException, IOException {
         Module module = moduleFromRequest(request);
+		request.setAttribute("moduleId",module.getModuleId());
+		request.setAttribute("view", "editmodule");
+		request.setAttribute("editType", "edit");
+		
         ArrayList<String> errors = moduleValidator.validatemodule(module, request);
         ThemeDisplay themeDisplay = (ThemeDisplay) request
 		.getAttribute(WebKeys.THEME_DISPLAY);
@@ -576,34 +571,26 @@ public static String SEPARATOR = "_";
         	try {
             	ModuleLocalServiceUtil.updateModule(module);
             	MultiVMPoolUtil.clear();
-            	request.setAttribute("view", "");
             	SessionMessages.add(request, "module-updated-successfully");
         	} catch (Exception cvex) {
         		SessionErrors.add(request, "please-enter-a-unique-code");
-        		request.setAttribute("view", "editmodule");
-        		request.setAttribute("editType", "edit");
-        		request.setAttribute("moduleId", module.getModuleId());
-        		request.setAttribute("title", module.getTitle()+"");
-        		request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
-        		request.setAttribute("ordern", module.getOrdern()+"");
-        		request.setAttribute("icon", module.getIcon()+"");
-        		request.setAttribute("startDate", module.getStartDate()+"");
-        		request.setAttribute("endDate", module.getEndDate()+"");
+        		request.setAttribute("title", module.getTitle());
+        		request.setAttribute("description", module.getDescription(themeDisplay.getLocale()));
+        		request.setAttribute("ordern",Long.toString(module.getOrdern()));
+        		request.setAttribute("icon", Long.toString(module.getIcon()));
+        		request.setAttribute("startDate", module.getStartDate().toString());
+        		request.setAttribute("endDate", module.getEndDate().toString());
         	}
         } else {
             for (String error : errors) {
                     SessionErrors.add(request, error);
             }
-            	request.setAttribute("moduleId)",Long.toString(module.getPrimaryKey()));
-            	request.setAttribute("view", "editmodule");
-            	request.setAttribute("editType", "edit");
-            	request.setAttribute("moduleId", module.getModuleId());
             	request.setAttribute("title", module.getTitle()+"");
-            	request.setAttribute("description", module.getDescription(themeDisplay.getLocale())+"");
-            	request.setAttribute("ordern", module.getOrdern()+"");
-            	request.setAttribute("icon", module.getIcon()+"");
-            	request.setAttribute("startDate", module.getStartDate()+"");
-            	request.setAttribute("endDate", module.getEndDate()+"");
+            	request.setAttribute("description", module.getDescription(themeDisplay.getLocale()));
+        		request.setAttribute("ordern",Long.toString(module.getOrdern()));
+        		request.setAttribute("icon", Long.toString(module.getIcon()));
+        		request.setAttribute("startDate", module.getStartDate().toString());
+        		request.setAttribute("endDate", module.getEndDate().toString());
         }
     }
 
