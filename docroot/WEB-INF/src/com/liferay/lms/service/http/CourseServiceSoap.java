@@ -79,12 +79,236 @@ public class CourseServiceSoap {
 		}
 	}
 
+	public static com.liferay.lms.model.CourseSoap createCourse(
+		java.lang.String name) throws RemoteException {
+		try {
+			com.liferay.lms.model.Course returnValue = CourseServiceUtil.createCourse(name);
+
+			return com.liferay.lms.model.CourseSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.lms.model.CourseSoap[] getCourseStudents(
+		long courseId) throws RemoteException {
+		try {
+			java.util.List<com.liferay.portal.model.User> returnValue = CourseServiceUtil.getCourseStudents(courseId);
+
+			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.lms.model.CourseSoap[] getCourseTeachers(
+		long courseId) throws RemoteException {
+		try {
+			java.util.List<com.liferay.portal.model.User> returnValue = CourseServiceUtil.getCourseTeachers(courseId);
+
+			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.lms.model.CourseSoap[] getCourseEditors(
+		long courseId) throws RemoteException {
+		try {
+			java.util.List<com.liferay.portal.model.User> returnValue = CourseServiceUtil.getCourseEditors(courseId);
+
+			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void addStudentToCourse(long courseId, java.lang.String login)
+		throws RemoteException {
+		try {
+			CourseServiceUtil.addStudentToCourse(courseId, login);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void addTeacherToCourse(long courseId, java.lang.String login)
+		throws RemoteException {
+		try {
+			CourseServiceUtil.addTeacherToCourse(courseId, login);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void addEditorToCourse(long courseId, java.lang.String login)
+		throws RemoteException {
+		try {
+			CourseServiceUtil.addEditorToCourse(courseId, login);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void removeStudentFromCourse(long courseId,
+		java.lang.String login) throws RemoteException {
+		try {
+			CourseServiceUtil.removeStudentFromCourse(courseId, login);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void removeTeacherFromCourse(long courseId,
+		java.lang.String login) throws RemoteException {
+		try {
+			CourseServiceUtil.removeTeacherFromCourse(courseId, login);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void removeEditorFromCourse(long courseId,
+		java.lang.String login) throws RemoteException {
+		try {
+			CourseServiceUtil.removeEditorFromCourse(courseId, login);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static long getUserResult(long courseId, java.lang.String login)
+		throws RemoteException {
+		try {
+			long returnValue = CourseServiceUtil.getUserResult(courseId, login);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.lms.model.CourseSoap[] myCourses()
 		throws RemoteException {
 		try {
 			java.util.List<com.liferay.lms.model.Course> returnValue = CourseServiceUtil.myCourses();
 
 			return com.liferay.lms.model.CourseSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portal.model.User addUser(
+		java.lang.String login, java.lang.String firstName,
+		java.lang.String lastName, java.lang.String email, boolean isStudent,
+		boolean isTeacher, boolean isParent) throws RemoteException {
+		try {
+			com.liferay.portal.model.User returnValue = CourseServiceUtil.addUser(login,
+					firstName, lastName, email, isStudent, isTeacher, isParent);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.portal.model.User updateUser(
+		java.lang.String login, java.lang.String firstName,
+		java.lang.String lastName, java.lang.String email, boolean isStudent,
+		boolean isTeacher, boolean isParent) throws RemoteException {
+		try {
+			com.liferay.portal.model.User returnValue = CourseServiceUtil.updateUser(login,
+					firstName, lastName, email, isStudent, isTeacher, isParent);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void setParent(java.lang.String parentLogin,
+		java.lang.String studentLogin) throws RemoteException {
+		try {
+			CourseServiceUtil.setParent(parentLogin, studentLogin);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void unsetParent(java.lang.String parentLogin,
+		java.lang.String studentLogin) throws RemoteException {
+		try {
+			CourseServiceUtil.unsetParent(parentLogin, studentLogin);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void setTutor(java.lang.String parentLogin,
+		java.lang.String studentLogin) throws RemoteException {
+		try {
+			CourseServiceUtil.setTutor(parentLogin, studentLogin);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void unsetTutor(java.lang.String parentLogin,
+		java.lang.String studentLogin) throws RemoteException {
+		try {
+			CourseServiceUtil.unsetTutor(parentLogin, studentLogin);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

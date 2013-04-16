@@ -52,7 +52,19 @@ public class LearningActivityResultServiceImpl
 		return learningActivityResultLocalService.getByActIdAndUserId(actId, user.getUserId());
 	}
 	@JSONWebService
+	public LearningActivityResult getByActIdAndUser(long actId,String login) throws PortalException, SystemException
+	{
+		User user=this.getUser();
+		return learningActivityResultLocalService.getByActIdAndUserId(actId, user.getUserId());
+	}
+	@JSONWebService
 	public boolean userPassed(long actId) throws PortalException, SystemException
+	{
+		User user=this.getUser();
+		return learningActivityResultLocalService.userPassed(actId, user.getUserId());
+	}
+	@JSONWebService
+	public boolean userLoginPassed(long actId,String login) throws PortalException, SystemException
 	{
 		User user=this.getUser();
 		return learningActivityResultLocalService.userPassed(actId, user.getUserId());
