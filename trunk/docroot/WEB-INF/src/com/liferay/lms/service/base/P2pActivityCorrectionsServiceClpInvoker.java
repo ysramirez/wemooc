@@ -23,24 +23,24 @@ import java.util.Arrays;
  */
 public class P2pActivityCorrectionsServiceClpInvoker {
 	public P2pActivityCorrectionsServiceClpInvoker() {
-		_methodName104 = "getBeanIdentifier";
+		_methodName102 = "getBeanIdentifier";
 
-		_methodParameterTypes104 = new String[] {  };
+		_methodParameterTypes102 = new String[] {  };
 
-		_methodName105 = "setBeanIdentifier";
+		_methodName103 = "setBeanIdentifier";
 
-		_methodParameterTypes105 = new String[] { "java.lang.String" };
+		_methodParameterTypes103 = new String[] { "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName104.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes104, parameterTypes)) {
+		if (_methodName102.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes102, parameterTypes)) {
 			return P2pActivityCorrectionsServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName105.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes105, parameterTypes)) {
+		if (_methodName103.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes103, parameterTypes)) {
 			P2pActivityCorrectionsServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
@@ -49,8 +49,8 @@ public class P2pActivityCorrectionsServiceClpInvoker {
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName104;
-	private String[] _methodParameterTypes104;
-	private String _methodName105;
-	private String[] _methodParameterTypes105;
+	private String _methodName102;
+	private String[] _methodParameterTypes102;
+	private String _methodName103;
+	private String[] _methodParameterTypes103;
 }

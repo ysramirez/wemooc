@@ -18,7 +18,6 @@ import com.liferay.counter.service.CounterLocalService;
 
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CheckP2pMailingLocalService;
-import com.liferay.lms.service.CheckP2pMailingService;
 import com.liferay.lms.service.CourseLocalService;
 import com.liferay.lms.service.CourseResultLocalService;
 import com.liferay.lms.service.CourseResultService;
@@ -35,13 +34,10 @@ import com.liferay.lms.service.ModuleResultLocalService;
 import com.liferay.lms.service.ModuleResultService;
 import com.liferay.lms.service.ModuleService;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalService;
-import com.liferay.lms.service.P2pActivityCorrectionsService;
 import com.liferay.lms.service.P2pActivityLocalService;
-import com.liferay.lms.service.P2pActivityService;
 import com.liferay.lms.service.SCORMContentLocalService;
 import com.liferay.lms.service.SCORMContentService;
 import com.liferay.lms.service.SurveyResultLocalService;
-import com.liferay.lms.service.SurveyResultService;
 import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerService;
 import com.liferay.lms.service.TestQuestionLocalService;
@@ -325,25 +321,6 @@ public abstract class LmsPrefsLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public void setCheckP2pMailingLocalService(
 		CheckP2pMailingLocalService checkP2pMailingLocalService) {
 		this.checkP2pMailingLocalService = checkP2pMailingLocalService;
-	}
-
-	/**
-	 * Returns the check p2p mailing remote service.
-	 *
-	 * @return the check p2p mailing remote service
-	 */
-	public CheckP2pMailingService getCheckP2pMailingService() {
-		return checkP2pMailingService;
-	}
-
-	/**
-	 * Sets the check p2p mailing remote service.
-	 *
-	 * @param checkP2pMailingService the check p2p mailing remote service
-	 */
-	public void setCheckP2pMailingService(
-		CheckP2pMailingService checkP2pMailingService) {
-		this.checkP2pMailingService = checkP2pMailingService;
 	}
 
 	/**
@@ -813,24 +790,6 @@ public abstract class LmsPrefsLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
-	 * Returns the p2p activity remote service.
-	 *
-	 * @return the p2p activity remote service
-	 */
-	public P2pActivityService getP2pActivityService() {
-		return p2pActivityService;
-	}
-
-	/**
-	 * Sets the p2p activity remote service.
-	 *
-	 * @param p2pActivityService the p2p activity remote service
-	 */
-	public void setP2pActivityService(P2pActivityService p2pActivityService) {
-		this.p2pActivityService = p2pActivityService;
-	}
-
-	/**
 	 * Returns the p2p activity persistence.
 	 *
 	 * @return the p2p activity persistence
@@ -866,25 +825,6 @@ public abstract class LmsPrefsLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public void setP2pActivityCorrectionsLocalService(
 		P2pActivityCorrectionsLocalService p2pActivityCorrectionsLocalService) {
 		this.p2pActivityCorrectionsLocalService = p2pActivityCorrectionsLocalService;
-	}
-
-	/**
-	 * Returns the p2p activity corrections remote service.
-	 *
-	 * @return the p2p activity corrections remote service
-	 */
-	public P2pActivityCorrectionsService getP2pActivityCorrectionsService() {
-		return p2pActivityCorrectionsService;
-	}
-
-	/**
-	 * Sets the p2p activity corrections remote service.
-	 *
-	 * @param p2pActivityCorrectionsService the p2p activity corrections remote service
-	 */
-	public void setP2pActivityCorrectionsService(
-		P2pActivityCorrectionsService p2pActivityCorrectionsService) {
-		this.p2pActivityCorrectionsService = p2pActivityCorrectionsService;
 	}
 
 	/**
@@ -979,24 +919,6 @@ public abstract class LmsPrefsLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public void setSurveyResultLocalService(
 		SurveyResultLocalService surveyResultLocalService) {
 		this.surveyResultLocalService = surveyResultLocalService;
-	}
-
-	/**
-	 * Returns the survey result remote service.
-	 *
-	 * @return the survey result remote service
-	 */
-	public SurveyResultService getSurveyResultService() {
-		return surveyResultService;
-	}
-
-	/**
-	 * Sets the survey result remote service.
-	 *
-	 * @param surveyResultService the survey result remote service
-	 */
-	public void setSurveyResultService(SurveyResultService surveyResultService) {
-		this.surveyResultService = surveyResultService;
 	}
 
 	/**
@@ -1319,8 +1241,6 @@ public abstract class LmsPrefsLocalServiceBaseImpl extends BaseLocalServiceImpl
 
 	@BeanReference(type = CheckP2pMailingLocalService.class)
 	protected CheckP2pMailingLocalService checkP2pMailingLocalService;
-	@BeanReference(type = CheckP2pMailingService.class)
-	protected CheckP2pMailingService checkP2pMailingService;
 	@BeanReference(type = CheckP2pMailingPersistence.class)
 	protected CheckP2pMailingPersistence checkP2pMailingPersistence;
 	@BeanReference(type = CourseLocalService.class)
@@ -1371,14 +1291,10 @@ public abstract class LmsPrefsLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected ModuleResultPersistence moduleResultPersistence;
 	@BeanReference(type = P2pActivityLocalService.class)
 	protected P2pActivityLocalService p2pActivityLocalService;
-	@BeanReference(type = P2pActivityService.class)
-	protected P2pActivityService p2pActivityService;
 	@BeanReference(type = P2pActivityPersistence.class)
 	protected P2pActivityPersistence p2pActivityPersistence;
 	@BeanReference(type = P2pActivityCorrectionsLocalService.class)
 	protected P2pActivityCorrectionsLocalService p2pActivityCorrectionsLocalService;
-	@BeanReference(type = P2pActivityCorrectionsService.class)
-	protected P2pActivityCorrectionsService p2pActivityCorrectionsService;
 	@BeanReference(type = P2pActivityCorrectionsPersistence.class)
 	protected P2pActivityCorrectionsPersistence p2pActivityCorrectionsPersistence;
 	@BeanReference(type = SCORMContentLocalService.class)
@@ -1389,8 +1305,6 @@ public abstract class LmsPrefsLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected SCORMContentPersistence scormContentPersistence;
 	@BeanReference(type = SurveyResultLocalService.class)
 	protected SurveyResultLocalService surveyResultLocalService;
-	@BeanReference(type = SurveyResultService.class)
-	protected SurveyResultService surveyResultService;
 	@BeanReference(type = SurveyResultPersistence.class)
 	protected SurveyResultPersistence surveyResultPersistence;
 	@BeanReference(type = TestAnswerLocalService.class)

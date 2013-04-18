@@ -235,15 +235,13 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static com.liferay.portal.model.User addUser(
-		java.lang.String login, java.lang.String firstName,
-		java.lang.String lastName, java.lang.String email, boolean isStudent,
-		boolean isTeacher, boolean isParent) throws RemoteException {
+	public static void addUser(java.lang.String login,
+		java.lang.String firstName, java.lang.String lastName,
+		java.lang.String email, boolean isStudent, boolean isTeacher,
+		boolean isParent) throws RemoteException {
 		try {
-			com.liferay.portal.model.User returnValue = CourseServiceUtil.addUser(login,
-					firstName, lastName, email, isStudent, isTeacher, isParent);
-
-			return returnValue;
+			CourseServiceUtil.addUser(login, firstName, lastName, email,
+				isStudent, isTeacher, isParent);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -252,15 +250,13 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static com.liferay.portal.model.User updateUser(
-		java.lang.String login, java.lang.String firstName,
-		java.lang.String lastName, java.lang.String email, boolean isStudent,
-		boolean isTeacher, boolean isParent) throws RemoteException {
+	public static void updateUser(java.lang.String login,
+		java.lang.String firstName, java.lang.String lastName,
+		java.lang.String email, boolean isStudent, boolean isTeacher,
+		boolean isParent) throws RemoteException {
 		try {
-			com.liferay.portal.model.User returnValue = CourseServiceUtil.updateUser(login,
-					firstName, lastName, email, isStudent, isTeacher, isParent);
-
-			return returnValue;
+			CourseServiceUtil.updateUser(login, firstName, lastName, email,
+				isStudent, isTeacher, isParent);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

@@ -23,34 +23,45 @@ import java.util.Arrays;
  */
 public class SCORMContentServiceClpInvoker {
 	public SCORMContentServiceClpInvoker() {
-		_methodName114 = "getBeanIdentifier";
+		_methodName106 = "getBeanIdentifier";
 
-		_methodParameterTypes114 = new String[] {  };
+		_methodParameterTypes106 = new String[] {  };
 
-		_methodName115 = "setBeanIdentifier";
+		_methodName107 = "setBeanIdentifier";
 
-		_methodParameterTypes115 = new String[] { "java.lang.String" };
+		_methodParameterTypes107 = new String[] { "java.lang.String" };
+
+		_methodName112 = "getSCORMContentOfGroup";
+
+		_methodParameterTypes112 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName114.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes114, parameterTypes)) {
+		if (_methodName106.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes106, parameterTypes)) {
 			return SCORMContentServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName115.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes115, parameterTypes)) {
+		if (_methodName107.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes107, parameterTypes)) {
 			SCORMContentServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
+		if (_methodName112.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes112, parameterTypes)) {
+			return SCORMContentServiceUtil.getSCORMContentOfGroup(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName114;
-	private String[] _methodParameterTypes114;
-	private String _methodName115;
-	private String[] _methodParameterTypes115;
+	private String _methodName106;
+	private String[] _methodParameterTypes106;
+	private String _methodName107;
+	private String[] _methodParameterTypes107;
+	private String _methodName112;
+	private String[] _methodParameterTypes112;
 }

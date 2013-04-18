@@ -16,7 +16,6 @@ package com.liferay.lms.model.impl;
 
 import com.liferay.lms.model.P2pActivityCorrections;
 import com.liferay.lms.model.P2pActivityCorrectionsModel;
-import com.liferay.lms.model.P2pActivityCorrectionsSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -36,10 +35,8 @@ import java.io.Serializable;
 
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -92,55 +89,6 @@ public class P2pActivityCorrectionsModelImpl extends BaseModelImpl<P2pActivityCo
 	public static long P2PACTIVITYID_COLUMN_BITMASK = 2L;
 	public static long USERID_COLUMN_BITMASK = 4L;
 	public static long UUID_COLUMN_BITMASK = 8L;
-
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 */
-	public static P2pActivityCorrections toModel(
-		P2pActivityCorrectionsSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		P2pActivityCorrections model = new P2pActivityCorrectionsImpl();
-
-		model.setUuid(soapModel.getUuid());
-		model.setP2pActivityCorrectionsId(soapModel.getP2pActivityCorrectionsId());
-		model.setP2pActivityId(soapModel.getP2pActivityId());
-		model.setUserId(soapModel.getUserId());
-		model.setActId(soapModel.getActId());
-		model.setDescription(soapModel.getDescription());
-		model.setDate(soapModel.getDate());
-		model.setFileEntryId(soapModel.getFileEntryId());
-		model.setResult(soapModel.getResult());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 */
-	public static List<P2pActivityCorrections> toModels(
-		P2pActivityCorrectionsSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<P2pActivityCorrections> models = new ArrayList<P2pActivityCorrections>(soapModels.length);
-
-		for (P2pActivityCorrectionsSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.lms.model.P2pActivityCorrections"));
 

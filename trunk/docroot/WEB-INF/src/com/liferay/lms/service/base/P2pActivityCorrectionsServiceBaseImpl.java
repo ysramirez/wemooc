@@ -18,7 +18,6 @@ import com.liferay.counter.service.CounterLocalService;
 
 import com.liferay.lms.model.P2pActivityCorrections;
 import com.liferay.lms.service.CheckP2pMailingLocalService;
-import com.liferay.lms.service.CheckP2pMailingService;
 import com.liferay.lms.service.CourseLocalService;
 import com.liferay.lms.service.CourseResultLocalService;
 import com.liferay.lms.service.CourseResultService;
@@ -115,25 +114,6 @@ public abstract class P2pActivityCorrectionsServiceBaseImpl
 	public void setCheckP2pMailingLocalService(
 		CheckP2pMailingLocalService checkP2pMailingLocalService) {
 		this.checkP2pMailingLocalService = checkP2pMailingLocalService;
-	}
-
-	/**
-	 * Returns the check p2p mailing remote service.
-	 *
-	 * @return the check p2p mailing remote service
-	 */
-	public CheckP2pMailingService getCheckP2pMailingService() {
-		return checkP2pMailingService;
-	}
-
-	/**
-	 * Sets the check p2p mailing remote service.
-	 *
-	 * @param checkP2pMailingService the check p2p mailing remote service
-	 */
-	public void setCheckP2pMailingService(
-		CheckP2pMailingService checkP2pMailingService) {
-		this.checkP2pMailingService = checkP2pMailingService;
 	}
 
 	/**
@@ -1105,8 +1085,6 @@ public abstract class P2pActivityCorrectionsServiceBaseImpl
 
 	@BeanReference(type = CheckP2pMailingLocalService.class)
 	protected CheckP2pMailingLocalService checkP2pMailingLocalService;
-	@BeanReference(type = CheckP2pMailingService.class)
-	protected CheckP2pMailingService checkP2pMailingService;
 	@BeanReference(type = CheckP2pMailingPersistence.class)
 	protected CheckP2pMailingPersistence checkP2pMailingPersistence;
 	@BeanReference(type = CourseLocalService.class)

@@ -16,7 +16,6 @@ package com.liferay.lms.model.impl;
 
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.model.P2pActivityModel;
-import com.liferay.lms.model.P2pActivitySoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -36,10 +35,8 @@ import java.io.Serializable;
 
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -93,53 +90,6 @@ public class P2pActivityModelImpl extends BaseModelImpl<P2pActivity>
 	public static long ACTID_COLUMN_BITMASK = 1L;
 	public static long USERID_COLUMN_BITMASK = 2L;
 	public static long UUID_COLUMN_BITMASK = 4L;
-
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 */
-	public static P2pActivity toModel(P2pActivitySoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		P2pActivity model = new P2pActivityImpl();
-
-		model.setUuid(soapModel.getUuid());
-		model.setP2pActivityId(soapModel.getP2pActivityId());
-		model.setActId(soapModel.getActId());
-		model.setUserId(soapModel.getUserId());
-		model.setFileEntryId(soapModel.getFileEntryId());
-		model.setCountCorrections(soapModel.getCountCorrections());
-		model.setDescription(soapModel.getDescription());
-		model.setDate(soapModel.getDate());
-		model.setAsignationsCompleted(soapModel.getAsignationsCompleted());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 */
-	public static List<P2pActivity> toModels(P2pActivitySoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<P2pActivity> models = new ArrayList<P2pActivity>(soapModels.length);
-
-		for (P2pActivitySoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.lms.model.P2pActivity"));
 

@@ -127,14 +127,14 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 	}
 	@JSONWebService
-	public User addUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
+	public void addUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
 	{
-		return null;
+		return ;
 	}
 	@JSONWebService
-	public User updateUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
+	public void updateUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
 	{
-		return null;
+		return ;
 	}
 	@JSONWebService
 	public void setParent(String parentLogin,String studentLogin)

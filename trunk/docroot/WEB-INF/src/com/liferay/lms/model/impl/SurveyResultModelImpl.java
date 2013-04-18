@@ -16,7 +16,6 @@ package com.liferay.lms.model.impl;
 
 import com.liferay.lms.model.SurveyResult;
 import com.liferay.lms.model.SurveyResultModel;
-import com.liferay.lms.model.SurveyResultSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -36,9 +35,7 @@ import java.io.Serializable;
 
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -86,51 +83,6 @@ public class SurveyResultModelImpl extends BaseModelImpl<SurveyResult>
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.SurveyResult"),
 			true);
 	public static long UUID_COLUMN_BITMASK = 1L;
-
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 */
-	public static SurveyResult toModel(SurveyResultSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		SurveyResult model = new SurveyResultImpl();
-
-		model.setUuid(soapModel.getUuid());
-		model.setSurveyResultId(soapModel.getSurveyResultId());
-		model.setActId(soapModel.getActId());
-		model.setLatId(soapModel.getLatId());
-		model.setQuestionId(soapModel.getQuestionId());
-		model.setAnswerId(soapModel.getAnswerId());
-		model.setUserId(soapModel.getUserId());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 */
-	public static List<SurveyResult> toModels(SurveyResultSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<SurveyResult> models = new ArrayList<SurveyResult>(soapModels.length);
-
-		for (SurveyResultSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.lms.model.SurveyResult"));
 
