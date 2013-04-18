@@ -45,6 +45,7 @@
 		<portlet id="tutoring"></portlet>
 		<portlet id="userprogress"></portlet>
 		<portlet id="scormadmin"></portlet>
+		<portlet id="scormactivity"></portlet>
 	</category>
 
 </display>
