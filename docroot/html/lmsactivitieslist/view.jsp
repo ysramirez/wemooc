@@ -65,6 +65,8 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe',function
 
 //-->
 </script>
+<div class="modulo portlet-toolbar search-form lms-tree">
+	<ul>
 <%
 renderRequest.setAttribute("moduleId", Long.toString(moduleId));
 boolean registrado=UserLocalServiceUtil.hasGroupUser(themeDisplay.getScopeGroupId(),themeDisplay.getUserId());
@@ -76,7 +78,10 @@ Date today=new java.util.Date(System.currentTimeMillis());
 for(Module theModule:theModules)
 {
 	%>
-	<div class="modulo">
+	
+	<li>
+	<span class="desplegar"></span>
+	
 	<%
 	
 	ModuleResult moduleResult=ModuleResultLocalServiceUtil.getByModuleAndUser(theModule.getModuleId(),themeDisplay.getUserId());
@@ -153,9 +158,14 @@ for(Module theModule:theModules)
 	<%
 	}
 	%>
-	</div>
+	</li>
+	
 	<%
 }
+%>
+</ul>
+	</div>
+	<%
 }
 else
 {
