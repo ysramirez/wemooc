@@ -31,7 +31,6 @@ String primKey = String.valueOf(module.getPrimaryKey());
 			<liferay-portlet:param name="popUpAction" value="editmodule" />
 			<liferay-portlet:param name="view" value="editmodule" />
 			<liferay-portlet:param name="resourcePrimKey" value="<%=primKey %>" />
-			<liferay-portlet:param name="actId" value="0" />
 		</liferay-portlet:renderURL>
 	<%
 	String taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal:true,destroyOnClose: true}, id: 'editModule', title: '" +

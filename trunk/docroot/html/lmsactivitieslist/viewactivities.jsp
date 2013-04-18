@@ -1,3 +1,7 @@
+<%@page import="com.liferay.portal.model.PublicRenderParameter"%>
+<%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
+<%@page import="java.net.URL"%>
+<%@page import="com.liferay.portlet.PortletQNameUtil"%>
 <%@page import="javax.portlet.RenderResponse"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
@@ -62,12 +66,6 @@ if (moduleId == 0) {
 }
 
 
-%>
-<portlet:renderURL var="selectModuleURL">
-	<portlet:param name="moduleId" value="<%=Long.toString(moduleId)%>"></portlet:param>
-	<portlet:param name="actId" value="0"></portlet:param>
-</portlet:renderURL>
-<%
 String activityEnd = "desactivado";
 Hashtable<AssetCategory, java.util.List<LearningActivity>> catler = new Hashtable<AssetCategory, java.util.List<LearningActivity>>();
 for (LearningActivity activity : activities) {
@@ -105,7 +103,8 @@ Liferay.provide(
     
 </script>
 <liferay-portlet:renderURL var="newactivityURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
-<liferay-portlet:param name="jspPage" value="/html/lmsactivitieslist/newactivity.jsp"/>
+	<liferay-portlet:param name="jspPage" value="/html/lmsactivitieslist/newactivity.jsp"/>
+	<liferay-portlet:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
 </liferay-portlet:renderURL>
 	<%
 
@@ -176,9 +175,18 @@ Liferay.provide(
 						activity.getActId(), ActionKeys.UPDATE)&&actionEditing))
 				{
 					LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
-					
-						AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
-						String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "").toString();					
+					AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
+					String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "");	
+					Portlet view1URLPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(view1URL, "p_p_id",false));
+					if(view1URLPortlet!=null) {
+						PublicRenderParameter moduleIdPublicParameter = view1URLPortlet.getPublicRenderParameter("moduleId");
+						if(moduleIdPublicParameter!=null) {					
+							view1URL=HttpUtil.addParameter(view1URL, PortletQNameUtil.getPublicRenderParameterName(moduleIdPublicParameter.getQName()),Long.toString(activity.getModuleId()));
+							view1URL=HttpUtil.removeParameter(view1URL, "p_p_state");
+							view1URL=HttpUtil.addParameter(view1URL, "p_p_state","normal");
+						}
+					}
+						
 				%>
 					<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>">
 					

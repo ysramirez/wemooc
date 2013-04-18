@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
 <%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.ModuleResult"%>
@@ -59,6 +60,9 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe',function
 			else if(html5Event.data.name=='closeModule'){
 				A.DialogManager.closeByChild('#editModule');
 			} 
+			else if(html5Event.data.name=='closeActivity'){
+				A.DialogManager.closeByChild('#editlesson');
+			}
 
 		});
 });
@@ -112,12 +116,14 @@ for(Module theModule:theModules)
 				
 			}
 		}
+		
+		LiferayPortletURL  gotoModuleURL = (LiferayPortletURL)renderResponse.createRenderURL();
+	    gotoModuleURL.removePublicRenderParameter("actId");
+	    gotoModuleURL.setWindowState(WindowState.NORMAL);
+	    gotoModuleURL.setParameter("moduleId", Long.toString(theModule.getModuleId()));
+	    gotoModuleURL.setPlid(retoplid);
 	
 	%>
-	<liferay-portlet:renderURL plid="<%=retoplid %>" portletName="lmsactivitieslist_WAR_liferaylmsportlet" var="gotoModuleURL">
-	<liferay-portlet:param name="moduleId" value="<%=Long.toString(theModule.getModuleId()) %>"></liferay-portlet:param>
-	</liferay-portlet:renderURL>
-	
 	
 	<a href="<%=gotoModuleURL.toString() %>"><%=theModule.getTitle(themeDisplay.getLocale()) %></a>
 	<%if(actionEditing)

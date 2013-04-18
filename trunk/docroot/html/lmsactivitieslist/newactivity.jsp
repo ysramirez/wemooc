@@ -13,13 +13,14 @@ for(Long key:classTypes.keySet())
 	
 %>	
 <liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
-<liferay-portlet:param name="resId" value="0" />
-<liferay-portlet:param name="typeId" value="<%=key.toString() %>" />
+	<liferay-portlet:param name="resId" value="0" />
+	<liferay-portlet:param name="resModuleId" value="<%=ParamUtil.getString(renderRequest, \"resModuleId\") %>" />
+	<liferay-portlet:param name="typeId" value="<%=key.toString() %>" />
 </liferay-portlet:actionURL>
 <%
 	String classname=classTypes.get(key);		
 %>
-	<div class="newitem">
+	<div class="activity_<%=key%>">
 		<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>"
 			url="<%=newactivityURL%>" />
 	</div>

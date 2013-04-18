@@ -1,3 +1,6 @@
+
+<%@page import="com.liferay.portal.model.PortletConstants"%>
+<%@page import="javax.portlet.RenderResponse"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest"%>
@@ -7,10 +10,6 @@
 <%
 
 LearningActivity myActivity = activity;
-
-JavaScriptUtil.markupToStringLiteral(
-((LiferayPortletURL)new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).getURLEdit((LiferayPortletRequest)renderRequest,
-		(LiferayPortletResponse)renderResponse)).getPortletId());
 
 String name = LearningActivity.class.getName();
 String primKey = String.valueOf(myActivity.getActId());
@@ -24,69 +23,161 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE) %>">
 	<liferay-portlet:actionURL  name="editactivityoptions" var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<liferay-portlet:param name="resId" value="<%=primKey %>" />
+		<liferay-portlet:param name="resModuleId" value="<%=Long.toString(myActivity.getModuleId()) %>" />
 	</liferay-portlet:actionURL>
 	<%
 	String portletnamespace = renderResponse.getNamespace();
-
-	String editctivitypopup = "javascript:Liferay.Util.openWindow("+
+		
+	StringBuilder editActivityPopup = new StringBuilder("javascript:Liferay.Util.openWindow("+
 "			{dialog:"+
 "				{width: 960,modal: true,xy:[50,50]  ,destroyOnClose: true, on: "+
 				"	{"+
-	     "      close: function() {" +
-		 "      var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(
-				 ((LiferayPortletURL)new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).getURLEdit((LiferayPortletRequest)renderRequest,
-							(LiferayPortletResponse)renderResponse)).getPortletId())+"_');"+
-		 "      if(activityTitlePortlet!=null) {  "+
-		 "		Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
-		 "	}  "+	
-		 "           }"+
-		 "        	}}"+
-	" ,id: 'editlesson', title: '" +
-			ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "',"+
-			"uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "',}"+
-	");";
+	     "      close: function() {"+
+    	 "             Liferay.Util.getOpener()."+portletnamespace+"refreshPortlet();");
+	
+	if(myActivity.getActId()==actId) {	
+		String activityPortletId = HttpUtil.getParameter(
+				new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
+						getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, ""), "p_p_id",false);
+	
+		if(activityPortletId!=null) {
+			editActivityPopup.append(
+			 "         var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+			 "         if(activityTitlePortlet!=null) {  "+
+			 "		      Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+			 "	       }  ");
+		}
+	}
+	
+	editActivityPopup.append(
+	     "      }"+			
+		 " }}"+
+		 " ,id: 'editlesson', title: '" +
+				ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "',"+
+				"uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "',}"+
+		 ");");
 		 
 	
 /*String editctivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
 		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "'});";
 */
 %>
-	<liferay-ui:icon image="edit" message="edit" url="<%=editctivitypopup %>" />
+	<liferay-ui:icon image="edit" message="edit" url="<%=editActivityPopup.toString() %>" />
 </c:if>
 
 
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
 ActionKeys.DELETE) %>">
-<portlet:actionURL name="deleteactivity" var="deleteURL">
-<portlet:param name="resId" value="<%= primKey %>" />
-<portlet:param name="actId" value="0" />
 
-</portlet:actionURL>
-<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
+	<portlet:actionURL name="deleteactivity" var="deleteURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+		<portlet:param name="resId" value="<%=primKey %>" />
+	</portlet:actionURL>
+	
+	<%
+		String deleteURLJavascript=
+				"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+						 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+						 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+						 "          activitiesListPortlet.remove(true); "+	
+						 "          A.io.request('"+ deleteURL.toString() +"', {  "+
+						 "            on: {  "+
+						 "             		success: function() {  "+
+						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+		 				 "			             }  "+	
+						 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+						 "          			 placeHolder.remove(true); "+	
+						 "             }  "+
+						 "            }  "+
+						 "          });  "+	 
+						 "		}); ";
+	%>
+	
+	<liferay-ui:icon-delete url="<%=deleteURLJavascript %>" />
+	
 </c:if>
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
 ActionKeys.UPDATE) %>">
-<portlet:actionURL name="downactivity" var="downURL">
+<portlet:actionURL name="downactivity" var="downURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
 <portlet:param name="resId" value="<%=primKey %>" />
 </portlet:actionURL>
 
+<%
+	String downURLJavascript=
+			"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+					 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+					 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+					 "          activitiesListPortlet.remove(true); "+	
+					 "          A.io.request('"+ downURL.toString() +"', {  "+
+					 "            on: {  "+
+					 "             		success: function() {  "+
+					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+	 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+	 				 "			             }  "+	
+					 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+					 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+					 "          			 placeHolder.remove(true); "+	
+					 "             }  "+
+					 "            }  "+
+					 "          });  "+	 
+					 "		}); ";
+%>
 
-<liferay-ui:icon image="bottom"  url="<%=downURL.toString() %>" />
-<portlet:actionURL name="upactivity" var="upURL">
+<liferay-ui:icon image="bottom" url="<%=downURLJavascript %>"/>
+
+<portlet:actionURL name="upactivity" var="upURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
 <portlet:param name="resId" value="<%=primKey %>" />
 </portlet:actionURL>
 
+<%
+	String upURLJavascript=
+			"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+					 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+					 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+					 "          activitiesListPortlet.remove(true); "+	
+					 "          A.io.request('"+ upURL.toString() +"', {  "+
+					 "            on: {  "+
+					 "             		success: function() {  "+
+					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+	 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+	 				 "			             }  "+	
+					 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+					 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+					 "          			 placeHolder.remove(true); "+	
+					 "             }  "+
+					 "            }  "+
+					 "          });  "+	 
+					 "		}); ";
+%>
 
-<liferay-ui:icon image="top"  url="<%=upURL.toString() %>" />
+<liferay-ui:icon image="top" url="<%=upURLJavascript %>"/>
 
 </c:if>
 
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
 ActionKeys.PERMISSIONS) %>">
+				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=LearningActivity.class.getName() %>"
 					modelResourceDescription="<%= myActivity.getTitle(themeDisplay.getLocale()) %>"
 					resourcePrimKey="<%= String.valueOf(myActivity.getActId()) %>"
+					redirect="<%=redirectURL %>"
 					var="permissionsURL"
 				/>
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			
