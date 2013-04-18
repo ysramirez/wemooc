@@ -58,6 +58,15 @@ public class SCORMAdmin extends MVCPortlet
 		}
 		
 	}
- 
+	public void deleteSCORM(ActionRequest actRequest, ActionResponse response) throws PortalException, SystemException
+	{
+		ThemeDisplay themeDisplay = (ThemeDisplay) actRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actRequest);
+		long scormId=ParamUtil.getLong(request, "scormId",0);
+		if(scormId>0)
+		{
+			SCORMContentLocalServiceUtil.delete(scormId);
+		}
+	}
 
 }
