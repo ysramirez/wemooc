@@ -6,7 +6,7 @@ import com.liferay.lms.asset.SCORMAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
-public class SCORMActivityType extends BaseLearningActivityType 
+public class SCORMLearningActivityType extends BaseLearningActivityType 
 {
 
 	@Override
@@ -40,7 +40,7 @@ public class SCORMActivityType extends BaseLearningActivityType
 
 	@Override
 	public long getTypeId() {
-		return 7;
+		return 9;
 	}
 
 	
