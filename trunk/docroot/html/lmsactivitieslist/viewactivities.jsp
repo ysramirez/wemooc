@@ -25,7 +25,6 @@
 <%@ include file="/init.jsp"%>
 
 
-<div class="portlet-toolbar search-form lms-tree">
 <%
 long moduleId = ParamUtil.getLong(request, "moduleId", 0);
 boolean actionEditing = ParamUtil.getBoolean(request,
@@ -134,8 +133,6 @@ Liferay.provide(
 %>
 <liferay-ui:error></liferay-ui:error>
 <ul>
-	<li class="iniciarRetoModule option-less"><span class="desplegar"></span>
-		<ul>
 			<%
 			for (LearningActivity activity : activities) {
 				
@@ -220,66 +217,4 @@ Liferay.provide(
 			<%
 			}
 			%>
-
-		</ul></li>
-
-	<%
-	Enumeration<AssetCategory> keys=catler.keys();
-	while (keys.hasMoreElements()) {
-		AssetCategory categoria =keys.nextElement();
-		%>
-		<li class="learningCategory  option-more"><span class="desplegar"><%=categoria.getTitle(themeDisplay.getLocale())%></span>
-
-			<ul>
-				<%
-				for (LearningActivity activity : catler.get(categoria)) {
-				%>
-				<portlet:actionURL name="viewactivity" var="viewURL">
-					<portlet:param name="actId" value="<%=Long.toString(activity.getActId())%>" />
-				</portlet:actionURL>
-				<%
-					if (actId == activity.getActId()) {
-						activityEnd = "activado";
-					} else {
-						activityEnd = "desactivado";
-					}
-	
-					String status = "not-started";
-					long result = 0;
-					if (LearningActivityResultLocalServiceUtil
-							.existsLearningActivityResult(activity.getActId(),
-									themeDisplay.getUserId())) {
-						status = "started";
-
-						LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil
-								.getByActIdAndUserId(activity.getActId(),
-										themeDisplay.getUserId());
-						result = learningActivityResult.getResult();
-						if (learningActivityResult.isPassed()) {
-							status = "passed";
-						}
-
-					}
-	
-					if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId()))
-					{
-					%>
-					<li class="learningActivity <%=activityEnd%> <%=status%>"><a
-						href="<%=viewURL.toString()%>"><%=activity.getTitle(themeDisplay.getLocale())%></a></li>
-					<%
-					}
-					else
-					{
-						%>
-						<li class="learningActivity <%=activityEnd%> <%=status%> locked"><span><%=activity.getTitle(themeDisplay.getLocale())%></span></li>
-						<%
-					}
-				}
-				%>
-			</ul>
-		</li>
-	<%
-	}
-	%>
 </ul>
-</div>
