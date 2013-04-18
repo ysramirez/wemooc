@@ -79,7 +79,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="P2pActivity" uuid="true" local-service="true" remote-service="true" json-enabled="false">
+	<entity name="P2pActivity" uuid="true" local-service="true" remote-service="false" json-enabled="false">
 		<!-- PK fields -->
 		<column name="p2pActivityId" type="long" primary="true" />
 		<column name="actId" type="long" />
@@ -102,7 +102,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="P2pActivityCorrections" uuid="true" local-service="true" remote-service="true" json-enabled="false">
+	<entity name="P2pActivityCorrections" uuid="true" local-service="true" remote-service="false" json-enabled="false">
 		<column name="p2pActivityCorrectionsId" type="long" primary="true" />
 		<column name="p2pActivityId" type="long" />
 		<column name="userId" type="long" />
@@ -330,7 +330,7 @@
 		</finder>
 	</entity>
 	
-	<entity name="CheckP2pMailing" local-service="true" json-enabled="false">
+	<entity name="CheckP2pMailing" local-service="true" json-enabled="false" remote-service="false">
 		<column name="checkP2pId" type="long" primary="true"></column>
 		<column name="actId" type="long"></column>
 		<column name="date" type="Date"></column>
@@ -348,7 +348,7 @@
         <column name="lmsTemplates" type="String"></column>
     </entity>
         
-	<entity name="SurveyResult" uuid="true" local-service="true" remote-service="true" json-enabled="false">
+	<entity name="SurveyResult" uuid="true" local-service="true" remote-service="false" json-enabled="false">
 		<column name="surveyResultId" type="long" primary="true" />
 		<column name="actId" type="long" />
 		<column name="latId" type="long" />
