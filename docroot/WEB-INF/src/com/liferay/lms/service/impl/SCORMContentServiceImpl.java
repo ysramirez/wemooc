@@ -14,7 +14,9 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.base.SCORMContentServiceBaseImpl;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
@@ -39,4 +41,8 @@ public class SCORMContentServiceImpl extends SCORMContentServiceBaseImpl {
 	 *
 	 * Never reference this interface directly. Always use {@link com.liferay.lms.service.SCORMContentServiceUtil} to access the s c o r m content remote service.
 	 */
+	public java.util.List<SCORMContent> getSCORMContentOfGroup(long groupId) throws SystemException
+	{
+		return scormContentPersistence.filterFindByGroupId(groupId);
+	}
 }

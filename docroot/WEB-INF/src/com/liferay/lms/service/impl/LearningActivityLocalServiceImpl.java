@@ -148,10 +148,7 @@ public class LearningActivityLocalServiceImpl
 					
 					
 				}
-			resourceLocalService.addResources(
-					serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
-			LearningActivity.class.getName(), larn.getPrimaryKey(), false,
-			true, true);
+			
 			
 			assetEntryLocalService.updateEntry(
 					userId, larn.getGroupId(), LearningActivity.class.getName(),

@@ -16,7 +16,6 @@ package com.liferay.lms.model.impl;
 
 import com.liferay.lms.model.CheckP2pMailing;
 import com.liferay.lms.model.CheckP2pMailingModel;
-import com.liferay.lms.model.CheckP2pMailingSoap;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -33,10 +32,8 @@ import java.io.Serializable;
 
 import java.sql.Types;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -80,48 +77,6 @@ public class CheckP2pMailingModelImpl extends BaseModelImpl<CheckP2pMailing>
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.CheckP2pMailing"),
 			true);
 	public static long ACTID_COLUMN_BITMASK = 1L;
-
-	/**
-	 * Converts the soap model instance into a normal model instance.
-	 *
-	 * @param soapModel the soap model instance to convert
-	 * @return the normal model instance
-	 */
-	public static CheckP2pMailing toModel(CheckP2pMailingSoap soapModel) {
-		if (soapModel == null) {
-			return null;
-		}
-
-		CheckP2pMailing model = new CheckP2pMailingImpl();
-
-		model.setCheckP2pId(soapModel.getCheckP2pId());
-		model.setActId(soapModel.getActId());
-		model.setDate(soapModel.getDate());
-
-		return model;
-	}
-
-	/**
-	 * Converts the soap model instances into normal model instances.
-	 *
-	 * @param soapModels the soap model instances to convert
-	 * @return the normal model instances
-	 */
-	public static List<CheckP2pMailing> toModels(
-		CheckP2pMailingSoap[] soapModels) {
-		if (soapModels == null) {
-			return null;
-		}
-
-		List<CheckP2pMailing> models = new ArrayList<CheckP2pMailing>(soapModels.length);
-
-		for (CheckP2pMailingSoap soapModel : soapModels) {
-			models.add(toModel(soapModel));
-		}
-
-		return models;
-	}
-
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.lms.model.CheckP2pMailing"));
 

@@ -108,39 +108,43 @@ public class SCORMContentLocalServiceClpInvoker {
 				"com.liferay.lms.model.SCORMContent", "boolean"
 			};
 
-		_methodName131 = "getBeanIdentifier";
+		_methodName123 = "getBeanIdentifier";
 
-		_methodParameterTypes131 = new String[] {  };
+		_methodParameterTypes123 = new String[] {  };
 
-		_methodName132 = "setBeanIdentifier";
+		_methodName124 = "setBeanIdentifier";
 
-		_methodParameterTypes132 = new String[] { "java.lang.String" };
+		_methodParameterTypes124 = new String[] { "java.lang.String" };
 
-		_methodName137 = "getBaseDir";
+		_methodName129 = "getBaseDir";
 
-		_methodParameterTypes137 = new String[] {  };
+		_methodParameterTypes129 = new String[] {  };
 
-		_methodName138 = "getDirScormPath";
+		_methodName130 = "getDirScormPath";
 
-		_methodParameterTypes138 = new String[] {
+		_methodParameterTypes130 = new String[] {
 				"com.liferay.lms.model.SCORMContent"
 			};
 
-		_methodName139 = "getSCORMContentOfGroup";
+		_methodName131 = "getSCORMContentOfGroup";
 
-		_methodParameterTypes139 = new String[] { "long" };
+		_methodParameterTypes131 = new String[] { "long" };
 
-		_methodName140 = "getSCORMContents";
+		_methodName132 = "getSCORMContents";
 
-		_methodParameterTypes140 = new String[] { "long" };
+		_methodParameterTypes132 = new String[] { "long" };
 
-		_methodName141 = "countByGroupId";
+		_methodName133 = "countByGroupId";
 
-		_methodParameterTypes141 = new String[] { "long" };
+		_methodParameterTypes133 = new String[] { "long" };
 
-		_methodName142 = "addSCORMContent";
+		_methodName134 = "delete";
 
-		_methodParameterTypes142 = new String[] {
+		_methodParameterTypes134 = new String[] { "long" };
+
+		_methodName135 = "addSCORMContent";
+
+		_methodParameterTypes135 = new String[] {
 				"java.lang.String", "java.lang.String", "java.io.File",
 				"com.liferay.portal.service.ServiceContext"
 			};
@@ -241,45 +245,52 @@ public class SCORMContentLocalServiceClpInvoker {
 				((Boolean)arguments[1]).booleanValue());
 		}
 
-		if (_methodName131.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
+		if (_methodName123.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes123, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName132.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes132, parameterTypes)) {
+		if (_methodName124.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes124, parameterTypes)) {
 			SCORMContentLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName137.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes137, parameterTypes)) {
+		if (_methodName129.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.getBaseDir();
 		}
 
-		if (_methodName138.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes138, parameterTypes)) {
+		if (_methodName130.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.getDirScormPath((com.liferay.lms.model.SCORMContent)arguments[0]);
 		}
 
-		if (_methodName139.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes139, parameterTypes)) {
+		if (_methodName131.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.getSCORMContentOfGroup(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName140.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes140, parameterTypes)) {
+		if (_methodName132.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes132, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.getSCORMContents(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName141.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes141, parameterTypes)) {
+		if (_methodName133.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes133, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.countByGroupId(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName142.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes142, parameterTypes)) {
+		if (_methodName134.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes134, parameterTypes)) {
+			SCORMContentLocalServiceUtil.delete(((Long)arguments[0]).longValue());
+
+			return null;
+		}
+
+		if (_methodName135.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes135, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.addSCORMContent((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1], (java.io.File)arguments[2],
 				(com.liferay.portal.service.ServiceContext)arguments[3]);
@@ -322,20 +333,22 @@ public class SCORMContentLocalServiceClpInvoker {
 	private String[] _methodParameterTypes15;
 	private String _methodName16;
 	private String[] _methodParameterTypes16;
+	private String _methodName123;
+	private String[] _methodParameterTypes123;
+	private String _methodName124;
+	private String[] _methodParameterTypes124;
+	private String _methodName129;
+	private String[] _methodParameterTypes129;
+	private String _methodName130;
+	private String[] _methodParameterTypes130;
 	private String _methodName131;
 	private String[] _methodParameterTypes131;
 	private String _methodName132;
 	private String[] _methodParameterTypes132;
-	private String _methodName137;
-	private String[] _methodParameterTypes137;
-	private String _methodName138;
-	private String[] _methodParameterTypes138;
-	private String _methodName139;
-	private String[] _methodParameterTypes139;
-	private String _methodName140;
-	private String[] _methodParameterTypes140;
-	private String _methodName141;
-	private String[] _methodParameterTypes141;
-	private String _methodName142;
-	private String[] _methodParameterTypes142;
+	private String _methodName133;
+	private String[] _methodParameterTypes133;
+	private String _methodName134;
+	private String[] _methodParameterTypes134;
+	private String _methodName135;
+	private String[] _methodParameterTypes135;
 }

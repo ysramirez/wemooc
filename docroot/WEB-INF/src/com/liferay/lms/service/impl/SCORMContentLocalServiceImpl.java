@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -95,6 +96,15 @@ public class SCORMContentLocalServiceImpl
 	{
 		return scormContentPersistence.countByGroupId(groupId);
 	}
+	public void delete (long scormId) throws SystemException, PortalException
+	{
+		SCORMContent scorm=scormContentPersistence.fetchByPrimaryKey(scormId);
+		assetEntryLocalService.deleteEntry(SCORMContent.class.getName(),scormId);
+		resourceLocalService.deleteResource(
+		scorm.getCompanyId(), SCORMContent.class.getName(),
+		ResourceConstants.SCOPE_INDIVIDUAL, scormId);
+		scormContentPersistence.remove(scorm);
+	}
 	public SCORMContent addSCORMContent (String title, String description,File scormfile,
 		ServiceContext serviceContext)
 			throws SystemException, 
@@ -142,12 +152,27 @@ public class SCORMContentLocalServiceImpl
 			}
 			try
 			{
-			resourceLocalService.addResources(
-					serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
-					SCORMContent.class.getName(), scocontent.getPrimaryKey(), false,
-			true, true);
+				if (serviceContext.isAddGroupPermissions() ||
+						serviceContext.isAddGuestPermissions()) {
+					resourceLocalService.addResources(
+							serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
+							SCORMContent.class.getName(), scocontent.getPrimaryKey(), false,
+						serviceContext.isAddGroupPermissions(),
+						serviceContext.isAddGuestPermissions());			
+					}
+					else {
+						
+						resourceLocalService.addModelResources(
+								serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
+								SCORMContent.class.getName(), scocontent.getPrimaryKey(),
+						serviceContext.getGroupPermissions(),
+						serviceContext.getGuestPermissions());
+						
+						
+					}
+			
 			assetEntryLocalService.updateEntry(
-					userId, scocontent.getGroupId(), Course.class.getName(),
+					userId, scocontent.getGroupId(), SCORMContent.class.getName(),
 					scocontent.getScormId(), scocontent.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
