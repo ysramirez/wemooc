@@ -10,6 +10,7 @@
 		<asset-renderer-factory>com.liferay.lms.asset.LearningActivityAssetRendererFactory</asset-renderer-factory>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
+		<header-portlet-javascript>/js/jquery.min.js</header-portlet-javascript>
 		<header-portlet-javascript>/js/tree.js</header-portlet-javascript>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>lmsactivitieslist-portlet</css-class-wrapper>
