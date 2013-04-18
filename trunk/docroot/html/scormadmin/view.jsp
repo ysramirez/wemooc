@@ -1,21 +1,30 @@
+<%@page import="com.liferay.lms.service.SCORMContentServiceUtil"%>
 <%@page import="com.liferay.lms.service.SCORMContentLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 <portlet:renderURL var="newactivityURL">
 <portlet:param name="jspPage" value="/html/scormadmin/editscorm.jsp"></portlet:param>
 </portlet:renderURL>
 <div class="newitem">
+<%
+if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.scormmodel",themeDisplay.getScopeGroupId(),"ADD_SCORM"))
+{
+	
+%>
 <liferay-ui:icon
 image="add"
 label="<%= true %>"
 message="new"
 url='<%= newactivityURL %>'
 />
+<%
+}
+%>
 </div>
 <liferay-ui:search-container
  delta="10">
 <liferay-ui:search-container-results>
 <%
-results=SCORMContentLocalServiceUtil.getSCORMContentOfGroup(themeDisplay.getScopeGroupId());
+results=SCORMContentServiceUtil.getSCORMContentOfGroup(themeDisplay.getScopeGroupId());
 total=results.size();
 pageContext.setAttribute("results", results);
 pageContext.setAttribute("total", total);
@@ -33,6 +42,8 @@ modelVar="scorm">
 </liferay-portlet:renderURL>
 <a href="<%=viewSCORMURL%>"><%=scorm.getTitle() %></a>
 </liferay-ui:search-container-column-text>
+<liferay-ui:search-container-column-jsp path="/html/scormadmin/admin_actions.jsp">
+</liferay-ui:search-container-column-jsp>
 </liferay-ui:search-container-row>
 <liferay-ui:search-iterator />
 </liferay-ui:search-container>
