@@ -2,10 +2,8 @@
 package com.liferay.lms;
 
 import java.io.IOException;
-import java.io.OutputStreamWriter;
 import java.util.Date;
 import java.util.Enumeration;
-import java.util.List;
 import java.util.Locale;
 import java.util.StringTokenizer;
 
@@ -14,32 +12,25 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-import javax.portlet.ResourceRequest;
-import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
-
-import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.Module;
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.model.P2pActivityCorrections;
-import com.liferay.lms.model.TestAnswer;
-import com.liferay.lms.model.TestQuestion;
-import com.liferay.lms.model.Module;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
-import com.liferay.lms.service.TestAnswerLocalServiceUtil;
-import com.liferay.lms.service.TestQuestionLocalServiceUtil;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -116,8 +107,8 @@ public class LmsActivitiesList extends MVCPortlet {
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 		actionRequest.setAttribute("editing", "true");
 		User user = themeDisplay.getUser();
-		long actId = ParamUtil.getLong(actionRequest, "actId", 0);
-		long moduleId = ParamUtil.getLong(actionRequest, "moduleId", 0);
+		long actId = ParamUtil.getLong(actionRequest, "resId", 0);
+		long moduleId = ParamUtil.getLong(actionRequest, "resModuleId", 0);
 		long weightinmodule=ParamUtil.getLong(actionRequest, "weightinmodule", 0);
 		long precedence=ParamUtil.getLong(actionRequest, "precedence", 0);
 		//String title = actionRequest.getParameter("title");
@@ -257,44 +248,83 @@ public class LmsActivitiesList extends MVCPortlet {
 		actionRequest.setAttribute("activity", larn);
 
 	}
+	
+	public void deletemodule(ActionRequest actionRequest, ActionResponse actionResponse)throws Exception {
 
+		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
+		long renderModule = ParamUtil.getLong(actionRequest, "moduleId",0);
+		
+		if(moduleId>0)
+		{
+			ModuleLocalServiceUtil.deleteModule(moduleId);
+			if(moduleId==renderModule) {
+				actionResponse.removePublicRenderParameter("moduleId");
+				actionResponse.removePublicRenderParameter("actId");				
+			}		
+		}
+	}
+	
+	public void upmodule(ActionRequest actionRequest, ActionResponse actionResponse)
+	throws Exception {
 
+		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
+		
+		if(moduleId>0)
+		{
+			ModuleLocalServiceUtil.goUpModule(moduleId);
+		}
+		
+	}
+	
+	public void downmodule(ActionRequest actionRequest, ActionResponse actionResponse)
+	throws Exception {
+
+		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
+		
+		if(moduleId>0)
+		{
+			ModuleLocalServiceUtil.goDownModule(moduleId);
+		}
+		
+	}
+	
 	public void deleteactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		String portletId = PortalUtil.getPortletId(actionRequest);
 		long actId = ParamUtil.getLong(actionRequest, "resId");
-		com.liferay.lms.service.LearningActivityServiceUtil.deleteLearningactivity(actId);
-		SessionMessages.add(actionRequest, "activity-deleted-successfully");
+		long renderActId = ParamUtil.getLong(actionRequest, "actId",0); 
+		
+		if(actId>0)
+		{
+			LearningActivityServiceUtil.deleteLearningactivity(actId);
+			if(actId==renderActId) {
+				actionResponse.removePublicRenderParameter("actId");				
+			}
+		}
 	}
 	
 	public void upactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 	throws Exception {
 
-	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-	String portletId = PortalUtil.getPortletId(actionRequest);
-	long actId = ParamUtil.getLong(actionRequest, "resId",0);
-	actionResponse.setRenderParameters(actionRequest.getParameterMap());
-	
-	if(actId>0)
-	{
-		com.liferay.lms.service.LearningActivityLocalServiceUtil.goUpLearningActivity(actId);
+		long actId = ParamUtil.getLong(actionRequest, "resId",0);
+		
+		if(actId>0)
+		{
+			LearningActivityLocalServiceUtil.goUpLearningActivity(actId);
+		}
 	}
-}
+	
 	public void downactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 	throws Exception {
 
-	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-	String portletId = PortalUtil.getPortletId(actionRequest);
-	long actId = ParamUtil.getLong(actionRequest, "resId",0);
-	actionResponse.setRenderParameters(actionRequest.getParameterMap());
+		long actId = ParamUtil.getLong(actionRequest, "resId",0);
 	
-	if(actId>0)
-	{
-		com.liferay.lms.service.LearningActivityLocalServiceUtil.goDownLearningActivity(actId);
+		if(actId>0)
+		{
+			LearningActivityLocalServiceUtil.goDownLearningActivity(actId);
+		}
 	}
-}
+	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws PortalException, SystemException, Exception {
 		long actId = ParamUtil.getInteger(actionRequest, "actId");

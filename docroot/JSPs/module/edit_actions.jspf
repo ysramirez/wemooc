@@ -1,3 +1,5 @@
+<%@page import="javax.portlet.WindowState"%>
+<%@page import="com.liferay.portal.theme.PortletDisplay"%>
 <%@page import="javax.portlet.ActionRequest"%>
 <%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
 <%@page import="com.liferay.portal.kernel.util.StringPool"%>
@@ -20,8 +22,9 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE))
 	{	
 	%>
-	
+		
 		<script type="text/javascript">
+		<!--
 		Liferay.provide(
 		        window,
 		        '<portlet:namespace />openEditModulePopup',
@@ -63,93 +66,6 @@ String primKey = String.valueOf(module.getPrimaryKey());
 		        },
 		        ['aui-dialog','aui-dialog-iframe','liferay-layout','liferay-portlet-url']
 		    );
-
-		Liferay.provide(
-		        window,
-		        '<portlet:namespace />upmodule',
-		        function(resourcePrimKey) {
-		        	var A = AUI();
-		        	
-					var actionUrl = Liferay.PortletURL.createActionURL();		
-					actionUrl.setPortletId('<%=PortalUtil.getJsSafePortletId("moduleportlet"+
-							PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName()) %>');	
-					actionUrl.setWindowState('<%= LiferayWindowState.EXCLUSIVE.toString() %>');
-					actionUrl.setName('upmodule');
-					actionUrl.setParameter('resourcePrimKey',resourcePrimKey);	
-
-					var activitiesListPortlet=A.one('#p_p_id<portlet:namespace />');
-					var activitiesListPortletId = activitiesListPortlet.attr('portlet');
-					var activitiesListUrl = activitiesListPortlet.refreshURL;
-					var placeHolder = A.Node.create('<div class="loading-animation" id="p_load' + activitiesListPortletId + '" />');	
-					activitiesListPortlet.placeBefore(placeHolder);
-					activitiesListPortlet.remove(true);	
-
-					A.io.request(
-							actionUrl.toString(),
-							{
-								dataType: 'html',
-								on: {
-									success: function(event, id, obj) {
-										Liferay.Portlet.addHTML(
-												{
-													onComplete: function(portlet, portletId) {
-														portlet.refreshURL = activitiesListUrl;
-													},
-													placeHolder: A.one('#p_load' + activitiesListPortletId),
-													url: activitiesListUrl
-												}
-										);
-									}
-								}
-							}
-						);
-		        },
-		        ['liferay-portlet-url']
-		    );
-
-
-		Liferay.provide(
-		        window,
-		        '<portlet:namespace />downmodule',
-		        function(resourcePrimKey) {
-		        	var A = AUI();
-		        	
-					var actionUrl = Liferay.PortletURL.createActionURL();		
-					actionUrl.setPortletId('<%=PortalUtil.getJsSafePortletId("moduleportlet"+
-							PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName()) %>');	
-					actionUrl.setWindowState('<%= LiferayWindowState.EXCLUSIVE.toString() %>');
-					actionUrl.setName('downmodule');
-					actionUrl.setParameter('resourcePrimKey',resourcePrimKey);	
-
-					var activitiesListPortlet=A.one('#p_p_id<portlet:namespace />');
-					var activitiesListPortletId = activitiesListPortlet.attr('portlet');
-					var activitiesListUrl = activitiesListPortlet.refreshURL;
-					var placeHolder = A.Node.create('<div class="loading-animation" id="p_load' + activitiesListPortletId + '" />');	
-					activitiesListPortlet.placeBefore(placeHolder);
-					activitiesListPortlet.remove(true);	
-
-					A.io.request(
-							actionUrl.toString(),
-							{
-								dataType: 'html',
-								on: {
-									success: function(event, id, obj) {
-										Liferay.Portlet.addHTML(
-												{
-													onComplete: function(portlet, portletId) {
-														portlet.refreshURL = activitiesListUrl;
-													},
-													placeHolder: A.one('#p_load' + activitiesListPortletId),
-													url: activitiesListUrl
-												}
-										);
-									}
-								}
-							}
-						);
-		        },
-		        ['liferay-portlet-url']
-		    );
 		
 		//-->
 		</script>
@@ -163,12 +79,37 @@ String primKey = String.valueOf(module.getPrimaryKey());
 		
 	%>
 	
-		<liferay-portlet:actionURL portletName="moduleportlet_WAR_liferaylmsportlet" name="deletemodule" var="deletemoduleURL">
-			<liferay-portlet:param name="resourcePrimKey" value="<%= primKey %>" />
-			<liferay-portlet:param name="actId" value="0" />
-		</liferay-portlet:actionURL>
+		<portlet:actionURL name="deletemodule" var="deleteModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+			<portlet:param name="resId" value="<%=primKey %>" />
+		</portlet:actionURL>
+	
+		<%
+			String deleteModuleURLJavascript=
+					"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+							 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+							 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+							 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+							 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+							 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+							 "          activitiesListPortlet.remove(true); "+	
+							 "          A.io.request('"+ deleteModuleURL.toString() +"', {  "+
+							 "            on: {  "+
+							 "             		success: function() {  "+
+							 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+							 									PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+							 "		                 if(activityNavigatorPortlet!=null) {  "+
+							 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+							 "			             }  "+
+							 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+							 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+							 "          			 placeHolder.remove(true); "+	
+							 "             }  "+
+							 "            }  "+
+							 "          });  "+	 
+							 "		}); ";
+		%>
 
-		<liferay-ui:icon-delete url="<%=deletemoduleURL.toString() %>" />
+		<liferay-ui:icon-delete url="<%=deleteModuleURLJavascript %>" />
 <%
 	}
 	%>
@@ -176,25 +117,86 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	{
 		
 	%>
-		<liferay-portlet:actionURL portletName="moduleportlet_WAR_liferaylmsportlet" name="upmodule" var="upURL">
-<liferay-portlet:param name="resourcePrimKey" value="<%=primKey %>" />
-		</liferay-portlet:actionURL>
-		<liferay-portlet:actionURL portletName="moduleportlet_WAR_liferaylmsportlet" name="downmodule" var="downURL">
-<liferay-portlet:param name="resourcePrimKey" value="<%=primKey %>" />
-	</liferay-portlet:actionURL>
 
-<liferay-ui:icon image="bottom"  url="<%=\"javascript:\"+renderResponse.getNamespace()+\"downmodule('\"+primKey+\"')\" %>" />
-<liferay-ui:icon image="top"  url="<%=\"javascript:\"+renderResponse.getNamespace()+\"upmodule('\"+primKey+\"')\" %>" />
+	<portlet:actionURL name="downmodule" var="downModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+		<portlet:param name="resId" value="<%=primKey %>" />
+		<portlet:param name="moduleId" value="<%=Long.toString(moduleId)%>" />
+	</portlet:actionURL>
+
+	<%
+		String downModuleURLJavascript=
+				"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+						 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+						 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+						 "          activitiesListPortlet.remove(true); "+	
+						 "          A.io.request('"+ downModuleURL.toString() +"', {  "+
+						 "            on: {  "+
+						 "             		success: function() {  "+
+						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+						 									PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+						 "		                 if(activityNavigatorPortlet!=null) {  "+
+						 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+						 "			             }  "+						 
+						 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+						 "          			 placeHolder.remove(true); "+	
+						 "             }  "+
+						 "            }  "+
+						 "          });  "+	 
+						 "		}); ";
+	%>
+
+
+	<liferay-ui:icon image="bottom"  url="<%=downModuleURLJavascript %>" />
+	
+	<portlet:actionURL name="upmodule" var="upModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+		<portlet:param name="resId" value="<%=primKey %>" />
+		<portlet:param name="moduleId" value="<%=Long.toString(moduleId)%>" />
+	</portlet:actionURL>
+
+	<%
+		String upModuleURLJavascript=
+				"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+						 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+						 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+						 "          activitiesListPortlet.remove(true); "+	
+						 "          A.io.request('"+ upModuleURL.toString() +"', {  "+
+						 "            on: {  "+
+						 "             		success: function() {  "+
+						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+						 "		                 if(activityNavigatorPortlet!=null) {  "+
+						 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+						 "			             }  "+	
+						 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+						 "          			 placeHolder.remove(true); "+	
+						 "             }  "+
+						 "            }  "+
+						 "          });  "+	 
+						 "		}); ";
+		%>
+
+	<liferay-ui:icon image="top"  url="<%=upModuleURLJavascript %>" />
 
 	<%
 	}
 	%>
 <c:if test="<%= permissionChecker.hasPermission(groupId, Module.class.getName(),primKey,
 ActionKeys.PERMISSIONS) %>">
+
+				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=Module.class.getName() %>"
 					modelResourceDescription="<%= module.getTitle(themeDisplay.getLocale()) %>"
 					resourcePrimKey="<%= String.valueOf(primKey) %>"
+					redirect="<%=redirectURL %>"
 					var="permissionsURL"
 				/>
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			

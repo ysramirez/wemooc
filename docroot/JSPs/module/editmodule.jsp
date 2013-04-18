@@ -22,18 +22,12 @@
 <portlet:defineObjects />
 
 <%
-	Long moduleId;
+	long moduleId=0;
 
 	if(module.getModuleId()!=0){
 		moduleId=module.getModuleId();
 	}
-	else{
-		moduleId=ParamUtil.getLong(renderRequest, "moduleId");
-		if(moduleId!=0){
-			module=ModuleLocalServiceUtil.getModule(moduleId);
-		}
-		
-	}
+
 %>
 
 <aui:model-context bean="module" model="<%= Module.class %>" />
@@ -76,11 +70,7 @@
 		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
 		<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initDescripcion" />
 		<aui:input id="descriptionhidden" name="description" type="hidden" />
-		
-		<portlet:renderURL var="cancelURL">
-			<portlet:param name="moduleId" value="<%=Long.toString(moduleId) %>"></portlet:param>
-		</portlet:renderURL>
-		
+				
 		<script type="text/javascript">
 	    <!--
 			function <portlet:namespace />initDescripcion() {
@@ -101,7 +91,7 @@
 					parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
 				}
 				else {
-					window.location.href='<%=cancelURL%>';
+					window.location.href='<portlet:renderURL />';
 				}
 		    }
 

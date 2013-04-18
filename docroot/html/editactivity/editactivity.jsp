@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="java.util.Map"%>
@@ -23,7 +24,7 @@
 
 
 <%
-long moduleId=ParamUtil.getLong(request,"moduleId",0);
+long moduleId=ParamUtil.getLong(request,"resModuleId",0);
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 long typeId=ParamUtil.getLong(request, "typeId");
@@ -31,7 +32,7 @@ AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactor
 Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
 
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
-long actId=ParamUtil.getLong(request, "actId",0);
+long actId=ParamUtil.getLong(request, "resId",0);
 LearningActivity learnact=null;
 if(request.getAttribute("activity")!=null)
 {
@@ -46,7 +47,7 @@ else
 	}
 	
 }
-ParamUtil.print(request);
+
 String typeName=classTypes.get(typeId);
 LearningActivityType larntype=new LearningActivityTypeRegistry().getLearningActivityType(typeId);
 
@@ -88,7 +89,6 @@ if(learnact!=null)
 	
 	<portlet:actionURL name="deleteMyTries" var="deleteMyTriesURL">
 		<portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
-		<portlet:param name="actId" value="0" />
 		<portlet:param name="redirect" value="<%=redirect %>" />
 		<portlet:param name="backURL" value="<%=backURL%>" />
 	</portlet:actionURL>
@@ -100,6 +100,7 @@ if(learnact!=null)
 		if(larntype.hasEditDetails()){
 		%>
 			<portlet:actionURL name="editactivity" var="editURL">
+				<portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
 				<portlet:param name="actId" value="<%=Long.toString(learnact.getActId()) %>" />
 			</portlet:actionURL>
 			<liferay-ui:icon image="edit" message="edit-activity-details" label="true" url="<%=editURL.toString() %>" />
@@ -126,8 +127,43 @@ else
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 		<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
-		<aui:input name="actId" type="hidden" value="<%=actId %>"/>
-		<aui:select label="module" name="moduleId">
+		<aui:input name="resId" type="hidden" value="<%=actId %>"/>
+
+<script type="text/javascript">
+<!--
+
+Liferay.provide(
+        window,
+        '<portlet:namespace />reloadComboActivities',
+        function(moduleId) {
+        	var A = AUI();
+			var renderUrl = Liferay.PortletURL.createRenderURL();							
+			renderUrl.setWindowState('<%= LiferayWindowState.EXCLUSIVE.toString() %>');
+			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
+			renderUrl.setParameter('jspPage','/html/editactivity/comboActivities.jsp');
+			renderUrl.setParameter('resId','<%=Long.toString(actId) %>');
+			renderUrl.setParameter('resModuleId',moduleId);
+			renderUrl.setParameter('precedence','<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>');
+
+			A.io.request(renderUrl.toString(),
+			{   
+			  on: 
+				{   
+					success: function() { 
+						A.one('#<portlet:namespace />precedence').
+							replace(A.Node.create(this.get('responseData')).one('select'));   
+					}   
+				}
+			}); 
+			
+        },
+        ['liferay-portlet-url']
+    );
+    
+//-->
+</script>
+
+		<aui:select label="module" name="resModuleId" onChange="<%=renderResponse.getNamespace()+\"reloadComboActivities(this.options[this.selectedIndex].value);\" %>">
 	<%
 	java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 	for(Module theModule:modules)
@@ -165,14 +201,16 @@ else
 		<aui:validator name="required" />
 		</aui:input>
 		<liferay-ui:error key="title-required" message="title-required" />
-	<aui:field-wrapper label="description">
+		<aui:field-wrapper label="description">
 			<liferay-ui:input-editor name="description" width="100%" />
-			<aui:input name="description" type="hidden" />
-				<script type="text/javascript">
-        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
-    </script>
+			<script type="text/javascript">
+		        function <portlet:namespace />initEditor() 
+		        { 
+		            return "<%= UnicodeFormatter.toString(description) %>"; 
+		        }
+		    </script>
 		</aui:field-wrapper>
-		    <liferay-ui:error key="description-required" message="description-required" />
+		<liferay-ui:error key="description-required" message="description-required" />
 	
 		<aui:field-wrapper label="start-date">
 			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
@@ -290,55 +328,41 @@ else
 	}
 %>
 		</aui:select>
-		<aui:select label="bloquing-activity" name="precedence">
-<%
-	java.util.List<LearningActivity> activities=null;
-	if(learnact!=null&&learnact.getModuleId()>0)
-	{
-		activities=LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(learnact.getModuleId());
-	}
-	if(activities==null)
-	{
-		activities=new ArrayList<LearningActivity>();
-	}
-%>
-			<aui:option value="0" >Ninguna</aui:option>
-<%
-	for(LearningActivity activity:activities)
-	{
-		if(activity.getActId()!=learnact.getActId())
-		{
-			boolean selected=false;
-			if(learnact.getPrecedence()>0 && learnact.getPrecedence()==activity.getActId())
-			{
-				
-				selected=true;
-			}
-		%>
-			<aui:option value="<%=activity.getActId() %>" selected="<%=selected %>"><%=activity.getTitle(themeDisplay.getLocale()) %></aui:option>
-		<% 
-		}
-	}
-%>
-		</aui:select>
+		
+		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
+			<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
+			<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
+			<liferay-util:param name="precedence" value="<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>" />
+		</liferay-util:include>
+
 		<aui:input name="tags" type="assetTags" />
 		<aui:input name="categories" type="assetCategories" />
 	</aui:fieldset>
 	
-		
-	<portlet:renderURL var="cancelURL">
-		<portlet:param name="actId" value="<%=Long.toString(actId) %>"></portlet:param>
-		<portlet:param name="moduleId" value="<%=Long.toString(moduleId) %>"></portlet:param>
-		<portlet:param name="jspPage" value="/html/editactivity/view.jsp" />
-	</portlet:renderURL>
-	
-	
 	<aui:button-row>
-		<% 
-		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
-		%>									
-
-		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
-		<aui:button onClick="<%=cancelURL %>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
+		<aui:button type="submit" ></aui:button>
+		
+		<script type="text/javascript">
+		<!--
+		
+		Liferay.provide(
+		        window,
+		        '<portlet:namespace />closeWindow',
+		        function() {
+			        
+					if ((!!window.postMessage)&&(window.parent != window)) {
+						parent.postMessage({name:'closeActivity',
+							                moduleId:<%=Long.toString(moduleId)%>,
+							                actId:<%=Long.toString(actId)%>}, window.location.origin);
+					}
+					else {
+						window.location.href='<portlet:renderURL />';
+					}
+		        }
+		    );
+		    
+		//-->
+		</script>
+		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
 	</aui:button-row>
 </aui:form>
