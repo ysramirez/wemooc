@@ -24,8 +24,8 @@ String urlIndex="http://localhost:8080/liferaylms-portlet/scorm/"+Long.toString(
 
    <script type="text/javascript">
      function InitPlayer() {
-       PlayerConfiguration.Debug = false;
-       PlayerConfiguration.StorageSupport = true;
+       PlayerConfiguration.Debug = true;
+       PlayerConfiguration.StorageSupport = false;
 
        PlayerConfiguration.TreeMinusIcon = "/liferaylms-portlet/icons/scorm/minus.gif";
        PlayerConfiguration.TreePlusIcon = "/liferaylms-portlet/icons/scorm/plus.gif";
@@ -61,5 +61,6 @@ String urlIndex="http://localhost:8080/liferaylms-portlet/scorm/"+Long.toString(
        </table>
       </td>
     </tr>
-   
+   <div id="debuggerContainer">
+   </div>
   </table>
