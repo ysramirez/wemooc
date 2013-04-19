@@ -88,7 +88,7 @@
 		<%
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		long moduleIde = ParamUtil.getLong(request,"moduleId",0);
-		module theModule=null;
+		Module theModule=null;
 		if(moduleIde>0)
 		{
 			theModule=ModuleLocalServiceUtil.getModule(moduleIde);
