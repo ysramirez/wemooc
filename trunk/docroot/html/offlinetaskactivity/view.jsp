@@ -1,4 +1,3 @@
-
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
@@ -100,8 +99,8 @@
 						AUI().use('aui-dialog','liferay-portlet-url','event', function(A){
 							window.<portlet:namespace />popupImportGrades = new A.Dialog({
 								id:'<portlet:namespace />showPopupImportGrades',
-					            title: '<liferay-ui:message key="offlinetaskactivity.import.grades" />',
-					            centered: true,
+					            title: '<liferay-message key="offlinetaskactivity.import.grades" />',
+						    	centered: true,
 					            modal: true,
 					            width: 450,
 					            height: 220,
@@ -205,6 +204,7 @@
 				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'
 				/>
 				<% } %>
+				<h2><liferay-ui:message key="offlinetaskactivity.description" />  </h2>
 				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 				
 				
@@ -227,14 +227,16 @@
 				<aui:form name="studentsearch" action="<%=returnurl %>" method="post">
 					<aui:fieldset>
 						<aui:column>
-							<aui:input label="studentsearch.criteria" name="criteria" size="20" value="<%=criteria %>" />	
+							<aui:input label="studentsearch.text.criteria" name="criteria" size="25" value="<%=criteria %>" />	
 						</aui:column>	
 						<aui:column>
-							<aui:select label="offlinetaskactivity.is.passed" name="gradeFilter" onchange='<%="document.getElementById(\'" + renderResponse.getNamespace() + "studentsearch\').submit();" %>'>
+							<aui:select label="offlinetaskactivity.status" name="gradeFilter" onchange='<%="document.getElementById(\'" + renderResponse.getNamespace() + "studentsearch\').submit();" %>'>
 								<aui:option selected='<%= gradeFilter.equals("") %>' value=""><liferay-ui:message key="offlinetaskactivity.all" /></aui:option>
+								<aui:option selected='<%= gradeFilter.equals("nocalification") %>' value="statuspassed"><liferay-ui:message key="offlinetaskactivity.status.passed" /></aui:option>
 								<aui:option selected='<%= gradeFilter.equals("passed") %>' value="passed"><liferay-ui:message key="offlinetaskactivity.passed" /></aui:option>
 								<aui:option selected='<%= gradeFilter.equals("failed") %>' value="failed"><liferay-ui:message key="offlinetaskactivity.failed" /></aui:option>
 							</aui:select>
+							<aui:button name="searchUsers" value="search" type="submit" />
 						</aui:column>	
 						<aui:button-row>
 							<aui:button name="searchUsers" value="search" type="submit" />
@@ -255,9 +257,18 @@
 							if(gradeFilter.equals("passed")) {
 								params.put("passed",new CustomSQLParam(OfflineActivity.ACTIVITY_RESULT_PASSED_SQL,actId));
 							}
-							else if(gradeFilter.equals("failed")) {
-								params.put("failed",new CustomSQLParam(OfflineActivity.ACTIVITY_RESULT_FAIL_SQL,actId));
+							else {
+								if(gradeFilter.equals("failed")) {
+									params.put("failed",new CustomSQLParam(OfflineActivity.ACTIVITY_RESULT_FAIL_SQL,actId));
+								} else {
+									if (gradeFilter.equals("nocalification")) {
+										params.put("nocalification",new CustomSQLParam(OfflineActivity.ACTIVITY_RESULT_NO_CALIFICATION_SQL,actId));
+									}
+								}
 							}
+							
+							
+						
 														
 							OrderByComparator obc = new UserFirstNameComparator(true);
 							

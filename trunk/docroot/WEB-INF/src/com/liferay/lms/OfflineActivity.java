@@ -52,7 +52,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 
 
 /**
- * Portlet implementation class SurveyActivity
+ * Portlet implementation class OfflineActivity
  */
 public class OfflineActivity extends MVCPortlet {
 	
@@ -63,6 +63,9 @@ public class OfflineActivity extends MVCPortlet {
 	public static final String ACTIVITY_RESULT_FAIL_SQL = "WHERE (EXISTS (SELECT 1 FROM lms_learningactivityresult " +
 			"WHERE User_.userId = lms_learningactivityresult.userId AND lms_learningactivityresult.result > 0" +
 			" AND lms_learningactivityresult.passed = 0 AND lms_learningactivityresult.actId = ? ))"; 
+	
+	public static final String ACTIVITY_RESULT_NO_CALIFICATION_SQL = "WHERE (NOT EXISTS (SELECT 1 FROM lms_learningactivityresult " +
+			"WHERE User_.userId = lms_learningactivityresult.userId AND lms_learningactivityresult.actId = ? ))"; 
 	
 	@Override
 	public void serveResource(ResourceRequest resourceRequest,
