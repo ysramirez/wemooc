@@ -16,32 +16,41 @@
 <%@ include file="/init.jsp" %>
 
 <script type="text/javascript">
-	function changeDiv(id){
-		if(id=="1"){
-			$("#capa1").css('display','block');
-		    $("#capa2").css('display','none');
-		    $("#capa3").css('display','none');
-		    $("#span1").addClass('selected');
-		    $("#span2").removeClass('selected');
-		    $("#span3").removeClass('selected');
-		}else if(id=="2"){
-			$("#capa1").css('display','none');
-			$("#capa2").css('display','block');
-			$("#capa3").css('display','none');
-			$("#span1").removeClass('selected');
-		    $("#span2").addClass('selected');
-		    $("#span3").removeClass('selected');
-		}
-		else if(id=="3"){
-			$("#capa1").css('display','none');
-			$("#capa2").css('display','none');
-			$("#capa3").css('display','block');
-			$("#span1").removeClass('selected');
-		    $("#span2").removeClass('selected');
-		    $("#span3").addClass('selected');
-		}
-	}
-	
+<!--
+	Liferay.provide(
+        window,
+        '<portlet:namespace />changeDiv',
+        function(id) {
+			var A = AUI();
+
+			if(id=="1"){				
+				A.one("#capa1").setStyle('display','block');
+				A.one("#capa2").setStyle('display','none');
+				A.one("#capa3").setStyle('display','none');
+				A.one("#span1").addClass('selected');
+				A.one("#span2").removeClass('selected');
+				A.one("#span3").removeClass('selected');
+			}else if(id=="2"){
+				A.one("#capa1").setStyle('display','none');
+				A.one("#capa2").setStyle('display','block');
+				A.one("#capa3").setStyle('display','none');
+				A.one("#span1").removeClass('selected');
+				A.one("#span2").addClass('selected');
+				A.one("#span3").removeClass('selected');
+			}
+			else if(id=="3"){
+				A.one("#capa1").setStyle('display','none');
+				A.one("#capa2").setStyle('display','none');
+				A.one("#capa3").setStyle('display','block');
+				A.one("#span1").removeClass('selected');
+				A.one("#span2").removeClass('selected');
+				A.one("#span3").addClass('selected');
+			}						
+        },
+        ['node']
+    );
+    
+	//-->
 </script>
 
 <%
@@ -92,21 +101,21 @@ if(actId!=0)
 		if(!learnResult.getPassed()){
 			classCSS2="selected";
 			if(showRevision==1)
-				javascript="changeDiv(3);";
+				javascript=renderResponse.getNamespace()+"changeDiv(3);";
 			else
-				javascript="changeDiv(2);";
+				javascript=renderResponse.getNamespace()+"changeDiv(2);";
 		}
 		else{
 			classCSS3="selected";
-			javascript="changeDiv(3);";
+			javascript=renderResponse.getNamespace()+"changeDiv(3);";
 			passed="done";
 		}
 		
 	%>
 	<div class="steps">
-		<span id="span1" onclick="changeDiv(1)" class="clicable done"><liferay-ui:message key="p2ptask-step1-resume" />&nbsp;>&nbsp;</span>
-		<span id="span2" class="<%=classCSS2 %> clicable <%=passed%>" onclick="changeDiv(2)"><liferay-ui:message key="p2ptask-step2-resume" />&nbsp;>&nbsp;</span>
-		<span id="span3" class="<%=classCSS3 %> clicable" onclick="changeDiv(3)"><liferay-ui:message key="p2ptask-step3-resume" /></span>
+		<span id="span1" onclick="<portlet:namespace />changeDiv(1)" class="clicable done"><liferay-ui:message key="p2ptask-step1-resume" />&nbsp;>&nbsp;</span>
+		<span id="span2" class="<%=classCSS2 %> clicable <%=passed%>" onclick="<portlet:namespace />changeDiv(2)"><liferay-ui:message key="p2ptask-step2-resume" />&nbsp;>&nbsp;</span>
+		<span id="span3" class="<%=classCSS3 %> clicable" onclick="<portlet:namespace />changeDiv(3)"><liferay-ui:message key="p2ptask-step3-resume" /></span>
 	</div>
 	<div class="preg_content" id="capa1" style="display:none">
 		<%
