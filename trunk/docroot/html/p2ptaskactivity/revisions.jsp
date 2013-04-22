@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
+<%@page import="com.liferay.portal.kernel.util.Constants"%>
 <%@page import="com.liferay.lms.service.P2pActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.P2pActivity"%>
 <%@page import="com.liferay.portal.service.UserGroupLocalServiceUtil"%>
@@ -47,8 +49,8 @@
 				
 				OrderByComparator obc = null;
 				
-				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, true, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, true, params);
+				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_APPROVED, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_APPROVED, params);
 						
 				pageContext.setAttribute("results", userListPage);
 			    pageContext.setAttribute("total", userCount);

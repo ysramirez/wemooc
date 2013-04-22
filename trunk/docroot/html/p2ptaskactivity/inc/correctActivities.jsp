@@ -1,3 +1,5 @@
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
+<%@page import="com.liferay.portal.kernel.util.Constants"%>
 <%@page import="java.util.Collection"%>
 <%@page import="com.liferay.lms.service.impl.LearningActivityLocalServiceImpl"%>
 <%@page import="com.liferay.lms.model.Module"%>
@@ -60,71 +62,196 @@ if(resultString.equals("true")){
 <script type="text/javascript">
 	var noFile ='<liferay-ui:message key="p2ptaskactivity.inc.nofileselected" />';
 	
-	function checkDataformC(thisForm){
-		var selector = 'form[name="'+thisForm+'"]';
-		var descriptionVal = $(selector).contents().find('textarea[name="<portlet:namespace />description"]').val();
-		if(descriptionVal=="" || descriptionVal=="<%=textoCorrecion%>"){
-			alert('<liferay-ui:message key="p2ptask-no-empty-answer" />');
-		}
-		else{
-			openPopUp(thisForm);
-		}
-	}
-	function clearText(id){
-		var idtext = "#"+id;
-		var textReplace = "<%=textoCorrecion%>";
-		if($(idtext).val()==textReplace){
-			$(idtext).val("");
-		}
-	}
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />checkDataformC',
+	        function (thisForm) {
+				var A = AUI();
+				
+				var selector = 'form[name="'+thisForm+'"]';
+				var descriptionVal = A.one(selector).one('textarea[name="<portlet:namespace />description"]').val();
+				if (descriptionVal == "" || descriptionVal == "<%= StringEscapeUtils.unescapeHtml(textoCorrecion) %>") {
+					alert('<liferay-ui:message key="p2ptask-no-empty-answer" />');
+				}
+				else {
+					<portlet:namespace />openPopUp(thisForm);
+				}
+	        },
+	        ['node']
+	);
 	
-	function openPopUp(formName){
-		var selector = 'form[name="'+formName+'"]';
-		var fileName =$(selector).contents().find('input[name="<portlet:namespace />fileName"]').val();
-		var textDesc = $(selector).contents().find('textarea[name="<portlet:namespace />description"]').val();
-		var textResult = $('select[name="<portlet:namespace />resultuser"]').val(); // $(selector).contents().find('select[name="<portlet:namespace />resultuser"]').val();
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />clearText',
+	        function (id) {
+				var A = AUI();
+				
+				var idtext = "#"+id;
+				
+				var textReplace = "<%= StringEscapeUtils.unescapeHtml(textoCorrecion)  %>";
+				if (A.one(idtext).val() == textReplace) {
+					A.one(idtext).val("");
+				}
+	        },
+	        ['node']
+	);
+	
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />openPopUp',
+	        function (formName) {
+				var A = AUI();
+				
+				var selector = 'form[name="'+formName+'"]';
+				var fileName = A.one(selector).one('input[name="<portlet:namespace />fileName"]').val();
+				var textDesc = A.one(selector).one('textarea[name="<portlet:namespace />description"]').val();
+				var textResult = A.one('select[name="<portlet:namespace />resultuser"]').val();
 
-		if(fileName!=""){
-			var pos = fileName.lastIndexOf("\\");
-			if(pos>0)
-				fileName = fileName.substring(pos+1);
-			
-		}else{
-			fileName = noFile;
-		}
-		$("#contentFileCorrec").html(fileName);
-		$("#contentDescriptionCorrec").html(textDesc);
-		$("#contentResult").html(textResult);
-		$("#submitCorrec").click(function(){commitForm(formName);});
-		
-		//Start opening popUp
-		$('#p2pconfrmCorrec').modal();
-	}
-
-	function commitForm(formName){
-		var selector = 'form[name="'+formName+'"]';
-		$("#submitCorrec").attr("disabled", "disabled");
-		$(selector).submit();
-	}
+				if (fileName != "") {
+					var pos = fileName.lastIndexOf("\\");
+					if (pos > 0) {
+						fileName = fileName.substring(pos + 1);
+					}
+				} else {
+					fileName = noFile;
+				}
+				
+				//Start opening popUp
+				if(A.one('#<portlet:namespace />p2pconfrmCorrec')) {
+					window.<portlet:namespace />p2pconfrmCorrecTitle = A.one('#<portlet:namespace />p2pconfrmCorrec h1').html();
+					window.<portlet:namespace />p2pconfrmCorrecBody = A.one('#<portlet:namespace />p2pconfrmCorrec').html();
+					A.one('#<portlet:namespace />p2pconfrmCorrec').remove();
+				}
+				
+				window.<portlet:namespace />p2pconfrmCorrec = new A.Dialog({
+					id:'<portlet:namespace />showp2pconfrmCorrec',
+					title: window.<portlet:namespace />p2pconfrmCorrecTitle,
+		            bodyContent: window.<portlet:namespace />p2pconfrmCorrecBody,
+		            centered: true,
+		            modal: true,
+		            width: "auto",
+		            height: "auto"
+		        }).render();
+		        
+				A.one("#contentFileCorrec").html(fileName);
+				A.one("#contentDescriptionCorrec").html(textDesc);
+				A.one("#contentResult").html(textResult);
+				A.one("#submitCorrec").on('click', function(){<portlet:namespace />commitForm(formName);});
+				
+				window.<portlet:namespace />p2pconfrmCorrec.show();
+	        },
+	        ['node','aui-dialog']
+	);
 	
-	function closeModal(){
-		$.modal.close();
-		window.setTimeout(function() {jQuery('#p2pCorrectionCompleted').modal()}, 300);
-	}
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />commitForm',
+	        function (formName) {
+	        	var A = AUI();
+				var selector = 'form[name="'+formName+'"]';
+				A.one("#submitCorrec").attr("disabled", "disabled");
+				A.one(selector).submit();
+	        },
+	        ['node']
+	);
 	
-	function openSaved(){
-		$("#p2pSaved").modal();
-	}
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />closeModal',
+	        function () {
+	        	var A = AUI();
+	        	A.DialogManager.closeByChild('#<portlet:namespace />showp2pSaved');
+				window.setTimeout(function() {<portlet:namespace />openCompleted();}, 300);
+	        },
+	        ['aui-dialog']
+	);
 	
-	function openCompleted(){
-		$("#p2pCorrectionCompleted").modal();
-		
-	}
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />openSaved',
+	        function () {
+	        	var A = AUI();
+	        	
+				if(A.one('#<portlet:namespace />p2pSaved')){
+					window.<portlet:namespace />p2pSavedTitle = A.one('#<portlet:namespace />p2pSaved h1').html();
+					window.<portlet:namespace />p2pSavedBody = A.one('#<portlet:namespace />p2pSaved').html();
+					A.one('#<portlet:namespace />p2pSaved').remove();
+				}
+				
+				window.<portlet:namespace />p2pSaved = new A.Dialog({
+					id:'<portlet:namespace />showp2pSaved',
+		            title: window.<portlet:namespace />p2pSavedTitle,
+		            bodyContent: window.<portlet:namespace />p2pSavedBody,
+		            centered: true,
+		            modal: true,
+		            width: "auto",
+		            height: "auto"
+		        }).render().show();
+	        },
+	        ['aui-dialog']
+	);
+	
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />openCompleted',
+	        function () {
+	        	var A = AUI();
+	        	
+	        	if(A.one('#<portlet:namespace />p2pCorrectionCompleted')){
+					window.<portlet:namespace />p2pCorrectionCompletedTitle = A.one('#<portlet:namespace />p2pCorrectionCompleted h1').html();
+					window.<portlet:namespace />p2pCorrectionCompletedBody = A.one('#<portlet:namespace />p2pCorrectionCompleted').html();
+					A.one('#<portlet:namespace />p2pCorrectionCompleted').remove();
+				}
+				
+				window.<portlet:namespace />p2pCorrectionCompleted = new A.Dialog({
+					id:'<portlet:namespace />showp2pCorrectionCompleted',
+		            title: window.<portlet:namespace />p2pCorrectionCompletedTitle,
+		            bodyContent: window.<portlet:namespace />p2pCorrectionCompletedBody,
+		            centered: true,
+		            modal: true,
+		            width: "auto",
+		            height: "auto"
+		        }).render().show();				
+	        },
+	        ['aui-dialog']
+	);
+	
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />closeConfirmationCorrection',
+	        function() {
+				var A = AUI();
+				
+				A.DialogManager.closeByChild('#<portlet:namespace />showp2pconfrmCorrec');
+	        },
+	        ['aui-dialog']
+	    );
+	
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />closeFormP2pSaved',
+	        function() {
+				var A = AUI();
+				A.DialogManager.closeByChild('#<portlet:namespace />showp2psaved');
+	        },
+	        ['aui-dialog']
+	    );
+	
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />closeFormsP2pCorrectionCompleted',
+	        function() {
+				var A = AUI();
+				A.DialogManager.closeByChild('#<portlet:namespace />showp2pCorrectionCompleted');
+	        },
+	        ['aui-dialog']
+	    );
+	
 </script>
 
 <!-- Start PopUp confirmation -->
 
-<div id="p2pconfrmCorrec" style="display:none">
+<div id="<portlet:namespace />p2pconfrmCorrec" style="display:none">
 	<h1><liferay-ui:message key="p2ptask-uploadcorrect-confirmation" /></h1>
 	<div class="desc color_tercero"><liferay-ui:message key="p2ptask-uploadcorrect-description" /></div>
 	<br />
@@ -137,7 +264,7 @@ if(resultString.equals("true")){
 		<p class="message"><liferay-ui:message key="p2ptask-uploadcorrect-task-message" /></p>
 	</div>
 	<div class="buttons">
-		<input type="button" class="button simplemodal-close" value="<liferay-ui:message key="cancel" />" />
+		<input type="button" class="button simplemodal-close" onclick="<portlet:namespace />closeConfirmationCorrection()" value="<liferay-ui:message key="cancel" />" />
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<input type="button" class="button" id="submitCorrec" value="<liferay-ui:message key="p2ptask-correction" />" />
 	</div>
@@ -145,7 +272,7 @@ if(resultString.equals("true")){
 <!-- End PopUp confrimation -->
 
 
-<div id="p2pCorrectionCompleted" style="display:none">
+<div id="<portlet:namespace />p2pCorrectionCompleted" style="display:none">
 	<h1><liferay-ui:message key="p2ptaskactivity.inc.p2pcorrectioncompleted.title" /></h1>
 	<div class="desc color_tercero"><liferay-ui:message key="p2ptaskactivity.inc.p2pcorrectioncompleted.subtitle" /></div>
 	<br />
@@ -153,11 +280,11 @@ if(resultString.equals("true")){
 		<p><liferay-ui:message key="p2ptaskactivity.inc.p2pcorrectioncompleted.message" /></p>
 	</div>
 	<div class="buttons">
-		<input type="button" class="button simplemodal-close" id="buttonClose" value="<liferay-ui:message key="close" />" onclick="closeForm()" />
+		<input type="button" class="button simplemodal-close" id="buttonClose" value="<liferay-ui:message key="close" />" onclick="<portlet:namespace />closeFormsP2pCorrectionCompleted()" />
 	</div>
 </div>
 
-<div id="p2pSaved" style="display:none">
+<div id="<portlet:namespace />p2pSaved" style="display:none">
 	<h1><liferay-ui:message key="p2ptaskactivity.inc.p2puploadedcompleted.title" /></h1>
 	<div class="desc color_tercero"><liferay-ui:message key="p2ptaskactivity.inc.p2puploadedcompleted.subtitle" /></div>
 	<br />
@@ -166,9 +293,9 @@ if(resultString.equals("true")){
 	</div>
 	<div class="buttons">
 	<%if(correctionsCompleted.equals("true")){ %>
-		<input type="button" class="button " id="completed" value="<liferay-ui:message key="close" />" onclick="closeModal();" />
+		<input type="button" class="button " id="<portlet:namespace />completed" value="<liferay-ui:message key="close" />" onclick="<portlet:namespace />closeModal();" />
 	<%}else{ %>
-		<input type="button" class="button simplemodal-close" id="buttonClose" value="<liferay-ui:message key="close" />" onclick="closeForm()" />
+		<input type="button" class="button simplemodal-close" id="buttonClose" value="<liferay-ui:message key="close" />" onclick="<portlet:namespace />closeFormP2pSaved()" />
 	<%} %>
 	</div>
 </div>
@@ -294,7 +421,7 @@ if(!p2pActList.isEmpty()){
 							</div>
 							
 							<div class="container-textarea">
-								<textarea rows="6" cols="90" name="<portlet:namespace />description" onfocus="clearText('<portlet:namespace />description_<%=cont%>')" id="<portlet:namespace />description_<%=cont%>"><%=textoCorrecion %></textarea>
+								<textarea rows="6" cols="90" name="<portlet:namespace />description" onfocus="javascript:<portlet:namespace />clearText('<portlet:namespace />description_<%=cont%>')" id="<portlet:namespace />description_<%=cont%>"><%=textoCorrecion %></textarea>
 							</div>
 							<liferay-ui:error key="p2ptaskactivity-error-file-size" message="p2ptaskactivity.error.file.size" />
 							<div class="container-file">
@@ -312,7 +439,7 @@ if(!p2pActList.isEmpty()){
 								</div>
 							</c:if>
 							<div>
-								<input type="button" class="button floatr" value="<liferay-ui:message key="p2ptask-correction" />" onclick="checkDataformC('<portlet:namespace />f1_<%=cont%>')" />
+								<input type="button" class="button floatr" value="<liferay-ui:message key="p2ptask-correction" />" onclick="<portlet:namespace />checkDataformC('<portlet:namespace />f1_<%=cont%>')" />
 							</div>
 						</form>
 					</div>
@@ -368,7 +495,7 @@ if(!p2pActList.isEmpty()){
 						<div class="degradade">
 							<div class="subtitle"><liferay-ui:message key="p2ptask-your-valoration" /> :</div>
 							<div class="container-textarea">
-								<textarea rows="6" cols="80" name="description" readonly="readonly"><%=description %></textarea>
+								<textarea rows="6" cols="80" name="<portlet:namespace />description" readonly="readonly"><%=description %></textarea>
 							</div>
 							<%
 							if(myP2PActiCor.getFileEntryId()!=0){
@@ -425,7 +552,7 @@ if(p2pActList.isEmpty()){
 if(correctionsSaved.equals("true")){
 	correctionsSaved="false";
 	request.setAttribute("correctionsSaved", correctionsSaved);
-	%><script>openSaved();</script><%
+	%><script><portlet:namespace />openSaved();</script><%
 }
 
 %>
