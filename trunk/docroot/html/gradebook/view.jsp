@@ -14,6 +14,7 @@
 <%@page import="com.liferay.lms.asset.LearningActivityAssetRendererFactory"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
+<%@page import="java.util.Arrays"%>
 <%@ include file="/init.jsp" %>
 <liferay-ui:panel-container >
 <%
@@ -53,20 +54,25 @@ for(LearningActivity learningActivity:activities)
 <%
 for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId()))
 {
+	String[] troles = {"courseTeacher", "Site Owner", "courseEditor", "Administrator", "Site Administrator"};
+	List<String> teacherRoles = Arrays.asList(troles);
 	
 	boolean isTeacher=false; 
 	for(Role role : RoleLocalServiceUtil.getUserGroupRoles(usuario.getUserId(), themeDisplay.getScopeGroupId())){
-		if(("courseTeacher".equals(role.getName()))||("Site Owner".equals(role.getName()))||("courseEditor".equals(role.getName()))) {
+		if(teacherRoles.contains(role.getName())) {
 			isTeacher=true;
 			break;
 		}
 	}
 	
-	boolean isUserWatchingATeacher=false;
-	for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId())){
-		if(("courseTeacher".equals(role.getName()))||("Site Owner".equals(role.getName()))||("courseEditor".equals(role.getName()))||(RoleConstants.ADMINISTRATOR.equals(role.getName()))) {
-			isUserWatchingATeacher=true;
-			break;
+	boolean isUserWatchingATeacher=permissionChecker.isOmniadmin();
+	if(!isUserWatchingATeacher){
+		for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId())){
+			System.out.println(role.getName());
+			if(teacherRoles.contains(role.getName())) {
+				isUserWatchingATeacher=true;
+				break;
+			}
 		}
 	}
 	
