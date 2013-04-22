@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
 <%@page import="com.liferay.portal.security.permission.ActionKeys"%>
 <%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
 <%@page import="com.liferay.portal.model.ResourceConstants"%>
@@ -77,7 +78,7 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 			"});");
 
 %>
-	<liferay-ui:icon image="edit" message="edit" url="<%=editActivityPopup.toString() %>" />
+	<liferay-ui:icon image="edit" message="edit" url="#" onClick="<%=editActivityPopup.toString() %>" />
 </c:if>
 
 
@@ -90,11 +91,12 @@ ActionKeys.DELETE) %>">
 	
 	<%
 		String deleteURLJavascript=
-				"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+				"javascript:if (confirm('"+LanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this")+"')) {"+
+						 "		AUI().use('node','aui-io-request', function(A){  "+ 
 						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
 						 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
 						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-						 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
 						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 						 "          activitiesListPortlet.remove(true); "+	
 						 "          A.io.request('"+ deleteURL.toString() +"', {  "+
@@ -111,10 +113,11 @@ ActionKeys.DELETE) %>">
 						 "             }  "+
 						 "            }  "+
 						 "          });  "+	 
-						 "		}); ";
+						 "		}); "+ 
+						 "  }";
 	%>
 	
-	<liferay-ui:icon-delete url="<%=deleteURLJavascript %>" />
+	<liferay-ui:icon image="delete" message="delete" url="#" onClick="<%=deleteURLJavascript %>" />
 	
 </c:if>
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
@@ -129,7 +132,7 @@ ActionKeys.UPDATE) %>">
 					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
 					 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
 					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-					 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+					 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
 					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 					 "          activitiesListPortlet.remove(true); "+	
 					 "          A.io.request('"+ downURL.toString() +"', {  "+
@@ -149,7 +152,7 @@ ActionKeys.UPDATE) %>">
 					 "		}); ";
 %>
 
-<liferay-ui:icon image="bottom" url="<%=downURLJavascript %>"/>
+<liferay-ui:icon image="bottom" url="#" onClick="<%=downURLJavascript %>"/>
 
 <portlet:actionURL name="upactivity" var="upURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
 <portlet:param name="resId" value="<%=primKey %>" />
@@ -161,7 +164,7 @@ ActionKeys.UPDATE) %>">
 					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
 					 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
 					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-					 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+					 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
 					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 					 "          activitiesListPortlet.remove(true); "+	
 					 "          A.io.request('"+ upURL.toString() +"', {  "+
@@ -181,7 +184,7 @@ ActionKeys.UPDATE) %>">
 					 "		}); ";
 %>
 
-<liferay-ui:icon image="top" url="<%=upURLJavascript %>"/>
+<liferay-ui:icon image="top" url="#" onClick="<%=upURLJavascript %>"/>
 
 </c:if>
 
@@ -213,7 +216,7 @@ ActionKeys.PERMISSIONS) %>">
 					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
 					 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
 					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-					 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+					 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
 					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 					 "          activitiesListPortlet.remove(true); "+	
 					 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
@@ -233,4 +236,4 @@ ActionKeys.PERMISSIONS) %>">
 					 "		}); ";
 %>
 
-<liferay-ui:icon image="<%=(visible)?\"eye\":\"eyeno\" %>" url="<%=visibiltyURLJavascript %>"/>
+<liferay-ui:icon image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>

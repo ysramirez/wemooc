@@ -69,7 +69,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 		
 		//-->
 		</script>
-		<liferay-ui:icon image="edit" url="<%= \"javascript:\"+renderResponse.getNamespace()+\"openEditModulePopup('\"+primKey+\"')\" %>" />
+		<liferay-ui:icon image="edit" url="#" onClick="<%= \"javascript:\"+renderResponse.getNamespace()+\"openEditModulePopup('\"+primKey+\"')\" %>" />
 
 		<%
 	}
@@ -85,11 +85,12 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	
 		<%
 			String deleteModuleURLJavascript=
-					"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+					"javascript:if (confirm('"+LanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this")+"')) {"+
+							 "		AUI().use('node','aui-io-request', function(A){  "+ 
 							 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
 							 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
 							 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-							 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+							 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+		
 							 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 							 "          activitiesListPortlet.remove(true); "+	
 							 "          A.io.request('"+ deleteModuleURL.toString() +"', {  "+
@@ -106,10 +107,11 @@ String primKey = String.valueOf(module.getPrimaryKey());
 							 "             }  "+
 							 "            }  "+
 							 "          });  "+	 
-							 "		}); ";
+							 "		}); "+ 
+							 "  }";
 		%>
 
-		<liferay-ui:icon-delete url="<%=deleteModuleURLJavascript %>" />
+		<liferay-ui:icon image="delete" message="delete" url="#" onClick="<%=deleteModuleURLJavascript %>" />
 <%
 	}
 	%>
@@ -129,7 +131,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
 						 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
 						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-						 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+							 
 						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 						 "          activitiesListPortlet.remove(true); "+	
 						 "          A.io.request('"+ downModuleURL.toString() +"', {  "+
@@ -150,7 +152,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 	%>
 
 
-	<liferay-ui:icon image="bottom"  url="<%=downModuleURLJavascript %>" />
+	<liferay-ui:icon image="bottom"  url="#" onClick="<%=downModuleURLJavascript %>" />
 	
 	<portlet:actionURL name="upmodule" var="upModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
 		<portlet:param name="resId" value="<%=primKey %>" />
@@ -163,7 +165,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
 						 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
 						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-						 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+		
 						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 						 "          activitiesListPortlet.remove(true); "+	
 						 "          A.io.request('"+ upModuleURL.toString() +"', {  "+
@@ -183,7 +185,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 						 "		}); ";
 		%>
 
-	<liferay-ui:icon image="top"  url="<%=upModuleURLJavascript %>" />
+	<liferay-ui:icon image="top"  url="#" onClick="<%=upModuleURLJavascript %>" />
 
 	<%
 	}
