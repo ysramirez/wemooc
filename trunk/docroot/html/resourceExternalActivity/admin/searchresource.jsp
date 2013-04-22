@@ -2,6 +2,15 @@
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@ include file="/html/resourceExternalActivity/admin/init.jsp" %>
+<liferay-portlet:renderURL var="backURL" >
+	<liferay-portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/edit.jsp"/>
+	<liferay-portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
+	<liferay-portlet:param name="resModuleId" value="<%=Long.toString(learnact.getModuleId()) %>" />
+	<liferay-portlet:param name="actionEditingDetails" value="true"/>
+</liferay-portlet:renderURL>
+<liferay-ui:icon image="back" message="back" label="true" url="<%=backURL.toString() %>" />
+
+<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 
 <%
 List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetRendererFactories();
@@ -9,8 +18,8 @@ List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetR
 %>
 <liferay-portlet:renderURL var="selectResource">
 <liferay-portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/searchresults.jsp"/>
- <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
-
+<liferay-portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>"/>
+<liferay-portlet:param name="actionEditingDetails" value="true" />
 </liferay-portlet:renderURL>
 <aui:form name="<portlet:namespace />ressearch" action="<%=selectResource %>" method="POST">
 <aui:select name="className" label="asset-type">

@@ -1,3 +1,8 @@
+<%@page import="java.util.HashMap"%>
+<%@page import="java.io.Serializable"%>
+<%@page import="com.liferay.portal.kernel.search.IndexerRegistryUtil"%>
+<%@page import="java.util.Map"%>
+<%@page import="com.liferay.portal.kernel.search.SearchContext"%>
 <%@page import="com.liferay.portal.kernel.search.Field"%>
 <%@page import="com.liferay.portal.kernel.search.Document"%>
 <%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryQuery"%>
@@ -19,8 +24,25 @@ total=0;
 if(keywords.length()>0)
 {
 
-Hits hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(),groupIds,selarf.getPortletId(),keywords,keywords,keywords,null,null,false,searchContainer.getStart(), searchContainer.getEnd());
+SearchContext searchContext = new SearchContext();
 
+searchContext.setAndSearch(false);
+
+Map<String, Serializable> attributes = new HashMap<String, Serializable>();
+
+attributes.put(Field.DESCRIPTION, keywords);
+attributes.put(Field.TITLE, keywords);
+attributes.put(Field.USER_NAME, keywords);
+
+searchContext.setAttributes(attributes);
+
+searchContext.setCompanyId(themeDisplay.getCompanyId());
+searchContext.setEnd(searchContainer.getEnd());
+searchContext.setGroupIds(groupIds);
+searchContext.setPortletIds(new String[] {selarf.getPortletId()});
+searchContext.setStart(searchContainer.getStart());
+
+Hits hits = IndexerRegistryUtil.getIndexer(AssetEntry.class).search(searchContext);
 
 results = new ArrayList<AssetEntry>();
 for(Document doc : hits.getDocs()) { 
@@ -58,7 +80,8 @@ property="title"
 orderable="false"
 />
 <liferay-portlet:actionURL name="selectResource" var="selectResourceURL">
- <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
+ <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="resId"/>
+ <liferay-portlet:param value="true" name="actionEditingDetails"/>
  <liferay-portlet:param value="/html/resourceExternalActivity/admin/resource.jsp" name="jspPage"/>
  <liferay-portlet:param value="<%=Long.toString(assetEntry.getEntryId()) %>" name="entryId"/>
 </liferay-portlet:actionURL>

@@ -17,6 +17,14 @@
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 
 <%@ include file="/html/resourceExternalActivity/admin/init.jsp" %>
+<liferay-portlet:actionURL portletName="editactivity_WAR_liferaylmsportlet" name="editactivityoptions" var="backURL" >
+	<liferay-portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
+	<liferay-portlet:param name="resModuleId" value="<%=Long.toString(learnact.getModuleId()) %>" />
+</liferay-portlet:actionURL>
+<liferay-ui:icon image="back" message="back" label="true" url="<%=backURL.toString() %>" />
+
+<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
+
 <%
 String advancedKey="ADVANCED";
 AssetEntry pentry=null;
@@ -39,11 +47,13 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 
 <aui:model-context bean="<%= learnact %>" model="<%= LearningActivity.class %>" />
 <portlet:renderURL var="cancel">
-	<portlet:param name="actId" value="0" />
+	<portlet:param name="resId" value="0" />
 </portlet:renderURL>
 
 <portlet:actionURL var="editresourceURL" name="addfiles">
-<portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/edit.jsp" />
+	<portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/edit.jsp" />
+	<portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
+	<portlet:param name="actionEditingDetails" value="true" />
 </portlet:actionURL>
 <aui:form name="fm" action="<%=editresourceURL%>"  method="post" enctype="multipart/form-data">
 	<aui:fieldset>
@@ -121,18 +131,7 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 	  
 		<%
 		}
-		if(learnact.getExtracontent()==null||learnact.getExtracontent().trim().equals("")|| Validator.isNumber(learnact.getExtracontent()))
-		{
-		%>			   
-		<c:if test="<%= permissionChecker.hasPermission(learnact.getGroupId(), LearningActivity.class.getName(), learnact.getActId(),
-			advancedKey) %>">
-	    	<liferay-portlet:renderURL var="searchResource">
-				<liferay-portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/searchresource.jsp"/>
-		 		<liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
-			</liferay-portlet:renderURL>
-			<a href="<%=searchResource.toString() %>"><liferay-ui:message key="select-resource"></liferay-ui:message></a>
-	   </c:if> 
-		<%} %>
+		%>		
 	</aui:fieldset>
 	<aui:button-row>
 		<%
@@ -140,6 +139,28 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 		%>									
 	
 		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
-		<aui:button onClick="<%= cancel %>" type="cancel" />
+		
+		<script type="text/javascript">
+		<!--
+		
+		Liferay.provide(
+		        window,
+		        '<portlet:namespace />closeWindow',
+		        function() {
+			        
+					if ((!!window.postMessage)&&(window.parent != window)) {
+						parent.postMessage({name:'closeActivity',
+							                moduleId:<%=Long.toString(learnact.getModuleId())%>,
+							                actId:<%=Long.toString(actId)%>}, window.location.origin);
+					}
+					else {
+						window.location.href='<portlet:renderURL />';
+					}
+		        }
+		    );
+		    
+		//-->
+		</script>
+		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
 	</aui:button-row>
 </aui:form>
