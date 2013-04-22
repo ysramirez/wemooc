@@ -305,29 +305,17 @@ Liferay.provide(
 		%>
 <%
 	boolean optional=false;
+	boolean mandatory = true;
 	if(learnact!=null)
 	{
 		optional=(learnact.getWeightinmodule()==0);
+		mandatory = (learnact.getWeightinmodule() != 0);
 	}
 %>
-		<aui:select name="weightinmodule" label="Optional">
-<%
-	if(optional)
-	{
-%>
-			<aui:option value="0" selected="true">true</aui:option>
-			<aui:option value="1">false</aui:option>
-<%
-	}
-	else
-	{
-%>
-			<aui:option value="0">true</aui:option>
-			<aui:option value="1"  selected="true">false</aui:option>
-<%
-	}
-%>
-		</aui:select>
+		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
+			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" />
+			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" />
+		</aui:field-wrapper>
 		
 		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
 			<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
