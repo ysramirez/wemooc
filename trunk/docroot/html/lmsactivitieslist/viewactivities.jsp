@@ -136,7 +136,7 @@ Liferay.provide(
 			 
 	%>
 	<liferay-ui:icon image="add" label="<%=true%>" message="add"
-	url="<%=newactivitypopup%>" cssClass="newactivity" />
+		url="#" cssClass="newactivity" onClick="<%=newactivitypopup %>"/>
 	
 <%
 }
