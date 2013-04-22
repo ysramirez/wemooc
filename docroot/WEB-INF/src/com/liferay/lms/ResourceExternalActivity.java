@@ -10,6 +10,8 @@ import java.util.Map;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -19,6 +21,7 @@ import com.liferay.lms.service.LearningActivityServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -57,7 +60,7 @@ public class ResourceExternalActivity extends MVCPortlet {
 		throws Exception {
 
 		String jspPage = ParamUtil.getString(actionRequest, "jspPage");
-		long actId = ParamUtil.getLong(actionRequest, "actId", 0);
+		long actId = ParamUtil.getLong(actionRequest, "resId", 0);
 		long entryId = ParamUtil.getLong(actionRequest, "entryId", 0);
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivity.class.getName(), actionRequest);
 	
@@ -66,7 +69,7 @@ public class ResourceExternalActivity extends MVCPortlet {
 		LearningActivityServiceUtil.modLearningActivity(larn, serviceContext);
 		SessionMessages.add(actionRequest, "activity-saved-successfully");
 		actionResponse.setRenderParameter("jspPage", jspPage);
-		actionResponse.setRenderParameter("actId", Long.toString(actId));
+		actionResponse.setRenderParameter("resId", Long.toString(actId));
 	}
 	
 	public void addfiles(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -76,7 +79,7 @@ public class ResourceExternalActivity extends MVCPortlet {
 	UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
 	
 	String jspPage = ParamUtil.getString(actionRequest, "jspPage");
-	long actId = ParamUtil.getLong(actionRequest, "actId", 0);
+	long actId = ParamUtil.getLong(actionRequest, "resId", 0);
 	String description = request.getParameter("description");
 	String youtubecode=ParamUtil.getString(request,"youtubecode","");
 	LearningActivity larn = LearningActivityServiceUtil.getLearningActivity(actId);
@@ -107,14 +110,27 @@ public class ResourceExternalActivity extends MVCPortlet {
 	LearningActivityServiceUtil.modLearningActivity(larn);
 	SessionMessages.add(actionRequest, "activity-saved-successfully");
 	actionResponse.setRenderParameter("jspPage", jspPage);
-	actionResponse.setRenderParameter("actId", Long.toString(actId));
+	actionResponse.setRenderParameter("actionEditingDetails", "true");	
+	actionResponse.setRenderParameter("resId", Long.toString(actId));
 }
 
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 	throws PortletException, IOException {
 
-if(ParamUtil.getLong(renderRequest, "actId", 0)==0)// TODO Auto-generated method stub
+	long actId=0;
+	
+	if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
+		
+		actId=ParamUtil.getLong(renderRequest, "resId", 0);
+		renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
+	}
+	else{
+		actId=ParamUtil.getLong(renderRequest, "actId", 0);
+	}
+		
+		
+if(actId==0)// TODO Auto-generated method stub
 {
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 }
@@ -122,7 +138,7 @@ else
 {
 		LearningActivity activity;
 		try {
-			activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest, "actId", 0));
+			activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 			long typeId=activity.getTypeId();
 			
 			if(typeId==2)

@@ -1,5 +1,14 @@
 
 <%@ include file="/html/resourceExternalActivity/admin/init.jsp" %>
+<liferay-portlet:renderURL var="backURL" >
+	<liferay-portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/edit.jsp"/>
+	<liferay-portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
+	<liferay-portlet:param name="resModuleId" value="<%=Long.toString(learnact.getModuleId()) %>" />
+	<liferay-portlet:param name="actionEditingDetails" value="true"/>
+</liferay-portlet:renderURL>
+<liferay-ui:icon image="back" message="back" label="true" url="<%=backURL.toString() %>" />
+
+<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
@@ -36,7 +45,7 @@ else
 %>
 <liferay-portlet:renderURL var="searchResource">
 <liferay-portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/searchresource.jsp"/>
- <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
+ <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="resId"/>
 
 </liferay-portlet:renderURL>
 <a href="<%=searchResource %>"><liferay-ui:message key="selectResource" /></a>
