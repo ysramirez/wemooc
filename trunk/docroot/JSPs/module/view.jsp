@@ -15,8 +15,6 @@
 <jsp:useBean id="moduleFilterURL" class="java.lang.String" scope="request" />
 <jsp:useBean id="moduleFilter" class="java.lang.String" scope="request" />
 
-<link rel="stylesheet" type="text/css" href="/Lms-portlet/css/Portlet_module.css" />
-
 <%--liferay-ui:success key="module-prefs-success" message="module-prefs-success" />
 <liferay-ui:success key="module-added-successfully" message="module-added-successfully" />
 <liferay-ui:success key="module-deleted-successfully" message="module-deleted-successfully" />
@@ -59,25 +57,37 @@ Liferay.provide(
         '<portlet:namespace />openPopup',
         function() {
         	var A = AUI();
-        	Liferay.Util.openWindow({dialog: {width: 960,modal:true}, 
-    		id: 'editModule',  
-    		title: 'Add', 
-    		uri:'<%=JavaScriptUtil.markupToStringLiteral(addmoduleURL)%>',
-    		dialog: {
-    			destroyOnClose: true,
-				on: {close:
-					function(evt){
-						var lmsactivitieslistPortlet=A.one('#p_p_id<%=PortalUtil.getJsSafePortletId(StringPool.UNDERLINE+"lmsactivitieslist"+
-								PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
-						if(lmsactivitieslistPortlet!=null) {
-							Liferay.Portlet.refresh(lmsactivitieslistPortlet);
+
+			new A.Dialog(
+				{
+		    		id: 'editModule', 
+					title: 'Add',
+	    			destroyOnClose: true,
+	    			width: 750,
+	    			modal:true,
+	    			x:50,
+	    			y:50,
+	    			on: {
+		    			close: function(evt){
+							var lmsactivitieslistPortlet=A.one('#p_p_id<%=PortalUtil.getJsSafePortletId(StringPool.UNDERLINE+"lmsactivitieslist"+
+									PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
+							if(lmsactivitieslistPortlet!=null) {
+								Liferay.Portlet.refresh(lmsactivitieslistPortlet);
+							}
+							Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'));		
 						}
-						Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'));				
+					}
+
 				}
-			}
-    		}});
+			).plug(
+				A.Plugin.DialogIframe,
+				{
+					uri: '<%=JavaScriptUtil.markupToStringLiteral(addmoduleURL)%>'
+				}
+			).render().show();
+
         },
-        ['aui-dialog','aui-dialog-iframe','liferay-layout']
+        ['aui-dialog','aui-dialog-iframe']
     );
 </script>
 <div class="newitem">
