@@ -23,15 +23,12 @@ long actId = ParamUtil.getLong(request,"actId",0 );
 
 if(actId == 0){
 	
-	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 
 } else {
 	
 	long userId = ParamUtil.getLong(request,"studentId",0 );
 
 	LearningActivity learningActivity=LearningActivityLocalServiceUtil.getLearningActivity(actId);	
-	request.setAttribute("actId",learningActivity.getActId());
-	request.setAttribute("learningActivity",learningActivity);
 	User owner = UserLocalServiceUtil.getUser(userId);
 	%>
 	<h2><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
