@@ -1,4 +1,11 @@
 
+<%@page import="com.liferay.portal.security.permission.ActionKeys"%>
+<%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.ResourceConstants"%>
+<%@page import="org.hsqldb.result.ResultConstants"%>
+<%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.Role"%>
 <%@page import="com.liferay.portal.model.PortletConstants"%>
 <%@page import="javax.portlet.RenderResponse"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
@@ -183,3 +190,39 @@ ActionKeys.PERMISSIONS) %>">
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			
 			</c:if>
 </c:if>
+
+<portlet:actionURL name="changeVisibility" var="visibiltyURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+	<portlet:param name="resId" value="<%=primKey %>" />
+</portlet:actionURL>
+
+<%
+	Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+	boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+	ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+
+	String visibiltyURLJavascript=
+			"javascript:AUI().use('node','aui-io-request', function(A){  "+ 
+					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+					 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+					 "          var placeHolder = A.Node.create(\"<div class='loading-animation' id='p_load' + activitiesListPortletId + '' />\"); "+	
+					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+					 "          activitiesListPortlet.remove(true); "+	
+					 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
+					 "            on: {  "+
+					 "             		success: function() {  "+
+					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+	 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+	 				 "			             }  "+	
+					 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+					 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+					 "          			 placeHolder.remove(true); "+	
+					 "             }  "+
+					 "            }  "+
+					 "          });  "+	 
+					 "		}); ";
+%>
+
+<liferay-ui:icon image="<%=(visible)?\"eye\":\"eyeno\" %>" url="<%=visibiltyURLJavascript %>"/>
