@@ -109,24 +109,35 @@ Liferay.provide(
 	<%
 
 	String portletnamespace = renderResponse.getNamespace();
-		String newactivitypopup = "javascript:Liferay.Util.openWindow("+
-	"			{dialog:"+
-	"				{width: 960,modal: true,xy:[50,50]  ,destroyOnClose: true, on: "+
-					"	{"+
-		         "  close: function() {" +
-			 ""+
-		     "Liferay.Util.getOpener()."+portletnamespace+"refreshPortlet();"+
-			 "           }"+
-			 "        	}}"+
-		" ,id: 'editlesson', title: '" +
-				ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "',"+
-				"uri:'" + HtmlUtil.escapeURL(newactivityURL) + "',}"+
-		");";
+	String newactivitypopup = "javascript:AUI().use('aui-dialog','aui-dialog-iframe', "+
+			"	function(A){ "+
+			"	new A.Dialog( "+
+			"		{ "+
+			"    		id: 'editlesson', "+ 
+			"			title: '"+ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName())+"', "+
+		    "			destroyOnClose: true, "+
+		    "			width: 750, "+
+		    "			modal:true, "+
+		    "			x:50, "+
+		    "			y:50, "+
+		    "			on: { "+
+			"    			close: function(evt){ "+
+			"					Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"')); "+		
+			"				} "+
+			"			} "+
+			"		} "+
+			"	).plug( "+
+			"		A.Plugin.DialogIframe, "+
+			"		{ "+
+			"			uri: '" + JavaScriptUtil.markupToStringLiteral(newactivityURL) + "' "+
+			"		} "+
+			"	).render().show(); "+
+			"});";
 			 
-		%>
-		<liferay-ui:icon image="add" label="<%=true%>" message="add"
-		url="<%=newactivitypopup%>" cssClass="newactivity" />
-		
+	%>
+	<liferay-ui:icon image="add" label="<%=true%>" message="add"
+	url="<%=newactivitypopup%>" cssClass="newactivity" />
+	
 <%
 }
 %>

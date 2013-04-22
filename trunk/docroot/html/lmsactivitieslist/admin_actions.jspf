@@ -35,13 +35,21 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 	<%
 	String portletnamespace = renderResponse.getNamespace();
 		
-	StringBuilder editActivityPopup = new StringBuilder("javascript:Liferay.Util.openWindow("+
-"			{dialog:"+
-"				{width: 960,modal: true,xy:[50,50]  ,destroyOnClose: true, on: "+
-				"	{"+
-	     "      close: function() {"+
-    	 "             Liferay.Util.getOpener()."+portletnamespace+"refreshPortlet();");
-	
+	StringBuilder editActivityPopup = new StringBuilder("javascript:AUI().use('aui-dialog','aui-dialog-iframe', "+
+			"	function(A){ "+
+			"	new A.Dialog( "+
+			"		{ "+
+			"    		id: 'editlesson', "+ 
+			"			title: '"+ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName())+"', "+
+		    "			destroyOnClose: true, "+
+		    "			width: 750, "+
+		    "			modal:true, "+
+		    "			x:50, "+
+		    "			y:50, "+
+		    "			on: { "+
+			"    			close: function(evt){ "+
+			"					Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"')); ");
+			
 	if(myActivity.getActId()==actId) {	
 		String activityPortletId = HttpUtil.getParameter(
 				new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
@@ -49,25 +57,25 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 	
 		if(activityPortletId!=null) {
 			editActivityPopup.append(
-			 "         var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
-			 "         if(activityTitlePortlet!=null) {  "+
-			 "		      Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
-			 "	       }  ");
+			 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+			 "         			if(activityTitlePortlet!=null) {  "+
+			 "		      			Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+			 "	       			}  ");
 		}
-	}
-	
+	}		
+			
 	editActivityPopup.append(
-	     "      }"+			
-		 " }}"+
-		 " ,id: 'editlesson', title: '" +
-				ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "',"+
-				"uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "',}"+
-		 ");");
-		 
-	
-/*String editctivitypopup = "javascript:Liferay.Util.openWindow({dialog: {width: 960,modal: true ,destroyOnClose: true}, id: 'editlesson', title: '" +
-		ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName()) + "', uri:'" + HtmlUtil.escapeURL(editoptionsURL) + "'});";
-*/
+			"				} "+
+			"			} "+
+			"		} "+
+			"	).plug( "+
+			"		A.Plugin.DialogIframe, "+
+			"		{ "+
+			"			uri: '" + JavaScriptUtil.markupToStringLiteral(editoptionsURL) + "' "+
+			"		} "+
+			"	).render().show(); "+
+			"});");
+
 %>
 	<liferay-ui:icon image="edit" message="edit" url="<%=editActivityPopup.toString() %>" />
 </c:if>

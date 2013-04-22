@@ -15,6 +15,7 @@ for(Long key:classTypes.keySet())
 %>	
 <liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
 <liferay-portlet:param name="resId" value="0" />
+<liferay-portlet:param name="resModuleId" value="<%=ParamUtil.getString(renderRequest, \"resModuleId\") %>" />
 <liferay-portlet:param name="typeId" value="<%=key.toString() %>" />
 </liferay-portlet:actionURL>
 <%
