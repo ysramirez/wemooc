@@ -168,38 +168,39 @@ Liferay.provide(
 					editing="editing";
 				}
 				
-				if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())||
-						(permissionChecker.hasPermission(
-						activity.getGroupId(),
-						LearningActivity.class.getName(),
-						activity.getActId(), ActionKeys.UPDATE)&&actionEditing))
-				{
-					LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
-					AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
-					String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "");	
-					Portlet view1URLPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(view1URL, "p_p_id",false));
-					if(view1URLPortlet!=null) {
-						PublicRenderParameter moduleIdPublicParameter = view1URLPortlet.getPublicRenderParameter("moduleId");
-						if(moduleIdPublicParameter!=null) {					
-							view1URL=HttpUtil.addParameter(view1URL, PortletQNameUtil.getPublicRenderParameterName(moduleIdPublicParameter.getQName()),Long.toString(activity.getModuleId()));
-							view1URL=HttpUtil.removeParameter(view1URL, "p_p_state");
-							view1URL=HttpUtil.addParameter(view1URL, "p_p_state","normal");
+				if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),	activity.getActId(), ActionKeys.VIEW)){
+					if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())||
+							(permissionChecker.hasPermission(
+							activity.getGroupId(),
+							LearningActivity.class.getName(),
+							activity.getActId(), ActionKeys.UPDATE)&&actionEditing)){
+						LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
+						AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
+						String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "");	
+						Portlet view1URLPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(view1URL, "p_p_id",false));
+						if(view1URLPortlet!=null) {
+							PublicRenderParameter moduleIdPublicParameter = view1URLPortlet.getPublicRenderParameter("moduleId");
+							if(moduleIdPublicParameter!=null) {					
+								view1URL=HttpUtil.addParameter(view1URL, PortletQNameUtil.getPublicRenderParameterName(moduleIdPublicParameter.getQName()),Long.toString(activity.getModuleId()));
+								view1URL=HttpUtil.removeParameter(view1URL, "p_p_state");
+								view1URL=HttpUtil.addParameter(view1URL, "p_p_state","normal");
+							}
 						}
+							
+					%>
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>">
+						
+							<a href="<%=view1URL.toString()%>"><%=activity.getTitle(themeDisplay.getLocale())%></a>
+							
+					<%
 					}
-						
-				%>
-					<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>">
-					
-						<a href="<%=view1URL.toString()%>"><%=activity.getTitle(themeDisplay.getLocale())%></a>
-						
-				<%
-				}
-				else
-				{
-				%>
-					<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked">
-						<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
-				<%
+					else
+					{
+					%>
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked">
+							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
+					<%
+					}
 				}
 
 				if (actionEditing
