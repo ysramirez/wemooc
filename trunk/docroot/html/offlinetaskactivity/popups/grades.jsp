@@ -25,7 +25,7 @@ if((renderRequest.getParameter("actId")!=null)&&(renderRequest.getParameter("stu
 	    	<%=(SessionErrors.contains(renderRequest, "offlinetaskactivity.grades.result-bad-format"))?
 	    			LanguageUtil.get(pageContext,"offlinetaskactivity.grades.result-bad-format"):StringPool.BLANK %>
 	    </div>
-		<aui:input type="textarea" cols="40" rows="2" name="comments" label="offlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'/>
+		<aui:input type="textarea" cols="40"  rows="2" name="comments" label="offlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'/>
 	</aui:fieldset>
 	<aui:button-row>
 	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">
