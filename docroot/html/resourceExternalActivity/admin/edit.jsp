@@ -46,9 +46,6 @@ if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals(
 %>
 
 <aui:model-context bean="<%= learnact %>" model="<%= LearningActivity.class %>" />
-<portlet:renderURL var="cancel">
-	<portlet:param name="resId" value="0" />
-</portlet:renderURL>
 
 <portlet:actionURL var="editresourceURL" name="addfiles">
 	<portlet:param name="jspPage" value="/html/resourceExternalActivity/admin/edit.jsp" />
