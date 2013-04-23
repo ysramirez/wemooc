@@ -101,7 +101,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 							 "		                 if(activityNavigatorPortlet!=null) {  "+
 							 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 							 "			             }  "+
-							 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+							 "                       activitiesListPortletClone.one('.portlet-body').html(this.get('responseData')); "+	
 							 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
 							 "          			 placeHolder.remove(true); "+	
 							 "             }  "+
@@ -142,7 +142,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 						 "		                 if(activityNavigatorPortlet!=null) {  "+
 						 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 						 "			             }  "+						 
-						 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+						 "                       activitiesListPortletClone.one('.portlet-body').html(this.get('responseData')); "+	
 						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
 						 "          			 placeHolder.remove(true); "+	
 						 "             }  "+
@@ -176,7 +176,7 @@ String primKey = String.valueOf(module.getPrimaryKey());
 						 "		                 if(activityNavigatorPortlet!=null) {  "+
 						 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 						 "			             }  "+	
-						 "                       activitiesListPortletClone.one('.portlet-content').html(this.get('responseData')); "+	
+						 "                       activitiesListPortletClone.one('.portlet-body').html(this.get('responseData')); "+	
 						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
 						 "          			 placeHolder.remove(true); "+	
 						 "             }  "+
