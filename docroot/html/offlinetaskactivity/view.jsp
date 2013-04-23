@@ -232,7 +232,7 @@
 						<aui:column>
 							<aui:select label="offlinetaskactivity.status" name="gradeFilter" onchange='<%="document.getElementById(\'" + renderResponse.getNamespace() + "studentsearch\').submit();" %>'>
 								<aui:option selected='<%= gradeFilter.equals("") %>' value=""><liferay-ui:message key="offlinetaskactivity.all" /></aui:option>
-								<aui:option selected='<%= gradeFilter.equals("nocalification") %>' value="statuspassed"><liferay-ui:message key="offlinetaskactivity.status.passed" /></aui:option>
+								<aui:option selected='<%= gradeFilter.equals("nocalification") %>' value="nocalification"><liferay-ui:message key="offlinetaskactivity.status.passed" /></aui:option>
 								<aui:option selected='<%= gradeFilter.equals("passed") %>' value="passed"><liferay-ui:message key="offlinetaskactivity.passed" /></aui:option>
 								<aui:option selected='<%= gradeFilter.equals("failed") %>' value="failed"><liferay-ui:message key="offlinetaskactivity.failed" /></aui:option>
 							</aui:select>
