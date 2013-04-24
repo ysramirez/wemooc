@@ -36,7 +36,8 @@ if (moduleId == 0)
 <script type="text/javascript">
 <!--
 
-AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe',function(A) {
+AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',function(A) {
+	
 	A.one(window).on('message', 
 		function(event){
 			var html5Event=event._event;
@@ -65,6 +66,37 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe',function
 			}
 
 		});
+
+		A.all('.lms-tree ul li.option-more ul').each(function(ul){
+			ul.hide();
+		});
+
+		A.all('.lms-tree ul li span.desplegar').each(function(span){
+			var parentNode=span.get('parentNode');
+			var wrapper = A.Node.create('<div style="overflow: hidden;" ></div>');
+			wrapper.append(parentNode.one('ul').replace(wrapper));
+			var height=wrapper.height();
+			var open = new A.Anim({node: wrapper, to: {height:  height},
+			     easing: A.Easing.easeOut});
+     		var close = new A.Anim({node: wrapper, to: {height:  -100},
+			     easing: A.Easing.easeIn});
+			span.on('click',function(){
+				
+				if(parentNode.hasClass('option-more')) {
+					parentNode.removeClass("option-more");
+					parentNode.addClass("option-less");
+					close.run();
+				
+				}
+				else {
+					parentNode.removeClass("option-less");
+					parentNode.addClass("option-more");
+					open.run();
+				}
+	
+			})
+		});
+
 });
 
 //-->
