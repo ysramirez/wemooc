@@ -198,6 +198,7 @@
 				<action-key>PUBLISH</action-key>
 				<action-key>REGISTER</action-key>
 				<action-key>ACCESSLOCK</action-key>
+				<action-key>COURSEEDITOR</action-key>
 				<action-key>ASSIGN_MEMBERS</action-key>	
 				<action-key>ACCESS</action-key>
 			</supports>
