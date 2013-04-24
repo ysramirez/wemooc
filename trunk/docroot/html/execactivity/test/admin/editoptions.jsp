@@ -1,24 +1,9 @@
-<%@page import="com.sun.jmx.snmp.Timestamp"%>
-<%@page import="com.liferay.lms.service.impl.LearningActivityLocalServiceImpl"%>
-<%@page	import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
-<%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
-<%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
-<%@page	import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
-<%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
-<%@page import="com.liferay.lms.model.LearningActivity"%>
-<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
-<%@page	import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
-<%@page	import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
-<%@page	import="com.liferay.portal.kernel.dao.orm.Criterion"%>
-<%@page	import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
-<%@page	import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
-<%@page	import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
-<%@page import="com.liferay.lms.model.LearningActivityResult"%>
-<%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
-<%@ page import="com.liferay.lms.model.Module" %>
-<%@ page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
-<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.model.Module"%>
+<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivity"%>
 
 <%@ include file="/init.jsp" %>
 
