@@ -88,6 +88,9 @@
 		    
 		    function <portlet:namespace />closeWindow(){
 				if ((!!window.postMessage)&&(window.parent != window)) {
+					if (!window.location.origin){
+						window.location.origin = window.location.protocol+"//"+window.location.host;
+					}
 					parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
 				}
 				else {
