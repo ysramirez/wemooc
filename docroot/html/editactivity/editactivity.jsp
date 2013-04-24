@@ -139,7 +139,7 @@ else
 	<%
 }
 %>
-<aui:form name="fm" action="<%=saveactivityURL%>"  method="post">
+<aui:form name="fm" action="<%=saveactivityURL%>"  method="post"  enctype="multipart/form-data">
 	<aui:fieldset>
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 		<aui:input name="backURL" type="hidden" value="<%= backURL %>" />

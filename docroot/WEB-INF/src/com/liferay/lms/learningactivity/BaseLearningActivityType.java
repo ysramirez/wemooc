@@ -9,6 +9,7 @@ import javax.portlet.PortletResponse;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.xml.DocumentException;
 
 
@@ -91,7 +92,7 @@ public abstract class BaseLearningActivityType implements LearningActivityType{
 	}
 	
 	@Override
-	public void setExtraContent(PortletRequest portletRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException {
+	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException {
 	}
 	
 	@Override
