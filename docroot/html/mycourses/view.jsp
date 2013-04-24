@@ -7,6 +7,43 @@
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 
 <%@ include file="/init.jsp"%>
+
+<script type="text/javascript">
+<!--
+
+	AUI().ready('event','node','anim',function(A) {
+	
+		A.all('div.option-more span').each(function(span){
+			var parentNode=span.get('parentNode');
+			var wrapper = A.Node.create('<div style="overflow: hidden;" ></div>');
+			wrapper.append(parentNode.one('div.collapsable').replace(wrapper));
+			var height=wrapper.height();
+			var open = new A.Anim({node: wrapper, to: {height:  height},
+			     easing: A.Easing.easeOut});
+     		var close = new A.Anim({node: wrapper, to: {height:  -100},
+			     easing: A.Easing.easeIn});
+			span.on('click',function(){
+				
+				if(parentNode.hasClass('option-more')) {
+					parentNode.removeClass("option-more");
+					parentNode.addClass("option-less");
+					close.run();
+				
+				}
+				else {
+					parentNode.removeClass("option-less");
+					parentNode.addClass("option-more");
+					open.run();
+				}
+	
+			})
+		});
+
+	});
+
+//-->
+</script>
+
 <%
 
 java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(themeDisplay.getUserId());
