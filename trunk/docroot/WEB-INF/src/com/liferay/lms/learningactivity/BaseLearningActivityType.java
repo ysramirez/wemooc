@@ -1,6 +1,15 @@
 package com.liferay.lms.learningactivity;
 
+import java.io.IOException;
 import java.util.Locale;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+
+import com.liferay.lms.model.LearningActivity;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.xml.DocumentException;
 
 
 public abstract class BaseLearningActivityType implements LearningActivityType{
@@ -74,6 +83,24 @@ public abstract class BaseLearningActivityType implements LearningActivityType{
 	@Override
 	public boolean isFeedbackNoCorrectConfigurable() {
 		return false;
+	}
+	
+	@Override
+	public String getExpecificContentPage() {
+		return null;
+	}
+	
+	@Override
+	public void setExtraContent(PortletRequest portletRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException {
+	}
+	
+	@Override
+	public boolean especificValidations(PortletRequest portletRequest,PortletResponse portletResponse) {
+		return true;
+	}
+	
+	@Override
+	public void afterInsertOrUpdate(PortletRequest portletRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException {
 	}
 
 	
