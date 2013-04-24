@@ -10,12 +10,14 @@ import com.liferay.lms.asset.ResourceExternalAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class ResourceExternalLearningActivityType extends BaseLearningActivityType 
@@ -64,11 +66,10 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 
 	
 	@Override
-	public void setExtraContent(PortletRequest portletRequest,
+	public void setExtraContent(UploadRequest uploadRequest,
 			PortletResponse portletResponse, LearningActivity learningActivity)
 			throws PortalException, SystemException, DocumentException,IOException {
-		
-		String youtubecode=ParamUtil.getString(portletRequest,"youtubecode");
+		String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");
 		if(!StringPool.BLANK.equals(youtubecode.trim())){
 			Document document = null;
 			Element rootElement = null;

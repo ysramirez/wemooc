@@ -15,6 +15,8 @@ import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
+import com.liferay.lms.learningactivity.LearningActivityType;
+import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.P2pActivity;
@@ -32,22 +34,29 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.upload.UploadRequest;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.PublicRenderParameter;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.PortletQNameUtil;
 import com.liferay.portlet.announcements.EntryDisplayDateException;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -103,61 +112,61 @@ public class LmsActivitiesList extends MVCPortlet {
 	}
 	public void saveActivity(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
-
+		UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivity.class.getName(), actionRequest);
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
-		actionResponse.setRenderParameters(actionRequest.getParameterMap());
-		actionRequest.setAttribute("editing", "true");
+		String redirect = ParamUtil.getString(uploadRequest, "redirect");
+		actionResponse.setRenderParameters(uploadRequest.getParameterMap());
+		uploadRequest.setAttribute("editing", "true");
 		User user = themeDisplay.getUser();
-		long actId = ParamUtil.getLong(actionRequest, "resId", 0);
-		long moduleId = ParamUtil.getLong(actionRequest, "resModuleId", 0);
-		long weightinmodule=ParamUtil.getLong(actionRequest, "weightinmodule", 0);
-		long precedence=ParamUtil.getLong(actionRequest, "precedence", 0);
+		long actId = ParamUtil.getLong(uploadRequest, "resId", 0);
+		long moduleId = ParamUtil.getLong(uploadRequest, "resModuleId", 0);
+		long weightinmodule=ParamUtil.getLong(uploadRequest, "weightinmodule", 0);
+		long precedence=ParamUtil.getLong(uploadRequest, "precedence", 0);
 		//String title = actionRequest.getParameter("title");
 		
-		String description = actionRequest.getParameter("description");
-		int type = ParamUtil.getInteger(actionRequest, "type", 0);
-		int startMonth = ParamUtil.getInteger(actionRequest, "startMon");
-		int startYear = ParamUtil.getInteger(actionRequest, "startYear");
-		int startDay = ParamUtil.getInteger(actionRequest, "startDay");
-		int startHour = ParamUtil.getInteger(actionRequest, "startHour");
-		int startMinute = ParamUtil.getInteger(actionRequest, "startMin");
-		int startAMPM = ParamUtil.getInteger(actionRequest, "startAMPM");
-		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
-		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect", "");
+		String description = uploadRequest.getParameter("description");
+		int type = ParamUtil.getInteger(uploadRequest, "type", -1);
+		int startMonth = ParamUtil.getInteger(uploadRequest, "startMon");
+		int startYear = ParamUtil.getInteger(uploadRequest, "startYear");
+		int startDay = ParamUtil.getInteger(uploadRequest, "startDay");
+		int startHour = ParamUtil.getInteger(uploadRequest, "startHour");
+		int startMinute = ParamUtil.getInteger(uploadRequest, "startMin");
+		int startAMPM = ParamUtil.getInteger(uploadRequest, "startAMPM");
+		String feedbackCorrect = ParamUtil.getString(uploadRequest, "feedbackCorrect", "");
+		String feedbackNoCorrect = ParamUtil.getString(uploadRequest, "feedbackNoCorrect", "");
 
 		if (startAMPM > 0) {
 			startHour += 12;
 		}
 		Date startDate = PortalUtil.getDate(startMonth, startDay, startYear, startHour, startMinute, user.getTimeZone(), new EntryDisplayDateException());
 
-		int stopMonth = ParamUtil.getInteger(actionRequest, "stopMon");
-		int stopYear = ParamUtil.getInteger(actionRequest, "stopYear");
-		int stopDay = ParamUtil.getInteger(actionRequest, "stopDay");
-		int stopHour = ParamUtil.getInteger(actionRequest, "stopHour");
-		int stopMinute = ParamUtil.getInteger(actionRequest, "stopMin");
-		int stopAMPM = ParamUtil.getInteger(actionRequest, "stopAMPM");
+		int stopMonth = ParamUtil.getInteger(uploadRequest, "stopMon");
+		int stopYear = ParamUtil.getInteger(uploadRequest, "stopYear");
+		int stopDay = ParamUtil.getInteger(uploadRequest, "stopDay");
+		int stopHour = ParamUtil.getInteger(uploadRequest, "stopHour");
+		int stopMinute = ParamUtil.getInteger(uploadRequest, "stopMin");
+		int stopAMPM = ParamUtil.getInteger(uploadRequest, "stopAMPM");
 		if (stopAMPM > 0) {
 			stopHour += 12;
 		}
 		Date stopDate = PortalUtil.getDate(stopMonth, stopDay, stopYear, stopHour, stopMinute, user.getTimeZone(), new EntryDisplayDateException());
 
-		long tries = ParamUtil.getLong(actionRequest, "tries", 0);
-		int passpuntuation = ParamUtil.getInteger(actionRequest, "passpuntuation", 0);
+		long tries = ParamUtil.getLong(uploadRequest, "tries", 0);
+		int passpuntuation = ParamUtil.getInteger(uploadRequest, "passpuntuation", 0);
 		java.util.Date ahora = new java.util.Date(System.currentTimeMillis());
 		
 		//validating
-		Enumeration<String> parNams= actionRequest.getParameterNames();
+		Enumeration<String> parNams= uploadRequest.getParameterNames();
 		boolean hasTitle=false;
 		while(parNams.hasMoreElements())
 		{
 		  String paramName=parNams.nextElement();
 		  if(paramName.startsWith("title_")&&paramName.length()>6)
 		  {
-			  if(actionRequest.getParameter(paramName)!=null && actionRequest.getParameter(paramName).length()>0){
-				  String title = actionRequest.getParameter(paramName);
+			  if(uploadRequest.getParameter(paramName)!=null && uploadRequest.getParameter(paramName).length()>0){
+				  String title = uploadRequest.getParameter(paramName);
 				  StringTokenizer tokens = new StringTokenizer(title);
 				  if(tokens.countTokens() > 0 ){
 					  hasTitle=true;
@@ -167,30 +176,47 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		if(!hasTitle)
 		{
-			SessionErrors.add(actionRequest, "title-required");
+			SessionErrors.add(uploadRequest, "title-required");
 			return;
 		}
 		if(Validator.isNull(description))
 		{
-			SessionErrors.add(actionRequest, "description-required");
+			SessionErrors.add(uploadRequest, "description-required");
 		}
 		if(Validator.equals(moduleId, 0))
 		{
-			SessionErrors.add(actionRequest, "module-required");
+			SessionErrors.add(uploadRequest, "module-required");
 		}
 		
 		//Date validation
 		if (startDate.after(stopDate)){
-			SessionErrors.add(actionRequest, "activity-startDate-before-endDate");
-		}
-		
-		//Type validation
-		if (type == -1){
-			SessionErrors.add(actionRequest, "activity-type-not-selected");
-			return;
+			SessionErrors.add(uploadRequest, "activity-startDate-before-endDate");
 		}
 		
 		LearningActivity larn=null;
+		LearningActivityType learningActivityType=null;
+		
+		if(actId==0){
+			//Type validation
+			if (type==-1){
+				SessionErrors.add(uploadRequest, "activity-type-not-selected");
+				return;
+			}
+						
+			learningActivityType=new LearningActivityTypeRegistry().getLearningActivityType(type);
+		}
+		else
+		{		
+			learningActivityType=new LearningActivityTypeRegistry().
+					getLearningActivityType(LearningActivityLocalServiceUtil.getLearningActivity(actId).getTypeId());
+		}
+			
+		//Type especific validations
+		if(!learningActivityType.especificValidations(actionRequest, actionResponse)){
+			return;
+		}
+		
+		
 		if (actId == 0) {
 
 			if(permissionChecker.hasPermission(
@@ -198,7 +224,7 @@ public class LmsActivitiesList extends MVCPortlet {
 					Module.class.getName(), moduleId,
 					"ADD_LACT"))
 			{
-			larn =com.liferay.lms.service.LearningActivityLocalServiceUtil.addLearningActivity(
+			larn =LearningActivityLocalServiceUtil.addLearningActivity(
 				"", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId, feedbackCorrect, feedbackNoCorrect, serviceContext);
 			}
 		}
@@ -208,7 +234,7 @@ public class LmsActivitiesList extends MVCPortlet {
 					LearningActivity.class.getName(), actId,
 					ActionKeys.UPDATE))
 			{
-			larn=com.liferay.lms.service.LearningActivityLocalServiceUtil.modLearningActivity(
+			larn=LearningActivityLocalServiceUtil.modLearningActivity(
 				actId, "", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId, feedbackCorrect, feedbackNoCorrect, serviceContext);
 			}
 			
@@ -216,7 +242,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		larn.setDescription( description,themeDisplay.getLocale());
 		larn.setWeightinmodule(weightinmodule);
 		larn.setPrecedence(precedence);
-		Enumeration<String> parNames= actionRequest.getParameterNames();
+		Enumeration<String> parNames= uploadRequest.getParameterNames();
 		
 		while(parNames.hasMoreElements())
 		{
@@ -225,17 +251,21 @@ public class LmsActivitiesList extends MVCPortlet {
 		  {
 			  String language=paramName.substring(6);
 			  Locale locale=LocaleUtil.fromLanguageId(language);
-			  larn.setTitle( actionRequest.getParameter(paramName),locale);
+			  larn.setTitle( uploadRequest.getParameter(paramName),locale);
 		  }
 		}
+		
+		learningActivityType.setExtraContent(uploadRequest,actionResponse,larn);
+
 		if(permissionChecker.hasPermission(
 				themeDisplay.getScopeGroupId(),
 				LearningActivity.class.getName(), larn.getActId(),
 				ActionKeys.UPDATE))
 		{
-			com.liferay.lms.service.LearningActivityLocalServiceUtil.updateLearningActivity(larn);
+			LearningActivityLocalServiceUtil.updateLearningActivity(larn);
+			learningActivityType.afterInsertOrUpdate(actionRequest,actionResponse,larn);
 		}
-		SessionMessages.add(actionRequest, "activity-saved-successfully");
+		SessionMessages.add(uploadRequest, "activity-saved-successfully");
 		WindowState windowState = actionRequest.getWindowState();
 		if (redirect != null && !"".equals(redirect)) {
 			if (!windowState.equals(LiferayWindowState.POP_UP)) {
@@ -249,7 +279,7 @@ public class LmsActivitiesList extends MVCPortlet {
 				}
 			}
 		}
-		actionRequest.setAttribute("activity", larn);
+		uploadRequest.setAttribute("activity", larn);
 
 	}
 	
@@ -331,7 +361,7 @@ public class LmsActivitiesList extends MVCPortlet {
 	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws PortalException, SystemException, Exception {
-		long actId = ParamUtil.getInteger(actionRequest, "actId");
+		long actId = ParamUtil.getInteger(actionRequest, "resId");
 	
 		// LearningActivity learnact =
 		// com.liferay.lms.service.LearningActivityServiceUtil.getLearningActivity(actId);
@@ -339,6 +369,17 @@ public class LmsActivitiesList extends MVCPortlet {
 		if (laf != null) {
 			AssetRenderer assetRenderer = laf.getAssetRenderer(actId, 0);
 			String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) actionRequest, (LiferayPortletResponse) actionResponse).toString();			
+			Portlet urlEditPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(urlEdit, "p_p_id",false));
+			if(urlEditPortlet!=null) {
+				//PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
+				//if(actIdPublicParameter!=null) {
+				//	urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
+				//}
+				urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId", actId);
+				urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails");
+				urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails", true);
+			}
+		
 			actionResponse.sendRedirect(urlEdit);
 		}
 		SessionMessages.add(actionRequest, "asset-renderer-not-defined");
