@@ -1,3 +1,9 @@
+<%@page import="com.liferay.portlet.PortletQNameUtil"%>
+<%@page import="com.liferay.portal.model.PublicRenderParameter"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest"%>
+<%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
+<%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
@@ -20,8 +26,6 @@
 <%@ include file="/init.jsp" %>
 
 <portlet:actionURL var="saveactivityURL" name="saveActivity" />
-
-
 
 <%
 long moduleId=ParamUtil.getLong(request,"resModuleId",0);
@@ -98,13 +102,26 @@ if(learnact!=null)
 	<div class="acticons"> 
 		<%
 		if(larntype.hasEditDetails()){
+			AssetRenderer  assetRenderer=larntype.getAssetRenderer(learnact);
+			if(assetRenderer!=null) {
+				String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse).toString();			
+				Portlet urlEditPortlet = PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(urlEdit, "p_p_id",false));
+				if(urlEditPortlet!=null) {
+					//PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
+					//if(actIdPublicParameter!=null) {
+					//	urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
+					//}
+					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId");
+					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId", Long.toString(learnact.getActId()));
+					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId");
+					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId", Long.toString(learnact.getModuleId()) );
+					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails");
+					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails", true);
+				}			
 		%>
-			<portlet:actionURL name="editactivity" var="editURL">
-				<portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
-				<portlet:param name="actId" value="<%=Long.toString(learnact.getActId()) %>" />
-			</portlet:actionURL>
-			<liferay-ui:icon image="edit" message="edit-activity-details" label="true" url="<%=editURL.toString() %>" />
+			<liferay-ui:icon image="edit" message="edit-activity-details" label="true" url="<%=urlEdit %>" />
 		<%
+			}
 		}
 		%>
 		<liferay-ui:icon-delete label="false" url="<%=deleteMyTriesURL.toString() %>" />
@@ -339,6 +356,9 @@ Liferay.provide(
 		        function() {
 			        
 					if ((!!window.postMessage)&&(window.parent != window)) {
+						if (!window.location.origin){
+							window.location.origin = window.location.protocol+"//"+window.location.host;
+						}
 						parent.postMessage({name:'closeActivity',
 							                moduleId:<%=Long.toString(moduleId)%>,
 							                actId:<%=Long.toString(actId)%>}, window.location.origin);
