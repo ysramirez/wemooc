@@ -325,6 +325,7 @@ Liferay.provide(
 	boolean mandatory = true;
 	if(learnact!=null)
 	{
+		request.setAttribute("activity", learnact);
 		optional=(learnact.getWeightinmodule()==0);
 		mandatory = (learnact.getWeightinmodule() != 0);
 	}
@@ -339,6 +340,13 @@ Liferay.provide(
 			<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
 			<liferay-util:param name="precedence" value="<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>" />
 		</liferay-util:include>
+		
+		<% if(larntype.getExpecificContentPage()!=null){ %>
+			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>">
+				<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
+				<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
+			</liferay-util:include>	
+		<% } %>
 
 		<aui:input name="tags" type="assetTags" />
 		<aui:input name="categories" type="assetCategories" />
