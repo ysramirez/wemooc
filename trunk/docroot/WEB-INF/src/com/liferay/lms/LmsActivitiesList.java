@@ -117,7 +117,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
 		String redirect = ParamUtil.getString(uploadRequest, "redirect");
-		actionResponse.setRenderParameters(uploadRequest.getParameterMap());
+		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 		uploadRequest.setAttribute("editing", "true");
 		User user = themeDisplay.getUser();
 		long actId = ParamUtil.getLong(uploadRequest, "resId", 0);
@@ -371,10 +371,10 @@ public class LmsActivitiesList extends MVCPortlet {
 			String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) actionRequest, (LiferayPortletResponse) actionResponse).toString();			
 			Portlet urlEditPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(urlEdit, "p_p_id",false));
 			if(urlEditPortlet!=null) {
-				//PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
-				//if(actIdPublicParameter!=null) {
-				//	urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
-				//}
+				PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
+				if(actIdPublicParameter!=null) {
+					urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
+				}
 				urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId", actId);
 				urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails");
 				urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails", true);
