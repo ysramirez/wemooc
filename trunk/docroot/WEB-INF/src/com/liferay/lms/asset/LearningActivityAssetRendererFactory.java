@@ -3,6 +3,7 @@ package com.liferay.lms.asset;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
 
 import javax.portlet.PortletURL;
 
@@ -14,6 +15,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.portlet.PortletBagPool;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
@@ -24,15 +26,15 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 	@Override
 	public Map<Long, String> getClassTypes(long[] groupId, Locale locale)
 			throws Exception {
+				
 		Map<Long, String> classTypes = new HashMap<Long, String>();
 		LearningActivityTypeRegistry ltr=new LearningActivityTypeRegistry();
+		ResourceBundle resourceBundle = PortletBagPool.get(getPortletId()).getResourceBundle(locale);
 		for(LearningActivityType lat:ltr.getLearningActivityTypes())
-		{
-			classTypes.put(lat.getTypeId(),lat.getName(locale));
+		{				
+			classTypes.put(lat.getTypeId(),(resourceBundle.containsKey(lat.getName())?resourceBundle.getString(lat.getName()):lat.getName()));
 		}
 		return classTypes;
-		
-
 	}
 
 	public static final String CLASS_NAME = LearningActivity.class.getName();

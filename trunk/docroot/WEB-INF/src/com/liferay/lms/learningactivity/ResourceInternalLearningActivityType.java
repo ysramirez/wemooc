@@ -1,7 +1,5 @@
 package com.liferay.lms.learningactivity;
 
-import java.util.Locale;
-
 import com.liferay.lms.asset.ResourceInternalAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portlet.asset.model.AssetRenderer;
@@ -22,7 +20,7 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 
 
 	@Override
-	public String getName(Locale locale) {
+	public String getName() {
 		
 		return "resourceInternal";
 	}

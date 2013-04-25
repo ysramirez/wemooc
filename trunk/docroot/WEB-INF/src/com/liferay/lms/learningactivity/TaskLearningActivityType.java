@@ -1,9 +1,6 @@
 package com.liferay.lms.learningactivity;
 
-import java.util.Locale;
-
 import com.liferay.lms.asset.TaskAssetRenderer;
-import com.liferay.lms.asset.TestAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
@@ -45,7 +42,7 @@ public class TaskLearningActivityType extends BaseLearningActivityType
 
 
 	@Override
-	public String getName(Locale locale) {
+	public String getName() {
 		
 		return "task";
 	}
