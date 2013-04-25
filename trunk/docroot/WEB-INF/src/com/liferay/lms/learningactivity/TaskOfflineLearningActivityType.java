@@ -24,8 +24,12 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 	
 	@Override
 	public long getTypeId() {
-		// TODO Auto-generated method stub
 		return 5;
+	}
+	
+	@Override
+	public boolean hasEditDetails() {
+		return false;
 	}
 
 }

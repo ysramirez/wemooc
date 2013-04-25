@@ -73,7 +73,15 @@
 
 				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 										
-				<% if(isTeacher){ %>			
+				<% if(isTeacher){ %>
+				
+				<liferay-portlet:resourceURL var="exportURL" >
+					<portlet:param name="action" value="export"/>
+					<portlet:param name="resId" value="<%=String.valueOf(activity.getActId()) %>"/>
+				</liferay-portlet:resourceURL>
+				<liferay-ui:icon image="export" label="<%= true %>" message="offlinetaskactivity.csv.export" method="get" url="<%=exportURL%>" />
+	
+							
 				<portlet:renderURL var="viewUrlPopImportGrades" windowState="<%= LiferayWindowState.POP_UP.toString() %>">   
 					<portlet:param name="actId" value="<%=String.valueOf(activity.getActId()) %>" />      
 		            <portlet:param name="jspPage" value="/html/offlinetaskactivity/popups/importGrades.jsp" />           
