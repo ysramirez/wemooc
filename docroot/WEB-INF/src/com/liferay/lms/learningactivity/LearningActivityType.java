@@ -1,7 +1,6 @@
 package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -25,12 +24,12 @@ public interface LearningActivityType
 	public boolean isTriesConfigurable();
 	public boolean isFeedbackCorrectConfigurable();
 	public boolean isFeedbackNoCorrectConfigurable();
-	public String getName(Locale locale);
+	public String getName();
 	public AssetRenderer getAssetRenderer(LearningActivity larn);
 	public String getUrlIcon();
-	public String getDescription(Locale locale);
+	public String getDescription();
 	public boolean gradebook();
-	String getMesageEditDetails(Locale locale);
+	String getMesageEditDetails();
 	public boolean hasEditDetails();
 	
 	public String getExpecificContentPage();

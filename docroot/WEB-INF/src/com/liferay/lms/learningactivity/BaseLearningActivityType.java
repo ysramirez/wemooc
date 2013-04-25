@@ -1,7 +1,6 @@
 package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
-import java.util.Locale;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -16,9 +15,8 @@ import com.liferay.portal.kernel.xml.DocumentException;
 public abstract class BaseLearningActivityType implements LearningActivityType{
 
 	@Override
-	public String getMesageEditDetails(Locale locale) {
-		// TODO Auto-generated method stub
-		return "Edit activity details";
+	public String getMesageEditDetails() {
+		return "edit-activity-details";
 	}
 
 	@Override
@@ -40,8 +38,7 @@ public abstract class BaseLearningActivityType implements LearningActivityType{
 	}
 
 	@Override
-	public String getDescription(Locale locale) {
-		// TODO Auto-generated method stub
+	public String getDescription() {
 		return "";
 	}
 

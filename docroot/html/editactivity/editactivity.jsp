@@ -119,7 +119,7 @@ if(learnact!=null)
 					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails", true);
 				}			
 		%>
-			<liferay-ui:icon image="edit" message="edit-activity-details" label="true" url="<%=urlEdit %>" />
+			<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails() %>" label="true" url="<%=urlEdit %>" />
 		<%
 			}
 		}
