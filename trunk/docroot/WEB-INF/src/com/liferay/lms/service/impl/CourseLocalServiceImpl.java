@@ -313,6 +313,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	Group theGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 	theGroup.setName("desactivado("+course.getGroupCreatedId()+")");
 	theGroup.setFriendlyURL(course.getFriendlyURL()+"_desac");
+	theGroup.setActive(false);
 	GroupLocalServiceUtil.updateGroup(theGroup);
 	
 	assetEntryLocalService.deleteEntry(Course.class.getName(),course.getCourseId());
