@@ -11,16 +11,19 @@ Course course=(Course)request.getAttribute("course");
 AssetEntry asset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(),course.getCourseId());
 Group generatedGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 Group university=GroupLocalServiceUtil.getGroup(course.getGroupId());
+%>
+<div class="courselogodiv">
+<%
 if(generatedGroup.getPublicLayoutSet().getLogo())
 				{
 					long logoId = generatedGroup.getPublicLayoutSet().getLogoId();
 					%>
-					<div class="courselogodiv">
 					<img class="courselogo" src="/image/layout_set_logo?img_id=<%=logoId%>">
-					</div>
+					
 					<%
 				}
 %>
+</div>
 <p class="description"><%=asset.getSummary() %></p>
 <%
 String uniurl="#";
