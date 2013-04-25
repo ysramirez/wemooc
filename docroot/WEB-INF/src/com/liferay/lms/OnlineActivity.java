@@ -46,7 +46,6 @@ import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 
@@ -276,24 +275,7 @@ public class OnlineActivity extends MVCPortlet {
 			actionResponse.setRenderParameter("jspPage", "/html/onlinetaskactivity/admin/edit.jsp");
 		}
 	}
-	
-	public void camposExtra(ActionRequest actionRequest, ActionResponse actionResponse)
-			throws Exception {
 		
-			long actId = ParamUtil.getLong(actionRequest, "actId", 0);
-		
-			String fichero = ParamUtil.getString(actionRequest, "fichero", "false");
-			String textoenr = ParamUtil.getString(actionRequest, "textoenr", "false");
-
-			
-			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "textoenr", textoenr);
-		
-			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "fichero", fichero);
-		
-			SessionMessages.add(actionRequest, "activity-saved-successfully");
-		}
-	
-	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException, SystemException, Exception {
 		long actId = ParamUtil.getInteger(actionRequest, "actId");
 		LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
