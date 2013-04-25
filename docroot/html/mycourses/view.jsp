@@ -17,7 +17,9 @@
 			var parentNode=span.get('parentNode');
 			var wrapper = A.Node.create('<div style="overflow: hidden;" ></div>');
 			wrapper.append(parentNode.one('div.collapsable').replace(wrapper));
+			parentNode.one('div.collapsable').setStyle('display','block');
 			var height=wrapper.height();
+			wrapper.height(0);
 			var open = new A.Anim({node: wrapper, to: {height:  height},
 			     easing: A.Easing.easeOut});
      		var close = new A.Anim({node: wrapper, to: {height:  -100},
@@ -72,7 +74,7 @@ for(Group groupCourse:groups)
 				
 		%>
 			<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a> <span class="challenges"><%=passed %>/<%= modulescount%><liferay-ui:message key="finished.modules" /></span><span class="ico-desplegable"></span>
-			<div class="collapsable">
+			<div class="collapsable"  style="display:none;">
 				<table class="moduleList">
 		<%
 			java.util.List<Module> theModules=ModuleLocalServiceUtil.findAllInGroup(groupCourse.getGroupId());
