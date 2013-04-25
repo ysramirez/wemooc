@@ -24,7 +24,7 @@ if(generatedGroup.getPublicLayoutSet().getLogo())
 				}
 %>
 </div>
-<p class="description"><%=asset.getSummary() %></p>
+<div class="description"><%=asset.getSummary() %></div>
 <%
 String uniurl="#";
 if(university.getPublicLayoutsPageCount()>0)
