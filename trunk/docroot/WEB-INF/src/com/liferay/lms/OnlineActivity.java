@@ -66,6 +66,14 @@ public class OnlineActivity extends MVCPortlet {
 			"WHERE User_.userId = lms_learningactivityresult.userId AND lms_learningactivityresult.result > 0" +
 			" AND lms_learningactivityresult.passed = 0 AND lms_learningactivityresult.actId = ? ))"; 
 	
+	public static final String ACTIVITY_RESULT_NO_CALIFICATION_SQL = "WHERE (EXISTS (SELECT 1 FROM lms_learningactivityresult " +
+			"WHERE User_.userId = lms_learningactivityresult.userId AND lms_learningactivityresult.result = 0 AND lms_learningactivityresult.actId = ? ))"; 
+		
+	
+	//public static final String ACTIVITY_RESULT_NO_CALIFICATION_SQL = "WHERE (EXISTS (SELECT 1 FROM lms_learningactivityresult " +
+	//		"WHERE User_.userId = lms_learningactivityresult.userId AND lms_learningactivityresult.endDate =lms_learningactivityresult.startDate AND lms_learningactivityresult.actId = ? ))"; 
+	
+	
 	public static final String TEXT_XML= "text";
 	public static final String RICH_TEXT_XML = "richText";
 	public static final String FILE_XML = "file";	
