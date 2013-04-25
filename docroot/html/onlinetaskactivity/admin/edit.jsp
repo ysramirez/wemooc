@@ -13,50 +13,28 @@
 <%@page	import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
 <%@page	import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
-<%@ include file="init.jsp"%>
+<%@ include file="/init.jsp" %>
 
 <%
-	long numEvaluaciones = 0;
 	boolean fichero = false;
-	String ficheroString = "";
 	boolean textoenr = false;
-	String textoenrString = "";
+	boolean existTries = false;
+	if(request.getAttribute("activity")!=null) {
+		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
+		if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
 	
-	if (learnact.getExtracontent() != null && !learnact.getExtracontent().trim().equals("")) {
-
-		
-		ficheroString = LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"fichero");
-		
-		if(ficheroString.equals("true")){
-			fichero = true;
+			fichero = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"fichero"));
+			textoenr = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"textoenr")); 
+				
 		}
 		
-		textoenrString = LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"textoenr");
-	
-		if(textoenrString.equals("true")){
-			textoenr = true;
-		}
-			
+		
+	    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
+	  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
+		dq.add(criterion);
+	    existTries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0;
 	}
-	
-	
-    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
-  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learnact.getActId());
-	dq.add(criterion);
-    boolean existTries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0;
 %>
-<portlet:actionURL var="camposExtraURL" name="camposExtra">
-</portlet:actionURL>
-<portlet:renderURL var="cancel">
-	<portlet:param name="actId" value="0"></portlet:param>
-</portlet:renderURL>
 
-<aui:form action="<%=camposExtraURL%>" method="post">
-	<aui:input name="actId" type="hidden" value="<%=learnact.getActId()%>"></aui:input>
-	<aui:input type="checkbox" name="fichero" label="onlinetaskactivity.save.file" checked="<%=fichero %>" disabled='<%=existTries %>' ></aui:input>
-	<aui:input type="checkbox" name="textoenr" label="onlinetaskactivity.richTech" checked="<%=textoenr %>" disabled='<%=existTries %>' ></aui:input>
-	<aui:button-row>
-		<aui:button type="submit" disabled='<%=existTries %>' value="onlinetaskactivity.save" />
-		<aui:button onclick="<%=\"window.location='\"+cancel+\"';\"%>" type="cancel" disabled='<%=existTries %>' value="onlinetaskactivity.cancel" />
-	</aui:button-row>
-</aui:form>
+<aui:input type="checkbox" name="fichero" label="onlinetaskactivity.save.file" checked="<%=fichero %>" disabled='<%=existTries %>' ></aui:input>
+<aui:input type="checkbox" name="textoenr" label="onlinetaskactivity.richTech" checked="<%=textoenr %>" disabled='<%=existTries %>' ></aui:input>
