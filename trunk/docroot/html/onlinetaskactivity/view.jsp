@@ -205,6 +205,7 @@ if(isTeacher){
 			<aui:column>
 				<aui:select label="onlinetaskactivity.is.passed" name="gradeFilter" onchange='<%="document.getElementById(\'" + renderResponse.getNamespace() + "studentsearch\').submit();" %>'>
 					<aui:option selected='<%= gradeFilter.equals("") %>' value=""><liferay-ui:message key="onlinetaskactivity.all" /></aui:option>
+					<aui:option selected='<%= gradeFilter.equals("nocalification") %>' value="nocalification"><liferay-ui:message key="onlinetaskactivity.status.passed" /></aui:option>
 					<aui:option selected='<%= gradeFilter.equals("passed") %>' value="passed"><liferay-ui:message key="onlinetaskactivity.passed" /></aui:option>
 					<aui:option selected='<%= gradeFilter.equals("failed") %>' value="failed"><liferay-ui:message key="onlinetaskactivity.failed" /></aui:option>
 				</aui:select>
@@ -224,13 +225,20 @@ if(isTeacher){
 				LinkedHashMap<String,Object> params = new LinkedHashMap<String,Object>();
 				params.put("usersGroups", new Long(themeDisplay.getScopeGroupId()));
 				params.put("onlineActivity",new CustomSQLParam(OnlineActivity.ACTIVITY_TRY_SQL,actId));
-				
+						
 				if(gradeFilter.equals("passed")) {
 					params.put("passed",new CustomSQLParam(OnlineActivity.ACTIVITY_RESULT_PASSED_SQL,actId));
 				}
-				else if(gradeFilter.equals("failed")) {
-					params.put("failed",new CustomSQLParam(OnlineActivity.ACTIVITY_RESULT_FAIL_SQL,actId));
+				else {
+					if(gradeFilter.equals("failed")) {
+						params.put("failed",new CustomSQLParam(OnlineActivity.ACTIVITY_RESULT_FAIL_SQL,actId));
+					} else {
+						if (gradeFilter.equals("nocalification")) {
+							params.put("nocalification",new CustomSQLParam(OnlineActivity.ACTIVITY_RESULT_NO_CALIFICATION_SQL,actId));
+						}
+					}
 				}
+				
 				
 				
 				OrderByComparator obc = new UserFirstNameComparator(true);
