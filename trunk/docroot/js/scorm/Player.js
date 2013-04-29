@@ -522,7 +522,7 @@ Player.ContentPlayer.prototype = {
 				this.$12.disabled = true;
 				this.$14.disabled = true;
 			}
-			this.$3.src = 'blank.html';
+			this.$3.src = '/liferaylms-portlet/blank.html';
 		} else if ($p1.get_eventType() === 1) {
 			if (this.$B != null) {
 				if (!this.$B.isFinishAttempted()) {
