@@ -89,13 +89,13 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',f
 					if(parentNode.hasClass('option-more')) {
 						parentNode.removeClass("option-more");
 						parentNode.addClass("option-less");
-						close.run();
+						open.run();
 					
 					}
 					else {
 						parentNode.removeClass("option-less");
 						parentNode.addClass("option-more");
-						open.run();
+						close.run();
 					}
 		
 				});
