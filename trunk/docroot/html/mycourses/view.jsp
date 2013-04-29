@@ -13,7 +13,7 @@
 
 	AUI().ready('event','node','anim',function(A) {
 	
-		A.all('div.option-more span').each(function(span){
+		A.all('span.ico-desplegable').each(function(span){
 			var parentNode=span.get('parentNode');
 			var wrapper = A.Node.create('<div style="overflow: hidden;" ></div>');
 			wrapper.append(parentNode.one('div.collapsable').replace(wrapper));
