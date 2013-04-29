@@ -58,13 +58,13 @@ name="title"
 property="title"
 orderable="false"
 />
-<liferay-portlet:actionURL name="selectResource" var="selectResourceURL">
- <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
- <liferay-portlet:param value="/html/resourceInternalActivity/admin/edit.jsp" name="jspPage"/>
- <liferay-portlet:param value="<%=Long.toString(assetEntry.getEntryId()) %>" name="entryId"/>
-</liferay-portlet:actionURL>
+<liferay-portlet:renderURL var="selectResourceURL">
+ <liferay-portlet:param value="/html/resourceInternalActivity/admin/result.jsp" name="jspPage"/>
+ <liferay-portlet:param value="<%=Long.toString(assetEntry.getEntryId()) %>" name="assertId"/>
+ <liferay-portlet:param value="<%=assetEntry.getTitle(renderRequest.getLocale()) %>" name="assertTitle"/>
+</liferay-portlet:renderURL>
 <liferay-ui:search-container-column-text>
-<liferay-ui:icon image="add" label="select" url="<%=selectResourceURL.toString() %>"></liferay-ui:icon>
+	<liferay-ui:icon image="add" label="false" message="select" url="<%=selectResourceURL.toString() %>" ></liferay-ui:icon>
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
  <liferay-ui:search-iterator />
