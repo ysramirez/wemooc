@@ -71,30 +71,35 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',f
 			ul.hide();
 		});
 
+
 		A.all('.lms-tree ul li span.desplegar').each(function(span){
+
 			var parentNode=span.get('parentNode');
 			var wrapper = A.Node.create('<div style="overflow: hidden;" ></div>');
-			wrapper.append(parentNode.one('ul').replace(wrapper));
-			var height=wrapper.height();
-			var open = new A.Anim({node: wrapper, to: {height:  height},
-			     easing: A.Easing.easeOut});
-     		var close = new A.Anim({node: wrapper, to: {height:  -100},
-			     easing: A.Easing.easeIn});
-			span.on('click',function(){
-				
-				if(parentNode.hasClass('option-more')) {
-					parentNode.removeClass("option-more");
-					parentNode.addClass("option-less");
-					close.run();
-				
-				}
-				else {
-					parentNode.removeClass("option-less");
-					parentNode.addClass("option-more");
-					open.run();
-				}
+			if(parentNode.one('ul')) {
+				wrapper.append(parentNode.one('ul').replace(wrapper));
+				var height=wrapper.height();
+				var open = new A.Anim({node: wrapper, to: {height:  height},
+				     easing: A.Easing.easeOut});
+	     		var close = new A.Anim({node: wrapper, to: {height:  -100},
+				     easing: A.Easing.easeIn});
 	
-			})
+				span.on('click',function(){
+					
+					if(parentNode.hasClass('option-more')) {
+						parentNode.removeClass("option-more");
+						parentNode.addClass("option-less");
+						close.run();
+					
+					}
+					else {
+						parentNode.removeClass("option-less");
+						parentNode.addClass("option-more");
+						open.run();
+					}
+		
+				});
+			}
 		});
 
 });
