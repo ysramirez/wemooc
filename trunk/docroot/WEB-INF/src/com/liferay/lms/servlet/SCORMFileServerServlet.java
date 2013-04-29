@@ -58,7 +58,10 @@ public class SCORMFileServerServlet extends HttpServlet {
         //El content type siempre antes del printwriter
         mime_type= MimeTypesUtil.getContentType(archivo);
         response.setContentType(mime_type);
-
+        if(archivo.getName().toLowerCase().endsWith(".html") ||archivo.getName().toLowerCase().endsWith(".htm") )
+        {
+        	mime_type="text/html";
+        }
         java.io.OutputStream out=response.getOutputStream();
 
         FileInputStream fis=new FileInputStream(patharchivo);
