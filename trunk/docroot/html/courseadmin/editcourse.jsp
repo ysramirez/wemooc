@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.model.LayoutSetPrototype"%>
+<%@page import="com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
 <%@page import="com.liferay.lms.learningactivity.courseeval.CourseEval"%>
 <%@page import="com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
@@ -136,6 +139,25 @@ else
 	}
 	%>
 	</aui:select>
+	<%
+	if(course==null)
+	{
+		String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
+		%>
+		<aui:select name="courseTemplate" label="course-template">
+		<%
+		for(String lspis:lspist)
+		{
+			LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
+			%>
+			<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+			<%
+		}
+		%>
+		</aui:select>
+		<%
+	}
+	%>
 
 	
 	<aui:field-wrapper label="start-inscription-date">
