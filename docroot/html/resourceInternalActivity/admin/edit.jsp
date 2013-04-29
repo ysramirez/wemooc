@@ -58,7 +58,7 @@ function <portlet:namespace />back() {
 	AUI().use('node',function(A) {
 		A.one('#<portlet:namespace/>backbutton').remove();
 		A.one('#<portlet:namespace/>finder').remove();
-		A.one('.acticons').show();
+		A.all('.acticons').each(function(icon){ icon.show(); });
 		A.one('#<portlet:namespace/>fm').show();
 
 	});
