@@ -37,7 +37,7 @@ function <portlet:namespace />load(source) {
            (A.Lang.isString(params['<portlet:namespace />assertTitle']))) {
 			A.one('#<portlet:namespace/>backbutton').remove();
 			A.one('#<portlet:namespace/>finder').remove();
-			A.one('.acticons').show();
+			A.all('.acticons').each(function(icon){ icon.show(); });
 			A.one('#<portlet:namespace/>fm').show();
 			A.one('#<portlet:namespace/>assetEntryId').setAttribute('value',params['<portlet:namespace />assertId']);		
 			A.one('#<portlet:namespace/>assetTitle .taglib-text').setContent(params['<portlet:namespace />assertTitle']);	
