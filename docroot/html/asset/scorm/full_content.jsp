@@ -14,18 +14,17 @@
 	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/LocalStorage.js"></script>
 	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/Player.js"></script>
 <%
-
-
 SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 
-String urlIndex="http://localhost:8080/liferaylms-portlet/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
+String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
 
 %>
-
+<%=this.getServletContext().getContextPath() %>
+<%=urlIndex %><br />
    <script type="text/javascript">
      function InitPlayer() {
-       PlayerConfiguration.Debug = true;
-       PlayerConfiguration.StorageSupport = false;
+       PlayerConfiguration.Debug = false;
+       PlayerConfiguration.StorageSupport = true;
 
        PlayerConfiguration.TreeMinusIcon = "/liferaylms-portlet/icons/scorm/minus.gif";
        PlayerConfiguration.TreePlusIcon = "/liferaylms-portlet/icons/scorm/plus.gif";
@@ -61,6 +60,5 @@ String urlIndex="http://localhost:8080/liferaylms-portlet/scorm/"+Long.toString(
        </table>
       </td>
     </tr>
-   <div id="debuggerContainer">
-   </div>
+   
   </table>
