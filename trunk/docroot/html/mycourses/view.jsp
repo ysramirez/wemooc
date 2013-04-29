@@ -29,13 +29,14 @@
 				if(parentNode.hasClass('option-less')) {
 					parentNode.removeClass("option-less");
 					parentNode.addClass("option-more");
-					open.run();
-				
+					close.run();
 				}
 				else {
 					parentNode.removeClass("option-more");
 					parentNode.addClass("option-less");
-					close.run();
+					
+open.run();
+				
 				}
 	
 			})
@@ -62,7 +63,7 @@ for(Group groupCourse:groups)
 	if(modulescount>0)
 	{
 		%>
-		<div class="course option-less">
+		<div class="course option-more">
 		<%
 		if(groupCourse.getPublicLayoutSet().getLogo())
 		{
