@@ -91,12 +91,11 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return coursePersistence.fetchByGroupCreatedId(groupId);
 	}
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
-			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
+			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,
 		ServiceContext serviceContext)
 			throws SystemException, 
 			PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
-		long layoutSetPrototypeId=Long.valueOf(lmsPrefs.getLmsTemplates());
 		long userId=serviceContext.getUserId();
 		Course course =
 				coursePersistence.create(counterLocalService.increment(
@@ -160,10 +159,20 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			LayoutSetPrototype lsProto=LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
 			/* activamos social activity para la comunidad creada */ 		
-			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);
-						
+			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);			
 			return course;
 		
+	}
+	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
+			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
+		ServiceContext serviceContext)
+			throws SystemException, 
+			PortalException {
+		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
+		long layoutSetPrototypeId=Long.valueOf(lmsPrefs.getLmsTemplates());
+		return addCourse (title, description,summary,friendlyURL, locale,
+				createDate,startDate,endDate,layoutSetPrototypeId,
+				 serviceContext);
 	}
 	public Course addCourse (String title, String description,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,

@@ -150,8 +150,7 @@ public class SCORMContentLocalServiceImpl
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			try
-			{
+		
 				if (serviceContext.isAddGroupPermissions() ||
 						serviceContext.isAddGuestPermissions()) {
 					resourceLocalService.addResources(
@@ -179,11 +178,7 @@ public class SCORMContentLocalServiceImpl
 					ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  scocontent.getDescription(),null, null, 0, 0,
 					null, false);
 					
-			}
-			catch(Exception e)
-			{
-				e.printStackTrace();
-			}
+			
 				
 			return scocontent;
 		
