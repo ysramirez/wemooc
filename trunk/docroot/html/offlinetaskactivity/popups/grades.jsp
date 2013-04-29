@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.model.LearningActivity"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
@@ -7,10 +9,12 @@
 <%
 
 LearningActivityResult result = null;
+LearningActivity activity = null;
 
 if((renderRequest.getParameter("actId")!=null)&&(renderRequest.getParameter("studentId")!=null))
 {
-	result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(ParamUtil.getLong(renderRequest,"actId"), ParamUtil.getLong(renderRequest,"studentId"));	
+	result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(ParamUtil.getLong(renderRequest,"actId"), ParamUtil.getLong(renderRequest,"studentId"));
+	activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest,"actId"));
 }
 
 
@@ -19,13 +23,15 @@ if((renderRequest.getParameter("actId")!=null)&&(renderRequest.getParameter("stu
 <aui:form  name="fn_grades" method="post" >
 	<aui:fieldset>
 		<aui:input type="hidden" name="studentId" value='<%=renderRequest.getParameter("studentId") %>' />
-	    <aui:input type="text" name="result" label="offlinetaskactivity.grades" value='<%=((result!=null)&&(result.getResult()>0))?Long.toString(result.getResult()):"" %>' />
+	    <aui:input type="text" name="result" helpMessage="<%=LanguageUtil.format(pageContext, \"offlinetaskactivity.grades.resultMessage\", new Object[]{activity.getPasspuntuation()})%>" label="offlinetaskactivity.grades" value='<%=((result!=null)&&(result.getResult()>0))?Long.toString(result.getResult()):"" %>' />
 	    <div id="<portlet:namespace />resultError" class="<%=(SessionErrors.contains(renderRequest, "offlinetaskactivity.grades.result-bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    	<%=(SessionErrors.contains(renderRequest, "offlinetaskactivity.grades.result-bad-format"))?
 	    			LanguageUtil.get(pageContext,"offlinetaskactivity.grades.result-bad-format"):StringPool.BLANK %>
 	    </div>
-		<aui:input type="textarea" cols="40"  rows="2" name="comments" label="offlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'/>
+		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"offlinetaskactivity.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="5" name="comments" label="offlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
+			<aui:validator name="range">[0, 70]</aui:validator>
+		</aui:input>
 	</aui:fieldset>
 	<aui:button-row>
 	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">

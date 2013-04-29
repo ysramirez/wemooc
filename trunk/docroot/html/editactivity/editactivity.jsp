@@ -73,7 +73,7 @@ int endYear=Integer.parseInt(formatYear.format(today))+1;
 int endHour=Integer.parseInt(formatHour.format(today));
 int endMin=Integer.parseInt(formatMin.format(today));
 %>
-<liferay-ui:header title="<%=typeName %>"></liferay-ui:header>
+<liferay-ui:header title="<%=typeName%>"></liferay-ui:header>
 <%
 if(learnact!=null)
 {
@@ -131,11 +131,9 @@ if(learnact!=null)
 	<aui:model-context bean="<%= learnact %>" model="<%= LearningActivity.class %>" />
 
 <%
-}
-else
-{
+}else{
 	%>
-	<aui:model-context  model="<%= LearningActivity.class %>" />
+	<aui:model-context model="<%= LearningActivity.class %>" />
 	<%
 }
 %>
@@ -270,7 +268,7 @@ Liferay.provide(
 				score=learnact.getPasspuntuation();
 			}
 		%>
-		<aui:input size="5" name="passpuntuation" label="passpuntuation" value="<%=Long.toString(score) %>">
+		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>">
 			<aui:validator name="required"/>
 		<aui:validator name="number" />
 		<aui:validator name="range">[0,100]</aui:validator>
@@ -331,8 +329,8 @@ Liferay.provide(
 	}
 %>
 		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
-			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" />
-			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" />
+			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" inlineField="true" />
+			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true"/>
 		</aui:field-wrapper>
 		
 		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
@@ -353,7 +351,7 @@ Liferay.provide(
 	</aui:fieldset>
 	
 	<aui:button-row>
-		<aui:button type="submit" ></aui:button>
+		<aui:button type="submit" value="savechanges"></aui:button>
 		
 		<script type="text/javascript">
 		<!--
@@ -379,6 +377,6 @@ Liferay.provide(
 		    
 		//-->
 		</script>
-		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
+		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
 	</aui:button-row>
 </aui:form>

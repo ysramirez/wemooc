@@ -41,7 +41,7 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 			"	new A.Dialog( "+
 			"		{ "+
 			"    		id: 'editlesson', "+ 
-			"			title: '"+ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName())+"', "+
+			"			title: '"+LanguageUtil.get(pageContext,"activity.edition")+"', "+
 		    "			destroyOnClose: true, "+
 		    "			width: 750, "+
 		    "			modal:true, "+
