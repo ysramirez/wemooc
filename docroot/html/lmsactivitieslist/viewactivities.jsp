@@ -114,7 +114,7 @@ Liferay.provide(
 			"	new A.Dialog( "+
 			"		{ "+
 			"    		id: 'editlesson', "+ 
-			"			title: '"+ResourceActionsUtil.getModelResource(locale, LearningActivity.class.getName())+"', "+
+			"			title: '"+LanguageUtil.get(pageContext,"activity.creation")+"', "+
 		    "			destroyOnClose: true, "+
 		    "			width: 750, "+
 		    "			modal:true, "+

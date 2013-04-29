@@ -158,7 +158,7 @@
 
 							window.<portlet:namespace />popupGrades = new A.Dialog({
 								id:'<portlet:namespace />showPopupGrades',
-					            title: '<liferay-ui:message key="offlinetaskactivity.set.grades" />',
+					            title: '<%=LanguageUtil.format(pageContext, "offlinetaskactivity.set.grades", new Object[]{""})%>',
 					            centered: true,
 					            modal: true,
 					            width: 370,
@@ -244,11 +244,10 @@
 								<aui:option selected='<%= gradeFilter.equals("passed") %>' value="passed"><liferay-ui:message key="offlinetaskactivity.passed" /></aui:option>
 								<aui:option selected='<%= gradeFilter.equals("failed") %>' value="failed"><liferay-ui:message key="offlinetaskactivity.failed" /></aui:option>
 							</aui:select>
-							<aui:button name="searchUsers" value="search" type="submit" />
 						</aui:column>	
-						<aui:button-row>
+						<aui:column>
 							<aui:button name="searchUsers" value="search" type="submit" />
-						</aui:button-row>
+						</aui:column>
 					</aui:fieldset>
 				</aui:form>
 				
@@ -289,10 +288,10 @@
 					</liferay-ui:search-container-results>
 					
 					<liferay-ui:search-container-row className="com.liferay.portal.model.User" keyProperty="userId" modelVar="user">
-					<liferay-ui:search-container-column-text>
+					<liferay-ui:search-container-column-text name="name">
 						<liferay-ui:user-display userId="<%=user.getUserId() %>"></liferay-ui:user-display>
 					</liferay-ui:search-container-column-text>
-					<liferay-ui:search-container-column-text>
+					<liferay-ui:search-container-column-text name="calification">
 						<% LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, user.getUserId()); 
 						   if((learningActivityResult!=null)&&(learningActivityResult.getResult()!=0)) {	   
 							   if (learningActivityResult.getResult()!=0) {
@@ -307,12 +306,14 @@
 							   else {
 								   %><liferay-ui:message key="offlinetaskactivity.student.without.qualification" /><% 
 							   }
-			               } %>
-					</liferay-ui:search-container-column-text>
-					<liferay-ui:search-container-column-text>
-						<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
-							<liferay-ui:message key="offlinetaskactivity.set.grades" />
-						</a>
+			               } 
+						   Object  [] arg =  new Object[]{" >>"};
+			               %>
+			            <p class="asset-more">
+							<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
+								<liferay-ui:message key="offlinetaskactivity.set.grades" arguments="<%=arg %>" />
+							</a>
+						</p>
 					</liferay-ui:search-container-column-text>
 					</liferay-ui:search-container-row>
 					
