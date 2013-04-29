@@ -62,7 +62,7 @@ for(Group groupCourse:groups)
 	if(modulescount>0)
 	{
 		%>
-		<div class="course option-more">
+		<div class="course option-less">
 		<%
 		if(groupCourse.getPublicLayoutSet().getLogo())
 		{
