@@ -3,16 +3,19 @@
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
-<%@ include file="/html/resourceInternalActivity/admin/init.jsp" %>
+<%@ include file="/init.jsp" %>
+
+<liferay-portlet:renderURL var="result">
+	<liferay-portlet:param name="jspPage" value="/html/resourceInternalActivity/admin/result.jsp"/>
+</liferay-portlet:renderURL>
+<a href="<%=result%>">return</a>
 
 <%
 List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetRendererFactories();
 
 %>
 <liferay-portlet:renderURL var="selectResource">
-<liferay-portlet:param name="jspPage" value="/html/resourceInternalActivity/admin/searchresults.jsp"/>
- <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
-
+	<liferay-portlet:param name="jspPage" value="/html/resourceInternalActivity/admin/searchresults.jsp"/>
 </liferay-portlet:renderURL>
 <aui:form name="<portlet:namespace />ressearch" action="<%=selectResource %>" method="POST">
 <aui:select name="className" label="asset-type">

@@ -14,7 +14,7 @@ if(request.getAttribute("activity")!=null)
 }
 else
 {
-	learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
+	learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"resId"));
 }
 
 %>
