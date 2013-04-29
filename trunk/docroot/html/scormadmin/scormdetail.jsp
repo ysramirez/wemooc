@@ -17,10 +17,10 @@
 
 long scormId=ParamUtil.getLong(request, "scormId",0);
 SCORMContent scorm=SCORMContentLocalServiceUtil.getSCORMContent(scormId);
-String urlIndex="http://localhost:8080/liferaylms-portlet/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
+String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
 
 %>
-
+<%=urlIndex %><br />
    <script type="text/javascript">
      function InitPlayer() {
        PlayerConfiguration.Debug = false;
