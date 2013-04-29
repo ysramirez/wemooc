@@ -20,7 +20,7 @@ function <portlet:namespace />search() {
 		A.one('.portlet-body').prepend(backbutton);
 		var iframe = A.Node.create('<iframe id="<portlet:namespace/>finder" src="javascript:false;" onload="<portlet:namespace />load(this)" frameBorder="0" scrolling="no" width="'+A.getBody().width()+'" height="0"></iframe>');
 		A.one('.portlet-body').append(iframe);
-		A.one('.acticons').hide();
+		A.all('.acticons').each(function(icon){ icon.hide(); });
 		A.one('#<portlet:namespace/>fm').hide();
 		iframe.setAttribute('src','<%=selectResource %>');
 	});
