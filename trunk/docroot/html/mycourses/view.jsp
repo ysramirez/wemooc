@@ -26,16 +26,16 @@
 			     easing: A.Easing.easeIn});
 			span.on('click',function(){
 				
-				if(parentNode.hasClass('option-more')) {
-					parentNode.removeClass("option-more");
-					parentNode.addClass("option-less");
-					close.run();
-				
-				}
-				else {
+				if(parentNode.hasClass('option-less')) {
 					parentNode.removeClass("option-less");
 					parentNode.addClass("option-more");
 					open.run();
+				
+				}
+				else {
+					parentNode.removeClass("option-more");
+					parentNode.addClass("option-less");
+					close.run();
 				}
 	
 			})
