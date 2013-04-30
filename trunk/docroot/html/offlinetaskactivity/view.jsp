@@ -161,8 +161,8 @@
 					            title: '<%=LanguageUtil.format(pageContext, "offlinetaskactivity.set.grades", new Object[]{""})%>',
 					            centered: true,
 					            modal: true,
-					            width: 370,
-					            height: 300,
+					            width: 470,
+					            height: 400,
 					            after: {   
 						          	close: function(event){ 
 						          		document.getElementById('<portlet:namespace />studentsearch').submit();
@@ -212,7 +212,7 @@
 				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'
 				/>
 				<% } %>
-				<h2><liferay-ui:message key="offlinetaskactivity.description" />  </h2>
+				<h5><liferay-ui:message key="offlinetaskactivity.description" />  </h5>
 				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 				
 				
@@ -232,6 +232,7 @@
 				
 				<liferay-portlet:renderURL var="returnurl" />
 				
+				<h5><liferay-ui:message key="studentsearch"/></h5>
 				<aui:form name="studentsearch" action="<%=returnurl %>" method="post">
 					<aui:fieldset>
 						<aui:column>
@@ -306,12 +307,10 @@
 							   else {
 								   %><liferay-ui:message key="offlinetaskactivity.student.without.qualification" /><% 
 							   }
-			               } 
-						   Object  [] arg =  new Object[]{" >>"};
-			               %>
-			            <p class="asset-more">
+			               } %>
+			            <p class="see-more">
 							<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
-								<liferay-ui:message key="offlinetaskactivity.set.grades" arguments="<%=arg %>" />
+								<liferay-ui:message key="offlinetaskactivity.set.grades"/>
 							</a>
 						</p>
 					</liferay-ui:search-container-column-text>
