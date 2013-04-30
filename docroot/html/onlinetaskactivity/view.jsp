@@ -74,7 +74,7 @@ else
 %>
 
 <h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-
+<h5><liferay-ui:message key="onlinetaskactivity.description" />  </h5>
 <p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 <liferay-portlet:renderURL var="returnurl">
 <liferay-portlet:param name="jspPage" value="/html/onlineactivity/view.jsp" />	
@@ -138,8 +138,8 @@ else
 	            title: '<liferay-ui:message key="onlinetaskactivity.set.grades" />',
 	            centered: true,
 	            modal: true,
-	            width: 590,
-	            height: 300,
+	            width: 600,
+	            height: 800,
 	            after: {   
 		          	close: function(event){ 
 		          		document.getElementById('<portlet:namespace />studentsearch').submit();
@@ -197,22 +197,23 @@ if(isTeacher){
 		<portlet:param name="jspPage" value="/html/onlinetaskactivity/view.jsp"></portlet:param>
 	</portlet:renderURL>
 
+	<h5><liferay-ui:message key="studentsearch"/></h5>
 	<aui:form name="studentsearch" action="<%=buscarURL %>" method="post">
 		<aui:fieldset>
 			<aui:column>
-				<aui:input label="studentsearch.criteria" name="criteria" size="20" value="<%=criteria %>" />	
+				<aui:input label="studentsearch.text.criteria" name="criteria" size="20" value="<%=criteria %>" />	
 			</aui:column>
 			<aui:column>
-				<aui:select label="onlinetaskactivity.is.passed" name="gradeFilter" onchange='<%="document.getElementById(\'" + renderResponse.getNamespace() + "studentsearch\').submit();" %>'>
+				<aui:select label="offlinetaskactivity.status" name="gradeFilter" onchange='<%="document.getElementById(\'" + renderResponse.getNamespace() + "studentsearch\').submit();" %>'>
 					<aui:option selected='<%= gradeFilter.equals("") %>' value=""><liferay-ui:message key="onlinetaskactivity.all" /></aui:option>
 					<aui:option selected='<%= gradeFilter.equals("nocalification") %>' value="nocalification"><liferay-ui:message key="onlinetaskactivity.status.passed" /></aui:option>
 					<aui:option selected='<%= gradeFilter.equals("passed") %>' value="passed"><liferay-ui:message key="onlinetaskactivity.passed" /></aui:option>
 					<aui:option selected='<%= gradeFilter.equals("failed") %>' value="failed"><liferay-ui:message key="onlinetaskactivity.failed" /></aui:option>
 				</aui:select>
 			</aui:column>	
-			<aui:button-row>
+			<aui:column>
 				<aui:button name="searchUsers" value="search" type="submit" />
-			</aui:button-row>
+			</aui:column>	
 		</aui:fieldset>
 	</aui:form>
 	
@@ -255,10 +256,10 @@ if(isTeacher){
 		</liferay-ui:search-container-results>
 		
 		<liferay-ui:search-container-row className="com.liferay.portal.model.User" keyProperty="userId" modelVar="user">
-		<liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="name">
 			<liferay-ui:user-display userId="<%=user.getUserId() %>"></liferay-ui:user-display>
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="calification">
 			<% LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, user.getUserId()); 
 			   if((learningActivityResult!=null)&&(learningActivityResult.getResult()!=0)) {	   
 				   if (learningActivityResult.getResult()!=0) {
@@ -274,9 +275,9 @@ if(isTeacher){
 					   %><liferay-ui:message key="onlinetaskactivity.student.without.qualification" /><% 
 				   }
                } %>
-		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text>
-			<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);"><liferay-ui:message key="onlinetaskactivity.set.grades" /></a>
+			<p class="see-more">
+				<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);"><liferay-ui:message key="onlinetaskactivity.set.grades"/></a>
+			</p>
 		</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		

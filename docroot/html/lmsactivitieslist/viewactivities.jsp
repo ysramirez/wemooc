@@ -55,7 +55,7 @@ if (moduleId == 0) {
 			"ADD_LACT")&& ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()))
 	{
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-		activities=new ArrayList<LearningActivity>();
+		activities=new ArrayList<LearningActivity>(); 
 	}
 	else
 	{

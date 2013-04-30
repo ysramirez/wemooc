@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
@@ -20,10 +22,11 @@
 LearningActivityTry lATry = null;
 LearningActivityResult result = null;
 boolean ownGrade=false;
+LearningActivity activity = null;
 
 if(renderRequest.getParameter("actId")!=null)
 {
-	
+	activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest,"actId"));
 	if(renderRequest.getParameter("studentId")!=null){
 		ownGrade=false;
 		lATry = LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(ParamUtil.getLong(renderRequest,"actId"), ParamUtil.getLong(renderRequest,"studentId"));
@@ -71,7 +74,10 @@ if(lATry!=null){
 	catch(DocumentException de)
 	{}
 }
-
+if(renderRequest.getParameter("studentId")!=null){%>
+ <aui:a href="" label="<%=UserLocalServiceUtil.getUserById(ParamUtil.getLong(renderRequest, \"studentId\")).getFullName() %>"></aui:a>
+<%
+}
  if(richtext!=null) { %>
 	<aui:field-wrapper label="onlinetaskactivity.text" >
 		<liferay-ui:panel-container >
@@ -87,8 +93,9 @@ if(lATry!=null){
 <% } 
  if(urlFile!=null) {
 %>
-	<liferay-ui:icon image="export" label="<%= true %>" message='<%=titleFile+"&nbsp;("+ sizeKbFile +"Kb)&nbsp;"%>' method="get" url="<%=urlFile%>"  />
-
+	<liferay-ui:message key="onlinetaskactivity.grades.attach"/>
+	<liferay-ui:icon image="export" label="<%= true %>" message='<%=titleFile+"&nbsp;("+ sizeKbFile +"Kb)&nbsp;"%>' method="get"/>
+	<aui:a class="see-more" href="<%=urlFile%>"><liferay-ui:message key="onlinetaskactivity.grades.download"/></aui:a>
 <% } 
 
 if(!ownGrade){
@@ -97,9 +104,11 @@ if(!ownGrade){
 <aui:form  name="fn_grades" method="post" >
 	<aui:fieldset>
 		<aui:input type="hidden" name="studentId" value='<%=renderRequest.getParameter("studentId") %>' />
-	    <aui:input type="text" name="result" label="onlinetaskactivity.grades" value='<%=((result!=null)&&(result.getResult()>0))?Long.toString(result.getResult()):"" %>' />
+	    <aui:input type="text" name="result" helpMessage="<%=LanguageUtil.format(pageContext, \"onlinetaskactivity.grades.resultMessage\", new Object[]{activity.getPasspuntuation()})%>"  label="onlinetaskactivity.grades" value='<%=((result!=null)&&(result.getResult()>0))?Long.toString(result.getResult()):"" %>' />
 	    <liferay-ui:error key="onlinetaskactivity.grades.result-bad-format" message="onlinetaskactivity.grades.result-bad-format" />
-		<aui:input type="textarea" cols="40" rows="2" name="comments" label="onlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'/>
+		<aui:input type="textarea" cols="90" rows="3" helpMessage="<%=LanguageUtil.get(pageContext, \"onlinetaskactivity.grades.commentsMessage\")%>"  maxLength="70" name="comments" label="onlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
+			<aui:validator name="range">[0, 70]</aui:validator>
+		</aui:input>
 	</aui:fieldset>
 	<aui:button-row>
 	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">

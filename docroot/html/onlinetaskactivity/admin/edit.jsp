@@ -35,6 +35,6 @@
 	    existTries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0;
 	}
 %>
-
-<aui:input type="checkbox" name="fichero" label="onlinetaskactivity.save.file" checked="<%=fichero %>" disabled='<%=existTries %>' ></aui:input>
-<aui:input type="checkbox" name="textoenr" label="onlinetaskactivity.richTech" checked="<%=textoenr %>" disabled='<%=existTries %>' ></aui:input>
+<p><liferay-ui:message key="onlinetaskactivity.permitStudents"/></p>
+<aui:input type="checkbox" name="fichero" label="onlinetaskactivity.save.file" checked="<%=fichero %>" disabled='<%=existTries %>' inlineField="true"></aui:input>
+<aui:input type="checkbox" name="textoenr" label="onlinetaskactivity.richTech" checked="<%=textoenr %>" disabled='<%=existTries %>' inlineField="true"></aui:input>
