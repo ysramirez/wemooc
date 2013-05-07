@@ -19,8 +19,7 @@ SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
 
 %>
-<%=this.getServletContext().getContextPath() %>
-<%=urlIndex %><br />
+
    <script type="text/javascript">
      function InitPlayer() {
        PlayerConfiguration.Debug = false;
