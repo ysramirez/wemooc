@@ -24,7 +24,7 @@ String description=learnact.getDescription(themeDisplay.getLocale(),true);
 long actId=learnact.getActId();
 
 %>
-
+<%=actId %>
 <aui:model-context bean="<%= learnact %>" model="<%= LearningActivity.class %>" />
 <portlet:renderURL var="cancel">
 	<portlet:param name="actId" value="0" />
@@ -61,7 +61,19 @@ long actId=learnact.getActId();
 			<liferay-ui:error key="description-required" message="description-required" />
 		</aui:field-wrapper>
 		
+		
+	</aui:fieldset>
+	<aui:button-row>
 		<%
+		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
+		%>									
+	
+		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
+		<aui:button onClick="<%= cancel %>" type="cancel" />
+	</aui:button-row>
+</aui:form>
+
+<%
 		if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals("") )
 		{
 			
@@ -75,7 +87,6 @@ long actId=learnact.getActId();
 		%>
 			<h2><liferay-ui:message key="selected-content"></liferay-ui:message></h2>
 			<liferay-ui:header title="<%=assetRenderer.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-			<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
 			<%
 		}
 		if(learnact.getExtracontent()==null||learnact.getExtracontent().trim().equals("")|| Validator.isNumber(learnact.getExtracontent()))
@@ -84,17 +95,8 @@ long actId=learnact.getActId();
 			
 	    	<liferay-portlet:renderURL var="searchResource">
 				<liferay-portlet:param name="jspPage" value="/html/scormactivity/admin/searchresource.jsp"/>
-		 		<liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
+		 		<liferay-portlet:param name="resId" value="<%=Long.toString(actId) %>" />
+		 		<liferay-portlet:param name="actId" value="<%=Long.toString(actId) %>" />
 			</liferay-portlet:renderURL>
 			<a href="<%=searchResource.toString() %>"><liferay-ui:message key="select-resource"></liferay-ui:message></a>
 		<%} %>
-	</aui:fieldset>
-	<aui:button-row>
-		<%
-		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
-		%>									
-	
-		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
-		<aui:button onClick="<%= cancel %>" type="cancel" />
-	</aui:button-row>
-</aui:form>
