@@ -128,6 +128,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			}
 			catch(Exception e)
 			{
+				System.out.println("CourseLocalServiceImpl.addCourse()"+e);
 			}
 			//creating group
 			Group group = GroupLocalServiceUtil.addGroup(userId,null, 0,
