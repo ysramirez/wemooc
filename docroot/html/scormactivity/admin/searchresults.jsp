@@ -4,7 +4,7 @@
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.search.Hits"%>
-<%@ include file="/html/resourceInternalActivity/admin/searchresource.jsp" %>
+<%@ include file="/html/scormactivity/admin/searchresource.jsp" %>
 
 <liferay-ui:search-container emptyResultsMessage="there-are-no-assets"
  delta="10">
