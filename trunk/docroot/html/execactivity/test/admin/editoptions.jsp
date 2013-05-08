@@ -184,7 +184,7 @@ window.<portlet:namespace />validate_execactivity={
 	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
 		ignoreRequestValue="true"></aui:input>
 		
-	<aui:input type="checkbox" name="improve" label="exectactivity.edit.showcorrect" checked="<%=improve %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
 		ignoreRequestValue="true"></aui:input>
 
 
