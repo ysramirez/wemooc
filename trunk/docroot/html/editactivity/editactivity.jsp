@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portlet.PortletQNameUtil"%>
 <%@page import="com.liferay.portal.model.PublicRenderParameter"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
@@ -48,6 +49,8 @@ else
 	if(actId>0)
 	{
 		learnact=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		typeId=learnact.getTypeId();
+		moduleId=learnact.getModuleId();
 	}
 	
 }
@@ -107,10 +110,10 @@ if(learnact!=null)
 				String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse).toString();			
 				Portlet urlEditPortlet = PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(urlEdit, "p_p_id",false));
 				if(urlEditPortlet!=null) {
-					//PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
-					//if(actIdPublicParameter!=null) {
-					//	urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
-					//}
+					PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
+					if(actIdPublicParameter!=null) {
+						urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
+					}
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId");
 					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId", Long.toString(learnact.getActId()));
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId");
@@ -137,6 +140,103 @@ if(learnact!=null)
 	<%
 }
 %>
+
+<script type="text/javascript">
+<!--
+
+AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
+
+
+	var rules = {			
+			<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
+				required: true
+			},
+        	<portlet:namespace />description: {
+        		required: true
+            }
+			<% if(larntype.isTriesConfigurable()) { %>
+			,<portlet:namespace />tries: {
+				required: true,
+				number: true,
+				range: [0,100]
+			}
+			<% } if(larntype.isScoreConfigurable()) { %>
+			,<portlet:namespace />passpuntuation: {
+				required: true,
+				number: true,
+				range: [0,100]
+			}
+			<% } %>
+		};
+
+	var fieldStrings = {			
+        	<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
+        		required: '<liferay-ui:message key="title-required" />'
+            },
+        	<portlet:namespace />description: {
+        		required: '<liferay-ui:message key="description-required" />'
+            }
+			<% if(larntype.isTriesConfigurable()) { %>
+        	,<portlet:namespace />tries: {
+        		required: '<liferay-ui:message key="editActivity.tries.required" />',
+        		number: '<liferay-ui:message key="editActivity.tries.number" />',
+        		range: '<liferay-ui:message key="editActivity.tries.range" />',       		
+            }
+			<% } if(larntype.isScoreConfigurable()) { %>
+        	,<portlet:namespace />passpuntuation: {
+        		required: '<liferay-ui:message key="editActivity.passpuntuation.required" />',
+        		number: '<liferay-ui:message key="editActivity.passpuntuation.number" />',
+        		range: '<liferay-ui:message key="editActivity.passpuntuation.range" />',       		
+            }
+			<% } %> 
+		};
+	
+	A.each(A.Object.keys(window), function(fieldName){
+		var field=window[fieldName];
+	    if((fieldName.indexOf('<portlet:namespace />validate_')==0)&&
+	       (A.Lang.isObject(field))&&
+	       (A.Object.hasKey(field,'rules'))&&
+	       (A.Object.hasKey(field,'fieldStrings'))) {
+			A.mix(rules,field.rules,true);
+			A.mix(fieldStrings,field.fieldStrings,true);
+		}
+	});
+
+	
+	window.<portlet:namespace />validateActivity = new A.FormValidator({
+		boundingBox: '#<portlet:namespace />fm',
+		validateOnBlur: true,
+		validateOnInput: true,
+		selectText: true,
+		showMessages: false,
+		containerErrorClass: '',
+		errorClass: '',
+		rules: rules,
+        fieldStrings: fieldStrings,
+		
+		on: {		
+            errorField: function(event) {
+            	var instance = this;
+				var field = event.validator.field;
+				var divError = A.one('#'+field.get('name')+'Error');
+				if(divError) {
+					divError.addClass('portlet-msg-error');
+					divError.setContent(instance.getFieldErrorMessage(field,event.validator.errors[0]));
+				}
+            },		
+            validField: function(event) {
+				var divError = A.one('#'+event.validator.field.get('name')+'Error');
+				if(divError) {
+					divError.removeClass('portlet-msg-error');
+					divError.setContent('');
+				}
+            }
+		}
+	});
+});
+
+//-->
+</script>
 <aui:form name="fm" action="<%=saveactivityURL%>"  method="post"  enctype="multipart/form-data">
 	<aui:fieldset>
 		<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
@@ -213,11 +313,33 @@ Liferay.provide(
 	%>
 
 		<aui:input name="title" label="title">
-		<aui:validator name="required" />
 		</aui:input>
-		<liferay-ui:error key="title-required" message="title-required" />
+		<div id="<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>Error" class="<%=(SessionErrors.contains(renderRequest, "title-required"))?
+	    														"portlet-msg-error":StringPool.BLANK %>">
+	    	<%=(SessionErrors.contains(renderRequest, "title-required"))?
+	    			LanguageUtil.get(pageContext,"title-required"):StringPool.BLANK %>
+	    </div>
+	    
+	    <script type="text/javascript">
+		<!--
+			Liferay.provide(
+		        window,
+		        '<portlet:namespace />onChangeDescription',
+		        function(val) {
+		        	var A = AUI();
+					A.one('#<portlet:namespace />description').set('value',val);
+					if(window.<portlet:namespace />validateActivity){
+						window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
+					}
+		        },
+		        ['node']
+		    );
+		    
+		//-->
+		</script>
+	    
 		<aui:field-wrapper label="description">
-			<liferay-ui:input-editor name="description" width="100%" />
+			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
 			<script type="text/javascript">
 		        function <portlet:namespace />initEditor() 
 		        { 
@@ -225,7 +347,11 @@ Liferay.provide(
 		        }
 		    </script>
 		</aui:field-wrapper>
-		<liferay-ui:error key="description-required" message="description-required" />
+		<div id="<portlet:namespace />descriptionError" class="<%=(SessionErrors.contains(renderRequest, "description-required"))?
+	    														"portlet-msg-error":StringPool.BLANK %>">
+	    	<%=(SessionErrors.contains(renderRequest, "description-required"))?
+	    			LanguageUtil.get(pageContext,"description-required"):StringPool.BLANK %>
+	    </div>
 	
 		<aui:field-wrapper label="start-date">
 			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
@@ -248,10 +374,18 @@ Liferay.provide(
 		%>
 		
 		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>">
-		<aui:validator name="required"/>
-		<aui:validator name="number" />
-		<aui:validator name="range">[0,1000]</aui:validator>
 		</aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
+  		<div id="<portlet:namespace />triesError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.tries.required"))||
+														      (SessionErrors.contains(renderRequest, "editActivity.tries.number"))||
+														      (SessionErrors.contains(renderRequest, "editActivity.tries.range")))?
+   														      "portlet-msg-error":StringPool.BLANK %>">
+   			<%=(SessionErrors.contains(renderRequest, "editActivity.tries.required"))?
+   			    	LanguageUtil.get(pageContext,"editActivity.tries.required"):
+ 			   (SessionErrors.contains(renderRequest, "editActivity.tries.number"))?
+ 		    		LanguageUtil.get(pageContext,"editActivity.tries.number"):
+ 			   (SessionErrors.contains(renderRequest, "editActivity.tries.range"))?
+ 		    		LanguageUtil.get(pageContext,"editActivity.tries.range"):StringPool.BLANK %>
+	    </div>
 		<%
 		}
 		else
@@ -269,10 +403,18 @@ Liferay.provide(
 			}
 		%>
 		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>">
-			<aui:validator name="required"/>
-		<aui:validator name="number" />
-		<aui:validator name="range">[0,100]</aui:validator>
 		</aui:input>
+  		<div id="<portlet:namespace />passpuntuationError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))||
+																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))||
+																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range")))?
+	    														      "portlet-msg-error":StringPool.BLANK %>">
+	    	<%=(SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))?
+	    			LanguageUtil.get(pageContext,"editActivity.passpuntuation.required"):
+   			   (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))?
+   		    		LanguageUtil.get(pageContext,"editActivity.passpuntuation.number"):
+   			   (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range"))?
+   		    		LanguageUtil.get(pageContext,"editActivity.passpuntuation.range"):StringPool.BLANK %>
+	    </div>
 		<%
 		}
 		else

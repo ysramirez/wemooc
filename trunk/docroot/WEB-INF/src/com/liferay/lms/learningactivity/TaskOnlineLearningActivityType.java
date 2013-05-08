@@ -6,7 +6,7 @@ import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.TaskOnlineAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.LearningActivityResult;
+import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -60,7 +60,7 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 			PortletResponse portletResponse, LearningActivity learningActivity)
 			throws PortalException, SystemException, DocumentException,IOException {
 		
-	    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
+	    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
 	  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
 		dq.add(criterion);
 		

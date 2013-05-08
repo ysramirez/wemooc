@@ -12,7 +12,7 @@
 <%@page	import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
 <%@page	import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
 <%@page	import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
-<%@page import="com.liferay.lms.model.LearningActivityResult"%>
+<%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@ include file="/init.jsp" %>
 
 <%
@@ -29,7 +29,7 @@
 		}
 		
 		
-	    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
+	    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
 	  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
 		dq.add(criterion);
 	    existTries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0;

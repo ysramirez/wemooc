@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
@@ -70,20 +71,13 @@ public class TestAssetRenderer extends BaseAssetRenderer {
 
 	public PortletURL getURLEdit(LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse) throws Exception {
-		HttpServletRequest request = liferayPortletRequest
-				.getHttpServletRequest();
-
-		ThemeDisplay themeDisplay = (ThemeDisplay) request
-				.getAttribute(WebKeys.THEME_DISPLAY);
 
 		PortletURL portletURL = liferayPortletResponse
-				.createActionURL("execactivity_WAR_liferaylmsportlet");
-		portletURL.setParameter("javax.portlet.action", "edit");
-
+				.createRenderURL("execactivity_WAR_liferaylmsportlet");
 		portletURL.setParameter("mvcPath",
-				"/html/execactivity/test/admin/edit.jsp");
+				"/html/execactivity/test/admin/editquestions.jsp");
 		portletURL.setParameter("jspPage",
-				"/html/execactivity/test/admin/edit.jsp");
+				"/html/execactivity/test/admin/editquestions.jsp");
 		portletURL.setParameter("actId",
 				Long.toString(_learningactivity.getActId()));
 		return portletURL;

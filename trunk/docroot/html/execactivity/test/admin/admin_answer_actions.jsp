@@ -15,10 +15,11 @@ String actId = String.valueOf(answer.getActId());
 <liferay-ui:icon-menu>
 
 <portlet:actionURL name="deleteanswer" var="deleteURL">
-<portlet:param name="answerId" value="<%= primKey %>" />
-<portlet:param name="actId" value="<%= actId %>" />
-<portlet:param name="questionId" value="<%= questionId %>" />
-<portlet:param name="jspPage" value="/html/execactivity/test/admin/editquestion.jsp"></portlet:param>
+	<portlet:param name="answerId" value="<%= primKey %>" />
+	<portlet:param name="resId" value="<%= actId %>" />
+	<portlet:param name="questionId" value="<%= questionId %>" />
+	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>" />	
+	<portlet:param name="jspPage" value="/html/execactivity/test/admin/editquestion.jsp"></portlet:param>
 </portlet:actionURL>
 <liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
 </liferay-ui:icon-menu>

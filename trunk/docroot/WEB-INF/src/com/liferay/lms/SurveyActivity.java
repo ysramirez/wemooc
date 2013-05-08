@@ -10,6 +10,8 @@ import java.util.List;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
@@ -37,6 +39,7 @@ import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
@@ -145,7 +148,7 @@ public class SurveyActivity extends MVCPortlet {
 	public void addquestion(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws Exception {
 		
-		long actid = ParamUtil.getLong(actionRequest, "actId");
+		long actid = ParamUtil.getLong(actionRequest, "resId");
 	
 		String text = ParamUtil.getString(actionRequest, "text");
 		long questionType = ParamUtil.getLong(actionRequest, "qtype");
@@ -154,6 +157,8 @@ public class SurveyActivity extends MVCPortlet {
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(actid);
 		
 		actionResponse.setRenderParameter("questionId", Long.toString(question.getQuestionId()));
+		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+		actionResponse.setRenderParameter("resId", Long.toString(actid));
 		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestion.jsp");
 		
 		actionRequest.setAttribute("activity", learnact);
@@ -175,10 +180,10 @@ public class SurveyActivity extends MVCPortlet {
 		
 		TestQuestionLocalServiceUtil.updateTestQuestion(question);
 		SessionMessages.add(actionRequest, "question-modified-successfully");
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
 		
 		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
+		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+		actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
 	
 		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestion.jsp");
 	}
@@ -187,11 +192,11 @@ public class SurveyActivity extends MVCPortlet {
 			throws Exception {
 		
 		TestAnswer answer = TestAnswerLocalServiceUtil.getTestAnswer(ParamUtil.getLong(actionRequest, "answerId"));
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(answer.getQuestionId()).getActId());
 		TestAnswerLocalServiceUtil.deleteTestAnswer(ParamUtil.getLong(actionRequest, "answerId"));
 		SessionMessages.add(actionRequest, "answer-deleted-successfully");
 		actionResponse.setRenderParameter("questionId", Long.toString(answer.getQuestionId()));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
+		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+		actionResponse.setRenderParameter("resId", Long.toString(TestQuestionLocalServiceUtil.getTestQuestion(answer.getQuestionId()).getActId()));
 	
 		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestion.jsp");
 	}
@@ -213,9 +218,9 @@ public class SurveyActivity extends MVCPortlet {
 			SessionMessages.add(actionRequest, "answer-added-successfully");
 		}
 		
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
 		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
+		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+		actionResponse.setRenderParameter("resId", Long.toString(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId()));
 
 		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestion.jsp");
 	}
@@ -244,9 +249,9 @@ public class SurveyActivity extends MVCPortlet {
 			SessionMessages.add(actionRequest, "answer-added-successfully");
 		}
 		
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(testanswer.getQuestionId()).getActId());
 		actionResponse.setRenderParameter("questionId", Long.toString(testanswer.getQuestionId()));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
+		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+		actionResponse.setRenderParameter("resId", Long.toString(TestQuestionLocalServiceUtil.getTestQuestion(testanswer.getQuestionId()).getActId()));
 		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestion.jsp");
 	}
 	
@@ -255,17 +260,15 @@ public class SurveyActivity extends MVCPortlet {
 	
 		TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(actionRequest, "questionId"));
 		TestQuestionLocalServiceUtil.deleteTestQuestion(ParamUtil.getLong(actionRequest, "questionId"));
-		editactivity(actionRequest, actionResponse);
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
-	
-		actionRequest.setAttribute("activity", learnact);
 	
 		SessionMessages.add(actionRequest, "question-deleted-successfully");
+		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+		actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
 		actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
 	}
 	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException, SystemException, Exception {
-		long actId = ParamUtil.getInteger(actionRequest, "actId");
+		long actId = ParamUtil.getInteger(actionRequest, "resId");
 		LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
 		if (laf != null) {
 			AssetRenderer assetRenderer = laf.getAssetRenderer(actId, 0);
@@ -276,10 +279,50 @@ public class SurveyActivity extends MVCPortlet {
 		SessionMessages.add(actionRequest, "asset-renderer-not-defined");
 	}
 	
+
+	@Override
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
+			throws PortletException, IOException {
+		long actId=0;
+		
+		if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
+			
+			actId=ParamUtil.getLong(renderRequest, "resId", 0);
+			renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
+		}
+		else{
+			actId=ParamUtil.getLong(renderRequest, "actId", 0);
+		}
+					
+		if(actId==0)// TODO Auto-generated method stub
+		{
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		}
+		else
+		{
+				LearningActivity activity;
+				try {
+					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+					long typeId=activity.getTypeId();
+					
+					if(typeId==4)
+					{
+						super.render(renderRequest, renderResponse);
+					}
+					else
+					{
+						renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+					}
+				} catch (PortalException e) {
+				} catch (SystemException e) {
+				}			
+		}
+	}
+	
 	public void  serveResource(ResourceRequest request, ResourceResponse response)throws PortletException, IOException {
 
 		String action = ParamUtil.getString(request, "action");
-		long actId = ParamUtil.getLong(request, "actId",0);
+		long actId = ParamUtil.getLong(request, "resId",0);
 		if(action.equals("export")){
 
 			try {

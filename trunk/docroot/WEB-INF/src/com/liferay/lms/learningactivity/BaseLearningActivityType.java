@@ -93,12 +93,12 @@ public abstract class BaseLearningActivityType implements LearningActivityType{
 	}
 	
 	@Override
-	public boolean especificValidations(PortletRequest portletRequest,PortletResponse portletResponse) {
+	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse) {
 		return true;
 	}
 	
 	@Override
-	public void afterInsertOrUpdate(PortletRequest portletRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException {
+	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException {
 	}
 
 	

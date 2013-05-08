@@ -2,9 +2,12 @@
 package com.liferay.lms;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.portlet.ActionRequest;
@@ -35,10 +38,12 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadRequest;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Portlet;
@@ -114,6 +119,50 @@ public class LmsActivitiesList extends MVCPortlet {
 		throws Exception {
 		UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivity.class.getName(), actionRequest);
+		
+		List<Long> assetCategoryIdsList = new ArrayList<Long>();
+		boolean updateAssetCategoryIds = false;
+		
+		for (Map.Entry<String, String[]> entry :uploadRequest.getParameterMap().entrySet()){
+			String name = entry.getKey();
+
+			if (name.startsWith("assetCategoryIds")) {
+				updateAssetCategoryIds = true;
+
+				long[] assetVocabularyAssetCategoryIds = StringUtil.split(
+					ParamUtil.getString(uploadRequest, name), 0L);
+
+				for (long assetCategoryId : assetVocabularyAssetCategoryIds) {
+					assetCategoryIdsList.add(assetCategoryId);
+				}
+			}
+			
+			
+		}
+		
+		if (updateAssetCategoryIds) {
+			long[] assetCategoryIds = ArrayUtil.toArray(
+				assetCategoryIdsList.toArray(
+					new Long[assetCategoryIdsList.size()]));
+
+			serviceContext.setAssetCategoryIds(assetCategoryIds);
+		}
+
+		
+		
+		
+		//Para obtener los tags y categories que no nos llegan con el getInstance.
+		//Supongo que sea un bug en liferay que no lleguen estos datos cuando usamos un multipart.
+		ServiceContext sc = ServiceContextFactory.getInstance(uploadRequest);
+		
+		//Asignamos las categorys a nuestro serviceContext que llega del form
+		//long[] assetCategoryIds = StringUtil.split((String)sc.getAttribute("assetCategoryIds"), 0L);
+		//serviceContext.setAssetCategoryIds(assetCategoryIds);
+
+		//Asignamos los tag names a nuestro serviceContext que llega del form
+		String[] assetTagNames = StringUtil.split((String)sc.getAttribute("assetTagNames"));
+		serviceContext.setAssetTagNames(assetTagNames);
+		
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
 		String redirect = ParamUtil.getString(uploadRequest, "redirect");
@@ -212,7 +261,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 			
 		//Type especific validations
-		if(!learningActivityType.especificValidations(actionRequest, actionResponse)){
+		if(!learningActivityType.especificValidations(uploadRequest, actionResponse)){
 			return;
 		}
 		
@@ -263,7 +312,7 @@ public class LmsActivitiesList extends MVCPortlet {
 				ActionKeys.UPDATE))
 		{
 			LearningActivityLocalServiceUtil.updateLearningActivity(larn);
-			learningActivityType.afterInsertOrUpdate(actionRequest,actionResponse,larn);
+			learningActivityType.afterInsertOrUpdate(uploadRequest,actionResponse,larn);
 		}
 		SessionMessages.add(uploadRequest, "activity-saved-successfully");
 		WindowState windowState = actionRequest.getWindowState();
