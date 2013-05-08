@@ -472,7 +472,7 @@ Liferay.provide(
 %>
 		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
 			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" inlineField="true" />
-			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" />
+			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true" />
 		</aui:field-wrapper>
 		
 		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
