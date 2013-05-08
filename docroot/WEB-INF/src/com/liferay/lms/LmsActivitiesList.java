@@ -3,6 +3,7 @@ package com.liferay.lms;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -123,45 +124,27 @@ public class LmsActivitiesList extends MVCPortlet {
 		List<Long> assetCategoryIdsList = new ArrayList<Long>();
 		boolean updateAssetCategoryIds = false;
 		
-		for (Map.Entry<String, String[]> entry :uploadRequest.getParameterMap().entrySet()){
-			String name = entry.getKey();
-
+		for (String name:Collections.list((Enumeration<String>)uploadRequest.getParameterNames())){
 			if (name.startsWith("assetCategoryIds")) {
 				updateAssetCategoryIds = true;
-
-				long[] assetVocabularyAssetCategoryIds = StringUtil.split(
-					ParamUtil.getString(uploadRequest, name), 0L);
-
-				for (long assetCategoryId : assetVocabularyAssetCategoryIds) {
+				for (long assetCategoryId : StringUtil.split(
+						ParamUtil.getString(uploadRequest, name), 0L)) {
 					assetCategoryIdsList.add(assetCategoryId);
 				}
 			}
-			
-			
 		}
 		
 		if (updateAssetCategoryIds) {
-			long[] assetCategoryIds = ArrayUtil.toArray(
-				assetCategoryIdsList.toArray(
-					new Long[assetCategoryIdsList.size()]));
-
-			serviceContext.setAssetCategoryIds(assetCategoryIds);
+			serviceContext.setAssetCategoryIds(ArrayUtil.toArray(
+					assetCategoryIdsList.toArray(
+							new Long[assetCategoryIdsList.size()])));
 		}
+	
+		String assetTagNames = uploadRequest.getParameter("assetTagNames");
 
-		
-		
-		
-		//Para obtener los tags y categories que no nos llegan con el getInstance.
-		//Supongo que sea un bug en liferay que no lleguen estos datos cuando usamos un multipart.
-		ServiceContext sc = ServiceContextFactory.getInstance(uploadRequest);
-		
-		//Asignamos las categorys a nuestro serviceContext que llega del form
-		//long[] assetCategoryIds = StringUtil.split((String)sc.getAttribute("assetCategoryIds"), 0L);
-		//serviceContext.setAssetCategoryIds(assetCategoryIds);
-
-		//Asignamos los tag names a nuestro serviceContext que llega del form
-		String[] assetTagNames = StringUtil.split((String)sc.getAttribute("assetTagNames"));
-		serviceContext.setAssetTagNames(assetTagNames);
+		if (assetTagNames != null) {
+			serviceContext.setAssetTagNames(StringUtil.split(assetTagNames));
+		}
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
