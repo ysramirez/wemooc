@@ -1,128 +1,49 @@
-<%@page import="com.liferay.lms.model.Module"%>
-<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
-<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
-
 <%@ include file="/init.jsp" %>
-
-<p class="negrita linea"><liferay-ui:message key="execActivity.options" /></p>
 <%
-
-	LearningActivity learnact=null;
-	if(request.getAttribute("activity")!=null)
-	{
-		
-	 learnact=(LearningActivity)request.getAttribute("activity");
-	}
-	else
-	{
-		learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
-	}
-
+	long moduleId=ParamUtil.getLong(renderRequest,"resModuleId",0);
 	long random = 0;
 	String password = StringPool.BLANK;
-	long hourDurationString=0,minuteDurationString=0,secondDurationString=0;
-
-	boolean textoenr = false;
-	String textoenrString = StringPool.BLANK;	
+	long hourDuration=0,minuteDuration=0,secondDuration=0;
+	boolean showCorrectAnswer= false;
+	boolean improve=false;
+	boolean newOrCourseEditor=true;
 	
-	if (learnact.getExtracontent() != null && !StringPool.BLANK.equals(learnact.getExtracontent().trim())) {
-		random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"random"));
-		password = HtmlUtil.unescape(LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"password")).trim();
-		long timestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"timeStamp"));		
-		hourDurationString = timestamp / 3600;
-		minuteDurationString = (timestamp % 3600) / 60;
-		secondDurationString = timestamp % 60;
-	}
-	
-	boolean showCorrectAnswer= false, improve = false;
-	String showCorrectAnswerStr = LearningActivityLocalServiceUtil.getExtraContentValue(ParamUtil.getLong(request,"actId"), "showCorrectAnswer");
-	String improveStr = LearningActivityLocalServiceUtil.getExtraContentValue(ParamUtil.getLong(request,"actId"), "improve");
-	
-	if(showCorrectAnswerStr.equals("true")){
-		showCorrectAnswer = true;
-	}
-	
-	if(improveStr.equals("true")){
-		improve = true;
-	}
-	
-	/*
-    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
-  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learnact.getActId());
-	dq.add(criterion);
-    boolean existTries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0;
-    */
-%>
-<portlet:actionURL var="camposExtraURL" name="camposExtra">
-</portlet:actionURL>
-
-<%--portlet:renderURL var="cancel">
-	<portlet:param name="actId" value="0"></portlet:param>
-</portlet:renderURL--%>
-
-	<liferay-portlet:actionURL portletName="editactivity_WAR_liferaylmsportlet" name="editactivityoptions" var="cancel">
-		<liferay-portlet:param name="resId" value="<%=Long.toString(learnact.getActId())%>" />
-		<portlet:param name="actId" value="0" />
-	</liferay-portlet:actionURL>
-
-<aui:form action="<%=camposExtraURL%>" method="post">
-	<aui:input name="actId" type="hidden" value="<%=learnact.getActId()%>"></aui:input>
-
-	<aui:input type="text" name="randomString" label="execActivity.options.random" value='<%=(random>0)?Long.toString(random):StringPool.BLANK %>'></aui:input>
-	<div id="<portlet:namespace />randomStringError"></div>
-	
-	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>"></aui:input>
-	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>"></aui:input>
-	
-<!-- 
-	<aui:input type="text" name="passwordString" label="execActivity.options.password" value='<%=password %>'></aui:input>
-	<div id="<portlet:namespace />passwordStringError"></div>
- -->
-<%
-Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-long moduleIde = ParamUtil.getLong(request,"moduleId",0);
-Module theModule=null;
-if(moduleIde>0){
-
-	theModule=ModuleLocalServiceUtil.getModule(moduleIde); 
-}
-
-
-boolean canEdit = true;
-if(theModule!=null && theModule.getStartDate() != null && theModule.getStartDate().before(new Date())
-		&&!permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR")){
-	canEdit = false;
-}
-%>
-	<aui:button-row>
-	<% 
-		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
-		%>									
-	<% if(canEdit){ %>
+	if(request.getAttribute("activity")!=null) {
+		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
+		random = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random"));		
+		password = HtmlUtil.unescape(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"password")).trim();
 		
-		<aui:button onclick="<%=renderResponse.getNamespace()+\"submit();\"%>" type="button" value="execActivity.options.save" />
-	<% } %>
+		long timestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"timeStamp"));		
+		hourDuration = timestamp / 3600;
+		minuteDuration = (timestamp % 3600) / 60;
+		secondDuration = timestamp % 60;
+		
+		showCorrectAnswer = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"showCorrectAnswer"));
+		improve = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"));	
+		
+		//disabled=LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
+		moduleId=learningActivity.getModuleId();
+		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
+		
+	}
 	
-		<aui:button onclick="<%=\"window.location='\"+cancel+\"';\"%>" type="button" value="execActivity.options.cancel" />
-	</aui:button-row>
-</aui:form>
+	boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
+
+%>
 
 <script type="text/javascript">
 <!--
 
-AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
-
-	A.mix(
-		YUI.AUI.defaults.FormValidator.STRINGS,
-		{
-			randomRule: '<liferay-ui:message key="execActivity.options.error.random" />'
-		},
-		true
-	);
-
+AUI().use('aui-form-validator', function(A) {
 	A.mix(
 			YUI.AUI.defaults.FormValidator.REGEX,
 			{
@@ -130,7 +51,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 			},
 			true
 		);
-
+	
 	var oldRequired=YUI.AUI.defaults.FormValidator.RULES.required;
 	
 	A.mix(
@@ -138,16 +59,14 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 		{
 			required: function(val, fieldNode, ruleValue) {
 				switch (fieldNode.get('name')) {
-			    case "<portlet:namespace />randomString":
-					return true;
-			    case "<portlet:namespace />passwordString":
+			    case "<portlet:namespace />random":
 					return true;		        
 			    default:
 			    	return oldRequired(val, fieldNode, ruleValue);
 				}				
 			},
 			randomRule: function(val, fieldNode, ruleValue) {
-				if(!A.Node.getDOMNode(fieldNode).form.<portlet:namespace />randomString.disabled){
+				if(!A.Node.getDOMNode(fieldNode).form.<portlet:namespace />random.disabled){
 					return YUI.AUI.defaults.FormValidator.REGEX.positiveLong.test(val);
 				}
 				return true;
@@ -155,68 +74,117 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 		},
 		true
 	);
-
 	
-	window.<portlet:namespace />validator = new A.FormValidator({
-		boundingBox: '#<portlet:namespace />fm',
-		validateOnBlur: true,
-		validateOnInput: true,
-		selectText: true,
-		showMessages: false,
-		containerErrorClass: '',
-		errorClass: '',
-		rules: {			
-			<portlet:namespace />randomString: {
-				required: true,
-				randomRule: true
-			},
-			<portlet:namespace />passwordString: {
-				required: true
-			}
-		},
-
-        fieldStrings: {
-        	<portlet:namespace />randomString: {
-    			randomRule: '<liferay-ui:message key="execActivity.options.error.random" />',
-    			passwordRule: '<liferay-ui:message key="execActivity.options.error.password" />',
-    			timeStampRule: '<liferay-ui:message key="execActivity.options.error.timestamp" />'
-            }
-        },
-		
-		on: {		
-            errorField: function(event) {
-            	var instance = this;
-				var field = event.validator.field;
-				var divError = A.one('#'+field.get('name')+'Error');
-				if(divError) {
-					divError.addClass('portlet-msg-error');
-					divError.setContent(instance.getFieldErrorMessage(field,event.validator.errors[0]));
-				}
-            },		
-            validField: function(event) {
-				var divError = A.one('#'+event.validator.field.get('name')+'Error');
-				if(divError) {
-					divError.removeClass('portlet-msg-error');
-					divError.setContent('');
-				}
-            }
-		}
-	});
-
 });
 
-function <portlet:namespace />submit(){
-	if(window.<portlet:namespace />validator) {
-		AUI().use('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
-			window.<portlet:namespace />validator.validate();
-			if(!window.<portlet:namespace />validator.hasErrors()){
-				document.getElementById('<portlet:namespace />fm').submit();
+window.<portlet:namespace />validate_execactivity={
+		rules:
+		{
+			<portlet:namespace />random: {
+				required: true,
+				randomRule: true
 			}
+		},
+		fieldStrings:
+		{
+			<portlet:namespace />random: {
+				randomRule: '<liferay-ui:message key="execactivity.editActivity.random.number" />'
+            }
+		}	
+};
+
+<% if(!newOrCourseEditor){ %>
+	AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet-url', function(A) {
+		A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />hourDuration]').set('value',3);
+		A.one('#<portlet:namespace />resModuleId').on('change', function (e) {
+			var renderUrl = Liferay.PortletURL.createRenderURL();							
+				renderUrl.setWindowState('<%=LiferayWindowState.EXCLUSIVE.toString()%>');
+				renderUrl.setPortletId('<%=portletDisplay.getId()%>');
+				renderUrl.setParameter('jspPage','/html/execactivity/test/admin/editModule.jsp');
+				renderUrl.setParameter('resModuleId',e.target.getDOM().options[e.target.getDOM().selectedIndex].value);
+			A.io.request(renderUrl.toString(), {
+			   dataType: 'json',
+		       on: {  
+		      		success: function() {  
+		      			var notEditable = !!this.get('responseData')['notEditable'];
+		      			A.one('#<portlet:namespace />random').set('disabled',notEditable);		
+		      			A.one('#<portlet:namespace />password').set('disabled',notEditable);
+						A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />hourDuration]').set('disabled',notEditable);
+						A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />minuteDuration]').set('disabled',notEditable);
+						A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />secondDuration]').set('disabled',notEditable);
+						A.one('#<portlet:namespace />showCorrectAnswerCheckbox').set('disabled',notEditable);
+						A.one('#<portlet:namespace />improveCheckbox').set('disabled',notEditable);
+	
+		      			if(notEditable) {
+			      			A.one('#<portlet:namespace />random').set('value','<%=(random>0)?Long.toString(random):StringPool.BLANK%>');		
+			      			A.one('#<portlet:namespace />password').set('value','<%=password%>');
+							A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />hourDuration]').set('value',<%=Long.toString(hourDuration)%>);
+							A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />minuteDuration]').set('value',<%=Long.toString(minuteDuration)%>);
+							A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />secondDuration]').set('value',<%=Long.toString(secondDuration)%>);
+							A.one('#<portlet:namespace />showCorrectAnswer').set('value','<%=Boolean.toString(showCorrectAnswer)%>');
+							A.one('#<portlet:namespace />showCorrectAnswerCheckbox').set('checked',<%=Boolean.toString(showCorrectAnswer)%>);
+							A.one('#<portlet:namespace />improve').set('value','<%=Boolean.toString(improve)%>');
+							A.one('#<portlet:namespace />improveCheckbox').set('checked',<%=Boolean.toString(improve)%>);
+			      		}
+			        } 
+			   } 
+			}); 
 		});
-	}
-}
+	
+	});
+<% } %>
 
 //-->
 </script>
+
+
+	<aui:input type="text" size="3" name="random" label="execActivity.options.random" value="<%=(random>0)?Long.toString(random):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+		ignoreRequestValue="true"></aui:input>
+	<div id="<portlet:namespace />randomError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?"portlet-msg-error":StringPool.BLANK %>">
+	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?
+				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
+	</div>
+	
+	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true"></aui:input>
+ 
+ 	<aui:field-wrapper label="execActivity.options.timestamp">
+	<%
+	NumberFormat timeNumberFormat = NumberFormat.getInstance(locale);
+	timeNumberFormat.setMinimumIntegerDigits(2);
+	%>
+		<select name="<portlet:namespace />hourDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> >
+			<%
+			for (int i = 0; i < 24; i++) {
+			%>
+					<option <%= (hourDuration == i) ? "selected" : StringPool.BLANK %> value="<%= i %>"><%= timeNumberFormat.format(i) %></option>
+			<%
+			}
+			%>
+		</select>
+		<select name="<portlet:namespace />minuteDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> >
+			<%
+			for (int i = 0; i < 60; i++) {
+			%>
+					<option <%= (minuteDuration == i) ? "selected" : StringPool.BLANK %> value="<%= i %>">:<%= timeNumberFormat.format(i) %></option>
+			<%
+			}
+			%>
+		</select>	
+		<select name="<portlet:namespace />secondDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> > 
+			<%
+			for (int i = 0; i < 60; i++) {
+			%>
+					<option <%= (secondDuration == i) ? "selected" : StringPool.BLANK %> value="<%= i %>">:<%= timeNumberFormat.format(i) %></option>
+			<%
+			}
+			%>
+		</select>			
+	</aui:field-wrapper>
+	
+	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+		ignoreRequestValue="true"></aui:input>
+		
+	<aui:input type="checkbox" name="improve" label="exectactivity.edit.showcorrect" checked="<%=improve %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+		ignoreRequestValue="true"></aui:input>
 
 

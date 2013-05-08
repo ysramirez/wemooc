@@ -65,11 +65,12 @@ public class SurveyAssetRenderer extends BaseAssetRenderer {
 	@Override
 	public PortletURL getURLEdit(LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse) throws Exception {
-		PortletURL portletURL = liferayPortletResponse.createActionURL("surveyactivity_WAR_liferaylmsportlet");
-		portletURL.setParameter("javax.portlet.action", "edit");
-			
-		portletURL.setParameter("mvcPath", "/html/surveyactivity/admin/edit.jsp");
-		portletURL.setParameter("jspPage", "/html/surveyactivity/admin/edit.jsp"); 
+		PortletURL portletURL = liferayPortletResponse
+				.createRenderURL("surveyactivity_WAR_liferaylmsportlet");	
+		portletURL.setParameter("mvcPath", 
+				"/html/surveyactivity/admin/editquestions.jsp");
+		portletURL.setParameter("jspPage", 
+				"/html/surveyactivity/admin/editquestions.jsp"); 
 	    portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 	    
 	    return portletURL;

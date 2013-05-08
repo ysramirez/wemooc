@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
 <%@page import="com.liferay.portal.kernel.search.Field"%>
 <%@page import="com.liferay.portal.kernel.search.Document"%>
 <%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryQuery"%>
@@ -60,11 +61,19 @@ name="title"
 property="title"
 orderable="false"
 />
-<liferay-portlet:actionURL name="selectResource" var="selectResourceURL">
- <liferay-portlet:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
- <liferay-portlet:param value="/html/resourceInternalActivity/admin/edit.jsp" name="jspPage"/>
- <liferay-portlet:param value="<%=Long.toString(assetEntry.getEntryId()) %>" name="entryId"/>
-</liferay-portlet:actionURL>
+<% 
+AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetEntry.getClassName());
+AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetEntry.getClassName()).getAssetRenderer(assetEntry.getClassPK());
+
+%>
+
+<liferay-portlet:renderURL var="selectResourceURL">
+ <liferay-portlet:param value="/html/scormactivity/admin/result.jsp" name="jspPage"/>
+ <liferay-portlet:param value="<%=Long.toString(assetEntry.getEntryId()) %>" name="assertId"/>
+ <liferay-portlet:param value="<%=assetRenderer.getTitle(themeDisplay.getLocale()) %>" name="assertTitle"/>
+</liferay-portlet:renderURL>
+
+
 <liferay-ui:search-container-column-text>
 <liferay-ui:icon image="add" label="select" url="<%=selectResourceURL.toString() %>"></liferay-ui:icon>
 </liferay-ui:search-container-column-text>

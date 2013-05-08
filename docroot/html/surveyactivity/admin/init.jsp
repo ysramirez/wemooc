@@ -14,7 +14,7 @@
 	}
 	else
 	{
-		learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
+		learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"resId"));
 	}
 	
 	boolean isSurvey = learnact.getTypeId() == 4;
@@ -24,7 +24,6 @@
 
 <div class = "init">
 	<liferay-portlet:renderURL var="backURL">
-		<liferay-portlet:param name="actId" value="0"></liferay-portlet:param>
 		<liferay-portlet:param name="resId" value="0"></liferay-portlet:param>
 	</liferay-portlet:renderURL>
 	<a href="<%=backURL.toString()%>"><%=LanguageUtil.get(pageContext,"cancel")%></a>

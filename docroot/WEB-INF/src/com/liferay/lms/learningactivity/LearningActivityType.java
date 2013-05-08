@@ -34,7 +34,7 @@ public interface LearningActivityType
 	
 	public String getExpecificContentPage();
 	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException;
-	public boolean especificValidations(PortletRequest portletRequest,PortletResponse portletResponse);
-	public void afterInsertOrUpdate(PortletRequest portletRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException;
+	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse);
+	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException;
 
 }

@@ -223,9 +223,10 @@ public class ExecActivity extends MVCPortlet
 		
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
 		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
+
 		if (learnact.getTypeId() == 0) {
-	
+			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+			actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
 		}
 	}
@@ -236,7 +237,7 @@ public class ExecActivity extends MVCPortlet
 
 	UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
 	
-	long actId = ParamUtil.getLong(actionRequest, "actId");
+	long actId = ParamUtil.getLong(actionRequest, "resId");
 	String fileName = request.getFileName("fileName");
 	if(fileName!=null && !fileName.equals(""))
 	{
@@ -245,6 +246,8 @@ public class ExecActivity extends MVCPortlet
 		TestQuestionLocalServiceUtil.importXML(actId, document);
 	}
 	SessionMessages.add(actionRequest, "questions-added-successfully");
+	actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+	actionResponse.setRenderParameter("resId", Long.toString(actId));
 	actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestions.jsp");
 	
 	
@@ -252,7 +255,7 @@ public class ExecActivity extends MVCPortlet
 	public void addquestion(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 	
-		long actid = ParamUtil.getLong(actionRequest, "actId");
+		long actid = ParamUtil.getLong(actionRequest, "resId");
 	
 		String text = ParamUtil.getString(actionRequest, "text");
 		long questionType = ParamUtil.getLong(actionRequest, "qtype");
@@ -260,7 +263,8 @@ public class ExecActivity extends MVCPortlet
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(actid);
 		actionResponse.setRenderParameter("questionId", Long.toString(question.getQuestionId()));
 		if (learnact.getTypeId() == 0) {
-	
+			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+			actionResponse.setRenderParameter("resId", Long.toString(actid));
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
 		}
 		actionRequest.setAttribute("activity", learnact);
@@ -279,10 +283,10 @@ public class ExecActivity extends MVCPortlet
 		TestAnswerLocalServiceUtil.deleteTestAnswer(ParamUtil.getLong(actionRequest, "answerId"));
 		SessionMessages.add(actionRequest, "answer-deleted-successfully");
 		actionResponse.setRenderParameter("questionId", Long.toString(answer.getQuestionId()));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
 	
 		if (learnact.getTypeId() == 0) {
-	
+			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+			actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
 		}
 	
@@ -292,15 +296,13 @@ public class ExecActivity extends MVCPortlet
 		throws Exception {
 	
 		TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(actionRequest, "questionId"));
-		TestQuestionLocalServiceUtil.deleteTestQuestion(ParamUtil.getLong(actionRequest, "questionId"));
-		editactivity(actionRequest, actionResponse);
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
-	
-		actionRequest.setAttribute("activity", learnact);
-	
+		TestQuestionLocalServiceUtil.deleteTestQuestion(question.getQuestionId());
 		SessionMessages.add(actionRequest, "question-deleted-successfully");
 		if (learnact.getTypeId() == 0) {
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
+			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+			actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
+			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestions.jsp");
 		}
 		
 	
@@ -391,8 +393,18 @@ public class ExecActivity extends MVCPortlet
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws PortletException, IOException {
-		// TODO Auto-generated method stub
-		if(ParamUtil.getLong(renderRequest, "actId", 0)==0)// TODO Auto-generated method stub
+		long actId=0;
+		
+		if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
+			
+			actId=ParamUtil.getLong(renderRequest, "resId", 0);
+			renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
+		}
+		else{
+			actId=ParamUtil.getLong(renderRequest, "actId", 0);
+		}
+					
+		if(actId==0)// TODO Auto-generated method stub
 		{
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		}
@@ -400,7 +412,7 @@ public class ExecActivity extends MVCPortlet
 		{
 				LearningActivity activity;
 				try {
-					activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest, "actId", 0));
+					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 					long typeId=activity.getTypeId();
 					
 					if(typeId==0)
@@ -412,11 +424,7 @@ public class ExecActivity extends MVCPortlet
 						renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 					}
 				} catch (PortalException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				} catch (SystemException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
 				}			
 		}
 	}
@@ -425,7 +433,7 @@ public class ExecActivity extends MVCPortlet
 	public void  serveResource(ResourceRequest request, ResourceResponse response)throws PortletException, IOException {
 
 		String action = ParamUtil.getString(request, "action");
-		long actId = ParamUtil.getLong(request, "actId",0);
+		long actId = ParamUtil.getLong(request, "resId",0);
 		if(action.equals("export")){
 			
 			try {
