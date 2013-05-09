@@ -42,8 +42,8 @@ function <portlet:namespace />load(source) {
 			A.one('#<portlet:namespace/>finder').remove();
 			A.all('.acticons').each(function(icon){ icon.show(); });
 			A.one('#<portlet:namespace/>fm').show();
-			A.one('#<portlet:namespace/>assetEntryId').setAttribute('value',params['<portlet:namespace />assertId']);		
-			A.one('#<portlet:namespace/>assetTitle .taglib-text').setContent(params['<portlet:namespace />assertTitle']);	
+			A.one('#<portlet:namespace/>assetEntryId').set('value',params['<portlet:namespace />assertId']);		
+			A.one('#<portlet:namespace/>assetEntryName').set('value',params['<portlet:namespace />assertTitle']);	
 		}
 		else {
 		    if (source.Document && source.Document.body.scrollHeight) 
@@ -96,10 +96,14 @@ if(request.getAttribute("activity")!=null) {
 %>
 
 <aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>"/>
-
-<h2><liferay-ui:message key="selected-content"></liferay-ui:message></h2>
-<liferay-ui:icon image="edit"  message="<%=assetTitle %>" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"search();\" %>" label="true" id="assetTitle" />
-
+<aui:field-wrapper name="scormactivity.edit.asserts" cssClass="search-button-container">
+	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50"/>
+	<button type="button" id="<portlet:namespace/>searchEntry" onclick="<portlet:namespace/>search();" >
+	    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
+	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
+	</button>
+</aui:field-wrapper>
+	
 <div id="<portlet:namespace/>backButton" style="display:none;">
 	<liferay-ui:icon image="back" message="back" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"back();\" %>" label="true"  />
 </div>
