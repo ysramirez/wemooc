@@ -49,6 +49,7 @@ import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
@@ -108,7 +109,12 @@ public static String SEPARATOR = "_";
 
 	public void doView(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
+		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		
+		if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), Module.class.getName(), 0L, ActionKeys.UPDATE)) {
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		}
+
 		if(renderRequest.getWindowState().equals(LiferayWindowState.POP_UP)){
 			String popUpAction = ParamUtil.getString(renderRequest, "popUpAction");
 			if("addmodule".equals(popUpAction)){
