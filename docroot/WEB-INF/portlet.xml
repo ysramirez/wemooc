@@ -6,7 +6,7 @@
 	version="2.0">
 	<portlet>
 		<portlet-name>lmsactivitieslist</portlet-name>
-		<display-name>Lista de actividades</display-name>
+		<display-name>LmsActivitiesList</display-name>
 		<portlet-class>com.liferay.lms.LmsActivitiesList</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -21,10 +21,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/lmsactivitieslist/Language</resource-bundle>
 		<portlet-info>
-			<title>Lista de actividades</title>
-			<short-title>Lista de actividades</short-title>
+			<title>LmsActivitiesList</title>
+			<short-title>LmsActivitiesList</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -46,7 +46,7 @@
 
 	<portlet>
 		<portlet-name>execactivity</portlet-name>
-		<display-name>Actividad de test</display-name>
+		<display-name>ExecActivity</display-name>
 		<portlet-class>com.liferay.lms.ExecActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -61,10 +61,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/execactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Actividad de test</title>
-			<short-title>Actividad de test</short-title>
+			<title>ExecActivity</title>
+			<short-title>ExecActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
         <portlet-preferences>
@@ -93,7 +93,7 @@
 	
 	<portlet>
 		<portlet-name>gradebook</portlet-name>
-		<display-name>Notas</display-name>
+		<display-name>GradeBook</display-name>
 		<portlet-class>com.liferay.lms.GradeBook</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -104,10 +104,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/gradebook/Language</resource-bundle>
 		<portlet-info>
-			<title>Notas</title>
-			<short-title>Notas</short-title>
+			<title>GradeBook</title>
+			<short-title>GradeBook</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -129,7 +129,7 @@
 	
 	<portlet>
 		<portlet-name>module-portlet</portlet-name>
-		<display-name>Modulos</display-name>
+		<display-name>module</display-name>
 		<portlet-class>com.liferay.lms.modulePortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -148,10 +148,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>VIEW</portlet-mode>
 		</supports>
-		<resource-bundle>content.Language</resource-bundle>
+		<resource-bundle>content/moduleportlet/Language</resource-bundle>
 		<portlet-info>
-			<title>Modulos</title>
-			<short-title>Modulos</short-title>
+			<title>module Portlet</title>
+			<short-title>module Portlet</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		
@@ -189,7 +189,7 @@
 	
 	<portlet>
 		<portlet-name>resourceExternalActivity</portlet-name>
-		<display-name>Actividad de recurso externo</display-name>
+		<display-name>ResourceExternalActivity</display-name>
 		<portlet-class>com.liferay.lms.ResourceExternalActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -204,10 +204,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/resourceexternalactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Actividad de recurso externo</title>
-			<short-title>Actividad de recurso externo</short-title>
+			<title>ResourceExternalActivity</title>
+			<short-title>ResourceExternalActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		 <portlet-preferences>
@@ -235,7 +235,7 @@
 	
 	<portlet>
 		<portlet-name>resourceInternalActivity</portlet-name>
-		<display-name>Actividad de recurso interno</display-name>
+		<display-name>ResourceInternalActivity</display-name>
 		<portlet-class>com.liferay.lms.ResourceInternalActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -250,10 +250,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/resourceinternalactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Actividad de recurso interno</title>
-			<short-title>Actividad de recurso interno</short-title>
+			<title>ResourceInternalActivity</title>
+			<short-title>ResourceInternalActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		 <portlet-preferences>
@@ -281,7 +281,7 @@
 	
 	<portlet>
 		<portlet-name>changeEditingMode</portlet-name>
-		<display-name>Cambio de modo</display-name>
+		<display-name>changeEditingMode</display-name>
 		<portlet-class>
 			com.liferay.util.bridges.mvc.MVCPortlet
 		</portlet-class>
@@ -294,10 +294,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/changeeditingmode/Language</resource-bundle>
 		<portlet-info>
-			<title>Cambio de modo</title>
-			<short-title>Cambio de modo</short-title>
+			<title>changeEditingMode</title>
+			<short-title>changeEditingMode</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -317,7 +317,7 @@
 	
 	<portlet>
 		<portlet-name>activityNavigator</portlet-name>
-		<display-name>Navegador de actividades</display-name>
+		<display-name>activityNavigator</display-name>
 		<portlet-class>com.liferay.lms.LmsActivitiesList</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -332,10 +332,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/activitynavigator/Language</resource-bundle>
 		<portlet-info>
-			<title>Navegador de actividades</title>
-			<short-title>Navegador de actividades</short-title>
+			<title>activityNavigator</title>
+			<short-title>ActivityL</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		 <portlet-preferences>
@@ -363,7 +363,7 @@
 	
 	<portlet>
 		<portlet-name>moduleDescription</portlet-name>
-		<display-name>Descripcion de modulo</display-name>
+		<display-name>moduleDescription</display-name>
 		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -374,10 +374,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/moduledescription/Language</resource-bundle>
 		<portlet-info>
-			<title>Descripcion de modulo</title>
-			<short-title>Descripcion de modulo</short-title>
+			<title>moduleDescription</title>
+			<short-title>ModuleDescription</short-title>
 			<keywords></keywords>
 		</portlet-info>
         <portlet-preferences>
@@ -417,7 +417,7 @@
 	</portlet>	
 	<portlet>
 		<portlet-name>moduleEditing</portlet-name>
-		<display-name>Editor de modulo</display-name>
+		<display-name>moduleEditing</display-name>
 		<portlet-class>com.liferay.lms.modulePortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -440,10 +440,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/moduleediting/Language</resource-bundle>
 		<portlet-info>
-			<title>Editor de modulo</title>
-			<short-title>Editor de modulo</short-title>
+			<title>moduleEditing</title>
+			<short-title>moduleEditing</short-title>
 			<keywords></keywords>
 		</portlet-info>
         <portlet-preferences>
@@ -482,7 +482,7 @@
 	</portlet>	
 	<portlet>
 		<portlet-name>p2ptaskactivity</portlet-name>
-		<display-name>Actividad P2P</display-name>
+		<display-name>P2PTaskActivity</display-name>
 		<portlet-class>com.liferay.lms.portlet.p2p.P2PActivityPortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -494,10 +494,10 @@
 			<portlet-mode>VIEW</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/p2ptaskactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Actividad P2P</title>
-			<short-title>Actividad P2P</short-title>
+			<title>P2PTaskActivity</title>
+			<short-title>P2PTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -519,7 +519,7 @@
 	
 	<portlet>
 		<portlet-name>ModuleTitle</portlet-name>
-		<display-name>Titulo modulo</display-name>
+		<display-name>ModuleTitle</display-name>
 		<portlet-class>
 			com.liferay.util.bridges.mvc.MVCPortlet
 		</portlet-class>
@@ -532,10 +532,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/moduletitle/Language</resource-bundle>
 		<portlet-info>
-			<title>Titulo modulo</title>
-			<short-title>Titulo modulo</short-title>
+			<title>ModuleTitle</title>
+			<short-title>ModuleTitle</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -557,7 +557,7 @@
 	
 	<portlet>
 		<portlet-name>modulelist</portlet-name>
-		<display-name>Lista modulos</display-name>
+		<display-name>ModuleList</display-name>
 		<portlet-class>
 			com.liferay.util.bridges.mvc.MVCPortlet
 		</portlet-class>
@@ -570,10 +570,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/modulelist/Language</resource-bundle>
 		<portlet-info>
-			<title>Lista modulos</title>
-			<short-title>Lista modulos</short-title>
+			<title>ModuleList</title>
+			<short-title>ModuleList</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -592,7 +592,7 @@
 	
 	<portlet>
 		<portlet-name>inscriptioncommunity</portlet-name>
-		<display-name>Inscripción comunidad</display-name>
+		<display-name>Community Inscription</display-name>
 		<portlet-class>com.liferay.lms.portlet.inscriptioncommunity.CommunityInscription</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -607,10 +607,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>VIEW</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/inscriptioncommunity/Language</resource-bundle>
 		<portlet-info>
-			<title>Inscripción comunidad</title>
-			<short-title>Inscripción comunidad</short-title>
+			<title>Community Inscription</title>
+			<short-title>Community Inscription</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -629,7 +629,7 @@
 	
 	<portlet>
 		<portlet-name>mycourses</portlet-name>
-		<display-name>Mis cursos</display-name>
+		<display-name>MyCourses</display-name>
 		<portlet-class>com.liferay.lms.MyCourses</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -640,10 +640,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/mycourses/Language</resource-bundle>
 		<portlet-info>
-			<title>Mis cursos</title>
-			<short-title>Mis cursos</short-title>
+			<title>MyCourses</title>
+			<short-title>MyCourses</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -662,7 +662,7 @@
 	
 	<portlet>
 		<portlet-name>coursetoolsmanage</portlet-name>
-		<display-name>Herramienta adminitracion de cursos</display-name>
+		<display-name>CourseToolsManage</display-name>
 		<portlet-class>com.liferay.lms.CourseToolsManage</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -673,10 +673,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/coursetoolsmanage/Language</resource-bundle>
 		<portlet-info>
-			<title>Herramienta adminitracion de cursos</title>
-			<short-title>Herramienta adminitracion de cursos</short-title>
+			<title>CourseToolsManage</title>
+			<short-title>CourseToolsManage</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -695,7 +695,7 @@
 	
 	<portlet>
 		<portlet-name>courseadmin</portlet-name>
-		<display-name>Administracion de cursos</display-name>
+		<display-name>CourseAdmin</display-name>
 		<portlet-class>com.liferay.lms.CourseAdmin</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -706,10 +706,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/courseadmin/Language</resource-bundle>
 		<portlet-info>
-			<title>Administracion de cursos</title>
-			<short-title>Administracion de cursos</short-title>
+			<title>CourseAdmin</title>
+			<short-title>CourseAdmin</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -729,7 +729,7 @@
 	
 	<portlet>
 		<portlet-name>editactivity</portlet-name>
-		<display-name>Editar actividad</display-name>
+		<display-name>EditActivity</display-name>
 		<portlet-class>
 			com.liferay.lms.LmsActivitiesList
 		</portlet-class>
@@ -746,10 +746,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/editactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Editar actividad</title>
-			<short-title>Editar actividad</short-title>
+			<title>EditActivity</title>
+			<short-title>EditActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -771,7 +771,7 @@
 	
 	<portlet>
 		<portlet-name>coursestats</portlet-name>
-		<display-name>Estadisticas curso</display-name>
+		<display-name>CourseStats</display-name>
 		<portlet-class>com.liferay.lms.CourseStats</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -782,10 +782,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/coursestats/Language</resource-bundle>
 		<portlet-info>
-			<title>Estadisticas curso</title>
-			<short-title>Estadisticas curso</short-title>
+			<title>CourseStats</title>
+			<short-title>CourseStats</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -804,7 +804,7 @@
 	
 	<portlet>
 		<portlet-name>myuniversity</portlet-name>
-		<display-name>Mi universidad</display-name>
+		<display-name>MyUniversity</display-name>
 		<portlet-class>com.liferay.lms.MyUniversity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -815,10 +815,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/myuniversity/Language</resource-bundle>
 		<portlet-info>
-			<title>Mi universidad</title>
-			<short-title>Mi universidad</short-title>
+			<title>MyUniversity</title>
+			<short-title>MyUniversity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -837,7 +837,7 @@
 	
 	<portlet>
 		<portlet-name>coursedescription</portlet-name>
-		<display-name>Descripción de curso</display-name>
+		<display-name>CourseDescription</display-name>
 		<portlet-class>com.liferay.lms.CourseDescription</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -848,10 +848,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/coursedescription/Language</resource-bundle>
 		<portlet-info>
-			<title>Descripción de curso</title>
-			<short-title>Descripción de curso</short-title>
+			<title>CourseDescription</title>
+			<short-title>CourseDescription</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -870,7 +870,7 @@
 	
 	<portlet>
 		<portlet-name>lmsconfig</portlet-name>
-		<display-name>Configuracion</display-name>
+		<display-name>LmsConfig</display-name>
 		<portlet-class>com.liferay.lms.LmsConfig</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -881,10 +881,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/lmsconfig/Language</resource-bundle>
 		<portlet-info>
-			<title>Configuracion</title>
-			<short-title>Configuracion</short-title>
+			<title>LmsConfig</title>
+			<short-title>LmsConfig</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -903,7 +903,7 @@
 	
 	<portlet>
 		<portlet-name>courseextradata</portlet-name>
-		<display-name>Datos extra cursos</display-name>
+		<display-name>CourseExtraData</display-name>
 		<portlet-class>com.liferay.lms.CourseExtraData</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -914,10 +914,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/courseextradata/Language</resource-bundle>
 		<portlet-info>
-			<title>Datos extra cursos</title>
-			<short-title>Datos extra cursos</short-title>
+			<title>CourseExtraData</title>
+			<short-title>CourseExtraData</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -936,7 +936,7 @@
 	
 	<portlet>
 		<portlet-name>courseteachers</portlet-name>
-		<display-name>Profesores</display-name>
+		<display-name>CourseTeachers</display-name>
 		<portlet-class>com.liferay.lms.CourseTeachers</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -947,10 +947,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/courseteachers/Language</resource-bundle>
 		<portlet-info>
-			<title>Profesores</title>
-			<short-title>Profesores</short-title>
+			<title>CourseTeachers</title>
+			<short-title>CourseTeachers</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -969,7 +969,7 @@
 	
 	<portlet>
 		<portlet-name>courseexpandovalue</portlet-name>
-		<display-name>Expando de curso</display-name>
+		<display-name>CourseExpandoValue</display-name>
 		<portlet-class>
 			com.liferay.lms.CourseExpandoValue
 		</portlet-class>
@@ -982,10 +982,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/courseexpandovalue/Language</resource-bundle>
 		<portlet-info>
-			<title>Expando de curso</title>
-			<short-title>Expando de curso</short-title>
+			<title>CourseExpandoValue</title>
+			<short-title>CourseExpandoValue</short-title>
 			<keywords></keywords>
 		</portlet-info>
         <portlet-preferences>
@@ -1009,7 +1009,7 @@
 	
 	<portlet>
 		<portlet-name>orgofcourse</portlet-name>
-		<display-name>Organizacion de curso</display-name>
+		<display-name>OrgOfCourse</display-name>
 		<portlet-class>com.liferay.lms.OrgOfCourse</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1020,10 +1020,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/orgofcourse/Language</resource-bundle>
 		<portlet-info>
-			<title>Organizacion de curso</title>
-			<short-title>Organizacion de curso</short-title>
+			<title>OrgOfCourse</title>
+			<short-title>OrgOfCourse</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1042,7 +1042,7 @@
 	
 	<portlet>
 		<portlet-name>coursesummary</portlet-name>
-		<display-name>Resumen de curso</display-name>
+		<display-name>CourseSummary</display-name>
 		<portlet-class>com.liferay.lms.CourseSummary</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1053,10 +1053,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/coursesummary/Language</resource-bundle>
 		<portlet-info>
-			<title>Resumen de curso</title>
-			<short-title>Resumen de curso</short-title>
+			<title>CourseSummary</title>
+			<short-title>CourseSummary</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1075,7 +1075,7 @@
 	
 	<portlet>
 		<portlet-name>coursecategories</portlet-name>
-		<display-name>Categorias de curso</display-name>
+		<display-name>CourseCategories</display-name>
 		<portlet-class>com.liferay.lms.CourseCategories</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1086,10 +1086,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/coursecategories/Language</resource-bundle>
 		<portlet-info>
-			<title>Categorias de curso</title>
-			<short-title>Categorias de curso</short-title>
+			<title>CourseCategories</title>
+			<short-title>CourseCategories</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1108,7 +1108,7 @@
 	
 	<portlet>
 		<portlet-name>coursesearch</portlet-name>
-		<display-name>Busqueda cursos</display-name>
+		<display-name>CourseSearch</display-name>
 		<portlet-class>com.liferay.lms.CourseSearch</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1119,10 +1119,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/coursesearch/Language</resource-bundle>
 		<portlet-info>
-			<title>Busqueda cursos</title>
-			<short-title>Busqueda cursos</short-title>
+			<title>CourseSearch</title>
+			<short-title>CourseSearch</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1140,7 +1140,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>studentsearch</portlet-name>
-		<display-name>Busqueda alumnos</display-name>
+		<display-name>StudentSearch</display-name>
 		<portlet-class>com.liferay.lms.StudentSearch</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1151,10 +1151,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/studentsearch/Language</resource-bundle>
 		<portlet-info>
-			<title>Busqueda alumnos</title>
-			<short-title>Busqueda alumnos</short-title>
+			<title>StudentSearch</title>
+			<short-title>StudentSearch</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1172,7 +1172,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>CourseRatings</portlet-name>
-		<display-name>Estadisticas de curso</display-name>
+		<display-name>CourseRatings</display-name>
 		<portlet-class>com.liferay.lms.CourseRatings</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1183,10 +1183,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/courseratings/Language</resource-bundle>
 		<portlet-info>
-			<title>Estadisticas de curso</title>
-			<short-title>Estadisticas de curso</short-title>
+			<title>CourseRatings</title>
+			<short-title>CourseRatings</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1204,7 +1204,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>CourseComments</portlet-name>
-		<display-name>Comentarios curso</display-name>
+		<display-name>CourseComments</display-name>
 		<portlet-class>com.liferay.lms.CourseComments</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1215,10 +1215,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/coursecomments/Language</resource-bundle>
 		<portlet-info>
-			<title>Comentarios curso</title>
-			<short-title>Comentarios curso</short-title>
+			<title>CourseComments</title>
+			<short-title>CourseComments</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1236,7 +1236,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>surveyactivity</portlet-name>
-		<display-name>Encuesta</display-name>
+		<display-name>SurveyActivity</display-name>
 		<portlet-class>com.liferay.lms.SurveyActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1252,10 +1252,10 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/surveyactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Encuesta</title>
-			<short-title>Encuesta</short-title>
+			<title>SurveyActivity</title>
+			<short-title>SurveyActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1276,7 +1276,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>onlinetaskactivity</portlet-name>
-		<display-name>Online</display-name>
+		<display-name>onlinetaskActivity</display-name>
 		<portlet-class>com.liferay.lms.OnlineActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1296,10 +1296,10 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/onlinetaskactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Online</title>
-			<short-title>Online</short-title>
+			<title>OnlineTaskActivity</title>
+			<short-title>OnlineTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1320,7 +1320,7 @@
 	</portlet>	
 	<portlet>
 		<portlet-name>offlinetaskactivity</portlet-name>
-		<display-name>Offline</display-name>
+		<display-name>offlinetaskActivity</display-name>
 		<portlet-class>com.liferay.lms.OfflineActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1340,10 +1340,10 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/offlinetaskactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Offline</title>
-			<short-title>Offline</short-title>
+			<title>OfflineTaskActivity</title>
+			<short-title>OfflineTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1364,7 +1364,7 @@
 	</portlet>
 	<portlet>
 	<portlet-name>evaluationtaskactivity</portlet-name>
-		<display-name>Evaluacion</display-name>
+		<display-name>evaluationtaskActivity</display-name>
 		<portlet-class>com.liferay.lms.EvaluationActivity</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1380,10 +1380,10 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>EDIT</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/evaluationtaskactivity/Language</resource-bundle>
 		<portlet-info>
-			<title>Evaluacion</title>
-			<short-title>Evaluacion</short-title>
+			<title>EvaluationTaskActivity</title>
+			<short-title>EvaluationTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1404,7 +1404,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>studentmanage</portlet-name>
-		<display-name>Administracion estudiantes</display-name>
+		<display-name>Studen tManage</display-name>
 		<portlet-class>com.liferay.lms.StudentManage</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1415,10 +1415,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/Language</resource-bundle>
+		<resource-bundle>content/studentmanage/Language</resource-bundle>
 		<portlet-info>
-			<title>Administracion estudiantes</title>
-			<short-title>Administracion estudiantes</short-title>
+			<title>Student Manage</title>
+			<short-title>StudentManage</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1436,7 +1436,7 @@
 	</portlet>
 	<portlet>
 		<portlet-name>portaladmin</portlet-name>
-		<display-name>Administración de portal</display-name>
+		<display-name>PortalAdmin</display-name>
 		<portlet-class>com.liferay.lms.PortalAdmin</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -1447,10 +1447,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/portaladmin/Language</resource-bundle>
 		<portlet-info>
-			<title>Administración de portal</title>
-			<short-title>Administración de portal</short-title>
+			<title>PortalAdmin</title>
+			<short-title>PortalAdmin</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1468,7 +1468,7 @@
 	</portlet>
 		<portlet>
 		<portlet-name>userprogress</portlet-name>
-		<display-name>Progreso de usuario</display-name>
+		<display-name>User Progress</display-name>
 		<portlet-class>com.liferay.lms.UserProgress</portlet-class>
 		<init-param>
 			<name>view-template</name>
@@ -1479,10 +1479,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/userprogress/Language</resource-bundle>
 		<portlet-info>
-			<title>Progreso de usuario</title>
-			<short-title>Progreso de usuario</short-title>
+			<title>User Progress</title>
+			<short-title>User Progress</short-title>
 			<keywords></keywords>
 		</portlet-info>
 		<security-role-ref>
@@ -1511,7 +1511,7 @@
 				<mime-type>text/html</mime-type>
 				<portlet-mode>view</portlet-mode>
 			</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/scormadmin/Language</resource-bundle>
 			<portlet-info>
 				<title>SCORM Admin</title>
 				<short-title>SCORM Admin</short-title>
@@ -1543,7 +1543,7 @@
 				<mime-type>text/html</mime-type>
 				<portlet-mode>view</portlet-mode>
 			</supports>
-			<resource-bundle>content/Language</resource-bundle>
+			<resource-bundle>content/scormactivity/Language</resource-bundle>
 			<portlet-info>
 				<title>SCORM Activity</title>
 				<short-title>SCORM Activity</short-title>
