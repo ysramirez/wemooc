@@ -25,8 +25,10 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowStateException;
 
+import com.liferay.lms.model.Course;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.impl.ModuleImpl;
+import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.exception.NestableException;
@@ -111,7 +113,14 @@ public static String SEPARATOR = "_";
 			RenderResponse renderResponse) throws IOException, PortletException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		
-		if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), Module.class.getName(), 0L, ActionKeys.UPDATE)) {
+		Course course=null;
+		try {
+			course = CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+		} catch (SystemException e) {
+			throw new IOException(e);
+		}
+		
+		if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), Course.class.getName(), course.getCourseId(), ActionKeys.UPDATE)) {
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		}
 

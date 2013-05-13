@@ -66,9 +66,10 @@ else
 		if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals("") )
 		{
 			
-			if(Validator.isNumber(learnact.getExtracontent()))
+			long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"assetEntry"),0);
+			
+			if(entryId!=0)
 			{
-				long entryId=Long.valueOf(learnact.getExtracontent());
 				AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(entryId);
 				AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
 				AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
@@ -255,63 +256,6 @@ else
 				<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
 				<%
 				}
-			}
-			else
-			{
-				%>
-				<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-				<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>
-				<%
-			Document document = SAXReaderUtil.read(learnact.getExtracontent());
-			Element root=document.getRootElement();
-			Element video=root.element("video");
-			if(video!=null)
-			{
-				if(!video.attributeValue("id","").equals(""))
-				{
-				AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(video.attributeValue("id")));
-				DLFileEntry videofile=DLFileEntryLocalServiceUtil.getDLFileEntry(videoAsset.getClassPK());
-				DLFileVersion videofileVersion = videofile.getFileVersion();
-				String videoURL=themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + videofileVersion.getGroupId() + StringPool.SLASH + videofileVersion.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(videofileVersion.getTitle()));
-				
-				%>
-		
-				
- 	<embed type="application/x-shockwave-flash" src="<%=request.getContextPath()%>/flash/flvplayer/playervideo.swf" 
-			  width="560" height="315" style="undefined" id="cab" name="cab" bgcolor="#FFFFFF" quality="high" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" menu="false" 
-			  flashvars="file=<%=videoURL%>&type=flv" />
-			  <%-- 
- 			<video width="320" height="240" controls="controls">
-  					<source src="<%=videoURL %>" type="video/mp4">
-  					</video>
---%>
-				<%
-				}
-				else
-				{
-					%>
-					<%=video.getText()%>
-					<%
-				}
-			}
-			Element documento=root.element("document");
-			if(documento!=null)
-			{
-				if(!documento.attributeValue("id","").equals(""))
-				{
-				AssetEntry docAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(documento.attributeValue("id")));
-				DLFileEntry docfile=DLFileEntryLocalServiceUtil.getDLFileEntry(docAsset.getClassPK());
-				DLFileVersion docfileVersion = docfile.getFileVersion();
-				
-				String docURL=themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + docfileVersion.getGroupId() + StringPool.SLASH + docfileVersion.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(docfileVersion.getTitle()));
-				%>
-				<div class="additionalDocument">
-				<a href="<%=docURL%>"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= docfileVersion.getIcon() %>.png" /><%= HtmlUtil.escape(docfileVersion.getTitle()) %></a>
-				</div>
-				<%
-				}
-			}
-			
 			}
 		}
 		else
