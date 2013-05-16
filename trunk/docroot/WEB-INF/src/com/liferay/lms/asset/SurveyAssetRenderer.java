@@ -82,8 +82,8 @@ public class SurveyAssetRenderer extends BaseAssetRenderer {
 			LiferayPortletResponse liferayPortletResponse,
 			String noSuchEntryRedirect) throws Exception {
 
-		PortletURL portletURL = liferayPortletResponse.createRenderURL("execactivity_WAR_liferaylmsportlet");
-		portletURL.setParameter("jspPage", "/html/execactivity/test/view.jsp");
+		PortletURL portletURL = liferayPortletResponse.createRenderURL("surveyactivity_WAR_liferaylmsportlet");
+		portletURL.setParameter("jspPage", "/html/surveyactivity/view.jsp");
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 		
 		return portletURL.toString();
