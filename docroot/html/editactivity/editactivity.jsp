@@ -261,7 +261,8 @@ Liferay.provide(
 			renderUrl.setParameter('precedence','<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>');
 
 			A.io.request(renderUrl.toString(),
-			{   
+			{  
+			  dataType : 'html',	 
 			  on: 
 				{   
 					success: function() { 

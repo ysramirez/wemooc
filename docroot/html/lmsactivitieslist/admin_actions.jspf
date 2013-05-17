@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.kernel.util.StringPool"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
 <%@page import="com.liferay.portal.security.permission.ActionKeys"%>
 <%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
@@ -53,8 +54,8 @@ ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), Lea
 			
 	if(myActivity.getActId()==actId) {	
 		String activityPortletId = HttpUtil.getParameter(
-				new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
-						getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, ""), "p_p_id",false);
+				learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
+						getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
 	
 		if(activityPortletId!=null) {
 			editActivityPopup.append(
@@ -89,8 +90,8 @@ ActionKeys.DELETE) %>">
 		<portlet:param name="resId" value="<%=primKey %>" />
 	</portlet:actionURL>
 	
-	<%
-		String deleteURLJavascript=
+	<%	
+		StringBuilder deleteURLJavascript = new StringBuilder(
 				"javascript:if (confirm('"+LanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this")+"')) {"+
 						 "		AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
 						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
@@ -100,13 +101,28 @@ ActionKeys.DELETE) %>">
 						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 						 "          activitiesListPortlet.remove(true); "+	
 						 "          A.io.request('"+ deleteURL.toString() +"', {  "+
+						 "		      dataType : 'html', "+
 						 "            on: {  "+
 						 "             		success: function() {  "+
 						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
 		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
 		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
-		 				 "			             }  "+	
+		 				 "			             }  ");
+		 				if(myActivity.getActId()==actId) {	
+		 					String activityPortletId = HttpUtil.getParameter(
+		 							learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
+		 									getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+		 				
+		 					if(activityPortletId!=null) {
+		 						deleteURLJavascript.append(
+		 						 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+		 						 "         			if(activityTitlePortlet!=null) {  "+
+		 						 "		      			Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+		 						 "	       			}  ");
+		 					}
+		 				}	 
+		 				deleteURLJavascript.append( 
 		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
 						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 						 "                       portletBody.setContent(this.get('responseData')); "+
@@ -116,10 +132,10 @@ ActionKeys.DELETE) %>">
 						 "            }  "+
 						 "          });  "+	 
 						 "		}); "+ 
-						 "  }";
+						 "  }");
 	%>
 	
-	<liferay-ui:icon image="delete" message="delete" url="#" onClick="<%=deleteURLJavascript %>" />
+	<liferay-ui:icon image="delete" message="delete" url="#" onClick="<%=deleteURLJavascript.toString() %>" />
 	
 </c:if>
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
@@ -138,6 +154,7 @@ ActionKeys.UPDATE) %>">
 					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 					 "          activitiesListPortlet.remove(true); "+	
 					 "          A.io.request('"+ downURL.toString() +"', {  "+
+					 "		      dataType : 'html', "+
 					 "            on: {  "+
 					 "             		success: function() {  "+
 					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
@@ -172,6 +189,7 @@ ActionKeys.UPDATE) %>">
 					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 					 "          activitiesListPortlet.remove(true); "+	
 					 "          A.io.request('"+ upURL.toString() +"', {  "+
+					 "		      dataType : 'html', "+
 					 "            on: {  "+
 					 "             		success: function() {  "+
 					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
@@ -226,6 +244,7 @@ ActionKeys.PERMISSIONS) %>">
 					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
 					 "          activitiesListPortlet.remove(true); "+	
 					 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
+					 "		      dataType : 'html', "+
 					 "            on: {  "+
 					 "             		success: function() {  "+
 					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+

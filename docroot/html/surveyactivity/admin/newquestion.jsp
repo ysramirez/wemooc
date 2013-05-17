@@ -95,10 +95,10 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	    </script>
 	</aui:field-wrapper>
 	
-	<div id="<portlet:namespace />textError" class="<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.newquestion.error.test.required"))?
+	<div id="<portlet:namespace />textError" class="<%=(SessionErrors.contains(renderRequest, "surveyactivity.editquestions.newquestion.error.test.required"))?
    														"portlet-msg-error":StringPool.BLANK %>">
-   	<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.newquestion.error.test.required"))?
-   			LanguageUtil.get(pageContext,"execativity.editquestions.newquestion.error.test.required"):StringPool.BLANK %>
+   	<%=(SessionErrors.contains(renderRequest, "surveyactivity.editquestions.newquestion.error.test.required"))?
+   			LanguageUtil.get(pageContext,"surveyactivity.editquestions.newquestion.error.test.required"):StringPool.BLANK %>
 	</div>
 
 	<aui:button-row>

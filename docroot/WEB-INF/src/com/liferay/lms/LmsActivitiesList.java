@@ -8,7 +8,6 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.portlet.ActionRequest;
@@ -79,7 +78,6 @@ public class LmsActivitiesList extends MVCPortlet {
 		String redirect = ParamUtil.getString(actionRequest, "redirect");
 		if(actId>0)
 		{
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivity.class.getName(), actionRequest);
 		LearningActivity larn=LearningActivityLocalServiceUtil.getLearningActivity(actId);
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
@@ -319,14 +317,14 @@ public class LmsActivitiesList extends MVCPortlet {
 
 		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
 		long renderModule = ParamUtil.getLong(actionRequest, "moduleId",0);
-		
+
 		if(moduleId>0)
 		{
 			ModuleLocalServiceUtil.deleteModule(moduleId);
 			if(moduleId==renderModule) {
 				actionResponse.removePublicRenderParameter("moduleId");
-				actionResponse.removePublicRenderParameter("actId");				
-			}		
+				actionResponse.removePublicRenderParameter("actId");	
+			}	
 		}
 	}
 	
@@ -346,7 +344,7 @@ public class LmsActivitiesList extends MVCPortlet {
 	throws Exception {
 
 		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
-		
+
 		if(moduleId>0)
 		{
 			ModuleLocalServiceUtil.goDownModule(moduleId);

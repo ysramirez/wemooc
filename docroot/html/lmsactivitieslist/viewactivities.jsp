@@ -35,6 +35,14 @@ boolean actionEditing = ParamUtil.getBoolean(request,
 		"actionEditing", false);
 long actId = ParamUtil.getLong(request, "actId", 0);
 
+LearningActivity currentLeaningActivity = null;
+
+if(actId!=0) {
+	currentLeaningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+}
+
+LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+
 java.util.List<LearningActivity> activities = null;
 if (moduleId == 0) {
 	java.util.List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
@@ -197,11 +205,77 @@ Liferay.provide(
 								view1URL=HttpUtil.addParameter(view1URL, "p_p_state","normal");
 							}
 						}
-							
-					%>
+						
+						%>
+						
+						<portlet:actionURL var="goToActivity" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+							<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
+						</portlet:actionURL>
+
+						<%
+							StringBuilder goToActivityJavascript= new StringBuilder(
+									"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
+											 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
+											 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+											 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+											 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
+											 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+											 "          activitiesListPortlet.remove(true); "+	
+											 "          A.io.request('"+ goToActivity.toString() +"', {  "+
+											 "		      dataType : 'html', "+
+											 "            on: {  "+
+											 "             		success: function() {  ");
+											 
+										   if((actId!=0)&&(activity.getActId()!=actId)) {								   
+											   if(currentLeaningActivity.getTypeId()!=activity.getTypeId()) {
+												   String currentActivityPortletId = HttpUtil.getParameter(
+															learningActivityTypeRegistry.getLearningActivityType(currentLeaningActivity.getTypeId()).getAssetRenderer(currentLeaningActivity).
+																	getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+													
+												   if(currentActivityPortletId!=null) {
+										              goToActivityJavascript.append(
+														 "         			var currentActivityPortletId=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(currentActivityPortletId)+"_');"+
+														 "         			if(currentActivityPortletId!=null) {  "+
+														 "		      			Liferay.Portlet.refresh(currentActivityPortletId);  "+			 
+														 "	       			}  ");
+												   }
+											   }
+										    	 
+										   }
+										     
+										   String activityPortletId = HttpUtil.getParameter(
+													learningActivityTypeRegistry.getLearningActivityType(activity.getTypeId()).getAssetRenderer(activity).
+															getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+											
+										   if(activityPortletId!=null) {
+								              goToActivityJavascript.append(
+												 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+												 "         			if(activityTitlePortlet!=null) {  "+
+												 "		      			Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+												 "	       			}  ");
+										   }
+												 
+											 
+										   goToActivityJavascript.append(
+											 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+							 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+							 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+							 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+							 				 "			             }  "+	
+							 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+											 "                       portletBody.plug(A.Plugin.ParseContent); "+	
+											 "                       portletBody.setContent(this.get('responseData')); "+	
+											 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+											 "          			 placeHolder.remove(true); "+			
+											 "             }  "+
+											 "            }  "+
+											 "          });  "+	 
+											 "		}); ");
+						%>
+
 						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>">
 						
-							<a href="<%=view1URL.toString()%>"><%=activity.getTitle(themeDisplay.getLocale())%></a>
+							<a href="#" onClick="<%=goToActivityJavascript.toString() %>"  ><%=activity.getTitle(themeDisplay.getLocale())%></a>
 							
 					<%
 					}

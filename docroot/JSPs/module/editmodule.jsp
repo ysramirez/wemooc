@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.StringPool"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@page import="javax.portlet.WindowState"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
@@ -20,7 +22,59 @@
 <jsp:useBean id="endDateAno" class="java.lang.String" scope="request" />
 
 <portlet:defineObjects />
+<script type="text/javascript">
+<!--
 
+AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
+	
+	window.<portlet:namespace />validateActivity = new A.FormValidator({
+		boundingBox: '#<portlet:namespace />addmodule',
+		validateOnBlur: true,
+		validateOnInput: true,
+		selectText: true,
+		showMessages: false,
+		containerErrorClass: '',
+		errorClass: '',
+		rules: {			
+			<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
+				required: true
+			},
+        	<portlet:namespace />description: {
+        		required: true
+            }
+		},
+        fieldStrings: {			
+        	<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
+        		required: '<liferay-ui:message key="module-title-required" />'
+            },
+        	<portlet:namespace />description: {
+        		required: '<liferay-ui:message key="module-description-required" />'
+            }
+		},
+		
+		on: {		
+            errorField: function(event) {
+            	var instance = this;
+				var field = event.validator.field;
+				var divError = A.one('#'+field.get('name')+'Error');
+				if(divError) {
+					divError.addClass('portlet-msg-error');
+					divError.setContent(instance.getFieldErrorMessage(field,event.validator.errors[0]));
+				}
+            },		
+            validField: function(event) {
+				var divError = A.one('#'+event.validator.field.get('name')+'Error');
+				if(divError) {
+					divError.removeClass('portlet-msg-error');
+					divError.setContent('');
+				}
+            }
+		}
+	});
+});
+
+//-->
+</script>
 <%
 	long moduleId=0;
 
@@ -63,45 +117,57 @@
 	}
 %>
 	<aui:input name="title" label="title">
-		<aui:validator name="required" />
 	</aui:input>
-	<liferay-ui:error key="module-title-required" message="module-title-required" />
-	<aui:field-wrapper label="description">
-		<div id="<portlet:namespace/>DescripcionRichTxt"></div>
-		<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initDescripcion" />
-		<aui:input id="descriptionhidden" name="description" type="hidden" />
-				
-		<script type="text/javascript">
-	    <!--
-			function <portlet:namespace />initDescripcion() {
-				return "<%= JavaScriptUtil.markupToStringLiteral(description) %>";
+	<div id="<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>Error" class="<%=(SessionErrors.contains(renderRequest, "module-title-required"))?
+    														"portlet-msg-error":StringPool.BLANK %>">
+    	<%=(SessionErrors.contains(renderRequest, "module-title-required"))?
+    			LanguageUtil.get(pageContext,"module-title-required"):StringPool.BLANK %>
+    </div>
+    	    
+    <script type="text/javascript">
+	<!--
+		Liferay.provide(
+	        window,
+	        '<portlet:namespace />onChangeDescription',
+	        function(val) {
+	        	var A = AUI();
+				A.one('#<portlet:namespace />description').set('value',val);
+				if(window.<portlet:namespace />validateActivity){
+					window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
+				}
+	        },
+	        ['node']
+	    );
+	
+	    function <portlet:namespace />closeWindow(){
+			if ((!!window.postMessage)&&(window.parent != window)) {
+				if (!window.location.origin){
+					window.location.origin = window.location.protocol+"//"+window.location.host;
+				}
+				parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
 			}
-
-		    function <portlet:namespace />extractCodeFromEditor(){
-				try {
-					document.<portlet:namespace />addmodule['<portlet:namespace />description'].value = window['<portlet:namespace />DescripcionRichTxt'].getHTML();
-				}
-				catch (e) {
-				}
-		    	
-		    }
-		    
-		    function <portlet:namespace />closeWindow(){
-				if ((!!window.postMessage)&&(window.parent != window)) {
-					if (!window.location.origin){
-						window.location.origin = window.location.protocol+"//"+window.location.host;
-					}
-					parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
-				}
-				else {
-					window.location.href='<portlet:renderURL />';
-				}
-		    }
-
-	        //-->
+			else {
+				window.location.href='<portlet:renderURL />';
+			}
+	    }
+ 
+	//-->
+	</script>
+    
+	<aui:field-wrapper label="description">
+		<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
+		<script type="text/javascript">
+	        function <portlet:namespace />initEditor() 
+	        { 
+	            return "<%= UnicodeFormatter.toString(description) %>"; 
+	        }
 	    </script>
 	</aui:field-wrapper>
-	<liferay-ui:error key="module-description-required" message="module-description-required" />
+	<div id="<portlet:namespace />descriptionError" class="<%=(SessionErrors.contains(renderRequest, "module-description-required"))?
+    														"portlet-msg-error":StringPool.BLANK %>">
+    	<%=(SessionErrors.contains(renderRequest, "module-description-required"))?
+    			LanguageUtil.get(pageContext,"module-description-required"):StringPool.BLANK %>
+    </div>
 	<aui:input type="hidden" name="icon" />
 	<br />
 	 
