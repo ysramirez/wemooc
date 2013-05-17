@@ -79,6 +79,11 @@ public class TestLearningActivityType extends BaseLearningActivityType
 	public String getExpecificContentPage() {
 		return "/html/execactivity/test/admin/editoptions.jsp";
 	}
+		
+	@Override
+	public String getMesageEditDetails() {
+		return "execativity.editquestions";
+	}
 	
 	@Override
 	public boolean especificValidations(UploadRequest uploadRequest,

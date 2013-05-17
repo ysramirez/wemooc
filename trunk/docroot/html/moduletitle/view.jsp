@@ -14,7 +14,9 @@
 <%@ include file="/init.jsp" %>
 <%
 long moduleId=ParamUtil.getLong(request,"moduleId",0);
+long currentModuleId=0;
 long actId=ParamUtil.getLong(request,"actId",0);
+long themeId=ParamUtil.getLong(request,"themeId",1);
 boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
 	Module theModule=null;
 	if(moduleId!=0)
@@ -40,7 +42,7 @@ boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
 	if(theModule!=null)
 	{
 		%>
-		<liferay-ui:header title="<%=theModule.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
+		<liferay-ui:header title="<%=LanguageUtil.format(pageContext, \"moduleTitle.chapter\", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %>"></liferay-ui:header>
 		<%
 	}
 	else

@@ -5,11 +5,6 @@
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 
-<liferay-portlet:renderURL var="result">
-	<liferay-portlet:param name="jspPage" value="/html/resourceInternalActivity/admin/result.jsp"/>
-</liferay-portlet:renderURL>
-<a href="<%=result%>">return</a>
-
 <%
 List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetRendererFactories();
 

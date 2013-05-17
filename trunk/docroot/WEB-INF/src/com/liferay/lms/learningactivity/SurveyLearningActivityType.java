@@ -22,5 +22,11 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 		// TODO Auto-generated method stub
 		return 4;
 	}
+	
+	
+	@Override
+	public String getMesageEditDetails() {
+		return "surveyactivity.editquestions";
+	}
 
 }
