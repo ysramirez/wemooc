@@ -30,6 +30,8 @@ import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
@@ -320,11 +322,17 @@ public class LmsActivitiesList extends MVCPortlet {
 
 		if(moduleId>0)
 		{
-			ModuleLocalServiceUtil.deleteModule(moduleId);
-			if(moduleId==renderModule) {
-				actionResponse.removePublicRenderParameter("moduleId");
-				actionResponse.removePublicRenderParameter("actId");	
-			}	
+			if(LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
+			add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)))==0) {
+				ModuleLocalServiceUtil.deleteModule(moduleId);
+				if(moduleId==renderModule) {
+					actionResponse.removePublicRenderParameter("moduleId");
+					actionResponse.removePublicRenderParameter("actId");	
+				}	
+			}
+			else{
+				SessionErrors.add(actionRequest, "activities-in-module");
+			}
 		}
 	}
 	

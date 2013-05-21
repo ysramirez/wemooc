@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
 <%@page import="javax.portlet.WindowState"%>
 <%@page import="com.liferay.portal.theme.PortletDisplay"%>
 <%@page import="javax.portlet.ActionRequest"%>
@@ -72,7 +75,9 @@ String primKey = String.valueOf(theModule.getPrimaryKey());
 		<%
 	}
 	%>
-	<%if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.DELETE))
+	<%if((permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.DELETE))&&
+		 (LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
+			add(PropertyFactoryUtil.forName("moduleId").eq(theModule.getModuleId())))==0))
 	{
 	%>
 		<portlet:actionURL name="deletemodule" var="deleteModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
