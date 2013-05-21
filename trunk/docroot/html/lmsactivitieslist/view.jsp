@@ -168,7 +168,8 @@ for(Module theModule:theModules)
 	themeId++;
 	%>
 	
-	<li class='<%= moduleId == theModule.getModuleId() ? "option-less" : "option-more"%>'>
+	<%--li class='<%= moduleId == theModule.getModuleId() ? "option-less" : "option-more"%>' --%>
+	<li class='option-none'>
 	<span class="desplegar"></span>
 	
 	<%
