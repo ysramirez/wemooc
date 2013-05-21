@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest"%>
@@ -24,7 +25,16 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 
 <%@ include file="/init.jsp"%>
+<%if (SessionErrors.contains(renderRequest, "activities-in-module")) { %>
+<script type="text/javascript">
+<!--
+	AUI().ready(function(A) {
+		alert('No se pueden borrar módulos con actividades');
+	});
+//-->
+</script>
 
+<% } %>
 <%
 long moduleId = ParamUtil.getLong(request, "moduleId", 0);
 boolean actionEditing = ParamUtil.getBoolean(request,
@@ -179,24 +189,12 @@ for(Module theModule:theModules)
 	java.util.Date now=new java.util.Date(System.currentTimeMillis());
 	if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId())||actionEditing)
 	{
-	
-		Group grupo=themeDisplay.getScopeGroup();
-		long retoplid=themeDisplay.getPlid();
-		for(Layout theLayout:LayoutLocalServiceUtil.getLayouts(grupo.getGroupId(),false))
-		{
-	
-			if(theLayout.getFriendlyURL().equals("/reto"))
-			{
-				retoplid=theLayout.getPlid();
-				
-			}
-		}
 		
 		LiferayPortletURL  gotoModuleURL = (LiferayPortletURL)renderResponse.createRenderURL();		
 	    gotoModuleURL.removePublicRenderParameter("actId");
 	    gotoModuleURL.setWindowState(LiferayWindowState.EXCLUSIVE);
 	    gotoModuleURL.setParameter("moduleId", Long.toString(theModule.getModuleId()));
-	    gotoModuleURL.setPlid(retoplid);
+	    gotoModuleURL.setPlid(themeDisplay.getPlid());
 	        
 		StringBuilder goToModuleJavascript= new StringBuilder(
 				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
