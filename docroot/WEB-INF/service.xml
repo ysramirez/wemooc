@@ -4,7 +4,8 @@
 	<author>TLS</author>
 	<namespace>Lms</namespace>
 	
-	<entity name="LearningActivity" uuid="true" local-service="true" remote-service="true" json-enabled="false">
+	<entity name="LearningActivity" uuid="true" local-service="true" remote-service="true" json-enabled="false" 
+			persistence-class="com.liferay.lms.service.persistence.LearningActivityCustomPersistenceImpl" >
 
 		<!-- PK fields -->
 		<column name="actId" type="long" primary="true" />
