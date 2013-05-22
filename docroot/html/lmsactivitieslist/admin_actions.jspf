@@ -123,7 +123,7 @@ ActionKeys.DELETE) %>">
 		 					}
 		 				}	 
 		 				deleteURLJavascript.append( 
-		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 						 "                       portletBody.setContent(this.get('responseData')); "+
 						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
@@ -162,7 +162,7 @@ ActionKeys.UPDATE) %>">
 	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 	 				 "			             }  "+	
-	 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+	 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 					 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 					 "                       portletBody.setContent(this.get('responseData')); "+	
 					 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
@@ -197,9 +197,9 @@ ActionKeys.UPDATE) %>">
 	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 	 				 "			             }  "+	
-	 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+	 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 					 "                       portletBody.plug(A.Plugin.ParseContent); "+	
-					 "                       portletBody.setContent(this.get('responseData')); "+
+					 "                       portletBody.setContent(this.get('responseData')); "+	
 					 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
 					 "          			 placeHolder.remove(true); "+	
 					 "             }  "+
@@ -252,7 +252,7 @@ ActionKeys.PERMISSIONS) %>">
 	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 	 				 "			             }  "+	
-	 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+	 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 					 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 					 "                       portletBody.setContent(this.get('responseData')); "+
 					 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
