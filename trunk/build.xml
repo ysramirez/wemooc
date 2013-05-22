@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <!DOCTYPE project>
 
-<project name="liferaylms-portlet" basedir="." default="deploy" xmlns:antelope="antlib:ise.antelope.tasks">
+<project name="weclass-portlet" basedir="." default="deploy" xmlns:antelope="antlib:ise.antelope.tasks">
  <import file="../build-common-portlet.xml" />
 
  <property name="native.lang.dir" value="docroot/WEB-INF/src/content/" />
