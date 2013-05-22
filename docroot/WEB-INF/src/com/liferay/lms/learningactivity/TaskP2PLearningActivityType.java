@@ -3,6 +3,7 @@ package com.liferay.lms.learningactivity;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.TaskP2PAssetRenderer;
@@ -19,6 +20,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadRequest;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -65,12 +67,14 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 	@Override
 	public boolean especificValidations(UploadRequest uploadRequest,
 			PortletResponse portletResponse) {
+		PortletRequest actionRequest = (PortletRequest)uploadRequest.getAttribute(
+				JavaConstants.JAVAX_PORTLET_REQUEST);
 		boolean validate=true;
-		
+
 		if((Validator.isNotNull(uploadRequest.getParameter("numValidaciones")))&&
 				(!Validator.isNumber(uploadRequest.getParameter("numValidaciones"))))
 		{
-			SessionErrors.add(uploadRequest, "p2ptaskactivity.editActivity.numValidaciones.number");
+			SessionErrors.add(actionRequest, "p2ptaskactivity.editActivity.numValidaciones.number");
 			validate=false;
 		}
 		return validate;
