@@ -46,8 +46,8 @@ public class SCORMContentAssetRendererFactory extends BaseAssetRendererFactory
             LiferayPortletResponse liferayPortletResponse)
         {
 		
-        return null;
-/*
+       
+
         HttpServletRequest request =
             liferayPortletRequest.getHttpServletRequest();
 
@@ -57,8 +57,8 @@ public class SCORMContentAssetRendererFactory extends BaseAssetRendererFactory
       try
       {
     	  PortletURL portletURL= 
-    			  PortletURLFactoryUtil.create(request,"lmsactivitieslist_WAR_liferaylmsportlet",getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
-          portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/editactivity.jsp");
+    			  PortletURLFactoryUtil.create(request,"scormadmin_WAR_liferaylmsportlet",getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
+          portletURL.setParameter("mvcPath", "/html/scormadmin/editscorm.jsp");
          return portletURL;
       }
       catch(Exception e)
@@ -66,8 +66,7 @@ public class SCORMContentAssetRendererFactory extends BaseAssetRendererFactory
     	  e.printStackTrace();
     	  
       }
-        return null;
-        */
+      return null;
     }
 	@Override
 	public boolean hasPermission(PermissionChecker permissionChecker,
