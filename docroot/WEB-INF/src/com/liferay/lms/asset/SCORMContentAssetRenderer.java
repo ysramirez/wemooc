@@ -2,6 +2,7 @@ package com.liferay.lms.asset;
 
 import java.util.Locale;
 
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -14,9 +15,11 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -78,8 +81,22 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 
 			 ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
 			            WebKeys.THEME_DISPLAY);
+			 try
+		      {
+		    	  PortletURL portletURL= 
+		    			  PortletURLFactoryUtil.create(request,"scormadmin_WAR_liferaylmsportlet",getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
+		          portletURL.setParameter("mvcPath", "/html/scormadmin/editscorm.jsp");
+		          portletURL.setParameter("scormId", Long.toString(_scorm.getScormId()));
+		         return portletURL;
+		      }
+		      catch(Exception e)
+		      {
+		    	  e.printStackTrace();
+		    	  
+		      }
+		      return null;
 		
-			return null;
+			
 			}
 			@Override
 			public String getURLViewInContext(
@@ -99,8 +116,8 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 			@Override
 			public boolean hasEditPermission(PermissionChecker permissionChecker)
 					throws PortalException, SystemException {
-				// TODO Auto-generated method stub
-				return false;
+				return permissionChecker.hasPermission(_scorm.getGroupId(), SCORMContent.class.getName(), _scorm.getScormId(),ActionKeys.UPDATE);
+
 			}
 			
 			public String getSummary(Locale locale) {
