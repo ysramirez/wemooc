@@ -199,12 +199,11 @@ for(Module theModule:theModules)
 	        
 		StringBuilder goToModuleJavascript= new StringBuilder(
 				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
-						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +">'); "+ 
-						 "          var activitiesListPortletClone=activitiesListPortlet.clone(); "+ 
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
 						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
 						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
 						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
-						 "          activitiesListPortlet.remove(true); "+	
+						 "          activitiesListPortlet.hide(); "+	
 						 "          A.io.request('"+ gotoModuleURL.toString() +"', {  "+
 						 "		 	  dataType : 'html', "+ 
 						 "            on: {  "+
@@ -238,10 +237,10 @@ for(Module theModule:theModules)
 		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 		 				 "			             }  "+	
-		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
+		 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
 						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 						 "                       portletBody.setContent(this.get('responseData')); "+	
-						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
+						 "                       activitiesListPortlet.show(); "+	
 						 "          			 placeHolder.remove(true); "+			
 						 "             }  "+
 						 "            }  "+
