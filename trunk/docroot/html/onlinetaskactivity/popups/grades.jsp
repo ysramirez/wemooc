@@ -89,7 +89,7 @@ if(renderRequest.getParameter("studentId")!=null){%>
 <% } 
  if(text!=null) {
 %>
-	<aui:input type="textarea" cols="100" rows="5" name="text" label="onlinetaskactivity.text" value='<%=text %>' readonly='readonly'/>
+	<aui:input type="textarea" cols="60" rows="10" name="text" label="onlinetaskactivity.text" value='<%=text %>' readonly='readonly'/>
 <% } 
  if(urlFile!=null) {
 %>
@@ -104,9 +104,9 @@ if(!ownGrade){
 <aui:form  name="fn_grades" method="post" >
 	<aui:fieldset>
 		<aui:input type="hidden" name="studentId" value='<%=renderRequest.getParameter("studentId") %>' />
-	    <aui:input type="text" name="result" helpMessage="<%=LanguageUtil.format(pageContext, \"onlinetaskactivity.grades.resultMessage\", new Object[]{activity.getPasspuntuation()})%>"  label="onlinetaskactivity.grades" value='<%=((result!=null)&&(result.getResult()>0))?Long.toString(result.getResult()):"" %>' />
+	    <aui:input type="text" name="result" helpMessage="<%=LanguageUtil.format(pageContext, \"onlinetaskactivity.grades.resultMessage\", new Object[]{activity.getPasspuntuation()})%>"  label="onlinetaskactivity.grades" value='<%=((result!=null)&&(result.getEndDate()!=null))?Long.toString(result.getResult()):"" %>' />
 	    <liferay-ui:error key="onlinetaskactivity.grades.result-bad-format" message="onlinetaskactivity.grades.result-bad-format" />
-		<aui:input type="textarea" cols="90" rows="3" helpMessage="<%=LanguageUtil.get(pageContext, \"onlinetaskactivity.grades.commentsMessage\")%>"  maxLength="70" name="comments" label="onlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
+		<aui:input type="textarea" cols="75" rows="6" helpMessage="<%=LanguageUtil.get(pageContext, \"onlinetaskactivity.grades.commentsMessage\")%>"  maxLength="70" name="comments" label="onlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
 			<aui:validator name="range">[0, 70]</aui:validator>
 		</aui:input>
 	</aui:fieldset>

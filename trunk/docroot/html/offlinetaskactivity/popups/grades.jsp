@@ -23,7 +23,7 @@ if((renderRequest.getParameter("actId")!=null)&&(renderRequest.getParameter("stu
 <aui:form  name="fn_grades" method="post" >
 	<aui:fieldset>
 		<aui:input type="hidden" name="studentId" value='<%=renderRequest.getParameter("studentId") %>' />
-	    <aui:input type="text" name="result" helpMessage="<%=LanguageUtil.format(pageContext, \"offlinetaskactivity.grades.resultMessage\", new Object[]{activity.getPasspuntuation()})%>" label="offlinetaskactivity.grades" value='<%=((result!=null)&&(result.getResult()>0))?Long.toString(result.getResult()):"" %>' />
+	    <aui:input type="text" name="result" helpMessage="<%=LanguageUtil.format(pageContext, \"offlinetaskactivity.grades.resultMessage\", new Object[]{activity.getPasspuntuation()})%>" label="offlinetaskactivity.grades" value='<%=((result!=null)&&(result.getEndDate()!=null))?Long.toString(result.getResult()):"" %>' />
 	    <div id="<portlet:namespace />resultError" class="<%=(SessionErrors.contains(renderRequest, "offlinetaskactivity.grades.result-bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    	<%=(SessionErrors.contains(renderRequest, "offlinetaskactivity.grades.result-bad-format"))?

@@ -294,20 +294,17 @@
 					</liferay-ui:search-container-column-text>
 					<liferay-ui:search-container-column-text name="calification">
 						<% LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, user.getUserId()); 
-						   if((learningActivityResult!=null)&&(learningActivityResult.getResult()!=0)) {	   
-							   if (learningActivityResult.getResult()!=0) {
+						   if((learningActivityResult!=null)&&(learningActivityResult.getEndDate()!= null)) {	   
 								   Object  [] arg =  new Object[]{learningActivityResult.getResult(),activity.getPasspuntuation()};
 								   if(learningActivityResult.getPassed()){
 									   %><liferay-ui:message key="offlinetaskactivity.student.passed"  arguments="<%=arg %>" /><%
-								   }
-								   else {
+								   }else {
 									   %><liferay-ui:message key="offlinetaskactivity.student.failed"  arguments="<%=arg %>" /><%
 								   }
-							   }
-							   else {
+							  
+			               	}else{
 								   %><liferay-ui:message key="offlinetaskactivity.student.without.qualification" /><% 
-							   }
-			               } %>
+							}%>
 			            <p class="see-more">
 							<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
 								<liferay-ui:message key="offlinetaskactivity.set.grades"/>
@@ -325,11 +322,8 @@
 				
 				<div class="nota"> 
 
-<%if ((result!=null)&&(result.getResult()>0)){ %>
+<%if ((result!=null)&&(result.getEndDate()!=null)){ %>
 	<h2><liferay-ui:message key="offlinetaskactivity.result.title" /></h2>
-	<%if (!result.getComments().trim().equals("")){ %>
-		<p><liferay-ui:message key="offlinetaskactivity.result.teachercoment" /> <span class="destacado"><%=result.getComments() %></span></p>
-	<% } %>
 	<p><liferay-ui:message key="offlinetaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
 	<%
 	if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
@@ -341,8 +335,10 @@
 	%>	
 		<p class="nota_nosuperado"><liferay-ui:message key="offlinetaskactivity.result.notpass"  arguments="<%=arg %>" /></p>
 	<%
-		
 	}
+	if (!result.getComments().trim().equals("")){ %>
+	<p><liferay-ui:message key="offlinetaskactivity.result.teachercoment" /> <span class="destacado"><%=result.getComments() %></span></p>
+	<% } 
 }else {
 %>
 	<p class="nota_nocorregida"><liferay-ui:message key="offlinetaskactivity.not.qualificated.activity" /></p>

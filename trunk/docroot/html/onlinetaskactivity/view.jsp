@@ -243,13 +243,8 @@ if(isTeacher){
 				
 				
 				OrderByComparator obc = new UserFirstNameComparator(true);
-				
-				
 				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				
-				
 				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria,  WorkflowConstants.STATUS_ANY, params);
-						
 				pageContext.setAttribute("results", userListPage);
 			    pageContext.setAttribute("total", userCount);
 			%>
@@ -261,19 +256,15 @@ if(isTeacher){
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="calification">
 			<% LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, user.getUserId()); 
-			   if((learningActivityResult!=null)&&(learningActivityResult.getResult()!=0)) {	   
-				   if (learningActivityResult.getResult()!=0) {
+			   if((learningActivityResult!=null)&&(learningActivityResult.getEndDate()!=null)) {	   
 					   Object  [] arg =  new Object[]{learningActivityResult.getResult(),activity.getPasspuntuation()};
 					   if(learningActivityResult.getPassed()){
 						   %><liferay-ui:message key="onlinetaskactivity.student.passed"  arguments="<%=arg %>" /><%
-					   }
-					   else {
+					   }else{ 
 						   %><liferay-ui:message key="onlinetaskactivity.student.failed"  arguments="<%=arg %>" /><%
 					   }
-				   }
-				   else {
+			   }else {
 					   %><liferay-ui:message key="onlinetaskactivity.student.without.qualification" /><% 
-				   }
                } %>
 			<p class="see-more">
 				<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);"><liferay-ui:message key="onlinetaskactivity.set.grades"/></a>
@@ -360,23 +351,20 @@ if(isTeacher){
 
 	<div class="nota"> 
 
-<%if ((result!=null)&&(result.getResult()>0)){ %>
+<%if (result!=null){ %>
 	<h3><liferay-ui:message key="test-done" /> <a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);">Ver &uacute;ltima.</a></h3>
-	<%if (!result.getComments().trim().equals("")){ %>
-		<h4>Comentario del profesor:<%=result.getComments() %></h4>
-	<% } %>
-	<h4><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></h4>
 	<%
-	if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
-	%>
-		<h4><liferay-ui:message key="your-result-pass" /> </h4>
-	<%
-	}else{
-		Object  [] arg =  new Object[]{activity.getPasspuntuation()};
-	%>	
-		<h4><liferay-ui:message key="your-result-dont-pass"  arguments="<%=arg %>" /> </h4>
-	<%
-		
+	if(result.getEndDate()!= null){
+		%><h4><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></h4><%
+		if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
+			%><h4><liferay-ui:message key="your-result-pass" /> </h4><%
+		}else{
+			Object  [] arg =  new Object[]{activity.getPasspuntuation()};
+			%><h4><liferay-ui:message key="your-result-dont-pass"  arguments="<%=arg %>" /> </h4><%
+		}
+		if (!result.getComments().trim().equals("")){ %>
+			<h4>Comentario del profesor:<%=result.getComments() %></h4>
+		<%}
 	}
 }else {
 	if(activity.getTries()!=0) {
