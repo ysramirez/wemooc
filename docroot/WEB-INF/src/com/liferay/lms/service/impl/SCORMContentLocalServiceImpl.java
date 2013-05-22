@@ -105,6 +105,19 @@ public class SCORMContentLocalServiceImpl
 		ResourceConstants.SCOPE_INDIVIDUAL, scormId);
 		scormContentPersistence.remove(scorm);
 	}
+	public SCORMContent updateSCORMContent(SCORMContent scocontent,ServiceContext serviceContext) throws PortalException, SystemException
+	{
+		scocontent.setExpandoBridgeAttributes(serviceContext);
+		scormContentPersistence.update(scocontent, true);
+		assetEntryLocalService.updateEntry(
+				scocontent.getUserId(), scocontent.getGroupId(), SCORMContent.class.getName(),
+				scocontent.getScormId(), scocontent.getUuid(),0, serviceContext.getAssetCategoryIds(),
+				serviceContext.getAssetTagNames(), true, null, null,
+				new java.util.Date(System.currentTimeMillis()), null,
+				ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  scocontent.getDescription(),null, null, 0, 0,
+				null, false);
+		return scocontent;
+	}
 	public SCORMContent addSCORMContent (String title, String description,File scormfile,
 		ServiceContext serviceContext)
 			throws SystemException, 
