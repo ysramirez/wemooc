@@ -3,6 +3,7 @@ package com.liferay.lms.learningactivity;
 import java.io.IOException;
 import java.util.Date;
 
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.TestAssetRenderer;
@@ -16,6 +17,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -88,13 +90,15 @@ public class TestLearningActivityType extends BaseLearningActivityType
 	@Override
 	public boolean especificValidations(UploadRequest uploadRequest,
 			PortletResponse portletResponse) {
+		PortletRequest actionRequest = (PortletRequest)uploadRequest.getAttribute(
+				JavaConstants.JAVAX_PORTLET_REQUEST);
 		boolean validate=true;
 		
 		if((Validator.isNotNull(uploadRequest.getParameter("random")))&&
 		   ((!Validator.isNumber(uploadRequest.getParameter("random")))||
 		    (Long.parseLong(uploadRequest.getParameter("random"))<0)))
 		{
-			SessionErrors.add(uploadRequest, "execactivity.editActivity.random.number");
+			SessionErrors.add(actionRequest, "execactivity.editActivity.random.number");
 			validate=false;
 		}
 		return validate;
