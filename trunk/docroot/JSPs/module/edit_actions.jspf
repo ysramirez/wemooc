@@ -141,7 +141,7 @@ String primKey = String.valueOf(theModule.getPrimaryKey());
 					    
 					    
 				   		  deleteModuleURLJavascript.append(
-			 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+			 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 							 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 							 "                       portletBody.setContent(this.get('responseData')); "+
 							 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
@@ -198,7 +198,7 @@ String primKey = String.valueOf(theModule.getPrimaryKey());
 		 				 "			             }  ");					    	
 				    }
 					  downModuleURLJavascript.append(
-		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 						 "                       portletBody.setContent(this.get('responseData')); "+
 						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
@@ -248,7 +248,7 @@ String primKey = String.valueOf(theModule.getPrimaryKey());
 		 				 "			             }  ");					    	
 				    }
 			          upModuleURLJavascript.append(
-		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+		 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 						 "                       portletBody.setContent(this.get('responseData')); "+
 						 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	

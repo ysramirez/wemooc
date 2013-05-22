@@ -262,7 +262,7 @@ Liferay.provide(
 							 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 							 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 							 				 "			             }  "+	
-							 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body'); "+
+							 				 "                       var portletBody = activitiesListPortletClone.one('.portlet-body * .portlet-body'); "+
 											 "                       portletBody.plug(A.Plugin.ParseContent); "+	
 											 "                       portletBody.setContent(this.get('responseData')); "+	
 											 "                       placeHolder.placeBefore(activitiesListPortletClone); "+	
