@@ -208,21 +208,21 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		if(!hasTitle)
 		{
-			SessionErrors.add(uploadRequest, "title-required");
+			SessionErrors.add(actionRequest, "title-required");
 			return;
 		}
 		if(Validator.isNull(description))
 		{
-			SessionErrors.add(uploadRequest, "description-required");
+			SessionErrors.add(actionRequest, "description-required");
 		}
 		if(Validator.equals(moduleId, 0))
 		{
-			SessionErrors.add(uploadRequest, "module-required");
+			SessionErrors.add(actionRequest, "module-required");
 		}
 		
 		//Date validation
 		if (startDate.after(stopDate)){
-			SessionErrors.add(uploadRequest, "activity-startDate-before-endDate");
+			SessionErrors.add(actionRequest, "activity-startDate-before-endDate");
 		}
 		
 		LearningActivity larn=null;
@@ -231,7 +231,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		if(actId==0){
 			//Type validation
 			if (type==-1){
-				SessionErrors.add(uploadRequest, "activity-type-not-selected");
+				SessionErrors.add(actionRequest, "activity-type-not-selected");
 				return;
 			}
 						
