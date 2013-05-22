@@ -75,6 +75,24 @@ public class SCORMContentLocalServiceImpl
 		}
 		return baseDir;
 	}
+	public String getBaseZipDir()
+	{
+		String baseDir=PropsUtil.get("liferay.lms.scormzipsdir");
+		if(baseDir==null ||baseDir.equals(""))
+		{
+			baseDir=PropsUtil.get("liferay.home")+"/data/scormszip";
+		}
+		return baseDir;
+	}
+	public String getDirScormzipPath(SCORMContent scocon)
+	{
+		String baseDir=PropsUtil.get("liferay.lms.scormzipsdir");
+		if(baseDir==null ||baseDir.equals(""))
+		{
+			baseDir=PropsUtil.get("liferay.home")+"/data/scormszip";
+		}
+		return baseDir+"/"+Long.toString(scocon.getCompanyId())+"/"+Long.toString(scocon.getGroupId())+"/"+scocon.getUuid();
+	}
 	public String getDirScormPath(SCORMContent scocon)
 	{
 		String baseDir=PropsUtil.get("liferay.lms.scormdir");
@@ -137,7 +155,13 @@ public class SCORMContentLocalServiceImpl
 			scormContentPersistence.update(scocontent, true);
 			String dirScorm=getDirScormPath(scocontent);
 			File dir=new File(dirScorm);
+			String dirScormZip=getDirScormzipPath(scocontent);
+			File dirZip=new File(dirScormZip);
+			
 			FileUtils.forceMkdir(dir);
+			FileUtils.forceMkdir(dirZip);
+			File scormFileZip=new File(dirZip.getAbsolutePath()+"/"+scocontent.getUuid()+".zip");
+			FileUtils.copyFile(scormfile, scormFileZip);
 			try {
 				ZipFile zipFile= new ZipFile(scormfile);
 				zipFile.extractAll(dir.getCanonicalPath());
