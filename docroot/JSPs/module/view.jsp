@@ -25,7 +25,7 @@
 long moduleId=ParamUtil.getLong(request,"moduleId",0);
 boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
 
-if((Boolean)request.getAttribute("hasAddPermission")&&actionEditing)
+if((Boolean)request.getAttribute("hasAddPermission")/*&&actionEditing*/)
 {
 
 %>
