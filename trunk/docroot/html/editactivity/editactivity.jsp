@@ -43,6 +43,7 @@ if(request.getAttribute("activity")!=null)
 {
 	learnact=(LearningActivity)request.getAttribute("activity");
 	typeId=learnact.getTypeId();
+	moduleId=learnact.getModuleId();
 }
 else
 {

@@ -191,65 +191,17 @@ for(Module theModule:theModules)
 	if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId())||actionEditing)
 	{
 		
-		LiferayPortletURL  gotoModuleURL = (LiferayPortletURL)renderResponse.createRenderURL();		
+		LiferayPortletURL  gotoModuleURL = (LiferayPortletURL)renderResponse.createActionURL();	
+		gotoModuleURL.setParameter(ActionRequest.ACTION_NAME, "goToModule");
 	    gotoModuleURL.removePublicRenderParameter("actId");
-	    gotoModuleURL.setWindowState(LiferayWindowState.EXCLUSIVE);
+	    gotoModuleURL.setWindowState(WindowState.NORMAL);
 	    gotoModuleURL.setParameter("moduleId", Long.toString(theModule.getModuleId()));
+	    gotoModuleURL.setParameter("themeId", Long.toString(themeId));
 	    gotoModuleURL.setPlid(themeDisplay.getPlid());
-	        
-		StringBuilder goToModuleJavascript= new StringBuilder(
-				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
-						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
-						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
-						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
-						 "          activitiesListPortlet.hide(); "+	
-						 "          A.io.request('"+ gotoModuleURL.toString() +"', {  "+
-						 "		 	  dataType : 'html', "+ 
-						 "            on: {  "+
-						 "             		success: function() {  "+				    	
-						 "			             var moduleTitlePortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("ModuleTitle"+
-															PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
-						 "		                 if(moduleTitlePortlet!=null) {  "+
-						 "				            Liferay.Portlet.refresh(moduleTitlePortlet,{_"+PortalUtil.getJsSafePortletId("ModuleTitle"+
-															PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_themeId:"+
-															Long.toString(themeId)+"}); "+
-						 "			             }  "+
-						 "			             var moduleDescriptionPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("moduleDescription"+
-		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
-		 				 "		                 if(moduleDescriptionPortlet!=null) {  "+
-		 				 "				            Liferay.Portlet.refresh(moduleDescriptionPortlet);  "+
-		 				 "			             }  ");											
-
-							
-					   if(currentActivityPortletId!=null) {
-			              goToModuleJavascript.append(
-							 "         		    var activityPortletId=A.one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(currentActivityPortletId)+"_');"+
-							 "         		    if(activityPortletId!=null) {  "+
-							 "		      		    Liferay.Portlet.refresh(activityPortletId);  "+			 
-							 "	       		    }  ");
-					   } 
-
-						 
-					   goToModuleJavascript.append(
-						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
-		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
-		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
-		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
-		 				 "			             }  "+	
-		 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
-						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
-						 "                       portletBody.setContent(this.get('responseData')); "+	
-						 "                       activitiesListPortlet.show(); "+	
-						 "          			 placeHolder.remove(true); "+			
-						 "             }  "+
-						 "            }  "+
-						 "          });  "+	 
-						 "		}); ");
 	
 	%>
 	
-	<a href="#" onClick="<%=goToModuleJavascript.toString() %>"><%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())})  %></a>
+	<a href="<%=gotoModuleURL.toString() %>"><%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())})  %></a>
 	<%if(actionEditing)
 		{
 		%>

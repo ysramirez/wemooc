@@ -6,9 +6,9 @@
 
 <aui:select label="bloquing-activity" name="precedence">
 <%
-	long actId=ParamUtil.getLong(renderRequest, "resId", 0);
-	long moduleId=ParamUtil.getLong(renderRequest, "resModuleId", 0);
-	long precedence=ParamUtil.getLong(renderRequest, "precedence", 0);
+	long actId=ParamUtil.getLong(request, "resId", 0);
+	long moduleId=ParamUtil.getLong(request, "resModuleId", 0);
+	long precedence=ParamUtil.getLong(request, "precedence", 0);
 
 	List<LearningActivity> activities=null;
 	if(moduleId>0)
@@ -20,7 +20,7 @@
 		activities=new ArrayList<LearningActivity>();
 	}
 %>
-			<aui:option value="0" >Ninguna</aui:option>
+			<aui:option value="0" ><%=LanguageUtil.get(pageContext,"none")%></aui:option>
 <%
 	for(LearningActivity activity:activities)
 	{
