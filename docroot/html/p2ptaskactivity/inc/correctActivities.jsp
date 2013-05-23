@@ -334,6 +334,7 @@ int contaValidations = 0;
 LearningActivityTry larEntry=LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
 
 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+dateFormat.setTimeZone(timeZone);
 
 List<P2pActivityCorrections> listDone = P2pActivityCorrectionsLocalServiceUtil.getCorrectionsDoneByUserInP2PActivity(actId, userId);
 

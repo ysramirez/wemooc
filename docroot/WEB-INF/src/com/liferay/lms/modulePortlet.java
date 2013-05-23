@@ -224,13 +224,20 @@ public static String SEPARATOR = "_";
 	public void showViewEditmodule(RenderRequest renderRequest, RenderResponse renderResponse) throws Exception {
 
 		boolean isPopUp = renderRequest.getWindowState().equals(LiferayWindowState.POP_UP);
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+		
 		SimpleDateFormat formatDia    = new SimpleDateFormat("dd");
+		formatDia.setTimeZone(themeDisplay.getTimeZone());
 		SimpleDateFormat formatMes    = new SimpleDateFormat("MM");
+		formatMes.setTimeZone(themeDisplay.getTimeZone());		
 		SimpleDateFormat formatAno    = new SimpleDateFormat("yyyy");
+		formatAno.setTimeZone(themeDisplay.getTimeZone());		
 		SimpleDateFormat formatHora   = new SimpleDateFormat("HH");
+		formatHora.setTimeZone(themeDisplay.getTimeZone());		
 		SimpleDateFormat formatMinuto = new SimpleDateFormat("mm");
-		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest
-		.getAttribute(WebKeys.THEME_DISPLAY);
+		formatMinuto.setTimeZone(themeDisplay.getTimeZone());		
 
 		LiferayPortletResponse liferayPortletResponse=(LiferayPortletResponse)renderResponse;
 		PortletURL editmoduleURL = null;
@@ -344,23 +351,13 @@ public static String SEPARATOR = "_";
 		
 	}
 
-	private String dateToJsp(ActionRequest request, Date date) {
+	private String dateToJsp(PortletRequest request, Date date) {
 		PortletPreferences prefs = request.getPreferences();
-		return dateToJsp(prefs, date);
-	}
-	private String dateToJsp(RenderRequest request, Date date) {
-		PortletPreferences prefs = request.getPreferences();
-		return dateToJsp(prefs, date);
-	}
-	private String dateToJsp(PortletPreferences prefs, Date date) {
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+				WebKeys.THEME_DISPLAY);
 		SimpleDateFormat format = new SimpleDateFormat(prefs.getValue("module-date-format", "yyyy/MM/dd"));
-		String stringDate = format.format(date);
-		return stringDate;
-	}
-	private String dateTimeToJsp(Date date) {
-		SimpleDateFormat format = new SimpleDateFormat("yyyy/MM/dd HH:mm");
-		String stringDate = format.format(date);
-		return stringDate;
+		format.setTimeZone(themeDisplay.getTimeZone());
+		return format.format(date);
 	}
 
 	public void showEditDefault(RenderRequest renderRequest,

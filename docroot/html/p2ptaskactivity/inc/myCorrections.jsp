@@ -35,6 +35,7 @@ DLFileEntry dlfile = null;
 String urlFile = "";
 
 SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+dateFormat.setTimeZone(timeZone);
 String correctionDate = "";
 int cont=0;
 long resultTotal=0;

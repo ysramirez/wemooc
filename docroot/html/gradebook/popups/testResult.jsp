@@ -42,6 +42,7 @@ if(actId == 0){
 	List<LearningActivityTry> triesList = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(actId, userId);
 	for(LearningActivityTry larntry:triesList){
 		java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("dd/MM/yyyy");
+		sdf.setTimeZone(timeZone);
 		String fecha = sdf.format(larntry.getEndDate());
 		String title = learningActivity.getTitle(themeDisplay.getLocale())  + " (" + fecha + ")";
 		%>
