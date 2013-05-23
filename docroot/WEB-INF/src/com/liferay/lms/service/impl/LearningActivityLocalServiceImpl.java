@@ -17,10 +17,14 @@ package com.liferay.lms.service.impl;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.StringTokenizer;
 
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityTry;
+import com.liferay.lms.model.module;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
+import com.liferay.lms.service.moduleLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -38,7 +42,9 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 /**
@@ -85,13 +91,12 @@ public class LearningActivityLocalServiceImpl
 		return false;
 	}
 	@Override
-	public LearningActivity addLearningActivity(
-			LearningActivity learningActivity,ServiceContext serviceContext) throws SystemException, PortalException {
+	public LearningActivity addLearningActivity(LearningActivity learningActivity,ServiceContext serviceContext) throws SystemException, PortalException {
 	
 		LearningActivity retorno=this.addLearningActivity(learningActivity.getTitle(),
 				learningActivity.getDescription(), learningActivity.getCreateDate(),
 				learningActivity.getStartdate(), learningActivity.getEnddate(), learningActivity.getTypeId(),
-				learningActivity.getTries(), learningActivity.getPasspuntuation(), learningActivity.getModuleId(), 
+				learningActivity.getTries(), learningActivity.getPasspuntuation(), learningActivity.getModuleId(), learningActivity.getExtracontent(),
 				learningActivity.getFeedbackCorrect(), learningActivity.getFeedbackNoCorrect(), serviceContext);
 		//retorno.setPrecedence(learningActivity.setPrecedence(precedence))
 		retorno.setPriority(learningActivity.getPriority());
@@ -101,32 +106,32 @@ public class LearningActivityLocalServiceImpl
 	}
 	public LearningActivity addLearningActivity (String title, String description, 
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
-			int typeId,long tries,int passpuntuation,long moduleId,
+			int typeId,long tries,int passpuntuation,long moduleId, String extracontent,
 			 String feedbackCorrect, String feedbackNoCorrect,ServiceContext serviceContext)
 			throws SystemException, 
 			PortalException {
 		
 		long userId=serviceContext.getUserId();
-		LearningActivity larn =
-				learningActivityPersistence.create(counterLocalService.increment(
-						LearningActivity.class.getName()));
-			larn.setCompanyId(serviceContext.getCompanyId());
+		LearningActivity larn = learningActivityPersistence.create(counterLocalService.increment(LearningActivity.class.getName()));
+		larn.setCompanyId(serviceContext.getCompanyId());
+		larn.setGroupId(serviceContext.getScopeGroupId());
+		larn.setUserId(userId);
 			larn.setGroupId(serviceContext.getScopeGroupId());
-			larn.setUserId(userId);
-			larn.setCreateDate(serviceContext.getCreateDate());
-			larn.setDescription(description);
-			larn.setTypeId(typeId);
-			larn.setTitle(title);
-			larn.setStartdate(startDate);
-			larn.setEnddate(endDate);
-			larn.setTries(tries);
-			larn.setPasspuntuation(passpuntuation);
-			larn.setStatus(WorkflowConstants.STATUS_APPROVED);
-			larn.setModuleId(moduleId);
-			larn.setPriority(larn.getActId());
-			larn.setFeedbackCorrect(feedbackCorrect);
-			larn.setFeedbackNoCorrect(feedbackNoCorrect);
-			learningActivityPersistence.update(larn, true);
+		larn.setDescription(description);
+		larn.setTypeId(typeId);
+		larn.setTitle(title);
+		larn.setStartdate(startDate);
+		larn.setEnddate(endDate);
+		larn.setTries(tries);
+		larn.setPasspuntuation(passpuntuation);
+		larn.setStatus(WorkflowConstants.STATUS_APPROVED);
+		larn.setModuleId(moduleId);
+		larn.setExtracontent(extracontent);
+		larn.setPriority(larn.getActId());
+		larn.setFeedbackCorrect(feedbackCorrect);
+		larn.setFeedbackNoCorrect(feedbackNoCorrect);
+		learningActivityPersistence.update(larn, true);
+		
 			try
 			{
 				// Resources
@@ -157,19 +162,23 @@ public class LearningActivityLocalServiceImpl
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(serviceContext.getLocale()),null, null, 0, 0,
 					null, false);
+			
+		} catch (Exception e) {e.printStackTrace();}
+			
+		
+		try {
 			SocialActivityLocalServiceUtil.addUniqueActivity(
 					larn.getUserId(), larn.getGroupId(),
 					LearningActivity.class.getName(), larn.getActId(),
 					0, StringPool.BLANK, 0);
-			}
-			catch(Exception e)
-			{
-				throw new SystemException(e);
-			}
-			return larn;
-			}
+		} catch (Exception e) {e.printStackTrace();}
+			
+		return larn;
+	
+	}
+	
 	public LearningActivity modLearningActivity (long actId,String title, String description, java.util.Date createDate,java.util.Date startDate,java.util.Date endDate, int typeId,long tries,int passpuntuation,long moduleId,
-			 String feedbackCorrect, String feedbackNoCorrect,ServiceContext serviceContext)
+			String extracontent, String feedbackCorrect, String feedbackNoCorrect,ServiceContext serviceContext)
 			throws SystemException, 
 			PortalException {
 		
@@ -187,6 +196,7 @@ public class LearningActivityLocalServiceImpl
 			larn.setPasspuntuation(passpuntuation);
 			larn.setStatus(WorkflowConstants.STATUS_APPROVED);
 			larn.setModuleId(moduleId);
+			larn.setExtracontent(extracontent);
 			larn.setFeedbackCorrect(feedbackCorrect);
 			larn.setFeedbackNoCorrect(feedbackNoCorrect);
 			learningActivityPersistence.update(larn, true);
@@ -410,7 +420,7 @@ public class LearningActivityLocalServiceImpl
 		}
 	}
 	
-	private HashMap<String, String> convertXMLExtraContentToHashMap(long actId) throws SystemException, PortalException 
+	public HashMap<String, String> convertXMLExtraContentToHashMap(long actId) throws SystemException, PortalException 
 	{
 		HashMap<String, String> hashMap = new HashMap<String, String>();
 		String xml ="";
@@ -430,7 +440,13 @@ public class LearningActivityLocalServiceImpl
 			Element rootElement = document.getRootElement();
 			
 			for(Element key:rootElement.elements()){
-				hashMap.put(key.getName(), key.getText());
+				
+				if(key.getName().equals("document")){
+					hashMap.put(key.getName(), key.attributeValue("id") );
+				}else{
+					hashMap.put(key.getName(), key.getText());
+				}
+				
 			}
 			
 		} catch (DocumentException e) {
@@ -440,7 +456,7 @@ public class LearningActivityLocalServiceImpl
 	}
 	
 	@SuppressWarnings("rawtypes")
-	private void saveHashMapToXMLExtraContent(long actId, HashMap<String, String> map) throws SystemException, PortalException 
+	public void saveHashMapToXMLExtraContent(long actId, HashMap<String, String> map) throws SystemException, PortalException 
 	{
 		try {
 			LearningActivity activity = learningActivityPersistence.fetchByPrimaryKey(actId);
