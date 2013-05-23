@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -101,12 +102,14 @@ public class CourseStats extends MVCPortlet {
 		    cabeceras[4]=rb.getString("coursestats.end.student");
 		    cabeceras[5]=rb.getString("coursestats.modulestats.dependencies");
 		    writer.writeNext(cabeceras);
-		   
+
+	    	java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("dd/MM/yyyy");
+	    	sdf.setTimeZone(themeDisplay.getTimeZone());
+		    
 		    for(Module modulo:tempResults){
 		    	String[] resultados = new String[numCols];
 		    	long started=ModuleResultLocalServiceUtil.countByModule(modulo.getModuleId());
 		    	long finished=ModuleResultLocalServiceUtil.countByModulePassed(modulo.getModuleId(),true);
-		    	java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("dd/MM/yyyy");
 		    	String moduloBloqueo = "";
 		    	if(modulo.getPrecedence() != 0) {
 		    		Module modulePredence = ModuleLocalServiceUtil.getModule(modulo.getPrecedence());

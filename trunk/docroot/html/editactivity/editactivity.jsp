@@ -61,10 +61,15 @@ LearningActivityType larntype=new LearningActivityTypeRegistry().getLearningActi
 
 String description="";
 SimpleDateFormat formatDay    = new SimpleDateFormat("dd");
+formatDay.setTimeZone(timeZone);
 SimpleDateFormat formatMonth    = new SimpleDateFormat("MM");
+formatMonth.setTimeZone(timeZone);
 SimpleDateFormat formatYear    = new SimpleDateFormat("yyyy");
+formatYear.setTimeZone(timeZone);
 SimpleDateFormat formatHour   = new SimpleDateFormat("HH");
+formatHour.setTimeZone(timeZone);
 SimpleDateFormat formatMin = new SimpleDateFormat("mm");
+formatMin.setTimeZone(timeZone);
 Date today=new Date(System.currentTimeMillis());
 int startDay=Integer.parseInt(formatDay.format(today));
 int startMonth=Integer.parseInt(formatMonth.format(today))-1;

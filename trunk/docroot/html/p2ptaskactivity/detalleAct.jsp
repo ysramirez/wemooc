@@ -141,6 +141,7 @@ if(actId!=0)
 		LearningActivityTry larEntry=LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
 		
 		SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		dateFormat.setTimeZone(timeZone);
 		int cont=0;
 		if(!p2pActList.isEmpty()){
 			
@@ -221,6 +222,7 @@ if(actId!=0)
 		urlFile = "";
 
 		dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+		dateFormat.setTimeZone(timeZone);
 		String correctionDate = "";
 		cont=0;
 		if(!p2pActCorList.isEmpty()){
