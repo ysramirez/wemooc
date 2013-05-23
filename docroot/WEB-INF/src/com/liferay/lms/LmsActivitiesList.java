@@ -16,8 +16,10 @@ import javax.portlet.PortletException;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
+import javax.xml.namespace.QName;
 
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
+import com.liferay.lms.events.ThemeIdEvent;
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
@@ -313,6 +315,13 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		uploadRequest.setAttribute("activity", larn);
 
+	}
+	
+	public void goToModule(ActionRequest actionRequest, ActionResponse actionResponse)throws Exception {
+		ThemeIdEvent themeIdEvent = new ThemeIdEvent();
+		themeIdEvent.setModuleId(ParamUtil.getLong(actionRequest, "moduleId",0));
+		themeIdEvent.setThemeId(ParamUtil.getLong(actionRequest, "themeId",1));		
+		actionResponse.setEvent(new QName("http://www.wemooc.com/" , "themeId"), themeIdEvent);
 	}
 	
 	public void deletemodule(ActionRequest actionRequest, ActionResponse actionResponse)throws Exception {

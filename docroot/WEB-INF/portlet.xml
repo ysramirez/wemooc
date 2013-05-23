@@ -39,6 +39,9 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
+        <supported-publishing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-publishing-event>
         <supported-public-render-parameter>actId</supported-public-render-parameter>
         <supported-public-render-parameter>moduleId</supported-public-render-parameter>
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
@@ -521,7 +524,7 @@
 		<portlet-name>ModuleTitle</portlet-name>
 		<display-name>ModuleTitle</display-name>
 		<portlet-class>
-			com.liferay.util.bridges.mvc.MVCPortlet
+			com.liferay.lms.ModuleTitle
 		</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
@@ -550,6 +553,9 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
+        <supported-processing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-processing-event>
 		<supported-public-render-parameter>actId</supported-public-render-parameter>
         <supported-public-render-parameter>moduleId</supported-public-render-parameter>
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
@@ -1562,6 +1568,9 @@
 				<role-name>user</role-name>
 			</security-role-ref>
 		</portlet>
+    <event-definition>
+        <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+    </event-definition>
 		<public-render-parameter>    
         <identifier>actId</identifier>
         <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:actId</qname>
