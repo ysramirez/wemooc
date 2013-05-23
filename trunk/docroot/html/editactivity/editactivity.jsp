@@ -381,7 +381,7 @@ Liferay.provide(
 		%>
 		
 		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>">
-		</aui:input><liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help>
+		</aui:input><%--liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help--%>
   		<div id="<portlet:namespace />triesError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.tries.required"))||
 														      (SessionErrors.contains(renderRequest, "editActivity.tries.number"))||
 														      (SessionErrors.contains(renderRequest, "editActivity.tries.range")))?
