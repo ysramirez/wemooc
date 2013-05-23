@@ -215,7 +215,7 @@ for(Module theModule:theModules)
 	else
 	{
 		%>
-		<%=theModule.getTitle(themeDisplay.getLocale()) %> <%=done %>%
+		<%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %> <%=done %>%
 		<%
 		if(actionEditing)
 		{
