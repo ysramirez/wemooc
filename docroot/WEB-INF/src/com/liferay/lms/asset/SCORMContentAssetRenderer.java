@@ -41,6 +41,10 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 		public long getClassPK() {
 		return _scorm.getScormId();
 		}
+		@Override
+		public String getDiscussionPath() {
+			return "edit_file_entry_discussion";
+		}
 		public long getGroupId() {
 		return _scorm.getGroupId();
 		}
@@ -111,7 +115,7 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 			public String getViewInContextMessage() {
 				// TODO Auto-generated method stub
 				
-				return "Ver ficha del curso";
+				return "";
 			}
 			@Override
 			public boolean hasEditPermission(PermissionChecker permissionChecker)
