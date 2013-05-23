@@ -13,6 +13,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.ProcessAction;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
@@ -39,6 +41,7 @@ import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
@@ -333,6 +336,45 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 				writer.write(jsonObject.toString());			
 			}
 		}	
+	}
+	
+	@Override
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
+			throws PortletException, IOException {
+		long actId=0;
+		
+		if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
+			
+			actId=ParamUtil.getLong(renderRequest, "resId", 0);
+			renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
+		}
+		else{
+			actId=ParamUtil.getLong(renderRequest, "actId", 0);
+		}
+					
+		if(actId==8)// TODO Auto-generated method stub
+		{
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		}
+		else
+		{
+				LearningActivity activity;
+				try {
+					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+					long typeId=activity.getTypeId();
+					
+					if(typeId==5)
+					{
+						super.render(renderRequest, renderResponse);
+					}
+					else
+					{
+						renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+					}
+				} catch (PortalException e) {
+				} catch (SystemException e) {
+				}			
+		}
 	}
 
 }
