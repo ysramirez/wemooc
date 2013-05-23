@@ -288,5 +288,44 @@ public class OnlineActivity extends MVCPortlet {
 		}
 		SessionMessages.add(actionRequest, "asset-renderer-not-defined");
 	}
+	
+	@Override
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
+			throws PortletException, IOException {
+		long actId=0;
+		
+		if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
+			
+			actId=ParamUtil.getLong(renderRequest, "resId", 0);
+			renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
+		}
+		else{
+			actId=ParamUtil.getLong(renderRequest, "actId", 0);
+		}
+					
+		if(actId==0)// TODO Auto-generated method stub
+		{
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		}
+		else
+		{
+				LearningActivity activity;
+				try {
+					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+					long typeId=activity.getTypeId();
+					
+					if(typeId==6)
+					{
+						super.render(renderRequest, renderResponse);
+					}
+					else
+					{
+						renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+					}
+				} catch (PortalException e) {
+				} catch (SystemException e) {
+				}			
+		}
+	}
 
 }
