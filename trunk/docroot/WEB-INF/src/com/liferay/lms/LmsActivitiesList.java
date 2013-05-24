@@ -259,7 +259,7 @@ public class LmsActivitiesList extends MVCPortlet {
 					"ADD_LACT"))
 			{
 			larn =LearningActivityLocalServiceUtil.addLearningActivity(
-				"", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId, feedbackCorrect, feedbackNoCorrect, serviceContext);
+				"", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId, "", feedbackCorrect, feedbackNoCorrect, serviceContext);
 			}
 		}
 		else {
@@ -269,7 +269,7 @@ public class LmsActivitiesList extends MVCPortlet {
 					ActionKeys.UPDATE))
 			{
 			larn=LearningActivityLocalServiceUtil.modLearningActivity(
-				actId, "", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId, feedbackCorrect, feedbackNoCorrect, serviceContext);
+				actId, "", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId,  "", feedbackCorrect, feedbackNoCorrect, serviceContext);
 			}
 			
 		}
