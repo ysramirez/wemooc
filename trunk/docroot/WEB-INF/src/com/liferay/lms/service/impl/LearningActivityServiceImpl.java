@@ -95,7 +95,7 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			PortalException {
 		if( getPermissionChecker().hasPermission(serviceContext.getScopeGroupId(),  LearningActivity.class.getName(),0,ActionKeys.ADD_ENTRY))
 		{
-			return learningActivityLocalService.addLearningActivity(title, description, createDate, startDate, endDate, typeId, tries, passpuntuation,moduleId, null, null, serviceContext);
+			return learningActivityLocalService.addLearningActivity(title, description, createDate, startDate, endDate, typeId, tries, passpuntuation,moduleId, "",  null, null, serviceContext);
 		}
 		else
 		{
@@ -134,7 +134,7 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 		if( getPermissionChecker().hasPermission(serviceContext.getScopeGroupId(), LearningActivity.class.getName(), actId,
 				ActionKeys.UPDATE))
 		{
-	  return learningActivityLocalService.modLearningActivity(actId, title, description, createDate, startDate, endDate, typeId, tries,passpuntuation, moduleId, null, null, serviceContext);
+	  return learningActivityLocalService.modLearningActivity(actId, title, description, createDate, startDate, endDate, typeId, tries,passpuntuation, moduleId,  "",  null, null, serviceContext);
 		}
 		else
 		{

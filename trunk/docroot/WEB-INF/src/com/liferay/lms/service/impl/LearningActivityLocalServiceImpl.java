@@ -21,10 +21,10 @@ import java.util.StringTokenizer;
 
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
-import com.liferay.lms.model.module;
+import com.liferay.lms.model.Module;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
-import com.liferay.lms.service.moduleLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
