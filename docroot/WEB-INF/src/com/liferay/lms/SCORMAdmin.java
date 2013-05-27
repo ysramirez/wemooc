@@ -28,19 +28,21 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class SCORMAdmin extends MVCPortlet 
 {
 	
-	public void saveSCORM(ActionRequest actRequest, ActionResponse response) throws PortalException, SystemException
+	public void saveSCORM(ActionRequest actRequest, ActionResponse response) throws PortalException, SystemException, IOException
 	{
 		ThemeDisplay themeDisplay = (ThemeDisplay) actRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actRequest);
 		String title=ParamUtil.getString(request, "title");
-		String description=ParamUtil.getString(request, "description");
+		String description=ParamUtil.getString(request, "description","");
+		String redirect=ParamUtil.getString(request, "redirect","");
 		long scormId=ParamUtil.getLong(request, "scormId",0);
-		String fileName = request.getFileName("fileName");
-		File file = request.getFile("fileName");
-		ServiceContext serviceContext =  ServiceContextFactory.getInstance(SCORMContent.class.getName(), actRequest);
+		ServiceContext serviceContext =  ServiceContextFactory.getInstance(SCORMContent.class.getName(), request);
 
 		if(scormId==0)	
 		{
+			String fileName = request.getFileName("fileName");
+			File file = request.getFile("fileName");
+		
 			if(fileName!=null && !fileName.equals(""))
 			{	
 			
@@ -56,9 +58,20 @@ public class SCORMAdmin extends MVCPortlet
 				 
 			}
 		}
+		else
+		{
+			SCORMContent scorm=SCORMContentLocalServiceUtil.getSCORMContent(scormId);
+			scorm.setTitle(title);
+			scorm.setDescription(description);
+			SCORMContentLocalServiceUtil.updateSCORMContent(scorm, serviceContext);
+		}
+		if(redirect!=null &&!"".equals(redirect))
+		{
+			response.sendRedirect(redirect);
+		}
 		
 	}
-	public void deleteSCORM(ActionRequest actRequest, ActionResponse response) throws PortalException, SystemException
+	public void deleteSCORM(ActionRequest actRequest, ActionResponse response) throws PortalException, SystemException, IOException
 	{
 		ThemeDisplay themeDisplay = (ThemeDisplay) actRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actRequest);
@@ -67,6 +80,12 @@ public class SCORMAdmin extends MVCPortlet
 		{
 			SCORMContentLocalServiceUtil.delete(scormId);
 		}
+		String redirect=ParamUtil.getString(actRequest, "redirect","");
+		if(redirect!=null &&!"".equals(redirect))
+		{
+			response.sendRedirect(redirect);
+		}
+		
 	}
 
 }
