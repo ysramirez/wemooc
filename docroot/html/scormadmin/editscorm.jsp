@@ -72,6 +72,8 @@ else
 	%>
 	<portlet:actionURL name="deleteSCORM" var="deleteURL">
 <portlet:param name="scormId" value="<%= Long.toString(scormId )%>" />
+<portlet:param name="redirect" value="<%= redirect%>" />
+
 </portlet:actionURL>
 <%
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  SCORMContent.class.getName(),scormId,ActionKeys.DELETE))
