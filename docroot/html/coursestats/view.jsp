@@ -6,6 +6,9 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
+<%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivity"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 <%
 long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),0);
@@ -85,6 +88,13 @@ long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(
 	
 	<liferay-ui:search-container-column-text name="coursestats.start.student"><%=started %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.end.student"><%=finished %></liferay-ui:search-container-column-text>
+		<%  
+	
+	int totalActivity=0;
+	List<LearningActivity> tempResults = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(module.getModuleId());
+	totalActivity = tempResults.size();
+	%>
+	<liferay-ui:search-container-column-text name="total.activity"><%=totalActivity %></liferay-ui:search-container-column-text>
 	
 		
 	<% if(module.getPrecedence() != 0) {
