@@ -35,6 +35,9 @@ boolean actionEditing = ParamUtil.getBoolean(request,
 		"actionEditing", false);
 long actId = ParamUtil.getLong(request, "actId", 0);
 
+NumberFormat resultNumberFormat = NumberFormat.getInstance(locale);
+resultNumberFormat.setMinimumIntegerDigits(2);
+
 LearningActivity currentLeaningActivity = null;
 
 if(actId!=0) {
@@ -212,7 +215,7 @@ Liferay.provide(
 							<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
 						</portlet:actionURL>
 
-						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>">
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
 						
 							<a href="<%=goToActivity.toString() %>"  ><%=activity.getTitle(themeDisplay.getLocale())%></a>
 							
@@ -221,7 +224,7 @@ Liferay.provide(
 					else
 					{
 					%>
-						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked">
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
 							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
 					<%
 					}
