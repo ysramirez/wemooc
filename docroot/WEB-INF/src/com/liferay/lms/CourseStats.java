@@ -5,9 +5,6 @@ import java.io.OutputStreamWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 import java.text.NumberFormat;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
@@ -43,6 +40,8 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -235,19 +234,14 @@ public class CourseStats extends MVCPortlet {
 		
 		PortletConfig portletConfig = (PortletConfig)resourceRequest.getAttribute(JavaConstants.JAVAX_PORTLET_CONFIG);
 		
-		Map<Integer,String> types= new HashMap<Integer,String>(); 
-		for(String name: LearningTypesProperties.getNames()) 
-		{
-			String []prop = name.split("\\.");
-			if(prop.length-1>0){
-				try{
-				types.put(Integer.parseInt(LearningTypesProperties.get(name)),
-						  prop[prop.length-1].substring(0, 1).toUpperCase()+prop[prop.length-1].substring(1, prop[prop.length-1].length()));
-				}
-				catch(NumberFormatException e){}
-			}
+		String typeId = StringPool.BLANK;
+		try {
+			AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
+			Map<Long, String> classTypes = arf.getClassTypes(new long[0], themeDisplay.getLocale());
+			typeId = classTypes.get((long)activity.getTypeId());
+		} catch (Exception e) {
 		}
-		String typeId = types.get(activity.getTypeId()).toLowerCase();
+		
 		String result = "", head="", val="";
 		LearningActivity precedenceActivity=null;
 		if(activity.getPrecedence()!=0) {
