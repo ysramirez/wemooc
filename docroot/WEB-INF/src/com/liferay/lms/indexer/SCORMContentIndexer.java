@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -121,9 +122,15 @@ public class SCORMContentIndexer extends BaseIndexer {
 
 		document.addKeyword(Field.ENTRY_CLASS_NAME, SCORMContent.class.getName());
 		document.addKeyword(Field.ENTRY_CLASS_PK, entryId);
+		String[] assetCategoryTitles = new String[assetCategoryIds.length];
+		for (int i=0; i<assetCategoryIds.length;i++){
+			AssetCategory categoria = AssetCategoryLocalServiceUtil.getCategory(assetCategoryIds[i]);
+			assetCategoryTitles[i]=categoria.getName();
+		}
 
+		document.addKeyword("assetCategoryTitles", assetCategoryTitles);
 		ExpandoBridgeIndexerUtil.addAttributes(document, expandoBridge);
-
+		
 		return document;
 	}
 
