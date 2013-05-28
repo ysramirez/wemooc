@@ -142,7 +142,7 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 	<% if (activity.getTypeId()!=8 && activity.getTypeId()!=9 && activity.getTypeId()!=7){ %>
 	<liferay-ui:search-container-column-jsp name=" " align="right" path="/html/coursestats/viewextras.jsp" />
 	<% } else {%>
-	<liferay-ui:search-container-column-text>&nbsp;</liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text>&nbsp</liferay-ui:search-container-column-text>
 	
 	<% } %>
 	</liferay-ui:search-container-row>
