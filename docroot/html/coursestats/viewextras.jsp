@@ -37,7 +37,7 @@ if(learningActivity.getPrecedence()!=0) {
 	catch(NestableException e){}
 }
 
-if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)) {
+if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)&&(learningActivity.getTypeId()!=8)) {
 	try{
 	
 		Iterator<Element> nodes= SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement().elementIterator();
@@ -115,4 +115,5 @@ AUI().ready('aui-aria', 'aui-overlay-context-panel', 'aui-overlay-manager', func
 	<img id="<portlet:namespace/>trigger_<%= Long.toString(learningActivity.getActId()) %>" src="${themeDisplay.pathThemeImages}/custom/icono_mas.png"/>
 <div id="<portlet:namespace/>panel_<%= Long.toString(learningActivity.getActId()) %>" class="lfr-panel-container"></div>
 
-<% } %>
+<%  }
+ %>
