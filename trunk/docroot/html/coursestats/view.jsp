@@ -67,7 +67,7 @@ long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(
 	<liferay-portlet:param name="moduleId" value="<%= Long.toString(module.getModuleId())%>"></liferay-portlet:param>
 	</liferay-portlet:renderURL>
 	<liferay-ui:search-container-column-text name="module"><a href="<%=viewModuleURL%>"><%=module.getTitle(themeDisplay.getLocale()) %></a></liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="coursestats.start.date">
+		<liferay-ui:search-container-column-text  cssClass="date-column" name="coursestats.start.date">
 		<%if(module.getStartDate()!=null)
 			{
 			%>
@@ -76,7 +76,7 @@ long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(
 		}
 		%>
 		</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="coursestats.end.date">
+			<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.end.date">
 			<%if(module.getEndDate()!=null)
 			{
 			%>
@@ -86,15 +86,15 @@ long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(
 			%>
 			</liferay-ui:search-container-column-text>
 	
-	<liferay-ui:search-container-column-text name="coursestats.start.student"><%=started %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.end.student"><%=finished %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.start.student"><%=started %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.end.student"><%=finished %></liferay-ui:search-container-column-text>
 		<%  
 	
 	int totalActivity=0;
 	List<LearningActivity> tempResults = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(module.getModuleId());
 	totalActivity = tempResults.size();
 	%>
-	<liferay-ui:search-container-column-text name="total.activity"><%=totalActivity %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="total.activity"><%=totalActivity %></liferay-ui:search-container-column-text>
 	
 		
 	<% if(module.getPrecedence() != 0) {

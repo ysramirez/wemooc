@@ -125,17 +125,17 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 		hasPrecedence = true;
 		%>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.activity"><%=title %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.activity.start"><%=dateFormatDateTime.format(activity.getStartdate()) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.activity.end"><%=dateFormatDateTime.format(activity.getEnddate()) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.start"><%=dateFormatDateTime.format(activity.getStartdate()) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.end"><%=dateFormatDateTime.format(activity.getEnddate()) %></liferay-ui:search-container-column-text>
 	
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.init"><%=astarted %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.passed"><%=afinished %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.failed"><%=notpassed %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.init"><%=astarted %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.passed"><%=afinished %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.failed"><%=notpassed %></liferay-ui:search-container-column-text>
 	
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.trials.average"><%=numberFormat.format(triesPerUser) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.marks.average"><%=numberFormat.format(avgResult) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.pass.mark"><%=numberFormat.format(activity.getPasspuntuation()) %></liferay-ui:search-container-column-text>	
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.trials.numbers"><%=numberFormat.format(activity.getTries()) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.trials.average"><%=numberFormat.format(triesPerUser) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.marks.average"><%=numberFormat.format(avgResult) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.pass.mark"><%=numberFormat.format(activity.getPasspuntuation()) %></liferay-ui:search-container-column-text>	
+	<liferay-ui:search-container-column-text cssClass="number-column"  name="coursestats.modulestats.trials.numbers"><%=numberFormat.format(activity.getTries()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=LanguageUtil.get(pageContext, "dependencies."+String.valueOf(hasPrecedence)) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=types.get(activity.getTypeId()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.obligatory"><%=activity.getWeightinmodule() == 1 ? "Si":"No" %></liferay-ui:search-container-column-text>
