@@ -23,12 +23,10 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
@@ -78,15 +76,21 @@ protected PortletPreferences doDeleteData(PortletDataContext context,
 @Override
 protected String doExportData(PortletDataContext context, String portletId, PortletPreferences preferences) throws Exception {
 
+	System.out.println(" doExportData portletId : " + portletId );
+	
 	context.addPermissions("com.liferay.lms.model.module", context.getScopeGroupId());
 	
 	Document document = SAXReaderUtil.createDocument();
 
 	Element rootElement = document.addElement("moduledata");
+	
+	System.out.println(" group-id : " + String.valueOf(context.getScopeGroupId()) );
 
 	rootElement.addAttribute("group-id", String.valueOf(context.getScopeGroupId()));
 	
 	List<Module> entries = ModuleLocalServiceUtil.findAllInGroup(context.getScopeGroupId());
+	
+	System.out.println(" entries : " + entries.size() );
 	
 	for (Module entry : entries) {
 		exportEntry(context, rootElement, entry);
@@ -98,6 +102,8 @@ protected String doExportData(PortletDataContext context, String portletId, Port
 private void exportEntry(PortletDataContext context, Element root, Module entry) throws PortalException, SystemException {
 	
 	String path = getEntryPath(context, entry);
+	
+	System.out.println(" path : " + path );
 	
 	if (!context.isPathNotProcessed(path)) {
 		return;
@@ -114,7 +120,7 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 	List<LearningActivity> actividades=LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(entry.getModuleId());
 	for(LearningActivity actividad:actividades)
 	{
-		
+		System.out.println(" actividad : " + actividad.getTitle(Locale.getDefault()) );
 		String pathlo = getEntryPath(context, actividad);
 		Element entryElementLoc= entryElement.addElement("learningactivity");
 		entryElementLoc.addAttribute("path", pathlo);
