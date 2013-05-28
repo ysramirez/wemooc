@@ -36,7 +36,7 @@ boolean actionEditing = ParamUtil.getBoolean(request,
 long actId = ParamUtil.getLong(request, "actId", 0);
 
 NumberFormat resultNumberFormat = NumberFormat.getInstance(locale);
-resultNumberFormat.setMinimumIntegerDigits(2);
+resultNumberFormat.setMinimumIntegerDigits(1);
 
 LearningActivity currentLeaningActivity = null;
 
