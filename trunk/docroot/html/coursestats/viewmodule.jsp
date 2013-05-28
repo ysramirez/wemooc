@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
+<%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="com.liferay.lms.LearningTypesProperties"%>
@@ -48,19 +50,9 @@ long started=ModuleResultLocalServiceUtil.countByModule(theModule.getModuleId())
 			%>
 			
 <%
-Map<Integer,String> types= new HashMap<Integer,String>(); 
-for(String name: LearningTypesProperties.getNames()) //for(LearningType type:types)
-{
-	String []prop = name.split("\\.");
-	if(prop.length-1>0){
-		try{
-		types.put(Integer.parseInt(LearningTypesProperties.get(name)),
-				  prop[prop.length-1].substring(0, 1).toUpperCase()+prop[prop.length-1].substring(1, prop[prop.length-1].length()));
-		}
-		catch(NumberFormatException e){}
-	}
-}
-request.setAttribute("types", types);
+AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
+Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
+request.setAttribute("types", classTypes);
 
 PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("jspPage","/html/coursestats/viewmodule.jsp");
@@ -137,7 +129,7 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.pass.mark"><%=numberFormat.format(activity.getPasspuntuation()) %></liferay-ui:search-container-column-text>	
 	<liferay-ui:search-container-column-text cssClass="number-column"  name="coursestats.modulestats.trials.numbers"><%=numberFormat.format(activity.getTries()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=LanguageUtil.get(pageContext, "dependencies."+String.valueOf(hasPrecedence)) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=types.get(activity.getTypeId()) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=classTypes.get((long)activity.getTypeId()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.obligatory"><%=activity.getWeightinmodule() == 1 ? "Si":"No" %></liferay-ui:search-container-column-text>
 	<% if (activity.getTypeId()!=8 && activity.getTypeId()!=9 && activity.getTypeId()!=7){ %>
 	<liferay-ui:search-container-column-jsp name=" " align="right" path="/html/coursestats/viewextras.jsp" />

@@ -14,7 +14,7 @@
 
 ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 LearningActivity learningActivity = (LearningActivity)row.getObject();
-String typeId=((Map<Integer,String>)request.getAttribute("types")).get(learningActivity.getTypeId()).toLowerCase();
+String typeId=((Map<Long,String>)request.getAttribute("types")).get((long)learningActivity.getTypeId());
 
 List<String> headers= new ArrayList<String>();
 List<String> values= new ArrayList<String>();
