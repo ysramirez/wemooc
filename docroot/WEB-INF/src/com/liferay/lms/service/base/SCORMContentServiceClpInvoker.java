@@ -46,8 +46,6 @@ public class SCORMContentServiceClpInvoker {
 		if (_methodName107.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes107, parameterTypes)) {
 			SCORMContentServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
-			return null;
 		}
 
 		if (_methodName112.equals(name) &&

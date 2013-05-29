@@ -10,10 +10,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.service.InvokableService;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
 
-public interface LearningActivityType
+public interface LearningActivityType extends InvokableService
 {
 	public long getDefaultScore();
 	public long getDefaultTries();
@@ -36,5 +37,5 @@ public interface LearningActivityType
 	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException;
 	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse);
 	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException;
-
+	public String getPortletId();
 }

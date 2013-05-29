@@ -42,8 +42,6 @@ public class SurveyResultServiceClpInvoker {
 		if (_methodName103.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes103, parameterTypes)) {
 			SurveyResultServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
-			return null;
 		}
 
 		throw new UnsupportedOperationException();

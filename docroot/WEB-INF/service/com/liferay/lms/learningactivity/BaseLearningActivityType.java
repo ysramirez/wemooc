@@ -1,6 +1,7 @@
 package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
+import java.io.Serializable;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
@@ -12,7 +13,7 @@ import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.xml.DocumentException;
 
 
-public abstract class BaseLearningActivityType implements LearningActivityType{
+public abstract class BaseLearningActivityType implements LearningActivityType, Serializable {
 
 	@Override
 	public String getMesageEditDetails() {
@@ -100,7 +101,15 @@ public abstract class BaseLearningActivityType implements LearningActivityType{
 	@Override
 	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException {
 	}
-
 	
+	public String getPortletId() {
+		return null;
+	}
+
+	public Object invokeMethod(
+			String name, String[] parameterTypes, Object[] arguments)
+		throws Throwable {
+		return this.invokeMethod(name, parameterTypes, arguments);
+	}
 
 }

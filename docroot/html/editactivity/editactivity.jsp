@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.learningactivity.BaseLearningActivityType"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portlet.PortletQNameUtil"%>
 <%@page import="com.liferay.portal.model.PublicRenderParameter"%>
@@ -488,8 +489,8 @@ Liferay.provide(
 			<liferay-util:param name="precedence" value="<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>" />
 		</liferay-util:include>
 		
-		<% if(larntype.getExpecificContentPage()!=null){ %>
-			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>">
+		<% if(larntype.getExpecificContentPage()!=null) { %>
+			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>" portletId="<%= larntype.getPortletId() %>">
 				<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
 				<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
 			</liferay-util:include>	

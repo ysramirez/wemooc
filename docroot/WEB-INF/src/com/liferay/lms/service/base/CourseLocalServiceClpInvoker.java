@@ -292,8 +292,6 @@ public class CourseLocalServiceClpInvoker {
 		if (_methodName124.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes124, parameterTypes)) {
 			CourseLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
-			return null;
 		}
 
 		if (_methodName129.equals(name) &&
@@ -349,8 +347,6 @@ public class CourseLocalServiceClpInvoker {
 				Arrays.deepEquals(_methodParameterTypes140, parameterTypes)) {
 			CourseLocalServiceUtil.setVisible(((Long)arguments[0]).longValue(),
 				((Boolean)arguments[1]).booleanValue());
-
-			return null;
 		}
 
 		if (_methodName141.equals(name) &&

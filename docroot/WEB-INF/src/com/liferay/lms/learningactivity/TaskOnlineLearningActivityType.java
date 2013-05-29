@@ -7,6 +7,7 @@ import javax.portlet.PortletResponse;
 import com.liferay.lms.asset.TaskOnlineAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -21,10 +22,16 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 
+	public static String PORTLET_ID = 
+			PortalUtil.getJsSafePortletId(
+					"offlinetaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
+	
 	@Override
 	public AssetRenderer getAssetRenderer(LearningActivity larn) {
 		return new TaskOnlineAssetRenderer(larn);
@@ -86,6 +93,8 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 			
 	}
 	
-	
+	public String portletId() {
+		return PORTLET_ID;
+	}
 
 }

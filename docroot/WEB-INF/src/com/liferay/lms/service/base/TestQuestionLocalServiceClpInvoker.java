@@ -226,16 +226,12 @@ public class TestQuestionLocalServiceClpInvoker {
 		if (_methodName113.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes113, parameterTypes)) {
 			TestQuestionLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
-			return null;
 		}
 
 		if (_methodName118.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes118, parameterTypes)) {
 			TestQuestionLocalServiceUtil.importXML(((Long)arguments[0]).longValue(),
 				(com.liferay.portal.kernel.xml.Document)arguments[1]);
-
-			return null;
 		}
 
 		if (_methodName120.equals(name) &&

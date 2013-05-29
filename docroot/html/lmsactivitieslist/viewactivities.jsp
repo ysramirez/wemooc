@@ -25,6 +25,7 @@
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 
 <%@ include file="/init.jsp"%>
 
