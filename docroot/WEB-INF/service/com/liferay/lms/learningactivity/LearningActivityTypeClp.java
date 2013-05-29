@@ -34,7 +34,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getDefaultScore", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -55,7 +55,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getDefaultTries", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -76,7 +76,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getTypeId",	new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -97,7 +97,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getDefaultFeedbackCorrect", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -118,7 +118,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getDefaultFeedbackNoCorrect", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -139,7 +139,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("isScoreConfigurable", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -160,7 +160,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("isTriesConfigurable", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -181,7 +181,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("isFeedbackCorrectConfigurable", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -202,7 +202,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("isFeedbackNoCorrectConfigurable", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -223,7 +223,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getName", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -265,7 +265,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getUrlIcon", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -286,7 +286,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getDescription", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -307,7 +307,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("gradebook", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -328,7 +328,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("hasEditDetails", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -349,7 +349,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getExpecificContentPage", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -373,7 +373,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 					new Object[] {uploadRequest, portletResponse, ClpSerializer.translateInput(learningActivity)});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 			
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
@@ -409,7 +409,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("especificValidations", new Object[] {uploadRequest, portletResponse});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -431,7 +431,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 					new Object[] {uploadRequest, portletResponse, ClpSerializer.translateInput(learningActivity)});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 			
 			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
 				throw (com.liferay.portal.kernel.exception.PortalException)t;
@@ -459,7 +459,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getMesageEditDetails", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -480,7 +480,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			returnObj = clp.invoke("getPortletId", new Object[] {});
 		}
 		catch (Throwable t) {
-			t = ClpSerializerLat.translateThrowable(t);
+			t = ClpSerializer.translateThrowable(t);
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
