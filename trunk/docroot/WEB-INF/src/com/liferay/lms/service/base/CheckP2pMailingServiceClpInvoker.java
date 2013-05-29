@@ -42,8 +42,6 @@ public class CheckP2pMailingServiceClpInvoker {
 		if (_methodName105.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes105, parameterTypes)) {
 			CheckP2pMailingServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
-			return null;
 		}
 
 		throw new UnsupportedOperationException();

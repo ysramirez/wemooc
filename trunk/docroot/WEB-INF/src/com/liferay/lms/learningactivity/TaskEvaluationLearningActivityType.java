@@ -2,10 +2,17 @@ package com.liferay.lms.learningactivity;
 
 import com.liferay.lms.asset.TaskEvaluationAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.service.ClpSerializer;
+import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class TaskEvaluationLearningActivityType extends BaseLearningActivityType {
 
+	public static String PORTLET_ID = 
+			PortalUtil.getJsSafePortletId(
+					"evaluationtaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
+	
 	@Override
 	public AssetRenderer getAssetRenderer(LearningActivity larn) {
 		return new TaskEvaluationAssetRenderer(larn);
@@ -31,6 +38,10 @@ public class TaskEvaluationLearningActivityType extends BaseLearningActivityType
 	@Override
 	public long getTypeId() {
 		return 8;
+	}
+	
+	public String portletId() {
+		return PORTLET_ID;
 	}
 
 }

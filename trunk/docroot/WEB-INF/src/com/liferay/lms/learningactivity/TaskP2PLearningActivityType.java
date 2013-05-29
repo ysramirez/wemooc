@@ -11,6 +11,7 @@ import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.P2pActivity;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
@@ -28,12 +29,18 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 
 	public static final int DEFAULT_VALIDATION_NUMBER = 3;
+	
+	public static String PORTLET_ID = 
+			PortalUtil.getJsSafePortletId(
+					"p2ptaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 
 	@Override
 	public AssetRenderer getAssetRenderer(LearningActivity larn) {
@@ -138,6 +145,10 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 		
 			learningActivity.setExtracontent(document.formattedString());
 	    }
+	}
+	
+	public String portletId() {
+		return PORTLET_ID;
 	}
 }
 

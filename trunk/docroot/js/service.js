@@ -3,7 +3,25 @@ Liferay.Service.register("Liferay.Service.Lms", "com.liferay.lms.service", "life
 Liferay.Service.registerClass(
 	Liferay.Service.Lms, "Course",
 	{
-		getCoursesOfGroup: true
+		getCoursesOfGroup: true,
+		createCourse: true,
+		getCourseStudents: true,
+		getCourseTeachers: true,
+		getCourseEditors: true,
+		addStudentToCourse: true,
+		addTeacherToCourse: true,
+		addEditorToCourse: true,
+		removeStudentFromCourse: true,
+		removeTeacherFromCourse: true,
+		removeEditorFromCourse: true,
+		getUserResult: true,
+		myCourses: true,
+		addUser: true,
+		updateUser: true,
+		setParent: true,
+		unsetParent: true,
+		setTutor: true,
+		unsetTutor: true
 	}
 );
 
@@ -15,7 +33,18 @@ Liferay.Service.registerClass(
 		deleteLearningactivity: true,
 		getLearningActivity: true,
 		addLearningActivity: true,
-		modLearningActivity: true
+		modLearningActivity: true,
+		isLocked: true
+	}
+);
+
+Liferay.Service.registerClass(
+	Liferay.Service.Lms, "LearningActivityResult",
+	{
+		getByActId: true,
+		getByActIdAndUser: true,
+		userPassed: true,
+		userLoginPassed: true
 	}
 );
 
@@ -23,6 +52,22 @@ Liferay.Service.registerClass(
 	Liferay.Service.Lms, "LearningActivityTry",
 	{
 		createLearningActivityTry: true
+	}
+);
+
+Liferay.Service.registerClass(
+	Liferay.Service.Lms, "Module",
+	{
+		findAllInGroup: true,
+		isLocked: true,
+		isUserPassed: true
+	}
+);
+
+Liferay.Service.registerClass(
+	Liferay.Service.Lms, "SCORMContent",
+	{
+		getSCORMContentOfGroup: true
 	}
 );
 

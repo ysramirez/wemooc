@@ -7,6 +7,7 @@ import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.ResourceExternalAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -20,9 +21,11 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -34,6 +37,9 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 public class ResourceExternalLearningActivityType extends BaseLearningActivityType 
 {
 	public static String DOCUMENTLIBRARY_MAINFOLDER = "ResourceUploads";
+	public static String PORTLET_ID = 
+			PortalUtil.getJsSafePortletId(
+					"resourceExternalActivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 	
 	@Override
 	public boolean gradebook() {
@@ -183,6 +189,10 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
      
   
         return dlMainFolderId;
+	}
+	
+	public String portletId() {
+		return PORTLET_ID;
 	}
 		
 }

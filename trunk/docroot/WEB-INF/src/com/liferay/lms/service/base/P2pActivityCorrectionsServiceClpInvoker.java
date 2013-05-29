@@ -42,8 +42,6 @@ public class P2pActivityCorrectionsServiceClpInvoker {
 		if (_methodName103.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes103, parameterTypes)) {
 			P2pActivityCorrectionsServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
-
-			return null;
 		}
 
 		throw new UnsupportedOperationException();

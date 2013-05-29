@@ -6,6 +6,7 @@ import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.SCORMAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
@@ -14,10 +15,16 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class SCORMLearningActivityType extends BaseLearningActivityType 
 {
+	
+	public static String PORTLET_ID = 
+			PortalUtil.getJsSafePortletId(
+					"scormactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 
 	@Override
 	public boolean gradebook() {
@@ -93,6 +100,10 @@ public class SCORMLearningActivityType extends BaseLearningActivityType
 		rootElement.add(assetEntry);	
 		
 		learningActivity.setExtracontent(document.formattedString());	
+	}
+	
+	public String portletId() {
+		return PORTLET_ID;
 	}
 
 }
