@@ -36,7 +36,8 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 		return "surveyactivity.editquestions";
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 

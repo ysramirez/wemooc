@@ -60,7 +60,8 @@ public class TaskLearningActivityType extends BaseLearningActivityType
 		return 1;
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 	

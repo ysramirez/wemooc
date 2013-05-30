@@ -98,7 +98,8 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 		learningActivity.setExtracontent(document.formattedString());	
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 	

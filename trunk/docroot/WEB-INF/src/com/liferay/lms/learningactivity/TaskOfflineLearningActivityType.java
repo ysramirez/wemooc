@@ -39,7 +39,8 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 		return false;
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 
