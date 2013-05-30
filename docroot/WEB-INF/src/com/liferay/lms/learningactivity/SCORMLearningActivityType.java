@@ -102,7 +102,8 @@ public class SCORMLearningActivityType extends BaseLearningActivityType
 		learningActivity.setExtracontent(document.formattedString());	
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 

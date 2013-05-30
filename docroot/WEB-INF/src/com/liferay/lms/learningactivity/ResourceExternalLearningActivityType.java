@@ -191,7 +191,8 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
         return dlMainFolderId;
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 		

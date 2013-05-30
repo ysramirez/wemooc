@@ -93,7 +93,8 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 			
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 

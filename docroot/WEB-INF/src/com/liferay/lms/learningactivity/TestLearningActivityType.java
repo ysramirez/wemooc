@@ -190,7 +190,8 @@ public class TestLearningActivityType extends BaseLearningActivityType
 	    }
 	}
 	
-	public String portletId() {
+	@Override
+	public String getPortletId() {
 		return PORTLET_ID;
 	}
 }
