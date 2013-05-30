@@ -464,8 +464,14 @@ public class LmsActivitiesList extends MVCPortlet {
 	@Override
 	public void doView(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
-		// TODO Auto-generated method stub
-		if(renderRequest.getAttribute("editing")!=null &&renderRequest.getAttribute("editing").equals("true"))
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		if((themeDisplay!=null)&&(themeDisplay.isWidget())) {
+			include("/html/lmsactivitieslist/widget/view.jsp",renderRequest,renderResponse);
+		}
+		else if(renderRequest.getAttribute("editing")!=null &&renderRequest.getAttribute("editing").equals("true"))
 		{
 			include("/html/editactivity/editactivity.jsp",renderRequest,renderResponse);
 		}
@@ -474,8 +480,6 @@ public class LmsActivitiesList extends MVCPortlet {
 			super.doView(renderRequest, renderResponse);
 		}
 	}
-
-
 
 	public void viewactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws PortalException, SystemException, Exception {
