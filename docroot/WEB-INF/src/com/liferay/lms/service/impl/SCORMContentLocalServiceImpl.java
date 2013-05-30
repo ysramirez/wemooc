@@ -31,6 +31,7 @@ import com.liferay.lms.service.base.SCORMContentLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
@@ -121,18 +122,18 @@ public class SCORMContentLocalServiceImpl
 		resourceLocalService.deleteResource(
 		scorm.getCompanyId(), SCORMContent.class.getName(),
 		ResourceConstants.SCOPE_INDIVIDUAL, scormId);
-		scormContentPersistence.remove(scorm);
+		this.deleteSCORMContent(scormId);
 	}
 	public SCORMContent updateSCORMContent(SCORMContent scocontent,ServiceContext serviceContext) throws PortalException, SystemException
 	{
 		scocontent.setExpandoBridgeAttributes(serviceContext);
-		scormContentPersistence.update(scocontent, true);
+		this.updateSCORMContent(scocontent);
 		assetEntryLocalService.updateEntry(
 				scocontent.getUserId(), scocontent.getGroupId(), SCORMContent.class.getName(),
 				scocontent.getScormId(), scocontent.getUuid(),0, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames(), true, null, null,
 				new java.util.Date(System.currentTimeMillis()), null,
-				ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  scocontent.getDescription(),null, null, 0, 0,
+				ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()),null, null, 0, 0,
 				null, false);
 		return scocontent;
 	}
@@ -212,7 +213,7 @@ public class SCORMContentLocalServiceImpl
 					scocontent.getScormId(), scocontent.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  scocontent.getDescription(),null, null, 0, 0,
+					ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()),null, null, 0, 0,
 					null, false);
 					
 			
