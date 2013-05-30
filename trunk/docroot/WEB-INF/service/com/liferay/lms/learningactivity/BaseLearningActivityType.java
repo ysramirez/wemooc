@@ -101,10 +101,6 @@ public abstract class BaseLearningActivityType implements LearningActivityType, 
 	@Override
 	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException {
 	}
-	
-	public String getPortletId() {
-		return null;
-	}
 
 	public Object invokeMethod(
 			String name, String[] parameterTypes, Object[] arguments)
