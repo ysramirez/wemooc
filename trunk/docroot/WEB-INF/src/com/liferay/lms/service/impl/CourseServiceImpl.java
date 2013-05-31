@@ -14,15 +14,30 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
+
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.UserGroupLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.social.model.SocialRelationConstants;
+import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
 
 /**
  * The implementation of the course remote service.
@@ -126,34 +141,176 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		return results;
 
 	}
+	
+	
+	private long [] getGruposFromExpando(Long companyId, String [] userGroupNames) throws PortalException, SystemException {
+		List<Long> userGroupIds = new ArrayList<Long>();
+		if (userGroupNames != null) {
+			for (String ugn : userGroupNames) {
+				UserGroup ug = UserGroupLocalServiceUtil.getUserGroup(companyId, ugn);
+				userGroupIds.add(ug.getUserGroupId());
+			}
+		}
+		return ArrayUtil.toArray(userGroupIds.toArray(new Long[0]));
+	}
+	
 	@JSONWebService
 	public void addUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
 	{
-		return ;
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		int rolesItr=0;
+		long[] roles = new long[((isStudent)?1:0)+((isTeacher)?1:0)+((isParent)?1:0)];
+		
+		try {
+			if(isStudent){
+				roles[rolesItr++]=UserGroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(), PropsUtil.get("weclass.grupo.estudiante")).getUserGroupId();
+			}
+			
+			if(isTeacher){
+				roles[rolesItr++]=UserGroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(), PropsUtil.get("weclass.grupo.profesor")).getUserGroupId();
+			}
+			
+			if(isParent){
+				roles[rolesItr]=UserGroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(), PropsUtil.get("weclass.grupo.padre")).getUserGroupId();
+			}
+			
+			Date birthday = new Date(0);
+					
+			User creatorUser=getUser();
+
+			UserLocalServiceUtil.addUser(creatorUser.getUserId(), serviceContext.getCompanyId(), false, /*password1*/login, /*password2*/login, false, login, 
+					email, new Long(0), "", creatorUser.getLocale(), firstName, StringPool.BLANK, lastName, -1, -1, 
+					creatorUser.isMale(), birthday.getMonth(), birthday.getDay(), birthday.getYear(), StringPool.BLANK, null, null, null, roles, 
+					false, ServiceContextThreadLocal.getServiceContext());
+		} catch (PortalException e) {
+		} catch (SystemException e) {
+		}
 	}
 	@JSONWebService
 	public void updateUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
 	{
-		return ;
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		long[] rolesToRemove = new long[((isStudent)?0:1)+((isTeacher)?0:1)+((isParent)?0:1)];
+		List<Long> rolesToAdd = new ArrayList<Long>(3-rolesToRemove.length);
+		int rolesAddItr=0,rolesRemoveItr=0;
+		
+		try {
+			if (isStudent) {
+				rolesToAdd.add(UserGroupLocalServiceUtil.getUserGroup(
+						serviceContext.getCompanyId(),
+						PropsUtil.get("weclass.grupo.estudiante"))
+						.getUserGroupId());
+			} else {
+				rolesToRemove[rolesRemoveItr++] = UserGroupLocalServiceUtil
+						.getUserGroup(serviceContext.getCompanyId(),
+								PropsUtil.get("weclass.grupo.estudiante"))
+						.getUserGroupId();
+			}
+			if (isTeacher) {
+				rolesToAdd.add(UserGroupLocalServiceUtil.getUserGroup(
+						serviceContext.getCompanyId(),
+						PropsUtil.get("weclass.grupo.profesor"))
+						.getUserGroupId());
+			} else {
+				rolesToRemove[rolesRemoveItr++] = UserGroupLocalServiceUtil
+						.getUserGroup(serviceContext.getCompanyId(),
+								PropsUtil.get("weclass.grupo.profesor"))
+						.getUserGroupId();
+			}
+			if (isParent) {
+				rolesToAdd.add(UserGroupLocalServiceUtil.getUserGroup(
+						serviceContext.getCompanyId(),
+						PropsUtil.get("weclass.grupo.padre")).getUserGroupId());
+			} else {
+				rolesToRemove[rolesRemoveItr] = UserGroupLocalServiceUtil
+						.getUserGroup(serviceContext.getCompanyId(),
+								PropsUtil.get("weclass.grupo.padre"))
+						.getUserGroupId();
+			}
+			User user = UserLocalServiceUtil.getUserByScreenName(
+					serviceContext.getCompanyId(), login);
+			user.setFirstName(firstName);
+			user.setLastName(lastName);
+			user.setEmailAddress(email);
+			List<UserGroup> userGroups = user.getUserGroups();
+			long[] userArray = new long[] { user.getUserId() };
+			for (long roleToRemove : rolesToRemove) {
+				for (UserGroup userGroup : userGroups) {
+					if (userGroup.getUserGroupId() == roleToRemove) {
+						UserLocalServiceUtil.unsetUserGroupUsers(
+								userGroup.getUserGroupId(), userArray);
+					}
+				}
+			}
+			for (Iterator<Long> iterator = rolesToAdd.iterator(); iterator
+					.hasNext();) {
+				long roleToAdd = iterator.next();
+				for (UserGroup userGroup : userGroups) {
+					if (userGroup.getUserGroupId() == roleToAdd) {
+						iterator.remove();
+					}
+				}
+			}
+			for (long roleToAdd : rolesToAdd) {
+				UserLocalServiceUtil.setUserGroupUsers(roleToAdd, userArray);
+			}
+			UserLocalServiceUtil.updateUser(user);
+		} catch (Exception e) {
+		}
+	
 	}
 	@JSONWebService
 	public void setParent(String parentLogin,String studentLogin)
 	{
-		
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		try {
+			User parent = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), parentLogin);
+			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);				
+			SocialRelationLocalServiceUtil.addRelation(parent.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_PARENT);
+		} catch (PortalException e) {
+		} catch (SystemException e) {
+		}
 	}
 	@JSONWebService
 	public void unsetParent(String parentLogin,String studentLogin)
 	{
-		
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		try {
+			User parent = UserLocalServiceUtil.getUserByScreenName(
+					serviceContext.getCompanyId(), parentLogin);
+			User student = UserLocalServiceUtil.getUserByScreenName(
+					serviceContext.getCompanyId(), studentLogin);
+			SocialRelationLocalServiceUtil.deleteRelation(parent.getUserId(),
+					student.getUserId(),
+					SocialRelationConstants.TYPE_UNI_PARENT);
+		} catch (Exception e) {
+		}		
 	}
 	@JSONWebService
-	public void setTutor(String parentLogin,String studentLogin)
+	public void setTutor(String tutorLogin,String studentLogin)
 	{
-		
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		try {
+			User tutor = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), tutorLogin);
+			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);	
+			SocialRelationLocalServiceUtil.addRelation(tutor.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_SUPERVISOR);
+		} catch (PortalException e) {
+		} catch (SystemException e) {
+		}
 	}
 	@JSONWebService
 	public void unsetTutor(String parentLogin,String studentLogin)
 	{
-		
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		try {
+			User parent = UserLocalServiceUtil.getUserByScreenName(
+					serviceContext.getCompanyId(), parentLogin);
+			User student = UserLocalServiceUtil.getUserByScreenName(
+					serviceContext.getCompanyId(), studentLogin);
+			SocialRelationLocalServiceUtil.deleteRelation(parent.getUserId(),
+					student.getUserId(),
+					SocialRelationConstants.TYPE_UNI_SUPERVISOR);
+		} catch (Exception e) {
+		}		
 	}
 }
