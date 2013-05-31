@@ -15,6 +15,7 @@
 package com.liferay.lms.service.impl;
 
 
+import java.util.Date;
 import java.util.List;
 
 import com.liferay.lms.model.Course;
@@ -203,6 +204,31 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 					validmodule.getCompanyId(), validmodule.getGroupId(), validmodule.getUserId(),
 			Module.class.getName(), validmodule.getPrimaryKey(), false,
 			true, true);
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			throw new SystemException(e);
+		}
+	    return ModuleUtil.update(fileobj, false);
+	}
+	
+	public Module addModule(Long companyId, Long courseId, Long userId, 
+			String title, String description,
+			Date startDate, Date endDate, Long ordern) throws SystemException {
+		Module fileobj = ModuleUtil.create(CounterLocalServiceUtil.increment(Module.class.getName()));
+
+	    fileobj.setCompanyId(companyId);
+	    fileobj.setGroupId(courseId);
+	    fileobj.setUserId(userId);
+	    fileobj.setStartDate(startDate);
+	    fileobj.setEndDate(endDate);
+	    fileobj.setTitle(title);
+	    fileobj.setDescription(description);
+	    fileobj.setOrdern(ordern != null ? ordern : fileobj.getModuleId());
+	    try {
+			resourceLocalService.addResources(
+					companyId, courseId, userId,
+					Module.class.getName(), fileobj.getPrimaryKey(), 
+					false, true, true);
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
 			throw new SystemException(e);

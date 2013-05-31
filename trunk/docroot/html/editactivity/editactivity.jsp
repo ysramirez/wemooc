@@ -476,6 +476,7 @@ Liferay.provide(
 	if(learnact!=null)
 	{
 		request.setAttribute("activity", learnact);
+		request.setAttribute("activityId", learnact.getActId());
 		optional=(learnact.getWeightinmodule()==0);
 		mandatory = (learnact.getWeightinmodule() != 0);
 	}

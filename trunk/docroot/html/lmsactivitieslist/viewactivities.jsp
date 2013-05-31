@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.portal.model.PublicRenderParameter"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
 <%@page import="java.net.URL"%>

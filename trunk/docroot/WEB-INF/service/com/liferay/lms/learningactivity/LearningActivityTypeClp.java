@@ -1,15 +1,22 @@
 package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityClp;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
+import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
@@ -237,11 +244,38 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		return ((String)returnObj);
 	}
 	
+	private Object translateLearningActivity(LearningActivity larn) {
+		Object larnObj = null;
+		try {
+			larnObj = Class.forName(LearningActivityClp.class.getName(), true, clp.getClassLoader()).newInstance();
+			
+			ClassLoaderProxy clp2 = new ClassLoaderProxy(larnObj, LearningActivityClp.class.getName(), clp.getClassLoader());
+			clp2.invoke("setModelAttributes", new Object[] {larn.getModelAttributes()});
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+		return larnObj;
+	}
+	
 	public AssetRenderer getAssetRenderer(LearningActivity larn) {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getAssetRenderer", new Object[] {ClpSerializer.translateInput(larn)});
+			returnObj = clp.invoke("getAssetRenderer", new Object[] {translateLearningActivity(larn)});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -366,11 +400,15 @@ public class LearningActivityTypeClp implements LearningActivityType {
 	public void setExtraContent(UploadRequest uploadRequest, 
 			PortletResponse portletResponse,LearningActivity learningActivity) 
 			throws PortalException,SystemException,DocumentException,IOException {
-		Object returnObj = null;
-
 		try {
-			returnObj = clp.invoke("setExtraContent",
-					new Object[] {uploadRequest, portletResponse, ClpSerializer.translateInput(learningActivity)});
+			ClassLoader classLoader = clp.getClassLoader();
+			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
+			Class uploadRequestActivityClass = Class.forName(UploadRequest.class.getName());
+			Class portletResponseClass = Class.forName(PortletResponse.class.getName());
+			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
+			
+			Method setExtraContentMethod = learningActivityTypeClass.getMethod("setExtraContent", uploadRequestActivityClass,portletResponseClass, learningActivityClass);    
+			clp.invoke(new MethodHandler(setExtraContentMethod, uploadRequest, portletResponse, translateLearningActivity(learningActivity)));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -406,7 +444,15 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("especificValidations", new Object[] {uploadRequest, portletResponse});
+			ClassLoader classLoader = clp.getClassLoader();
+			
+			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
+			Class uploadRequestActivityClass = Class.forName(UploadRequest.class.getName());
+			Class portletResponseClass = Class.forName(PortletResponse.class.getName());
+		    
+			Method especificValidationsMethod = learningActivityTypeClass.getMethod("especificValidations", uploadRequestActivityClass,portletResponseClass);    
+		    
+			returnObj = clp.invoke(new MethodHandler(especificValidationsMethod, uploadRequest, portletResponse));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -415,6 +461,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 				throw (RuntimeException)t;
 			}
 			else {
+				t.printStackTrace();
 				throw new RuntimeException(t.getClass().getName() +
 					" is not a valid exception");
 			}
@@ -424,11 +471,16 @@ public class LearningActivityTypeClp implements LearningActivityType {
 	
 	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) 
 			throws PortalException,SystemException {
-		Object returnObj = null;
-
+		
 		try {
-			returnObj = clp.invoke("afterInsertOrUpdate",
-					new Object[] {uploadRequest, portletResponse, ClpSerializer.translateInput(learningActivity)});
+			ClassLoader classLoader = clp.getClassLoader();
+			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
+			Class uploadRequestActivityClass = Class.forName(UploadRequest.class.getName());
+			Class portletResponseClass = Class.forName(PortletResponse.class.getName());
+			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
+			
+			Method afterInsertOrUpdateMethod = learningActivityTypeClass.getMethod("afterInsertOrUpdate", uploadRequestActivityClass,portletResponseClass, learningActivityClass);    
+			clp.invoke(new MethodHandler(afterInsertOrUpdateMethod, uploadRequest, portletResponse, translateLearningActivity(learningActivity)));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
