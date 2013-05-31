@@ -199,7 +199,8 @@
 				<action-key>REGISTER</action-key>
 				<action-key>ACCESSLOCK</action-key>
 				<action-key>COURSEEDITOR</action-key>
-				<action-key>ASSIGN_MEMBERS</action-key>	
+				<action-key>ASSIGN_MEMBERS</action-key>
+				<action-key>VIEW_RESULTS</action-key>
 				<action-key>ACCESS</action-key>
 			</supports>
 			<site-member-defaults>
