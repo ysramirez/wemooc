@@ -109,8 +109,8 @@ if(learnact!=null)
 
 	<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 	
-	<div class="acticons"> 
-		<%
+<div class="acticons">
+	<%
 		if(larntype.hasEditDetails()){
 			AssetRenderer  assetRenderer=larntype.getAssetRenderer(learnact);
 			if(assetRenderer!=null) {
@@ -122,21 +122,23 @@ if(learnact!=null)
 						urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
 					}
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId");
-					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId", Long.toString(learnact.getActId()));
+					urlEdit=HttpUtil.addParameter   (urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId", Long.toString(learnact.getActId()));
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId");
-					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId", Long.toString(learnact.getModuleId()) );
+					urlEdit=HttpUtil.addParameter   (urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId", Long.toString(learnact.getModuleId()) );
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails");
-					urlEdit=HttpUtil.addParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails", true);
-				}			
-		%>
-			<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails() %>" label="true" url="<%=urlEdit %>" />
-		<%
+					urlEdit=HttpUtil.addParameter   (urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails", true);
+				}
+				%>
+				<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails()%>" label="true" url="<%=urlEdit%>" />
+					
+				<liferay-ui:icon-delete label="false" url="<%=deleteMyTriesURL.toString()%>" />
+				<a href="<%=deleteMyTriesURL.toString()%>"><liferay-ui:message key="delete-mi-tries"></liferay-ui:message></a>
+				
+				<%
 			}
 		}
-		%>
-		<liferay-ui:icon-delete label="false" url="<%=deleteMyTriesURL.toString() %>" />
-		<a href="<%=deleteMyTriesURL.toString() %>"><liferay-ui:message key="delete-mi-tries"></liferay-ui:message></a>
-	</div>
+	%>
+</div>
 	
 	<aui:model-context bean="<%= learnact %>" model="<%= LearningActivity.class %>" />
 
