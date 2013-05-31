@@ -68,7 +68,7 @@ for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId
 	boolean isUserWatchingATeacher=permissionChecker.isOmniadmin();
 	if(!isUserWatchingATeacher){
 		for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUser().getUserId(), themeDisplay.getScopeGroupId())){
-			System.out.println(role.getName());
+			//System.out.println(role.getName());
 			if(teacherRoles.contains(role.getName())) {
 				isUserWatchingATeacher=true;
 				break;
