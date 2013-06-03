@@ -35,7 +35,7 @@
 	<portlet>
 		<portlet-name>module-portlet</portlet-name>
 		<icon>/icons/icon.png</icon>
-		<portlet-data-handler-class>com.liferay.lms.lar.ModuleDataHandlerImpl</portlet-data-handler-class>
+		<portlet-data-handler-class>com.liferay.lms.lar.ModulePortletDataHandlerImpl</portlet-data-handler-class>
 	    <custom-attributes-display>com.liferay.lms.expando.ModuleCustomAttributesDisplay</custom-attributes-display>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
