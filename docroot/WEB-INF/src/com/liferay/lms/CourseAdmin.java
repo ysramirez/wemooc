@@ -1,25 +1,41 @@
 package com.liferay.lms;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
 import javax.portlet.WindowState;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
+import com.liferay.portal.LARFileException;
+import com.liferay.portal.LARTypeException;
+import com.liferay.portal.LayoutImportException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Time;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
@@ -28,6 +44,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -44,6 +61,9 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  * Portlet implementation class CourseAdmin
  */
 public class CourseAdmin extends MVCPortlet {
+	
+	private static Log _log = LogFactoryUtil.getLog(CourseAdmin.class);
+	
 	public void deleteCourse(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
@@ -281,5 +301,84 @@ public class CourseAdmin extends MVCPortlet {
 		UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { userId },
 				course.getGroupCreatedId(), roleId);
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
+	}
+	
+	@Override
+	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
+		
+		String action = ParamUtil.getString(resourceRequest, "action");
+	
+		if(action.equals("export")){
+			
+			try {	
+				
+				long groupId = ParamUtil.getLong(resourceRequest, "groupId");
+				boolean privateLayout = ParamUtil.getBoolean(resourceRequest, "privateLayout");
+				String fileName = ParamUtil.getString(resourceRequest, "exportFileName");
+				
+				Date now = new Date();
+				Date startDate = new Date(now.getTime() - Time.DAY); //new Date(now.getTime() - (rangeLast * Time.HOUR));
+				Date endDate = now;
+							
+				File file = LayoutServiceUtil.exportLayoutsAsFile(groupId, privateLayout, null, resourceRequest.getParameterMap(), null, null);
+			
+				HttpServletRequest request = PortalUtil.getHttpServletRequest(resourceRequest);
+				HttpServletResponse response = PortalUtil.getHttpServletResponse(resourceResponse);
+	
+				InputStream is = new FileInputStream(file);
+
+				String contentType = MimeTypesUtil.getContentType(file);
+
+				ServletResponseUtil.sendFile(request, response, fileName, is, contentType);
+				
+			}catch(Exception e){
+				
+				System.out.println(" Error: "+e.getMessage());
+				e.printStackTrace();
+				
+			}
+			
+		} else {
+			super.serveResource(resourceRequest, resourceResponse);
+		}
+	}
+	
+	public void importCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		
+		try {
+			UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+
+			long groupId = ParamUtil.getLong(uploadRequest, "groupId");
+			boolean privateLayout = ParamUtil.getBoolean(uploadRequest, "privateLayout");
+			File file = uploadRequest.getFile("importFileName");
+			
+			System.out.println("groupId: "+groupId+", privateLayout:"+privateLayout+", file: "+file.getName());
+			
+			System.out.println("actionRequest.getParameterMap().size: "+actionRequest.getParameterMap().size());
+
+			if (!file.exists()) {
+				System.out.println("Import file does not exist");
+				throw new LARFileException("Import file does not exist");
+			}
+			System.out.println("importLayouts 1");
+			LayoutServiceUtil.importLayouts(groupId, privateLayout, uploadRequest.getParameterMap(), file);
+			System.out.println("importLayouts 2");
+
+			addSuccessMessage(actionRequest, actionResponse);
+			
+		}
+		catch (Exception e) {
+			System.out.println("Error importando lar.");
+			
+			if ((e instanceof LARFileException) || (e instanceof LARTypeException)) {
+
+				SessionErrors.add(actionRequest, e.getClass().getName());
+				
+			}
+			else {
+				_log.error(e, e);
+				SessionErrors.add(actionRequest, LayoutImportException.class.getName());
+			}
+		}
 	}
 }
