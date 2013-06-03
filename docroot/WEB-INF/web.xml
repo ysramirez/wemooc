@@ -8,6 +8,14 @@
   <param-name>portalContextConfigLocation</param-name>
   <param-value>/WEB-INF/classes/META-INF/messaging-spring.xml</param-value>
  </context-param>
+  <filter>
+  <filter-name>ServletContext JSON Web Service Servlet Filter</filter-name> 
+  <filter-class>com.liferay.portal.kernel.servlet.PortalClassLoaderFilter</filter-class>
+   <init-param> 
+   <param-name>filter-class</param-name> 
+   <param-value>com.liferay.portal.servlet.filters.absoluteredirects.AbsoluteRedirectsFilter</param-value> 
+   </init-param> 
+  </filter>
  <filter>
   <filter-name>Secure JSON Web Service Servlet Filter</filter-name> 
   <filter-class>com.liferay.portal.kernel.servlet.PortalClassLoaderFilter</filter-class>
@@ -24,6 +32,10 @@
  <param-value>jsonws.servlet.</param-value>
   </init-param>
    </filter>
+       <filter-mapping>
+     <filter-name>ServletContext JSON Web Service Servlet Filter</filter-name>
+      <url-pattern>/api/secure/jsonws/*</url-pattern> 
+      </filter-mapping>
     <filter-mapping>
      <filter-name>Secure JSON Web Service Servlet Filter</filter-name>
       <url-pattern>/api/secure/jsonws/*</url-pattern> 
