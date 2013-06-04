@@ -215,7 +215,7 @@ for(Module theModule:theModules)
 	else
 	{
 		%>
-		<%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %> <%=done %>%
+		<%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %> <span class="module-percent"><%=done %>%</span>
 		<%
 		if(actionEditing)
 		{
