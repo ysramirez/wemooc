@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -126,7 +127,7 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 			
 			public String getSummary(Locale locale) {
 				
-				return _scorm.getDescription();
+				return HtmlUtil.extractText(_scorm.getDescription());
 			}
 			
 			public String getTitle(Locale locale) {
