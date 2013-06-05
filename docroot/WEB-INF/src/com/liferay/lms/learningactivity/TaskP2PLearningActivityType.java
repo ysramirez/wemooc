@@ -120,7 +120,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			anonimous.setText(Boolean.toString(ParamUtil.get(uploadRequest,"anonimous",false)));		
 			rootElement.add(anonimous);	
 			
-			if(P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))==0){
+			//if(P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))==0){
 			
 				Element numValidaciones=rootElement.element("validaciones");
 				if(numValidaciones!=null)
@@ -141,7 +141,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 				result = SAXReaderUtil.createElement("result");
 				result.setText(Boolean.toString(ParamUtil.get(uploadRequest,"result",false)));		
 				rootElement.add(result);	
-			}
+			//}
 		
 			learningActivity.setExtracontent(document.formattedString());
 	    }
