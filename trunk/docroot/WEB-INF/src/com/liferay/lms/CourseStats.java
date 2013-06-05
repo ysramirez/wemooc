@@ -38,6 +38,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
@@ -70,20 +72,20 @@ public class CourseStats extends MVCPortlet {
 	private void exportCourse(ResourceResponse resourceResponse, long courseId,
 			ThemeDisplay themeDisplay) throws IOException,
 			UnsupportedEncodingException {
-		try {
-			
-			long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),0);
+		try {			
 			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			Group group = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+			long registered=UserLocalServiceUtil.getGroupUsersCount(group.getGroupId(),0);
 			long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
 			long iniciados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados;
 			
-			List<Module> tempResults = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+			List<Module> tempResults = ModuleLocalServiceUtil.findAllInGroup(group.getGroupId());
 			CSVWriter writer = initCsv(resourceResponse);
 		    ResourceBundle rb =  ResourceBundle.getBundle("content.Language");
 		    rb = ResourceBundle.getBundle("content.Language", Locale.getDefault());
 		    
 		    //Curso
-		    writer.writeNext(new String[]{themeDisplay.getScopeGroupName()});
+		    writer.writeNext(new String[]{group.getName()});
 		    
 		    //Inscritos
 		    Object args[] = {registered};
@@ -139,8 +141,10 @@ public class CourseStats extends MVCPortlet {
 			
 			java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("dd/MM/yyyy");
 			
-			long registered=UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId(),0);
+			
 			Module module = ModuleLocalServiceUtil.getModule(moduleId);
+			Group group = GroupLocalServiceUtil.getGroup(module.getGroupId());
+			long registered=UserLocalServiceUtil.getGroupUsersCount(group.getGroupId(),0);
 			long finalizados = ModuleResultLocalServiceUtil.countByModulePassed(module.getModuleId(),true);
 			long iniciados = ModuleResultLocalServiceUtil.countByModule(module.getModuleId());
 			String mStartDate = module.getStartDate() == null? "":sdf.format(module.getStartDate());
@@ -153,7 +157,7 @@ public class CourseStats extends MVCPortlet {
 		    rb = ResourceBundle.getBundle("content.Language", Locale.getDefault());
 		    
 		    //Curso
-		    writer.writeNext(new String[]{themeDisplay.getScopeGroupName()});
+		    writer.writeNext(new String[]{group.getName()});
 		    
 		    //Modulo
 		    writer.writeNext(new String[]{module.getTitle(themeDisplay.getLocale())});
