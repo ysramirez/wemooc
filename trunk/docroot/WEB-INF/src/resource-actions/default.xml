@@ -114,6 +114,21 @@
 		</guest-unsupported>
 	</model-resource>
 	<model-resource>
+		<model-name>com.liferay.lms.learningactivitymodel</model-name>
+		<portlet-ref>
+			<portlet-name>lmsactivitieslist</portlet-name>
+		</portlet-ref>
+		<supports>
+			<action-key>ADD_ACTIVITY</action-key>
+			<action-key>PERMISSIONS</action-key>
+		</supports>
+		<site-member-defaults/>
+		<guest-defaults/>
+		<guest-unsupported>
+			<action-key>ADD_ACTIVITY</action-key>
+		</guest-unsupported>
+	</model-resource>
+	<model-resource>
 		<model-name>com.liferay.lms.model.LearningActivity</model-name>
 		<portlet-ref>
 			<portlet-name>lmsactivitieslist</portlet-name>
