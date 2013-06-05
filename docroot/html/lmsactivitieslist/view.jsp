@@ -248,6 +248,20 @@ for(Module theModule:theModules)
 }
 else
 {
+	if(course==null)
+	{
+		
+		%>
+		
+		<jsp:include page="/html/lmsactivitieslist/viewactivities.jsp"></jsp:include>
+		
+		<%	
+	}
+	else
+	{
+		
+	
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+	}
 }
 %>

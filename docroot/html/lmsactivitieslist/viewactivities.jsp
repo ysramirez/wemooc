@@ -92,11 +92,12 @@ for (LearningActivity activity : activities) {
 		catler.get(categoria).add(activity);
 	}
 }
-if (actionEditing
+if ((actionEditing
 		&& permissionChecker.hasPermission(
 				themeDisplay.getScopeGroupId(),
 				Module.class.getName(), moduleId,
-				"ADD_LACT")) {
+				"ADD_LACT"))||(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),
+						"com.liferay.lms.learningactivitymodel", themeDisplay.getScopeGroupId(), "ADD_ACTIVITY")&&moduleId==0)) {
 	%>
 
 

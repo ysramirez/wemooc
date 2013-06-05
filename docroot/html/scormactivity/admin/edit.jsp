@@ -35,7 +35,7 @@ function <portlet:namespace />load(source) {
 		
 		var params=A.QueryString.parse(source.contentWindow.location.search.replace('?',''));
 	
-		if((params['<portlet:namespace />jspPage']=='/html/resourceInternalActivity/admin/result.jsp')&&
+		if((params['<portlet:namespace />jspPage']=='/html/scormactivity/admin/result.jsp')&&
            (A.Lang.isNumber(params['<portlet:namespace />assertId']))&&
            (A.Lang.isString(params['<portlet:namespace />assertTitle']))) {
 			A.one('#<portlet:namespace/>backbutton').remove();
