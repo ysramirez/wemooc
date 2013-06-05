@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="org.apache.commons.lang.ArrayUtils"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
@@ -6,8 +8,16 @@
 <%@ include file="/init.jsp" %>
 
 <%
-List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetRendererFactories();
 
+List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetRendererFactories();
+Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+long searchGroupId=themeDisplay.getScopeGroupId();
+if(course!=null)
+{
+	searchGroupId=course.getGroupId();
+}
+String assetTypes=PropsUtil.get("lms.internalresource.assettypes");
+String[] allowedAssetTypes=assetTypes.split(",");
 %>
 <liferay-portlet:renderURL var="selectResource">
 	<liferay-portlet:param name="jspPage" value="/html/resourceInternalActivity/admin/searchresults.jsp"/>
@@ -15,9 +25,6 @@ List<AssetRendererFactory> factories= AssetRendererFactoryRegistryUtil.getAssetR
 <aui:form name="<portlet:namespace />ressearch" action="<%=selectResource %>" method="POST">
 <aui:select name="className" label="asset-type">
 <% 
-
-String assetTypes=PropsUtil.get("lms.internalresource.assettypes");
-String[] allowedAssetTypes=assetTypes.split(",");
 
 for(String className:allowedAssetTypes)
 {	
@@ -30,12 +37,10 @@ for(String className:allowedAssetTypes)
 %>
 </aui:select>
 <aui:input name="keywords" size="20" type="text"/>
-<aui:select name="groupId" label="ambito">
 
-<aui:option value="<%=themeDisplay.getScopeGroupId() %>" label="course"></aui:option>
-<aui:option value="<%=themeDisplay.getCompanyGroupId() %>" label="global-contents"></aui:option>
-<aui:option value="<%=themeDisplay.getUser().getGroupId() %>" label="personal-contents"></aui:option>
-</aui:select>
+<aui:input name="groupId" type="hidden" value="<%=Long.toString(searchGroupId) %>" />
+
+<%@ include file="/html/resourceInternalActivity/admin/catselector.jspf" %>
 
 <aui:button type="submit" value="search" />
 </aui:form>

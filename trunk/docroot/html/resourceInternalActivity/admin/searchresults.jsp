@@ -1,3 +1,11 @@
+<%@page import="com.liferay.portal.kernel.search.IndexerRegistryUtil"%>
+<%@page import="com.liferay.portal.kernel.search.Indexer"%>
+<%@page import="com.liferay.portal.kernel.search.SearchContextFactory"%>
+<%@page import="com.liferay.portal.kernel.search.SearchContext"%>
+<%@page import="com.liferay.portal.service.ServiceContextFactory"%>
+<%@page import="com.liferay.portal.service.ServiceContextUtil"%>
+<%@page import="com.liferay.portal.service.ServiceContext"%>
+<%@page import="com.liferay.portal.model.ServiceComponent"%>
 <%@page import="com.liferay.portal.kernel.search.Field"%>
 <%@page import="com.liferay.portal.kernel.search.Document"%>
 <%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryQuery"%>
@@ -5,22 +13,39 @@
 <%@page import="com.liferay.portlet.asset.service.AssetEntryServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.search.Hits"%>
 <%@ include file="/html/resourceInternalActivity/admin/searchresource.jsp" %>
-
-<liferay-ui:search-container emptyResultsMessage="there-are-no-assets"
- delta="10">
-<liferay-ui:search-container-results>
 <%
 String className=ParamUtil.getString(request,"className","");
 String keywords=ParamUtil.getString(request,"keywords","");
+String assetCategoryIds=ParamUtil.getString(request,"assetCategoryIds","");
 long groupIdSelected=ParamUtil.getLong(request,"groupId",themeDisplay.getScopeGroupId());
+ServiceContext serviceContext=ServiceContextFactory.getInstance( renderRequest);
+
 AssetRendererFactory selarf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(className);
 long[] groupIds=new long[1];
 groupIds[0]=groupIdSelected;
+String[] entryClassNames={className};
+
+%>
+<liferay-ui:search-container emptyResultsMessage="there-are-no-assets"
+ delta="10">
+<liferay-ui:search-container-results>
+
+<%
 total=0;
 if(keywords.length()>0)
 {
 
-Hits hits = AssetEntryLocalServiceUtil.search(themeDisplay.getCompanyId(),groupIds,selarf.getPortletId(),keywords,searchContainer.getStart(), searchContainer.getEnd());
+	SearchContext searchContext=SearchContextFactory.getInstance(request);
+	searchContext.setAssetCategoryIds(serviceContext.getAssetCategoryIds());
+	searchContext.setUserId(themeDisplay.getUserId());
+	searchContext.setGroupIds(groupIds);
+	searchContext.setEntryClassNames(entryClassNames);
+	searchContext.setKeywords(keywords);
+	searchContext.setStart(searchContainer.getStart());
+	searchContext.setEnd(searchContainer.getEnd());
+	
+	Indexer indexer=IndexerRegistryUtil.getIndexer(className);
+Hits hits = indexer.search(searchContext);
 
 
 results = new ArrayList<AssetEntry>();
@@ -38,8 +63,15 @@ else
 	query.setClassName(className);
 	query.setGroupIds(groupIds);
 	query.setStart(searchContainer.getStart());
-	query.setStart(searchContainer.getEnd());
-	total = AssetEntryLocalServiceUtil.getEntriesCount(query);
+	query.setEnd(searchContainer.getEnd());
+	query.setEnablePermissions(true);
+	query.setExcludeZeroViewCount(false);
+	if(serviceContext.getAssetCategoryIds()!=null)
+	{
+	query.setAllCategoryIds(serviceContext.getAssetCategoryIds());
+	}
+	query.setVisible(true);
+	total = AssetEntryServiceUtil.getEntriesCount(query);
 	results = AssetEntryServiceUtil.getEntries(query);
 }
 
