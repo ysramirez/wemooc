@@ -75,7 +75,7 @@ public class LearningActivityLocalServiceImpl
 			learningActivityPersistence.fetchByPrimaryKey(actId);
 		java.util.Date now=new java.util.Date(System.currentTimeMillis());
 		
-		if(moduleLocalService.isLocked(larn.getModuleId(), userId))
+		if(larn.getModuleId()>0&&moduleLocalService.isLocked(larn.getModuleId(), userId))
 		{
 			return true;
 		}
