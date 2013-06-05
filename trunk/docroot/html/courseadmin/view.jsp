@@ -28,6 +28,9 @@ if(catId!=0)
 	entryQuery.setAllCategoryIds(catIds);
 	entryQuery.setGroupIds(groupIds);
 	entryQuery.setClassName(Course.class.getName());
+	entryQuery.setEnablePermissions(true);
+	entryQuery.setExcludeZeroViewCount(false);
+	entryQuery.setVisible(false);
 	courses=new ArrayList<Course>();
 	java.util.List<AssetEntry> entries=AssetEntryLocalServiceUtil.getEntries(entryQuery);
 	for(AssetEntry entry:entries)
