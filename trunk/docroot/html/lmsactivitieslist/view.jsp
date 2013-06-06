@@ -169,7 +169,7 @@ for(Module theModule:theModules)
 	%>
 	
 	<%--li class='<%= moduleId == theModule.getModuleId() ? "option-less" : "option-more"%>' --%>
-	<li class='option-none'>
+	<li class='option-none  <%=theModule.getModuleId() == moduleId ? "option-less":"option-more" %>'>
 	<span class="desplegar"></span>
 	
 	<%
