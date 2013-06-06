@@ -12,7 +12,10 @@ import java.util.StringTokenizer;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.EventRequest;
+import javax.portlet.EventResponse;
 import javax.portlet.PortletException;
+import javax.portlet.ProcessEvent;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
@@ -75,6 +78,21 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  */
 
 public class LmsActivitiesList extends MVCPortlet {
+	
+    @ProcessEvent(qname = "{http://www.wemooc.com/}themeId")
+    public void handlethemeEvent(EventRequest eventRequest, EventResponse eventResponse) {
+    	
+        if (eventRequest.getEvent().getValue() instanceof ThemeIdEvent){
+     	   ThemeIdEvent themeIdEvent = (ThemeIdEvent) eventRequest.getEvent().getValue();
+     	   long moduleId=ParamUtil.getLong(eventRequest, "moduleId",0L);
+     	   if(moduleId==themeIdEvent.getModuleId()){
+     		   eventResponse.setRenderParameter("viewCurrentModule",StringPool.TRUE);
+     	   }    	
+     	   else if((moduleId==0)&&(themeIdEvent.getModuleId()==ThemeIdEvent.EVALUATION_THEME_ID)){
+     		   eventResponse.setRenderParameter("viewCurrentModule",StringPool.FALSE);
+     	   }
+        }
+    }
 
 	public void deleteMyTries(ActionRequest actionRequest, ActionResponse actionResponse)
 	throws Exception {

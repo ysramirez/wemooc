@@ -55,14 +55,13 @@ public class EvaluationAvgCourseEval implements CourseEval {
 	}
 
 	@Override
-	public String getName(Locale locale) {
-		// TODO Auto-generated method stub
+	public String getName() {
 		return "Media de evaluaciones";
 	}
 
 	@Override
 	public long getTypeId() {
-		return 0;
+		return 1;
 	}
 
 }

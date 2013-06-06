@@ -55,8 +55,7 @@ public class CompleteModulesCourseEval implements CourseEval {
 	}
 
 	@Override
-	public String getName(Locale locale) {
-		// TODO Auto-generated method stub
+	public String getName() {
 		return "Completar Modulos";
 	}
 

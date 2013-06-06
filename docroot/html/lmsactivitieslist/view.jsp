@@ -228,7 +228,7 @@ for(Module theModule:theModules)
 	
 		
 	}
-	if(theModule.getModuleId()==moduleId)
+	if((theModule.getModuleId()==moduleId)&&(ParamUtil.getBoolean(renderRequest, "viewCurrentModule",true)))
 	{
 	%>
 	
