@@ -3,6 +3,7 @@ package com.liferay.lms.learningactivity;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
+import java.util.Map;
 
 import javax.portlet.PortletResponse;
 
@@ -408,7 +409,10 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
 			
 			Method setExtraContentMethod = learningActivityTypeClass.getMethod("setExtraContent", uploadRequestActivityClass,portletResponseClass, learningActivityClass);    
-			clp.invoke(new MethodHandler(setExtraContentMethod, uploadRequest, portletResponse, translateLearningActivity(learningActivity)));
+			Object learningActivityObj = translateLearningActivity(learningActivity);
+			clp.invoke(new MethodHandler(setExtraContentMethod, uploadRequest, portletResponse, learningActivityObj));
+			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
+			learningActivity.setModelAttributes((Map<String, Object>) classLoaderProxy.invoke("getModelAttributes", new Object[]{}));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
