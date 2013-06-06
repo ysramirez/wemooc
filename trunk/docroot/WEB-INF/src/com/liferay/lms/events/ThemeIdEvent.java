@@ -2,8 +2,11 @@ package com.liferay.lms.events;
 
 import java.io.Serializable;
 
-public final class ThemeIdEvent implements Serializable {
+public final class ThemeIdEvent implements Serializable {	
 	private static final long serialVersionUID = -8549599250647470213L;
+	
+	public static final long EVALUATION_THEME_ID=-1;
+	
 	private long moduleId;
 	long themeId;
 	/**

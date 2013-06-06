@@ -46,6 +46,8 @@
 		<portlet id="userprogress"></portlet>
 		<portlet id="scormadmin"></portlet>
 		<portlet id="scormactivity"></portlet>
+		<portlet id="evaluation"></portlet>
+		<portlet id="evaluationAvg"></portlet>
 	</category>
 
 </display>

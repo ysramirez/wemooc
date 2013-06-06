@@ -139,7 +139,7 @@ else
 		}
 		
 		%>
-		<aui:option value="<%=ce.getTypeId() %>" selected="<%=selected %>"><%=ce.getName(locale) %></aui:option>
+		<aui:option value="<%=ce.getTypeId() %>" selected="<%=selected %>"><liferay-ui:message key="<%=ce.getName() %>" /></aui:option>
 		<%
 	}
 	%>

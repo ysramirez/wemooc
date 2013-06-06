@@ -39,6 +39,9 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
+        <supported-processing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-processing-event>
         <supported-publishing-event>
             <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
         </supported-publishing-event>
@@ -321,7 +324,7 @@
 	<portlet>
 		<portlet-name>activityNavigator</portlet-name>
 		<display-name>activityNavigator</display-name>
-		<portlet-class>com.liferay.lms.LmsActivitiesList</portlet-class>
+		<portlet-class>com.liferay.lms.ActivityNavigatorPortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
 			<value>/html/activitynavigator/view.jsp</value>
@@ -359,6 +362,9 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
+		<supported-processing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-processing-event>
 		<supported-public-render-parameter>actId</supported-public-render-parameter>
         <supported-public-render-parameter>moduleId</supported-public-render-parameter>
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
@@ -367,7 +373,7 @@
 	<portlet>
 		<portlet-name>moduleDescription</portlet-name>
 		<display-name>moduleDescription</display-name>
-		<portlet-class>com.liferay.util.bridges.mvc.MVCPortlet</portlet-class>
+		<portlet-class>com.liferay.lms.ModuleDescriptionPortlet</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
 			<value>/html/moduledescription/view.jsp</value>
@@ -413,7 +419,10 @@
 		</security-role-ref>
 		<security-role-ref>
 			<role-name>user</role-name>
-		</security-role-ref>
+		</security-role-ref>        
+		<supported-processing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-processing-event>
 		<supported-public-render-parameter>actId</supported-public-render-parameter>
         <supported-public-render-parameter>moduleId</supported-public-render-parameter>
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
@@ -1572,6 +1581,86 @@
 				<role-name>user</role-name>
 			</security-role-ref>
 		</portlet>
+		
+		
+		<portlet>
+		<portlet-name>evaluation</portlet-name>
+		<display-name>evaluation</display-name>
+		<portlet-class>com.liferay.lms.EvaluationPortlet</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/evaluation/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<resource-bundle>content/evaluation/Language</resource-bundle>
+		<portlet-info>
+			<title>evaluation</title>
+			<short-title>evaluation</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+        <supported-publishing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-publishing-event>
+        <supported-public-render-parameter>actId</supported-public-render-parameter>
+        <supported-public-render-parameter>moduleId</supported-public-render-parameter>
+        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+	</portlet>
+	
+	<portlet>
+		<portlet-name>evaluationAvg</portlet-name>
+		<display-name>evaluationAvg</display-name>
+		<portlet-class>com.liferay.lms.EvaluationAvgPortlet</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/evaluationAvg/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<resource-bundle>content/evaluationavg/Language</resource-bundle>
+		<portlet-info>
+			<title>evaluationAvg</title>
+			<short-title>evaluationAvg</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+        <supported-processing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-processing-event>
+        <supported-public-render-parameter>actId</supported-public-render-parameter>
+        <supported-public-render-parameter>moduleId</supported-public-render-parameter>
+        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+	</portlet>
+	
     <event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
     </event-definition>
