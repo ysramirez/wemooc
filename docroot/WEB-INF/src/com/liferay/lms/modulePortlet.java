@@ -57,6 +57,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.announcements.EntryDisplayDateException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
@@ -665,26 +666,16 @@ public static String SEPARATOR = "_";
         }
 	    PortletPreferences prefs = actRequest.getPreferences();
         int startDateAno = ParamUtil.getInteger(request, "startDateAno");
-        int startDateMes = ParamUtil.getInteger(request, "startDateMes")+1;
+        int startDateMes = ParamUtil.getInteger(request, "startDateMes");
         int startDateDia = ParamUtil.getInteger(request, "startDateDia");
         long precedence=ParamUtil.getLong(request, "precedence");
-        try {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-			formatter.setTimeZone(themeDisplay.getTimeZone());	
-            module.setStartDate(formatter.parse(startDateAno + "/" + startDateMes + "/" + startDateDia));
-        } catch (ParseException e) {
-			module.setStartDate(new Date());
-        }
+        module.setStartDate(PortalUtil.getDate(startDateMes, startDateDia, startDateAno, 0, 0, themeDisplay.getTimeZone(), new EntryDisplayDateException()));
+
         int endDateAno = ParamUtil.getInteger(request, "endDateAno");
-        int endDateMes = ParamUtil.getInteger(request, "endDateMes")+1;
+        int endDateMes = ParamUtil.getInteger(request, "endDateMes");
         int endDateDia = ParamUtil.getInteger(request, "endDateDia");
-        try {
-			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-			formatter.setTimeZone(themeDisplay.getTimeZone());	
-            module.setEndDate(formatter.parse(endDateAno + "/" + endDateMes + "/" + endDateDia));
-        } catch (ParseException e) {
-			module.setEndDate(new Date());
-        }
+        module.setEndDate(PortalUtil.getDate(endDateMes, endDateDia, endDateAno, 23, 59, themeDisplay.getTimeZone(), new EntryDisplayDateException()));
+        
 		try {
 		    module.setPrimaryKey(ParamUtil.getLong(request,"resourcePrimKey"));
 		} catch (NumberFormatException nfe) {
