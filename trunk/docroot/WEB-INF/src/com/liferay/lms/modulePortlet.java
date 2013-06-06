@@ -613,7 +613,7 @@ public static String SEPARATOR = "_";
 		String dateFormat = ParamUtil.getString(request, "module-date-format");
 		String datetimeFormat = ParamUtil.getString(request, "module-datetime-format");
 
-		ArrayList<String> errors = new ArrayList();
+		ArrayList<String> errors = new ArrayList<String>();
 		if (moduleValidator.validateEditmodule(rowsPerPage, dateFormat, datetimeFormat, errors)) {
 			response.setRenderParameter("module-rows-per-page", "");
 			response.setRenderParameter("module-date-format", "");
@@ -632,15 +632,7 @@ public static String SEPARATOR = "_";
 	private Module moduleFromRequest(PortletRequest actRequest) throws PortalException, SystemException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) actRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actRequest);
-		ServiceContext serviceContext = null;
-		ServiceContext serviceContext2=null;
-		try {
-			serviceContext =  ServiceContextFactory.getInstance(Module.class.getName(), actRequest);
 
-			serviceContext2 = ServiceContextFactory.getInstance(actRequest);
-		} catch (PortalException e1) {
-		} catch (SystemException e1) {
-		}
 		Module module = null;
         long moduleId=ParamUtil.getLong(request, "resourcePrimKey",0);
         
@@ -672,13 +664,13 @@ public static String SEPARATOR = "_";
 		    //Controled en Validator
         }
 	    PortletPreferences prefs = actRequest.getPreferences();
-        SimpleDateFormat format = new SimpleDateFormat(prefs.getValue("module-date-format", "yyyy/MM/dd"));
         int startDateAno = ParamUtil.getInteger(request, "startDateAno");
         int startDateMes = ParamUtil.getInteger(request, "startDateMes")+1;
         int startDateDia = ParamUtil.getInteger(request, "startDateDia");
         long precedence=ParamUtil.getLong(request, "precedence");
         try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+			formatter.setTimeZone(themeDisplay.getTimeZone());	
             module.setStartDate(formatter.parse(startDateAno + "/" + startDateMes + "/" + startDateDia));
         } catch (ParseException e) {
 			module.setStartDate(new Date());
@@ -688,6 +680,7 @@ public static String SEPARATOR = "_";
         int endDateDia = ParamUtil.getInteger(request, "endDateDia");
         try {
 			SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
+			formatter.setTimeZone(themeDisplay.getTimeZone());	
             module.setEndDate(formatter.parse(endDateAno + "/" + endDateMes + "/" + endDateDia));
         } catch (ParseException e) {
 			module.setEndDate(new Date());
