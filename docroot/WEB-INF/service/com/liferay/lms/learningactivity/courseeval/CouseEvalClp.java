@@ -154,4 +154,48 @@ public class CouseEvalClp implements CourseEval {
 		
 	}
 
+	@Override
+	public boolean getNeedPassAllModules() {
+		Object returnObj = null;
+
+		try {
+			returnObj = clp.invoke("getNeedPassAllModules",	new Object[] {});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Boolean)returnObj).booleanValue();
+	}
+
+	@Override
+	public boolean getNeedPassPuntuation() {
+		Object returnObj = null;
+
+		try {
+			returnObj = clp.invoke("getNeedPassPuntuation",	new Object[] {});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Boolean)returnObj).booleanValue();
+	}
+
 }
