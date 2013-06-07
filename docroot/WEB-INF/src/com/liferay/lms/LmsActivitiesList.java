@@ -286,8 +286,17 @@ public class LmsActivitiesList extends MVCPortlet {
 					LearningActivity.class.getName(), actId,
 					ActionKeys.UPDATE))
 			{
+				
+			String extraContentTmp = "";	
+			try {
+				LearningActivity tmp =	LearningActivityLocalServiceUtil.getLearningActivity(actId);
+				extraContentTmp = tmp.getExtracontent();
+			} catch (Exception e) {
+
+			}
+				
 			larn=LearningActivityLocalServiceUtil.modLearningActivity(
-				actId, "", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId,  "", feedbackCorrect, feedbackNoCorrect, serviceContext);
+				actId, "", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId,  extraContentTmp, feedbackCorrect, feedbackNoCorrect, serviceContext);
 			}
 			
 		}
