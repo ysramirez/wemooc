@@ -9,5 +9,7 @@ public interface CourseEval
 	public void updateCourse(Course course, ModuleResult moduleResult) throws SystemException;
 	public String getName();
 	public long getTypeId();
+	public boolean getNeedPassAllModules();
+	public boolean getNeedPassPuntuation();
 
 }

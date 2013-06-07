@@ -64,4 +64,14 @@ public class CompleteModulesCourseEval implements CourseEval {
 		return 0;
 	}
 
+	@Override
+	public boolean getNeedPassAllModules() {
+		return true;
+	}
+
+	@Override
+	public boolean getNeedPassPuntuation() {
+		return false;
+	}
+
 }

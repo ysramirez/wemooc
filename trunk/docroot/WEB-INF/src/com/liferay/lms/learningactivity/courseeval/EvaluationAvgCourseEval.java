@@ -1,18 +1,13 @@
 package com.liferay.lms.learningactivity.courseeval;
 
-import java.util.Locale;
-
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
-import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
-import com.liferay.lms.service.ModuleLocalServiceUtil;
-import com.liferay.lms.service.impl.LearningActivityLocalServiceImpl;
 import com.liferay.portal.kernel.exception.SystemException;
 
 public class EvaluationAvgCourseEval implements CourseEval {
@@ -62,6 +57,16 @@ public class EvaluationAvgCourseEval implements CourseEval {
 	@Override
 	public long getTypeId() {
 		return 1;
+	}
+
+	@Override
+	public boolean getNeedPassAllModules() {
+		return false;
+	}
+
+	@Override
+	public boolean getNeedPassPuntuation() {
+		return true;
 	}
 
 }
