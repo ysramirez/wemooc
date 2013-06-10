@@ -30,6 +30,8 @@ import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.base.SCORMContentLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -118,10 +120,17 @@ public class SCORMContentLocalServiceImpl
 	public void delete (long scormId) throws SystemException, PortalException
 	{
 		SCORMContent scorm=scormContentPersistence.fetchByPrimaryKey(scormId);
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				SCORMContent.class);
+
+		indexer.delete(scorm);
 		assetEntryLocalService.deleteEntry(SCORMContent.class.getName(),scormId);
 		resourceLocalService.deleteResource(
 		scorm.getCompanyId(), SCORMContent.class.getName(),
 		ResourceConstants.SCOPE_INDIVIDUAL, scormId);
+
+		
+
 		this.deleteSCORMContent(scormId);
 	}
 	public SCORMContent updateSCORMContent(SCORMContent scocontent,ServiceContext serviceContext) throws PortalException, SystemException
@@ -135,6 +144,10 @@ public class SCORMContentLocalServiceImpl
 				new java.util.Date(System.currentTimeMillis()), null,
 				ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()),null, null, 0, 0,
 				null, false);
+		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+				SCORMContent.class);
+
+		indexer.reindex(scocontent);
 		return scocontent;
 	}
 	public SCORMContent addSCORMContent (String title, String description,File scormfile,
@@ -216,7 +229,10 @@ public class SCORMContentLocalServiceImpl
 					ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()),null, null, 0, 0,
 					null, false);
 					
-			
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					SCORMContent.class);
+
+			indexer.reindex(scocontent);
 				
 			return scocontent;
 		
