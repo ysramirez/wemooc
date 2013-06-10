@@ -23,6 +23,7 @@ import java.util.Map;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
+import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.base.CourseLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -32,6 +33,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -160,7 +163,11 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			LayoutSetPrototype lsProto=LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
 			/* activamos social activity para la comunidad creada */ 		
-			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);			
+			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);	
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					Course.class);
+
+			indexer.reindex(course);
 			return course;
 		
 	}
@@ -304,6 +311,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(locale),null, null, 0, 0,
 					null, false);
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+					Course.class);
+
+			indexer.reindex(course);
 			return course;
 		
 			}
@@ -325,7 +336,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	theGroup.setFriendlyURL(course.getFriendlyURL()+"_desac");
 	theGroup.setActive(false);
 	GroupLocalServiceUtil.updateGroup(theGroup);
-	
+	Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
+			Course.class);
+
+	indexer.delete(course);
 	assetEntryLocalService.deleteEntry(Course.class.getName(),course.getCourseId());
 	resourceLocalService.deleteResource(
 	companyId, Course.class.getName(),
@@ -333,6 +347,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	assetEntryLocalService.deleteEntry(
 			LearningActivity.class.getName(), course.getCourseId());
 	coursePersistence.remove(course);
+	
 	return null;
 	}
 	
