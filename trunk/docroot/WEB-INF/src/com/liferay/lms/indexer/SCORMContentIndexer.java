@@ -194,7 +194,7 @@ public class SCORMContentIndexer extends BaseIndexer {
 	@Override
 	public String getPortletId() {
 		// TODO Auto-generated method stub
-		return null;
+		return PORTLET_ID;
 	}
 
 

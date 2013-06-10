@@ -141,6 +141,7 @@ public class CourseIndexer extends BaseIndexer {
 		{
 			AssetEntry assetEntry=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), entry.getCourseId());
 			if (!assetEntry.getVisible()) {
+				this.delete(obj);
 				return;
 			}
 
