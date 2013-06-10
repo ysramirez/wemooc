@@ -14,7 +14,6 @@ ResultRow row =
 	(ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 	 
 SCORMContent myScorm = (SCORMContent)row.getObject();
-LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 String name = SCORMContent.class.getName();
 String primKey = String.valueOf(myScorm.getScormId());
 
