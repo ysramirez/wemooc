@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsKeys"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
@@ -266,6 +267,12 @@ else
 			
 		<%
 		}
+	}
+	if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
+		%>
+		<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
+		<liferay-ui:discussion classPK="<%=learnact.getPrimaryKey() %>" userId="<%=learnact.getUserId()%>" className="<%=learnact.getClass().getName()%>" subject="<%=learnact.getTitle()%>" formAction="<%=discussionURL%>" redirect="<%= currentURL %>"/>
+		<%
 	}
 }
 %>
