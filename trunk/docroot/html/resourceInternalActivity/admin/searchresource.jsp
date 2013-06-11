@@ -105,6 +105,7 @@ public PortletURL getAddPortletURL(long groupId,LiferayPortletRequest liferayPor
 	redirectPortletURL.setParameter("className",className);
 	redirectPortletURL.setParameter("jspPage","/html/resourceInternalActivity/admin/searchresults.jsp");
 	redirectPortletURL.setParameter("groupId",Long.toString(groupId));
+	redirectPortletURL.setParameter("actionEditing","true");
 
 	addPortletURL.setParameter("redirect", redirectPortletURL.toString());
 
