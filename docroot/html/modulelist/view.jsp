@@ -88,10 +88,8 @@ image.getGroupId() %>" />
 	<td class="access">
 	<%
 	java.util.Date now=new java.util.Date(System.currentTimeMillis());
-	if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId())
-		||
-		permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(), "ACCESSLOCK")	
-			)
+	if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()) ||
+		permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"))
 	{
 	
 	Group grupo=themeDisplay.getScopeGroup();

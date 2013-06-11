@@ -11,130 +11,74 @@
 <%@ include file="/init.jsp" %>
 
 <%
-long userId=ParamUtil.getLong(request,"userId",0);
-String returnurl=ParamUtil.getString(request,"returnurl","");
-User usuario=UserLocalServiceUtil.getUser(userId);
-java.util.List<LearningActivity> activities = null;
-
-	java.util.List<Module> modules = ModuleLocalServiceUtil
-			.findAllInGroup(themeDisplay.getScopeGroupId());
-%>
-<liferay-ui:header title="Resultados" backURL="<%=returnurl %>"></liferay-ui:header>
-<liferay-ui:user-display userId="<%=userId %>">
-</liferay-ui:user-display>
-<%
-	for(Module theModule:modules)
-	{
-
-	activities = LearningActivityServiceUtil
-			.getLearningActivitiesOfModule(theModule.getModuleId());
-
-
+	long userId=ParamUtil.getLong(request,"userId",0);
+	String returnurl=ParamUtil.getString(request,"returnurl","");
+	User usuario=UserLocalServiceUtil.getUser(userId);
+	String title = LanguageUtil.get(pageContext,"results") +" "+ usuario.getFullName();
 %>
 
-<h2><%=theModule.getTitle(themeDisplay.getLocale()) %>
-<%
-    String mstatus ="not-started";
-	ModuleResult mr=ModuleResultLocalServiceUtil.getByModuleAndUser(theModule.getModuleId(),userId);
-    if(mr!=null)
-    {
-    	mstatus="started";
-    	if(mr.getPassed())
-    	{
-    		mstatus="passed";
-    	}
-    	else
-    	{
-    		
-    	}
-    }
-	%>
-	<%if(mstatus.equals("passed"))
-		{%>
-	 <liferay-ui:icon image="checked"></liferay-ui:icon>
-	 <%}
-	%>
-	<%if(mstatus.equals("not-passed"))
-		{%>
-	 <liferay-ui:icon image="close"></liferay-ui:icon>
-	 <%}
-	%>
-	<%if(mstatus.equals("started"))
-		{%>
-	 <liferay-ui:icon image="unchecked"></liferay-ui:icon>
-	 <%}
-	%>
-	</h2>
-<table class="gradeuser">
-<tr>
+<liferay-ui:header title="<%= title %>" backURL="<%=returnurl %>"></liferay-ui:header>
+<liferay-ui:search-container  emptyResultsMessage="there-are-no-results" delta="5" deltaConfigurable="true">
+	<liferay-ui:search-container-results>
+		<%
+			List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());	
+			pageContext.setAttribute("results", modules);
+		    pageContext.setAttribute("total", modules.size());
+		%>
+	</liferay-ui:search-container-results>
+	<liferay-ui:search-container-row className="com.liferay.lms.model.Module" keyProperty="moduleId" modelVar="theModule">
+		<liferay-ui:search-container-column-text name="module">
+			<%=theModule.getTitle(themeDisplay.getLocale()) %>
+			<% String mstatus ="not-started";
+			ModuleResult mr=ModuleResultLocalServiceUtil.getByModuleAndUser(theModule.getModuleId(),userId);
+		    if(mr!=null){
+		    	mstatus="started";
+		    	if(mr.getPassed()) mstatus="passed";
+		    }%>
+			<%if(mstatus.equals("passed")){%>
+				<liferay-ui:icon image="checked"></liferay-ui:icon>
+			<%}
+			if(mstatus.equals("not-passed")){%>
+				<liferay-ui:icon image="close"></liferay-ui:icon>
+			<%}
+			if(mstatus.equals("started")){%>
+				<liferay-ui:icon image="unchecked"></liferay-ui:icon>
+			<%}	%>
+		</liferay-ui:search-container-column-text>
+		<% 	List<LearningActivity> activities = LearningActivityServiceUtil.getLearningActivitiesOfModule(theModule.getModuleId());
+		for(LearningActivity learningActivity:activities){
+		%>
+			<%long result=0;
+			String status="not-started";
+			if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(learningActivity.getActId(), usuario.getUserId())){
+				status="started";
+				LearningActivityResult learningActivityResult=LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), usuario.getUserId());
+				result=learningActivityResult.getResult();
+				if(learningActivityResult.getEndDate()!=null){
+						status="not-passed"	;
+				}
+				if(learningActivityResult.isPassed()){
+					status="passed"	;
+				}
+			}%>
+			<liferay-ui:search-container-column-text cssClass="number-column" name = "">
+				<p><%=learningActivity.getTitle(themeDisplay.getLocale()) %></p>
+				<%=result %>
+				<%if(status.equals("passed")){%>
+					<liferay-ui:icon image="checked"></liferay-ui:icon>
+				<%}
+				if(status.equals("not-passed")){%>
+					<liferay-ui:icon image="close"></liferay-ui:icon>
+				<%}
+				if(status.equals("started")){%>
+					<liferay-ui:icon image="unchecked"></liferay-ui:icon>
+				<%}%>
+			</liferay-ui:search-container-column-text>
+		<%} %>
+	</liferay-ui:search-container-row>
+ 	<liferay-ui:search-iterator />
+</liferay-ui:search-container>
 
-<%
-for(LearningActivity learningActivity:activities)
-{
-	%>
-	<th>
-	<%=learningActivity.getTitle(themeDisplay.getLocale()) %>
-	</th>
-	<%
-}
-	%>
-	</tr>
-<%
 
-	%>
-	<tr>
+
 	
-	<%
-for(LearningActivity learningActivity:activities)
-{
-	long result=0;
-	String status="not-started";
-	if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(learningActivity.getActId(), usuario.getUserId()))
-			{
-		status="started";
-				
-			LearningActivityResult learningActivityResult=
-				LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), usuario.getUserId());
-			result=learningActivityResult.getResult();
-			if(learningActivityResult.getEndDate()!=null)
-			{
-				status="not-passed"	;
-			}
-			if(learningActivityResult.isPassed())
-			{
-				status="passed"	;
-			}
-			
-			}
-	%>
-	<td>
-	<%=result %>
-	<%if(status.equals("passed"))
-		{%>
-	 <liferay-ui:icon image="checked"></liferay-ui:icon>
-	 <%}
-	%>
-	<%if(status.equals("not-passed"))
-		{%>
-	 <liferay-ui:icon image="close"></liferay-ui:icon>
-	 <%}
-	%>
-	<%if(status.equals("started"))
-		{%>
-	 <liferay-ui:icon image="unchecked"></liferay-ui:icon>
-	 <%}
-	%>
-	</td>
-	<%
-}
-	%>
-	</tr>
-	<%
-
-%>
-</table>
-
-<%
-}
-
-%>

@@ -93,8 +93,7 @@ else
 		<% }  %>
 <%
 	}
-	else if(typeId==0 
-			&& permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")){	
+	else if(typeId==0 && permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")){	
 		%>
 				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 				<liferay-util:include page="/html/execactivity/test/view.jsp" servletContext="<%=this.getServletContext() %>">
