@@ -43,29 +43,9 @@
 		long typeId=learningActivity.getTypeId();
 				
 		if(typeId==8&&(!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
-				permissionChecker.hasPermission(
-				learningActivity.getGroupId(),
-				LearningActivity.class.getName(),
-				actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+				permissionChecker.hasPermission(learningActivity.getGroupId(),	LearningActivity.class.getName(), actId, ActionKeys.UPDATE)||
+				permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
 		{
-			
-			boolean isTeacher=false;
-			
-			for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUserId(), themeDisplay.getScopeGroupId())){
-				if("courseTeacher".equals(role.getName())) {
-					isTeacher=true;
-					break;
-				}
-			}
-				
-			if(isTeacher==false){
-				for(Role role : themeDisplay.getUser().getRoles()){
-					if(RoleConstants.ADMINISTRATOR.equals(role.getName())) {
-						isTeacher=true;
-						break;
-					}
-				}
-			}
 			
 			List<Module> moduleList = (List<Module>)ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 			StringBundler sbTitles = new StringBundler(2 * moduleList.size() - 1);

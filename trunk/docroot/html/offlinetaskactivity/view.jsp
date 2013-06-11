@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
@@ -43,37 +44,16 @@
 		}
 		
 		if(typeId==5&&(!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
-				permissionChecker.hasPermission(
-				activity.getGroupId(),
-				LearningActivity.class.getName(),
-				actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+				permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)||
+				permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
 		{
-
-			
-			boolean isTeacher=false;
-					
-			for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUserId(), themeDisplay.getScopeGroupId())){
-				if("courseTeacher".equals(role.getName())) {
-					isTeacher=true;
-					break;
-				}
-			}
-				
-			if(isTeacher==false){
-				for(Role role : themeDisplay.getUser().getRoles()){
-					if(RoleConstants.ADMINISTRATOR.equals(role.getName())) {
-						isTeacher=true;
-						break;
-					}
-				}
-			}
 		%>
 
 			<div class="offlinetaskactivity view">
 
 				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 										
-				<% if(isTeacher){ %>
+				<% if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){ %>
 				
 				<liferay-portlet:resourceURL var="exportURL" >
 					<portlet:param name="action" value="export"/>
@@ -216,7 +196,7 @@
 				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 				
 				
-				<% if(isTeacher){ 
+				<% if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){ 
 					String criteria = request.getParameter("criteria");
 					String gradeFilter = request.getParameter("gradeFilter");
 

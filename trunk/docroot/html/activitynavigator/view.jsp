@@ -35,10 +35,7 @@ Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScope
 	{
 		Module theModule=ModuleLocalServiceUtil.getModule(moduleId);
 	
-		if(permissionChecker.hasPermission(
-				themeDisplay.getScopeGroupId(),
-				Module.class.getName(), moduleId,
-				"ADD_LACT")|| !ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()))
+		if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),	Module.class.getName(), moduleId, "ADD_LACT")|| !ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()))
 		{
 			activities=LearningActivityServiceUtil.getLearningActivitiesOfModule(moduleId);
 		}
@@ -64,7 +61,7 @@ if(actId>0)
 <portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
 </portlet:actionURL>
 <% 
-	if(LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())&&!permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"ACCESSLOCK"))
+	if(LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())&&!permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"))
 			{
 		%>
 		<div id="nextactivity" class="locked"><span><liferay-ui:message key="next" /></span></div>
@@ -91,7 +88,7 @@ if(actId>0)
 				<portlet:param name="actId" value="<%=Long.toString(prevActivity.getActId()) %>" />
 				</portlet:actionURL>
 				<%
-				if(LearningActivityLocalServiceUtil.islocked(prevActivity.getActId(),themeDisplay.getUserId())&&!permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"ACCESSLOCK"))
+				if(LearningActivityLocalServiceUtil.islocked(prevActivity.getActId(),themeDisplay.getUserId())&&!permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"))
 				{
 					%>
 					<div id="previusactivity" class="locked"><span><liferay-ui:message key="prev" /></span></div>

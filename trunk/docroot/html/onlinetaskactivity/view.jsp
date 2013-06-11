@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
@@ -45,10 +46,8 @@ else
 	long typeId=activity.getTypeId();
 	
 	if(typeId==6&&(!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
-			permissionChecker.hasPermission(
-			activity.getGroupId(),
-			LearningActivity.class.getName(),
-			actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+			permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)||
+			permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
 	{
 
 	String criteria = request.getParameter("criteria");
@@ -80,26 +79,6 @@ else
 <liferay-portlet:param name="jspPage" value="/html/onlineactivity/view.jsp" />	
 </liferay-portlet:renderURL>
 
-<% 
-	boolean isTeacher=false;
-	
-	for(Role role : RoleLocalServiceUtil.getUserGroupRoles(themeDisplay.getUserId(), themeDisplay.getScopeGroupId())){
-		if("courseTeacher".equals(role.getName())) {
-			isTeacher=true;
-			break;
-		}
-	}
-		
-	if(isTeacher==false){
-		for(Role role : themeDisplay.getUser().getRoles()){
-			if(RoleConstants.ADMINISTRATOR.equals(role.getName())) {
-				isTeacher=true;
-				break;
-			}
-		}
-	}
-%>
-		        
 <portlet:renderURL var="viewUrlPopGrades" windowState="<%= LiferayWindowState.POP_UP.toString() %>">   
 	<portlet:param name="actId" value="<%=String.valueOf(activity.getActId()) %>" />      
     <portlet:param name="jspPage" value="/html/onlinetaskactivity/popups/grades.jsp" />           
@@ -123,7 +102,7 @@ else
 			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
 			renderUrl.setParameter('actId', '<%=String.valueOf(activity.getActId()) %>');
 			<%
-			if(isTeacher){
+			if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
 			%>
 			if(!selfGrade) {
 				renderUrl.setParameter('studentId', studentId);
@@ -160,7 +139,7 @@ else
     }
 
 	<%
-	if(isTeacher){
+	if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
 	%>
 
     function <portlet:namespace />doSaveGrades()
@@ -188,7 +167,7 @@ else
 </script>
 
 <%
-if(isTeacher){
+if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
 %>
 
 <div class="student_search"> 
