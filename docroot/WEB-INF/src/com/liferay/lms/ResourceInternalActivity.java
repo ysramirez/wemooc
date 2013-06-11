@@ -8,6 +8,7 @@ import java.util.HashMap;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletConfig;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
@@ -43,6 +44,7 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.dynamicdatamapping.storage.Fields;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.tls.util.liferay.patch.PortalClassInvokerPatched;
 
 /**
  * Portlet implementation class ResourceActivity
@@ -263,5 +265,26 @@ else
      
   
         return dlMainFolderId;
+	}
+	
+	public void invokeTaglibDiscussion(
+			ActionRequest actionRequest, ActionResponse actionResponse)
+		throws Exception {
+		
+		//Se parchea porque da error al hacer comentarios con la clase por defecto del portal.
+		
+		PortletConfig portletConfig = getPortletConfig();
+		
+		PortalClassInvokerPatched.invoke(  // Notar el "Patched"
+            true,
+            "com.liferay.portlet.messageboards.action.EditDiscussionAction",
+            "processAction",
+            new String[] {
+                    "org.apache.struts.action.ActionMapping",
+                    "org.apache.struts.action.ActionForm",
+                    PortletConfig.class.getName(), ActionRequest.class.getName(),
+                    ActionResponse.class.getName()
+            },
+            null, null, portletConfig, actionRequest, actionResponse);
 	}
 }
