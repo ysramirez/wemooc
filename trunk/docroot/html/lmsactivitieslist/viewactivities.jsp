@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.portal.model.PublicRenderParameter"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
@@ -65,7 +66,8 @@ if (moduleId == 0) {
 	if(!permissionChecker.hasPermission(
 			themeDisplay.getScopeGroupId(),
 			Module.class.getName(), moduleId,
-			"ADD_LACT")&& ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()))
+			"ADD_LACT")&& ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()) &&
+			!permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK"))
 	{
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		activities=new ArrayList<LearningActivity>(); 
@@ -195,10 +197,8 @@ Liferay.provide(
 				
 				if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),	activity.getActId(), ActionKeys.VIEW)){
 					if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())||
-							(permissionChecker.hasPermission(
-							activity.getGroupId(),
-							LearningActivity.class.getName(),
-							activity.getActId(), ActionKeys.UPDATE)&&actionEditing)){
+							permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") ||
+							(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE)&&actionEditing)){
 						LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
 						AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
 						String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "");	
