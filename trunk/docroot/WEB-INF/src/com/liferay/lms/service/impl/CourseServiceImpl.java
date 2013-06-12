@@ -267,6 +267,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User parent = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), parentLogin);
 			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);				
 			SocialRelationLocalServiceUtil.addRelation(parent.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_PARENT);
+			SocialRelationLocalServiceUtil.addRelation(student.getUserId(), parent.getUserId(), SocialRelationConstants.TYPE_UNI_CHILD);
 		} catch (PortalException e) {
 		} catch (SystemException e) {
 		}
@@ -276,13 +277,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		try {
-			User parent = UserLocalServiceUtil.getUserByScreenName(
-					serviceContext.getCompanyId(), parentLogin);
-			User student = UserLocalServiceUtil.getUserByScreenName(
-					serviceContext.getCompanyId(), studentLogin);
-			SocialRelationLocalServiceUtil.deleteRelation(parent.getUserId(),
-					student.getUserId(),
-					SocialRelationConstants.TYPE_UNI_PARENT);
+			User parent = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), parentLogin);
+			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);
+			SocialRelationLocalServiceUtil.deleteRelation(parent.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_PARENT);
+			SocialRelationLocalServiceUtil.deleteRelation(student.getUserId(), parent.getUserId(), SocialRelationConstants.TYPE_UNI_CHILD);
 		} catch (Exception e) {
 		}		
 	}
@@ -294,6 +292,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User tutor = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), tutorLogin);
 			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);	
 			SocialRelationLocalServiceUtil.addRelation(tutor.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_SUPERVISOR);
+			SocialRelationLocalServiceUtil.addRelation(student.getUserId(), tutor.getUserId(), SocialRelationConstants.TYPE_UNI_SUBORDINATE);
 		} catch (PortalException e) {
 		} catch (SystemException e) {
 		}
@@ -303,13 +302,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		try {
-			User parent = UserLocalServiceUtil.getUserByScreenName(
-					serviceContext.getCompanyId(), parentLogin);
-			User student = UserLocalServiceUtil.getUserByScreenName(
-					serviceContext.getCompanyId(), studentLogin);
-			SocialRelationLocalServiceUtil.deleteRelation(parent.getUserId(),
-					student.getUserId(),
-					SocialRelationConstants.TYPE_UNI_SUPERVISOR);
+			User tutor = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), parentLogin);
+			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);
+			SocialRelationLocalServiceUtil.deleteRelation(tutor.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_SUPERVISOR);
+			SocialRelationLocalServiceUtil.deleteRelation(student.getUserId(), tutor.getUserId(), SocialRelationConstants.TYPE_UNI_SUBORDINATE);
 		} catch (Exception e) {
 		}		
 	}
