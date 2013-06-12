@@ -265,6 +265,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			
 		//Type especific validations
 		if(!learningActivityType.especificValidations(uploadRequest, actionResponse)){
+			actionResponse.setRenderParameters(uploadRequest.getParameterMap());
 			return;
 		}
 		
