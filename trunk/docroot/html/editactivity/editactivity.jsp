@@ -26,7 +26,7 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 
 <%@ include file="/init.jsp" %>
-
+ <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
 <portlet:actionURL var="saveactivityURL" name="saveActivity" />
 
 <%
@@ -533,3 +533,4 @@ Liferay.provide(
 		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
 	</aui:button-row>
 </aui:form>
+ <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
