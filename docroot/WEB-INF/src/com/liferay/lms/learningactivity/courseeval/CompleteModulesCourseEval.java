@@ -1,6 +1,7 @@
 package com.liferay.lms.learningactivity.courseeval;
 
-import java.util.Locale;
+import java.io.IOException;
+import java.util.List;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
@@ -8,11 +9,22 @@ import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 public class CompleteModulesCourseEval implements CourseEval {
 
 	@Override
+	@SuppressWarnings("unchecked")
 	public void updateCourse(Course course, ModuleResult mresult) throws SystemException 
 	{
 		
@@ -24,7 +36,7 @@ public class CompleteModulesCourseEval implements CourseEval {
 		}
 		if(mresult.isPassed())
 		{
-			java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
+			List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
 			boolean passed=true;
 			long cuantospasados=0;
 			for(Module thmodule:modules)
@@ -53,7 +65,95 @@ public class CompleteModulesCourseEval implements CourseEval {
 		}
 
 	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean updateCourse(Course course, long userId) throws SystemException {
+		
+		CourseResult courseResult=CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), userId);
+		if(courseResult==null)
+		{
+			courseResult=CourseResultLocalServiceUtil.create(course.getCourseId(), userId);
+		}
 
+		List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
+		boolean passed=true;
+		long cuantospasados=0;
+		for(Module thmodule:modules)
+		{
+			if(!ModuleLocalServiceUtil.isUserPassed(thmodule.getModuleId(), userId))
+			{
+				passed=false;
+				
+			}
+			else
+			{
+				cuantospasados++;
+			}
+		}
+		long result=0;
+		if(modules.size()>0)
+		{
+			result=100*cuantospasados/modules.size();
+		}
+		
+		
+			courseResult.setResult(result);
+			courseResult.setPassed(passed);
+			CourseResultLocalServiceUtil.update(courseResult);
+			return true;	
+	}
+	
+	@Override
+	@SuppressWarnings("unchecked")
+	public boolean updateCourse(Course course) throws SystemException {
+		
+		List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
+		try {
+		
+			for(User userOfCourse:UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId())){
+				if(!PermissionCheckerFactoryUtil.create(userOfCourse).hasPermission(course.getGroupCreatedId(), "com.liferay.lms.model",course.getGroupCreatedId(), "VIEW_RESULTS")){
+			
+				CourseResult courseResult=CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), userOfCourse.getUserId());
+				if(courseResult==null)
+				{
+					courseResult=CourseResultLocalServiceUtil.create(course.getCourseId(), userOfCourse.getUserId());
+				}
+				
+	
+				
+				boolean passed=true;
+				long cuantospasados=0;
+				for(Module thmodule:modules)
+				{
+					if(!ModuleLocalServiceUtil.isUserPassed(thmodule.getModuleId(), userOfCourse.getUserId()))
+					{
+						passed=false;
+						
+					}
+					else
+					{
+						cuantospasados++;
+					}
+				}
+				long result=0;
+				if(modules.size()>0)
+				{
+					result=100*cuantospasados/modules.size();
+				}
+			
+				courseResult.setResult(result);
+				courseResult.setPassed(passed);
+				CourseResultLocalServiceUtil.update(courseResult);
+				
+				}				
+			}
+		} catch (Exception e) {
+			throw new SystemException(e);
+		}
+		return true;	
+	}
+	
 	@Override
 	public String getName() {
 		return "Completar Modulos";
@@ -72,6 +172,27 @@ public class CompleteModulesCourseEval implements CourseEval {
 	@Override
 	public boolean getNeedPassPuntuation() {
 		return false;
+	}
+
+	@Override
+	public long getPassPuntuation(Course course) throws DocumentException {
+		throw new RuntimeException();
+	}
+	
+	@Override
+	public JSONObject getEvaluationModel(Course course) throws PortalException,
+			SystemException, DocumentException, IOException {
+		return JSONFactoryUtil.createJSONObject();
+	}
+
+	@Override
+	public void setEvaluationModel(Course course, JSONObject model)
+			throws PortalException, SystemException, DocumentException,
+			IOException {	
+		Document document = SAXReaderUtil.createDocument();
+		Element rootElement = document.addElement("eval");
+		rootElement.addElement("courseEval").setText(CompleteModulesCourseEval.class.getName());		
+		course.setCourseExtraData(document.formattedString());
 	}
 
 }

@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.json.JSONObject"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.OrderFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
@@ -19,6 +21,15 @@
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 	CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
 	
+	JSONObject courseEvalModel = null;
+	try{
+		courseEvalModel = courseEval.getEvaluationModel(course);
+	}
+	catch(Throwable e){
+		courseEvalModel = JSONFactoryUtil.createJSONObject();
+		courseEvalModel.put("evaluations", JSONFactoryUtil.createJSONArray());
+	}
+		
 	PortletURL viewEvaluationsURL = renderResponse.createRenderURL();
 	viewEvaluationsURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
 	viewEvaluationsURL.setParameter("jspPage","/html/evaluationAvg/popups/evaluations.jsp");
@@ -39,9 +50,6 @@
 	    A.<portlet:namespace />EvaluationModel = A.Base.create('<portlet:namespace />EvaluationModel', A.Model, [], {
 	    }, {
 	        ATTRS: {
-	            name: {
-	                value: ''
-	            },
 				weight: {
 					value: 0
 				}
@@ -57,14 +65,14 @@
 	
 	}, '' ,{requires:['model-list']});
 
-	function <portlet:namespace />addEvaluation(evalId, evalName,evalWeight){
+	function <portlet:namespace />addEvaluation(evalId, evalWeight){
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
 			var existingEvaluation=window.<portlet:namespace />selectedEvaluations.getById(evalId);
 			if(existingEvaluation!=null){
 				window.<portlet:namespace />selectedEvaluations.remove(existingEvaluation);
 			}	
 			window.<portlet:namespace />selectedEvaluations.add(
-					new A.<portlet:namespace />EvaluationModel({id:evalId,name:evalName,weight:evalWeight}));
+					new A.<portlet:namespace />EvaluationModel({id:evalId,weight:evalWeight}));
 		});			
 	}
 	
@@ -119,13 +127,16 @@
 									var divError = A.one('#'+evaluationWeight.get('name')+'Error');
 									divError.removeClass('portlet-msg-error');
 									divError.setContent('');
-									<portlet:namespace />deleteEvaluation(evalId)
+									<portlet:namespace />deleteEvaluation(evalId);
 								}
 								else{
-									window.<portlet:namespace />validateEvaluations.validateField(evaluationWeight.get('name'))
-									if(!window.<portlet:namespace />validateEvaluations.getFieldError(window.<portlet:namespace />validateEvaluations.getField(evaluationWeight.get('name')))){
-										var evalId=evaluationWeight.get('id').substring('<portlet:namespace />weight_'.length);
-										alert(evalId);
+									window.<portlet:namespace />validateEvaluations.validateField(evaluationWeight.get('name'));
+									var evalId=evaluationWeight.get('id').substring('<portlet:namespace />weight_'.length);
+									if(!window.<portlet:namespace />validateEvaluations.getFieldError(window.<portlet:namespace />validateEvaluations.getField(evaluationWeight.get('name')))){	
+										<portlet:namespace />addEvaluation(evalId, evaluationWeight.get('value'));
+									}
+									else {
+										<portlet:namespace />deleteEvaluation(evalId);
 									}
 								}
 							});
@@ -166,8 +177,59 @@
 		});		
 	}
 
+	function <portlet:namespace />validatelearningActivitiesSearchContainerSearchContainer(){
+		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
+		if(window.<portlet:namespace />validateEvaluations.hasErrors()) {
+			return confirm('<liferay-ui:message key="evaluationAvg.confirm.message"/>');
+		}
+		else {
+			return true;
+		}
+		});			
+	}
+
+	function <portlet:namespace />doSaveEvaluations(){
+		AUI().use('node-base','json-stringify','<portlet:namespace />eval-model','aui-io-request', function(A) {
+			if(!window.<portlet:namespace />validateEvaluations.hasErrors()){
+                var output= new Object();			
+				<% if(courseEval.getNeedPassPuntuation()) { %>
+				   output['passPuntuation']=A.one('#<portlet:namespace />passPuntuation').get('value');
+				<% }%>
+
+				var outputEvaluations= new Array();
+				var itrOutputEvaluations=0;
+				window.<portlet:namespace />selectedEvaluations.each(
+					function(evalModel){
+						outputEvaluations[itrOutputEvaluations++]={id:evalModel.get('id'),weight:evalModel.get('weight')};
+					}
+				);	
+				output['evaluations']=outputEvaluations;
+
+				A.io.request(
+						'<portlet:actionURL name="saveEvalModel" />',
+						{
+							data: {model:A.JSON.stringify(output)},
+							dataType: 'json',
+							on: {
+								failure: function(event, id, obj) {
+									var portlet = A.one('#p_p_id<portlet:namespace />');
+									portlet.hide();
+									portlet.placeAfter('<div class="portlet-msg-error"><liferay-ui:message key="there-was-an-unexpected-error.-please-refresh-the-current-page"/></div>');
+								},
+								success: function(event, id, obj) {
+									alert(this.get('responseData'));
+								}
+							}
+						}
+					);
+				
+			}
+		});	
+	}
+
 	AUI().ready('node-base','<portlet:namespace />eval-model', function(A) {
 		window.<portlet:namespace />selectedEvaluations = new A.<portlet:namespace />EvaluationModelList();
+		window.<portlet:namespace />selectedEvaluations.add(<%=courseEvalModel.getJSONArray("evaluations").toString() %>);
 
 		var searchContainer = A.one('#<%=renderResponse.getNamespace() %>learningActivitiesSearchContainerSearchContainer').ancestor('.lfr-search-container');
 
@@ -175,7 +237,8 @@
 
 			window.<portlet:namespace />selectedEvaluations.each(
 				function(evalModel){
-					A.all('#<portlet:namespace />weight_'+evalModel.get('id')).each(function(evalModelDiv){ evalModelDiv.setContent(evalModel.get('weight')); });  					 
+					A.all('#<portlet:namespace />weight_'+evalModel.get('id')).each(function(evalModelInput){
+						 evalModelInput.set('value',evalModel.get('weight')); });  					 
 				}
 			);
 			<portlet:namespace />createValidator();	
@@ -189,11 +252,10 @@
 
 <aui:form name="evaluations">
 <% if(courseEval.getNeedPassPuntuation()) { 
-	long passPuntuation = courseEval.getPassPuntuation(course);
 %>
 	<aui:fieldset>
 	    <aui:input type="text" name="passPuntuation" label="evaluationAvg.passPuntuation"
-	               value='<%= (passPuntuation==0)?0:passPuntuation %>' />
+	               value='<%= courseEvalModel.getLong("passPuntuation") %>' />
 	    <div id="<portlet:namespace />passPuntuationError" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.passPuntuation.result-bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    	<%=(SessionErrors.contains(renderRequest, "evaluationAvg.passPuntuation.result-bad-format"))?
@@ -254,35 +316,37 @@
 				
 				function <portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(url){
 
-					var params = {};
-					var urlPieces = url.split('?');
-					if (urlPieces.length > 1) {
-						params = A.QueryString.parse(urlPieces[1]);
-						params.p_p_state='<%=LiferayWindowState.EXCLUSIVE.toString() %>';
-						url = urlPieces[0];
-					}
-	
-					A.io.request(
-						url,
-						{
-							data: params,
-							dataType: 'html',
-							on: {
-								failure: function(event, id, obj) {
-									var portlet = A.one('#p_p_id<portlet:namespace />');
-									portlet.hide();
-									portlet.placeAfter('<div class="portlet-msg-error"><liferay-ui:message key="there-was-an-unexpected-error.-please-refresh-the-current-page"/></div>');
-								},
-								success: function(event, id, obj) {
-									searchContainer.setContent(A.Node.create(this.get('responseData')).one('#<%=renderResponse.getNamespace() %><%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer').ancestor('.lfr-search-container').getContent ());
-									<portlet:namespace />ajaxMode<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(A);
-									searchContainer.fire('ajaxLoaded');
+					if(!((!!<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer)&&
+					     (<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer()))) {
+						var params = {};
+						var urlPieces = url.split('?');
+						if (urlPieces.length > 1) {
+							params = A.QueryString.parse(urlPieces[1]);
+							params.p_p_state='<%=LiferayWindowState.EXCLUSIVE.toString() %>';
+							url = urlPieces[0];
+						}
+
+						A.io.request(
+							url,
+							{
+								data: params,
+								dataType: 'html',
+								on: {
+									failure: function(event, id, obj) {
+										var portlet = A.one('#p_p_id<portlet:namespace />');
+										portlet.hide();
+										portlet.placeAfter('<div class="portlet-msg-error"><liferay-ui:message key="there-was-an-unexpected-error.-please-refresh-the-current-page"/></div>');
+									},
+									success: function(event, id, obj) {
+										searchContainer.setContent(A.Node.create(this.get('responseData')).one('#<%=renderResponse.getNamespace() %><%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer').ancestor('.lfr-search-container').getContent ());
+										<portlet:namespace />ajaxMode<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(A);
+										searchContainer.fire('ajaxLoaded');
+									}
 								}
 							}
-						}
-					);
+						);
+					}
 				}
-
 				
 				<portlet:namespace /><%= searchContainer.getCurParam() %>updateCur = function(box){
 					<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) 
@@ -322,7 +386,7 @@
 </aui:form>
 
 <aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button">
 		<liferay-ui:message key="offlinetaskactivity.save" />
 	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
