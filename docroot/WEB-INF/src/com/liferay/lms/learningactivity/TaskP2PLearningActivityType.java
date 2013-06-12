@@ -1,6 +1,7 @@
 package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.portlet.PortletRequest;
@@ -32,6 +33,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.announcements.EntryDisplayDateException;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class TaskP2PLearningActivityType extends BaseLearningActivityType {
@@ -77,6 +79,9 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 		PortletRequest actionRequest = (PortletRequest)uploadRequest.getAttribute(
 				JavaConstants.JAVAX_PORTLET_REQUEST);
 		boolean validate=true;
+		
+		Date upload = getDateFromRequest(uploadRequest,"upload");
+		Date end = getDateFromRequest(uploadRequest,"stop");
 
 		if((Validator.isNotNull(uploadRequest.getParameter("numValidaciones")))&&
 				(!Validator.isNumber(uploadRequest.getParameter("numValidaciones"))))
@@ -84,7 +89,37 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			SessionErrors.add(actionRequest, "p2ptaskactivity.editActivity.numValidaciones.number");
 			validate=false;
 		}
+		
+		if(upload.after(end))
+		{
+			SessionErrors.add(actionRequest, "p2ptaskactivity.editActivity.dateupload.afteractivity");
+			validate=false;
+			System.out.println(" ERROR EN FECHA");
+		}
+		
 		return validate;
+	}
+	
+	private Date getDateFromRequest(UploadRequest uploadRequest, String key){
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		int uploadMonth = ParamUtil.getInteger(uploadRequest, key+"Mon");
+		int uploadYear = ParamUtil.getInteger(uploadRequest, key+"Year");
+		int uploadDay = ParamUtil.getInteger(uploadRequest, key+"Day");
+		int uploadHour = ParamUtil.getInteger(uploadRequest, key+"Hour");
+		int uploadMinute = ParamUtil.getInteger(uploadRequest, key+"Min");
+		int uploadAMPM = ParamUtil.getInteger(uploadRequest, key+"AMPM");
+		
+		if (uploadAMPM > 0) {
+			uploadHour += 12;
+		}
+		
+		try {
+			return PortalUtil.getDate(uploadMonth, uploadDay, uploadYear, uploadHour, uploadMinute, themeDisplay.getTimeZone(),  (Class<? extends PortalException>)null);
+		} catch (PortalException e) {}
+		
+		return null;
 	}
 	
 	@Override
@@ -141,6 +176,44 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 				result = SAXReaderUtil.createElement("result");
 				result.setText(Boolean.toString(ParamUtil.get(uploadRequest,"result",false)));		
 				rootElement.add(result);	
+				
+				Element fileOptional=rootElement.element("fileoptional");
+				if(fileOptional!=null)
+				{
+					fileOptional.detach();
+					rootElement.remove(fileOptional);
+				}
+				fileOptional = SAXReaderUtil.createElement("fileoptional");
+				fileOptional.setText(Boolean.toString(ParamUtil.get(uploadRequest,"fileoptional",false)));		
+				rootElement.add(fileOptional);	
+				
+				
+				int uploadMonth = ParamUtil.getInteger(uploadRequest, "uploadMon");
+				int uploadYear = ParamUtil.getInteger(uploadRequest, "uploadYear");
+				int uploadDay = ParamUtil.getInteger(uploadRequest, "uploadDay");
+				int uploadHour = ParamUtil.getInteger(uploadRequest, "uploadHour");
+				int uploadMinute = ParamUtil.getInteger(uploadRequest, "uploadMin");
+				int uploadAMPM = ParamUtil.getInteger(uploadRequest, "uploadAMPM");
+				
+				if (uploadAMPM > 0) {
+					uploadHour += 12;
+				}
+				
+				Date uploadDate = PortalUtil.getDate(uploadMonth, uploadDay, uploadYear, uploadHour, uploadMinute, (Class<? extends PortalException>)null);
+	
+				SimpleDateFormat formatUploadDate = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+				formatUploadDate.setTimeZone(themeDisplay.getTimeZone());
+					
+				Element dateUpload=rootElement.element("dateupload");
+				if(dateUpload!=null)
+				{
+					dateUpload.detach();
+					rootElement.remove(dateUpload);
+				}
+				dateUpload = SAXReaderUtil.createElement("dateupload");
+				dateUpload.setText(formatUploadDate.format(uploadDate));		
+				rootElement.add(dateUpload);	
+				
 			}
 		
 			learningActivity.setExtracontent(document.formattedString());

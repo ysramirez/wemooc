@@ -88,3 +88,4 @@ url='<%= newactivityURL %>'
 	<liferay-ui:search-iterator />
 
 </liferay-ui:search-container>
+</div>

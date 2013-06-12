@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
@@ -15,16 +16,77 @@
 
 <%
 	long moduleId=ParamUtil.getLong(renderRequest,"resModuleId",0);
+
 	boolean anonimous=false;
 	boolean result=false;
 	boolean disabled=false;
 	boolean newOrCourseEditor=true;
+	boolean fileOptional = false;
+	
+	String dateUpload = "";
+
+	SimpleDateFormat formatDay = new SimpleDateFormat("dd");
+	formatDay.setTimeZone(timeZone);
+	SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
+	formatMonth.setTimeZone(timeZone);
+	SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+	formatYear.setTimeZone(timeZone);
+	SimpleDateFormat formatHour = new SimpleDateFormat("HH");
+	formatHour.setTimeZone(timeZone);
+	SimpleDateFormat formatMin = new SimpleDateFormat("mm");
+	formatMin.setTimeZone(timeZone);
+
+	Date today = new Date(System.currentTimeMillis());
+
+	int uploadDay = Integer.parseInt(formatDay.format(today));
+	int uploadMonth = Integer.parseInt(formatMonth.format(today)) - 1;
+	int uploadYear = Integer.parseInt(formatYear.format(today)) + 1;
+	int uploadHour = Integer.parseInt(formatHour.format(today));
+	int uploadMin = Integer.parseInt(formatMin.format(today));
+	
 	long numEvaluaciones = TaskP2PLearningActivityType.DEFAULT_VALIDATION_NUMBER;
+	
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
 		anonimous = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"anonimous"));
 		result = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"result"));
+		
+		fileOptional = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"fileoptional"));
+		
 		numEvaluaciones = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"validaciones"));
+		
+		fileOptional = StringPool.TRUE .equals(LearningActivityLocalServiceUtil .getExtraContentValue( learningActivity.getActId(), "fileoptional"));
+		
+		String validaciones = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"validaciones");
+		if (!validaciones.equals("") && Validator.isNumber(validaciones)) {
+			numEvaluaciones = Long.parseLong(validaciones);
+		}
+		
+		dateUpload = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"dateupload");
+
+		if (!dateUpload.equals("")) {
+
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+			dateFormat.setTimeZone(timeZone);
+
+			Date date = dateFormat.parse(dateUpload);
+
+			uploadDay = Integer.parseInt(formatDay.format(date));
+			uploadMonth = Integer.parseInt(formatMonth.format(date)) - 1;
+			uploadYear = Integer.parseInt(formatYear.format(date));
+			uploadHour = Integer.parseInt(formatHour.format(date));
+			uploadMin = Integer.parseInt(formatMin.format(date));
+
+		} else {
+
+			uploadDay = Integer.parseInt(formatDay.format(learningActivity.getEnddate())) - 1;
+			uploadMonth = Integer.parseInt(formatMonth.format(learningActivity.getEnddate())) - 1;
+			uploadYear = Integer.parseInt(formatYear.format(learningActivity.getEnddate()));
+			uploadHour = Integer.parseInt(formatHour.format(learningActivity.getEnddate()));
+			uploadMin = Integer.parseInt(formatMin.format(learningActivity.getEnddate()));
+
+		}
+		
 		disabled=P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
@@ -98,8 +160,39 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 	ignoreRequestValue="true"></aui:input>
 <aui:input type="checkbox" name="result" label="test.result" checked="<%=result %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))||disabled %>" 
 	ignoreRequestValue="true"></aui:input>
+	
+<aui:input type="checkbox" name="fileoptional" label="p2ptaskactivity.edit.fileoptional" checked="<%=fileOptional%>" disabled="<%=(notModuleEditable && (!newOrCourseEditor)) || disabled%>" ignoreRequestValue="true" />	
+	
+<aui:field-wrapper label="p2ptaskactivity.edit.dateUpload">
+
+	<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"
+		yearNullable="false" dayNullable="false" monthNullable="false"
+		dayParam="uploadDay" monthParam="uploadMon" yearParam="uploadYear"
+		yearValue="<%=uploadYear%>" monthValue="<%=uploadMonth%>"
+		dayValue="<%=uploadDay%>">
+	</liferay-ui:input-date>
+
+	<liferay-ui:input-time minuteParam="uploadMin" amPmParam="uploadAMPM"
+		hourParam="uploadHour" hourValue="<%=uploadHour%>"
+		minuteValue="<%=uploadMin%>">
+	</liferay-ui:input-time>
+
+</aui:field-wrapper>
+
+<div id="<portlet:namespace />updateDate"
+	class="<%=((SessionErrors.contains(renderRequest,
+					"p2ptaskactivity.editActivity.dateupload.afteractivity"))) ? "portlet-msg-error"
+					: StringPool.BLANK%>">
+	<%=(SessionErrors.contains(renderRequest,
+					"p2ptaskactivity.editActivity.dateupload.afteractivity")) ? LanguageUtil
+					.get(pageContext,
+							"p2ptaskactivity.editActivity.dateupload.afteractivity")
+					: StringPool.BLANK%>
+</div>
+	
 <aui:input type="text" size="3" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))||disabled %>" 
 	ignoreRequestValue="true"></aui:input>
+	
 <div id="<portlet:namespace />numValidacionesError" class="<%=((SessionErrors.contains(renderRequest, "p2ptaskactivity.editActivity.numValidaciones.required"))||
 												      (SessionErrors.contains(renderRequest, "p2ptaskactivity.editActivity.numValidaciones.number"))||
 												      (SessionErrors.contains(renderRequest, "p2ptaskactivity.editActivity.numValidaciones.range")))?

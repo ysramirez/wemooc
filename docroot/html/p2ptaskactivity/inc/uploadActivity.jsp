@@ -1,3 +1,5 @@
+<%@page import="java.text.SimpleDateFormat"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="com.liferay.portal.service.persistence.PortletUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
@@ -26,6 +28,25 @@ String uploadCorrect = ParamUtil.getString(request, "uploadCorrect", "false");
 Long userId = themeDisplay.getUserId();
 P2pActivity myP2PActivity = P2pActivityLocalServiceUtil.findByActIdAndUserId(actId, userId);
 long p2pActivityId = 0;
+
+boolean isDateExpired = false; 
+String dateUpload = LearningActivityLocalServiceUtil.getExtraContentValue(actId,"dateupload");
+Date date = new Date();
+if(!dateUpload.equals("")){
+	
+	Date now = new Date();
+	SimpleDateFormat dateFormatZone = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+	dateFormat.setTimeZone(themeDisplay.getTimeZone());
+	
+	date = dateFormat.parse(dateUpload);
+
+	dateUpload = dateFormatZone.format(date);
+
+	if(now.after(date)){
+		isDateExpired = true;
+	}
+}
 
 %>
 
@@ -218,18 +239,43 @@ Liferay.provide(
 			<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 		</div>
 		<%
-	}else{%>
+	} 
+
+	//Si ha pasado la fecha de entrega.
+	else if(isDateExpired){
+	%>
+		<h3 class="dateexpired"><liferay-ui:message key="p2ptaskactivity.dateexpired" /></h3>
+		<div class="description">
+			<p class="color_tercero"><liferay-ui:message key="p2ptaskactivity.dateexpired.message" arguments="<%=dateUpload%>" /></p>
+		</div>
+	<%			
+	}
+	else
+	{
+	%>
 		<form name="<portlet:namespace />fm_1" id="<portlet:namespace />fm_1" action="<%=addP2PActivity%>" method="POST" enctype="multipart/form-data" >
 			<aui:input name="actId" type="hidden" value="<%=actId %>" />
 			<aui:input name="p2pActivityId" type="hidden" value="<%=p2pActivityId %>" />
+			
+			<c:if test="<%=!dateUpload.equals(\"\") %>">
+				<div class="description">
+					<p><liferay-ui:message key="p2ptaskactivity.dateexpire" arguments="<%=dateUpload%>" /></p>
+				</div>
+			</c:if>
+			
 			<% String clearText = "javascript:"+renderResponse.getNamespace()+"clearText();"; %>
 			<div class="container-textarea">
 				<aui:input name="description" type="textarea" label="" onfocus="<%= clearText %>" rows="6" cols="90" value="<%=StringEscapeUtils.unescapeHtml(textCorrection) %>" id="description" />
 			</div>
 			<liferay-ui:error key="p2ptaskactivity-error-file-size" message="p2ptaskactivity.error.file.size" />
 			<div class="container-file">
-				<aui:input inlineLabel="left" inlineField="true"
-						  	name="fileName" id="fileName" type="file" value="" />
+				<c:if test="<%=StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId, \"fileoptional\")) %>">
+					<span class="optionalfile optional-yes"><liferay-ui:message key="p2ptaskactivity.optionalfile.yes" /></span>
+				</c:if>
+				<c:if test="<%=!StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId, \"fileoptional\")) %>">
+					<span class="optionalfile optional-no"><liferay-ui:message key="p2ptaskactivity.optionalfile.no" /></span>
+				</c:if>
+				<aui:input inlineLabel="left" inlineField="true" name="fileName" id="fileName" type="file" value="" />
 			</div>
 			<!--
 			<div>
