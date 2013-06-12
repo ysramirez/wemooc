@@ -327,7 +327,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			LearningActivityLocalServiceUtil.updateLearningActivity(larn);
 			learningActivityType.afterInsertOrUpdate(uploadRequest,actionResponse,larn);
 		}
-		SessionMessages.add(uploadRequest, "activity-saved-successfully");
+		SessionMessages.add(actionRequest, "activity-saved-successfully");
 		WindowState windowState = actionRequest.getWindowState();
 		if (redirect != null && !"".equals(redirect)) {
 			if (!windowState.equals(LiferayWindowState.POP_UP)) {
