@@ -1,7 +1,9 @@
 package com.liferay.lms.portlet.p2p;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -44,6 +46,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -86,6 +89,15 @@ public class P2PActivityPortlet extends MVCPortlet {
 		try{
 			UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(request);
 			ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+			
+			ServiceContext serviceContext = null;
+			try {
+				serviceContext = ServiceContextFactory.getInstance(request);
+			} catch (PortalException e1) {
+				e1.printStackTrace();
+			} catch (SystemException e1) {
+				e1.printStackTrace();
+			}
 						
 			//Obtenemos los campos necesarios.
 			User user = UserLocalServiceUtil.getUser(themeDisplay.getUserId());
@@ -123,28 +135,48 @@ public class P2PActivityPortlet extends MVCPortlet {
 			//Solo puede subir una P2pActivity por Activity.
 			P2pActivity p2pAc = P2pActivityLocalServiceUtil.findByActIdAndUserId(actId, user.getUserId());
 			
+			//Obtener si es obligatorio el fichero en las p2p.
+			boolean fileoptional = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "fileoptional"));
+			
 			if(p2pAc==null){
-				if((description!=null && !description.equals(""))  && (fileName!=null && !fileName.equals(""))){
-					
-					long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-					//Obtenermos el Id de directorio. Creamos el directorio si no existe.
-					long folderId = createDLFolders(user.getUserId(), repositoryId, request);
-					
-					//Subimos el Archivo en la Document Library
-					ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
-					//Damos permisos al archivo para usuarios de comunidad.
-					serviceContext.setAddGroupPermissions(true);
-					FileEntry document = DLAppLocalServiceUtil.addFileEntry(
-						user.getUserId(), repositoryId , folderId , fileName, mimeType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContext );
+
+				//Cuando el fichero es obligatorio y no esta seleccionado.
+				if( !fileoptional &&  (fileName == null || fileName.equals("")) ){
+					SessionErrors.add(request, "campos-necesarios-vacios");
+				}
+				else if( description != null && !description.equals("") ){
 					
 					//Registramos la actividad p2p del usuario.
 					P2pActivity p2pActivity = new P2pActivityImpl();
 					p2pActivity.setActId(actId);		
 					p2pActivity.setDate(new Date(System.currentTimeMillis()));
-					p2pActivity.setFileEntryId(document.getFileEntryId());
+
 					p2pActivity.setUserId(user.getUserId());
 					p2pActivity.setDescription(description);
 					p2pActivity.setP2pActivityId(p2pActivityId);
+				
+					//Subimos el fichero si existe. Si llegamos aqui y no existe, es que no es obligatorio.
+					if( fileName != null && !fileName.equals("") ){
+						
+						long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+						//Obtenermos el Id de directorio. Creamos el directorio si no existe.
+						long folderId = createDLFolders(user.getUserId(), repositoryId, request);
+						
+						System.out.println(" folderId " + folderId);
+
+						//Subimos el Archivo en la Document Library
+						InputStream is = new FileInputStream(file);
+						DLFileEntry dlDocument = DLFileEntryLocalServiceUtil.addFileEntry(serviceContext.getUserId(), groupId, groupId,folderId,fileName, mimeType, title, description, "Importation", 0, null, null , is, file.length(), serviceContext);
+						
+						//Damos permisos al archivo para usuarios de comunidad.
+						DLFileEntryLocalServiceUtil.addFileEntryResources(dlDocument, true, false);
+						//Asociamos con el fichero subido.
+						p2pActivity.setFileEntryId(dlDocument.getFileEntryId());
+						
+						System.out.println(" dlDocument.getFileEntryId() " + dlDocument.getFileEntryId());
+					}
+					
+					//Añadir la actividad a bd
 					P2pActivityLocalServiceUtil.addP2pActivity(p2pActivity);
 					
 					//Creamos el LearningActivityTry
@@ -158,11 +190,10 @@ public class P2PActivityPortlet extends MVCPortlet {
 					P2PActivityPortlet.sendMailP2pDone(user, actId, themeDisplay);
 					
 					request.setAttribute("latId", learningTry.getLatId());
-				}
-				else{
-					SessionErrors.add(request, "campos-necesarios-vacios");
+					
 				}
 			}
+			
 			request.setAttribute("actId", actId);
 			response.setRenderParameter("uploadCorrect", "true");
 			response.setRenderParameter("jspPage","/html/p2ptaskactivity/view.jsp");
