@@ -7,6 +7,8 @@
 <%@ page contentType="application/json" %>
 <%@ include file="/init.jsp"%>
 <%
+   renderResponse.setProperty(
+		"clear-request-parameters", Boolean.TRUE.toString());
    response.setContentType("application/json");
    response.setHeader("Content-Disposition", "inline");
    JSONObject jsonObject = JSONFactoryUtil.createJSONObject();

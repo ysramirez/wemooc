@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.OrderFactoryUtil"%>
@@ -139,6 +140,10 @@
 										<portlet:namespace />deleteEvaluation(evalId);
 									}
 								}
+								var divResult = A.one('#<portlet:namespace />evaluationResult');
+								divResult.removeClass('portlet-msg-error');
+								divResult.removeClass('portlet-msg-success');
+								divResult.setContent('');
 							});
 					}
 			});
@@ -217,7 +222,31 @@
 									portlet.placeAfter('<div class="portlet-msg-error"><liferay-ui:message key="there-was-an-unexpected-error.-please-refresh-the-current-page"/></div>');
 								},
 								success: function(event, id, obj) {
-									alert(this.get('responseData'));
+									var responseData = this.get('responseData');
+									var divResult = A.one('#<portlet:namespace />evaluationResult');
+									if(responseData.responseCode==1){
+										divResult.removeClass('portlet-msg-error');
+										divResult.addClass('portlet-msg-success');
+									}
+									else{
+										divResult.addClass('portlet-msg-error');
+										divResult.removeClass('portlet-msg-success');
+									}
+									divResult.setContent('');
+									
+									var messageList = A.Node.create('<ul></ul>');
+									if(responseData.messages.length==1){
+										divResult.setContent(responseData.messages[0]);
+									}
+									else {
+										for (var i = 0; i < responseData.messages.length; i++) {
+											var messageItem = A.Node.create('<li></li>');  
+											messageItem.setContent(responseData.messages[i]);   
+											messageList.appendChild(messageItem);
+										}
+										divResult.appendChild(messageList);
+									}
+
 								}
 							}
 						}
@@ -242,9 +271,14 @@
 				}
 			);
 			<portlet:namespace />createValidator();	
+
+			var divResult = A.one('#<portlet:namespace />evaluationResult');
+			divResult.removeClass('portlet-msg-error');
+			divResult.removeClass('portlet-msg-success');
+			divResult.setContent('');
 		});
 
-		<portlet:namespace />createValidator();		
+		searchContainer.fire('ajaxLoaded');
 	});
 
 //-->
@@ -393,6 +427,11 @@
 		<liferay-ui:message key="offlinetaskactivity.cancel" />
 	</button>
 </aui:button-row>
-<liferay-ui:success key="offlinetaskactivity.grades.updating" message="offlinetaskactivity.correct.saved" />
-<liferay-ui:error key="offlinetaskactivity.grades.bad-updating" message="offlinetaskactivity.grades.bad-updating" />
-
+<liferay-ui:success key="evaluationAvg.updating" message="evaluationAvg.saved" />
+<liferay-ui:error key="evaluationAvg.bad-updating" message="evaluationAvg.bad-updating" />
+<div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.bad-updating"))?
+									   "portlet-msg-error":((SessionMessages.contains(renderRequest, "evaluationAvg.updating"))?
+									   "portlet-msg-success":StringPool.BLANK) %>">
+	<%=(SessionErrors.contains(renderRequest, "evaluationAvg.bad-updating"))?LanguageUtil.get(pageContext,"evaluationAvg.bad-updating"):
+	    ((SessionMessages.contains(renderRequest, "evaluationAvg.updating"))?LanguageUtil.get(pageContext,"evaluationAvg.updating"):StringPool.BLANK) %>
+</div>

@@ -80,7 +80,7 @@
 					            resizable: true,
 					            after: {   
 						          	close: function(event){ 
-						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'));	
+						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
 					            	}
 					            }
 					        }).plug(A.Plugin.IO, {
