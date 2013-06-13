@@ -194,7 +194,8 @@ public class EvaluationAvgPortlet extends MVCPortlet {
             if(errors.isEmpty()) {
 				courseEval.setEvaluationModel(course, jsonObjectModel);
 				CourseLocalServiceUtil.updateCourse(course);
-	    		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[49]); //1   
+	    		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[49]); //1 
+	    		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.updating")});  
             }
             else{
 	    		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0   
@@ -214,7 +215,7 @@ public class EvaluationAvgPortlet extends MVCPortlet {
 	public void doView(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
 		
-		if(ParamUtil.getBoolean(renderRequest, WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,false)) {
+		if(ParamUtil.getBoolean(renderRequest, WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,false)){
 			super.doView(renderRequest, renderResponse);
 		}
 		else {
