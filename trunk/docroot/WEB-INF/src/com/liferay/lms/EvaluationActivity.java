@@ -352,7 +352,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 			actId=ParamUtil.getLong(renderRequest, "actId", 0);
 		}
 					
-		if(actId==8)// TODO Auto-generated method stub
+		if(actId==0)// TODO Auto-generated method stub
 		{
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		}
@@ -363,7 +363,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 					long typeId=activity.getTypeId();
 					
-					if(typeId==5)
+					if(typeId==8)
 					{
 						super.render(renderRequest, renderResponse);
 					}
