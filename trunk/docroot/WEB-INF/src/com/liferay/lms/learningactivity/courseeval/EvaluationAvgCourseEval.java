@@ -1,10 +1,13 @@
 package com.liferay.lms.learningactivity.courseeval;
 
 import java.io.IOException;
+import java.text.DateFormat;
 import java.util.Collection;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.liferay.lms.model.Course;
@@ -23,6 +26,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -33,6 +37,9 @@ import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 public class EvaluationAvgCourseEval implements CourseEval {
+	
+	private static DateFormat _dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:sszzz",Locale.US);
 		
 	@SuppressWarnings("unchecked")
 	private Map<Long,Long> getEvaluations(Course course, Element rootElement) throws SystemException,DocumentException{
@@ -50,7 +57,7 @@ public class EvaluationAvgCourseEval implements CourseEval {
 		List<Long> actIdsInDatabase = 
 				LearningActivityLocalServiceUtil.dynamicQuery(
 				DynamicQueryFactoryUtil.forClass(LearningActivity.class)
-				.add(PropertyFactoryUtil.forName("typeId").eq(8))
+				//.add(PropertyFactoryUtil.forName("typeId").eq(8))
 				.add(PropertyFactoryUtil.forName("actId").in((Collection<Object>)(Collection<?>)evaluations.keySet()))
 				.setProjection(ProjectionFactoryUtil.property("actId")));
 		
@@ -192,6 +199,16 @@ public class EvaluationAvgCourseEval implements CourseEval {
 		Document document=SAXReaderUtil.read(course.getCourseExtraData());
 		Element rootElement =document.getRootElement();
 		JSONObject model = JSONFactoryUtil.createJSONObject();
+			
+		try {
+			Element firedDateElement = rootElement.element("firedDate");
+			if(firedDateElement!=null){
+				Date firedDate =(Date)_dateFormat.parseObject(firedDateElement.getTextTrim());
+				model.put("firedDate", firedDate);
+			}
+		} catch (Throwable e) {
+		}	
+			
 		model.put("passPuntuation", Long.toString(GetterUtil.getLong(rootElement.elementText("passPuntuation"))));
 		List<Element> evaluations = rootElement.elements("evaluation");
 		if(!evaluations.isEmpty()){
@@ -214,9 +231,29 @@ public class EvaluationAvgCourseEval implements CourseEval {
 	public void setEvaluationModel(Course course, JSONObject model)
 			throws PortalException, SystemException, DocumentException,
 			IOException {
-		Document document = SAXReaderUtil.createDocument();
-		Element rootElement = document.addElement("eval");
+		
+		Document document = null;
+		Element rootElement = null;
+		Date firedDate = null;
+		if((course.getCourseExtraData()!=null)&&(course.getCourseExtraData().trim().length()!=0)){
+			try {
+				document=SAXReaderUtil.read(course.getCourseExtraData());
+				rootElement =document.getRootElement();
+				Element firedDateElement = rootElement.element("firedDate");
+				if(firedDateElement!=null){
+					firedDate =(Date)_dateFormat.parseObject(firedDateElement.getTextTrim());
+				}
+			} catch (Throwable e) {
+			}	
+		}
+	
+		document = SAXReaderUtil.createDocument();
+		rootElement = document.addElement("eval");
 		rootElement.addElement("courseEval").setText(EvaluationAvgCourseEval.class.getName());
+		if(firedDate!=null){
+			rootElement.addElement("firedDate").setText(_dateFormat.format(firedDate));
+		}
+		
 		rootElement.addElement("passPuntuation").setText(Long.toString(model.getLong("passPuntuation")));
 		JSONArray jsonArray = model.getJSONArray("evaluations");
 		if(jsonArray!=null){		
