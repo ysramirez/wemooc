@@ -1,4 +1,6 @@
 
+<%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.json.JSONObject"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.EvaluationAvgPortlet"%>
 <%@page import="com.liferay.portal.service.ResourceBlockLocalServiceUtil"%>
@@ -51,8 +53,18 @@
 
 				<h2><%=course.getTitle(themeDisplay.getLocale()) %></h2>
 										
-				<% if(isTeacher){ %>
+				<% if(isTeacher){ 
 				
+					JSONObject courseEvalModel = null;
+					try{
+						courseEvalModel = courseEval.getEvaluationModel(course);
+					}
+					catch(Throwable e){
+						courseEvalModel = JSONFactoryUtil.createJSONObject();
+					}
+
+				%>
+
 				<portlet:renderURL var="viewEvaluationsURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
 		        	<portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>     
 		            <portlet:param name="jspPage" value="/html/evaluationAvg/popups/evaluations.jsp" />           
@@ -63,9 +75,13 @@
 					<portlet:param name="ajaxAction" value="setGrades" />      
 		            <portlet:param name="jspPage" value="/html/evaluationAvg/popups/grades.jsp" />           
 		        </portlet:renderURL>
-
+		        		        
 				<script type="text/javascript">
 			    <!--
+					<% 
+					   if(!courseEvalModel.has("firedDate")) {
+					%>
+      
 				    function <portlet:namespace />showPopupEvaluations()
 				    {
 	
@@ -90,15 +106,29 @@
 						});
 				    }
 
+					<% 
+					   if(courseEvalModel.has("evaluations")) {
+					%>
 
-				    function <portlet:namespace />showPopupGrades(studentId)
+				    function <portlet:namespace />calculateEvaluation()
+				    {
+						if(confirm('<liferay-ui:message key="evaluationAvg.calculate.confirm" />')){
+							location.href='<portlet:actionURL name="updateCourse" />';
+						}  	
+				    }
+
+					<% 
+					   }}
+					%>
+
+				    function <portlet:namespace />showPopupGrades(userId)
 				    {
 
 						AUI().use('aui-dialog','liferay-portlet-url', function(A){
 							var renderUrl = Liferay.PortletURL.createRenderURL();							
 							renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
 							renderUrl.setPortletId('<%=portletDisplay.getId()%>');
-							renderUrl.setParameter('studentId', studentId);
+							renderUrl.setParameter('userId', userId);
 							renderUrl.setParameter('jspPage', '/html/evaluationAvg/popups/grades.jsp');
 
 							window.<portlet:namespace />popupGrades = new A.Dialog({
@@ -106,73 +136,49 @@
 					            title: '<%=LanguageUtil.format(pageContext, "evaluationAvg.set.grades", new Object[]{})%>',
 					            centered: true,
 					            modal: true,
-					            width: 1000,
-					            height: 750,
 					            after: {   
 						          	close: function(event){ 
-						          		document.getElementById('<portlet:namespace />studentsearch').submit();
+						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
 					            	}
 					            }
 					        }).plug(A.Plugin.IO, {
 					            uri: renderUrl.toString(),
 					            parseContent: true
-					        }).render();
-							window.<portlet:namespace />popupGrades.show();   
+					        }).render().show();   
 						});
-				    }
 
-				    function <portlet:namespace />doClosePopupGrades()
-				    {
-				        AUI().use('aui-dialog', function(A) {
-				        	A.DialogManager.closeByChild('#<portlet:namespace />showPopupGrades');
-				        });
-				    }
-
-				    function <portlet:namespace />doSaveGrades()
-				    {
-				        AUI().use('aui-io-request','io-form', function(A) {
-				            A.io.request('<%= setGradesURL %>', { 
-				                method : 'POST', 
-				                form: {
-				                    id: '<portlet:namespace />fn_grades'
-				                },
-				                dataType : 'html', 
-				                on : { 
-				                    success : function() { 
-				                    	A.one('.aui-dialog-bd form').set('innerHTML',A.Node.create('<div>'+this.get('responseData')+'</div>').one('form').get('innerHTML'));	
-				                    	createValidator();			                    	
-				                    } 
-				                } 
-				            });
-				        });
 				    }
 			
 				    //-->
 				</script>
 				
-				<aui:button-row>
-					<button name="Calculate" value="calculate" onclick="<portlet:namespace />showPopupEvaluations();" type="button">
-						<liferay-ui:message key="evaluationAvg.calculate" />
-					</button>
-				</aui:button-row>
-
+				<% 
+				   if(!courseEvalModel.has("firedDate")) {
+				%>
+				
 				<liferay-ui:icon
 				image="add"
 				label="<%= true %>"
-				message="evaluationAvg.import.grades"
-				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'
+				message="evaluationAvg.evaluation.configuration"
+				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupEvaluations();" %>'
 				/>
-				<% } %>
+				<% 
+				   if(courseEvalModel.has("evaluations")) {
+				%>
+				<aui:button-row>
+					<button name="Calculate" value="calculate" onclick="<portlet:namespace />calculateEvaluation();" type="button">
+						<liferay-ui:message key="evaluationAvg.calculate" />
+					</button>
+				</aui:button-row>
+						
+				<% }}} %>
 				<h5><liferay-ui:message key="evaluationAvg.description" />  </h5>
 				<p><%=course.getDescription(themeDisplay.getLocale()) %></p>
 				
 				
 				<% if(isTeacher){ 
-					String criteria = request.getParameter("criteria");
-					String gradeFilter = request.getParameter("gradeFilter");
-
-					if (criteria == null) criteria = "";	
-					if (gradeFilter == null) gradeFilter = "";	
+					String criteria = ParamUtil.get(request,"criteria",StringPool.BLANK);
+					String gradeFilter = ParamUtil.get(request,"gradeFilter",StringPool.BLANK);
 					
 					PortletURL portletURL = renderResponse.createRenderURL();
 					portletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");
@@ -269,15 +275,26 @@
 									   %><liferay-ui:message key="<%=failedStudentMessageKey %>"  arguments="<%=
 											   new Object[]{courseResult.getResult(),passPuntuation} %>" /><%
 								   }
+								   %>
+								   <portlet:actionURL name="reCalculate" var="reCalculateURL">
+								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+								   </portlet:actionURL>
+						            <p class="see-more">
+									<a href="<%=reCalculateURL %>">
+										<liferay-ui:message key="evaluationAvg.recalculate"/>
+									</a>
+									</p>
+								     <p class="see-more">
+									<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
+										<liferay-ui:message key="evaluationAvg.set.grades"/>
+									</a>
+									</p>
+								<%
 							  
 			               	}else{
 								   %><liferay-ui:message key="evaluationAvg.student.without.qualification" /><% 
 							}%>
-			            <p class="see-more">
-							<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
-								<liferay-ui:message key="evaluationAvg.set.grades"/>
-							</a>
-						</p>
+
 					</liferay-ui:search-container-column-text>
 					</liferay-ui:search-container-row>
 					
@@ -290,7 +307,9 @@
 				
 				<div class="nota"> 
 
-<%if (result!=null){ %>
+<%
+	if(!isTeacher){ 
+	if (result!=null){ %>
 	<h2><liferay-ui:message key="evaluationAvg.result.title" /></h2>
 	<p><liferay-ui:message key="evaluationAvg.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
 	<%
@@ -317,7 +336,7 @@
 %>
 	<p class="nota_nocorregida"><liferay-ui:message key="evaluationAvg.not.qualificated.activity" /></p>
 <% 
-	
+}	
 }%>
 
 </div>
