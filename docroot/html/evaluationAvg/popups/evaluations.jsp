@@ -105,7 +105,7 @@
 		        	<portlet:namespace />passPuntuation: {
 		        		required: '<liferay-ui:message key="evaluationAvg.passPuntuation.required" />',
 		        		number: '<liferay-ui:message key="evaluationAvg.passPuntuation.number" />',
-		        		range: '<liferay-ui:message key="evaluationAvg.passPuntuation.range" />',       		
+		        		range: '<liferay-ui:message key="evaluationAvg.passPuntuation.range" />'     		
 		            }
 				};
 
@@ -120,7 +120,7 @@
 
 						fieldStrings[evaluationWeight.get('id')] = {
 								number: '<liferay-ui:message key="evaluationAvg.weight.number" />',
-				        		range: '<liferay-ui:message key="evaluationAvg.weight.range" />',   
+				        		range: '<liferay-ui:message key="evaluationAvg.weight.range" />'  
 							};
 
 						evaluationWeight.on('input',function(){
@@ -183,14 +183,13 @@
 	}
 
 	function <portlet:namespace />validatelearningActivitiesSearchContainerSearchContainer(){
+		var _return=true;
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
-		if(window.<portlet:namespace />validateEvaluations.hasErrors()) {
-			return confirm('<liferay-ui:message key="evaluationAvg.confirm.message"/>');
-		}
-		else {
-			return true;
-		}
-		});			
+			if(window.<portlet:namespace />validateEvaluations.hasErrors()) {
+				_return=confirm('<liferay-ui:message key="evaluationAvg.confirm.message"/>');
+			}
+		});		
+		return _return;	
 	}
 
 	function <portlet:namespace />doSaveEvaluations(){
@@ -332,10 +331,10 @@
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.weight" title="evaluationAvg.evaluation.weight">
 				<aui:input type="text" label="" name="<%=\"weight_\"+evaluation.getActId() %>"  />
-				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".result-bad-format"))?
+				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
-	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".result-bad-format"))?
-	    															LanguageUtil.get(pageContext,"evaluationAvg.weight_"+evaluation.getActId()+".result-bad-format"):StringPool.BLANK %>
+	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
+	    															LanguageUtil.get(pageContext,"evaluationAvg.weight.bad-format"):StringPool.BLANK %>
 	    		</div>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
@@ -349,9 +348,9 @@
 				var searchContainer = A.one('#<%=renderResponse.getNamespace() %><%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer').ancestor('.lfr-search-container');
 				
 				function <portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(url){
-
-					if(!((!!<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer)&&
-					     (<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer()))) {
+				     
+					if((!!<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer)&&
+					     (<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer())) {
 						var params = {};
 						var urlPieces = url.split('?');
 						if (urlPieces.length > 1) {
@@ -427,8 +426,6 @@
 		<liferay-ui:message key="offlinetaskactivity.cancel" />
 	</button>
 </aui:button-row>
-<liferay-ui:success key="evaluationAvg.updating" message="evaluationAvg.saved" />
-<liferay-ui:error key="evaluationAvg.bad-updating" message="evaluationAvg.bad-updating" />
 <div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.bad-updating"))?
 									   "portlet-msg-error":((SessionMessages.contains(renderRequest, "evaluationAvg.updating"))?
 									   "portlet-msg-success":StringPool.BLANK) %>">
