@@ -50,8 +50,6 @@
 		%>
 
 			<div class="evaluationAvg view">
-
-				<h2><%=course.getTitle(themeDisplay.getLocale()) %></h2>
 										
 				<% if(isTeacher){ 
 				
@@ -133,7 +131,7 @@
 
 							window.<portlet:namespace />popupGrades = new A.Dialog({
 								id:'<portlet:namespace />showPopupGrades',
-					            title: '<%=LanguageUtil.format(pageContext, "evaluationAvg.set.grades", new Object[]{})%>',
+					            title: '<%=LanguageUtil.get(pageContext, "evaluationAvg.set.grade")%>',
 					            centered: true,
 					            modal: true,
 					            after: {   
@@ -171,19 +169,15 @@
 					</button>
 				</aui:button-row>
 						
-				<% }}} %>
-				<h5><liferay-ui:message key="evaluationAvg.description" />  </h5>
-				<p><%=course.getDescription(themeDisplay.getLocale()) %></p>
+				<% }}
 				
+				String criteria = ParamUtil.get(request,"criteria",StringPool.BLANK);
+				String gradeFilter = ParamUtil.get(request,"gradeFilter",StringPool.BLANK);
 				
-				<% if(isTeacher){ 
-					String criteria = ParamUtil.get(request,"criteria",StringPool.BLANK);
-					String gradeFilter = ParamUtil.get(request,"gradeFilter",StringPool.BLANK);
-					
-					PortletURL portletURL = renderResponse.createRenderURL();
-					portletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");
-					portletURL.setParameter("criteria", criteria); 
-					portletURL.setParameter("gradeFilter", gradeFilter);
+				PortletURL portletURL = renderResponse.createRenderURL();
+				portletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");
+				portletURL.setParameter("criteria", criteria); 
+				portletURL.setParameter("gradeFilter", gradeFilter);
 				
 				%>
 				
