@@ -126,7 +126,7 @@
 
 						AUI().use('aui-dialog','liferay-portlet-url', function(A){
 							var renderUrl = Liferay.PortletURL.createRenderURL();							
-							renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
+							renderUrl.setWindowState('<%= LiferayWindowState.EXCLUSIVE.toString() %>');
 							renderUrl.setPortletId('<%=portletDisplay.getId()%>');
 							renderUrl.setParameter('userId', userId);
 							renderUrl.setParameter('jspPage', '/html/evaluationAvg/popups/grades.jsp');
