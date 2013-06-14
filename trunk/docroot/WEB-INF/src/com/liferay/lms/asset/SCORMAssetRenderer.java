@@ -5,6 +5,7 @@ import java.util.Locale;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.LearningActivity;
@@ -77,6 +78,16 @@ public class SCORMAssetRenderer extends BaseAssetRenderer {
 						"actId",Long.toString( _learningactivity.getActId()));
 				return portletURL;
 			}
+			
+			@Override
+			public PortletURL getURLView(
+					LiferayPortletResponse liferayPortletResponse,
+					WindowState windowState)
+				throws Exception {
+
+				return null;
+			}
+			
 			@Override
 			public String getURLViewInContext(
 					LiferayPortletRequest liferayPortletRequest,

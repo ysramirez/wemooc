@@ -15,6 +15,7 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.model.LearningActivityResult;
+import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.base.LearningActivityResultServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -68,5 +69,11 @@ public class LearningActivityResultServiceImpl
 	{
 		User user=this.getUser();
 		return learningActivityResultLocalService.userPassed(actId, user.getUserId());
+	}
+	@JSONWebService
+	public LearningActivityResult update(long latId, long result, String tryResultData) throws PortalException, SystemException
+	{
+		User user=this.getUser();
+		return learningActivityResultLocalService.update(latId, result, tryResultData, user.getUserId());
 	}
 }

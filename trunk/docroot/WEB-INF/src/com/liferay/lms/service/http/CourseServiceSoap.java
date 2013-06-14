@@ -289,10 +289,10 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static void setTutor(java.lang.String parentLogin,
+	public static void setTutor(java.lang.String tutorLogin,
 		java.lang.String studentLogin) throws RemoteException {
 		try {
-			CourseServiceUtil.setTutor(parentLogin, studentLogin);
+			CourseServiceUtil.setTutor(tutorLogin, studentLogin);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

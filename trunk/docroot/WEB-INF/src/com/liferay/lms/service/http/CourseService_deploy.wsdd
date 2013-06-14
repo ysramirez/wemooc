@@ -63,7 +63,7 @@
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="studentLogin" type="tns:string"></parameter>
 		</operation>
 		<operation xmlns:operNS="urn:http.service.lms.liferay.com" name="setTutor" qname="operNS:setTutor" soapAction="">
-			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="parentLogin" type="tns:string"></parameter>
+			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="tutorLogin" type="tns:string"></parameter>
 			<parameter xmlns:tns="http://www.w3.org/2001/XMLSchema" qname="studentLogin" type="tns:string"></parameter>
 		</operation>
 		<operation xmlns:operNS="urn:http.service.lms.liferay.com" name="unsetParent" qname="operNS:unsetParent" soapAction="">

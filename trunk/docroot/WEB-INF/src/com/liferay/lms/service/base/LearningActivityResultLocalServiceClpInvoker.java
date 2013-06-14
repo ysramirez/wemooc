@@ -118,37 +118,43 @@ public class LearningActivityResultLocalServiceClpInvoker {
 				"com.liferay.lms.model.LearningActivityTry"
 			};
 
-		_methodName119 = "existsLearningActivityResult";
+		_methodName119 = "update";
 
-		_methodParameterTypes119 = new String[] { "long", "long" };
+		_methodParameterTypes119 = new String[] {
+				"long", "long", "java.lang.String", "long"
+			};
 
-		_methodName120 = "userPassed";
+		_methodName120 = "existsLearningActivityResult";
 
 		_methodParameterTypes120 = new String[] { "long", "long" };
 
-		_methodName121 = "countPassed";
+		_methodName121 = "userPassed";
 
-		_methodParameterTypes121 = new String[] { "long" };
+		_methodParameterTypes121 = new String[] { "long", "long" };
 
-		_methodName122 = "countNotPassed";
+		_methodName122 = "countPassed";
 
 		_methodParameterTypes122 = new String[] { "long" };
 
-		_methodName123 = "avgResult";
+		_methodName123 = "countNotPassed";
 
 		_methodParameterTypes123 = new String[] { "long" };
 
-		_methodName124 = "countStarted";
+		_methodName124 = "avgResult";
 
 		_methodParameterTypes124 = new String[] { "long" };
 
-		_methodName125 = "triesPerUser";
+		_methodName125 = "countStarted";
 
 		_methodParameterTypes125 = new String[] { "long" };
 
-		_methodName126 = "getByActIdAndUserId";
+		_methodName126 = "triesPerUser";
 
-		_methodParameterTypes126 = new String[] { "long", "long" };
+		_methodParameterTypes126 = new String[] { "long" };
+
+		_methodName127 = "getByActIdAndUserId";
+
+		_methodParameterTypes127 = new String[] { "long", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -257,43 +263,50 @@ public class LearningActivityResultLocalServiceClpInvoker {
 
 		if (_methodName119.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes119, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.existsLearningActivityResult(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
+			return LearningActivityResultLocalServiceUtil.update(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				(java.lang.String)arguments[2], ((Long)arguments[3]).longValue());
 		}
 
 		if (_methodName120.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes120, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.userPassed(((Long)arguments[0]).longValue(),
+			return LearningActivityResultLocalServiceUtil.existsLearningActivityResult(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName121.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes121, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.countPassed(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.userPassed(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName122.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes122, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.countNotPassed(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.countPassed(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName123.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes123, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.avgResult(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.countNotPassed(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName124.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes124, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.countStarted(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.avgResult(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName125.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes125, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.triesPerUser(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.countStarted(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName126.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
+			return LearningActivityResultLocalServiceUtil.triesPerUser(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName127.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
 			return LearningActivityResultLocalServiceUtil.getByActIdAndUserId(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
@@ -355,4 +368,6 @@ public class LearningActivityResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes125;
 	private String _methodName126;
 	private String[] _methodParameterTypes126;
+	private String _methodName127;
+	private String[] _methodParameterTypes127;
 }

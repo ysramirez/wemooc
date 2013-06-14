@@ -83,41 +83,41 @@ public class CourseServiceClpInvoker {
 
 		_methodParameterTypes124 = new String[] {  };
 
-		_methodName125 = "addUser";
-
-		_methodParameterTypes125 = new String[] {
-				"java.lang.String", "java.lang.String", "java.lang.String",
-				"java.lang.String", "boolean", "boolean", "boolean"
-			};
-
-		_methodName126 = "updateUser";
+		_methodName126 = "addUser";
 
 		_methodParameterTypes126 = new String[] {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.lang.String", "boolean", "boolean", "boolean"
 			};
 
-		_methodName127 = "setParent";
+		_methodName127 = "updateUser";
 
 		_methodParameterTypes127 = new String[] {
-				"java.lang.String", "java.lang.String"
+				"java.lang.String", "java.lang.String", "java.lang.String",
+				"java.lang.String", "boolean", "boolean", "boolean"
 			};
 
-		_methodName128 = "unsetParent";
+		_methodName128 = "setParent";
 
 		_methodParameterTypes128 = new String[] {
 				"java.lang.String", "java.lang.String"
 			};
 
-		_methodName129 = "setTutor";
+		_methodName129 = "unsetParent";
 
 		_methodParameterTypes129 = new String[] {
 				"java.lang.String", "java.lang.String"
 			};
 
-		_methodName130 = "unsetTutor";
+		_methodName130 = "setTutor";
 
 		_methodParameterTypes130 = new String[] {
+				"java.lang.String", "java.lang.String"
+			};
+
+		_methodName131 = "unsetTutor";
+
+		_methodParameterTypes131 = new String[] {
 				"java.lang.String", "java.lang.String"
 			};
 	}
@@ -206,19 +206,9 @@ public class CourseServiceClpInvoker {
 			return CourseServiceUtil.myCourses();
 		}
 
-		if (_methodName125.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes125, parameterTypes)) {
-			CourseServiceUtil.addUser((java.lang.String)arguments[0],
-				(java.lang.String)arguments[1], (java.lang.String)arguments[2],
-				(java.lang.String)arguments[3],
-				((Boolean)arguments[4]).booleanValue(),
-				((Boolean)arguments[5]).booleanValue(),
-				((Boolean)arguments[6]).booleanValue());
-		}
-
 		if (_methodName126.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
-			CourseServiceUtil.updateUser((java.lang.String)arguments[0],
+			CourseServiceUtil.addUser((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1], (java.lang.String)arguments[2],
 				(java.lang.String)arguments[3],
 				((Boolean)arguments[4]).booleanValue(),
@@ -228,24 +218,34 @@ public class CourseServiceClpInvoker {
 
 		if (_methodName127.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
-			CourseServiceUtil.setParent((java.lang.String)arguments[0],
-				(java.lang.String)arguments[1]);
+			CourseServiceUtil.updateUser((java.lang.String)arguments[0],
+				(java.lang.String)arguments[1], (java.lang.String)arguments[2],
+				(java.lang.String)arguments[3],
+				((Boolean)arguments[4]).booleanValue(),
+				((Boolean)arguments[5]).booleanValue(),
+				((Boolean)arguments[6]).booleanValue());
 		}
 
 		if (_methodName128.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
-			CourseServiceUtil.unsetParent((java.lang.String)arguments[0],
+			CourseServiceUtil.setParent((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
 		}
 
 		if (_methodName129.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
-			CourseServiceUtil.setTutor((java.lang.String)arguments[0],
+			CourseServiceUtil.unsetParent((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
 		}
 
 		if (_methodName130.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
+			CourseServiceUtil.setTutor((java.lang.String)arguments[0],
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName131.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
 			CourseServiceUtil.unsetTutor((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
 		}
@@ -283,8 +283,6 @@ public class CourseServiceClpInvoker {
 	private String[] _methodParameterTypes123;
 	private String _methodName124;
 	private String[] _methodParameterTypes124;
-	private String _methodName125;
-	private String[] _methodParameterTypes125;
 	private String _methodName126;
 	private String[] _methodParameterTypes126;
 	private String _methodName127;
@@ -295,4 +293,6 @@ public class CourseServiceClpInvoker {
 	private String[] _methodParameterTypes129;
 	private String _methodName130;
 	private String[] _methodParameterTypes130;
+	private String _methodName131;
+	private String[] _methodParameterTypes131;
 }

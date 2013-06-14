@@ -44,7 +44,8 @@ Liferay.Service.registerClass(
 		getByActId: true,
 		getByActIdAndUser: true,
 		userPassed: true,
-		userLoginPassed: true
+		userLoginPassed: true,
+		update: true
 	}
 );
 

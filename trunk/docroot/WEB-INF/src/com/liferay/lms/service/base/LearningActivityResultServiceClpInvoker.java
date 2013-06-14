@@ -46,6 +46,12 @@ public class LearningActivityResultServiceClpInvoker {
 		_methodName105 = "userLoginPassed";
 
 		_methodParameterTypes105 = new String[] { "long", "java.lang.String" };
+
+		_methodName106 = "update";
+
+		_methodParameterTypes106 = new String[] {
+				"long", "long", "java.lang.String"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -82,6 +88,12 @@ public class LearningActivityResultServiceClpInvoker {
 				(java.lang.String)arguments[1]);
 		}
 
+		if (_methodName106.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes106, parameterTypes)) {
+			return LearningActivityResultServiceUtil.update(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(), (java.lang.String)arguments[2]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -97,4 +109,6 @@ public class LearningActivityResultServiceClpInvoker {
 	private String[] _methodParameterTypes104;
 	private String _methodName105;
 	private String[] _methodParameterTypes105;
+	private String _methodName106;
+	private String[] _methodParameterTypes106;
 }

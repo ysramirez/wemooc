@@ -1580,6 +1580,9 @@
 			<security-role-ref>
 				<role-name>user</role-name>
 			</security-role-ref>
+			<supported-public-render-parameter>actId</supported-public-render-parameter>
+			<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+	        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 		</portlet>
 		
 		
@@ -1679,8 +1682,5 @@
     <public-render-parameter>
 		<identifier>categoryId</identifier>
 		<qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryId</qname>
-		</public-render-parameter>
-
-
-
+	</public-render-parameter>
 </portlet-app>
