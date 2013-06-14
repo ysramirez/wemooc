@@ -72,6 +72,7 @@ function <portlet:namespace />back() {
 
 <%
 long assetId=0;
+Boolean openWindow = true;
 String assetTitle=StringPool.BLANK;
 
 if(request.getAttribute("activity")!=null) {	
@@ -82,6 +83,8 @@ if(request.getAttribute("activity")!=null) {
 			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(
 				GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"assetEntry")));
 			assetId=entry.getEntryId();
+			
+			openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
 			
 			AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());
 			AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());			
@@ -102,6 +105,9 @@ if(request.getAttribute("activity")!=null) {
 	    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 	</button>
+</aui:field-wrapper>
+<aui:field-wrapper name="scormactivity.edit.openwindow">
+	<aui:input type="checkbox" name="openWindow" value="<%= String.valueOf(openWindow) %>" />
 </aui:field-wrapper>
 	
 <div id="<portlet:namespace/>backButton" style="display:none;">

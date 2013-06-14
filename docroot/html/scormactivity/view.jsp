@@ -1,271 +1,283 @@
-<%@page import="com.liferay.portal.kernel.util.PropsKeys"%>
-<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.util.VideoProcessorUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.util.PDFProcessorUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.util.ImageProcessorUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.util.AudioProcessorUtil"%>
-<%@page import="com.liferay.portal.kernel.repository.model.FileVersion"%>
-<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
+<%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
+<%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
+<%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
+<%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
+<%@page import="com.liferay.taglib.portlet.RenderURLTag"%>
+<%@page import="com.liferay.lms.model.LearningActivityResult"%>
+<%@page import="com.liferay.lms.service.impl.LearningActivityResultLocalServiceImpl"%>
+<%@page import="java.util.HashMap"%>
 <%@page import="com.liferay.portal.kernel.xml.Element"%>
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
 <%@page import="com.liferay.portal.kernel.xml.Document"%>
-<%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
-<%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.service.DLFileVersionLocalServiceUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.model.DLFileVersion"%>
-<%@page import="com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil"%>
-<%@page import="com.liferay.portlet.documentlibrary.model.DLFileEntry"%>
-<%@page import="com.liferay.portlet.journal.model.JournalArticle"%>
+<%@page import="java.util.Hashtable"%>
+<%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.TestAnswer"%>
+<%@page import="com.liferay.lms.service.TestAnswerLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.TestQuestion"%>
+<%@page import="com.liferay.lms.service.TestQuestionLocalServiceUtil"%>
 <%@page import="com.liferay.portal.service.ServiceContextFactory"%>
 <%@page import="com.liferay.portal.service.ServiceContext"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
-<%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
-<%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
-<%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
-<%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
-<%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
-<%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
-<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
-<%@ include file="/init.jsp" %>
+<%@page import="javax.portlet.RenderResponse"%>
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
+<%@page import="java.util.Collections"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.ArrayList"%>
+<%@page import="com.liferay.portal.kernel.xml.Element"%>
+<%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
+<%@page import="com.liferay.util.JavaScriptUtil"%>
+
+<%@ include file="/init.jsp"%>
+
 <%
-long actId=ParamUtil.getLong(request,"actId",0);
+	long actId=ParamUtil.getLong(request,"actId",0);
+	boolean improve =ParamUtil.getBoolean(request, "improve",false);
+	long userId = themeDisplay.getUserId();
+	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
-if(actId==0 )
-{
-	
-	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-}
-else
-{
 
-	LearningActivity learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
-	
-	if(learnact.getTypeId()!=9 )
-	{
-		
+	//Obtener si puede hacer un intento de mejorar el resultado.
+	boolean improving = false;
+	LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+	if (result != null) {
+		int done =  LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId,userId);
+		LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		if(result.getResult() < 100
+		   && !LearningActivityLocalServiceUtil.islocked(actId, userId)
+		   && LearningActivityResultLocalServiceUtil.userPassed(actId, userId)
+		   && done < act.getTries()){
+			improving = true;
+		}
+	}
+
+
+	if (actId==0) {
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+	} else {
+		LearningActivity activity=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		long typeId=activity.getTypeId();
+		
+		if( typeId==9
+		&& (!LearningActivityLocalServiceUtil.islocked(actId,userId)
+		|| permissionChecker.hasPermission( activity.getGroupId(),LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
+		|| permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+		{
+%>
+
+<h2><%=activity.getTitle(themeDisplay.getLocale())%></h2>
+<p><%=activity.getDescription(themeDisplay.getLocale())%></p>
+
+<%
+	if((!LearningActivityLocalServiceUtil.islocked(actId,userId)
+	|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
+	|| permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+		{		
+		if((!improve) && (LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())))
+		{
+			request.setAttribute("learningActivity",activity);
+			request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
+		}
+		else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
+		|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
+		|| permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"ACCESSLOCK")
+	    || improving )
+		{
+
+	ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
+	long activityTimestamp=0;
+	long timestamp=0;
+	
+	LearningActivityTry learningTry = LearningActivityTryLocalServiceUtil.getLearningActivityTryNotFinishedByActUser(actId,userId);
+	
+	//Comprobar si tenemos un try sin fecha de fin, para continuar en ese try.
+	if(learningTry == null)
+	{
+		learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
 	}
 	else
 	{
-		if(!LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
-		{
-			ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
+		activityTimestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"timeStamp"));
+		timestamp=activityTimestamp*1000 - (new Date().getTime() - learningTry.getStartDate().getTime());
+	}
+	
+	if((activityTimestamp!=0)&&(timestamp<0)){
+		request.setAttribute("learningActivity",activity);
+		request.setAttribute("larntry",learningTry);
+%>
+<liferay-util:include page="/html/execactivity/test/expired.jsp"
+	servletContext="<%=this.getServletContext()%>">
+	<liferay-util:param value="<%=Long.toString(activity.getActId())%>"
+		name="actId" />
+</liferay-util:include>
+<%
+	}
+	else {
+	Object [] arg =  new Object [] { activity.getPasspuntuation() };
+%>
 
-			LearningActivityTry learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
-			learningTry.setEndDate(new java.util.Date(System.currentTimeMillis()));
-			learningTry.setResult(100);
-			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningTry);
+<% if (activity.getPasspuntuation() > 0) { %>
+<h3><liferay-ui:message key="scormactivity.try.pass.puntuation" arguments="<%= arg %>" /></h3>
+<% }
+String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
+if ("true".equals(openWindow) && !themeDisplay.isStateMaximized()) { %>
+				<liferay-portlet:renderURL var="scormwindow" windowState="<%= LiferayWindowState.MAXIMIZED.toString() %>"/>
+				<script type="text/javascript">
+					function abrirActividad() {
+						ventana = window.open('<%= scormwindow %>', "scormactivity");
+						return ventana;
+					}
+					abrirActividad();
+				</script>
+				
+				<liferay-ui:message key="scormactivity.openwindow"></liferay-ui:message>
+				
+				<a href="<%= scormwindow %>" target="_blank" >Go</a>
+				<%
+			} else {
 			
-
-		}
-		if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals("") )
-		{
-			
-			long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"assetEntry"),0);
+			long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"assetEntry"),0);
 			
 			if(entryId!=0)
 			{
 				AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(entryId);
 				AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
 				AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
-				String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
-				if(!entry.getClassName().equals(JournalArticle.class.getName()))
-				{
-					%>
-					<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-					<%
-					
-				}
-				if(entry.getClassName().equals(DLFileEntry.class.getName()))
-				{
-					
-					FileEntry fileEntry=DLAppLocalServiceUtil.getFileEntry(entry.getClassPK());
-					long fileEntryId = fileEntry.getFileEntryId();
-					long folderId = fileEntry.getFolderId();
-					String extension = fileEntry.getExtension();
-					String title = fileEntry.getTitle();
-
-					FileVersion fileVersion = fileEntry.getFileVersion();
-					long fileEntryTypeId = 0;
-					if (fileVersion.getModel() instanceof DLFileVersion) {
-						DLFileVersion dlFileVersion = (DLFileVersion)fileVersion.getModel();
-
-						fileEntryTypeId = dlFileVersion.getFileEntryTypeId();
-					}
-					boolean hasAudio = AudioProcessorUtil.hasAudio(fileVersion);
-					boolean hasImages = ImageProcessorUtil.hasImages(fileVersion);
-					boolean hasPDFImages = PDFProcessorUtil.hasImages(fileVersion);
-					boolean hasVideo = VideoProcessorUtil.hasVideo(fileVersion);
-					int previewFileCount = 0;
-					String previewFileURL = null;
-					String[] previewFileURLs = null;
-					String videoThumbnailURL = null;
-
-					String previewQueryString = null;
-
-					if (hasAudio) {
-						previewQueryString = "&audioPreview=1";
-					}
-					else if (hasImages) {
-						previewQueryString = "&imagePreview=1";
-					}
-					else if (hasPDFImages) {
-						previewFileCount = PDFProcessorUtil.getPreviewFileCount(fileVersion);
-
-						previewQueryString = "&previewFileIndex=";
-
-						previewFileURL = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, previewQueryString);
-					}
-					else if (hasVideo) {
-						previewQueryString = "&videoPreview=1";
-
-						videoThumbnailURL = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, "&videoThumbnail=1");
-					}
-
-					if (Validator.isNotNull(previewQueryString)) {
-						if (hasAudio) {
-							previewFileURLs = new String[PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_AUDIO_CONTAINERS).length];
-
-							for (int i = 0; i < PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_AUDIO_CONTAINERS).length; i++) {
-								previewFileURLs[i] = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, previewQueryString + "&type=" + PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_AUDIO_CONTAINERS)[i]);
+				String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT); %>
+				<% themeDisplay.setIncludeServiceJs(true); %>
+				<script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
+				<script type="text/javascript">
+					localStorage.removeItem('scormpool');
+				</script>
+				<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>"></liferay-util:include>
+				<script type="text/javascript">
+		
+					var update_scorm = function(e) {
+						var scormpool = localStorage['scormpool'];
+						var results = JSON.parse(scormpool, function (key, value) {
+							var type;
+						    if (value && typeof value === 'object') {
+						        type = value.type;
+						        if (typeof type === 'string' && typeof window[type] === 'function') {
+						            return new (window[type])(value);
+						        }
+						    }
+						    return value;
+						});
+						var orgs = results.organizations;
+						var org = null;
+						for (var key in orgs) {
+							if (orgs.hasOwnProperty(key)) {
+								org = orgs[key];
+								break;
 							}
 						}
-						else if (hasVideo) {
-							if (PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_VIDEO_CONTAINERS).length > 0) {
-								previewFileURLs = new String[PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_VIDEO_CONTAINERS).length];
-
-								for (int i = 0; i <PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_VIDEO_CONTAINERS).length; i++) {
-									previewFileURLs[i] = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, previewQueryString + "&type=" + PropsUtil.getArray(PropsKeys.DL_FILE_ENTRY_PREVIEW_VIDEO_CONTAINERS)[i]);
+						if (org != null) {
+							var lessons = org.cmi;
+							var lesson = null;
+							for (var key2 in lessons) {
+								if (lessons.hasOwnProperty(key2)) {
+									lesson = lessons[key2];
+									break;
 								}
 							}
-							else {
-								previewFileURLs = new String[1];
-
-								previewFileURLs[0] = videoThumbnailURL;
+							if (lesson != null) {
+								var lesson_success_status = lesson["cmi.success_status"].value;
+								var lesson_completion_status = lesson["cmi.completion_status"].value;
+								var lesson_score_raw = lesson["cmi.score.raw"].value;
+								var lesson_score_min = lesson["cmi.score.min"].value;
+								var lesson_score_max = lesson["cmi.score.max"].value;
+								
+								var lesson_score = lesson["cmi.score.scaled"].value;
+								
+								if (lesson_score < 0) {
+									lesson_score = 0;
+								} else {
+									lesson_score *= 100;
+								}				
+								
+								// if (estado finished) launch service
+								if (lesson_completion_status == 'completed') {
+									var serviceParameterTypes = [
+							      		'long',
+							      		'long',
+							      		'java.lang.String'
+							      	];
+												 		
+							      	Liferay.Service.Lms.LearningActivityResult.update(
+							      		{
+							      			latId: <%= learningTry.getLatId() %>,
+							      			result: lesson_score,
+							      			tryResultData: JSON.stringify(lesson),
+							      			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
+							      		},
+							      		function(message) {
+							                 var exception = message.exception;
+							
+							                 if (!exception) {
+							                     // Process Success - A LearningActivityResult returned
+							                 	console.log(message);
+							                 }
+							                 else {
+							                     // Process Exception
+							                 	
+							                 }
+							             }
+							      	);
+								} else if (lesson_completion_status == 'incomplete') {
+									
+								} else if (lesson_completion_status == 'not attempted') {
+									
+								} else if (lesson_completion_status == 'unknown') {
+									
+								}
+							
 							}
 						}
-						else {
-							previewFileURLs = new String[1];
-
-							previewFileURLs[0] = DLUtil.getPreviewURL(fileEntry, fileVersion, themeDisplay, previewQueryString);
-						}
-
-						previewFileURL = previewFileURLs[0];
-
-						if (!hasPDFImages) {
-							previewFileCount = 1;
-						}
+					};
+					
+					if(window.addEventListener) {
+					    window.addEventListener('scormevent', update_scorm, false);
+					} else {
+					    window.attachEvent('onscormevent', update_scorm);
 					}
-
-					request.setAttribute("view_file_entry.jsp-supportedAudio", String.valueOf(hasAudio));
-					request.setAttribute("view_file_entry.jsp-supportedVideo", String.valueOf(hasVideo));
-
-					request.setAttribute("view_file_entry.jsp-previewFileURLs", previewFileURLs);
-					request.setAttribute("view_file_entry.jsp-videoThumbnailURL", videoThumbnailURL);
-					%>
-					<c:choose>
-							<c:when test="<%= previewFileCount == 0 %>">
-								<c:if test="<%= AudioProcessorUtil.isAudioSupported(fileVersion) || ImageProcessorUtil.isImageSupported(fileVersion) || PDFProcessorUtil.isDocumentSupported(fileVersion) || VideoProcessorUtil.isVideoSupported(fileVersion) %>">
-									<div class="portlet-msg-info">
-										<liferay-ui:message key="generating-preview-will-take-a-few-minutes" />
-									</div>
-								</c:if>
-							</c:when>
-							<c:otherwise>
-								<c:choose>
-									<c:when test="<%= hasAudio %>">
-										<div class="lfr-preview-audio" id="<portlet:namespace />previewFile">
-											<div class="lfr-preview-audio-content" id="<portlet:namespace />previewFileContent"></div>
-										</div>
-
-										<liferay-util:include page="/html/portlet/document_library/player.jsp" />
-									</c:when>
-									<c:when test="<%= hasImages %>">
-										<div class="lfr-preview-file lfr-preview-image" id="<portlet:namespace />previewFile">
-											<div class="lfr-preview-file-content lfr-preview-image-content" id="<portlet:namespace />previewFileContent">
-												<div class="lfr-preview-file-image-current-column">
-													<div class="lfr-preview-file-image-container">
-														<img class="lfr-preview-file-image-current" src="<%= previewFileURL %>" />
-													</div>
-												</div>
-											</div>
-										</div>
-									</c:when>
-									<c:when test="<%= hasVideo %>">
-										<div class="lfr-preview-file lfr-preview-video" id="<portlet:namespace />previewFile">
-											<div class="lfr-preview-file-content lfr-preview-video-content">
-												<div class="lfr-preview-file-video-current-column">
-													<div id="<portlet:namespace />previewFileContent"></div>
-												</div>
-											</div>
-										</div>
-
-										<liferay-util:include page="/html/portlet/document_library/player.jsp" />
-									</c:when>
-									<c:otherwise>
-										<div class="lfr-preview-file" id="<portlet:namespace />previewFile">
-											<div class="lfr-preview-file-content" id="<portlet:namespace />previewFileContent">
-												<div class="lfr-preview-file-image-current-column">
-													<div class="lfr-preview-file-image-container">
-														<img class="lfr-preview-file-image-current" id="<portlet:namespace />previewFileImage" src="<%= previewFileURL + "1" %>" />
-													</div>
-													<span class="lfr-preview-file-actions aui-helper-hidden" id="<portlet:namespace />previewFileActions">
-														<span class="lfr-preview-file-toolbar" id="<portlet:namespace />previewToolbar"></span>
-
-														<span class="lfr-preview-file-info">
-															<span class="lfr-preview-file-index" id="<portlet:namespace />previewFileIndex">1</span> of <span class="lfr-preview-file-count"><%= previewFileCount %></span>
-														</span>
-													</span>
-												</div>
-
-												<div class="lfr-preview-file-images" id="<portlet:namespace />previewImagesContent">
-													<div class="lfr-preview-file-images-content"></div>
-												</div>
-											</div>
-										</div>
-
-										<aui:script use="aui-base,liferay-preview">
-											new Liferay.Preview(
-												{
-													actionContent: '#<portlet:namespace />previewFileActions',
-													baseImageURL: '<%= previewFileURL %>',
-													boundingBox: '#<portlet:namespace />previewFile',
-													contentBox: '#<portlet:namespace />previewFileContent',
-													currentPreviewImage: '#<portlet:namespace />previewFileImage',
-													imageListContent: '#<portlet:namespace />previewImagesContent',
-													maxIndex: <%= previewFileCount %>,
-													previewFileIndexNode: '#<portlet:namespace />previewFileIndex',
-													toolbar: '#<portlet:namespace />previewToolbar'
-												}
-											).render();
-										</aui:script>
-									</c:otherwise>
-								</c:choose>
-							</c:otherwise>
-						</c:choose>
-					</div>			<%
-				}
-				else
-				{
-			%>
-				<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
+	
+				</script>
 				<%
-				}
 			}
-		}
-		else
-		{
-			%>
-			<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-			<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>
-			
-		<%
 		}
 	}
 }
+//Si no ha pasado el test, ni tiene mas intentos.
+else {
+	//LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+	Object[] arguments = new Object[] { result.getResult() };
+	Object[] arg = new Object[] { activity.getPasspuntuation() };
+%>
+<h2><%=activity.getTitle(themeDisplay.getLocale())%></h2>
+<p>
+	<liferay-ui:message key="test-done" />
+</p>
+<p>
+	<liferay-ui:message key="your-result" arguments="<%=arguments%>" />
+</p>
+<p class="color_tercero negrita">
+	<liferay-ui:message key="your-result-dont-pass" arguments="<%=arg%>" />
+</p>
+<p>
+	<liferay-ui:message key="your-result-no-more-tries" />
+</p>
+<%
+	}
+
+			}
+		}
+	}
 %>

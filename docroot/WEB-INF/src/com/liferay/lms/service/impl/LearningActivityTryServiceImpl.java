@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 public class LearningActivityTryServiceImpl
 	extends LearningActivityTryServiceBaseImpl 
 	{
+	@JSONWebService
 	public LearningActivityTry createLearningActivityTry(long actId,long userId) throws SystemException
 	{
 		

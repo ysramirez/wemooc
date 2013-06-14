@@ -14,10 +14,13 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.Date;
+
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityResultLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
@@ -97,6 +100,20 @@ public class LearningActivityResultLocalServiceImpl
 		}
 		return learningActivityResult;
 		
+	}
+	public LearningActivityResult update(long latId, long result, String tryResultData, long userId) throws SystemException, PortalException {
+		LearningActivityTry learningActivityTry = LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
+		if (userId != learningActivityTry.getUserId()) {
+			throw new PortalException();
+		}
+		learningActivityTry.setResult(result);
+		
+		Date endDate = new Date(System.currentTimeMillis());
+		learningActivityTry.setEndDate(endDate);
+		learningActivityTry.setTryResultData(tryResultData);
+		LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+		
+		return update(learningActivityTry);
 	}
 	public boolean existsLearningActivityResult(long actId,long userId) throws SystemException
 	{

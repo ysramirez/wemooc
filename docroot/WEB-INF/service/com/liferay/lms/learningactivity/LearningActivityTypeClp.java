@@ -400,11 +400,9 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
 			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
-			Class uploadRequestActivityClass = Class.forName(UploadRequest.class.getName());
-			Class portletResponseClass = Class.forName(PortletResponse.class.getName());
 			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
 			
-			Method setExtraContentMethod = learningActivityTypeClass.getMethod("setExtraContent", uploadRequestActivityClass,portletResponseClass, learningActivityClass);    
+			Method setExtraContentMethod = learningActivityTypeClass.getMethod("setExtraContent", UploadRequest.class, PortletResponse.class, learningActivityClass);    
 			Object learningActivityObj = translateLearningActivity(learningActivity);
 			clp.invoke(new MethodHandler(setExtraContentMethod, uploadRequest, portletResponse, learningActivityObj));
 			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
@@ -447,10 +445,8 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			ClassLoader classLoader = clp.getClassLoader();
 			
 			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
-			Class uploadRequestActivityClass = Class.forName(UploadRequest.class.getName());
-			Class portletResponseClass = Class.forName(PortletResponse.class.getName());
 		    
-			Method especificValidationsMethod = learningActivityTypeClass.getMethod("especificValidations", uploadRequestActivityClass,portletResponseClass);    
+			Method especificValidationsMethod = learningActivityTypeClass.getMethod("especificValidations", UploadRequest.class, PortletResponse.class);    
 		    
 			returnObj = clp.invoke(new MethodHandler(especificValidationsMethod, uploadRequest, portletResponse));
 		}
@@ -474,13 +470,14 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
-			Class uploadRequestActivityClass = Class.forName(UploadRequest.class.getName());
-			Class portletResponseClass = Class.forName(PortletResponse.class.getName());
+			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(), true, classLoader);
 			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
 			
-			Method afterInsertOrUpdateMethod = learningActivityTypeClass.getMethod("afterInsertOrUpdate", uploadRequestActivityClass,portletResponseClass, learningActivityClass);    
-			clp.invoke(new MethodHandler(afterInsertOrUpdateMethod, uploadRequest, portletResponse, translateLearningActivity(learningActivity)));
+			Method afterInsertOrUpdateMethod = learningActivityTypeClass.getMethod("afterInsertOrUpdate", UploadRequest.class, PortletResponse.class, learningActivityClass);
+			Object learningActivityObj = translateLearningActivity(learningActivity);
+			clp.invoke(new MethodHandler(afterInsertOrUpdateMethod, uploadRequest, portletResponse, learningActivityObj));
+			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
+			learningActivity.setModelAttributes((Map<String, Object>) classLoaderProxy.invoke("getModelAttributes", new Object[]{}));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);

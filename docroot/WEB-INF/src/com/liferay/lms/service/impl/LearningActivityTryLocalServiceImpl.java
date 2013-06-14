@@ -22,10 +22,12 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.ModuleResult;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityTryLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
@@ -154,7 +156,8 @@ public class LearningActivityTryLocalServiceImpl
 	@SuppressWarnings("unchecked")
 	public LearningActivityTry getLastLearningActivityTryByActivityAndUser(long actId,long userId) throws SystemException, PortalException
 	{ 			
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class)
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class, (ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),
+				"portletClassLoader"))
 					.add(PropertyFactoryUtil.forName("actId").eq(new Long(actId)))
 					.add(PropertyFactoryUtil.forName("userId").eq(new Long(userId)))
 					.addOrder(PropertyFactoryUtil.forName("endDate").desc());
@@ -162,7 +165,7 @@ public class LearningActivityTryLocalServiceImpl
 		List<LearningActivityTry> activities = (List<LearningActivityTry>)learningActivityTryPersistence.findWithDynamicQuery(consulta);
 
 		for(LearningActivityTry activity:activities){
-			//Necesitamos la primera, que está ordenada por la última realizada.
+			//Necesitamos la primera, que estï¿½ ordenada por la ï¿½ltima realizada.
 			return activity;
 		}
 		return null;		
@@ -171,7 +174,8 @@ public class LearningActivityTryLocalServiceImpl
 	@SuppressWarnings("unchecked")
 	public LearningActivityTry getLearningActivityTryNotFinishedByActUser(long actId,long userId) throws SystemException, PortalException
 	{ 			
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class)
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class, (ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),
+				"portletClassLoader"))
 					.add(PropertyFactoryUtil.forName("actId").eq(new Long(actId)))
 					.add(PropertyFactoryUtil.forName("userId").eq(new Long(userId)))
 					.add(PropertyFactoryUtil.forName("endDate").isNull())
@@ -180,7 +184,7 @@ public class LearningActivityTryLocalServiceImpl
 		List<LearningActivityTry> activities = (List<LearningActivityTry>)learningActivityTryPersistence.findWithDynamicQuery(consulta);
 
 		for(LearningActivityTry activity:activities){
-			//Necesitamos la primera, que está ordenada por la última realizada.
+			//Necesitamos la primera, que estï¿½ ordenada por la ï¿½ltima realizada.
 			return activity;
 		}
 		return null;		
@@ -219,7 +223,7 @@ public class LearningActivityTryLocalServiceImpl
 	@SuppressWarnings("unchecked")
 	public boolean canUserDoANewTry(long actId,long userId) throws Exception{
 		
-		//Si ya ha pasado el test, no puede hacer más intentos.
+		//Si ya ha pasado el test, no puede hacer mï¿½s intentos.
 		if(LearningActivityResultLocalServiceUtil.userPassed(actId, userId))
 		{
 			return false;
