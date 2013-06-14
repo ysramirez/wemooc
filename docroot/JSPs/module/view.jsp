@@ -61,7 +61,7 @@ Liferay.provide(
 			new A.Dialog(
 				{
 		    		id: 'editModule', 
-					title: 'Add',
+					title: '<%=LanguageUtil.get(pageContext,"module-add")%>',
 	    			destroyOnClose: true,
 	    			width: 750,
 	    			modal:true,
@@ -91,7 +91,7 @@ Liferay.provide(
     );
 </script>
 <div class="newitem">
-	<liferay-ui:icon image="add" label="true" message="new" url="<%= \"javascript:\"+renderResponse.getNamespace()+\"openPopup()\" %>" />
+	<liferay-ui:icon image="add" label="true" message="module-add" url="<%= \"javascript:\"+renderResponse.getNamespace()+\"openPopup()\" %>" />
 </div>
 
 <% 

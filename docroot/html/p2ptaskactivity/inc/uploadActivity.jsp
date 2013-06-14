@@ -91,7 +91,7 @@ Liferay.provide(
 				alert('<liferay-ui:message key="p2ptask-empty-desc" />');
 				return false;
 			}
-			if(A.one(idFile).val() == "" && <%=StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "fileoptional")) %> ){
+			if(A.one(idFile).val() == "" && <%=!StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "fileoptional")) %> ){
 				alert('<liferay-ui:message key="p2ptask-empty-file" />');
 				return false;
 			}
