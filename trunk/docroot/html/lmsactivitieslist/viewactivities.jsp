@@ -151,7 +151,7 @@ Liferay.provide(
 			"});";
 			 
 	%>
-	<liferay-ui:icon image="add" label="<%=true%>" message="add"
+	<liferay-ui:icon image="add" label="<%=true%>" message="activity.creation"
 		url="#" cssClass="newactivity" onClick="<%=newactivitypopup %>"/>
 	
 <%
