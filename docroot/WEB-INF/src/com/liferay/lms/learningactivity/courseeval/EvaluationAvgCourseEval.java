@@ -71,17 +71,45 @@ public class EvaluationAvgCourseEval implements CourseEval {
 		return evaluations;
 	}
 	
-
+	private double calculateMean(double[] values, double[] weights) {
+		int i;
+		double sumWeight=0;
+		for (i = 0; i < weights.length; i++) {
+			sumWeight+=weights[i];
+		}
+		
+		double mean=0;
+		for (i = 0; i < values.length; i++) {
+			mean+=weights[i]*values[i];
+		}
+		mean/=sumWeight;
+		
+		//Correction factor
+		double correction=0;
+		for (i = 0; i < values.length; i++) {
+			correction += weights[i] * (values[i] - mean);
+		}
+		
+		return mean + (correction/sumWeight);
+	}
+	
 	private void updateCourseResult(Course course, long passPuntuation,
 			Map<Long, Long> evaluations, long userId) throws SystemException {
-		long sumValues=0;
-		long sumWeights=0;
+		double[] values=new double[evaluations.size()];
+		double[] weights=new double[evaluations.size()];
+		int i=0;
 		for(Map.Entry<Long,Long> evaluation:evaluations.entrySet()){
 			LearningActivityResult result=LearningActivityResultLocalServiceUtil.getByActIdAndUserId(evaluation.getKey(),userId);
 			if(result!=null){
-				sumValues+=result.getResult()*evaluation.getValue();
+				values[i]=result.getResult();
 			}
-			sumWeights+=evaluation.getValue();
+			/*
+			 * else{
+			 * 	values[i]=0;
+			 * }
+			 * 
+			 */
+			weights[i++]=evaluation.getValue();
 		}
 		
 		CourseResult courseResult=CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), userId);
@@ -90,10 +118,11 @@ public class EvaluationAvgCourseEval implements CourseEval {
 			courseResult=CourseResultLocalServiceUtil.create(course.getCourseId(), userId);
 		}
 		
-		courseResult.setResult(sumValues/sumWeights);
+		courseResult.setResult((long) calculateMean(values,weights));
 		courseResult.setPassed(courseResult.getResult()>passPuntuation);
 		CourseResultLocalServiceUtil.update(courseResult);
 	}
+
 
 	@Override
 	public void updateCourse(Course course, ModuleResult mresult) throws SystemException 
