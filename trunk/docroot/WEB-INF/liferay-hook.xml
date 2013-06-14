@@ -3,4 +3,7 @@
 
 <hook>
 	<portal-properties>portal.properties</portal-properties>
+	<language-properties>
+		content/language-hook.properties
+	</language-properties>
 </hook>
