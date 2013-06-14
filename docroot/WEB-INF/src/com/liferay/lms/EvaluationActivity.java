@@ -103,7 +103,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 			 try {
 				Message message = new Message();
 				message.put("actId", actId);
-				MessageBusUtil.sendMessage("liferay/lms/evaluation", message);
+				MessageBusUtil.sendMessage("liferay/lms/evaluationActivity", message);
 			} catch (Exception e) {
 			}
 		}
