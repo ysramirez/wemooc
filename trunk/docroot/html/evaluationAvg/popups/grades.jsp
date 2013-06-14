@@ -20,7 +20,7 @@ function <portlet:namespace />doClosePopupGrades()
 
 function <portlet:namespace />doSaveGrades(){
 	AUI().use('node-base','aui-io-request', function(A) {
-		if(!window.<portlet:namespace />validateEvaluations.hasErrors()){
+		if(!window.<portlet:namespace />validator.hasErrors()){
 			A.io.request(
 					'<portlet:actionURL name="setGrade" />',
 					{
@@ -133,7 +133,7 @@ function <portlet:namespace />createValidator(){
 
 }
 
-AUI().use('node-base',function(A) {
+AUI().ready('node-base',function(A) {
 
 	<portlet:namespace />createValidator();	
 	var divResult = A.one('#<portlet:namespace />evaluationResult');
@@ -176,7 +176,7 @@ else{
 </aui:form>
 
 <aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />/>doSaveGrades();" type="button">
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">
 		<liferay-ui:message key="offlinetaskactivity.save" />
 	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupGrades();" type="button">
