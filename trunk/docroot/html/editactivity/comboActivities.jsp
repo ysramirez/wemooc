@@ -4,7 +4,7 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@ include file="/init.jsp" %>
 
-<aui:select label="bloquing-activity" name="precedence">
+<aui:select label="bloquing-activity" name="precedence" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
 <%
 	long actId=ParamUtil.getLong(request, "resId", 0);
 	long moduleId=ParamUtil.getLong(request, "resModuleId", 0);

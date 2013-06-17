@@ -13,19 +13,19 @@ Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocal
 LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 for(Long key:classTypes.keySet())
 {
-	
-%>	
-<liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
-<liferay-portlet:param name="resId" value="0" />
-<liferay-portlet:param name="resModuleId" value="<%=ParamUtil.getString(renderRequest, \"resModuleId\") %>" />
-<liferay-portlet:param name="typeId" value="<%=key.toString() %>" />
-</liferay-portlet:actionURL>
-<%
 	String classname=classTypes.get(key);
-%>
+%>	
+	<liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
+		<liferay-portlet:param name="resId" value="0" />
+		<liferay-portlet:param name="resModuleId" value="<%=ParamUtil.getString(renderRequest, \"resModuleId\") %>" />
+		<liferay-portlet:param name="typeId" value="<%=key.toString() %>" />
+	</liferay-portlet:actionURL>
+
 	<li class="activity_<%=key%>">
-		<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>" url="<%=newactivityURL%>" />
-		<liferay-ui:icon-help message="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>"/>
+		<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>" url="<%=newactivityURL%>" cssClass="activity-icon" imageHover="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>" />
+		<span class="activity-help">
+			<liferay-ui:icon-help message="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>"  />
+		</span>
 	</li>
 <%
 }
