@@ -153,10 +153,10 @@ CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseE
 
 String resultHelpMessage=null;
 if(courseEval.getNeedPassPuntuation()){
-	resultHelpMessage=LanguageUtil.format(pageContext, "offlinetaskactivity.grades.resultMessage", new Object[]{courseEval.getPassPuntuation(course)});
+	resultHelpMessage=LanguageUtil.format(pageContext, "evaluationAvg.grades.resultMessage", new Object[]{courseEval.getPassPuntuation(course)});
 }
 else{
-	resultHelpMessage=LanguageUtil.get(pageContext, "offlinetaskactivity.grades.resultMessage");	
+	resultHelpMessage=LanguageUtil.get(pageContext, "evaluationAvg.grades.resultMessage");	
 }
 
 %>
@@ -164,13 +164,13 @@ else{
 <aui:form  name="fn_grades" method="post" >
 	<aui:fieldset>
 		<aui:input type="hidden" name="userId" value='<%=renderRequest.getParameter("userId") %>' />
-	    <aui:input type="text" name="result" helpMessage="<%=resultHelpMessage %>" label="offlinetaskactivity.grades" value='<%=courseResult.getResult() %>' />
+	    <aui:input type="text" name="result" helpMessage="<%=resultHelpMessage %>" label="evaluationAvg.grades" value='<%=courseResult.getResult() %>' />
 				<div id="<portlet:namespace />resultError" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.result.bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.result.bad-format"))?
 	    															LanguageUtil.get(pageContext,"evaluationAvg.result.bad-format"):StringPool.BLANK %>
 	    		</div>
-		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"offlinetaskactivity.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=(courseResult.getComments()!=null)?courseResult.getComments():"" %>'>
+		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationAvg.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=(courseResult.getComments()!=null)?courseResult.getComments():"" %>'>
 		</aui:input>
 	</aui:fieldset>
 </aui:form>
