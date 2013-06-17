@@ -148,7 +148,8 @@ AUI().ready('node-base',function(A) {
 
 <%
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-CourseResult courseResult = CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), ParamUtil.getLong(renderRequest, "userId"));
+long userId = ParamUtil.getLong(renderRequest, "userId");
+CourseResult courseResult = CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), userId);
 CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
 
 String resultHelpMessage=null;
@@ -163,6 +164,7 @@ else{
 
 <aui:form  name="fn_grades" method="post" >
 	<aui:fieldset>
+		<h1><%=UserLocalServiceUtil.getUser(userId).getFullName() %></h1>
 		<aui:input type="hidden" name="userId" value='<%=renderRequest.getParameter("userId") %>' />
 	    <aui:input type="text" name="result" helpMessage="<%=resultHelpMessage %>" label="evaluationAvg.grades" value='<%=courseResult.getResult() %>' />
 				<div id="<portlet:namespace />resultError" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.result.bad-format"))?
@@ -170,8 +172,10 @@ else{
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.result.bad-format"))?
 	    															LanguageUtil.get(pageContext,"evaluationAvg.result.bad-format"):StringPool.BLANK %>
 	    		</div>
+		<liferay-ui:message key="evaluationAvg.result.percent" />
 		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationAvg.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=(courseResult.getComments()!=null)?courseResult.getComments():"" %>'>
 		</aui:input>
+		<liferay-ui:message key="evaluationAvg.comments.maxLength" />
 	</aui:fieldset>
 </aui:form>
 
