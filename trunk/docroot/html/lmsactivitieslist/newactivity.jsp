@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
@@ -9,6 +10,7 @@
 <%
 AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
 Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
+LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 for(Long key:classTypes.keySet())
 {
 	
@@ -23,6 +25,7 @@ for(Long key:classTypes.keySet())
 %>
 	<li class="activity_<%=key%>">
 		<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>" url="<%=newactivityURL%>" />
+		<liferay-ui:icon-help message="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>"/>
 	</li>
 <%
 }
