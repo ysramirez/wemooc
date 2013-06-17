@@ -22,7 +22,7 @@ for(Long key:classTypes.keySet())
 	String classname=classTypes.get(key);
 %>
 	<li class="activity_<%=key%>">
-		<liferay-ui:icon image="add" label="<%=true%>" message="activity.creation" url="<%=newactivityURL%>" />
+		<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>" url="<%=newactivityURL%>" />
 	</li>
 <%
 }
