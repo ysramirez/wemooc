@@ -166,7 +166,7 @@ else{
 	<aui:fieldset>
 		<h1><%=UserLocalServiceUtil.getUser(userId).getFullName() %></h1>
 		<aui:input type="hidden" name="userId" value='<%=renderRequest.getParameter("userId") %>' />
-	    <aui:input type="text" name="result" helpMessage="<%=resultHelpMessage %>" label="evaluationAvg.grades" value='<%=courseResult.getResult() %>' />
+	    <aui:input type="text" name="result" size="3"  helpMessage="<%=resultHelpMessage %>" label="evaluationAvg.grades" value='<%=courseResult.getResult() %>' />
 				<div id="<portlet:namespace />resultError" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.result.bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.result.bad-format"))?

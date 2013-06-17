@@ -165,7 +165,7 @@ String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationtaskactivit
 	<aui:fieldset>
 		<h1><%=UserLocalServiceUtil.getUser(userId).getFullName() %></h1>
 		<aui:input type="hidden" name="userId" value='<%=userId %>' />
-	    <aui:input type="text" name="result" helpMessage="<%=resultHelpMessage %>" label="evaluationtaskactivity.grades" value='<%=result.getResult() %>' />
+	    <aui:input type="text" name="result" size="3" helpMessage="<%=resultHelpMessage %>" label="evaluationtaskactivity.grades" value='<%=result.getResult() %>' />
 				<div id="<portlet:namespace />resultError" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.result.bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.result.bad-format"))?

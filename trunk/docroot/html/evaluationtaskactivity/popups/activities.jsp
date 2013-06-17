@@ -370,7 +370,7 @@
 				<span class="activity-<%=activityToEvaluate.getTypeId() %>>" ><liferay-ui:message key="<%=learningActivityTypeRegistry.getLearningActivityType(activityToEvaluate.getTypeId()).getName() %>" /></span>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.weight" title="evaluationtaskactivity.evaluation.weight">
-				<aui:input type="text" label="" name="<%=\"weight_\"+activityToEvaluate.getActId() %>"  />
+				<aui:input type="text" label="" name="<%=\"weight_\"+activityToEvaluate.getActId() %>"  size="3" />
 				<div id="<portlet:namespace />weight_<%=activityToEvaluate.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+activityToEvaluate.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+activityToEvaluate.getActId()+".bad-format"))?
