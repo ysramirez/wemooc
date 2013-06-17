@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.sun.corba.se.impl.copyobject.JavaStreamObjectCopierImpl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.liferay.portal.kernel.xml.Element"%>
@@ -27,6 +28,7 @@
 <%
 	long actId = ParamUtil.getLong(request,"actId",0);
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+	LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 
 	JSONObject courseEvalModel = JSONFactoryUtil.createJSONObject();
 	JSONArray activities = JSONFactoryUtil.createJSONArray();
@@ -218,6 +220,7 @@
 
 	function <portlet:namespace />validatelearningActivitiesSearchContainerSearchContainer(sourceEvent){
 		var _return=true;
+
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
 			if(window.<portlet:namespace />validateActivities.hasErrors()) {
 				_return=confirm('<liferay-ui:message key="evaluationtaskactivity.confirm.message"/>');
@@ -344,6 +347,7 @@
 
 	   	<liferay-ui:search-container-results>
 			<%
+			
 				pageContext.setAttribute("results", LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
 						add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)).
 			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
@@ -358,15 +362,18 @@
 			%>
 		</liferay-ui:search-container-results>
 		
-		<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="evaluation">
+		<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="activityToEvaluate">
 			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.name" title="evaluationtaskactivity.evaluation.name">
-				<%=evaluation.getTitle(themeDisplay.getLocale()) %>
+				<%=activityToEvaluate.getTitle(themeDisplay.getLocale()) %>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.type" title="evaluationtaskactivity.evaluation.type">
+				<span class="activity-<%=activityToEvaluate.getTypeId() %>>" ><liferay-ui:message key="<%=learningActivityTypeRegistry.getLearningActivityType(activityToEvaluate.getTypeId()).getName() %>" /></span>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.weight" title="evaluationtaskactivity.evaluation.weight">
-				<aui:input type="text" label="" name="<%=\"weight_\"+evaluation.getActId() %>"  />
-				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+evaluation.getActId()+".bad-format"))?
+				<aui:input type="text" label="" name="<%=\"weight_\"+activityToEvaluate.getActId() %>"  />
+				<div id="<portlet:namespace />weight_<%=activityToEvaluate.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+activityToEvaluate.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
-	    														<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+evaluation.getActId()+".bad-format"))?
+	    														<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+activityToEvaluate.getActId()+".bad-format"))?
 	    															LanguageUtil.get(pageContext,"evaluationtaskactivity.weight.bad-format"):StringPool.BLANK %>
 	    		</div>
 			</liferay-ui:search-container-column-text>
@@ -418,6 +425,7 @@
 					}
 				}
 
+				searchContainer.detach('refresh');
 				searchContainer.on('refresh',
 					function(sourceEvent) {
 						<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) 
