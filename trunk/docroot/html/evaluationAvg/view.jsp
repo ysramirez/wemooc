@@ -315,11 +315,11 @@
 
 		if(needPassPuntuation) {
 	%>	
-		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.notPassPuntuation" /></p>	
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.passPuntuation"  arguments="<%=new Object[]{passPuntuation} %>" /></p>
 	<% 
 		}else {
 	%>
-		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.passPuntuation"  arguments="<%=new Object[]{passPuntuation} %>" /></p>
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.notPassPuntuation" /></p>	
 	<%
 		}
 	}
