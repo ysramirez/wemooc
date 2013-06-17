@@ -1,3 +1,9 @@
+<%@page import="com.sun.corba.se.impl.copyobject.JavaStreamObjectCopierImpl"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="com.liferay.portal.kernel.xml.Element"%>
+<%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
+<%@page import="com.liferay.portal.kernel.json.JSONArray"%>
+<%@page import="com.liferay.portal.kernel.util.StringBundler"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
@@ -19,36 +25,64 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@ include file="/init.jsp" %>
 <%
-	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-	CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
-	
-	JSONObject courseEvalModel = null;
+	long actId = ParamUtil.getLong(request,"actId",0);
+	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+
+	JSONObject courseEvalModel = JSONFactoryUtil.createJSONObject();
+	JSONArray activities = JSONFactoryUtil.createJSONArray();
+	courseEvalModel.put("activities", activities);
 	try{
-		courseEvalModel = courseEval.getEvaluationModel(course);
+		if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)) {
+			Element activitiesElement = SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement().element("activities");
+			
+			if(activitiesElement!=null){
+				Iterator<Element> activitiesElementItr = activitiesElement.elementIterator();
+				while(activitiesElementItr.hasNext()) {
+					Element activity =activitiesElementItr.next();
+					if(("activity".equals(activity.getName()))&&(activity.attribute("id")!=null)&&(activity.attribute("id").getValue().length()!=0)){
+						try{
+							JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
+							jsonObject.put("id", Long.valueOf(activity.attribute("id").getValue()));
+							jsonObject.put("weight", Long.valueOf(activity.getText()));
+							activities.put(jsonObject);
+						}
+						catch(NumberFormatException e){}
+					}
+				}				
+			}
+		}
 	}
 	catch(Throwable e){
-		courseEvalModel = JSONFactoryUtil.createJSONObject();
-		courseEvalModel.put("evaluations", JSONFactoryUtil.createJSONArray());
+	}
+	List<Module> moduleList = (List<Module>)ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+	long moduleId=ParamUtil.get(request, "currModuleId",ParamUtil.get(request, "moduleId",moduleList.get(0).getModuleId()));
+	JSONArray moduleItems = JSONFactoryUtil.createJSONArray();
+	for(Module module:moduleList){
+		JSONObject jsonModule = JSONFactoryUtil.createJSONObject();
+		jsonModule.put("id", renderResponse.getNamespace()+"moduleTab_"+module.getModuleId());
+		jsonModule.put("label", module.getTitle(themeDisplay.getLocale()));
+		jsonModule.put("active", module.getModuleId()==moduleId);	
+		moduleItems.put(jsonModule);
 	}
 		
-	PortletURL viewEvaluationsURL = renderResponse.createRenderURL();
-	viewEvaluationsURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
-	viewEvaluationsURL.setParameter("jspPage","/html/evaluationAvg/popups/evaluations.jsp");
+	PortletURL viewActivitiesURL = renderResponse.createRenderURL();
+	viewActivitiesURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
+	viewActivitiesURL.setParameter("jspPage","/html/evaluationtaskactivity/popups/activities.jsp");
 
 %>
 
 <script type="text/javascript">
 <!--
 
-	function <portlet:namespace />doClosePopupEvaluations()
+	function <portlet:namespace />doClosePopupActivities()
 	{
 	    AUI().use('aui-dialog', function(A) {
-	    	A.DialogManager.closeByChild('#<portlet:namespace />showPopupEvaluations');
+	    	A.DialogManager.closeByChild('#<portlet:namespace />showPopupActivities');
 	    });
 	}
 
 	YUI.add('<portlet:namespace />eval-model', function(A) {
-	    A.<portlet:namespace />EvaluationModel = A.Base.create('<portlet:namespace />EvaluationModel', A.Model, [], {
+	    A.<portlet:namespace />ActivitieModel = A.Base.create('<portlet:namespace />ActivitiesModel', A.Model, [], {
 	    }, {
 	        ATTRS: {
 				weight: {
@@ -57,31 +91,31 @@
 	        }
 	    });
 
-	    A.<portlet:namespace />EvaluationModelList = A.Base.create('<portlet:namespace />EvaluationModelList', A.ModelList, [], {
+	    A.<portlet:namespace />ActivitiesModelList = A.Base.create('<portlet:namespace />ActivitiesModelList', A.ModelList, [], {
 	        comparator: function (model) {
 	            return model.get('id');
 	        },
-	        model: A.<portlet:namespace />EvaluationModel
+	        model: A.<portlet:namespace />ActivitieModel
 	    });
 	
 	}, '' ,{requires:['model-list']});
 
-	function <portlet:namespace />addEvaluation(evalId, evalWeight){
+	function <portlet:namespace />addActivities(evalId, evalWeight){
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
-			var existingEvaluation=window.<portlet:namespace />selectedEvaluations.getById(evalId);
-			if(existingEvaluation!=null){
-				window.<portlet:namespace />selectedEvaluations.remove(existingEvaluation);
+			var existingActivities=window.<portlet:namespace />selectedActivities.getById(evalId);
+			if(existingActivities!=null){
+				window.<portlet:namespace />selectedActivities.remove(existingActivities);
 			}	
-			window.<portlet:namespace />selectedEvaluations.add(
-					new A.<portlet:namespace />EvaluationModel({id:evalId,weight:evalWeight}));
+			window.<portlet:namespace />selectedActivities.add(
+					new A.<portlet:namespace />ActivitieModel({id:evalId,weight:evalWeight}));
 		});			
 	}
 	
-	function <portlet:namespace />deleteEvaluation(evalId){
+	function <portlet:namespace />deleteActivities(evalId){
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
-			var existingEvaluation=window.<portlet:namespace />selectedEvaluations.getById(evalId);
-			if(existingEvaluation!=null){
-				window.<portlet:namespace />selectedEvaluations.remove(existingEvaluation);
+			var existingActivities=window.<portlet:namespace />selectedActivities.getById(evalId);
+			if(existingActivities!=null){
+				window.<portlet:namespace />selectedActivities.remove(existingActivities);
 			}		
 		});		
 	}
@@ -89,8 +123,8 @@
 	function <portlet:namespace />createValidator(){
 		AUI().use('aui-form-validator', function(A) {
 
-			if(!!window.<portlet:namespace />validateEvaluations){
-				delete window.<portlet:namespace />validateEvaluations;
+			if(!!window.<portlet:namespace />validateActivities){
+				delete window.<portlet:namespace />validateActivities;
 			}
 
 			var rules = {			
@@ -103,13 +137,13 @@
 
 			var fieldStrings = {			
 		        	<portlet:namespace />passPuntuation: {
-		        		required: '<liferay-ui:message key="evaluationAvg.passPuntuation.required" />',
-		        		number: '<liferay-ui:message key="evaluationAvg.passPuntuation.number" />',
-		        		range: '<liferay-ui:message key="evaluationAvg.passPuntuation.range" />'     		
+		        		required: '<liferay-ui:message key="evaluationtaskactivity.passPuntuation.required" />',
+		        		number: '<liferay-ui:message key="evaluationtaskactivity.passPuntuation.number" />',
+		        		range: '<liferay-ui:message key="evaluationtaskactivity.passPuntuation.range" />'     		
 		            }
 				};
 
-			A.all('#<portlet:namespace />evaluations * input').each(
+			A.all('#<portlet:namespace />activities * input').each(
 				function(evaluationWeight){
 					if(evaluationWeight.get('id').indexOf('<portlet:namespace />weight_')==0){
 						
@@ -119,8 +153,8 @@
 							};
 
 						fieldStrings[evaluationWeight.get('id')] = {
-								number: '<liferay-ui:message key="evaluationAvg.weight.number" />',
-				        		range: '<liferay-ui:message key="evaluationAvg.weight.range" />'  
+								number: '<liferay-ui:message key="evaluationtaskactivity.weight.number" />',
+				        		range: '<liferay-ui:message key="evaluationtaskactivity.weight.range" />'  
 							};
 
 						evaluationWeight.on('input',function(){
@@ -128,16 +162,16 @@
 									var divError = A.one('#'+evaluationWeight.get('name')+'Error');
 									divError.removeClass('portlet-msg-error');
 									divError.setContent('');
-									<portlet:namespace />deleteEvaluation(evalId);
+									<portlet:namespace />deleteActivities(evalId);
 								}
 								else{
-									window.<portlet:namespace />validateEvaluations.validateField(evaluationWeight.get('name'));
+									window.<portlet:namespace />validateActivities.validateField(evaluationWeight.get('name'));
 									var evalId=evaluationWeight.get('id').substring('<portlet:namespace />weight_'.length);
-									if(!window.<portlet:namespace />validateEvaluations.getFieldError(window.<portlet:namespace />validateEvaluations.getField(evaluationWeight.get('name')))){	
-										<portlet:namespace />addEvaluation(evalId, evaluationWeight.get('value'));
+									if(!window.<portlet:namespace />validateActivities.getFieldError(window.<portlet:namespace />validateActivities.getField(evaluationWeight.get('name')))){	
+										<portlet:namespace />addActivities(evalId, evaluationWeight.get('value'));
 									}
 									else {
-										<portlet:namespace />deleteEvaluation(evalId);
+										<portlet:namespace />deleteActivities(evalId);
 									}
 								}
 								var divResult = A.one('#<portlet:namespace />evaluationResult');
@@ -148,8 +182,8 @@
 					}
 			});
 					
-			window.<portlet:namespace />validateEvaluations = new A.FormValidator({
-				boundingBox: '#<portlet:namespace />evaluations',
+			window.<portlet:namespace />validateActivities = new A.FormValidator({
+				boundingBox: '#<portlet:namespace />activities',
 				validateOnBlur: true,
 				validateOnInput: true,
 				selectText: true,
@@ -182,32 +216,33 @@
 		});		
 	}
 
-	function <portlet:namespace />validatelearningActivitiesSearchContainerSearchContainer(){
+	function <portlet:namespace />validatelearningActivitiesSearchContainerSearchContainer(sourceEvent){
 		var _return=true;
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
-			if(window.<portlet:namespace />validateEvaluations.hasErrors()) {
-				_return=confirm('<liferay-ui:message key="evaluationAvg.confirm.message"/>');
+			if(window.<portlet:namespace />validateActivities.hasErrors()) {
+				_return=confirm('<liferay-ui:message key="evaluationtaskactivity.confirm.message"/>');
 			}
 		});		
+
+		if((_return==false)&&(sourceEvent!=null)&&(!!sourceEvent.preventDefault)){
+			sourceEvent.preventDefault();
+		}
+		
 		return _return;	
 	}
 
-	function <portlet:namespace />doSaveEvaluations(){
+	function <portlet:namespace />doSaveActivities(){
 		AUI().use('node-base','json-stringify','<portlet:namespace />eval-model','aui-io-request', function(A) {
-			if(!window.<portlet:namespace />validateEvaluations.hasErrors()){
+			if(!window.<portlet:namespace />validateActivities.hasErrors()){
                 var output= new Object();			
-				<% if(courseEval.getNeedPassPuntuation()) { %>
-				   output['passPuntuation']=A.one('#<portlet:namespace />passPuntuation').get('value');
-				<% }%>
-
-				var outputEvaluations= new Array();
-				var itrOutputEvaluations=0;
-				window.<portlet:namespace />selectedEvaluations.each(
+				var outputActivities= new Array();
+				var itrOutputActivities=0;
+				window.<portlet:namespace />selectedActivities.each(
 					function(evalModel){
-						outputEvaluations[itrOutputEvaluations++]={id:evalModel.get('id'),weight:evalModel.get('weight')};
+						outputActivities[itrOutputActivities++]={id:evalModel.get('id'),weight:evalModel.get('weight')};
 					}
 				);	
-				output['evaluations']=outputEvaluations;
+				output['activities']=outputActivities;
 
 				A.io.request(
 						'<portlet:actionURL name="saveEvalModel" />',
@@ -255,15 +290,34 @@
 		});	
 	}
 
-	AUI().ready('node-base','<portlet:namespace />eval-model', function(A) {
-		window.<portlet:namespace />selectedEvaluations = new A.<portlet:namespace />EvaluationModelList();
-		window.<portlet:namespace />selectedEvaluations.add(<%=courseEvalModel.getJSONArray("evaluations").toString() %>);
+	AUI().ready('node-base','<portlet:namespace />eval-model','aui-tabs', function(A) {
+
+		window.<portlet:namespace />filterlearningActivitiesSearchContainerSearchContainer = {<portlet:namespace />currModuleId:<%=moduleId%>};
+
+		window.<portlet:namespace />selectedActivities = new A.<portlet:namespace />ActivitiesModelList();
+		window.<portlet:namespace />selectedActivities.add(<%=courseEvalModel.getJSONArray("activities").toString() %>);
 
 		var searchContainer = A.one('#<%=renderResponse.getNamespace() %>learningActivitiesSearchContainerSearchContainer').ancestor('.lfr-search-container');
+	
+	    var tabView = new A.TabView(
+	    	      {
+	    	    	 items: <%=moduleItems.toString() %>,
+	    	  		 contentBox: '#moduleTabs'
+	    	      }
+	    	    ).render();
 
-		searchContainer.on('ajaxLoaded',function(){
+		tabView.on(
+				'activeTabChange',
+				function(activeTabChangeEvent) {
+					var moduleId = activeTabChangeEvent.details[0].newVal.get('id').substring(<%=(renderResponse.getNamespace()+"moduleTab_").length() %>);
+					window.<portlet:namespace />filterlearningActivitiesSearchContainerSearchContainer = {<portlet:namespace />currModuleId:moduleId};
+					searchContainer.fire('refresh',activeTabChangeEvent);
+				}
+			);
 
-			window.<portlet:namespace />selectedEvaluations.each(
+		searchContainer.on('ajaxLoaded',function(sourceEvent){
+
+			window.<portlet:namespace />selectedActivities.each(
 				function(evalModel){
 					A.all('#<portlet:namespace />weight_'+evalModel.get('id')).each(function(evalModelInput){
 						 evalModelInput.set('value',evalModel.get('weight')); });  					 
@@ -277,64 +331,43 @@
 			divResult.setContent('');
 		});
 
-		searchContainer.fire('ajaxLoaded');
+		searchContainer.fire('ajaxLoaded',null);
 	});
 
 //-->
 </script>
 
-<aui:form name="evaluations">
-<% if(courseEval.getNeedPassPuntuation()) { 
-%>
-	<aui:fieldset>
-	    <aui:input type="text" name="passPuntuation" label="evaluationAvg.passPuntuation"
-	               value='<%= courseEvalModel.getLong("passPuntuation") %>' />
-	    <div id="<portlet:namespace />passPuntuationError" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.passPuntuation.result-bad-format"))?
-	    														"portlet-msg-error":StringPool.BLANK %>">
-	    	<%=(SessionErrors.contains(renderRequest, "evaluationAvg.passPuntuation.result-bad-format"))?
-	    			LanguageUtil.get(pageContext,"evaluationAvg.passPuntuation.result-bad-format"):StringPool.BLANK %>
-	    </div>
-	</aui:fieldset>
-<% } %>
+<aui:form name="activities">
+	<div id="moduleTabs"></div>
 
-	<liferay-ui:search-container iteratorURL="<%=viewEvaluationsURL%>" emptyResultsMessage="there-are-no-results" delta="5" deltaConfigurable="true" >
+	<liferay-ui:search-container iteratorURL="<%=viewActivitiesURL%>" emptyResultsMessage="there-are-no-results" delta="5" deltaConfigurable="true" >
 
 	   	<liferay-ui:search-container-results>
 			<%
 				pageContext.setAttribute("results", LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
-		    		add(PropertyFactoryUtil.forName("moduleId").in(
-			    			DynamicQueryFactoryUtil.forClass(Module.class).add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
-			    			setProjection(ProjectionFactoryUtil.property("moduleId"))	
-			    		)).
-			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId()))/*.
-			    	    add(PropertyFactoryUtil.forName("typeId").eq(8))*/.
-			    	    addOrder(OrderFactoryUtil.asc("moduleId")), 
+						add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)).
+			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
+			    	    add(PropertyFactoryUtil.forName("typeId").ne(8)),
 			    	searchContainer.getStart(), searchContainer.getEnd()));
 			
 			    pageContext.setAttribute("total",(int)LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
-			    		add(PropertyFactoryUtil.forName("moduleId").in(
-				    			DynamicQueryFactoryUtil.forClass(Module.class).add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
-				    			setProjection(ProjectionFactoryUtil.property("moduleId"))	
-				    		)).
-				    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId()))/*.
-				    	    add(PropertyFactoryUtil.forName("typeId").eq(8))*/	
-			    		));			
+		    			add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)).
+			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
+			    	    add(PropertyFactoryUtil.forName("typeId").ne(8))
+		    		));			
 			%>
 		</liferay-ui:search-container-results>
 		
 		<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="evaluation">
-			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.module" title="evaluationAvg.evaluation.module">
-				<%=ModuleLocalServiceUtil.getModule(evaluation.getModuleId()).getTitle(themeDisplay.getLocale()) %>
-			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.name" title="evaluationAvg.evaluation.name">
+			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.name" title="evaluationtaskactivity.evaluation.name">
 				<%=evaluation.getTitle(themeDisplay.getLocale()) %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.weight" title="evaluationAvg.evaluation.weight">
+			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.weight" title="evaluationtaskactivity.evaluation.weight">
 				<aui:input type="text" label="" name="<%=\"weight_\"+evaluation.getActId() %>"  />
-				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
+				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+evaluation.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
-	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
-	    															LanguageUtil.get(pageContext,"evaluationAvg.weight.bad-format"):StringPool.BLANK %>
+	    														<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+evaluation.getActId()+".bad-format"))?
+	    															LanguageUtil.get(pageContext,"evaluationtaskactivity.weight.bad-format"):StringPool.BLANK %>
 	    		</div>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
@@ -347,16 +380,20 @@
 
 				var searchContainer = A.one('#<%=renderResponse.getNamespace() %><%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer').ancestor('.lfr-search-container');
 				
-				function <portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(url){
+				function <portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(sourceEvent,url){
 				     
 					if((!!<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer)&&
-					     (<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer())) {
+					     (<portlet:namespace />validate<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(sourceEvent))) {
 						var params = {};
 						var urlPieces = url.split('?');
 						if (urlPieces.length > 1) {
 							params = A.QueryString.parse(urlPieces[1]);
 							params.p_p_state='<%=LiferayWindowState.EXCLUSIVE.toString() %>';
 							url = urlPieces[0];
+						}
+
+						if(window.<portlet:namespace />filter<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer){
+							A.mix(params,window.<portlet:namespace />filter<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer,true);
 						}
 
 						A.io.request(
@@ -373,23 +410,32 @@
 									success: function(event, id, obj) {
 										searchContainer.setContent(A.Node.create(this.get('responseData')).one('#<%=renderResponse.getNamespace() %><%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer').ancestor('.lfr-search-container').getContent ());
 										<portlet:namespace />ajaxMode<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(A);
-										searchContainer.fire('ajaxLoaded');
+										searchContainer.fire('ajaxLoaded',sourceEvent);
 									}
 								}
 							}
 						);
 					}
 				}
+
+				searchContainer.on('refresh',
+					function(sourceEvent) {
+						<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) 
+						%>SearchContainer(sourceEvent,'<%=HttpUtil.removeParameter(searchContainer.getIteratorURL().toString(), renderResponse.getNamespace() + searchContainer.getCurParam()) 
+							%>');
+					}
+
+				);
 				
 				<portlet:namespace /><%= searchContainer.getCurParam() %>updateCur = function(box){
 					<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) 
-					%>SearchContainer('<%=HttpUtil.removeParameter(searchContainer.getIteratorURL().toString(), renderResponse.getNamespace() + searchContainer.getCurParam()) 
+					%>SearchContainer(box,'<%=HttpUtil.removeParameter(searchContainer.getIteratorURL().toString(), renderResponse.getNamespace() + searchContainer.getCurParam()) 
 						%>&<%= renderResponse.getNamespace() + searchContainer.getCurParam() %>=' + A.one(box).val());
 				};
 
 				<portlet:namespace /><%= searchContainer.getDeltaParam() %>updateDelta = function(box){
 					<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) 
-						%>SearchContainer('<%=HttpUtil.removeParameter(searchContainer.getIteratorURL().toString(), renderResponse.getNamespace() + searchContainer.getDeltaParam()) 
+						%>SearchContainer(box,'<%=HttpUtil.removeParameter(searchContainer.getIteratorURL().toString(), renderResponse.getNamespace() + searchContainer.getDeltaParam()) 
 							%>&<%= renderResponse.getNamespace() + searchContainer.getDeltaParam() %>=' + A.one(box).val());
 				};
 
@@ -400,8 +446,8 @@
 								var url=anchor.get('href');
 								anchor.set('href','#');
 							    anchor.on('click',
-									function(){
-							    		<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(url);
+									function(clickEvent){
+							    		<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(clickEvent,url);
 								    }
 							    );
 							}
@@ -419,16 +465,16 @@
 </aui:form>
 
 <aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button">
-		<liferay-ui:message key="offlinetaskactivity.save" />
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveActivities();" type="button">
+		<liferay-ui:message key="evaluationtaskactivity.save" />
 	</button>
-	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
-		<liferay-ui:message key="offlinetaskactivity.cancel" />
+	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
+		<liferay-ui:message key="evaluationtaskactivity.cancel" />
 	</button>
 </aui:button-row>
-<div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.bad-updating"))?
-									   "portlet-msg-error":((SessionMessages.contains(renderRequest, "evaluationAvg.updating"))?
+<div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.bad-updating"))?
+									   "portlet-msg-error":((SessionMessages.contains(renderRequest, "evaluationtaskactivity.updating"))?
 									   "portlet-msg-success":StringPool.BLANK) %>">
-	<%=(SessionErrors.contains(renderRequest, "evaluationAvg.bad-updating"))?LanguageUtil.get(pageContext,"evaluationAvg.bad-updating"):
-	    ((SessionMessages.contains(renderRequest, "evaluationAvg.updating"))?LanguageUtil.get(pageContext,"evaluationAvg.updating"):StringPool.BLANK) %>
+	<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.bad-updating"))?LanguageUtil.get(pageContext,"evaluationtaskactivity.bad-updating"):
+	    ((SessionMessages.contains(renderRequest, "evaluationtaskactivity.updating"))?LanguageUtil.get(pageContext,"evaluationtaskactivity.updating"):StringPool.BLANK) %>
 </div>
