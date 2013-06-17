@@ -329,39 +329,7 @@ Liferay.provide(
 	    	<%=(SessionErrors.contains(renderRequest, "title-required"))?
 	    			LanguageUtil.get(pageContext,"title-required"):StringPool.BLANK %>
 	    </div>
-	    
-	    <script type="text/javascript">
-		<!--
-			Liferay.provide(
-		        window,
-		        '<portlet:namespace />onChangeDescription',
-		        function(val) {
-		        	var A = AUI();
-					A.one('#<portlet:namespace />description').set('value',val);
-					if(window.<portlet:namespace />validateActivity){
-						window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
-					}
-		        },
-		        ['node']
-		    );
-		    
-		//-->
-		</script>
-	    
-		<aui:field-wrapper label="description">
-			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
-			<script type="text/javascript">
-		        function <portlet:namespace />initEditor() 
-		        { 
-		            return "<%= UnicodeFormatter.toString(description) %>"; 
-		        }
-		    </script>
-		</aui:field-wrapper>
-		<div id="<portlet:namespace />descriptionError" class="<%=(SessionErrors.contains(renderRequest, "description-required"))?
-	    														"portlet-msg-error":StringPool.BLANK %>">
-	    	<%=(SessionErrors.contains(renderRequest, "description-required"))?
-	    			LanguageUtil.get(pageContext,"description-required"):StringPool.BLANK %>
-	    </div>
+
 	
 		<aui:field-wrapper label="start-date">
 			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
@@ -433,6 +401,32 @@ Liferay.provide(
 			<aui:input type="hidden" name="passpuntuation" value="<%=larntype.getDefaultScore() %>" />
 			<% 
 		}
+		%>
+		
+		<%
+			boolean optional=false;
+			boolean mandatory = true;
+			if(learnact!=null)
+			{
+				request.setAttribute("activity", learnact);
+				request.setAttribute("activityId", learnact.getActId());
+				optional=(learnact.getWeightinmodule()==0);
+				mandatory = (learnact.getWeightinmodule() != 0);
+			}
+		%>
+		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
+			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" inlineField="true" />
+			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true" />
+		</aui:field-wrapper>
+		
+				
+		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
+			<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
+			<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
+			<liferay-util:param name="precedence" value="<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>" />
+		</liferay-util:include>
+		
+		<%
 		if(larntype.isFeedbackCorrectConfigurable())
 		{
 			String  feedbacCorrect=larntype.getDefaultFeedbackCorrect();
@@ -446,7 +440,6 @@ Liferay.provide(
 		}
 		else
 		{
-			
 			%>
 			<aui:input type="hidden" name="feedbackCorrect" value="<%=larntype.getDefaultFeedbackCorrect() %>" />
 			<% 
@@ -470,27 +463,7 @@ Liferay.provide(
 		}
 		
 		%>
-<%
-	boolean optional=false;
-	boolean mandatory = true;
-	if(learnact!=null)
-	{
-		request.setAttribute("activity", learnact);
-		request.setAttribute("activityId", learnact.getActId());
-		optional=(learnact.getWeightinmodule()==0);
-		mandatory = (learnact.getWeightinmodule() != 0);
-	}
-%>
-		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
-			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" inlineField="true" />
-			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true" />
-		</aui:field-wrapper>
-		
-		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
-			<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
-			<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
-			<liferay-util:param name="precedence" value="<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>" />
-		</liferay-util:include>
+
 		
 		<% if(larntype.getExpecificContentPage()!=null) { %>
 			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>" portletId="<%= larntype.getPortletId() %>">
@@ -499,8 +472,44 @@ Liferay.provide(
 			</liferay-util:include>	
 		<% } %>
 
+
+	    <script type="text/javascript">
+		<!--
+			Liferay.provide(
+		        window,
+		        '<portlet:namespace />onChangeDescription',
+		        function(val) {
+		        	var A = AUI();
+					A.one('#<portlet:namespace />description').set('value',val);
+					if(window.<portlet:namespace />validateActivity){
+						window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
+					}
+		        },
+		        ['node']
+		    );
+		    
+		//-->
+		</script>
+	    
+		<aui:field-wrapper label="description">
+			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
+			<script type="text/javascript">
+		        function <portlet:namespace />initEditor() 
+		        { 
+		            return "<%= UnicodeFormatter.toString(description) %>"; 
+		        }
+		    </script>
+		</aui:field-wrapper>
+		<div id="<portlet:namespace />descriptionError" class="<%=(SessionErrors.contains(renderRequest, "description-required"))?
+	    														"portlet-msg-error":StringPool.BLANK %>">
+	    	<%=(SessionErrors.contains(renderRequest, "description-required"))?
+	    			LanguageUtil.get(pageContext,"description-required"):StringPool.BLANK %>
+	    </div>
+
 		<aui:input name="tags" type="assetTags" />
+		
 		<aui:input name="categories" type="assetCategories" />
+		
 	</aui:fieldset>
 	
 	<aui:button-row>
