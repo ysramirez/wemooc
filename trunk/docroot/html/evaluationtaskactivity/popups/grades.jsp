@@ -152,8 +152,9 @@ AUI().ready('node-base',function(A) {
 
 <%
 long actId = ParamUtil.getLong(request,"actId",0);
+long userId = ParamUtil.getLong(renderRequest, "userId");
 LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, ParamUtil.getLong(renderRequest, "userId"));
+LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
 
 
 String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationtaskactivity.grades.resultMessage", new Object[]{learningActivity.getPasspuntuation()});
@@ -162,15 +163,18 @@ String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationtaskactivit
 
 <aui:form  name="fn_grades" method="post" >
 	<aui:fieldset>
-		<aui:input type="hidden" name="userId" value='<%=renderRequest.getParameter("userId") %>' />
+		<h1><%=UserLocalServiceUtil.getUser(userId).getFullName() %></h1>
+		<aui:input type="hidden" name="userId" value='<%=userId %>' />
 	    <aui:input type="text" name="result" helpMessage="<%=resultHelpMessage %>" label="evaluationtaskactivity.grades" value='<%=result.getResult() %>' />
 				<div id="<portlet:namespace />resultError" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.result.bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.result.bad-format"))?
 	    															LanguageUtil.get(pageContext,"evaluationtaskactivity.result.bad-format"):StringPool.BLANK %>
 	    		</div>
+	    <liferay-ui:message key="evaluationtaskactivity.result.percent" />
 		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="evaluationtaskactivity.comments" value='<%=(result.getComments()!=null)?result.getComments():"" %>'>
 		</aui:input>
+		<liferay-ui:message key="evaluationtaskactivity.comments.maxLength" />
 	</aui:fieldset>
 </aui:form>
 
