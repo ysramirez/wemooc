@@ -274,7 +274,7 @@
 								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
 								   </portlet:actionURL>
 						            <p class="see-more">
-									<a href="<%=reCalculateURL %>">
+									<a onClick="if(confirm('<liferay-ui:message key="evaluationAvg.recalculate.confirm" />')){ location.href='<%=reCalculateURL %>'; }">
 										<liferay-ui:message key="evaluationAvg.recalculate"/>
 									</a>
 									</p>
