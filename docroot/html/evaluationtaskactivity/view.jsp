@@ -1,426 +1,370 @@
-<%@page import="com.liferay.util.JavaScriptUtil"%>
-<%@page import="com.liferay.lms.learningactivity.TaskEvaluationLearningActivityType"%>
-<%@page import="java.util.Collection"%>
-<%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
-<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
-<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
-<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
-<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
-<%@page import="com.liferay.portal.kernel.util.StringBundler"%>
+
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
-<%@page import="com.liferay.lms.model.Module"%>
-<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.QueryUtil"%>
+<%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
+<%@page import="com.liferay.portal.service.ResourceBlockLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PropsKeys"%>
+<%@page import="com.liferay.lms.EvaluationAvgPortlet"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.CustomSQLParam"%>
+<%@page import="com.liferay.portal.util.comparator.UserFirstNameComparator"%>
+<%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@page import="com.liferay.lms.model.LearningActivityResult"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
-<%@page import="com.liferay.portal.model.Role"%>
-<%@page import="com.liferay.portal.model.RoleConstants"%>
-<%@page import="com.liferay.lms.model.LearningActivityResult"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
-<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.xml.Document"%>
 <%@page import="com.liferay.portal.kernel.xml.Element"%>
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
-<%@page import="com.liferay.portal.kernel.xml.DocumentException"%>
-<%@page import="java.util.Map"%>
-<%@page import="java.util.HashMap"%>
-<%@page import="java.util.Iterator"%>
 
 <%@ include file="/init.jsp" %>
 
 <%
-	long actId = ParamUtil.getLong(request,"actId",0);
-	
-	if(actId==0)
-	{
-		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-	}
-	else
-	{
-		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-		LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-		long typeId=learningActivity.getTypeId();
-				
-		if(typeId==8&&(!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
-				permissionChecker.hasPermission(learningActivity.getGroupId(),	LearningActivity.class.getName(), actId, ActionKeys.UPDATE)||
-				permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
-		{
-			
-			List<Module> moduleList = (List<Module>)ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
-			StringBundler sbTitles = new StringBundler(2 * moduleList.size() - 1);
-			StringBundler sbModuleId = new StringBundler(2 * moduleList.size() - 1);	
+long actId = ParamUtil.getLong(request,"actId",0);
 
-			for (int i = 0; i < moduleList.size(); i++) {
-				Module module = moduleList.get(i);
+if(actId==0)
+{
+	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+}
+else
+{
+	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+	long typeId=learningActivity.getTypeId();
 			
-				sbTitles.append(module.getTitle(themeDisplay.getLocale()));
-				sbModuleId.append(module.getModuleId());
-
-			
-				if ((i + 1) != moduleList.size()) {
-					sbTitles.append(StringPool.COMMA);
-					sbModuleId.append(StringPool.COMMA);
-				}
-			}
-			
-			long moduleId=ParamUtil.get(request, "moduleId",moduleList.get(0).getModuleId());
-			
-			Map<Long,Long> activities= new HashMap<Long,Long>();
-			
-			if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)) {
-				try{
-					
-					Iterator<Element> elements = SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement().elementIterator();
-					
-					while(elements.hasNext()){
-						Element element =elements.next();
-						if("activities".equals(element.getName())){
-							Iterator<Element> activitiesElement = element.elementIterator();
-							while(activitiesElement.hasNext()) {
-								Element activity =activitiesElement.next();
-								if(("activity".equals(activity.getName()))&&(activity.attribute("id")!=null)&&(activity.attribute("id").getValue().length()!=0)){
-									try{
-										activities.put(Long.valueOf(activity.attribute("id").getValue()),Long.valueOf(activity.getText()));
-									}
-									catch(NumberFormatException e){}
-								}
-							}
-							
-						}
-					}
-				}
-				catch(DocumentException e){}
-				
-			}
+	if(typeId==8&&(!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
+			permissionChecker.hasPermission(
+			learningActivity.getGroupId(),
+			LearningActivity.class.getName(),
+			actId, ActionKeys.UPDATE)||permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+	{
 		
-			
-			LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, themeDisplay.getUserId());
-			Object  [] arguments=null;
-			
-			if(result!=null){	
-				arguments =  new Object[]{result.getResult()};
-			}
-			
-			learningActivity.getExtracontent();
-
-			
-		%>
-			<div class="evaluationtaskactivity view">
-			
-			<div id="<portlet:namespace />activityPopup" style="display: none;">
-				<%@ include file="popups/activity.jspf" %>
-			</div>
-			
-			<portlet:resourceURL var="updateEvaluationURL" >   
-				<portlet:param name="ajaxAction" value="updateEvaluation" />
-	        </portlet:resourceURL>
-			
-			<script type="text/javascript">
-		    <!--
-
-		    	AUI().ready('node-base' ,'aui-form-validator', function(A) {
-			    	
-		    		A.mix(
-		    				YUI.AUI.defaults.FormValidator.STRINGS,
-		    				{
-		    					required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.required")) %>',
-		    					weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.format")) %>'
-		    				},
-		    				true
-		    			);
-
-	    			A.mix(
-	    					YUI.AUI.defaults.FormValidator.REGEX,
-	    					{
-	    						positiveLong: /^[0-9]*[1-9][0-9]*$/			
-	    					},
-	    					true
-	    				);
-
-	    			var oldRequired=YUI.AUI.defaults.FormValidator.RULES.required;
-	    			
-	    			A.mix(
-	    				YUI.AUI.defaults.FormValidator.RULES,
-	    				{
-	    					required: function(val, fieldNode, ruleValue) {
-	    						switch (fieldNode.get('name')) {
-	    					    case "<portlet:namespace />weight":
-	    					    	if(A.Node.getDOMNode(fieldNode).form.<portlet:namespace />weight.disabled){
-	    								return true;	 
-	    					    	}       
-	    					    default:
-	    					    	return oldRequired(val, fieldNode, ruleValue);
-	    						}				
-	    					},
-	    					weightRule: function(val, fieldNode, ruleValue) {
-	    						if(!A.Node.getDOMNode(fieldNode).form.<portlet:namespace />weight.disabled){
-	    							return YUI.AUI.defaults.FormValidator.REGEX.positiveLong.test(val);
-	    						}
-	    						return true;
-	    					}		
-	    				},
-	    				true
-	    			);
-		    	});
-		    
-			    function <portlet:namespace />showPopupActivities(activityId)
-			    {
-					AUI().use('node','aui-form-validator','aui-dialog', function(A){
-
-						if(A.one('#<portlet:namespace />activityPopup')){
-							window.<portlet:namespace />popupActivitiesBody = A.one('#<portlet:namespace />activityPopup').get('innerHTML');
-							A.one('#<portlet:namespace />activityPopup').remove();
-						}
-
-						window.<portlet:namespace />popupActivities = new A.Dialog({
-							id:'<portlet:namespace />showPopupActivities',
-				            title: A.one('#<portlet:namespace />title_'+activityId).get ('innerHTML'),
-				            bodyContent: window.<portlet:namespace />popupActivitiesBody,
-				            centered: true,
-				            modal: true,
-				            width: 370,
-				            height: 270
-				        }).render();
-
-						A.one('#<portlet:namespace />evalActId').set ('value',activityId);
-						A.one('#<portlet:namespace />state').set ('value',A.one('#<portlet:namespace />selected_'+activityId).get ('value'));
-						A.one('#<portlet:namespace />stateCheckbox').set ('checked',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'checked':'');
-						A.one('#<portlet:namespace />weight').set ('value',A.one('#<portlet:namespace />weight_'+activityId).get ('innerHTML'));
-						A.one('#<portlet:namespace />weight').set ('disabled',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'':'disabled');
-						A.one('#<portlet:namespace />weight').ancestor('.aui-field-content').setStyle('display',(A.one('#<portlet:namespace />selected_'+activityId).get ('value')=='true')?'inline':'none');
-						
-						window.<portlet:namespace />validator = new A.FormValidator({
-							boundingBox: '#<portlet:namespace />fm_activities',
-							validateOnBlur: true,
-							validateOnInput: true,
-							selectText: true,
-							showMessages: false,
-							containerErrorClass: '',
-							errorClass: '',
-							rules: {			
-								<portlet:namespace />weight: {
-									required: true,
-									weightRule: true
-								}
-							},
-
-					        fieldStrings: {
-					        	<portlet:namespace />weight: {
-					        		required:'<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.required")) %>',
-					    			weightRule: '<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "evaluationTask.activity.error.weight.format")) %>'
-					            }
-					        },
-							
-							on: {		
-					            errorField: function(event) {
-					            	var instance = this;
-									var field = event.validator.field;
-									var divError = A.one('#'+field.get('name')+'Error');
-									if(divError) {
-										divError.addClass('portlet-msg-error');
-										divError.setContent(instance.getFieldErrorMessage(field,event.validator.errors[0]));
-									}
-					            },		
-					            validField: function(event) {
-									var divError = A.one('#'+event.validator.field.get('name')+'Error');
-									if(divError) {
-										divError.removeClass('portlet-msg-error');
-										divError.setContent('');
-									}
-					            }
-							}
-						});
-				        
-						window.<portlet:namespace />popupActivities.show();   
-					});
-			    }
-
-			    function <portlet:namespace />stateActivitiesChange(stateCheckbox)
-			    {
-			        AUI().use('node','aui-form-validator', function(A) {
-			        	A.one('#<portlet:namespace />weight').set ('disabled',(stateCheckbox.checked)?'':'disabled');
-						A.one('#<portlet:namespace />weight').ancestor('.aui-field-content').setStyle('display',(stateCheckbox.checked)?'inline':'none');
-			        	window.<portlet:namespace />validator.validate();
-			        });
-			    }
-	
-			    function <portlet:namespace />doClosePopupActivities()
-			    {
-			        AUI().use('aui-dialog', function(A) {
-			        	window.<portlet:namespace />popupActivities.close();
-			        });
-			    }
-		    
-		    	function <portlet:namespace />saveActivity(){
-
-		    		AUI().use('node','liferay-portlet-url','aui-io-request','aui-form-validator', function(A){
-
-		    			window.<portlet:namespace />validator.validate();
-		    			if(!window.<portlet:namespace />validator.hasErrors()){
-
-							A.io.request('<%=updateEvaluationURL.toString()%>', 
-								{ 
-								  method : 'POST', 
-					              form: {
-					                id: '<portlet:namespace />fm_activities'
-					              },
-								  dataType: 'json',
-								  on: { 
-									success: function() {
-										var divError = A.one('#<portlet:namespace />fm_activitiesError');    
-										if(this.get('responseData').returnStatus){
-											if(divError) {
-												var activityId = A.one('#<portlet:namespace />evalActId').get ('value');
-												A.one('#<portlet:namespace />selected_'+activityId).set ('value',A.one('#<portlet:namespace />state').get ('value'));
-												A.one('#<portlet:namespace />selected_'+activityId+'Checkbox').set ('checked',(A.one('#<portlet:namespace />state').get ('value')=='true')?'checked':'');
-												A.one('#<portlet:namespace />weight_'+activityId).set ('innerHTML',
-														(A.one('#<portlet:namespace />state').get ('value')=='true')?A.one('#<portlet:namespace />weight').get ('value').replace(/^[0]+/g,""):'');
-												divError.addClass('portlet-msg-success');
-												divError.setContent(this.get('responseData').returnMessage);
-											}
-										}
-										else{
-											
-											if(divError) {
-												divError.addClass('portlet-msg-error');
-												divError.setContent(this.get('responseData').returnMessage);
-											}
-										}
-										  
-									},  
-									failure: function() {
-										alert('Error deleting the notification.');
-									} 
-								} 
-							});
-
-		    			}
-		    		});
-			    }
- 
-		    //-->
-			</script>
-			
-			<liferay-ui:tabs
-			   names="<%=sbTitles.toString() %>"
-			   tabsValues="<%=sbModuleId.toString() %>"
-			   param="<%=renderResponse.getNamespace()+\"moduleId\"%>"
-			   url="<%=renderResponse.createRenderURL().toString()%>"
-			   value="<%=Long.toString(moduleId) %>"
-			/>
-
-			<%
-				PortletURL portletURL = renderResponse.createRenderURL();
-				portletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp");
-			
-			%>
-				<liferay-ui:search-container deltaConfigurable="true" delta="10" emptyResultsMessage="Ahhhh" hover="true"  >
-					<liferay-ui:search-container-results >
-					<%
-					int containerStart;
-					int containerEnd;
-					try {
-						containerStart = ParamUtil.getInteger(request, "containerStart");
-						containerEnd = ParamUtil.getInteger(request, "containerEnd");
-					} catch (Exception e) {
-						containerStart = searchContainer.getStart();
-						containerEnd = searchContainer.getEnd();
-					}
-					if (containerStart <=0) {
-						containerStart = searchContainer.getStart();
-						containerEnd = searchContainer.getEnd();
-					}
-					
-					List<Object> gradeBookActivities = new ArrayList<Object>();
-					
-					for (LearningActivityType learningActivityType:new LearningActivityTypeRegistry().getLearningActivityTypes()){
-						if((learningActivityType.gradebook())&&(!(learningActivityType instanceof TaskEvaluationLearningActivityType))) {
-							gradeBookActivities.add((int)learningActivityType.getTypeId());
-						}
-					}
-			
-					List<LearningActivity> tempResults =  LearningActivityLocalServiceUtil.dynamicQuery(
-							DynamicQueryFactoryUtil.forClass(LearningActivity.class).
-									add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)).
-									add(PropertyFactoryUtil.forName("typeId").in(gradeBookActivities)));
-					results = ListUtil.subList(tempResults, containerStart, containerEnd);
-					total = tempResults.size();
-						
-					pageContext.setAttribute("results", results);
-					pageContext.setAttribute("total", total);
-								
-					request.setAttribute("containerStart",String.valueOf(containerStart));
-					request.setAttribute("containerEnd",String.valueOf(containerEnd));
-					%>
+		String passedStudentMessageKey="evaluationtaskactivity.student.passed";
+		String failedStudentMessageKey="evaluationtaskactivity.student.failed";
 				
+		LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, themeDisplay.getUserId());
+		
+		Object  [] arguments=null;
+		
+		if(result!=null){	
+			arguments =  new Object[]{result.getResult()};
+		}
+					
+			boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");
+					
+		%>
+
+			<div class="evaluationAvg view">
+										
+				<% if(isTeacher){ 
+					boolean hasFiredDate=false;
+					boolean hasPublishDate=false;
+					boolean hasActivities=false;
+					try{
+						if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)) {	
+							Element rootElement = SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement();
+							hasFiredDate = rootElement.element("firedDate")!=null;
+							hasPublishDate = rootElement.element("publishDate")!=null;
+							hasActivities = rootElement.element("activities")!=null;
+						}
+					}
+					catch(Throwable e){}
+
+				%>
+
+				<portlet:renderURL var="viewEvaluationsURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
+		        	<portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>     
+		            <portlet:param name="jspPage" value="/html/evaluationtaskactivity/popups/activities.jsp" />           
+		        </portlet:renderURL>
+					        		        
+		        <portlet:renderURL var="setGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
+		        	<portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>
+					<portlet:param name="ajaxAction" value="setGrades" />      
+		            <portlet:param name="jspPage" value="/html/evaluationtaskactivity/popups/grades.jsp" />           
+		        </portlet:renderURL>
+		        		        
+				<script type="text/javascript">
+			    <!--
+					<% 
+					   if(!hasFiredDate) {
+					%>
+      
+				    function <portlet:namespace />showPopupActivities()
+				    {
+	
+						AUI().use('aui-dialog','liferay-portlet-url', function(A){
+							
+							
+							new A.Dialog({
+								id:'<portlet:namespace />showPopupActivities',
+					            title: '<%=LanguageUtil.format(pageContext, "evaluationtaskactivity.evaluations", new Object[]{})%>',
+					            modal: true,
+					            xy:A.one('#p_p_id<portlet:namespace />').getXY (),
+					            resizable: true,
+					            after: {   
+						          	close: function(event){ 
+						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
+					            	}
+					            }
+					        }).plug(A.Plugin.IO, {
+					            uri: '<%=viewEvaluationsURL %>',
+					            parseContent: true
+					        }).render().show();   
+						});
+				    }
+
+					<% 
+					   if(hasActivities) {
+					%>
+
+				    function <portlet:namespace />calculateEvaluation()
+				    {
+						if(confirm('<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />')){
+							location.href='<portlet:actionURL name="update" />';
+						}  	
+				    }
+
+					<% 
+					   }}
+					   else if (!hasPublishDate) {
+					%>
+
+				    function <portlet:namespace />publish()
+				    {
+						if(confirm('<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />')){
+							location.href='<portlet:actionURL name="publish" />';
+						}  	
+				    }
+
+					<%
+					   }
+			        %>
+
+				    function <portlet:namespace />showPopupGrades(userId)
+				    {
+
+						AUI().use('aui-dialog','liferay-portlet-url', function(A){
+							var renderUrl = Liferay.PortletURL.createRenderURL();							
+							renderUrl.setWindowState('<%= LiferayWindowState.EXCLUSIVE.toString() %>');
+							renderUrl.setPortletId('<%=portletDisplay.getId()%>');
+							renderUrl.setParameter('userId', userId);
+							renderUrl.setParameter('jspPage', '/html/evaluationtaskactivity/popups/grades.jsp');
+
+							window.<portlet:namespace />popupGrades = new A.Dialog({
+								id:'<portlet:namespace />showPopupGrades',
+					            title: '<%=LanguageUtil.get(pageContext, "evaluationtaskactivity.set.grade")%>',
+					            centered: true,
+					            modal: true,
+					            after: {   
+						          	close: function(event){ 
+						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
+					            	}
+					            }
+					        }).plug(A.Plugin.IO, {
+					            uri: renderUrl.toString(),
+					            parseContent: true
+					        }).render().show();   
+						});
+
+				    }
+			
+				    //-->
+				</script>
+				
+				<% 
+				   if(!hasFiredDate) {
+				%>
+				
+				<liferay-ui:icon
+				image="add"
+				label="<%= true %>"
+				message="evaluationtaskactivity.evaluation.configuration"
+				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupActivities();" %>'
+				/>
+				<% 
+				   if(hasActivities) {
+				%>
+				<aui:button-row>
+					<button name="Calculate" value="calculate" onclick="<portlet:namespace />calculateEvaluation();" type="button">
+						<liferay-ui:message key="evaluationtaskactivity.calculate" />
+					</button>
+				</aui:button-row>
+						
+				<% }}
+				   else if(!hasPublishDate) {
+				%>
+				<aui:button-row>
+					<button name="publish" value="publish" onclick="<portlet:namespace />publish();" type="button">
+						<liferay-ui:message key="evaluationtaskactivity.publish" />
+					</button>
+				</aui:button-row>
+						
+				<% }
+				
+				String criteria = ParamUtil.get(request,"criteria",StringPool.BLANK);
+				String gradeFilter = ParamUtil.get(request,"gradeFilter",StringPool.BLANK);
+				
+				PortletURL portletURL = renderResponse.createRenderURL();
+				portletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");
+				portletURL.setParameter("criteria", criteria); 
+				portletURL.setParameter("gradeFilter", gradeFilter);
+				
+				%>
+				
+				<liferay-portlet:renderURL var="returnurl" >
+					<liferay-portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>
+				</liferay-portlet:renderURL>
+				
+				<h5><liferay-ui:message key="studentsearch"/></h5>
+				<aui:form name="studentsearch" action="<%=returnurl %>" method="post">
+					<aui:fieldset>
+						<aui:column>
+							<aui:input label="studentsearch.text.criteria" name="criteria" size="25" value="<%=criteria %>" />	
+						</aui:column>	
+						<aui:column>
+							<aui:select label="evaluationtaskactivity.status" name="gradeFilter" onchange='<%="document.getElementById(\'" + renderResponse.getNamespace() + "studentsearch\').submit();" %>'>
+								<aui:option selected='<%= gradeFilter.equals("") %>' value=""><liferay-ui:message key="evaluationtaskactivity.all" /></aui:option>
+								<aui:option selected='<%= gradeFilter.equals("nocalification") %>' value="nocalification"><liferay-ui:message key="evaluationtaskactivity.status.passed" /></aui:option>
+								<aui:option selected='<%= gradeFilter.equals("passed") %>' value="passed"><liferay-ui:message key="evaluationtaskactivity.passed" /></aui:option>
+								<aui:option selected='<%= gradeFilter.equals("failed") %>' value="failed"><liferay-ui:message key="evaluationtaskactivity.failed" /></aui:option>
+							</aui:select>
+						</aui:column>	
+						<aui:column>
+							<aui:button name="searchUsers" value="search" type="submit" />
+						</aui:column>
+					</aui:fieldset>
+				</aui:form>
+				
+					
+					<liferay-ui:search-container iteratorURL="<%=portletURL%>" emptyResultsMessage="there-are-no-results" delta="10" deltaConfigurable="true">
+
+				   	<liferay-ui:search-container-results>
+						<%
+							OrderByComparator obc = new UserFirstNameComparator(true);
+							LinkedHashMap<String,Object> params = new LinkedHashMap<String,Object>();
+							params.put("usersGroups", new Long(themeDisplay.getScopeGroupId()));
+												
+							if(gradeFilter.equals("passed")) {
+								params.put("passed",new CustomSQLParam(EvaluationAvgPortlet.COURSE_RESULT_PASSED_SQL,course.getCourseId()));
+							}
+							else {
+								if(gradeFilter.equals("failed")) {
+									params.put("failed",new CustomSQLParam(EvaluationAvgPortlet.COURSE_RESULT_FAIL_SQL,course.getCourseId()));
+								} else {
+									if (gradeFilter.equals("nocalification")) {
+										params.put("nocalification",new CustomSQLParam(EvaluationAvgPortlet.COURSE_RESULT_NO_CALIFICATION_SQL,course.getCourseId()));
+									}
+								}
+							}
+							
+							if ((GetterUtil.getInteger(PropsUtil.get(PropsKeys.PERMISSIONS_USER_CHECK_ALGORITHM))==6)&&(!ResourceBlockLocalServiceUtil.isSupported("com.liferay.lms.model"))){		
+								
+								params.put("notTeacher",new CustomSQLParam(EvaluationAvgPortlet.NOT_TEACHER_SQL,themeDisplay.getScopeGroupId()));
+								List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+								int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria,  WorkflowConstants.STATUS_ANY, params);
+								pageContext.setAttribute("results", userListPage);
+							    pageContext.setAttribute("total", userCount);
+							    
+							}
+							else{
+						
+								List<User> userListsOfCourse = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+								List<User> userLists =  new ArrayList<User>(userListsOfCourse.size());
+								
+								for(User userOfCourse:userListsOfCourse){							
+									if(!PermissionCheckerFactoryUtil.create(userOfCourse).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
+										userLists.add(userOfCourse);
+									}
+								}	
+								
+								pageContext.setAttribute("results", ListUtil.subList(userLists, searchContainer.getStart(), searchContainer.getEnd()));
+							    pageContext.setAttribute("total", userLists.size());	
+							}
+															
+
+						%>
 					</liferay-ui:search-container-results>
 					
-					<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity"
-						keyProperty="actId"
-						modelVar="learningActivityModel"
-						rowVar="learningActivityRow"
-					>
-					<%
-					
-					
-					%>
-						<liferay-ui:search-container-column-text name="evaluationTask.selected">
-							<aui:input type="checkbox" 
-							           inlineLabel="right" 
-							           label="" 
-							           name="<%=\"selected_\"+learningActivityModel.getActId() %>"  
-							           checked="<%=activities.containsKey(learningActivityModel.getActId())%>" 
-							           disabled="true"
-							></aui:input>
-						</liferay-ui:search-container-column-text>
-						<liferay-ui:search-container-column-text name="evaluationTask.weight">
-							<span id="<portlet:namespace />weight_<%=learningActivityModel.getActId() %>"
-								><%=(activities.containsKey(learningActivityModel.getActId()))?activities.get(learningActivityModel.getActId()):StringPool.BLANK %></span>
-						</liferay-ui:search-container-column-text>
-						<liferay-ui:search-container-column-text name="evaluationTask.title">
-							<span id="<portlet:namespace />title_<%=learningActivityModel.getActId() %>"
-								><%=learningActivityModel.getTitle(themeDisplay.getLocale()) %></span>
-						</liferay-ui:search-container-column-text>
-						<liferay-ui:search-container-column-text name="evaluationTask.configuration">
-							<liferay-ui:icon image="configuration" toolTip="config" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"showPopupActivities(\"+learningActivityModel.getActId()+\");\" %>" />
-						</liferay-ui:search-container-column-text>
-					</liferay-ui:search-container-row>
+					<liferay-ui:search-container-row className="com.liferay.portal.model.User" keyProperty="userId" modelVar="user">
+					<liferay-ui:search-container-column-text name="name">
+						<liferay-ui:user-display userId="<%=user.getUserId() %>"></liferay-ui:user-display>
+					</liferay-ui:search-container-column-text>
+					<liferay-ui:search-container-column-text name="calification">
+						<% 
+						   LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, user.getUserId());
+						   if(learningActivityResult!=null) {	   
+								   if(learningActivityResult.getPassed()){
+									   %><liferay-ui:message key="<%=passedStudentMessageKey %>"  arguments="<%=
+											   new Object[]{learningActivityResult.getResult(),learningActivity.getPasspuntuation()} %>" /><%
+								   }else {
+									   %><liferay-ui:message key="<%=failedStudentMessageKey %>"  arguments="<%=
+											   new Object[]{learningActivityResult.getResult(),learningActivity.getPasspuntuation()} %>" /><%
+								   }
+								   
+								   if(!hasPublishDate) {
+								   %>
+								   <portlet:actionURL name="reCalculate" var="reCalculateURL">
+								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+								   </portlet:actionURL>
+						            <p class="see-more">
+									<a href="<%=reCalculateURL %>">
+										<liferay-ui:message key="evaluationtaskactivity.recalculate"/>
+									</a>
+									</p>
+								     <p class="see-more">
+									<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
+										<liferay-ui:message key="evaluationtaskactivity.set.grades"/>
+									</a>
+									</p>
+								<%
+								   }
+							  
+			               	}else{
+								   %><liferay-ui:message key="evaluationtaskactivity.student.without.qualification" /><% 
+							}%>
 
-					<liferay-ui:search-iterator />
+					</liferay-ui:search-container-column-text>
+					</liferay-ui:search-container-row>
+					
+				 	<liferay-ui:search-iterator />
+				 	
 				</liferay-ui:search-container>
 				
-				<liferay-portlet:actionURL var="execEvaluationURL" name="execEvaluation">
-					<liferay-portlet:param name="actId" value="<%=Long.toString(actId) %>"/>
-				</liferay-portlet:actionURL>
 				
-				<aui:button  href="<%=execEvaluationURL %>" value="Mensaje" />
+				<% } %>	
 				
-					<div class="nota"> 
+				<div class="nota"> 
 
-						<%if ((result!=null)&&(result.getResult()>0)){ %>
-							<%if (!result.getComments().trim().equals("")){ %>
-								<h4>Comentario del profesor:<%=result.getComments() %></h4>
-							<% } %>
-							<h4><liferay-ui:message key="evaluationTask.result" arguments="<%=arguments %>" /></h4>
-							<%
-							if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
-							%>
-								<h4><liferay-ui:message key="evaluationTask.result.pass" /> </h4>
-							<%
-							}else{
-								Object  [] arg =  new Object[]{learningActivity.getPasspuntuation()};
-							%>	
-								<h4><liferay-ui:message key="evaluationTask.result.fail"  arguments="<%=arg %>" /> </h4>
-							<%
-								
-							}
-						}%>
-					
-					</div>
-			
-			</div>
-			<%
-		}
+<%
+	if(!isTeacher){ 
+	if (result!=null){ %>
+	<h2><liferay-ui:message key="evaluationtaskactivity.result.title" /></h2>
+	<p><liferay-ui:message key="evaluationtaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
+	<%
+	if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
+	%>
+		<p class="nota_superado"><liferay-ui:message key="evaluationtaskactivity.result.pass" /></p>
+	<%
+	}else{
+	%>
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationtaskactivity.result.notpass.passPuntuation"  arguments="<%=new Object[]{learningActivity.getPasspuntuation()} %>" /></p>
+	<%
 	}
+	if (!result.getComments().trim().equals("")){ %>
+	<p><liferay-ui:message key="evaluationtaskactivity.result.teachercoment" /> <span class="destacado"><%=result.getComments() %></span></p>
+	<% } 
+}else {
 %>
+	<p class="nota_nocorregida"><liferay-ui:message key="evaluationtaskactivity.not.qualificated.activity" /></p>
+<% 
+}}}}
+
+%>
+
+</div>
+			
+</div>
+
