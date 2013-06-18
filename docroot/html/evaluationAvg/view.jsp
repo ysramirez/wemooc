@@ -29,11 +29,11 @@
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
 		boolean needPassPuntuation = courseEval.getNeedPassPuntuation(); 
-		long passPuntuation = 5; // (needPassPuntuation)?courseEval.getPassPuntuation(course):0;		
-		boolean needPassAllModules = false; //courseEval.getNeedPassAllModules();
+		long passPuntuation = (needPassPuntuation)?courseEval.getPassPuntuation(course):0;		
+		boolean needPassAllModules = courseEval.getNeedPassAllModules();
 		
-		String passedStudentMessageKey="evaluationAvg.student.passed";
-		String failedStudentMessageKey="evaluationAvg.student.failed";
+		String passedStudentMessageKey=(needPassPuntuation)?"evaluationAvg.student.passed":"evaluationAvg.student.passed.noPass";
+		String failedStudentMessageKey=(needPassPuntuation)?"evaluationAvg.student.failed":"evaluationAvg.student.failed.noPass";
 		
 		
 		CourseResult result = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(), themeDisplay.getUserId());
@@ -309,17 +309,17 @@
 	<%
 	if(result.isPassed()){
 	%>
-		<p class="nota_superado"><liferay-ui:message key="evaluationAvg.result.pass" /></p>
+		<p class="nota_superado"><liferay-ui:message key="evaluationAvg.result.pass"  arguments="<%=new Object[]{result.getResult()} %>"  /></p>
 	<%
 	}else{
 
 		if(needPassPuntuation) {
 	%>	
-		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.passPuntuation"  arguments="<%=new Object[]{passPuntuation} %>" /></p>
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.passPuntuation"  arguments="<%=new Object[]{result.getResult(),passPuntuation} %>" /></p>
 	<% 
 		}else {
 	%>
-		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.notPassPuntuation" /></p>	
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.notPassPuntuation"   arguments="<%=new Object[]{result.getResult()} %>"  /></p>	
 	<%
 		}
 	}

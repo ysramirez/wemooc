@@ -157,7 +157,7 @@ LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearning
 LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
 
 
-String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationtaskactivity.grades.resultMessage", new Object[]{learningActivity.getPasspuntuation()});
+String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationtaskactivity.grades.resultMessage", new Object[]{result.getResult()});
 
 %>
 

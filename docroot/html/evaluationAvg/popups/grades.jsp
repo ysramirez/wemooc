@@ -152,13 +152,7 @@ long userId = ParamUtil.getLong(renderRequest, "userId");
 CourseResult courseResult = CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), userId);
 CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
 
-String resultHelpMessage=null;
-if(courseEval.getNeedPassPuntuation()){
-	resultHelpMessage=LanguageUtil.format(pageContext, "evaluationAvg.grades.resultMessage", new Object[]{courseEval.getPassPuntuation(course)});
-}
-else{
-	resultHelpMessage=LanguageUtil.get(pageContext, "evaluationAvg.grades.resultMessage");	
-}
+String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationAvg.grades.resultMessage", new Object[]{courseResult.getResult()});
 
 %>
 
