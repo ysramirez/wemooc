@@ -120,9 +120,28 @@ else
 
 				    function <portlet:namespace />calculateEvaluation()
 				    {
-						if(confirm('<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />')){
-							location.href='<portlet:actionURL name="update" />';
-						}  	
+				    	AUI().use('aui-dialog', function(A) {
+					    	var dialog1 = new A.Dialog({
+					    		title: '<liferay-ui:message key="evaluationtaskactivity.calculate" />',
+					    		bodyContent: '<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />',
+					    		height: 150,
+					    		width: 300,
+					    		modal: true,
+					    		centered: true,
+					    		buttons: [{
+					    			label: '<liferay-ui:message key="ok" />',
+					    			handler: function() {
+					    				location.href='<portlet:actionURL name="update" />';
+					    			}
+					    		},
+					    		{
+					    			label: '<liferay-ui:message key="cancel" />',
+					    			handler: function() {
+					    				this.close();
+					    			}
+					    		}]
+					    	}).render().show();
+					    }); 	
 				    }
 
 					<% 
@@ -132,9 +151,28 @@ else
 
 				    function <portlet:namespace />publish()
 				    {
-						if(confirm('<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />')){
-							location.href='<portlet:actionURL name="publish" />';
-						}  	
+				    	AUI().use('aui-dialog', function(A) {
+					    	var dialog1 = new A.Dialog({
+					    		title: '<liferay-ui:message key="evaluationtaskactivity.publish" />',
+					    		bodyContent: '<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />',
+					    		height: 150,
+					    		width: 300,
+					    		modal: true,
+					    		centered: true,
+					    		buttons: [{
+					    			label: '<liferay-ui:message key="ok" />',
+					    			handler: function() {
+					    				location.href='<portlet:actionURL name="publish" />';
+					    			}
+					    		},
+					    		{
+					    			label: '<liferay-ui:message key="cancel" />',
+					    			handler: function() {
+					    				this.close();
+					    			}
+					    		}]
+					    	}).render().show();
+					    });  	
 				    }
 
 					<%
@@ -308,7 +346,28 @@ else
 								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
 								   </portlet:actionURL>
 						            <p class="see-more">
-									<a onClick="if(confirm('<liferay-ui:message key="evaluationtaskactivity.recalculate.confirm" />')){ location.href='<%=reCalculateURL %>'; }">
+									<a onClick="AUI().use('aui-dialog', function(A) {
+											    	var dialog1 = new A.Dialog({
+											    		title: '<liferay-ui:message key="evaluationtaskactivity.recalculate" />',
+											    		bodyContent: '<liferay-ui:message key="evaluationtaskactivity.recalculate.confirm" />',
+											    		height: 150,
+											    		width: 300,
+											    		modal: true,
+											    		centered: true,
+											    		buttons: [{
+											    			label: '<liferay-ui:message key="ok" />',
+											    			handler: function() {
+											    				location.href='<%=reCalculateURL %>';
+											    			}
+											    		},
+											    		{
+											    			label: '<liferay-ui:message key="cancel" />',
+											    			handler: function() {
+											    				this.close();
+											    			}
+											    		}]
+											    	}).render().show();
+											    });">
 										<liferay-ui:message key="evaluationtaskactivity.recalculate"/>
 									</a>
 									</p>
