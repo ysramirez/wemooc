@@ -1,8 +1,14 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
+<%@ include file="/init.jsp"%>
 <%
-Course course=(Course)request.getAttribute("course");
-%>
+String abstractLength = renderRequest.getPreferences().getValue("abstractLength", "200");
 
-<p><%=HtmlUtil.unescape(course.getDescription()) %></p>
+Course course=(Course)request.getAttribute("course");
+String summary = course.getDescription();
+
+summary = StringUtil.shorten(summary, Integer.valueOf(abstractLength), "...");
+
+%>
+<p><%= summary %></p>
