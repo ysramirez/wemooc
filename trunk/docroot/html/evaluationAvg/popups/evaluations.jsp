@@ -306,8 +306,8 @@
 			    			DynamicQueryFactoryUtil.forClass(Module.class).add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
 			    			setProjection(ProjectionFactoryUtil.property("moduleId"))	
 			    		)).
-			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId()))/*.
-			    	    add(PropertyFactoryUtil.forName("typeId").eq(8))*/.
+			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
+			    	    add(PropertyFactoryUtil.forName("typeId").eq(8)).
 			    	    addOrder(OrderFactoryUtil.asc("moduleId")), 
 			    	searchContainer.getStart(), searchContainer.getEnd()));
 			
@@ -316,8 +316,8 @@
 				    			DynamicQueryFactoryUtil.forClass(Module.class).add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
 				    			setProjection(ProjectionFactoryUtil.property("moduleId"))	
 				    		)).
-				    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId()))/*.
-				    	    add(PropertyFactoryUtil.forName("typeId").eq(8))*/	
+				    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
+				    	    add(PropertyFactoryUtil.forName("typeId").eq(8))
 			    		));			
 			%>
 		</liferay-ui:search-container-results>

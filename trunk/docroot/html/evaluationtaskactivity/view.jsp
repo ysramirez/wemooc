@@ -344,11 +344,11 @@ else
 	<%
 	if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
 	%>
-		<p class="nota_superado"><liferay-ui:message key="evaluationtaskactivity.result.pass" /></p>
+		<p class="nota_superado"><liferay-ui:message key="evaluationtaskactivity.result.pass" arguments="<%=new Object[]{result.getResult(),learningActivity.getPasspuntuation()} %>" /></p>
 	<%
 	}else{
 	%>
-		<p class="nota_nosuperado"><liferay-ui:message key="evaluationtaskactivity.result.notpass.passPuntuation"  arguments="<%=new Object[]{learningActivity.getPasspuntuation()} %>" /></p>
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationtaskactivity.result.notpass.passPuntuation"  arguments="<%=new Object[]{result.getResult(),learningActivity.getPasspuntuation()} %>" /></p>
 	<%
 	}
 	if (!result.getComments().trim().equals("")){ %>
