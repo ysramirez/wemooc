@@ -78,7 +78,7 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 			{ "description", Types.VARCHAR },
 			{ "index_", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_SCORMContent (uuid_ VARCHAR(75) null,scormId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title VARCHAR(75) null,description VARCHAR(75) null,index_ VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_SCORMContent (uuid_ VARCHAR(75) null,scormId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title VARCHAR(75) null,description TEXT null,index_ VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_SCORMContent";
 	public static final String ORDER_BY_JPQL = " ORDER BY scormContent.scormId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_SCORMContent.scormId ASC";

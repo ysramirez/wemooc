@@ -84,6 +84,20 @@
 		{
 			request.setAttribute("learningActivity",activity);
 			request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
+			Object[] arguments = new Object[] { result.getResult() };
+			Object[] arg = new Object[] { activity.getPasspuntuation() };
+			%>
+			<p>
+				<liferay-ui:message key="test-done" />
+			</p>
+			<p>
+				<liferay-ui:message key="your-result" arguments="<%=arguments%>" />
+			</p>
+			<p class="color_tercero negrita">
+				<liferay-ui:message key="your-result-pass" arguments="<%=arg%>" />
+			</p>
+			
+			<% 
 		}
 		else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
 		|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)

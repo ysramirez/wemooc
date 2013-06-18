@@ -172,7 +172,9 @@
 		<field name="statusByUserName" type="String" />
 		<field name="statusDate" type="Date" />
 		<field name="title" type="String" />
-		<field name="description" type="String" />
+		<field name="description" type="String">
+			<hint name="max-length">500000</hint>
+		</field>
 		<field name="index" type="String" />
 	</model>
 	<model name="com.liferay.lms.model.SurveyResult">
