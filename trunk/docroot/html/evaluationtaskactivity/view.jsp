@@ -132,7 +132,7 @@ else
 
 				    function <portlet:namespace />publish()
 				    {
-						if(confirm('<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />')){
+						if(confirm('<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />')){
 							location.href='<portlet:actionURL name="publish" />';
 						}  	
 				    }
