@@ -172,7 +172,11 @@ else{
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.result.bad-format"))?
 	    															LanguageUtil.get(pageContext,"evaluationAvg.result.bad-format"):StringPool.BLANK %>
 	    		</div>
-		<liferay-ui:message key="evaluationAvg.result.percent" />
+	    <% if(courseEval.getNeedPassPuntuation()){ %>
+			<liferay-ui:message key="evaluationAvg.result.percent"  arguments="<%=new Object[]{courseEval.getPassPuntuation(course)} %>" />
+		<% } else { %>
+		    <liferay-ui:message key="evaluationAvg.result.percent.noPass" />
+		<% } %>
 		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationAvg.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=(courseResult.getComments()!=null)?courseResult.getComments():"" %>'>
 		</aui:input>
 		<liferay-ui:message key="evaluationAvg.comments.maxLength" />
