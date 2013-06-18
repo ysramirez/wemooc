@@ -312,7 +312,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 				Long idLong = GetterUtil.getLong(id);
 				
 				if(activitiesMap.containsKey(idLong)){
-					errors.add(LanguageUtil.format(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.idNumberRepeated",new Object[]{weight},false));
+					errors.add(LanguageUtil.format(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.idNumberRepeated",new Object[]{idLong},false));
 				}
 				else{
 					activitiesMap.put(idLong, GetterUtil.getLong(weight));
@@ -342,7 +342,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 			
 			if(activitiesMap.isEmpty()){
         		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
-        		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.noEvaluations")}); 
+        		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.noActivities")}); 
         		return;				
 			}
 					
@@ -476,17 +476,17 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
     		
     		long actId = ParamUtil.getLong(actionRequest,"actId"); 
         	if(actId==0){        		
-        		errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.noActIdParam"));
+        		errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.noActIdParam"));
         	}
         	
         	long userId = ParamUtil.getLong(actionRequest, "userId");
         	if(userId==0){        		
-        		errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.noUserIdParam"));
+        		errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.noUserIdParam"));
         	}
         	
     		long result = ParamUtil.getLong(actionRequest, "result");
         	if((result<0)||(result>100)){
-        		errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.resultNumberRange"));
+        		errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.resultNumberRange"));
         	}
         	
     		String comments = ParamUtil.getString(actionRequest, "comments");
@@ -501,7 +501,7 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 			LearningActivityTry  learningActivityTry =  LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId);
         	if(learningActivityTry==null){
         		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
-        		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.noLearningActivityTry")});  
+        		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.noLearningActivityTry")});  
         		return;
         	}
 
@@ -510,11 +510,11 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 			learningActivityTry.setComments(comments);
 			updateLearningActivityTryAndResult(learningActivityTry);
     		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[49]); //1    		
-    		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.grade.updating")});  
+    		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.grade.updating")});  
     		
     	} catch (Exception e) {	
     		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
-    		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.systemError")});  
+    		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.systemError")});  
     	} finally{
 	    	actionResponse.setRenderParameter("jspPage","/html/evaluationtaskactivity/popups/activitiesResult.jsp");   	
 	    	actionResponse.setRenderParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
