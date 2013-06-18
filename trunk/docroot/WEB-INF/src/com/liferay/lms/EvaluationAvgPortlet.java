@@ -220,7 +220,7 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
 			List<Long> actIdsInDatabase = 
 				LearningActivityLocalServiceUtil.dynamicQuery(
 				DynamicQueryFactoryUtil.forClass(LearningActivity.class)
-				//.add(PropertyFactoryUtil.forName("typeId").eq(8))
+				.add(PropertyFactoryUtil.forName("typeId").eq(8))
 				.add(PropertyFactoryUtil.forName("actId").in((Collection<Object>)(Collection<?>)evaluationMap.keySet()))
 				.setProjection(ProjectionFactoryUtil.property("actId")));
 			
@@ -262,7 +262,7 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
 		Element rootElement = document.getRootElement();
 		
 		Element firedDateElement = rootElement.element("firedDate");
-		//if(firedDateElement==null){
+		if(firedDateElement==null){
 			rootElement.addElement("firedDate").setText(_dateFormat.format(new Date()));
 			course.setCourseExtraData(document.formattedString());
 			CourseLocalServiceUtil.updateCourse(course);
@@ -270,7 +270,7 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
 			Message message = new Message();
 			message.put("courseId", course.getCourseId());
 			MessageBusUtil.sendMessage("liferay/lms/evaluationAverage", message);
-		//}
+		}
 		
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();
 		viewPortletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");   	
