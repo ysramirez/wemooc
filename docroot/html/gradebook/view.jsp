@@ -133,12 +133,7 @@
 						            centered: true,
 						            modal: true,
 						            width: 370,
-						            height: 300,
-						            after: {   
-							          	close: function(event){ 
-							          		document.location.reload();
-						            	}
-						            }
+						            height: 300
 						        }).plug(A.Plugin.IO, {
 						            uri: renderUrl.toString()
 						        }).render();
@@ -164,9 +159,14 @@
 					                	actId: actId,
 					                	studentId: studentId
 					                },
-					                on : { 
-					                    success : function() { 
-					                    	A.one('.aui-dialog-bd').set('innerHTML',this.get('responseData'));				                    	
+					                on : {
+					                	success : function() { 
+					                    	A.one('.aui-dialog-bd').set('innerHTML',this.get('responseData'));	
+					                    	window.<portlet:namespace />popupGrades.close();
+					                    	document.location.reload();
+					                    },
+						                cancel : function() { 
+					                    	window.<portlet:namespace />popupGrades.close();
 					                    } 
 					                } 
 					            });
