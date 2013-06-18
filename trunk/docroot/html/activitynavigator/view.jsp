@@ -1,3 +1,8 @@
+<%@page import="com.liferay.portal.model.Role"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.ResourceConstants"%>
+<%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
@@ -50,85 +55,84 @@
 		<div id="modulegreetings"><liferay-ui:message key="module-finissed-greetings" /></div>
 	<%
 	}
+
+	LearningActivity prevActivity=null;
+	boolean writeNext=false;
 	
-	if(actId > 0){
+	Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
 	
-		LearningActivity prevActivity=null;
-		boolean writeNext=false;
+	for(LearningActivity activity:activities){
 		
-		for(LearningActivity activity:activities){
-			
-			if(writeNext){
-				%>
-				<portlet:actionURL name="viewactivity" var="viewnextURL">
+		boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+				ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+		
+		boolean isLocked = LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId());
+		boolean accessLock = permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK");
+		//boolean update = permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE);
+		//boolean view = permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.VIEW);
+		
+		boolean showActivity = ( !isLocked || accessLock ) && visible ;
+		
+		//System.out.println("\n-------------------\n activity: " +activity.getTitle(themeDisplay.getLocale()));
+		//System.out.println(" is locked: " + LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId()));
+		//System.out.println(" ACCESSLOCK: " + permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"));
+		//System.out.println(" ActionKeys.UPDATE: " + permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE));
+		//System.out.println(" ActionKeys.VIEW: " +   permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.VIEW));
+		//System.out.println(" Visible: " + visible);
+		//System.out.println(" showActivity ( !isLocked || accessLock ) && ( visible ): " + showActivity);
+					
+		//Cuando entramos en la primera actividad desde el módulo y se puede ver.
+		if(actId == 0 && showActivity){
+			//System.out.println("    start activity: " +activity.getTitle(themeDisplay.getLocale()));
+			%>
+				<portlet:actionURL name="viewactivity" var="viewstartURL">
 					<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
 				</portlet:actionURL>
-				<% 
-				/*
-						if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),	activity.getActId(), ActionKeys.VIEW)){
-						   if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())
-							|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") 
-							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing)){
-							   
-						   }
-						}
-				
-				*/
-				if(LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())
-						&& !permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")
-						&& !permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.VIEW)){
+				<div id="startactivity"><a href="<%=viewstartURL.toString()%>"><liferay-ui:message key="start" /></a></div>
+			<%
+			break;
+		}
+		
+		if(writeNext){
+
+			if(showActivity){
+				//System.out.println("    next activity: " +activity.getTitle(themeDisplay.getLocale()));
 				%>
-					<div id="nextactivity" class="locked"><span><liferay-ui:message key="next" /></span></div>
-				<%
-				}else{
-				%>
+					<portlet:actionURL name="viewactivity" var="viewnextURL">
+						<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
+					</portlet:actionURL>
 					<div id="nextactivity"><a href="<%=viewnextURL.toString()%>"><liferay-ui:message key="next" /></a></div>
 				<%
-				}
+				//Tenemos la anterior y la siguiente, no necesitamos buscar más.
 				break;
 			}
-			else
-			{
-				if(activity.getActId() == actId){
-					
-					writeNext = true;
-					
-					if(prevActivity != null){
-						%>
+			
+		}
+		else
+		{
+			//Si la actividad actual es la primera, activamos calculo de la siguiente.
+			if(activity.getActId() == actId){
+				
+				writeNext = true;
+				
+				//Tenemos una anterior mostrable.
+				if(prevActivity != null){
+					//System.out.println("    previous activity: " +activity.getTitle(themeDisplay.getLocale()));
+					%>
 						<portlet:actionURL name="viewactivity" var="viewURL">
 							<portlet:param name="actId" value="<%=Long.toString(prevActivity.getActId()) %>" />
 						</portlet:actionURL>
-						<%
-						if(LearningActivityLocalServiceUtil.islocked(prevActivity.getActId(),themeDisplay.getUserId())
-								&& !permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")){
-						%>
-							<div id="previusactivity" class="locked"><span><liferay-ui:message key="prev" /></span></div>
-						<%	
-						}
-						else{
-						%>
-							<div id="previusactivity"><a href="<%=viewURL.toString()%>"><liferay-ui:message key="prev" /></a></div>
-						<%
-						}
-					}			
-				}
+						<div id="previusactivity"><a href="<%=viewURL.toString()%>"><liferay-ui:message key="prev" /></a></div>
+					<%
+				}			
 			}
-			prevActivity=activity;
-		}// fin for
-	}// fin if actId > 0
-	else
-	{
-		if(activities.size() > 0)
-		{
-			LearningActivity activity=activities.get(0);
-			%>
-			<portlet:actionURL name="viewactivity" var="viewstartURL">
-				<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
-			</portlet:actionURL>
-			
-			<div id="startactivity"><a href="<%=viewstartURL.toString()%>"><liferay-ui:message key="start" /></a></div>
-			
-			<%
 		}
-	}
+		
+		//Si se puede ver, la ponemos como la anterior.
+		if(showActivity){
+			prevActivity = activity;
+		}
+		
+	}// fin for activities
+
 %>
