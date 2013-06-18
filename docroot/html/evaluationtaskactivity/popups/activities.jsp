@@ -305,7 +305,8 @@
 	    var tabView = new A.TabView(
 	    	      {
 	    	    	 items: <%=moduleItems.toString() %>,
-	    	  		 contentBox: '#moduleTabs'
+	    	  		 contentBox: '#moduleTabs',
+	    	  		 width:770
 	    	      }
 	    	    ).render();
 
