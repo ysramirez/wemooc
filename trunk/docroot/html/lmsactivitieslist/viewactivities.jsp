@@ -196,13 +196,16 @@ Liferay.provide(
 				}
 				
 				if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),	activity.getActId(), ActionKeys.VIEW)){
-					if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())||
-							permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") ||
-							(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE)&&actionEditing)){
+					
+					if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())
+							|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") 
+							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing)){
+						
 						LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
 						AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
 						String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "");	
 						Portlet view1URLPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(view1URL, "p_p_id",false));
+						
 						if(view1URLPortlet!=null) {
 							PublicRenderParameter moduleIdPublicParameter = view1URLPortlet.getPublicRenderParameter("moduleId");
 							if(moduleIdPublicParameter!=null) {					
@@ -234,18 +237,9 @@ Liferay.provide(
 				}
 
 				if (actionEditing
-					&& (permissionChecker.hasPermission(
-						activity.getGroupId(),
-						LearningActivity.class.getName(),
-						activity.getActId(), ActionKeys.UPDATE)
-						|| permissionChecker.hasPermission(
-								activity.getGroupId(),
-								LearningActivity.class.getName(),
-								activity.getActId(), ActionKeys.DELETE) || permissionChecker
-							.hasPermission(activity.getGroupId(),
-									LearningActivity.class.getName(),
-									activity.getActId(),
-									ActionKeys.PERMISSIONS))) {
+					&& (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.UPDATE)
+						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.DELETE) 
+						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.PERMISSIONS))) {
 				%>
 				<div class="iconsedit"><%@ include file="/html/lmsactivitieslist/admin_actions.jspf" %></div>
 				
