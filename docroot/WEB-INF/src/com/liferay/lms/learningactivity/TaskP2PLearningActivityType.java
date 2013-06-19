@@ -55,7 +55,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 
 	@Override
 	public String getName() {
-		return "taskp2p";
+		return "learningactivity.p2p";
 	}
 
 	@Override
@@ -218,6 +218,11 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 		
 			learningActivity.setExtracontent(document.formattedString());
 	    }
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.p2p.helpmessage";
 	}
 	
 	@Override

@@ -21,7 +21,7 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 	@Override
 	public String getName() {
 		
-		return "survey";
+		return "learningactivity.survey";
 	}
 
 	@Override
@@ -34,6 +34,11 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 	@Override
 	public String getMesageEditDetails() {
 		return "surveyactivity.editquestions";
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.survey.helpmessage";
 	}
 	
 	@Override

@@ -56,7 +56,7 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 	@Override
 	public String getName() {
 		
-		return "resourceExternal";
+		return "learningactivity.external";
 	}
 
 
@@ -189,6 +189,11 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
      
   
         return dlMainFolderId;
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.external.helpmessage";
 	}
 	
 	@Override

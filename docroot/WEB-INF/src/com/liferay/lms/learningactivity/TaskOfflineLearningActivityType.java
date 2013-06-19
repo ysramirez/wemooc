@@ -21,7 +21,7 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 	@Override
 	public String getName() {
 		
-		return "offLine";
+		return "learningactivity.offline";
 	}
 
 	@Override
@@ -37,6 +37,11 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 	@Override
 	public boolean hasEditDetails() {
 		return false;
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.offline.helpmessage";
 	}
 	
 	@Override

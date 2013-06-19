@@ -44,7 +44,7 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 	@Override
 	public String getName() {
 
-		return "SCORM";
+		return "learningactivity.scorm";
 	}
 
 	@Override
@@ -108,6 +108,11 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		learningActivity.setExtracontent(document.formattedString());
 	}
 
+	@Override
+	public String getDescription() {
+		return "learningactivity.scorm.helpmessage";
+	}
+	
 	@Override
 	public String getPortletId() {
 		return PORTLET_ID;
