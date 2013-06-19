@@ -99,15 +99,15 @@ if(request.getAttribute("activity")!=null) {
 %>
 
 <aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>"/>
-<aui:field-wrapper name="scormactivity.edit.asserts" cssClass="search-button-container">
+<aui:field-wrapper name="activity.edit.asserts" cssClass="search-button-container">
 	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50"/>
 	<button type="button" id="<portlet:namespace/>searchEntry" onclick="<portlet:namespace/>search();" >
 	    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 	</button>
 </aui:field-wrapper>
-<aui:field-wrapper name="scormactivity.edit.openwindow.options">
-	<aui:input type="checkbox" name="openWindow" label="scormactivity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
+<aui:field-wrapper name="activity.edit.openwindow.options">
+	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
 </aui:field-wrapper>
 	
 <div id="<portlet:namespace/>backButton" style="display:none;">
