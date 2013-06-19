@@ -106,8 +106,8 @@ if(request.getAttribute("activity")!=null) {
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 	</button>
 </aui:field-wrapper>
-<aui:field-wrapper name="scormactivity.edit.openwindow">
-	<aui:input type="checkbox" name="openWindow" value="<%= String.valueOf(openWindow) %>" />
+<aui:field-wrapper name="scormactivity.edit.openwindow.options">
+	<aui:input type="checkbox" name="openWindow" label="scormactivity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
 </aui:field-wrapper>
 	
 <div id="<portlet:namespace/>backButton" style="display:none;">
