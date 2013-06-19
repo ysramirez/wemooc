@@ -46,13 +46,15 @@ else
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.coursemodel",themeDisplay.getScopeGroupId(),"ADD_COURSE"))
 {
 %>
-<div class="newitem">
+<div class="newitem2">
 <liferay-ui:icon
 image="add"
 label="<%= true %>"
 message="new"
 url='<%= newactivityURL %>'
 />
+
+
 </div>
 <%
 }
