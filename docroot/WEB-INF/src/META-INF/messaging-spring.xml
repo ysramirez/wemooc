@@ -4,30 +4,45 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">  
 	
 	<!-- Listeners -->
-	<bean id="messageListener.liferay.lms.evaluation_listener"
+	<bean id="messageListener.liferay.lms.evaluationActivity_listener"
 		class="com.liferay.lms.EvaluationActivity" />
+	<bean id="messageListener.liferay.lms.evaluationAverage_listener"
+		class="com.liferay.lms.EvaluationAvgPortlet" />	
+		
 	
 	<!-- Destinations -->
-	<bean id="destination.liferay.lms.evaluation"
+	<bean id="destination.liferay.lms.evaluationActivity"
 		class="com.liferay.portal.kernel.messaging.SerialDestination">
-		<property name="name" value="liferay/lms/evaluation" />
+		<property name="name" value="liferay/lms/evaluationActivity" />
 	</bean>
+	
+	<bean id="destination.liferay.lms.evaluationAverage"
+		class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="liferay/lms/evaluationAverage" />
+	</bean>
+	
 	
 	<!-- Configurator -->
 	<bean id="messagingConfigurator"
 		class="com.liferay.portal.kernel.messaging.config.PluginMessagingConfigurator">
 		<property name="messageListeners">
 			<map key-type="java.lang.String" value-type="java.util.List">
-				<entry key="liferay/lms/evaluation">
+				<entry key="liferay/lms/evaluationActivity">
 					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
-						<ref bean="messageListener.liferay.lms.evaluation_listener" />
+						<ref bean="messageListener.liferay.lms.evaluationActivity_listener" />
+					</list>
+				</entry>
+				<entry key="liferay/lms/evaluationAverage">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.liferay.lms.evaluationAverage_listener" />
 					</list>
 				</entry>
 			</map>
 		</property>
 		<property name="destinations">
 			<list>
-				<ref bean="destination.liferay.lms.evaluation" />
+				<ref bean="destination.liferay.lms.evaluationActivity" />
+				<ref bean="destination.liferay.lms.evaluationAverage" />
 			</list>
 		</property>
 	</bean>
