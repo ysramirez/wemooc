@@ -191,7 +191,7 @@ else
 
 							window.<portlet:namespace />popupGrades = new A.Dialog({
 								id:'<portlet:namespace />showPopupGrades',
-					            title: '<%=LanguageUtil.get(pageContext, "evaluationtaskactivity.set.grade")%>',
+					            title: '<%=LanguageUtil.get(pageContext, "evaluationtaskactivity.set.grades")%>',
 					            centered: true,
 					            modal: true,
 					            after: {   
