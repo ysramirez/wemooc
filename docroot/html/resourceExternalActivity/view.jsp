@@ -80,13 +80,7 @@ else
 				AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
 				AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 				String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
-				if(!entry.getClassName().equals(JournalArticle.class.getName()))
-				{
-					%>
-					<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-					<%
-					
-				}
+
 				if(entry.getClassName().equals(DLFileEntry.class.getName()))
 				{
 					
@@ -265,10 +259,7 @@ else
 			}
 			else
 			{
-				%>
-				<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-				<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>
-				<%
+
 			Document document = SAXReaderUtil.read(learnact.getExtracontent());
 			Element root=document.getRootElement();
 			Element video=root.element("video");
