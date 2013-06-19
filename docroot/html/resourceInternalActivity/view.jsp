@@ -80,13 +80,7 @@ else
 				AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
 				AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 				String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
-				if(!entry.getClassName().equals(JournalArticle.class.getName()))
-				{
-					%>
-					<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-					<%
-					
-				}
+								
 				if(entry.getClassName().equals(DLFileEntry.class.getName()))
 				{
 					
@@ -264,12 +258,6 @@ else
 				}
 			}
 		}
-	}
-	if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
-		%>
-		<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
-		<liferay-ui:discussion classPK="<%=learnact.getPrimaryKey() %>" userId="<%=learnact.getUserId()%>" className="<%=learnact.getClass().getName()%>" subject="<%=learnact.getTitle()%>" formAction="<%=discussionURL%>" redirect="<%= currentURL %>"/>
-		<%
 	}
 }
 %>
