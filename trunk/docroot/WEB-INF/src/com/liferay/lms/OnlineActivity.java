@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
@@ -53,6 +54,17 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  * Portlet implementation class SurveyActivity
  */
 public class OnlineActivity extends MVCPortlet {
+	
+	public static final String NOT_TEACHER_SQL = "WHERE User_.userId NOT IN "+
+			 "( SELECT Usergrouprole.userId "+
+			 "    FROM Usergrouprole "+ 
+			 "   INNER JOIN Resourcepermission ON Usergrouprole.roleId = Resourcepermission.roleId "+
+			 "   INNER JOIN Resourceaction ON Resourcepermission.name = Resourceaction.name "+
+			 "	   					      AND (BITAND(CAST_LONG(ResourcePermission.actionIds), CAST_LONG(ResourceAction.bitwiseValue)) != 0)"+
+			 "   WHERE Resourcepermission.scope="+ResourceConstants.SCOPE_GROUP_TEMPLATE+
+			 "     AND Resourceaction.actionId = 'VIEW_RESULTS' "+
+			 "     AND Resourceaction.name='com.liferay.lms.model' "+
+			 "     AND Usergrouprole.groupid=? ) ";
 
 	public static final String ACTIVITY_TRY_SQL = "WHERE (EXISTS (SELECT 1 FROM lms_learningactivitytry " +
 			"WHERE User_.userId = lms_learningactivitytry.userId AND lms_learningactivitytry.actId = ? ))"; 
