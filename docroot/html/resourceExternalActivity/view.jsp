@@ -46,6 +46,12 @@ else
 
 	LearningActivity learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
 	
+	%>
+		<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
+		<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>
+		
+	<%
+	
 	if(learnact.getTypeId()!=2 )
 	{
 		
@@ -315,14 +321,7 @@ else
 			
 			}
 		}
-		else
-		{
-			%>
-			<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
-			<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>
-			
-		<%
-		}
+
 	}
 	if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
 		%>
