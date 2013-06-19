@@ -25,8 +25,14 @@ long[] groupIds=new long[1];
 groupIds[0]=groupIdSelected;
 String[] entryClassNames={className};
 
+PortletURL portletURL= renderResponse.createRenderURL();
+portletURL.setParameter("className",className);
+portletURL.setParameter("jspPage","/html/resourceInternalActivity/admin/searchresults.jsp");
+portletURL.setParameter("groupId",Long.toString(groupIdSelected));
+portletURL.setParameter("actionEditing","true");
+
 %>
-<liferay-ui:search-container emptyResultsMessage="there-are-no-assets"
+<liferay-ui:search-container emptyResultsMessage="there-are-no-assets" iteratorURL="<%=portletURL%>"
  delta="10">
 <liferay-ui:search-container-results>
 
