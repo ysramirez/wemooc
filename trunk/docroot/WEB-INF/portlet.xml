@@ -1638,6 +1638,10 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<supports>
+			<mime-type>application/json</mime-type>
+			<portlet-mode>VIEW</portlet-mode>
+		</supports>
 		<resource-bundle>content/evaluationavg/Language</resource-bundle>
 		<portlet-info>
 			<title>evaluationAvg</title>
