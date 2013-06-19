@@ -43,6 +43,7 @@
 	long userId = themeDisplay.getUserId();
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
+	String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
 
 	//Obtener si puede hacer un intento de mejorar el resultado.
 	boolean improving = false;
@@ -50,7 +51,7 @@
 	if (result != null) {
 		int done =  LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId,userId);
 		LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
-		if(result.getResult() < 100
+		if (result.getResult() < 100
 		   && !LearningActivityLocalServiceUtil.islocked(actId, userId)
 		   && LearningActivityResultLocalServiceUtil.userPassed(actId, userId)
 		   && done < act.getTries()){
@@ -88,13 +89,13 @@
 			Object[] arg = new Object[] { activity.getPasspuntuation() };
 			%>
 			<p>
-				<liferay-ui:message key="test-done" />
+				<liferay-ui:message key="activity-done" />
 			</p>
 			<p>
-				<liferay-ui:message key="your-result" arguments="<%=arguments%>" />
+				<liferay-ui:message key="activity.your-result" arguments="<%=arguments%>" />
 			</p>
 			<p class="color_tercero negrita">
-				<liferay-ui:message key="your-result-pass" arguments="<%=arg%>" />
+				<liferay-ui:message key="activity.your-result-pass" arguments="<%=arg%>" />
 			</p>
 			
 			<% 
@@ -114,7 +115,9 @@
 	//Comprobar si tenemos un try sin fecha de fin, para continuar en ese try.
 	if(learningTry == null)
 	{
-		learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+		if (!("true".equals(openWindow) && !themeDisplay.isStateMaximized())) {
+			learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+		}
 	}
 	else
 	{
@@ -138,22 +141,34 @@
 %>
 
 <% if (activity.getPasspuntuation() > 0) { %>
-<h3><liferay-ui:message key="scormactivity.try.pass.puntuation" arguments="<%= arg %>" /></h3>
+<h3><liferay-ui:message key="activity.try.pass.puntuation" arguments="<%= arg %>" /></h3>
 <% }
-String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
+
 if ("true".equals(openWindow) && !themeDisplay.isStateMaximized()) { %>
 				<liferay-portlet:renderURL var="scormwindow" windowState="<%= LiferayWindowState.MAXIMIZED.toString() %>"/>
 				<script type="text/javascript">
-					function abrirActividad() {
+			Liferay.provide(
+			        window,
+			        '<portlet:namespace />actualizarActividad',
+			        function() {
+						Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+			        },
+			        ['node']
+			    );
+			Liferay.provide(
+					window,
+					'<portlet:namespace />abrirActividad',
+					function() {
 						ventana = window.open('<%= scormwindow %>', "scormactivity");
-						return ventana;
+						ventana.onbeforeunload = <portlet:namespace />actualizarActividad;
+						return false;
 					}
-					abrirActividad();
-				</script>
+			);
+			</script>
 				
-				<liferay-ui:message key="scormactivity.openwindow"></liferay-ui:message>
+				<liferay-ui:message key="activity.openwindow"></liferay-ui:message>
 				
-				<a href="<%= scormwindow %>" target="_blank" >Go</a>
+				<a href="#" onclick="javascript:<portlet:namespace />abrirActividad();" ><liferay-ui:message key="activity.go"></liferay-ui:message></a>
 				<%
 			} else {
 			
@@ -172,96 +187,98 @@ if ("true".equals(openWindow) && !themeDisplay.isStateMaximized()) { %>
 				</script>
 				<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>"></liferay-util:include>
 				<script type="text/javascript">
-		
-					var update_scorm = function(e) {
-						var scormpool = localStorage['scormpool'];
-						var results = JSON.parse(scormpool, function (key, value) {
-							var type;
-						    if (value && typeof value === 'object') {
-						        type = value.type;
-						        if (typeof type === 'string' && typeof window[type] === 'function') {
-						            return new (window[type])(value);
-						        }
-						    }
-						    return value;
-						});
-						var orgs = results.organizations;
-						var org = null;
-						for (var key in orgs) {
-							if (orgs.hasOwnProperty(key)) {
-								org = orgs[key];
-								break;
-							}
-						}
-						if (org != null) {
-							var lessons = org.cmi;
-							var lesson = null;
-							for (var key2 in lessons) {
-								if (lessons.hasOwnProperty(key2)) {
-									lesson = lessons[key2];
+
+				        var <portlet:namespace />update_scorm = function(e) {
+							var scormpool = localStorage['scormpool'];
+							var results = JSON.parse(scormpool, function (key, value) {
+								var type;
+							    if (value && typeof value === 'object') {
+							        type = value.type;
+							        if (typeof type === 'string' && typeof window[type] === 'function') {
+							            return new (window[type])(value);
+							        }
+							    }
+							    return value;
+							});
+							var orgs = results.organizations;
+							var org = null;
+							for (var key in orgs) {
+								if (orgs.hasOwnProperty(key)) {
+									org = orgs[key];
 									break;
 								}
 							}
-							if (lesson != null) {
-								var lesson_success_status = lesson["cmi.success_status"].value;
-								var lesson_completion_status = lesson["cmi.completion_status"].value;
-								var lesson_score_raw = lesson["cmi.score.raw"].value;
-								var lesson_score_min = lesson["cmi.score.min"].value;
-								var lesson_score_max = lesson["cmi.score.max"].value;
-								
-								var lesson_score = lesson["cmi.score.scaled"].value;
-								
-								if (lesson_score < 0) {
-									lesson_score = 0;
-								} else {
-									lesson_score *= 100;
-								}				
-								
-								// if (estado finished) launch service
-								if (lesson_completion_status == 'completed') {
-									var serviceParameterTypes = [
-							      		'long',
-							      		'long',
-							      		'java.lang.String'
-							      	];
-												 		
-							      	Liferay.Service.Lms.LearningActivityResult.update(
-							      		{
-							      			latId: <%= learningTry.getLatId() %>,
-							      			result: lesson_score,
-							      			tryResultData: JSON.stringify(lesson),
-							      			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
-							      		},
-							      		function(message) {
-							                 var exception = message.exception;
-							
-							                 if (!exception) {
-							                     // Process Success - A LearningActivityResult returned
-							                 	console.log(message);
-							                 }
-							                 else {
-							                     // Process Exception
-							                 	
-							                 }
-							             }
-							      	);
-								} else if (lesson_completion_status == 'incomplete') {
-									
-								} else if (lesson_completion_status == 'not attempted') {
-									
-								} else if (lesson_completion_status == 'unknown') {
-									
+							if (org != null) {
+								var lessons = org.cmi;
+								var lesson = null;
+								for (var key2 in lessons) {
+									if (lessons.hasOwnProperty(key2)) {
+										lesson = lessons[key2];
+										break;
+									}
 								}
-							
+								if (lesson != null) {
+									var lesson_success_status = lesson["cmi.success_status"].value;
+									var lesson_completion_status = lesson["cmi.completion_status"].value;
+									var lesson_score_raw = lesson["cmi.score.raw"].value;
+									var lesson_score_min = lesson["cmi.score.min"].value;
+									var lesson_score_max = lesson["cmi.score.max"].value;
+									
+									var lesson_score = lesson["cmi.score.scaled"].value;
+									
+									if (lesson_score < 0) {
+										lesson_score = 0;
+									} else {
+										lesson_score *= 100;
+									}				
+									
+									// if (estado finished) launch service
+									if (lesson_completion_status == 'completed') {
+										var serviceParameterTypes = [
+								      		'long',
+								      		'long',
+								      		'java.lang.String'
+								      	];
+													 		
+								      	Liferay.Service.Lms.LearningActivityResult.update(
+								      		{
+								      			latId: <%= learningTry.getLatId() %>,
+								      			result: lesson_score,
+								      			tryResultData: JSON.stringify(lesson),
+								      			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
+								      		},
+								      		function(message) {
+								                 var exception = message.exception;
+								
+								                 if (!exception) {
+								                     // Process Success - A LearningActivityResult returned
+								                	 window.opener.<portlet:namespace />actualizarActividad();
+								                 }
+								                 else {
+								                     // Process Exception
+								                	 window.location.reload(true);
+								                 }
+								             }
+								      	);
+									} else if (lesson_completion_status == 'incomplete') {
+										
+									} else if (lesson_completion_status == 'not attempted') {
+										
+									} else if (lesson_completion_status == 'unknown') {
+										
+									}
+								
+								}
 							}
-						}
-					};
+				        }
 					
+				
 					if(window.addEventListener) {
-					    window.addEventListener('scormevent', update_scorm, false);
+					    window.addEventListener('scormevent', <portlet:namespace />update_scorm, false);
 					} else {
-					    window.attachEvent('onscormevent', update_scorm);
+					    window.attachEvent('onscormevent', <portlet:namespace />update_scorm);
 					}
+				
 	
 				</script>
 				<%
@@ -277,16 +294,16 @@ else {
 %>
 <h2><%=activity.getTitle(themeDisplay.getLocale())%></h2>
 <p>
-	<liferay-ui:message key="test-done" />
+	<liferay-ui:message key="activity-done" />
 </p>
 <p>
-	<liferay-ui:message key="your-result" arguments="<%=arguments%>" />
+	<liferay-ui:message key="activity.your-result" arguments="<%=arguments%>" />
 </p>
 <p class="color_tercero negrita">
-	<liferay-ui:message key="your-result-dont-pass" arguments="<%=arg%>" />
+	<liferay-ui:message key="activity.your-result-dont-pass" arguments="<%=arg%>" />
 </p>
 <p>
-	<liferay-ui:message key="your-result-no-more-tries" />
+	<liferay-ui:message key="activity.your-result-no-more-tries" />
 </p>
 <%
 	}
