@@ -70,7 +70,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 <jsp:include page="/html/courseadmin/search_form.jsp" />
 <liferay-ui:search-container iteratorURL="<%=portletURL%>"
    		emptyResultsMessage="there-are-no-results"
-   		delta="10">
+   		delta="10" deltaConfigurable="true" >
 
    	<liferay-ui:search-container-results>
    	

@@ -57,7 +57,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 %>
 
 <liferay-ui:search-container emptyResultsMessage="there-are-no-users"
- delta="10" iteratorURL="<%=portletURL%>">
+ delta="10" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
 <liferay-ui:search-container-results>
 <%
 results = ListUtil.subList(users, searchContainer.getStart(),
