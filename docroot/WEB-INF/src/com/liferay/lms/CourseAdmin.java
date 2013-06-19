@@ -307,21 +307,18 @@ public class CourseAdmin extends MVCPortlet {
 	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
 		
 		String action = ParamUtil.getString(resourceRequest, "action");
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
 	
 		if(action.equals("export")){
 			
 			try {	
 				
 				long groupId = ParamUtil.getLong(resourceRequest, "groupId");
-				boolean privateLayout = ParamUtil.getBoolean(resourceRequest, "privateLayout");
 				String fileName = ParamUtil.getString(resourceRequest, "exportFileName");
 				
-				Date now = new Date();
-				Date startDate = new Date(now.getTime() - Time.DAY); //new Date(now.getTime() - (rangeLast * Time.HOUR));
-				Date endDate = now;
-							
-				File file = LayoutServiceUtil.exportLayoutsAsFile(groupId, privateLayout, null, resourceRequest.getParameterMap(), null, null);
-			
+				File file = LayoutServiceUtil.exportPortletInfoAsFile(themeDisplay.getLayout().getPlid(), groupId, themeDisplay.getPortletDisplay().getId(), resourceRequest.getParameterMap(), null, null);
+				
 				HttpServletRequest request = PortalUtil.getHttpServletRequest(resourceRequest);
 				HttpServletResponse response = PortalUtil.getHttpServletResponse(resourceResponse);
 	
@@ -347,6 +344,8 @@ public class CourseAdmin extends MVCPortlet {
 		
 		try {
 			UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+			
+			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
 			long groupId = ParamUtil.getLong(uploadRequest, "groupId");
 			boolean privateLayout = ParamUtil.getBoolean(uploadRequest, "privateLayout");
@@ -360,8 +359,11 @@ public class CourseAdmin extends MVCPortlet {
 				System.out.println("Import file does not exist");
 				throw new LARFileException("Import file does not exist");
 			}
-			System.out.println("importLayouts 1");
-			LayoutServiceUtil.importLayouts(groupId, privateLayout, uploadRequest.getParameterMap(), file);
+			System.out.println("importLayouts 1, portletId"+themeDisplay.getPortletDisplay().getId());
+			
+			String portletId = (String) actionRequest.getAttribute(WebKeys.PORTLET_ID);
+			LayoutServiceUtil.importPortletInfo(themeDisplay.getLayout().getPlid(), groupId,portletId, uploadRequest.getParameterMap(), file);
+
 			System.out.println("importLayouts 2");
 
 			addSuccessMessage(actionRequest, actionResponse);

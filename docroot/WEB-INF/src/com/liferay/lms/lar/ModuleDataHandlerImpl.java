@@ -23,9 +23,12 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -67,9 +70,51 @@ private static PortletDataHandlerBoolean _ratings =
 private static PortletDataHandlerBoolean _tags =
 	new PortletDataHandlerBoolean(_NAMESPACE, "tags");
 
+@SuppressWarnings("unchecked")
 @Override
 protected PortletPreferences doDeleteData(PortletDataContext context,
 		String portletId, PortletPreferences preferences) throws Exception {
+	
+	System.out.println("  ::: ModuleDataHandlerImpl.doDeleteData ::: " + portletId +" "+context.getGroupId()+" "+context.getScopeGroupId());
+	
+	try {
+		String groupIdStr = String.valueOf(context.getScopeGroupId());
+		
+		Group group = GroupLocalServiceUtil.getGroup(context.getScopeGroupId());
+		
+		long groupId = 0;
+		
+		if(Validator.isNumber(groupIdStr)){
+			groupId = Long.parseLong(groupIdStr);
+		}
+		
+		System.out.println("   groupId : " + groupId +", name: "+ group.getName());
+		
+		List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(groupId);
+
+		for(Module module:modules){
+			
+			System.out.println("    module : " + module.getModuleId() );
+			
+			List<LearningActivity> activities = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(module.getModuleId());
+			
+			for(LearningActivity activity:activities){
+				
+				System.out.println("     activity : " + activity.getActId() );
+				LearningActivityLocalServiceUtil.deleteLearningactivity(activity);
+				
+			}
+			
+			ModuleLocalServiceUtil.deleteModule(module);
+			
+		}
+	} catch (Exception e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+
+	System.out.println("  ::: ModuleDataHandlerImpl.doDeleteData ::: ends " );
+	
 	return super.doDeleteData(context, portletId, preferences);
 }
 
@@ -83,8 +128,6 @@ protected String doExportData(PortletDataContext context, String portletId, Port
 	Document document = SAXReaderUtil.createDocument();
 
 	Element rootElement = document.addElement("moduledata");
-	
-	System.out.println(" group-id : " + String.valueOf(context.getScopeGroupId()) );
 
 	rootElement.addAttribute("group-id", String.valueOf(context.getScopeGroupId()));
 	
@@ -160,8 +203,6 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 				
 				//Guardar el fichero en el zip.
 				InputStream input = DLFileEntryLocalServiceUtil.getFileAsStream(docfile.getUserId(), docfile.getFileEntryId(), docfile.getVersion());
-				//.getFileAsStream(docfile.getCompanyId(), docfile.getUserId(), docfile.getGroupId(), docfile.getFolderId(),docfile.getName(),docfile.getVersion());
-				
 				context.addZipEntry(getFilePath(context, docfile,actividad.getActId())+docfile.getTitle(), input);
 
 			} catch (NumberFormatException e) {
@@ -275,6 +316,8 @@ protected PortletPreferences doImportData(PortletDataContext context, String por
 		}
 		Module entry = (Module)context.getZipEntryAsObject(path);
 		
+		System.out.println(" Module : " + entry.getModuleId() );
+		
 		importEntry(context,entryElement, entry);
 	}
 	
@@ -283,13 +326,12 @@ protected PortletPreferences doImportData(PortletDataContext context, String por
 
 private void importEntry(PortletDataContext context, Element entryElement, Module entry) throws SystemException, PortalException {
 	
-	Date now = new Date();
-	
 	long userId = context.getUserId(entry.getUserUuid());
 	entry.setGroupId(context.getScopeGroupId());
 	entry.setUserId(userId);
 	
-	Module theModule=ModuleLocalServiceUtil.addModule(entry);
+	Module theModule=ModuleLocalServiceUtil.addModule(entry.getCompanyId(), entry.getGroupId(), entry.getUserId(), entry.getTitle(), entry.getDescription(),
+			entry.getStartDate(), entry.getEndDate(), entry.getOrdern());
 	
 	for (Element actElement : entryElement.elements("learningactivity")) {
 		
@@ -298,6 +340,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		String path = actElement.attributeValue("path");
 
 		LearningActivity larn=(LearningActivity)context.getZipEntryAsObject(path);
+		
 		ServiceContext serviceContext=new ServiceContext();
 		serviceContext.setAssetCategoryIds(context.getAssetCategoryIds(LearningActivity.class, larn.getActId()));
 		serviceContext.setAssetTagNames(context.getAssetTagNames(LearningActivity.class, larn.getActId()));
@@ -393,7 +436,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
         	
         	//DLFolderLocalServiceUtil.addFolderResources(mainFolder, true, false);
         	
-        	ex.printStackTrace();
+        	//ex.printStackTrace();
         }
   
         return mainFolder;
@@ -446,7 +489,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
 		}
 		
     	return newDLFolder;

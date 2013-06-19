@@ -44,28 +44,20 @@
 	
 	<div class="options" style="display:none;">
 		
-		<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_CONTROL_DEFAULT %>" type="hidden" value="<%= true %>" />
-		<aui:input name="<%= PortletDataHandlerKeys.PORTLET_DATA_ALL %>" type="hidden" value="<%= true %>" />
-		
 		<liferay-ui:message key="what-would-you-like-to-export" />
 	
-		<aui:input label="pages" 								name="pages" disabled="<%= true %>"   type="checkbox" 										value="<%= true %>" />
-		<aui:input label="portlets" 							name="portlets" disabled="<%= true %>"  type="checkbox" 									value="<%= true %>" />
-		<aui:input label="setup" 								name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" type="checkbox" 							value="<%= false %>" />
-		<aui:input label="archived-setups" 						name="<%= PortletDataHandlerKeys.PORTLET_ARCHIVED_SETUPS %>" type="checkbox" 				value="<%= false %>" />
-		<aui:input label="user-preferences" 					name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" type="checkbox" 				value="<%= false %>" />
-		<aui:input label="data"  								name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" 							value="<%= false %>" />
-		<aui:input label="mirror" checked="<%= true %>" 		name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" 							value="<%= PortletDataHandlerKeys.DATA_STRATEGY_MIRROR %>" />
-		<aui:input label="copy-as-new" 							name="<%= PortletDataHandlerKeys.DATA_STRATEGY %>" type="radio" 							value="<%= PortletDataHandlerKeys.DATA_STRATEGY_COPY_AS_NEW %>" />
-		<aui:input label="delete-portlet-data-before-importing" name="<%= PortletDataHandlerKeys.DELETE_PORTLET_DATA %>" type="checkbox" />
-		<aui:input label="permissions" 							name="<%= PortletDataHandlerKeys.PERMISSIONS %>" type="checkbox" />
-		<aui:input label="theme" 								name="<%= PortletDataHandlerKeys.THEME %>" type="checkbox" 									value="<%= false %>" />
-		<aui:input label="categories" 							name="<%= PortletDataHandlerKeys.CATEGORIES %>" type="checkbox" 							value="<%= false %>" />
-		<aui:input label="data" 								name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" 							value="<%= false %>" />
-		<aui:input label="all" checked="<%= true %>"   			name="range" onClick='<%= renderResponse.getNamespace() + "hideDateRange()" %>' type="radio" value="all" />
-		<aui:input label="from-last-publish-date"  				name="range" onClick='<%= renderResponse.getNamespace() + "hideDateRange()" %>' type="radio" value="fromLastPublishDate" />
-		<aui:input label="date-range" 							name="range" onClick='<%= renderResponse.getNamespace() + "showDateRange()" %>' type="radio" value="dateRange" />	
-		
+		<%
+		String rootPortletId = themeDisplay.getPortletDisplay().getRootPortletId();
+		String taglibOnChange = renderResponse.getNamespace() + "toggleChildren(this, '" + renderResponse.getNamespace() + PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + rootPortletId + "Controls');";
+		%>
+
+		<aui:input label="data"			name="<%= PortletDataHandlerKeys.PORTLET_DATA + StringPool.UNDERLINE + rootPortletId %>" type="checkbox" value="<%= true %>" onchange="<%= taglibOnChange %>" />
+		<aui:input label="categories" 	name="<%= PortletDataHandlerKeys.CATEGORIES %>" 				type="checkbox" value="<%= false %>" />
+		<aui:input label="permissions" 	name="<%= PortletDataHandlerKeys.PERMISSIONS %>" 				type="checkbox" value="<%= false %>" />
+		<aui:input label="setup" 		name="<%= PortletDataHandlerKeys.PORTLET_SETUP %>" 				type="checkbox" value="<%= false %>" />
+		<aui:input label="preferences" 	name="<%= PortletDataHandlerKeys.PORTLET_USER_PREFERENCES %>" 	type="checkbox" value="<%= false %>" />
+		<aui:input label="permissions" 	name="<%= PortletDataHandlerKeys.USER_PERMISSIONS %>" 			type="checkbox" value="<%= false %>" />
+				
 	</div>
 		
 	<aui:button-row>

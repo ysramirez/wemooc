@@ -36,7 +36,7 @@
 	<portlet>
 		<portlet-name>module-portlet</portlet-name>
 		<icon>/icons/icon.png</icon>
-		<portlet-data-handler-class>com.liferay.lms.lar.ModulePortletDataHandlerImpl</portlet-data-handler-class>
+		<portlet-data-handler-class>com.liferay.lms.lar.ModuleDataHandlerImpl</portlet-data-handler-class>
 	    <custom-attributes-display>com.liferay.lms.expando.ModuleCustomAttributesDisplay</custom-attributes-display>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
@@ -180,6 +180,7 @@
 		<portlet-name>courseadmin</portlet-name>
 		<icon>/icon.png</icon>
 		<indexer-class>com.liferay.lms.indexer.CourseIndexer</indexer-class>
+		<portlet-data-handler-class>com.liferay.lms.lar.ModuleDataHandlerImpl</portlet-data-handler-class>
 		<control-panel-entry-category>content</control-panel-entry-category>
 		<control-panel-entry-weight>17.5</control-panel-entry-weight>
 		<asset-renderer-factory>com.liferay.lms.asset.CourseAssetRendererFactory</asset-renderer-factory>
