@@ -51,13 +51,18 @@ public class TaskLearningActivityType extends BaseLearningActivityType
 	@Override
 	public String getName() {
 		
-		return "task";
+		return "learningactivity.task";
 	}
 
 
 	@Override
 	public long getTypeId() {
 		return 1;
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.task.helpmessage";
 	}
 	
 	@Override

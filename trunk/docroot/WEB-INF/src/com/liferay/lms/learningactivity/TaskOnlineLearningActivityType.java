@@ -39,7 +39,7 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 
 	@Override
 	public String getName() {	
-		return "onLine";
+		return "learningactivity.online";
 	}
 	
 	@Override
@@ -91,6 +91,11 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 		
 	    }
 			
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.online.helpmessage";
 	}
 	
 	@Override

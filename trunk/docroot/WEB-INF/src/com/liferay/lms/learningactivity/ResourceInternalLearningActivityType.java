@@ -41,7 +41,7 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 	@Override
 	public String getName() {
 		
-		return "resourceInternal";
+		return "learningactivity.internal";
 	}
 
 
@@ -96,6 +96,11 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 		rootElement.add(assetEntry);	
 		
 		learningActivity.setExtracontent(document.formattedString());	
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.internal.helpmessage";
 	}
 	
 	@Override

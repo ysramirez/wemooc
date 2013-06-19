@@ -73,7 +73,7 @@ public class TestLearningActivityType extends BaseLearningActivityType
 
 	@Override
 	public String getName() {
-		return "test";
+		return "learningactivity.test";
 	}
 
 
@@ -190,6 +190,12 @@ public class TestLearningActivityType extends BaseLearningActivityType
 	    }
 	}
 	
+	@Override
+	public String getDescription() {
+		return "learningactivity.test.helpmessage";
+	}
+
+
 	@Override
 	public String getPortletId() {
 		return PORTLET_ID;

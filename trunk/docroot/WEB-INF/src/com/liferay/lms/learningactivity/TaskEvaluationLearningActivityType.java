@@ -26,7 +26,7 @@ public class TaskEvaluationLearningActivityType extends BaseLearningActivityType
 	@Override
 	public String getName() {
 		
-		return "evaluation";
+		return "learningactivity.evaluation";
 	}
 	
 	
@@ -38,6 +38,11 @@ public class TaskEvaluationLearningActivityType extends BaseLearningActivityType
 	@Override
 	public long getTypeId() {
 		return 8;
+	}
+	
+	@Override
+	public String getDescription() {
+		return "learningactivity.evaluation.helpmessage";
 	}
 	
 	@Override
