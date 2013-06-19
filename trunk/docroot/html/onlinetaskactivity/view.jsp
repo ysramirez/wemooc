@@ -1,4 +1,8 @@
 
+<%@page import="com.liferay.portal.kernel.dao.orm.QueryUtil"%>
+<%@page import="com.liferay.portal.service.ResourceBlockLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
@@ -219,13 +223,31 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 					}
 				}
 				
-				
-				
 				OrderByComparator obc = new UserFirstNameComparator(true);
-				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria,  WorkflowConstants.STATUS_ANY, params);
-				pageContext.setAttribute("results", userListPage);
-			    pageContext.setAttribute("total", userCount);
+				
+				if ((GetterUtil.getInteger(PropsUtil.get(PropsKeys.PERMISSIONS_USER_CHECK_ALGORITHM))==6)&&(!ResourceBlockLocalServiceUtil.isSupported("com.liferay.lms.model"))){		
+				
+					params.put("notTeacher",new CustomSQLParam(OnlineActivity.NOT_TEACHER_SQL,themeDisplay.getScopeGroupId()));
+					List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+					int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria,  WorkflowConstants.STATUS_ANY, params);
+					pageContext.setAttribute("results", userListPage);
+					pageContext.setAttribute("total", userCount);
+				
+				}
+				else{
+				
+					List<User> userListsOfCourse = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
+					List<User> userLists =  new ArrayList<User>(userListsOfCourse.size());
+					
+					for(User userOfCourse:userListsOfCourse){							
+						if(!PermissionCheckerFactoryUtil.create(userOfCourse).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
+							userLists.add(userOfCourse);
+						}
+					}	
+				
+				pageContext.setAttribute("results", ListUtil.subList(userLists, searchContainer.getStart(), searchContainer.getEnd()));
+				pageContext.setAttribute("total", userLists.size());	
+				}
 			%>
 		</liferay-ui:search-container-results>
 		
