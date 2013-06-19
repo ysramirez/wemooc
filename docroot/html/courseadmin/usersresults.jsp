@@ -121,7 +121,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 <liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 
 </liferay-portlet:actionURL>
-<liferay-ui:icon image="add" url="<%=addUserRoleURL %>" label="add" message="add"></liferay-ui:icon>
+<liferay-ui:icon image="add" url="<%=addUserRoleURL %>" label="add" message="add"> label="add" message="add"><liferay-ui:message key="assign-member" /></liferay-ui:icon>
 </liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
  	<liferay-ui:search-iterator />
