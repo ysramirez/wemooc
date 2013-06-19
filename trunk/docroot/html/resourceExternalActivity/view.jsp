@@ -321,13 +321,6 @@ else
 			
 			}
 		}
-
-	}
-	if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
-		%>
-		<portlet:actionURL name="invokeTaglibDiscussion" var="discussionURL" />
-		<liferay-ui:discussion classPK="<%=learnact.getPrimaryKey() %>" userId="<%=learnact.getUserId()%>" className="<%=learnact.getClass().getName()%>" subject="<%=learnact.getTitle()%>" formAction="<%=discussionURL%>" redirect="<%= currentURL %>"/>
-		<%
 	}
 }
 %>
