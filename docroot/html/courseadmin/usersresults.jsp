@@ -1,5 +1,6 @@
 
 
+<%@page import="com.liferay.portal.kernel.dao.orm.CustomSQLParam"%>
 <%@include file="/init.jsp" %>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
@@ -93,10 +94,15 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	boolean andSearch = Boolean.parseBoolean(andSearchStr);	
 
 	
-	LinkedHashMap<String,Object> params=null;			
+	LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();			
 	
 
 	OrderByComparator obc = null;
+	
+	params.put("notInCourseRole",new CustomSQLParam("WHERE User_.userId NOT IN "+
+	                                                " (SELECT UserGroupRole.userId "+
+	                                                "  FROM UserGroupRole "+
+	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))",new Long[]{course.getGroupCreatedId(),roleId}));
 
 	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
 	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
