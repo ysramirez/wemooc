@@ -6,26 +6,16 @@
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), Course.class.getName(), course.getCourseId(), ActionKeys.UPDATE)) {
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-}
-else
-{
+}else{
+	boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
+	String text="enable-edition";
+	if(actionEditing) text="disable-edition";
+	%>
 
-boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
-String text="enable-edition";
-if(actionEditing)
-{
-    text="disable-edition";
-}
-%>
-
-<liferay-portlet:renderURL var="changeEditingMode">
-<liferay-portlet:param name="actionEditing" value="<%=Boolean.toString(!actionEditing)%>"/>
-
-</liferay-portlet:renderURL>
-<%
-String redirect="self.location='"+changeEditingMode.toString()+"'";
-%>
-<aui:button type="submit"  value="<%=text %>" onClick="<%=redirect %>"></aui:button>
-<%
-}
-%>
+	<liferay-portlet:renderURL var="changeEditingMode">
+		<liferay-portlet:param name="actionEditing" value="<%=Boolean.toString(!actionEditing)%>"/>
+	</liferay-portlet:renderURL>
+	
+	<% String redirect="self.location='"+changeEditingMode.toString()+"'"; %>
+	<aui:button type="submit"  value="<%=text %>" onClick="<%=redirect %>"/>
+<%}%>
