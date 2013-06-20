@@ -32,7 +32,7 @@ else
 	<%
 }
 %>
-
+<liferay-ui:error key="scormadmin.error.nomanifest" message="scormadmin.error.nomanifest"/>
 <aui:form name="fm" action="<%=savescormURL%>"  method="post" enctype="multipart/form-data">
 
 	<aui:input type="hidden" name="scormId" value="<%=scormId %>" />

@@ -4,18 +4,29 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Enumeration;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipException;
+import java.util.zip.ZipFile;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+
+import org.apache.commons.io.FileUtils;
 
 import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.SCORMContentLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -40,22 +51,37 @@ public class SCORMAdmin extends MVCPortlet
 
 		if(scormId==0)	
 		{
+			
 			String fileName = request.getFileName("fileName");
 			File file = request.getFile("fileName");
 		
 			if(fileName!=null && !fileName.equals(""))
 			{	
-			
-				try 
-				{
-					SCORMContentLocalServiceUtil.addSCORMContent(title, description, file, serviceContext);
-				} 
-				catch (IOException e) 
-				{
-						// TODO Auto-generated catch block
+				try {
+					ZipFile zipFile= new ZipFile(file);
+					if (zipFile.getEntry("imsmanifest.xml") == null) {
+						SessionErrors.add(actRequest, "scormadmin.error.nomanifest");
+					}
+				} catch (ZipException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				 
+				
+				if (!SessionErrors.isEmpty(actRequest)) {
+					response.setRenderParameters(actRequest.getParameterMap());
+					response.setRenderParameter("jspPage", "/html/scormadmin/editscorm.jsp");
+				} else {
+					try 
+					{
+						SCORMContentLocalServiceUtil.addSCORMContent(title, description, file, serviceContext);
+					} 
+					catch (IOException e) 
+					{
+							// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 		}
 		else
