@@ -66,7 +66,7 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 				String template)
 				throws Exception {
 			request.setAttribute("scorm", _scorm);
-					if (template.equals(TEMPLATE_FULL_CONTENT)) {
+					if (template.equals(TEMPLATE_FULL_CONTENT)||template.equals(TEMPLATE_ABSTRACT)) {
 						request.setAttribute("scorm", _scorm);
 						
 						return "/html/asset/scorm/" + template + ".jsp";
