@@ -77,7 +77,7 @@ else
 %>
 
 <h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-<h5><liferay-ui:message key="onlinetaskactivity.description" />  </h5>
+<h3><liferay-ui:message key="onlinetaskactivity.description" />  <h3/>
 <p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 <liferay-portlet:renderURL var="returnurl">
 <liferay-portlet:param name="jspPage" value="/html/onlineactivity/view.jsp" />	
