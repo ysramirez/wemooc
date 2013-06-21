@@ -29,7 +29,7 @@ if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGrou
 	<liferay-ui:error key="dependent-rows-exist-error-deleting" message="dependent-rows-exist-error-deleting" /--%>
 	<%
 	long moduleId=ParamUtil.getLong(request,"moduleId",0);
-	boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
+	boolean actionEditing=(ParamUtil.getBoolean(request,"actionEditing",false))||(!themeDisplay.getLayout().getFriendlyURL().equals("/reto"));
 	if((Boolean)request.getAttribute("hasAddPermission") && actionEditing)
 	{
 	
@@ -95,8 +95,9 @@ if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGrou
 	        ['aui-dialog','aui-dialog-iframe']
 	    );
 	</script>
-	<div class="newitem">
-		<liferay-ui:icon image="add" cssClass="newitem2" label="true" message="module-add" url="<%= \"javascript:\"+renderResponse.getNamespace()+\"openPopup()\" %>" />
+	
+	<div class="<%=(themeDisplay.getLayout().getFriendlyURL().equals("/reto"))?"newitem":"newitem2" %>">
+		<liferay-ui:icon image="add" label="true" message="module-add" url="<%= \"javascript:\"+renderResponse.getNamespace()+\"openPopup()\" %>" />
 	</div>
 	
 	<% 
