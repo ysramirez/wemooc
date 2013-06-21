@@ -47,7 +47,7 @@ else
 	LearningActivity learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
 	
 	%>
-		<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale())%>"></liferay-ui:header>
+		<h2><%=learnact.getTitle(themeDisplay.getLocale())%>"></h2>
 		<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>	
 	<%
 	
