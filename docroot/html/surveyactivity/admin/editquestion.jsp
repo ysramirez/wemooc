@@ -160,7 +160,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 <portlet:actionURL var="addanswerURL" name="addanswer" />
 <h3><liferay-ui:message key="add-answer"></liferay-ui:message></h3>
 <aui:form name="afm" action="<%=addanswerURL%>" method="post">
-	<aui:input type="textarea" cols="122" rows="4" name="answer" label="answer"></aui:input>
+	<aui:input type="textarea" rows="4" name="answer" label="answer"></aui:input>
 	<div id="<portlet:namespace />answerError" class="<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?
 	   														"portlet-msg-error":StringPool.BLANK %>">
 	   	<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?
@@ -251,7 +251,7 @@ int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryF
 			
 				<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 			
-				<aui:input type="textarea" cols="122" rows="4" name="answer" value="<%=testanswer.getAnswer() %>"></aui:input>
+				<aui:input type="textarea" rows="4" name="answer" value="<%=testanswer.getAnswer() %>"></aui:input>
 				<div id="<portlet:namespace />answerError_<%=Long.toString(testanswer.getAnswerId()) %>" class="<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
 				   														"portlet-msg-error":StringPool.BLANK %>">
 				   	<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
