@@ -96,7 +96,7 @@ if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGrou
 	    );
 	</script>
 	<div class="newitem">
-		<liferay-ui:icon image="add" label="true" message="module-add" url="<%= \"javascript:\"+renderResponse.getNamespace()+\"openPopup()\" %>" />
+		<liferay-ui:icon image="add" cssClass="newitem2" label="true" message="module-add" url="<%= \"javascript:\"+renderResponse.getNamespace()+\"openPopup()\" %>" />
 	</div>
 	
 	<% 
