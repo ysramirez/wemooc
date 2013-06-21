@@ -545,7 +545,7 @@ if(p2pActList.isEmpty()){
 	<liferay-portlet:param name="moduleId" value="<%=Long.toString(myModule.getModuleId()) %>"></liferay-portlet:param>
 	</liferay-portlet:renderURL>
 	
-	<div style="font-size: 14px;color: #B70050;font-weight: bold;"><liferay-ui:message key="no-p2pActivites-uploaded" /></div>
+	<div class="no-p2pActivites-uploaded"><liferay-ui:message key="no-p2pActivites-uploaded" /></div>
 	<%
 }%>
 

@@ -144,7 +144,7 @@ if(!p2pActCorList.isEmpty()){
 
 if(!correctionsDone){
 	%>
-	<div style="font-size: 14px;color: #B70050;font-weight: bold;">
+	<div class="no-p2pActivites-corretion">
 		<liferay-ui:message key="no-p2pActivites-corretion" />
 	</div>
 	<%
