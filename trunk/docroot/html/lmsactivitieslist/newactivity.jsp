@@ -36,12 +36,16 @@ for(Long key:classTypes.keySet())
 		<liferay-portlet:param name="resModuleId" value="<%=ParamUtil.getString(renderRequest, \"resModuleId\") %>" />
 		<liferay-portlet:param name="typeId" value="<%=key.toString() %>" />
 	</liferay-portlet:actionURL>
-
-	<li class="activity_<%=key%>">
-		<liferay-ui:icon image="add" label="<%=true%>" message="<%=classTypes.get(key) %>" url="<%=newactivityURL%>" cssClass="activity-icon" imageHover="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>" />
-		<span class="activity-help">
+	
+	<liferay-util:buffer var="activityMessage">
+	    <%=classTypes.get(key) %>
+	    <span class="activity-help">
 			<liferay-ui:icon-help message="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>"  />
 		</span>
+	</liferay-util:buffer>
+
+	<li class="activity_<%=key%>">
+		<liferay-ui:icon image="add" label="<%=true%>" message="<%=activityMessage %>" url="<%=newactivityURL%>" cssClass="activity-icon" imageHover="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>" />
 	</li>
 <%
 }
