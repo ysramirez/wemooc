@@ -48,12 +48,68 @@ String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextP
        Run.ManifestByURL("<%=urlIndex%>", false);
      }
      
-     AUI().ready(InitPlayer);
+     Liferay.provide(
+    	        window,
+    	        '<portlet:namespace />patchTree',
+    	        function() {
+    				var A = AUI();
+			    	A.all('#placeholder_treeContainer a').on('click', function(event) {
+			    		if (event.preventDefault) {
+			         	 	event.preventDefault();
+			         	 }
+			         	 event.returnValue = false;
+			    	});
+     			},
+     			['node']
+     			);
+     
+     AUI().ready(function() {
+    	 InitPlayer();
+    	 var iframe = document.getElementById('placeholder_contentIFrame');
+    	 var contentIFrame = document.getElementById('contentIFrame');
+    	 var treeContainer = document.getElementById('placeholder_treeContainer');
+    	 
+    	 if (treeContainer.style.display == 'block') {
+    		 iframe.style.width = '80%';
+    		 treeContainer.style.width = '20%';
+    	 } else {
+    		 iframe.style.width = '100%';
+    	 }
+    	 <portlet:namespace />patchTree();
+   	 });
+     
+     function iResize() {
+    	 console.log("Resized");
+    	 document.getElementById('placeholder_contentIFrame').style.height = 
+    	    document.getElementById('contentIFrame').contentWindow.document.body.offsetHeight + 'px';
+    	 console.log(document.getElementById('placeholder_contentIFrame').style.height);
+     }
+     
+     function toggleScormBar(evt) {
+    	 var treeContainer = document.getElementById('placeholder_treeContainer');
+    	 var iframe = document.getElementById('placeholder_contentIFrame');
+    	 if (treeContainer.style.display == 'block') {
+    		 treeContainer.style.display = 'none';
+    		 iframe.style.width = '100%';
+    	 } else {
+    		 treeContainer.style.display = 'block';
+    		 iframe.style.width = '80%';
+    	 }
+    	 if (evt.preventDefault) {
+     	 	evt.preventDefault();
+     	 }
+     	 evt.returnValue = false;
+     }
      
   </script>
+  <div id="placeholder_barContainer">
+  	<a id="clicker" href="#" style="display: none">__</a>
+  	<a href="#" onclick="javascript:toggleScormBar(event)">+</a>
+  </div>
 <div id="placeholder_treecontentContainer">
 	<div id="placeholder_treeContainer"></div>
 	<div id="placeholder_contentIFrame">
           <iframe id="contentIFrame" width="100%" height="100%"></iframe>
     </div>          
 </div>
+

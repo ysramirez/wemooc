@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
@@ -6,13 +8,25 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 
 <%@ include file="/init.jsp"%>
+
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+
 <ul class="activity-list">
 <%
 AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
 Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
 LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+String blacklistProp = PropsUtil.get("lms.learningactivity.invisibles");
+String[] blacklistArray = blacklistProp.split(",");
+List<String> blacklist = new ArrayList<String>();
+if (blacklistArray != null) {
+	blacklist = ListUtil.fromArray(blacklistArray);
+}
 for(Long key:classTypes.keySet())
 {
+	if (blacklist.contains(key.toString())) {
+		break;
+	}
 	String classname=classTypes.get(key);
 %>	
 	<liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
