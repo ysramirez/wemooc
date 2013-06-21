@@ -1,6 +1,3 @@
-<%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
-<%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
-<%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portal.kernel.exception.PortalException"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
@@ -72,23 +69,16 @@ function <portlet:namespace />back() {
 
 <%
 long assetId=0;
-Boolean openWindow = true;
 String assetTitle=StringPool.BLANK;
 
 if(request.getAttribute("activity")!=null) {	
 	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
 	if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
-
 		try{
 			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(
 				GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"assetEntry")));
 			assetId=entry.getEntryId();
-			
-			openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
-			
-			AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());
-			AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());			
-			assetTitle=assetRenderer.getTitle(themeDisplay.getLocale());	
+			assetTitle=entry.getTitle(renderRequest.getLocale());	
 		}
 		catch(PortalException e)
 		{
@@ -106,10 +96,7 @@ if(request.getAttribute("activity")!=null) {
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 	</button>
 </aui:field-wrapper>
-<aui:field-wrapper name="activity.edit.openwindow.options">
-	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
-</aui:field-wrapper>
-	
+		
 <div id="<portlet:namespace/>backButton" style="display:none;">
 	<liferay-ui:icon image="back" message="back" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"back();\" %>" label="true"  />
 </div>
