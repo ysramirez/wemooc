@@ -69,7 +69,7 @@ else
 	{
 		%>
 
-		<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+		<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 		<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 		
 		<%

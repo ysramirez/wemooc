@@ -57,7 +57,7 @@
 					if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 					{
 					%>
-						<h2><liferay-ui:message key="surveyactivity.survey.done" /></h2>
+						<h2 class="description-title"><liferay-ui:message key="surveyactivity.survey.done" /></h2>
 					<%
 					}
 					else

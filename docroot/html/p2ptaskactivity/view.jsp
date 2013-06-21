@@ -82,7 +82,7 @@ else
 	if(typeId==3)
 	{
 		%>
-		<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+		<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 		<p class="sub-title"><liferay-ui:message key="p2ptask-explicacion" /></p>
 		<div class="description">
 			<%=activity.getDescription(themeDisplay.getLocale()) %>

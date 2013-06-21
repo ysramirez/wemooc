@@ -56,7 +56,7 @@
 
 			<div class="offlinetaskactivity view">
 
-				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+				<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 										
 				<% if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){ %>
 				
