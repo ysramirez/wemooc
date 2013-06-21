@@ -47,7 +47,7 @@ else
 	LearningActivity learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
 	
 	%>
-		<h2><%=learnact.getTitle(themeDisplay.getLocale())%>"></h2>
+		<h2 class="description-title"><%=learnact.getTitle(themeDisplay.getLocale())%>"></h2>
 		<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>	
 	<%
 	

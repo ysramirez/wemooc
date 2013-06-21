@@ -398,7 +398,7 @@ else
 <%
 	if(!isTeacher){ 
 	if (result!=null){ %>
-	<h2><liferay-ui:message key="evaluationtaskactivity.result.title" /></h2>
+	<h2 class="description-title"><liferay-ui:message key="evaluationtaskactivity.result.title" /></h2>
 	<p><liferay-ui:message key="evaluationtaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
 	<%
 	if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
