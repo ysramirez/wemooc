@@ -53,8 +53,9 @@
 		
 		fileOptional = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"fileoptional"));
 		
-		numEvaluaciones = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"validaciones"));
-		
+		String numEvaStr = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"validaciones");
+		numEvaluaciones = numEvaStr.equals("") ? TaskP2PLearningActivityType.DEFAULT_VALIDATION_NUMBER : Long.parseLong(numEvaStr);
+	
 		fileOptional = StringPool.TRUE .equals(LearningActivityLocalServiceUtil .getExtraContentValue( learningActivity.getActId(), "fileoptional"));
 		
 		String validaciones = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"validaciones");

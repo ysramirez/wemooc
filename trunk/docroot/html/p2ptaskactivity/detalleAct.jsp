@@ -208,7 +208,7 @@ if(actId!=0)
 		}
 		else{
 		%>
-		<div style="font-size: 14px;color: #B70050;font-weight: bold;"><liferay-ui:message key="no-p2pActivites-uploaded-resume" /></div>
+		<div class="no-p2pActivites-uploaded-resume"><liferay-ui:message key="no-p2pActivites-uploaded-resume" /></div>
 		<%
 		}
 		%>
@@ -286,7 +286,7 @@ if(actId!=0)
 			}
 		}else{
 			%>
-			<div style="font-size: 14px;color: #B70050;font-weight: bold;">
+			<div class="no-p2pActivites-corretion-resume">
 				<liferay-ui:message key="no-p2pActivites-corretion-resume" />
 			</div>
 			<%
