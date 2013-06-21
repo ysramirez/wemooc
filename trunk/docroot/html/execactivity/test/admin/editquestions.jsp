@@ -34,8 +34,8 @@
 	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
 </portlet:renderURL>
 
-<liferay-ui:icon
-image="add"
+<liferay-ui:icon 
+image="add" cssClass="newitem2"
 label="<%= true %>"
 message="execativity.editquestions.newquestion"
 url='<%= newquestionURL %>'

@@ -180,7 +180,7 @@
 				%>
 				
 				<liferay-ui:icon
-				image="add"
+				image="add" cssClass="newitem2"
 				label="<%= true %>"
 				message="evaluationAvg.evaluation.configuration"
 				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupEvaluations();" %>'

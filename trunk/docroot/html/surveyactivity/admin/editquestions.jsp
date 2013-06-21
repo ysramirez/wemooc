@@ -35,7 +35,7 @@
 </portlet:renderURL>
 
 <liferay-ui:icon
-image="add"
+image="add" cssClass="newitem2"
 label="<%= true %>"
 message="surveyactivity.editquestions.newquestion"
 url='<%= newquestionURL %>'
