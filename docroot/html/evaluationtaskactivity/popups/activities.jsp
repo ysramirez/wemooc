@@ -25,6 +25,7 @@
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@ include file="/init.jsp" %>
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <%
 	long actId = ParamUtil.getLong(request,"actId",0);
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);

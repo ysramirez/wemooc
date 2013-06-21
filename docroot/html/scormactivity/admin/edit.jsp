@@ -5,6 +5,7 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ include file="/init.jsp" %>
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 
 <liferay-portlet:renderURL var="selectResource" windowState="<%=LiferayWindowState.POP_UP.toString() %>">
 	<liferay-portlet:param name="jspPage" value="/html/scormactivity/admin/searchresource.jsp"/>
