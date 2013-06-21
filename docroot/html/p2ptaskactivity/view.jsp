@@ -9,7 +9,7 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 
 <%@ include file="/init.jsp" %>
-
+<div class="container-activity">
 <script type="text/javascript">
 <!--
 	
@@ -179,4 +179,4 @@ else
 	}
 }
 	%>
-	
+</div>

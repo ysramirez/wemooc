@@ -21,7 +21,7 @@
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
 
 <%@ include file="/init.jsp" %>
-
+<div class="container-activity">
 <%
 long actId = ParamUtil.getLong(request,"actId",0);
 
@@ -425,3 +425,4 @@ else
 			
 </div>
 
+</div>

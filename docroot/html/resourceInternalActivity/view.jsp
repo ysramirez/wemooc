@@ -33,6 +33,9 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
+
+<div class="container-activity">
+
 <%
 long actId=ParamUtil.getLong(request,"actId",0);
 
@@ -261,3 +264,4 @@ else
 	}
 }
 %>
+</div>

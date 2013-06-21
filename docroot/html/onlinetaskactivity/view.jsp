@@ -32,7 +32,7 @@
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 
 <%@ include file="/init.jsp" %>
-
+<div class="container-activity">
 <%
 
 long actId = ParamUtil.getLong(request,"actId",0);
@@ -77,7 +77,7 @@ else
 %>
 
 <h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-<h3><liferay-ui:message key="onlinetaskactivity.description" />  <h3/>
+<h3><liferay-ui:message key="onlinetaskactivity.description" />  </h3>
 <p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 <liferay-portlet:renderURL var="returnurl">
 <liferay-portlet:param name="jspPage" value="/html/onlineactivity/view.jsp" />	
@@ -379,3 +379,4 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 
 <% } 
 }%>
+</div>
