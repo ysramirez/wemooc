@@ -15,6 +15,6 @@ SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 				/>
 	
 	<p class="asset-description">
-	<%= HtmlUtil.escape(StringUtil.shorten(scorm.getDescription() , abstractLength)) %>
+	<%= StringUtil.shorten(scorm.getDescription() , abstractLength)%>
 </p>
 </div>
