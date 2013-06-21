@@ -9,6 +9,7 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@ include file="/init.jsp" %>
 <script type="text/javascript">
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <!--
 
 function <portlet:namespace />doClosePopupGrades()

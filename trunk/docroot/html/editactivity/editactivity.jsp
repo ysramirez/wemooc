@@ -24,7 +24,7 @@
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
-
+<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <%@ include file="/init.jsp" %>
  <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
 <portlet:actionURL var="saveactivityURL" name="saveActivity" />
