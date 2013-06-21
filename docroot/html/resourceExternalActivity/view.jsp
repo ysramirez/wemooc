@@ -33,6 +33,7 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
+<div class="container-activity">
 <%
 long actId=ParamUtil.getLong(request,"actId",0);
 
@@ -47,7 +48,7 @@ else
 	LearningActivity learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
 	
 	%>
-		<h2 class="description-title"><%=learnact.getTitle(themeDisplay.getLocale())%>"></h2>
+		<h2 class="description-title"><%=learnact.getTitle(themeDisplay.getLocale())%></h2>
 		<div id="resourcedescription"><%=learnact.getDescription(themeDisplay.getLocale()) %></div>
 		
 	<%
@@ -315,3 +316,4 @@ else
 	}
 }
 %>
+</div>
