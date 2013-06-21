@@ -191,13 +191,13 @@
 				</script>
 
 				<liferay-ui:icon
-				image="add"
+				image="add" cssClass="newitem2"
 				label="<%= true %>"
 				message="offlinetaskactivity.import.grades"
 				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'
 				/>
 				<% } %>
-				<h5><liferay-ui:message key="offlinetaskactivity.description" />  </h5>
+				<h3><liferay-ui:message key="offlinetaskactivity.description" />  </h3>
 				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 				
 				

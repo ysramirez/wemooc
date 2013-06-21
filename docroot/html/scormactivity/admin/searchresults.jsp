@@ -75,7 +75,7 @@ AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFa
 
 
 <liferay-ui:search-container-column-text>
-<liferay-ui:icon image="add" label="select" url="<%=selectResourceURL.toString() %>"></liferay-ui:icon>
+<liferay-ui:icon image="add" cssClass="newitem2" label="select" url="<%=selectResourceURL.toString() %>"></liferay-ui:icon>
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
  <liferay-ui:search-iterator />

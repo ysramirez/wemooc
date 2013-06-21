@@ -11,7 +11,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 	
 %>
 <liferay-ui:icon
-image="add"
+image="add" cssClass="newitem2"
 label="<%= true %>"
 message="new"
 url='<%= newactivityURL %>'
