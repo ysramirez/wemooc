@@ -252,7 +252,12 @@ if ("true".equals(openWindow) && !themeDisplay.isStateMaximized()) { %>
 								
 								                 if (!exception) {
 								                     // Process Success - A LearningActivityResult returned
-								                	 window.opener.<portlet:namespace />actualizarActividad();
+								                     if (window.opener) {
+								                     	window.opener.<portlet:namespace />actualizarActividad();
+								                     } else {
+								                     	//Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+								                     	window.location.reload(true);
+								                     }
 								                 }
 								                 else {
 								                     // Process Exception
@@ -276,7 +281,7 @@ if ("true".equals(openWindow) && !themeDisplay.isStateMaximized()) { %>
 					if(window.addEventListener) {
 					    window.addEventListener('scormevent', <portlet:namespace />update_scorm, false);
 					} else {
-					    window.attachEvent('onscormevent', <portlet:namespace />update_scorm);
+					    document.getElementById('clicker').attachEvent('onclick', <portlet:namespace />update_scorm);
 					}
 				
 	

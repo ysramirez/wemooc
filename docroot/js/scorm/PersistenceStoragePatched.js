@@ -11,7 +11,9 @@ Player.PersistentStateStorage.prototype.$3 = function($p0) {
 		    evt.initEvent(eventName, false, true);
 		    element.dispatchEvent(evt);
 		} else {
-			element.fireEvent("on"+eventName);
+			var evt = document.createEventObject();
+			evt.eventName = "click";
+			document.getElementById('clicker').fireEvent("onclick", evt);
 		}
 	} catch ($0) {
 		alert('Error! Can\'t save data to Local Storage. Problem can be related to storage size limit.');
