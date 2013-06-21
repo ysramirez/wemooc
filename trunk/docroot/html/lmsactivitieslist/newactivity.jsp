@@ -17,10 +17,12 @@ AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactor
 Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
 LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 String blacklistProp = PropsUtil.get("lms.learningactivity.invisibles");
-String[] blacklistArray = blacklistProp.split(",");
 List<String> blacklist = new ArrayList<String>();
-if (blacklistArray != null) {
-	blacklist = ListUtil.fromArray(blacklistArray);
+if (blacklistProp != null) {
+	String[] blacklistArray = blacklistProp.split(",");
+	if (blacklistArray != null) {
+		blacklist = ListUtil.fromArray(blacklistArray);
+	}
 }
 for(Long key:classTypes.keySet())
 {
