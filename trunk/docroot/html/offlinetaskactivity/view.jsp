@@ -25,7 +25,7 @@
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
-
+<div class="container-activity">
 <%
 	long actId = ParamUtil.getLong(request,"actId",0);
 	
@@ -353,3 +353,4 @@
 		}
 	}
 %>
+</div>

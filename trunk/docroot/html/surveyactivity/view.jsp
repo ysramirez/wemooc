@@ -13,11 +13,8 @@
 <%@page import="javax.portlet.RenderResponse"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
-
-
-
 <%@ include file="/init.jsp" %>
-
+<div class="container-activity">
 <%
 	long actId = ParamUtil.getLong(request,"actId",0);
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
@@ -137,4 +134,4 @@
 			%>
 
 
-			
+</div>

@@ -30,7 +30,7 @@
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 
 <%@ include file="/init.jsp" %>
-
+<div class="container-activity">
 <%
 long actId=ParamUtil.getLong(request,"actId",0);
 boolean improve =ParamUtil.getBoolean(request, "improve",false);
@@ -352,3 +352,4 @@ else
 	}
 }
 %>
+</div>
