@@ -20,7 +20,7 @@ long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(
 	<portlet:param name="action" value="export"/>
 	<portlet:param name="courseId" value="<%=Long.toString(curso.getCourseId()) %>"/>
 </liferay-portlet:resourceURL>
-<liferay-ui:icon image="export" label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
+<liferay-ui:icon cssClass='bt_importexport' label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
 <div class="registered"><liferay-ui:message key="coursestats.hay" /> <%=registered %> <liferay-ui:message key="coursestats.inscription.users" /></div>
 
 <div class="coursestart"><liferay-ui:message key="coursestats.start.course" /> <%= iniciados %> <liferay-ui:message key="coursestats.end.course" /> <%= finalizados %>.</div>
