@@ -1,3 +1,4 @@
+<%@page import="com.liferay.util.JS"%>
 <%@ include file="/init.jsp" %>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
@@ -35,7 +36,7 @@ else
 <liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
 
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>" backURL="<%=backURL %>"></liferay-ui:header>
-<h2><%=role.getTitle(themeDisplay.getLocale()) %></h2>
+<h2><liferay-ui:message key="<%=\"wemooc.roles.\"+JS.getSafeName(role.getName())%>"></liferay-ui:message></h2>
 <portlet:renderURL var="adduserURL">
 <portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
 <liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
