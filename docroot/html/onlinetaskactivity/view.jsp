@@ -74,6 +74,7 @@ else
 		arguments =  new Object[]{result.getResult()};
 	}
 	
+	boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");	
 %>
 
 <h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
@@ -106,7 +107,7 @@ else
 			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
 			renderUrl.setParameter('actId', '<%=String.valueOf(activity.getActId()) %>');
 			<%
-			if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
+			if(isTeacher){
 			%>
 			if(!selfGrade) {
 				renderUrl.setParameter('studentId', studentId);
@@ -352,7 +353,8 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 
 	<div class="nota"> 
 
-<%if (result!=null){ %>
+<% if(!isTeacher) {
+if (result!=null){ %>
 	<h3><liferay-ui:message key="test-done" /> <a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);">Ver &uacute;ltima.</a></h3>
 	<%
 	if(result.getEndDate()!= null){
@@ -377,6 +379,5 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 
 </div>
 
-<% } 
-}%>
+<% }}} %>
 </div>
