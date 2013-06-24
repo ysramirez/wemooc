@@ -1,6 +1,6 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
 <%@include file="/init.jsp" %>
-<div class="newitem">
+<div class="option-nota">
 <% 
 	LiferayPortletURL  gotoEvaluationURL = (LiferayPortletURL)renderResponse.createActionURL();	
 	gotoEvaluationURL.setParameter(ActionRequest.ACTION_NAME, "gotoEvaluation");
