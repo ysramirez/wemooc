@@ -40,7 +40,7 @@ if(learnResult.getPassed())
 <div id="score" style='<%=(true)? "display:none":""%>'>
 	<b><liferay-ui:message key="shared-you-guess" /> <%=learnResult.getResult()%>% <liferay-ui:message key="shared-in-tarea" /></b>
 </div>
-<div class="negrita color_principal"><liferay-ui:message key="shared-guess-badget" /></div>
+<%--div class="negrita color_principal"><liferay-ui:message key="shared-guess-badget" /></div--%>
 <!-- <a class="button">Ver revisi&oacute;n</a>-->
 </div>
 <script type="text/javascript">
