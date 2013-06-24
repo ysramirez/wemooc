@@ -40,6 +40,14 @@ label="<%= true %>"
 message="execativity.editquestions.newquestion"
 url='<%= newquestionURL %>'
 />
+<script type="text/javascript">
+<!--
+AUI().ready(function(A) {
+	A.one('.newitem2 a').focus();
+
+});
+//-->
+</script>
 
 <portlet:renderURL var="importquestionsURL">
 	<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
