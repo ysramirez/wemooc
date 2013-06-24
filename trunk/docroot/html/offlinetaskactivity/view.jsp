@@ -48,6 +48,8 @@
 			arguments =  new Object[]{result.getResult()};
 		}
 		
+		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");	
+		
 		if(typeId==5&&(!LearningActivityLocalServiceUtil.islocked(actId,themeDisplay.getUserId())||
 				permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)||
 				permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
@@ -58,7 +60,7 @@
 
 				<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 										
-				<% if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){ %>
+				<% if(isTeacher){ %>
 				
 				<liferay-portlet:resourceURL var="exportURL" >
 					<portlet:param name="action" value="export"/>
@@ -322,7 +324,8 @@
 				
 				<div class="nota"> 
 
-<%if ((result!=null)&&(result.getEndDate()!=null)){ %>
+<%  if(!isTeacher) {
+	if ((result!=null)&&(result.getEndDate()!=null)){ %>
 	<h2><liferay-ui:message key="offlinetaskactivity.result.title" /></h2>
 	<p><liferay-ui:message key="offlinetaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
 	<%
@@ -351,6 +354,7 @@
 			</div>
 			<%
 		}
+	}
 	}
 %>
 </div>
