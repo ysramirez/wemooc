@@ -85,7 +85,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	//-->
 	</script>
     
-	<aui:field-wrapper label="enunciation">
+	<aui:field-wrapper label="execativity.editquestions.editquestion.enunciation">
 		<liferay-ui:input-editor name="text" width="80%" onChangeMethod="onChangeText" />
 		<script type="text/javascript">
 	        function <portlet:namespace />initEditor() 
