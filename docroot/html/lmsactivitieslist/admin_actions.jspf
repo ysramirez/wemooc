@@ -254,4 +254,4 @@ ActionKeys.PERMISSIONS) %>">
 					 "		}); ";
 %>
 
-<liferay-ui:icon  title="<%=(visible)?\"Visible\":\"No visible\" %>" alt="<%=(visible)?\"Visible\":\"No visible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+<liferay-ui:icon alt="<%=(visible)?\"Visible\":\"No visible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
