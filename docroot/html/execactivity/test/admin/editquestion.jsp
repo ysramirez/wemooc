@@ -176,7 +176,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 		<aui:input  type="checkbox" name="correct" label="correct"></aui:input>
 	</aui:column>
 	<aui:column>
-		<aui:button type="submit" value="add"></aui:button>
+		<aui:button type="submit" value="add-more-answers" ></aui:button>
 	</aui:column>
 </aui:form>
 <br />
