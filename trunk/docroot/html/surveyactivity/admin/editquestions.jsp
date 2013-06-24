@@ -40,6 +40,14 @@ label="<%= true %>"
 message="surveyactivity.editquestions.newquestion"
 url='<%= newquestionURL %>'
 />
+<script type="text/javascript">
+<!--
+AUI().ready(function(A) {
+	A.one('.newitem2 a').focus();
+
+});
+//-->
+</script>
 
 <liferay-portlet:resourceURL var="exportURL" >
 	<portlet:param name="action" value="export"/>
