@@ -131,7 +131,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		Module module = ModuleLocalServiceUtil.getModule(learningActivity.getModuleId());
 				
-	    if((!module.getStartDate().before(new Date()))||(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR")))
+	    if(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR"))
 	    {
 			Document document = null;
 			Element rootElement = null;
