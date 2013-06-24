@@ -83,6 +83,7 @@ public class OfflineActivity extends MVCPortlet {
 	public void serveResource(ResourceRequest resourceRequest,
 			ResourceResponse resourceResponse) throws IOException,
 			PortletException {
+    	ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		String action = ParamUtil.getString(resourceRequest, "action");
 		long actId = ParamUtil.getLong(resourceRequest, "actId",0);
 		if(action.equals("export")){
@@ -101,10 +102,10 @@ public class OfflineActivity extends MVCPortlet {
 		        
 		        
 		        //En esta columna vamos a tener el nombre del usuario.
-		        cabeceras[0]="User";
-		        cabeceras[1]="Date";
-		        cabeceras[2]="Result";
-		        cabeceras[3]="Comment";
+		        cabeceras[0]= LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "onlinetaskactivity.export.user");
+		        cabeceras[1]= LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "onlinetaskactivity.export.date");
+		        cabeceras[2]= LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "onlinetaskactivity.export.result");
+		        cabeceras[3]= LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "onlinetaskactivity.export.comment");
 		        		    
 		        writer.writeNext(cabeceras);
 		        DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
@@ -117,7 +118,7 @@ public class OfflineActivity extends MVCPortlet {
 		        			//Array con los resultados de los intentos.
 			        		String[] resultados = new String[4];
 			        		//En la primera columna del csv introducidos el nombre del estudiante.
-			        		resultados[0] = String.valueOf(learningActivityResult.getUuid());
+			        		resultados[0] = UserLocalServiceUtil.getUser(learningActivityResult.getUserId()).getFullName();
 			        		resultados[1] = String.valueOf(learningActivityResult.getEndDate());
 			        		resultados[2] = String.valueOf(learningActivityResult.getResult());
 			        		resultados[3] = String.valueOf(learningActivityResult.getComments());
@@ -130,7 +131,7 @@ public class OfflineActivity extends MVCPortlet {
 				resourceResponse.getPortletOutputStream().flush();
 				resourceResponse.getPortletOutputStream().close();
 			
-			} catch (SystemException e) {
+			} catch (NestableException e) {
 
 			}finally{
 				resourceResponse.getPortletOutputStream().flush();
