@@ -63,6 +63,7 @@ url='<%= importquestionsURL %>'
 
 <liferay-portlet:resourceURL var="exportURL" >
 	<portlet:param name="action" value="export"/>
+	<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
 </liferay-portlet:resourceURL>
 <liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
 
