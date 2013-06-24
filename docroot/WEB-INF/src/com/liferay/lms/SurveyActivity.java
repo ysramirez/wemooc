@@ -264,7 +264,7 @@ public class SurveyActivity extends MVCPortlet {
 		SessionMessages.add(actionRequest, "question-deleted-successfully");
 		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
 		actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
-		actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
+		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/edit.jsp");
 	}
 	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException, SystemException, Exception {
