@@ -81,10 +81,10 @@ modelVar="activity">
 name="text"
 property="text"
 />
-<liferay-ui:search-container-column-text
+<!--<liferay-ui:search-container-column-text
 name="questionType"
 property="questionType"
-/>
+/>-->
 <liferay-ui:search-container-column-jsp
 path="/html/execactivity/test/admin/admin_actions.jsp"
 align="right"
