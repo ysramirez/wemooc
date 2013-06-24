@@ -180,6 +180,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	</aui:column>
 </aui:form>
 <br />
+<liferay-ui:success key="answer-added-successfully" message="answer-added-successfully" />
 
 <%
 int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryFactoryUtil.forClass(TestAnswer.class).
@@ -276,7 +277,6 @@ int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryF
 				</aui:column>
 			</aui:form>
 		</liferay-ui:search-container-column-text>
-
 		<liferay-ui:search-container-column-jsp
 			path="/html/execactivity/test/admin/admin_answer_actions.jsp"
 			align="right"
