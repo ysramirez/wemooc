@@ -69,7 +69,7 @@ String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextP
     	 var contentIFrame = document.getElementById('contentIFrame');
     	 var treeContainer = document.getElementById('placeholder_treeContainer');
     	 
-    	 if (treeContainer.style.display == 'block') {
+    	 if (treeContainer.style.display != 'none') {
     		 iframe.style.width = '80%';
     		 treeContainer.style.width = '20%';
     	 } else {
@@ -88,7 +88,7 @@ String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextP
      function toggleScormBar(evt) {
     	 var treeContainer = document.getElementById('placeholder_treeContainer');
     	 var iframe = document.getElementById('placeholder_contentIFrame');
-    	 if (treeContainer.style.display == 'block') {
+    	 if (treeContainer.style.display != 'none') {
     		 treeContainer.style.display = 'none';
     		 iframe.style.width = '100%';
     	 } else {
