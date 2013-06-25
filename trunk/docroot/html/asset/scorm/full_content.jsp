@@ -78,40 +78,7 @@ if (dirScormImages.exists()) {
     	},
     	['node', 'event', 'node-event-simulate']
      );
-     /*
-     function adjustScorm() {
-    	 var iframe = document.getElementById('placeholder_contentIFrame');
-    	 var treeContainer = document.getElementById('placeholder_treeContainer');
-    	 var menuA = document.getElementById('open-close-scorm-menu');
-    	 
-    	 if (treeContainer.style.display != 'none') {
-    		 iframe.style.width = '80%';
-    		 treeContainer.style.width = '20%';
-    		 menuA.setAttribute('class', 'close-scorm-menu');
-    	 } else {
-    		 iframe.style.width = '100%';
-    		 menuA.setAttribute('class', 'open-scorm-menu');
-    	 }
-    	 var initiated = false;
-    	 var leafs = treeContainer.getElementsByTagName("img");
-    	 for (var i = 0; i < leafs.length; i++) {
-    		 var leaf = leafs[i];
-    		 var source = leaf.getAttribute('src');
-    		 if (source.endsWith("select.gif")) {
-    			 initiated = true;
-    		 }
-    	 }
-    	 if (!initiated) {
-    		 var aas = treeContainer.getElementsByTagName("a");
-    		 for (var i = 0; i < aas.length; i++) {
-    			 var aa = aas[i];
-    			 if (aa.getAttribute('href') == '#') {
-    				 break;
-    			 }
-    		 }
-    	 }
-     }
-          */
+     
      AUI().ready(function() {
     	 InitPlayer();
     	 

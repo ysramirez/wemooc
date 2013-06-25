@@ -166,9 +166,9 @@ if ("true".equals(openWindow) && !themeDisplay.isStateMaximized()) { %>
 			);
 			</script>
 				
-				<liferay-ui:message key="activity.openwindow"></liferay-ui:message>
+				<p class="activity-message"><liferay-ui:message key="activity.openwindow"></liferay-ui:message></p>
 				
-				<a href="#" onclick="javascript:<portlet:namespace />abrirActividad();" ><liferay-ui:message key="activity.go"></liferay-ui:message></a>
+				<span class="newitem2"><a href="#" onclick="javascript:<portlet:namespace />abrirActividad();" ><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
 				<%
 			} else {
 			
