@@ -145,7 +145,7 @@ window.<portlet:namespace />validate_execactivity={
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true"></aui:input>
+	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"execActivity.options.password.help\")%>"></aui:input>
  
  	<aui:field-wrapper label="execActivity.options.timestamp">
 	<%
