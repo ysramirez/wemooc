@@ -42,7 +42,7 @@ boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
 	if(theModule!=null)
 	{
 		%>
-		<liferay-ui:header title="<%=LanguageUtil.format(pageContext, \"moduleTitle.chapter\", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %>"></liferay-ui:header>
+		<liferay-ui:header title="<%=LanguageUtil.format(pageContext, \"moduleTitle.chapter2\", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %>"></liferay-ui:header>
 		<%
 	}
 	else
