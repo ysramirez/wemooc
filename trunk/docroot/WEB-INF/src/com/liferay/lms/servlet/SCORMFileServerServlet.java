@@ -65,6 +65,10 @@ public class SCORMFileServerServlet extends HttpServlet {
         {
         	mime_type="application/x-shockwave-flash";
         }
+        if(archivo.getName().toLowerCase().endsWith(".flv"))
+        {
+        	mime_type="video/x-flv";
+        }
         response.setContentType(mime_type);
         java.io.OutputStream out=response.getOutputStream();
 

@@ -54,20 +54,64 @@ if (dirScormImages.exists()) {
        Run.ManifestByURL("<%=urlIndex%>", false);
      }
      
+     Liferay.provide(
+    	window,
+    	'adjustScorm',
+    	function() {
+    		var A = AUI();
+    		var iframe = A.one('#placeholder_contentIFrame');
+	       	 var treeContainer = A.one('#placeholder_treeContainer');
+	       	 var menuA = A.one('#open-close-scorm-menu');
+	       	 
+	       	 if (treeContainer.getStyle('display') != 'none') {
+	       		 iframe.setStyle('width', '80%');
+	       		 treeContainer.setStyle('width', '20%');
+	       		 menuA.replaceClass('open-scorm-menu', 'close-scorm-menu');
+	       	 } else {
+	       		iframe.setStyle('width', '100%');
+	       		menuA.replaceClass('close-scorm-menu', 'open-scorm-menu');
+	       	 }
+	       	 var initiated = (treeContainer.all('img[src*="select.gif"]').size() > 0);
+	       	 if (!initiated) {
+	       		treeContainer.one('a[href="#"]').simulate('click');
+	       	 }
+    	},
+    	['node', 'event', 'node-event-simulate']
+     );
+     /*
      function adjustScorm() {
     	 var iframe = document.getElementById('placeholder_contentIFrame');
     	 var treeContainer = document.getElementById('placeholder_treeContainer');
+    	 var menuA = document.getElementById('open-close-scorm-menu');
     	 
     	 if (treeContainer.style.display != 'none') {
-    		 console.log('tree visible');
     		 iframe.style.width = '80%';
     		 treeContainer.style.width = '20%';
+    		 menuA.setAttribute('class', 'close-scorm-menu');
     	 } else {
-    		 console.log('tree invisible');
     		 iframe.style.width = '100%';
+    		 menuA.setAttribute('class', 'open-scorm-menu');
+    	 }
+    	 var initiated = false;
+    	 var leafs = treeContainer.getElementsByTagName("img");
+    	 for (var i = 0; i < leafs.length; i++) {
+    		 var leaf = leafs[i];
+    		 var source = leaf.getAttribute('src');
+    		 if (source.endsWith("select.gif")) {
+    			 initiated = true;
+    		 }
+    	 }
+    	 if (!initiated) {
+    		 var aas = treeContainer.getElementsByTagName("a");
+    		 for (var i = 0; i < aas.length; i++) {
+    			 var aa = aas[i];
+    			 if (aa.getAttribute('href') == '#') {
+    				 break;
+    			 }
+    		 }
     	 }
      }
-          
+          */
      AUI().ready(function() {
     	 InitPlayer();
     	 
@@ -85,12 +129,15 @@ if (dirScormImages.exists()) {
      function toggleScormBar(evt) {
     	 var treeContainer = document.getElementById('placeholder_treeContainer');
     	 var iframe = document.getElementById('placeholder_contentIFrame');
+    	 var menuA = document.getElementById('open-close-scorm-menu');
     	 if (treeContainer.style.display != 'none') {
     		 treeContainer.style.display = 'none';
     		 iframe.style.width = '100%';
+    		 menuA.setAttribute('class', 'open-scorm-menu');
     	 } else {
     		 treeContainer.style.display = 'block';
     		 iframe.style.width = '80%';
+    		 menuA.setAttribute('class', 'close-scorm-menu');
     	 }
     	 if (evt.preventDefault) {
      	 	evt.preventDefault();
@@ -101,7 +148,7 @@ if (dirScormImages.exists()) {
   </script>
   <div id="placeholder_barContainer">
   	<a id="clicker" href="#" style="display: none">__</a>
-  	<a href="#" onclick="javascript:toggleScormBar(event)">+</a>
+  	<a id="open-close-scorm-menu" href="#" onclick="javascript:toggleScormBar(event)">+</a>
   </div>
 <div id="placeholder_treecontentContainer">
 	<div id="placeholder_treeContainer"></div>
