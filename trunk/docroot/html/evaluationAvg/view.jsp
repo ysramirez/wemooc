@@ -88,7 +88,7 @@
 							
 							new A.Dialog({
 								id:'<portlet:namespace />showPopupEvaluations',
-					            title: '<%=LanguageUtil.format(pageContext, "evaluationAvg.evaluations", new Object[]{})%>',
+					            title: '<%=LanguageUtil.format(pageContext,(courseEvalModel.has("evaluations"))?"evaluationAvg.evaluations":"evaluationAvg.evaluations.define", new Object[]{})%>',
 					            modal: true,
 					            xy:A.one('#p_p_id<portlet:namespace />').getXY (),
 					            resizable: true,
@@ -182,7 +182,7 @@
 				<liferay-ui:icon
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
-				message="evaluationAvg.evaluation.configuration"
+				message="<%=(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluation.configuration\":\"evaluationAvg.evaluation.configuration.define\" %>"
 				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupEvaluations();" %>'
 				/>
 				<% 
