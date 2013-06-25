@@ -5,6 +5,8 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.text.DateFormat;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -40,6 +42,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -56,6 +59,9 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  * Portlet implementation class OfflineActivity
  */
 public class OfflineActivity extends MVCPortlet {
+	
+	private static DateFormat _dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
+			"yyyy-MM-dd'T'HH:mm:sszzz",Locale.US);
 	
 	public static final String NOT_TEACHER_SQL = "WHERE User_.userId NOT IN "+
 			 "( SELECT Usergrouprole.userId "+
@@ -118,8 +124,8 @@ public class OfflineActivity extends MVCPortlet {
 		        			//Array con los resultados de los intentos.
 			        		String[] resultados = new String[4];
 			        		//En la primera columna del csv introducidos el nombre del estudiante.
-			        		resultados[0] = UserLocalServiceUtil.getUser(learningActivityResult.getUserId()).getFullName();
-			        		resultados[1] = String.valueOf(learningActivityResult.getEndDate());
+			        		resultados[0] = UserLocalServiceUtil.getUser(learningActivityResult.getUserId()).getScreenName();
+			        		resultados[1] = _dateFormat.format(learningActivityResult.getEndDate());
 			        		resultados[2] = String.valueOf(learningActivityResult.getResult());
 			        		resultados[3] = String.valueOf(learningActivityResult.getComments());
 			        		
@@ -159,77 +165,84 @@ public class OfflineActivity extends MVCPortlet {
 		}else{
 			CSVReader reader=null;
 			try {
-				reader = new CSVReader(new FileReader(csvFile));
+				reader = new CSVReader(new FileReader(csvFile),';');
 				int line=0;
 				String[] currLine;
 				while ((currLine = reader.readNext()) != null) {
 					boolean correct=true;
-					line++;
-					
-					if(currLine.length==3){
-						
-						long userId=0;
-						String userFullName=StringPool.BLANK;
-						long result=0;
-						
-						try {
-							userId=Long.parseLong(currLine[0].trim());
-						} catch (NumberFormatException e) {
-							correct=false;
-							errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-bad-format",new Object[]{line},false));
-						}
-						
-						if(correct) {
+					if(line++!=0){			
+						if(currLine.length>=4){
+							
+							User user=null;
+							String userFullName=StringPool.BLANK;
+							Date endDate = null;
+							long result=0;
+							
 							try {
-								User user=UserLocalServiceUtil.getUser(userId);
-								userFullName=user.getFullName();
-								if(!ArrayUtil.contains(user.getGroupIds(),groupId)){
-									correct=false;
-									errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-not-in-course",new Object[]{line},false));
-								}
-							} catch (PortalException e) {
+								user=UserLocalServiceUtil.getUserByScreenName(themeDisplay.getCompanyId(), currLine[0].trim());
+							} catch (NestableException e) {
 								correct=false;
-								errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-not-exists",new Object[]{line},false));
-							} catch (SystemException e) {
-								correct=false;
-								errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-system-error",new Object[]{line},false));
+								errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-bad-format",new Object[]{line},false));
 							}
-						}	
-	
-						try {
-							result=Long.parseLong(currLine[1]);
-							if(result<0 || result>100){
+							
+							if(correct) {
+								try {
+									userFullName=user.getFullName();
+									if(!ArrayUtil.contains(user.getGroupIds(),groupId)){
+										correct=false;
+										errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-not-in-course",new Object[]{line},false));
+									}
+								} catch (PortalException e) {
+									correct=false;
+									errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-not-exists",new Object[]{line},false));
+								} catch (SystemException e) {
+									correct=false;
+									errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.user-id-system-error",new Object[]{line},false));
+								}
+							}
+							
+							try {
+								endDate=_dateFormat.parse(currLine[1]);
+							} catch (ParseException e) {
+								correct=false;
+								errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.date-bad-format",new Object[]{line},false));
+							}
+														
+							try {
+								result=Long.parseLong(currLine[2]);
+								if(result<0 || result>100){
+									correct=false;
+									errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.result-bad-format",new Object[]{line},false));
+								}
+							} catch (NumberFormatException e) {
 								correct=false;
 								errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.result-bad-format",new Object[]{line},false));
 							}
-						} catch (NumberFormatException e) {
-							correct=false;
-							errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.result-bad-format",new Object[]{line},false));
-						}
-											
-						if(correct){
-							try {
-								LearningActivityTry  learningActivityTry =  LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId);
-								if(learningActivityTry==null){
-									ServiceContext serviceContext = new ServiceContext();
-									serviceContext.setUserId(userId);
-									learningActivityTry =  LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+												
+							if(correct){
+								try {
+									LearningActivityTry  learningActivityTry =  LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, user.getUserId());
+									if(learningActivityTry==null){
+										ServiceContext serviceContext = new ServiceContext();
+										serviceContext.setUserId(user.getUserId());
+										learningActivityTry =  LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+									}
+									learningActivityTry.setEndDate(endDate);
+									learningActivityTry.setResult(result);
+									learningActivityTry.setComments(currLine[3]);
+									updateLearningActivityTryAndResult(learningActivityTry);
+		
+								} catch (NestableException e) {
+									correct=false;
+									errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.bad-updating",new Object[]{line,userFullName},false));
 								}
-								learningActivityTry.setEndDate(new Date());
-								learningActivityTry.setResult(result);
-								learningActivityTry.setComments(currLine[2]);
-								updateLearningActivityTryAndResult(learningActivityTry);
-	
-							} catch (NestableException e) {
+							}	
+						}
+						else {
+							if(currLine.length!=0) {
 								correct=false;
-								errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.bad-updating",new Object[]{line,userFullName},false));
+								errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.bad-format",new Object[]{line},false));
 							}
-						}	
-					}
-					else {
-						if(currLine.length!=0) {
-							correct=false;
-							errors.add(LanguageUtil.format(getPortletConfig(),locale,"offlinetaskactivity.csvError.bad-format",new Object[]{line},false));
 						}
 					}
 				}
