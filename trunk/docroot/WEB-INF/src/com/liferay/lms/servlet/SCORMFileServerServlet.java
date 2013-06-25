@@ -31,7 +31,7 @@ public class SCORMFileServerServlet extends HttpServlet {
     private ServletContext application;
 	private ServletConfig config=null;
 
-  /** Procesa los métodos HTTP GET y POST.<br>
+  /** Procesa los mï¿½todos HTTP GET y POST.<br>
    *  Busca en la ruta que se le ha pedido el comienzo del directorio "contenidos" y sirve el fichero.
    */
   protected void processRequest(HttpServletRequest request, HttpServletResponse response)
@@ -57,11 +57,15 @@ public class SCORMFileServerServlet extends HttpServlet {
         
         //El content type siempre antes del printwriter
         mime_type= MimeTypesUtil.getContentType(archivo);
-        response.setContentType(mime_type);
         if(archivo.getName().toLowerCase().endsWith(".html") ||archivo.getName().toLowerCase().endsWith(".htm") )
         {
         	mime_type="text/html";
         }
+        if(archivo.getName().toLowerCase().endsWith(".swf"))
+        {
+        	mime_type="application/x-shockwave-flash";
+        }
+        response.setContentType(mime_type);
         java.io.OutputStream out=response.getOutputStream();
 
         FileInputStream fis=new FileInputStream(patharchivo);
@@ -93,7 +97,7 @@ public class SCORMFileServerServlet extends HttpServlet {
   }
 
   /**
-   * Procesa el método HTTP GET.
+   * Procesa el mï¿½todo HTTP GET.
    */
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
   throws ServletException, java.io.IOException
@@ -102,7 +106,7 @@ public class SCORMFileServerServlet extends HttpServlet {
   }
 
   /**
-   * Procesa el método HTTP POST.
+   * Procesa el mï¿½todo HTTP POST.
    */
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
   throws ServletException, java.io.IOException

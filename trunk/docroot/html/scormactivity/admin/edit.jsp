@@ -97,6 +97,8 @@ if(request.getAttribute("activity")!=null) {
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 	</button>
 </aui:field-wrapper>
+
+<<liferay-ui:input-permissions/>
 		
 <div id="<portlet:namespace/>backButton" style="display:none;">
 	<liferay-ui:icon image="back" message="back" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"back();\" %>" label="true"  />
