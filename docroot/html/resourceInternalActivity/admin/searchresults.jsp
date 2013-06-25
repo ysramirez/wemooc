@@ -102,7 +102,7 @@ orderable="false"
  <liferay-portlet:param value="<%=assetEntry.getTitle(renderRequest.getLocale()) %>" name="assertTitle"/>
 </liferay-portlet:renderURL>
 <liferay-ui:search-container-column-text>
-	<liferay-ui:icon image="add" cssClass="newitem2" label="false" message="select" url="<%=selectResourceURL.toString() %>" ><liferay-ui:message key="select" />
+	<liferay-ui:icon image="add" cssClass="newitem2" label="false" message="select" url="<%=selectResourceURL.toString() %>" ><liferay-ui:message key="select" />***********************
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
  <liferay-ui:search-iterator />
