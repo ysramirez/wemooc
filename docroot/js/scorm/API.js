@@ -1725,27 +1725,69 @@ API.setAPI_LIB = function(api_lib) {
 	API.$0 = api_lib;
 }
 API.LMSInitialize = function(param) {
+	if (API.$0 == null) {
+		return API_1484_11.Initialize(param);
+	}
 	return API.$0.LMSInitialize(param);
 }
 API.LMSFinish = function(param) {
+	if (API.$0 == null) {
+		return API_1484_11.Terminate(param);
+	}
 	return API.$0.LMSFinish(param);
 }
 API.LMSGetValue = function(element) {
+	if (API.$0 == null) {
+		element = element.replace("cmi.core.", "cmi.");
+		element = element.replace(".student_", ".learner_");
+		if (element == "cmi.lesson_status") {
+			element = "cmi.completion_status";
+		} else {
+			element = element.replace(".lesson_", ".");
+		}
+		return API_1484_11.GetValue(element);
+	}
 	return API.$0.LMSGetValue(element);
 }
 API.LMSSetValue = function(element, value) {
+	if (API.$0 == null) {
+		element = element.replace("cmi.core.", "cmi.");
+		element = element.replace(".student_", ".learner_");
+		if (element == "cmi.lesson_status") {
+			element = "cmi.completion_status";
+		} else {
+			element = element.replace(".lesson_", ".");
+		}
+		if (element == "cmi.session_time" || element == "cmi.total_time") {
+			var valores = value.split(":");
+			value = "PT" + valores[0] + "H" + valores[1] + "M" + valores[2] + "S";
+		}
+		return API_1484_11.SetValue(element, value);
+	}
 	return API.$0.LMSSetValue(element, value);
 }
 API.LMSCommit = function(param) {
+	if (API.$0 == null) {
+		return API_1484_11.Commit(param);
+	}
 	return API.$0.LMSCommit(param);
 }
 API.LMSGetLastError = function() {
+	if (API.$0 == null) {
+		return API_1484_11.GetLastError();
+	}
 	return API.$0.LMSGetLastError();
 }
 API.LMSGetErrorString = function(param) {
+	if (API.$0 == null) {
+		return API_1484_11.GetErrorString(param);
+	}
 	return API.$0.LMSGetErrorString(param);
 }
 API.LMSGetDiagnostic = function(param) {
+	if (API.$0 == null) {
+		return API_1484_11.GetDiagnostic(param);
+	}
 	return API.LMSGetDiagnostic(param);
 }
 SCORM_1_2.ActivityTreeNode.createClass('SCORM_1_2.ActivityTreeNode', null,

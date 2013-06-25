@@ -1,3 +1,4 @@
+<%@page import="java.io.File"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.SCORMContentLocalServiceUtil"%>
@@ -24,6 +25,11 @@ SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 
 String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
 
+String iconsDir = "/liferaylms-portlet";
+File dirScormImages = new File(themeDisplay.getPathThemeImages()+"/icons/scorm");
+if (dirScormImages.exists()) {
+	iconsDir = themeDisplay.getPathThemeImages();
+}
 %>
 
    <script type="text/javascript">
@@ -31,10 +37,10 @@ String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextP
        PlayerConfiguration.Debug = false;
        PlayerConfiguration.StorageSupport = true;
 
-       PlayerConfiguration.TreeMinusIcon = "/liferaylms-portlet/icons/scorm/minus.gif";
-       PlayerConfiguration.TreePlusIcon = "/liferaylms-portlet/icons/scorm/plus.gif";
-       PlayerConfiguration.TreeLeafIcon = "/liferaylms-portlet/icons/scorm/leaf.gif";
-       PlayerConfiguration.TreeActiveIcon = "/liferaylms-portlet/icons/scorm/select.gif";
+       PlayerConfiguration.TreeMinusIcon = "<%= iconsDir %>/icons/scorm/minus.gif";
+       PlayerConfiguration.TreePlusIcon = "<%= iconsDir %>/icons/scorm/plus.gif";
+       PlayerConfiguration.TreeLeafIcon = "<%= iconsDir %>/icons/scorm/leaf.gif";
+       PlayerConfiguration.TreeActiveIcon = "<%= iconsDir %>/icons/scorm/select.gif";
 
        PlayerConfiguration.BtnPreviousLabel = "Previous";
        PlayerConfiguration.BtnContinueLabel = "Continue";
@@ -48,34 +54,25 @@ String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextP
        Run.ManifestByURL("<%=urlIndex%>", false);
      }
      
-     Liferay.provide(
-    	        window,
-    	        '<portlet:namespace />patchTree',
-    	        function() {
-    				var A = AUI();
-			    	A.all('#placeholder_treeContainer a').on('click', function(event) {
-			    		if (event.preventDefault) {
-			         	 	event.preventDefault();
-			         	 }
-			         	 event.returnValue = false;
-			    	});
-     			},
-     			['node']
-     			);
-     
-     AUI().ready(function() {
-    	 InitPlayer();
+     function adjustScorm() {
     	 var iframe = document.getElementById('placeholder_contentIFrame');
-    	 var contentIFrame = document.getElementById('contentIFrame');
     	 var treeContainer = document.getElementById('placeholder_treeContainer');
     	 
     	 if (treeContainer.style.display != 'none') {
+    		 console.log('tree visible');
     		 iframe.style.width = '80%';
     		 treeContainer.style.width = '20%';
     	 } else {
+    		 console.log('tree invisible');
     		 iframe.style.width = '100%';
     	 }
-    	 <portlet:namespace />patchTree();
+     }
+          
+     AUI().ready(function() {
+    	 InitPlayer();
+    	 
+    	 setTimeout(adjustScorm, 100);
+    	 
    	 });
      
      function iResize() {
