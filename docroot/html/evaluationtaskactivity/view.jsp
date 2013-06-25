@@ -98,7 +98,7 @@ else
 							
 							new A.Dialog({
 								id:'<portlet:namespace />showPopupActivities',
-					            title: '<%=LanguageUtil.format(pageContext, "evaluationtaskactivity.evaluations", new Object[]{})%>',
+					            title: '<%=LanguageUtil.format(pageContext,(hasActivities)?"evaluationtaskactivity.evaluations":"evaluationtaskactivity.evaluations.define", new Object[]{})%>',
 					            modal: true,
 					            xy:A.one('#p_p_id<portlet:namespace />').getXY (),
 					            resizable: true,
@@ -217,7 +217,7 @@ else
 				<liferay-ui:icon
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
-				message="evaluationtaskactivity.evaluation.configuration"
+				message="<%=(hasActivities)?\"evaluationtaskactivity.evaluation.configuration\":\"evaluationtaskactivity.evaluation.configuration.define\"%>"
 				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupActivities();" %>'
 				/>
 				<% 
