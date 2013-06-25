@@ -107,8 +107,8 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',f
 		A.all('.lms-tree ul li span.desplegar').each(function(span){
 
 			var parentNode=span.get('parentNode');
-			if(parentNode.one('div.desplegable')) {
-				var wrapper=parentNode.one('div.desplegable');
+			if(parentNode.one('div.lms-desplegable')) {
+				var wrapper=parentNode.one('div.lms-desplegable');
 				var height=wrapper.height();
 				var open = new A.Anim({node: wrapper, to: {height:  height},
 				     easing: A.Easing.easeOut});
@@ -188,7 +188,7 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',f
 						<%if(actionEditing){}
 					}
 					if((theModule.getModuleId()==moduleId)&&(ParamUtil.getBoolean(renderRequest, "viewCurrentModule",true))){%>
-						<div class="desplegable" style="overflow: hidden;" >
+						<div class="lms-desplegable" style="overflow: hidden;" >
 							<jsp:include page="/html/lmsactivitieslist/viewactivities.jsp"></jsp:include>
 						</div>
 					<%}	%>		
