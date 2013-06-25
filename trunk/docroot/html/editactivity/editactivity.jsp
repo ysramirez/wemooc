@@ -155,6 +155,9 @@ if(learnact!=null)
 
 AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
 
+	<% if(larntype.hasEditDetails()){ %>
+		A.one('.taglib-icon').focus();
+	<% } %>
 
 	var rules = {			
 			<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
