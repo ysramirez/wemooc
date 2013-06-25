@@ -234,7 +234,7 @@
 							</aui:select>
 						</aui:column>	
 						<aui:column>
-							<aui:button name="searchUsers" value="search" type="submit" />
+							<aui:button cssClass="inline-button" name="searchUsers" value="search" type="submit" />
 						</aui:column>
 					</aui:fieldset>
 				</aui:form>
