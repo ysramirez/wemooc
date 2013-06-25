@@ -103,20 +103,20 @@ if(actId==0){
 							    	var dialog1 = new A.Dialog({
 							    		title: '<liferay-ui:message key="evaluationtaskactivity.calculate" />',
 							    		bodyContent: '<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />',
-							    		height: 150,
-							    		width: 300,
+							    		height: 200,
+							    		width: 400,
 							    		modal: true,
 							    		centered: true,
 							    		buttons: [{
-							    			label: '<liferay-ui:message key="ok" />',
-							    			handler: function() {
-							    				location.href='<portlet:actionURL name="update" />';
-							    			}
-							    		},
-							    		{
 							    			label: '<liferay-ui:message key="cancel" />',
 							    			handler: function() {
 							    				this.close();
+							    			}
+							    		},
+							    		{
+							    			label: '<liferay-ui:message key="evaluationtaskactivity.calculate" />',
+							    			handler: function() {
+							    				location.href='<portlet:actionURL name="update" />';
 							    			}
 							    		}]
 							    	}).render().show();
@@ -131,20 +131,19 @@ if(actId==0){
 						    	var dialog1 = new A.Dialog({
 						    		title: '<liferay-ui:message key="evaluationtaskactivity.publish" />',
 						    		bodyContent: '<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />',
-						    		height: 150,
-						    		width: 300,
+						    		height: 200,
+						    		width: 400,
 						    		modal: true,
 						    		centered: true,
 						    		buttons: [{
-						    			label: '<liferay-ui:message key="ok" />',
-						    			handler: function() {
-						    				location.href='<portlet:actionURL name="publish" />';
-						    			}
-						    		},
-						    		{
 						    			label: '<liferay-ui:message key="cancel" />',
 						    			handler: function() {
 						    				this.close();
+						    			}
+						    		},{
+						    			label: '<liferay-ui:message key="acept" />',
+						    			handler: function() {
+						    				location.href='<portlet:actionURL name="publish" />';
 						    			}
 						    		}]
 						    	}).render().show();
@@ -303,20 +302,19 @@ if(actId==0){
 										   	var dialog1 = new A.Dialog({
 												title: '<liferay-ui:message key="evaluationtaskactivity.recalculate" />',
 											    bodyContent: '<liferay-ui:message key="evaluationtaskactivity.recalculate.confirm" />',
-											    height: 150,
-											    width: 300,
+											    height: 200,
+											    width: 400,
 											    modal: true,
 											    centered: true,
 											    buttons: [{
-											    	label: '<liferay-ui:message key="ok" />',
-											    	handler: function() {
-											    		location.href='<%=reCalculateURL %>';
-											    	}
-											    },
-											    {
 											    	label: '<liferay-ui:message key="cancel" />',
 											    	handler: function() {
 											    		this.close();
+											    	}
+											    },{
+											    	label: '<liferay-ui:message key="acept" />',
+											    	handler: function() {
+											    		location.href='<%=reCalculateURL %>';
 											    	}
 											    }]
 											}).render().show();
@@ -335,8 +333,8 @@ if(actId==0){
 										   	var dialog1 = new A.Dialog({
 												title: '<liferay-ui:message key="comments" />',
 											    bodyContent: '<%=learningActivityResult.getComments() %>',
-											    height: 150,
-											    width: 300,
+											    height: 200,
+											    width: 400,
 											    modal: true,
 											    centered: true,
 											    buttons: [{
