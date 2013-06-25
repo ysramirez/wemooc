@@ -107,13 +107,12 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',f
 		A.all('.lms-tree ul li span.desplegar').each(function(span){
 
 			var parentNode=span.get('parentNode');
-			var wrapper = A.Node.create('<div style="overflow: hidden;" ></div>');
-			if(parentNode.one('ul')) {
-				wrapper.append(parentNode.one('ul').replace(wrapper));
+			if(parentNode.one('div.desplegable')) {
+				var wrapper=parentNode.one('div.desplegable');
 				var height=wrapper.height();
 				var open = new A.Anim({node: wrapper, to: {height:  height},
 				     easing: A.Easing.easeOut});
-	     		var close = new A.Anim({node: wrapper, to: {height:  -100},
+	     		var close = new A.Anim({node: wrapper, to: {height:  0},
 				     easing: A.Easing.easeIn});
 	
 				span.on('click',function(){
@@ -162,8 +161,7 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',f
 				
 				<%--li class='<%= moduleId == theModule.getModuleId() ? "option-less" : "option-more"%>' --%>
 				<li class='option-none  <%=theModule.getModuleId() == moduleId ? "option-less":"option-more" %>'>
-					<span class="desplegar"></span>
-					
+					<span class="desplegar"></span>					
 					<%
 					ModuleResult moduleResult=ModuleResultLocalServiceUtil.getByModuleAndUser(theModule.getModuleId(),themeDisplay.getUserId());
 					long done=0;
@@ -190,8 +188,10 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',f
 						<%if(actionEditing){}
 					}
 					if((theModule.getModuleId()==moduleId)&&(ParamUtil.getBoolean(renderRequest, "viewCurrentModule",true))){%>
-						<jsp:include page="/html/lmsactivitieslist/viewactivities.jsp"></jsp:include>
-					<%}	%>
+						<div class="desplegable" style="overflow: hidden;" >
+							<jsp:include page="/html/lmsactivitieslist/viewactivities.jsp"></jsp:include>
+						</div>
+					<%}	%>		
 				</li>
 			<%}%>
 			</ul>
