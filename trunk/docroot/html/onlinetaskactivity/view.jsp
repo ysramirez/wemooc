@@ -349,12 +349,12 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<aui:button type="submit" value="onlinetaskactivity.save" onClick='<%=renderResponse.getNamespace() + "extractCodeFromEditor()"%>'></aui:button>
 		</aui:button-row>
 	</aui:form>
-	<% } %>	
+	<liferay-ui:success key="onlinetaskactivity.updating" message="onlinetaskactivity.updating" />
+	<% } if(!isTeacher) { %>
+	
+<div class="nota"> 
 
-	<div class="nota"> 
-
-<% if(!isTeacher) {
-if (result!=null){ %>
+<% if (result!=null){ %>
 	<h3><a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h3>
 	<%
 	if(result.getEndDate()!= null){
