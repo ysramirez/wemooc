@@ -129,7 +129,7 @@ else
 	</c:if>
 	<aui:input type="textarea" cols="100" rows="4" name="summary" label="summary" value="<%=summary %>"/>
 	
-	<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,"course-correction-method-help")%>">
+	<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
 	<%
 	CourseEvalRegistry cer=new CourseEvalRegistry();
 	for(CourseEval ce:cer.getCourseEvals())
