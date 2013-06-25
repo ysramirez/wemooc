@@ -114,20 +114,19 @@
 					    	var dialog1 = new A.Dialog({
 					    		title: '<liferay-ui:message key="evaluationAvg.calculate" />',
 					    		bodyContent: '<liferay-ui:message key="evaluationAvg.calculate.confirm" />',
-					    		height: 150,
-					    		width: 300,
+					    		height: 200,
+					    		width: 400,
 					    		modal: true,
 					    		centered: true,
 					    		buttons: [{
-					    			label: '<liferay-ui:message key="ok" />',
-					    			handler: function() {
-					    				location.href='<portlet:actionURL name="updateCourse" />';
-					    			}
-					    		},
-					    		{
 					    			label: '<liferay-ui:message key="cancel" />',
 					    			handler: function() {
 					    				this.close();
+					    			}
+					    		},{
+					    			label: '<liferay-ui:message key="evaluationAvg.calculate" />',
+					    			handler: function() {
+					    				location.href='<portlet:actionURL name="updateCourse" />';
 					    			}
 					    		}]
 					    	}).render().show();
@@ -303,20 +302,19 @@
 											    	var dialog1 = new A.Dialog({
 											    		title: '<liferay-ui:message key="evaluationAvg.recalculate" />',
 											    		bodyContent: '<liferay-ui:message key="evaluationAvg.recalculate.confirm" />',
-											    		height: 150,
-											    		width: 300,
+											    		height: 200,
+											    		width: 400,
 											    		modal: true,
 											    		centered: true,
 											    		buttons: [{
-											    			label: '<liferay-ui:message key="ok" />',
-											    			handler: function() {
-											    				location.href='<%=reCalculateURL %>';
-											    			}
-											    		},
-											    		{
 											    			label: '<liferay-ui:message key="cancel" />',
 											    			handler: function() {
 											    				this.close();
+											    			}
+											    		},{
+											    			label: '<liferay-ui:message key="acept" />',
+											    			handler: function() {
+											    				location.href='<%=reCalculateURL %>';
 											    			}
 											    		}]
 											    	}).render().show();

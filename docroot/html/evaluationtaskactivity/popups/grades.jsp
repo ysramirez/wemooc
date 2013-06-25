@@ -180,11 +180,11 @@ String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationtaskactivit
 </aui:form>
 
 <aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">
-		<liferay-ui:message key="evaluationtaskactivity.save" />
-	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupGrades();" type="button">
 		<liferay-ui:message key="evaluationtaskactivity.cancel" />
+	</button>
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">
+		<liferay-ui:message key="evaluationtaskactivity.save" />
 	</button>
 </aui:button-row>
 <div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.grades.bad-updating"))?
