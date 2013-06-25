@@ -223,6 +223,7 @@ public class OnlineActivity extends MVCPortlet {
 			//learningActivityTry.setEndDate(new Date());
 			//learningActivityTry.setResult(0);
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+			SessionMessages.add(actionRequest, "onlinetaskactivity.updating");
 		}
 
 	}
