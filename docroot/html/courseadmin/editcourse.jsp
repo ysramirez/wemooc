@@ -190,7 +190,7 @@ else
 	<%
 		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
 	%>									
-		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
 		<aui:button onClick="<%=cancel %>" type="cancel" />
+		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
 	</aui:button-row>
 </aui:form>
