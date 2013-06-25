@@ -370,7 +370,10 @@
 		}
 	}
 	if (!result.getComments().trim().equals("")){ %>
-	<p><liferay-ui:message key="evaluationAvg.result.teachercoment" /> <span class="destacado"><%=result.getComments() %></span></p>
+	<p>
+		<liferay-ui:message key="evaluationAvg.result.teachercoment" /> 
+		<div class="activity-comments"><%=result.getComments() %></div>
+	</p>
 	<% } 
 }else {
 %>

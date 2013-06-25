@@ -411,7 +411,8 @@ else
 	<%
 	}
 	if (!result.getComments().trim().equals("")){ %>
-	<p><liferay-ui:message key="evaluationtaskactivity.result.teachercoment" /> <span class="destacado"><%=result.getComments() %></span></p>
+	<p><liferay-ui:message key="evaluationtaskactivity.result.teachercoment" /> 
+	   <div class="activity-comments"><%=result.getComments() %></div></p>
 	<% } 
 }else {
 %>
