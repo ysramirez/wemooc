@@ -355,7 +355,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 
 <% if(!isTeacher) {
 if (result!=null){ %>
-	<h3><liferay-ui:message key="test-done" /> <a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);">Ver &uacute;ltima.</a></h3>
+	<h3><a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h3>
 	<%
 	if(result.getEndDate()!= null){
 		%><h4><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></h4><%
