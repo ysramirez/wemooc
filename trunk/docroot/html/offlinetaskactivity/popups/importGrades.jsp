@@ -30,7 +30,7 @@ else
 <iframe name="<portlet:namespace />import_frame" src="" id="<portlet:namespace />import_frame" style="display:none;" onload="<portlet:namespace />doImportGrades();" ></iframe>
 <aui:form name="fm" action="<%=importGradesURL%>"  method="post" enctype="multipart/form-data" target='<%=renderResponse.getNamespace() +"import_frame" %>' >
 	<aui:fieldset>
-		<aui:field-wrapper label="offlinetaskactivity.file" >
+		<aui:field-wrapper label="offlinetaskactivity.file"  helpMessage="offlinetaskactivity.file.help">
 	    			<aui:input inlineLabel="left" inlineField="true"
 					  	name="fileName" label="" id="fileName" type="file" value="" />
 		</aui:field-wrapper>
