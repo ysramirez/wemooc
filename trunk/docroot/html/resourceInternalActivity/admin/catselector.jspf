@@ -51,7 +51,28 @@ vocabularies.addAll(AssetVocabularyLocalServiceUtil.getGroupVocabularies(searchG
 	</div>
 
 	<aui:script use="liferay-asset-categories-selector">
-		new Liferay.AssetCategoriesSelector(
+	
+		Liferay.AssetCategoriesSelector.prototype._getPopupSuper = Liferay.AssetCategoriesSelector.prototype._getPopup;
+	
+		Liferay.AssetCategoriesSelector.prototype._getPopup = function(){
+			var instance = this;
+			var popUp = instance._getPopupSuper(); 
+			popUp.set('draggable',false);
+			popUp.set('resizable',false);
+			popUp.after(
+				['dialog:destroy', 'dialog:modalChange', 'dialog:render', 'dialog:visibleChange'],function(event) {
+					if ((!!window.postMessage)&&(window.parent != window)) {
+						if (!window.location.origin){
+							window.location.origin = window.location.protocol+"//"+window.location.host;
+						}
+						parent.postMessage({name:'resizeIframe',height:(popUp.get('visible'))?popUp.get('boundingBox').height():0}, window.location.origin);
+					}	
+				});
+			
+			return popUp;	
+		};
+	
+		var categorySelector = new Liferay.AssetCategoriesSelector(
 			{
 				className: '<%= className %>',
 				contentBox: '#<%= namespace + randomNamespace %>assetCategoriesSelector',
@@ -64,6 +85,7 @@ vocabularies.addAll(AssetVocabularyLocalServiceUtil.getGroupVocabularies(searchG
 				vocabularyIds: '<%= ListUtil.toString(vocabularies, "vocabularyId") %>'
 			}
 		).render();
+
 	</aui:script>
 
 <%!
