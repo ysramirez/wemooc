@@ -516,7 +516,7 @@ Liferay.provide(
 	</aui:fieldset>
 	
 	<aui:button-row>
-		<aui:button type="submit" value="savechanges"></aui:button>
+		
 		
 		<script type="text/javascript">
 		<!--
@@ -543,6 +543,7 @@ Liferay.provide(
 		//-->
 		</script>
 		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
+		<aui:button type="submit" value="savechanges"></aui:button>
 	</aui:button-row>
 </aui:form>
  <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
