@@ -192,14 +192,9 @@
 				    //-->
 				</script>
 
-				<liferay-ui:icon
-				image="add" cssClass="newitem2"
-				label="<%= true %>"
-				message="offlinetaskactivity.import.grades"
-				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'
-				/>
+				<liferay-ui:icon image="add" cssClass="newitem2" label="<%= true %>" message="offlinetaskactivity.import.grades" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'/>
 				<% } %>
-				<h3><liferay-ui:message key="offlinetaskactivity.description" />  </h3>
+				<h3><liferay-ui:message key="offlinetaskactivity.description" /> </h3>
 				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
 				
 				
@@ -324,33 +319,24 @@
 				
 				<div class="nota"> 
 
-<%  if(!isTeacher) {
-	if ((result!=null)&&(result.getEndDate()!=null)){ %>
-	<h2><liferay-ui:message key="offlinetaskactivity.result.title" /></h2>
-	<p><liferay-ui:message key="offlinetaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
-	<%
-	if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
-	%>
-		<p class="nota_superado"><liferay-ui:message key="offlinetaskactivity.result.pass" /></p>
-	<%
-	}else{
-		Object  [] arg =  new Object[]{activity.getPasspuntuation()};
-	%>	
-		<p class="nota_nosuperado"><liferay-ui:message key="offlinetaskactivity.result.notpass"  arguments="<%=arg %>" /></p>
-	<%
-	}
-	if (!result.getComments().trim().equals("")){ %>
-	<p><liferay-ui:message key="offlinetaskactivity.result.teachercoment" /> <span class="destacado"><%=result.getComments() %></span></p>
-	<% } 
-}else {
-%>
-	<p class="nota_nocorregida"><liferay-ui:message key="offlinetaskactivity.not.qualificated.activity" /></p>
-<% 
+<%if(!isTeacher) {%>
+	<h3><liferay-ui:message key="offlinetaskactivity.your-calification" /> </h3>
+	<%if ((result!=null)&&(result.getEndDate()!=null)){ %>
+		<p><liferay-ui:message key="offlinetaskactivity.your-result" arguments="<%=new Object[]{(arguments.length>0) ? arguments[0]:\"\"} %>" /></p>
+		<p><liferay-ui:message key="offlinetaskactivity.needed-to-pass" arguments="<%=new Object[]{activity.getPasspuntuation()} %>" /></p>
+	<%}else {%>
+		<p class="nota_nocorregida"><liferay-ui:message key="offlinetaskactivity.not.qualificated.activity" /></p>
+	<%}%>
 	
-}%>
-
+	<h3><liferay-ui:message key="offlinetaskactivity.result.teachercoment" /> </h3>
+	<%if ((result!=null)&&!"".equals(result.getComments().trim())){ %>
+		<p><span class="destacado"><%=result.getComments() %></span></p>
+	<% } else if(result==null){%>
+		<p><liferay-ui:message key="offlinetaskactivity.no-teacher-comments-yet" /></p>
+	<%}else {%>
+		<p><liferay-ui:message key="offlinetaskactivity.no-teacher-comments" /></p>
+	<%} %>
 </div>
-			
 			</div>
 			<%
 		}
