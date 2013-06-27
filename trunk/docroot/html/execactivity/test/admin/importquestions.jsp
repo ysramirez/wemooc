@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.lms.model.TestQuestion"%>
 <%@page import="com.liferay.lms.service.TestQuestionLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
@@ -33,7 +34,7 @@ else
 </portlet:actionURL>
 <aui:form name="fm" action="<%=importQuestionsURL%>"  method="post" enctype="multipart/form-data">
 	<aui:fieldset>
-		<aui:field-wrapper label="file" >
+		<aui:field-wrapper label="file" helpMessage="execativity.editquestions.importquestions.fileHelp">
 	    			<aui:input inlineLabel="left" inlineField="true"
 					  	name="fileName" label="" id="fileName" type="file" value="" />
 				</aui:field-wrapper>
@@ -43,3 +44,13 @@ else
 		<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
 	</aui:button-row>
 </aui:form>
+
+<liferay-ui:error key="execativity.editquestions.importquestions.xml.fileRequired" message="execativity.editquestions.importquestions.xml.fileRequired" />
+<liferay-ui:error key="execativity.editquestions.importquestions.xml.badFormat" message="execativity.editquestions.importquestions.xml.badFormat" />
+<liferay-ui:error key="execativity.editquestions.importquestions.xml.parseXML" message="execativity.editquestions.importquestions.xml.parseXML" />
+<% if(SessionErrors.contains(renderRequest, "execativity.editquestions.importquestions.xml.parseXMLLine")) { %>
+<div class="portlet-msg-error">
+	<%=LanguageUtil.format(pageContext, "execativity.editquestions.importquestions.xml.parseXMLLine", SessionErrors.get(renderRequest, "execativity.editquestions.importquestions.xml.parseXMLLine"),false) %>
+</div>
+<% } %>
+
