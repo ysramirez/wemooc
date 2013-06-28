@@ -73,6 +73,19 @@
 					<portlet:param name="ajaxAction" value="setGrades" />      
 		            <portlet:param name="jspPage" value="/html/evaluationAvg/popups/grades.jsp" />           
 		        </portlet:renderURL>
+		        
+		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
+		        	<portlet:actionURL name="updateCourse" var="updateCourseURL" />
+		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
+			        <aui:button-row>
+			        	<aui:button type="button" name="cancel" value="cancel"  
+			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"calculatePopup'); }); \" %>"
+			        	/>
+			        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate"  
+			        		onclick="<%= \"location.href='\"+updateCourseURL+\"';\" %>"
+			        	/>
+					</aui:button-row>
+		        </div>
 		        		        
 				<script type="text/javascript">
 			    <!--
@@ -112,31 +125,16 @@
 				    {
 					    AUI().use('aui-dialog', function(A) {
 					    	var dialog1 = new A.Dialog({
+					    		id:'<portlet:namespace />calculatePopup',
 					    		title: '<liferay-ui:message key="evaluationAvg.calculate" />',
-					    		bodyContent: '<liferay-ui:message key="evaluationAvg.calculate.confirm" />',
+					    		bodyContent: A.one('#<portlet:namespace />calculateContents').getContent(),
 					    		height: 200,
 					    		width: 400,
 					    		modal: true,
-					    		centered: true,
-					    		buttons: [{
-					    			label: '<liferay-ui:message key="cancel" />',
-					    			handler: function() {
-					    				this.close();
-					    			}
-					    		},{
-					    			label: '<liferay-ui:message key="evaluationAvg.calculate" />',
-					    			handler: function() {
-					    				location.href='<portlet:actionURL name="updateCourse" />';
-					    			}
-					    		}]
+					    		centered: true
 					    	}).render().show();
 					    });
 
-					    /*
-						if(confirm('<liferay-ui:message key="evaluationAvg.calculate.confirm" />')){
-							location.href='<portlet:actionURL name="updateCourse" />';
-						}  	
-						*/
 				    }
 
 					<% 
