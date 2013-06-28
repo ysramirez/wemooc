@@ -417,7 +417,32 @@
 										portlet.placeAfter('<div class="portlet-msg-error"><liferay-ui:message key="there-was-an-unexpected-error.-please-refresh-the-current-page"/></div>');
 									},
 									success: function(event, id, obj) {
-										searchContainer.setContent(A.Node.create(this.get('responseData')).one('#<%=renderResponse.getNamespace() %><%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer').ancestor('.lfr-search-container').getContent ());
+
+										var responseSearchContainer = A.Node.create(this.get('responseData')).one('#<%=renderResponse.getNamespace() %><%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer').ancestor('.lfr-search-container');
+										if(responseSearchContainer.hasClass('aui-helper-hidden')){
+											if(!searchContainer.hasClass('aui-helper-hidden')){
+												searchContainer.addClass('aui-helper-hidden');
+												var noResults = searchContainer.ancestor().one('.portlet-msg-info');												
+												if(noResults){
+													noResults.removeClass('aui-helper-hidden'); 
+												}
+												else{
+													searchContainer.ancestor().appendChild(A.Node.create('<div class=\'portlet-msg-info\' ><%=LanguageUtil.get(pageContext,searchContainer.getEmptyResultsMessage()) %></div>')); 
+												}
+											}
+
+										}
+										else {
+											if(searchContainer.hasClass('aui-helper-hidden')){
+												searchContainer.removeClass('aui-helper-hidden');
+												var noResults = searchContainer.ancestor().one('.portlet-msg-info');												
+												if(noResults){
+													noResults.addClass('aui-helper-hidden'); 
+												}
+											}
+										}
+
+										searchContainer.setContent(responseSearchContainer.getContent());
 										<portlet:namespace />ajaxMode<%= searchContainer.getId(request, renderResponse.getNamespace()) %>SearchContainer(A);
 										searchContainer.fire('ajaxLoaded',sourceEvent);
 									}
