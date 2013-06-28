@@ -68,6 +68,33 @@ if(actId==0){
 					<portlet:param name="ajaxAction" value="setGrades" />      
 		            <portlet:param name="jspPage" value="/html/evaluationtaskactivity/popups/grades.jsp" />           
 		        </portlet:renderURL>
+		        
+		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
+		        	<portlet:actionURL name="update" var="updateURL" />
+		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
+			        <aui:button-row>
+			        	<aui:button type="button" name="cancel" value="cancel"  
+			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"calculatePopup'); }); \" %>"
+			        	/>
+			        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate"  
+			        		onclick="<%= \"location.href='\"+updateURL+\"';\" %>"
+			        	/>
+					</aui:button-row>
+		        </div>
+		        
+		        <div id="<portlet:namespace />publishContents" class="aui-helper-hidden">
+		        	<portlet:actionURL name="publish" var="publishURL" />
+		        	<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />
+			        <aui:button-row>
+			        	<aui:button type="button" name="cancel" value="cancel"  
+			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"publishPopup'); }); \" %>"
+			        	/>
+			        	<aui:button type="button" name="publish" value="evaluationtaskactivity.publish"  
+			        		onclick="<%= \"location.href='\"+publishURL+\"';\" %>"
+			        	/>
+					</aui:button-row>
+		        </div>
+
 				<script type="text/javascript">
 			    <!--
 					<%if(!hasFiredDate){%>
@@ -99,26 +126,16 @@ if(actId==0){
 						<%if(hasActivities) {%>
 
 						    function <portlet:namespace />calculateEvaluation(){
+							   
 						    	AUI().use('aui-dialog', function(A) {
 							    	var dialog1 = new A.Dialog({
+							    		id:'<portlet:namespace />calculatePopup',
 							    		title: '<liferay-ui:message key="evaluationtaskactivity.calculate" />',
-							    		bodyContent: '<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />',
+							    		bodyContent: A.one('#<portlet:namespace />calculateContents').getContent(),
 							    		height: 200,
 							    		width: 400,
 							    		modal: true,
-							    		centered: true,
-							    		buttons: [{
-							    			label: '<liferay-ui:message key="cancel" />',
-							    			handler: function() {
-							    				this.close();
-							    			}
-							    		},
-							    		{
-							    			label: '<liferay-ui:message key="evaluationtaskactivity.calculate" />',
-							    			handler: function() {
-							    				location.href='<portlet:actionURL name="update" />';
-							    			}
-							    		}]
+							    		centered: true
 							    	}).render().show();
 							    }); 	
 						    }
@@ -129,23 +146,13 @@ if(actId==0){
 					    function <portlet:namespace />publish(){
 					    	AUI().use('aui-dialog', function(A) {
 						    	var dialog1 = new A.Dialog({
+						    		id:'<portlet:namespace />publishPopup',
 						    		title: '<liferay-ui:message key="evaluationtaskactivity.publish" />',
-						    		bodyContent: '<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />',
+						    		bodyContent: A.one('#<portlet:namespace />publishContents').getContent(),
 						    		height: 200,
 						    		width: 400,
 						    		modal: true,
-						    		centered: true,
-						    		buttons: [{
-						    			label: '<liferay-ui:message key="cancel" />',
-						    			handler: function() {
-						    				this.close();
-						    			}
-						    		},{
-						    			label: '<liferay-ui:message key="acept" />',
-						    			handler: function() {
-						    				location.href='<portlet:actionURL name="publish" />';
-						    			}
-						    		}]
+						    		centered: true
 						    	}).render().show();
 						    });  	
 					    }
