@@ -61,7 +61,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class OfflineActivity extends MVCPortlet {
 	
 	private static DateFormat _dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:sszzz",Locale.US);
+			"dd-MM-yyyy",Locale.US);
 	
 	public static final String NOT_TEACHER_SQL = "WHERE User_.userId NOT IN "+
 			 "( SELECT Usergrouprole.userId "+
