@@ -59,6 +59,7 @@ AUI().ready(function(A) {
 	PortletURL editQuestionsURL = renderResponse.createRenderURL();
 	editQuestionsURL.setParameter("jspPage","/html/surveyactivity/admin/editquestions.jsp");
 	editQuestionsURL.setParameter("resId",Long.toString(learningActivity.getActId()));
+	editQuestionsURL.setParameter("actionEditingDetails",StringPool.TRUE);
 %>
 <liferay-ui:search-container emptyResultsMessage="there-are-no-questions"
  delta="10" iteratorURL="<%=editQuestionsURL%>">
@@ -67,7 +68,8 @@ AUI().ready(function(A) {
   DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()));
   pageContext.setAttribute("results", TestQuestionLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),
 		searchContainer.getEnd()));
-  pageContext.setAttribute("total", (int)TestQuestionLocalServiceUtil.dynamicQueryCount(dynamicQuery));
+  pageContext.setAttribute("total", (int)TestQuestionLocalServiceUtil.dynamicQueryCount(
+		  DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))));
 %>
 </liferay-ui:search-container-results>
 <liferay-ui:search-container-row
