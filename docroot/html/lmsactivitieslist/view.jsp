@@ -58,11 +58,17 @@ if(actId!=0) {
 <script type="text/javascript">
 <!--
 
-AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim',function(A) {
+AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','json',function(A) {
 	
 	A.one(window).on('message', 
 		function(event){
+
 			var html5Event=event._event;
+
+			if(A.Lang.isString(html5Event.data)){
+				html5Event={data:JSON.parse(html5Event.data)};
+			}
+	
 			if(html5Event.data.name=='reloadModule'){
 				<% if(moduleId!=0){ %>
 				if(html5Event.data.moduleId==<%=Long.toString(moduleId)%>)
