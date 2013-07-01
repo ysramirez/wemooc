@@ -18,9 +18,17 @@
 					if (!window.location.origin){
 						window.location.origin = window.location.protocol+"//"+window.location.host;
 					}
-					parent.postMessage({name:'closeActivity',
-						                moduleId:<%=Long.toString(learningActivity.getModuleId())%>,
-						                actId:<%=Long.toString(learningActivity.getActId())%>}, window.location.origin);
+
+					if(AUI().UA.ie==0) {
+						parent.postMessage({name:'closeActivity',
+							                moduleId:<%=Long.toString(learningActivity.getModuleId())%>,
+							                actId:<%=Long.toString(learningActivity.getActId())%>}, window.location.origin);
+					}
+					else {
+						parent.postMessage(JSON.stringify({name:'closeActivity',
+			                							   moduleId:<%=Long.toString(learningActivity.getModuleId())%>,
+			                							   actId:<%=Long.toString(learningActivity.getActId())%>}), window.location.origin);
+					}
 				}
 				else {
 					window.location.href='<liferay-portlet:renderURL portletName="<%=PortalUtil.getJsSafePortletId(\"lmsactivitieslist\"+

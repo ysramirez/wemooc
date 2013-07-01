@@ -530,9 +530,17 @@ Liferay.provide(
 						if (!window.location.origin){
 							window.location.origin = window.location.protocol+"//"+window.location.host;
 						}
-						parent.postMessage({name:'closeActivity',
-							                moduleId:<%=Long.toString(moduleId)%>,
-							                actId:<%=Long.toString(actId)%>}, window.location.origin);
+						
+						if(AUI().UA.ie==0) {
+							parent.postMessage({name:'closeActivity',
+								                moduleId:<%=Long.toString(moduleId)%>,
+								                actId:<%=Long.toString(actId)%>}, window.location.origin);
+						}
+						else {
+							parent.postMessage(JSON.stringify({name:'closeActivity',
+				                							   moduleId:<%=Long.toString(moduleId)%>,
+				                							   actId:<%=Long.toString(actId)%>}), window.location.origin);
+						}
 					}
 					else {
 						window.location.href='<portlet:renderURL />';
