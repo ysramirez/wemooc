@@ -72,7 +72,7 @@ if(actId==0){
 		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
 		        	<portlet:actionURL name="update" var="updateURL" />
 		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
-			        <aui:button-row>
+			        <aui:button-row cssClass="container-buttons">
 			        	<aui:button type="button" name="cancel" value="cancel"  
 			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"calculatePopup'); }); \" %>"
 			        	/>
@@ -85,7 +85,7 @@ if(actId==0){
 		        <div id="<portlet:namespace />publishContents" class="aui-helper-hidden">
 		        	<portlet:actionURL name="publish" var="publishURL" />
 		        	<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />
-			        <aui:button-row>
+			        <aui:button-row  cssClass="container-buttons">
 			        	<aui:button type="button" name="cancel" value="cancel"  
 			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"publishPopup'); }); \" %>"
 			        	/>
