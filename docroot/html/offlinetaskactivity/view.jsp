@@ -97,8 +97,8 @@
 					            title: '<liferay-message key="offlinetaskactivity.import.grades" />',
 						    	centered: true,
 					            modal: true,
-					            width: 450,
-					            height: 220,
+					            width: 550,
+					            height: 320,
 					            after: {   
 						          	close: function(event){ 
 						          		document.getElementById('<portlet:namespace />studentsearch').submit();
