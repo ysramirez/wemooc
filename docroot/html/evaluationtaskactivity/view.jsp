@@ -76,7 +76,7 @@ if(actId==0){
 			        	<aui:button type="button" name="cancel" value="cancel"  
 			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"calculatePopup'); }); \" %>"
 			        	/>
-			        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate"  
+			        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate.acept"  
 			        		onclick="<%= \"location.href='\"+updateURL+\"';\" %>"
 			        	/>
 					</aui:button-row>

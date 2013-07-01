@@ -77,11 +77,11 @@
 		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
 		        	<portlet:actionURL name="updateCourse" var="updateCourseURL" />
 		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
-			        <aui:button-row>
+			        <aui:button-row  cssClass="container-buttons">
 			        	<aui:button type="button" name="cancel" value="cancel"  
 			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"calculatePopup'); }); \" %>"
 			        	/>
-			        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate"  
+			        	<aui:button type="button" name="calculate" value="evaluationAvg.calculate.acept"  
 			        		onclick="<%= \"location.href='\"+updateCourseURL+\"';\" %>"
 			        	/>
 					</aui:button-row>
