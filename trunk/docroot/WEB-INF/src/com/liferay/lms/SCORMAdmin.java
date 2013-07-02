@@ -57,15 +57,19 @@ public class SCORMAdmin extends MVCPortlet
 		
 			if(fileName!=null && !fileName.equals(""))
 			{	
-				try {
-					ZipFile zipFile= new ZipFile(file);
-					if (zipFile.getEntry("imsmanifest.xml") == null) {
-						SessionErrors.add(actRequest, "scormadmin.error.nomanifest");
+				if (!file.getName().toLowerCase().endsWith(".zip")) {
+					SessionErrors.add(actRequest, "scormadmin.error.nozip");
+				} else {
+					try {
+						ZipFile zipFile= new ZipFile(file);
+						if (zipFile.getEntry("imsmanifest.xml") == null) {
+							SessionErrors.add(actRequest, "scormadmin.error.nomanifest");
+						}
+					} catch (ZipException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
-				} catch (ZipException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
 				}
 				
 				if (!SessionErrors.isEmpty(actRequest)) {
