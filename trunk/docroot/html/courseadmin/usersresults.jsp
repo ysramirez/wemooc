@@ -1,5 +1,10 @@
 
 
+<%@page import="com.liferay.portal.service.RoleServiceUtil"%>
+<%@page import="com.liferay.portal.service.UserServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.CustomSQLParam"%>
 <%@include file="/init.jsp" %>
 <%@page import="com.liferay.lms.model.Course"%>
@@ -104,11 +109,18 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	                                                "  FROM UserGroupRole "+
 	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))",new Long[]{course.getGroupCreatedId(),roleId}));
 
-	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
-	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
+	//List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
+	//int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
 
+	List<User> userListPage = new ArrayList<User>();
+	List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(themeDisplay.getScopeGroupId(), role.getRoleId());
+	
+	for(UserGroupRole userGroupRole:userGroupRoles){
+		userListPage.add(userGroupRole.getUser());
+	}
+	
 	pageContext.setAttribute("results", userListPage);
-    pageContext.setAttribute("total", userCount);
+    pageContext.setAttribute("total", userGroupRoles.size());
 
 %>
 	</liferay-ui:search-container-results>
