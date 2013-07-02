@@ -325,7 +325,7 @@ Liferay.provide(
 		}
 	%>
 
-		<aui:input name="title" label="title">
+		<aui:input name="title" label="title" defaultLanguageId="<%=renderRequest.getLocale().toString() %>">
 		</aui:input>
 		<div id="<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>Error" class="<%=(SessionErrors.contains(renderRequest, "title-required"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
