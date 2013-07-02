@@ -113,7 +113,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	//int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
 
 	List<User> userListPage = new ArrayList<User>();
-	List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(themeDisplay.getScopeGroupId(), role.getRoleId());
+	List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(course.getGroupCreatedId(), role.getRoleId());
 	
 	for(UserGroupRole userGroupRole:userGroupRoles){
 		userListPage.add(userGroupRole.getUser());
