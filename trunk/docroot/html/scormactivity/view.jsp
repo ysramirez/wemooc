@@ -150,7 +150,7 @@ Liferay.provide(
     function() {
     	var A = AUI();
     	var serviceParameterTypes = ['long'];
-    	Liferay.Service.Lms.LearningActivityResult.getByActId(
+    	Liferay.Service.Lms.LearningActivityResult.userPassed(
 	      		{
 	      			actId: <%= learningTry.getActId() %>,
 	      			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
@@ -160,7 +160,7 @@ Liferay.provide(
 	
 	                 if (!exception) {
 	                     // Process Success - A LearningActivityResult returned
-	                     if (message.passed) {
+	                     if (message) {
 	                    	 window.location.reload(true);
 	                     } else {
 	                    	A.one('h3').html('<liferay-ui:message key="activity.try.finished"/>');
@@ -203,7 +203,7 @@ Liferay.provide(
 					'<portlet:namespace />abrirActividad',
 					function(e) {
 						var A = AUI();
-						window.ventana = window.open('','scormactivity','height=768,width=1024');
+						window.ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
 						window.ventana.location = '<%= scormwindow %>';
 						
 						if (ventana != null) {

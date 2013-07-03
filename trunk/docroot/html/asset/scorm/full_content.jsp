@@ -79,6 +79,7 @@ try {
 	       	 if (!initiated) {
 	       		treeContainer.one('a[href="#"]').simulate('click');
 	       	 }
+	       	 /*
 	       	 var iFrameID = document.getElementById('contentIFrame');
 	       	 iFrameID.style.height = "";
 	       	 iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight : 600) + "px";
@@ -94,6 +95,7 @@ try {
 	       			iframe.setStyle('height', ifra.style.height);
 	       		}
 	       	 }
+	       	 */
 	       	 A.one("#close-scorm").on('click', function() {<portlet:namespace/>update_scorm(event);});
     	},
     	['node', 'event', 'node-event-simulate']
@@ -133,7 +135,7 @@ try {
   </div>
 <div id="placeholder_treecontentContainer">
 	<div id="placeholder_treeContainer"></div>
-	<div id="placeholder_contentIFrame">
+	<div id="placeholder_contentIFrame" style="height: 670px;">
           <iframe id="contentIFrame" style="height:100%; width:100%"></iframe>
     </div>          
 </div>
