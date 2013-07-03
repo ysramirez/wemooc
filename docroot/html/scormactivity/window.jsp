@@ -36,6 +36,7 @@ if(entryId != 0) {
 <script type="text/javascript">
 		if (window.opener) {
 			document.getElementById('close-scorm').style.display = 'none';
+			window.onunload = function() {<portlet:namespace />update_scorm(null);};
 		}
         var <portlet:namespace />update_scorm = function(e) {
         	
@@ -73,7 +74,13 @@ if(entryId != 0) {
 					var lesson_completion_status = lesson["cmi.completion_status"] ? lesson["cmi.completion_status"].value : lesson["cmi.core.lesson_status"].value;
 					var lesson_score_raw = lesson["cmi.score.raw"] ? lesson["cmi.score.raw"].value : lesson["cmi.core.score.raw"].value;
 					var lesson_score_min = lesson["cmi.score.min"] ? lesson["cmi.score.min"].value : lesson["cmi.core.score.min"].value;
+					if (lesson_score_min = null || lesson_score_min == '') {
+						lesson_score_min = 0;
+					}
 					var lesson_score_max = lesson["cmi.score.max"] ? lesson["cmi.score.max"].value : lesson["cmi.core.score.max"].value;
+					if (lesson_score_max = null || lesson_score_max == '') {
+						lesson_score_max = 100;
+					}
 					
 					lesson_score = lesson["cmi.score.scaled"] ? lesson["cmi.score.scaled"].value : -1;
 					
@@ -114,7 +121,7 @@ if(entryId != 0) {
 	                 if (!exception) {
 	                     // Process Success - A LearningActivityResult returned
 	                     if (window.opener) {
-	                     	window.close();
+	                    	window.opener.<portlet:namespace />actualizarActividad();
 	                     } else {
 	                    	document.getElementById('placeholder_contentIFrame').style.display = 'none';
 	                     	document.getElementById('open-close-scorm-menu').style.display = 'none';

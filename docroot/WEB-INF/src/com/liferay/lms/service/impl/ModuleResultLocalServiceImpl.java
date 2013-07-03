@@ -25,12 +25,14 @@ import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.model.Module;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.ModuleResultLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -73,7 +75,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 	}
 
 	/**
-	 * No debería haber nunca más de un result para el mismo usuario y modulo.
+	 * No deberï¿½a haber nunca mï¿½s de un result para el mismo usuario y modulo.
 	 * Se hace para eliminar los duplicados.
 	 * @param moduleId
 	 * @param userId
@@ -118,7 +120,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 		LearningActivity learningActivity = learningActivityLocalService.getLearningActivity(actId);
 		// Si el Weight es mayor que cero (obligatoria) entonces calcula, sino
 		// no.
-		// Se elimina la restricción de calcular solo en las obligatorias, se
+		// Se elimina la restricciï¿½n de calcular solo en las obligatorias, se
 		// calcula ent todas las que se aprueben.
 		if (learningActivity.getModuleId() > 0 && /*
 												 * learningActivity.
@@ -139,7 +141,8 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 				moduleResult.setResult(0);
 
 			}
-			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LearningActivity.class);
+			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LearningActivity.class, (ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),
+					"portletClassLoader"));
 			Criterion crit;
 			crit = PropertyFactoryUtil.forName("weightinmodule").gt(new Long(0));
 			dynamicQuery.add(crit);
@@ -265,14 +268,14 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 				passedModule = false;
 			}
 
-			//Indicamos la media y el resultado del módulo.
+			//Indicamos la media y el resultado del mï¿½dulo.
 			long result = 0;
 			if(totalActivities > 0){
 				
 				result = activitiesPassed * 100 / totalActivities;
 			}
 			
-			//Sólo actualizamos si cambia el resultado.
+			//Sï¿½lo actualizamos si cambia el resultado.
 			if(moduleResult.getResult() < result){
 				
 				//Traza
