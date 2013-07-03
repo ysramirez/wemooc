@@ -24,9 +24,9 @@ url='<%= newactivityURL %>'
  delta="10">
 <liferay-ui:search-container-results>
 <%
-results=SCORMContentServiceUtil.getSCORMContentOfGroup(themeDisplay.getScopeGroupId());
+results=SCORMContentServiceUtil.getSCORMContentOfGroup(themeDisplay.getScopeGroupId()); // TODO better pagination
 total=results.size();
-pageContext.setAttribute("results", results);
+pageContext.setAttribute("results", results.subList(searchContainer.getStart(), results.size() <= searchContainer.getEnd() ? results.size() - 1 : searchContainer.getEnd()));
 pageContext.setAttribute("total", total);
 %>
 </liferay-ui:search-container-results>

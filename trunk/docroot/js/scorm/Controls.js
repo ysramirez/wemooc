@@ -190,6 +190,8 @@ ControlsCollection.TreeView.prototype = {
 			if ($1 === 'a') {
 				if (window.event.preventDefault) {
 	         	 	window.event.preventDefault();
+	         	} else {
+	         		window.event.returnValue = false;
 	         	}
 			}
 		}
