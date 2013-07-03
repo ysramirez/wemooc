@@ -33,7 +33,7 @@
 long moduleId=ParamUtil.getLong(request,"resModuleId",0);
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
-long typeId=ParamUtil.getLong(request, "typeId");
+long typeId=ParamUtil.getLong(request, "type");
 AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
 Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
 
