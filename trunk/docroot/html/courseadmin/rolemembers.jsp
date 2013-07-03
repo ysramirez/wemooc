@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.util.JS"%>
 <%@ include file="/init.jsp" %>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
@@ -37,12 +38,77 @@ else
 
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>" backURL="<%=backURL %>"></liferay-ui:header>
 <h2><liferay-ui:message key="<%=\"wemooc.roles.\"+JS.getSafeName(role.getName())%>"></liferay-ui:message></h2>
-<portlet:renderURL var="adduserURL">
-<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
-<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
-<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 
+<portlet:renderURL var="adduserURL">
+	<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
+	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
+	<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 </portlet:renderURL>
+
+<portlet:renderURL var="importUsersURL"  windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<portlet:param name="courseId" value="<%=ParamUtil.getString(renderRequest, \"courseId\") %>" /> 
+	<portlet:param name="roleId" value="<%=ParamUtil.getString(renderRequest, \"roleId\") %>" /> 
+	<portlet:param name="jspPage" value="/html/courseadmin/popups/importUsers.jsp" /> 
+</portlet:renderURL>
+
+<script type="text/javascript">
+<!--
+
+    function <portlet:namespace />doImportUsers()
+    {
+        var uploadMessages = document.getElementById('<portlet:namespace />uploadMessages');
+        if(uploadMessages){
+			var importUsersDIV=document.getElementById('<portlet:namespace />import_frame').
+								contentDocument.getElementById('<portlet:namespace />uploadMessages');
+		
+			if(importUsersDIV){
+				uploadMessages.innerHTML=importUsersDIV.innerHTML;
+			}
+			else {
+				uploadMessages.innerHTML='';
+			}
+        }
+    }
+    
+	function <portlet:namespace/>showPopupImportUsers()
+    {
+		AUI().use('aui-dialog', function(A){
+			new A.Dialog({
+				id:'<portlet:namespace />showPopupImportUsers',
+	            title: '<liferay-ui:message key="import" />',
+	            modal: true,
+	            centered: true,
+	            resizable: true,
+	            width: 650,
+	            height: 350,
+	            destroyOnClose: true,
+	            after: {   
+		          	close: function(event){ 
+		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,
+			          																   '<portlet:namespace />courseId':'<%=Long.toString(courseId) %>',
+			          																   '<portlet:namespace />roleId':'<%=Long.toString(roleId) %>',
+			          																   '<portlet:namespace />jspPage':'/html/courseadmin/rolemembers.jsp'});	
+	            	}
+	            }
+	        }).plug(A.Plugin.IO, {
+	            uri: '<%=importUsersURL %>',
+	            parseContent: true
+	        }).render().show();   
+		}); 
+    }
+    
+//-->
+</script>
+
+<iframe name="<portlet:namespace />import_frame" src="" id="<portlet:namespace />import_frame" style="display:none;" onload="<portlet:namespace />doImportUsers();" ></iframe>
+
+<liferay-ui:icon
+	image="add" cssClass="newitem2"
+	label="<%= true %>"
+	message="courseadmin.importuserrole"
+	url="#"
+	onClick="<%=renderResponse.getNamespace()+\"showPopupImportUsers();\"%>"
+/>
 
 <liferay-ui:icon
 image="add" cssClass="newitem2"
