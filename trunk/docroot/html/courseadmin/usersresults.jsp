@@ -119,6 +119,10 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 		userListPage.add(userGroupRole.getUser());
 	}
 	
+	System.out.println(" course.getGroupCreatedId() : " + course.getGroupCreatedId() );
+	System.out.println(" role.getRoleId() : " + role.getRoleId() + " " + role.getTitle() );
+	System.out.println(" userGroupRoles.size() : " + userGroupRoles.size() );
+	
 	pageContext.setAttribute("results", userListPage);
     pageContext.setAttribute("total", userGroupRoles.size());
 
