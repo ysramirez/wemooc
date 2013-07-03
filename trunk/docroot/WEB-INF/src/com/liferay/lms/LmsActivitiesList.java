@@ -8,6 +8,7 @@ import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.StringTokenizer;
 
 import javax.portlet.ActionRequest;
@@ -169,7 +170,11 @@ public class LmsActivitiesList extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
 		String redirect = ParamUtil.getString(uploadRequest, "redirect");
-		actionResponse.setRenderParameters(actionRequest.getParameterMap());
+		for(Map.Entry<String, String[]> parameter:uploadRequest.getParameterMap().entrySet()){
+			if(parameter.getValue()!=null) {
+				actionResponse.setRenderParameter(parameter.getKey(), parameter.getValue());
+			}
+		}
 		uploadRequest.setAttribute("editing", "true");
 		User user = themeDisplay.getUser();
 		long actId = ParamUtil.getLong(uploadRequest, "resId", 0);
