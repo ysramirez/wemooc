@@ -1,3 +1,12 @@
+<%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.portal.model.ResourcePermission"%>
+<%@page import="com.liferay.portal.model.ResourceConstants"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.Role"%>
+<%@page import="com.liferay.portal.model.Resource"%>
+<%@page import="com.liferay.portal.service.ResourceActionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.service.ResourceLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.social.service.SocialRelationLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.social.model.SocialRelationConstants"%>
 <%@ include file="/init.jsp" %>
@@ -32,6 +41,7 @@ else
 	<%
 }
 %>
+<liferay-ui:error key="scormadmin.error.nozip" message="scormadmin.error.nozip"/>
 <liferay-ui:error key="scormadmin.error.nomanifest" message="scormadmin.error.nomanifest"/>
 <aui:form name="fm" action="<%=savescormURL%>"  method="post" enctype="multipart/form-data">
 
@@ -54,7 +64,12 @@ else
 		<aui:input inlineLabel="left" inlineField="true"
 		  	name="fileName" label="" id="fileName" type="file" value="" />
 </aui:field-wrapper>	
+<aui:field-wrapper name="permissions">
+		<liferay-ui:input-permissions modelName="<%= SCORMContent.class.getName() %>">
+		</liferay-ui:input-permissions>
+	</aui:field-wrapper>
 	</c:if>
+	
 	
 		<liferay-ui:custom-attributes-available className="<%= SCORMContent.class.getName() %>">
 		<liferay-ui:custom-attribute-list 
@@ -70,19 +85,7 @@ else
 			<%if(scormId>0) 
 	{
 	%>
-	<portlet:actionURL name="deleteSCORM" var="deleteURL">
-<portlet:param name="scormId" value="<%= Long.toString(scormId )%>" />
-<portlet:param name="redirect" value="<%= redirect%>" />
-
-</portlet:actionURL>
-<%
-if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  SCORMContent.class.getName(),scormId,ActionKeys.DELETE))
-{
-%>
-<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
-<%
-}
-%>
+	
 
 <c:if test="<%= permissionChecker.hasPermission(scorm.getGroupId(), SCORMContent.class.getName(), scorm.getScormId(),
 ActionKeys.PERMISSIONS) %>">
@@ -92,11 +95,25 @@ ActionKeys.PERMISSIONS) %>">
 					resourcePrimKey="<%= String.valueOf(scorm.getScormId()) %>"
 					var="permissionsURL"
 				/>
-				<liferay-ui:icon image="permissions" message="courseadmin.adminactions.permissions" url="<%=permissionsURL %>" />			
+				
+				<aui:button href="<%=permissionsURL.toString() %>" value="courseadmin.adminactions.permissions" />	
 			</c:if>
 
 <%
 	}
+%>
+<portlet:actionURL name="deleteSCORM" var="deleteURL">
+<portlet:param name="scormId" value="<%= Long.toString(scormId )%>" />
+<portlet:param name="redirect" value="<%= redirect%>" />
+
+</portlet:actionURL>
+<%
+if(scormId > 0 && permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  SCORMContent.class.getName(),scormId,ActionKeys.DELETE))
+{
+%>
+<aui:button href="<%=deleteURL.toString() %>" value="delete" />
+<%
+}
 %>
 		<aui:button onClick="<%=cancel %>" type="cancel" />
 	</aui:button-row>

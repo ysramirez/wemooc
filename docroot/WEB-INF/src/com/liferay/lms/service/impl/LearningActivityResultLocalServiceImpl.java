@@ -106,10 +106,12 @@ public class LearningActivityResultLocalServiceImpl
 		if (userId != learningActivityTry.getUserId()) {
 			throw new PortalException();
 		}
-		learningActivityTry.setResult(result);
-		
-		Date endDate = new Date(System.currentTimeMillis());
-		learningActivityTry.setEndDate(endDate);
+		if (result >= 0L) {
+			learningActivityTry.setResult(result);
+			
+			Date endDate = new Date(System.currentTimeMillis());
+			learningActivityTry.setEndDate(endDate);
+		}
 		learningActivityTry.setTryResultData(tryResultData);
 		LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
 		

@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.model.SCORMContent"%>
 <%@page import="com.liferay.portal.kernel.exception.PortalException"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
@@ -94,6 +95,7 @@ function <portlet:namespace />back() {
 
 <%
 long assetId=0;
+Boolean openWindow = true;
 String assetTitle=StringPool.BLANK;
 
 if(request.getAttribute("activity")!=null) {	
@@ -103,7 +105,9 @@ if(request.getAttribute("activity")!=null) {
 			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(
 				GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"assetEntry")));
 			assetId=entry.getEntryId();
-			assetTitle=entry.getTitle(renderRequest.getLocale());	
+			assetTitle=entry.getTitle(renderRequest.getLocale());
+			
+			openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
 		}
 		catch(PortalException e)
 		{
@@ -120,6 +124,9 @@ if(request.getAttribute("activity")!=null) {
 	    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 	</button>
+</aui:field-wrapper>
+<aui:field-wrapper name="activity.edit.openwindow.options">
+	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
 </aui:field-wrapper>
 		
 <div id="<portlet:namespace/>backButton" style="display:none;">
