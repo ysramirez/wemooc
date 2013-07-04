@@ -35,8 +35,9 @@ if(entryId != 0) {
 <liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>"></liferay-util:include>
 <script type="text/javascript">
 		if (window.opener) {
-			document.getElementById('close-scorm').style.display = 'none';
 			window.onunload = function() {<portlet:namespace />update_scorm(null);};
+		} else {
+			document.getElementById('close-scorm').style.display = 'block';
 		}
         var <portlet:namespace />update_scorm = function(e) {
         	

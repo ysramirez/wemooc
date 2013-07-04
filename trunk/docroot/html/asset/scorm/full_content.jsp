@@ -132,7 +132,7 @@ try {
   </script>
   <div id="placeholder_barContainer">
   	<a id="clicker" href="#" style="display: none">__</a>
-  	<aui:button id="close-scorm" value="activity.try.exit" style="float: right;" />
+  	<aui:button id="close-scorm" value="activity.try.exit" style="float: right; display: none" />
   	<a id="open-close-scorm-menu" href="#" onclick="javascript:toggleScormBar(event)">+</a>
   	
   </div>
