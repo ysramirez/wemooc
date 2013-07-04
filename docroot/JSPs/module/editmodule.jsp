@@ -93,7 +93,16 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 <!--
 	AUI().ready(function(A) {
 		if ((!!window.postMessage)&&(window.parent != window)) {
-			parent.postMessage({name:'reloadModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
+			if (!window.location.origin){
+				window.location.origin = window.location.protocol+"//"+window.location.host;
+			}
+			
+			if(AUI().UA.ie==0) {
+				parent.postMessage({name:'reloadModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
+			}
+			else {
+				parent.postMessage(JSON.stringify({name:'reloadModule',moduleId:<%=Long.toString(moduleId)%>}), window.location.origin);
+			}
 		}
 	});
 //-->
@@ -144,7 +153,13 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 				if (!window.location.origin){
 					window.location.origin = window.location.protocol+"//"+window.location.host;
 				}
-				parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
+				
+				if(AUI().UA.ie==0) {
+					parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
+				}
+				else {
+					parent.postMessage(JSON.stringify({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}), window.location.origin);
+				}
 			}
 			else {
 				window.location.href='<portlet:renderURL />';
