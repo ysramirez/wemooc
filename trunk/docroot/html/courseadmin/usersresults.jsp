@@ -1,10 +1,5 @@
 
 
-<%@page import="com.liferay.portal.service.RoleServiceUtil"%>
-<%@page import="com.liferay.portal.service.UserServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
-<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
-<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.CustomSQLParam"%>
 <%@include file="/init.jsp" %>
 <%@page import="com.liferay.lms.model.Course"%>
@@ -109,22 +104,11 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	                                                "  FROM UserGroupRole "+
 	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))",new Long[]{course.getGroupCreatedId(),roleId}));
 
-	//List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
-	//int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
+	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
+	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
 
-	List<User> userListPage = new ArrayList<User>();
-	List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(course.getGroupCreatedId(), role.getRoleId());
-	
-	for(UserGroupRole userGroupRole:userGroupRoles){
-		userListPage.add(userGroupRole.getUser());
-	}
-	
-	System.out.println(" course.getGroupCreatedId() : " + course.getGroupCreatedId() );
-	System.out.println(" role.getRoleId() : " + role.getRoleId() + " " + role.getTitle() );
-	System.out.println(" userGroupRoles.size() : " + userGroupRoles.size() );
-	
 	pageContext.setAttribute("results", userListPage);
-    pageContext.setAttribute("total", userGroupRoles.size());
+    pageContext.setAttribute("total", userCount);
 
 %>
 	</liferay-ui:search-container-results>
@@ -143,7 +127,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 <liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 
 </liferay-portlet:actionURL>
-<a class="newitem2" href="<%=addUserRoleURL %>" ><liferay-ui:message key="assign-member" /></a>
+<liferay-ui:icon image="add" cssClass="newitem2" url="<%=addUserRoleURL %>" label="add" message="add"><liferay-ui:message key="assign-member" /></liferay-ui:icon>
 </liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
  	<liferay-ui:search-iterator />
