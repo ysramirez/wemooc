@@ -2,6 +2,8 @@ package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
@@ -38,4 +40,5 @@ public interface LearningActivityType extends InvokableService
 	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse);
 	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException;
 	public String getPortletId();
+	public void deleteResources(ActionRequest actionRequest,ActionResponse actionResponse,LearningActivity larn) throws PortalException,SystemException,DocumentException,IOException;
 }
