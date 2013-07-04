@@ -148,8 +148,8 @@
 					            title: '<%=LanguageUtil.format(pageContext, "offlinetaskactivity.set.grades", new Object[]{""})%>',
 					            centered: true,
 					            modal: true,
-					            width: 470,
-					            height: 400,
+					            width: 600,
+					            height: 800,
 					            after: {   
 						          	close: function(event){ 
 						          		document.getElementById('<portlet:namespace />studentsearch').submit();
