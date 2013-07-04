@@ -15,14 +15,25 @@
 package com.liferay.lms.service.impl;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.StringWriter;
 import java.util.Locale;
+
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import net.lingala.zip4j.core.ZipFile;
 import net.lingala.zip4j.exception.ZipException;
 
 import org.apache.commons.io.FileUtils;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LmsPrefs;
@@ -235,6 +246,44 @@ public class SCORMContentLocalServiceImpl
 			indexer.reindex(scocontent);
 				
 			return scocontent;
+		
+	}
+	
+	public boolean force(long scormId, String version)
+				throws SystemException, 
+				PortalException, IOException {
+		
+		try {
+			SCORMContent scorm = this.getSCORMContent(scormId);
+			String filename = this.getBaseDir()+"/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
+			
+			File file = new File(filename);
+			FileOutputStream outputStream = null;
+			if (file.exists() && file.canRead() && file.canWrite()) {
+				DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
+			    InputStream inputStream = new FileInputStream(file);
+			    org.w3c.dom.Document doc = documentBuilderFactory.newDocumentBuilder().parse(inputStream);
+			    NodeList nodeList = doc.getElementsByTagName("schemaversion");
+			    Node node = nodeList.item(0);
+			    node.setTextContent(version);
+			    StringWriter stw = new StringWriter();
+			    Transformer serializer = TransformerFactory.newInstance().newTransformer();
+			    serializer.transform(new DOMSource(doc), new StreamResult(stw));
+			    String scormXml = stw.toString();
+			    
+			    outputStream = new FileOutputStream(file);
+			    outputStream.write(scormXml.getBytes());
+			    
+			    outputStream.flush();
+			    outputStream.close();
+			    
+			}
+			return true;
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			return false;
+		}
 		
 	}
 }

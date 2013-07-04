@@ -40,5 +40,24 @@ ActionKeys.PERMISSIONS) %>">
 				/>
 				<liferay-ui:icon image="permissions" message="courseadmin.adminactions.permissions" url="<%=permissionsURL %>" />			
 			</c:if>
+<%
+if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  SCORMContent.class.getName(),primKey,ActionKeys.UPDATE)) {
+	%>
+	<portlet:actionURL name="forceSCORM" var="force12URL">
+		<portlet:param name="scormId" value="<%= primKey %>" />
+		<portlet:param name="version" value="1.2" />
+</portlet:actionURL>
+
+<liferay-ui:icon image="edit" message="scormadmin.force.12" url="<%=force12URL %>" />	
+
+<portlet:actionURL name="forceSCORM" var="force13URL">
+		<portlet:param name="scormId" value="<%= primKey %>" />
+		<portlet:param name="version" value="1.3" />
+</portlet:actionURL>
+
+<liferay-ui:icon image="edit" message="scormadmin.force.13" url="<%=force13URL %>" />	
+	<%
+}
+%>
 
 </liferay-ui:icon-menu>

@@ -165,6 +165,10 @@ public class SCORMContentLocalServiceClpInvoker {
 				"java.lang.String", "java.lang.String", "java.io.File",
 				"com.liferay.portal.service.ServiceContext"
 			};
+
+		_methodName139 = "force";
+
+		_methodParameterTypes139 = new String[] { "long", "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -325,6 +329,12 @@ public class SCORMContentLocalServiceClpInvoker {
 				(com.liferay.portal.service.ServiceContext)arguments[3]);
 		}
 
+		if (_methodName139.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes139, parameterTypes)) {
+			return SCORMContentLocalServiceUtil.force(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -386,4 +396,6 @@ public class SCORMContentLocalServiceClpInvoker {
 	private String[] _methodParameterTypes137;
 	private String _methodName138;
 	private String[] _methodParameterTypes138;
+	private String _methodName139;
+	private String[] _methodParameterTypes139;
 }

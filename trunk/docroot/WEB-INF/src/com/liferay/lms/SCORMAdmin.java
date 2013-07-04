@@ -117,5 +117,23 @@ public class SCORMAdmin extends MVCPortlet
 		}
 		
 	}
+	
+	public void forceSCORM(ActionRequest actRequest, ActionResponse response)
+			throws PortalException, SystemException, IOException {
+		ThemeDisplay themeDisplay = (ThemeDisplay) actRequest
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		UploadPortletRequest request = PortalUtil
+				.getUploadPortletRequest(actRequest);
+		long scormId = ParamUtil.getLong(request, "scormId", 0);
+		String version = ParamUtil.getString(request, "version", "1.2");
+		if (scormId > 0) {
+			SCORMContentLocalServiceUtil.force(scormId, version);
+		}
+		String redirect = ParamUtil.getString(actRequest, "redirect", "");
+		if (redirect != null && !"".equals(redirect)) {
+			response.sendRedirect(redirect);
+		}
+
+	}
 
 }
