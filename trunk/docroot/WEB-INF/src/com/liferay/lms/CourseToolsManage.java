@@ -20,26 +20,43 @@ public class CourseToolsManage extends MVCPortlet
 	public void changeLayout(ActionRequest request, ActionResponse response) throws Exception
 	{
 
-			ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-					WebKeys.THEME_DISPLAY);
-			if (!themeDisplay.isSignedIn()) {
-				return;
+			try {
+				ThemeDisplay themeDisplay = (ThemeDisplay) request
+						.getAttribute(WebKeys.THEME_DISPLAY);
+				if (!themeDisplay.isSignedIn()) {
+					return;
+				}
+				String layoutid = ParamUtil.getString(request, "layoutid");
+				Layout ellayout = LayoutLocalServiceUtil.getLayout(Long
+						.parseLong(layoutid));
+				if (ellayout.getHidden()) {
+					ellayout.setHidden(false);
+					ResourcePermissionLocalServiceUtil.setResourcePermissions(
+							themeDisplay.getCompanyId(),
+							Layout.class.getName(),
+							ResourceConstants.SCOPE_INDIVIDUAL,
+							layoutid,
+							RoleLocalServiceUtil.getRole(
+									themeDisplay.getCompanyId(),
+									RoleConstants.SITE_MEMBER).getRoleId(),
+							new String[] { ActionKeys.VIEW });
+				} else {
+					ellayout.setHidden(true);
+					ResourcePermissionLocalServiceUtil
+							.removeResourcePermission(
+									themeDisplay.getCompanyId(),
+									Layout.class.getName(),
+									ResourceConstants.SCOPE_INDIVIDUAL,
+									layoutid,
+									RoleLocalServiceUtil.getRole(
+											themeDisplay.getCompanyId(),
+											RoleConstants.SITE_MEMBER)
+											.getRoleId(), ActionKeys.VIEW);					
+				}
+				LayoutLocalServiceUtil.updateLayout(ellayout);
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
-			String layoutid=ParamUtil.getString(request, "layoutid");
-			Layout ellayout=LayoutLocalServiceUtil.getLayout(Long.parseLong(layoutid));
-			if(ellayout.getHidden()) {
-				ellayout.setHidden(true);
-				ResourcePermissionLocalServiceUtil.removeResourcePermission(themeDisplay.getCompanyId(), Layout.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	layoutid,RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER).getRoleId(), ActionKeys.VIEW);	
-			}
-			else {
-				ellayout.setHidden(false);
-				ResourcePermissionLocalServiceUtil.setResourcePermissions(themeDisplay.getCompanyId(), Layout.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	layoutid,RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER).getRoleId(), new String[]{ActionKeys.VIEW});
-			}
-			
-			ellayout.setHidden(!ellayout.getHidden());
-			LayoutLocalServiceUtil.updateLayout(ellayout);
 			//response.setRenderParameters(request.getParameterMap());			
 			response.setRenderParameter("jspPage", "/html/coursetoolsmanage/reload.jsp");		
 	} 
