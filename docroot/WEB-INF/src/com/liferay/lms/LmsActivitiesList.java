@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadRequest;
@@ -73,6 +74,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletQNameUtil;
 import com.liferay.portlet.announcements.EntryDisplayDateException;
 import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -411,6 +413,11 @@ public class LmsActivitiesList extends MVCPortlet {
 		
 		if(actId>0)
 		{
+			LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			LearningActivityType learningActivityType=new LearningActivityTypeRegistry().
+					getLearningActivityType(larn.getTypeId());
+			learningActivityType.deleteResources(actionRequest, actionResponse, larn);
+			
 			LearningActivityServiceUtil.deleteLearningactivity(actId);
 			if(actId==renderActId) {
 				actionResponse.removePublicRenderParameter("actId");				

@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.model.LearningActivity;
@@ -541,6 +543,49 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		}
 
 		return ((String)returnObj);
+	}
+	
+	public void deleteResources(ActionRequest actionRequest,ActionResponse actionResponse,LearningActivity learningActivity)
+			throws PortalException,SystemException,DocumentException,IOException{
+		try {
+			ClassLoader classLoader = clp.getClassLoader();
+			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
+			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
+			
+			Method deleteResourcesMethod = learningActivityTypeClass.getMethod("deleteResources", ActionRequest.class, ActionResponse.class, learningActivityClass);    
+			Object learningActivityObj = translateLearningActivity(learningActivity);
+			clp.invoke(new MethodHandler(deleteResourcesMethod, actionRequest, actionResponse, learningActivityObj));
+			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
+			learningActivity.setModelAttributes((Map<String, Object>) classLoaderProxy.invoke("getModelAttributes", new Object[]{}));
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+			
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+			
+			if (t instanceof IOException) {
+				throw (IOException)t;
+			}
+			
+			if (t instanceof DocumentException) {
+				throw (DocumentException)t;
+			}
+			
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
 	}
 
 }

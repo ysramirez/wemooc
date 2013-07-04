@@ -3,6 +3,8 @@ package com.liferay.lms.learningactivity;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
@@ -180,6 +182,26 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 			}
 	    	return newFolder;
 		}
+		
+	@Override
+	public void deleteResources(ActionRequest actionRequest,
+			ActionResponse actionResponse, LearningActivity larn)
+			throws PortalException, SystemException, DocumentException,
+			IOException {
+		UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		try {
+			Folder folder = DLAppLocalServiceUtil.getFolder(themeDisplay.getScopeGroupId(), 0, String.valueOf(larn.getActId()));
+			java.util.List<FileEntry> files = DLAppLocalServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), folder.getFolderId());
+			for(FileEntry file:files){
+				DLAppLocalServiceUtil.deleteFileEntry(file.getFileEntryId());
+			}
+			DLAppLocalServiceUtil.deleteFolder(folder.getFolderId());
+		} catch (Exception e) {
+			//No existe carpeta, por lo que no hay recursos asociados que eliminar.
+		}
+		super.deleteResources(actionRequest, actionResponse, larn);
+	}
 	
 	@Override
 	public String getDescription() {

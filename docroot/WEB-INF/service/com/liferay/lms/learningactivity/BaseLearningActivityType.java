@@ -3,6 +3,8 @@ package com.liferay.lms.learningactivity;
 import java.io.IOException;
 import java.io.Serializable;
 
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
@@ -106,6 +108,10 @@ public abstract class BaseLearningActivityType implements LearningActivityType, 
 			String name, String[] parameterTypes, Object[] arguments)
 		throws Throwable {
 		return this.invokeMethod(name, parameterTypes, arguments);
+	}
+	
+	@Override
+	public void deleteResources(ActionRequest actionRequest,ActionResponse actionResponse,LearningActivity larn) throws PortalException,SystemException,DocumentException,IOException{
 	}
 
 }
