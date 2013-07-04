@@ -102,10 +102,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	params.put("notInCourseRole",new CustomSQLParam("WHERE User_.userId NOT IN "+
 	                                                " (SELECT UserGroupRole.userId "+
 	                                                "  FROM UserGroupRole "+
-	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))"+
-	                                                " AND User_.userId IN "+
-                                               		" (SELECT DISTINCT Users_roles.userId FROM Users_roles WHERE Users_roles.roleId = ?)"
-	                                                ,new Long[]{course.getGroupCreatedId(),roleId,roleId}));
+	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))",new Long[]{course.getGroupCreatedId(),roleId}));
 
 	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
 	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
@@ -130,7 +127,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 <liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 
 </liferay-portlet:actionURL>
-<liferay-ui:icon image="add" cssClass="newitem2" url="<%=addUserRoleURL %>" label="add" message="add"><liferay-ui:message key="assign-member" /></liferay-ui:icon>
+<a class="newitem2" href="<%=addUserRoleURL %>" ><liferay-ui:message key="assign-member" /></a>
 </liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
  	<liferay-ui:search-iterator />
