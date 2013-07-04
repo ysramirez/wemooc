@@ -104,7 +104,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	                                                "  FROM UserGroupRole "+
 	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))"+
 	                                                " AND User_.userId IN "+
-                                               		" (SELECT DISTINCT UserGroupRole.userId FROM UserGroupRole WHERE UserGroupRole.roleId = ?)"
+                                               		" (SELECT DISTINCT Users_roles.userId FROM Users_roles WHERE Users_roles.roleId = ?)"
 	                                                ,new Long[]{course.getGroupCreatedId(),roleId,roleId}));
 
 	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
