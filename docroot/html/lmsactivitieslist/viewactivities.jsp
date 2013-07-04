@@ -234,7 +234,7 @@ Liferay.provide(
 							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
 					<%
 					}
-				}
+				
 
 				if (actionEditing
 					&& (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.UPDATE)
@@ -248,6 +248,6 @@ Liferay.provide(
 				%>
 				</li>
 			<%
-			}
+			}}
 			%>
 </ul>
