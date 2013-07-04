@@ -102,7 +102,10 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	params.put("notInCourseRole",new CustomSQLParam("WHERE User_.userId NOT IN "+
 	                                                " (SELECT UserGroupRole.userId "+
 	                                                "  FROM UserGroupRole "+
-	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))",new Long[]{course.getGroupCreatedId(),roleId}));
+	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))"+
+	                                                " AND User_.userId IN "+
+                                               		" (SELECT DISTINCT UserGroupRole.userId FROM UserGroupRole WHERE UserGroupRole.roleId = ?)"
+	                                                ,new Long[]{course.getGroupCreatedId(),roleId,roleId}));
 
 	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
 	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
