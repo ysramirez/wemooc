@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="java.io.IOException"%>
 <%@page import="java.net.URL"%>
 <%@page import="java.io.File"%>
@@ -28,11 +29,13 @@ SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
 
 String iconsDir = "/liferaylms-portlet";
-URL dirScormImages = new URL(themeDisplay.getPathThemeImages()+"/custom/icons/scorm/plus.gif");
+String conTema = PropsUtil.get("scorm.icons.theme");
 try {
-	dirScormImages.getContent();
-	iconsDir = themeDisplay.getPathThemeImages()+"/custom";
-} catch(IOException e) {
+	if (conTema != null && Boolean.valueOf(conTema)) {
+		iconsDir = themeDisplay.getPathThemeImages()+"/custom";
+	}
+} catch(Exception e) {
+	
 }
 %>
 
