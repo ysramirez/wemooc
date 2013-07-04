@@ -233,7 +233,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 %>
 	</aui:select>       
 	<aui:button-row>
-		<aui:button type="submit" onClick="<%=renderResponse.getNamespace() + \"extractCodeFromEditor()\"%>"></aui:button>
 		<aui:button onClick="<%=renderResponse.getNamespace() + \"closeWindow()\"%>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
-		</aui:button-row>
+		<aui:button type="submit" onClick="<%=renderResponse.getNamespace() + \"extractCodeFromEditor()\"%>"></aui:button>
+	</aui:button-row>
 </aui:form>
