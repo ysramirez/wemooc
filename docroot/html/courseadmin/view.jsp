@@ -50,7 +50,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 <liferay-ui:icon
 image="add"
 label="<%= true %>"
-message="new"
+message="new-course"
 url='<%= newactivityURL %>'
 />
 
