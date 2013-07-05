@@ -21,7 +21,7 @@ Module theModule=ModuleLocalServiceUtil.getModule(moduleId);
 	<portlet:param name="action" value="exportModule"/>
 	<portlet:param name="moduleId" value="<%=Long.toString(moduleId) %>"/>
 </liferay-portlet:resourceURL>
-<liferay-ui:icon image="export" label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
+<liferay-ui:icon cssClass='bt_importexport' label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
 <portlet:renderURL var="cancelURL" />
 
 <liferay-ui:header backLabel="back" title="<%=theModule.getTitle(themeDisplay.getLocale())%>" backURL="<%=cancelURL.toString() %>"></liferay-ui:header>
@@ -131,12 +131,12 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=LanguageUtil.get(pageContext, "dependencies."+String.valueOf(hasPrecedence)) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=classTypes.get((long)activity.getTypeId()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.obligatory"><%=activity.getWeightinmodule() == 1 ? "Si":"No" %></liferay-ui:search-container-column-text>
-	<% if (activity.getTypeId()!=8 && activity.getTypeId()!=9 && activity.getTypeId()!=7){ %>
-	<liferay-ui:search-container-column-jsp name=" " align="right" path="/html/coursestats/viewextras.jsp" />
-	<% } else {%>
-	<liferay-ui:search-container-column-text>&nbsp</liferay-ui:search-container-column-text>
+	<% //if (activity.getTypeId()!=8 && activity.getTypeId()!=9 && activity.getTypeId()!=7){ %>
+	<%// liferay-ui:search-container-column-jsp name=" " align="right" path="/html/coursestats/viewextras.jsp" /%>
+	<% //} else {%>
+	<% //liferay-ui:search-container-column-text>&nbsp</liferay-ui:search-container-column-text%>
 	
-	<% } %>
+	<% //} %>
 	</liferay-ui:search-container-row>
 	
 	<liferay-ui:search-iterator />

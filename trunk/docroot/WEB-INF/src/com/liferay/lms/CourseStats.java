@@ -219,7 +219,7 @@ public class CourseStats extends MVCPortlet {
 		    	resultados[10]=String.valueOf(hasPrecedence);
 		    	resultados[11]=Integer.toString(activity.getTypeId());
 		    	resultados[12]=activity.getWeightinmodule() == 1 ? "Si":"No";
-		    	resultados[13]=getExtraData(themeDisplay, activity, resourceRequest);
+		    	resultados[13]="";//getExtraData(themeDisplay, activity, resourceRequest);
 		    	
 		        writer.writeNext(resultados);
 		    }
