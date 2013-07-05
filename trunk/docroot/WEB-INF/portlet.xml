@@ -1591,6 +1591,10 @@
 		<display-name>evaluation</display-name>
 		<portlet-class>com.liferay.lms.EvaluationPortlet</portlet-class>
 		<init-param>
+			<name>add-process-action-success-action</name>
+			<value>false</value>		
+		</init-param>
+		<init-param>
 			<name>view-jsp</name>
 			<value>/html/evaluation/view.jsp</value>
 		</init-param>
