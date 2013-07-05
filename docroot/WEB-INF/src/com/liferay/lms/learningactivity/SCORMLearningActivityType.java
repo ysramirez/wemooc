@@ -33,7 +33,7 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 
 	@Override
 	public long getDefaultScore() {
-		return 50;
+		return 100;
 	}
 
 	@Override
