@@ -316,7 +316,7 @@
 				function(activeTabChangeEvent) {
 					var moduleId = activeTabChangeEvent.details[0].newVal.get('id').substring(<%=(renderResponse.getNamespace()+"moduleTab_").length() %>);
 					window.<portlet:namespace />filterlearningActivitiesSearchContainerSearchContainer = {<portlet:namespace />currModuleId:moduleId};
-					searchContainer.fire('refresh',activeTabChangeEvent);
+					searchContainer.fire('refreshEvaluation',activeTabChangeEvent);
 				}
 			);
 
@@ -452,8 +452,8 @@
 					}
 				}
 
-				searchContainer.detach('refresh');
-				searchContainer.on('refresh',
+				searchContainer.detach('refreshEvaluation');
+				searchContainer.on('refreshEvaluation',
 					function(sourceEvent) {
 						<portlet:namespace />reload<%= searchContainer.getId(request, renderResponse.getNamespace()) 
 						%>SearchContainer(sourceEvent,'<%=HttpUtil.removeParameter(searchContainer.getIteratorURL().toString(), renderResponse.getNamespace() + searchContainer.getCurParam()) 
