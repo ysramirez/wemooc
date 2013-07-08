@@ -270,7 +270,7 @@
 									<a href="<%="javascript:AUI().use('aui-dialog', function(A){ "+
 											    "	new A.Dialog({ "+
 											    "		id:'"+renderResponse.getNamespace()+"showPopupGrades', "+
-											    "		title: '"+LanguageUtil.get(pageContext, "evaluationAvg.set.grade")+"', "+
+											    "		title: '"+LanguageUtil.get(pageContext, "evaluationAvg.set.grades")+"', "+
 											    "		centered: true, "+
 											    "		modal: true, "+
 											    "		after: { "+   

@@ -21,19 +21,6 @@
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
 
 <%@ include file="/init.jsp" %>
-<script type="text/javascript">
-<!--
-
-	AUI().ready('aui-dialog',function(A) {
-		new A.Dialog({
-			id:'menuErrorDialog'
-	    });   
-	});
-
-//-->
-</script>
-
-
 <div class="container-activity">
 <%
 long actId = ParamUtil.getLong(request,"actId",0);
@@ -107,99 +94,6 @@ if(actId==0){
 			        	/>
 					</aui:button-row>
 		        </div>
-
-				<script type="text/javascript">
-			    <!--
-					<%if(!hasFiredDate){%>
-      
-				    function <portlet:namespace />showPopupActivities()
-				    {
-	
-						AUI().use('aui-dialog','liferay-portlet-url', function(A){
-							
-							
-							new A.Dialog({
-								id:'<portlet:namespace />showPopupActivities',
-					            title: '<%=LanguageUtil.format(pageContext,(hasActivities)?"evaluationtaskactivity.evaluations":"evaluationtaskactivity.evaluations.define", new Object[]{})%>',
-					            modal: true,
-					            xy:A.one('#p_p_id<portlet:namespace />').getXY (),
-					    		height: 550,
-					    		width: 900,
-					            resizable: true,
-					            after: {   
-						          	close: function(event){ 
-						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
-					            	}
-					            }
-					        }).plug(A.Plugin.IO, {
-					            uri: '<%=viewEvaluationsURL %>',
-					            parseContent: true
-					        }).render().show();   
-						});
-				    }
-
-						<%if(hasActivities) {%>
-
-						    function <portlet:namespace />calculateEvaluation(){
-							   
-						    	AUI().use('aui-dialog', function(A) {
-							    	var dialog1 = new A.Dialog({
-							    		id:'<portlet:namespace />calculatePopup',
-							    		title: '<liferay-ui:message key="evaluationtaskactivity.calculate" />',
-							    		bodyContent: A.one('#<portlet:namespace />calculateContents').getContent(),
-							    		height: 200,
-							    		width: 400,
-							    		modal: true,
-							    		centered: true
-							    	}).render().show();
-							    }); 	
-						    }
-
-						<%}
-					}else if (!hasPublishDate) {%>
-
-					    function <portlet:namespace />publish(){
-					    	AUI().use('aui-dialog', function(A) {
-						    	var dialog1 = new A.Dialog({
-						    		id:'<portlet:namespace />publishPopup',
-						    		title: '<liferay-ui:message key="evaluationtaskactivity.publish" />',
-						    		bodyContent: A.one('#<portlet:namespace />publishContents').getContent(),
-						    		height: 200,
-						    		width: 400,
-						    		modal: true,
-						    		centered: true
-						    	}).render().show();
-						    });  	
-					    }
-
-					<%}%>
-
-					    function <portlet:namespace />showPopupGrades(userId){
-							AUI().use('aui-dialog','liferay-portlet-url', function(A){
-								var renderUrl = Liferay.PortletURL.createRenderURL();							
-								renderUrl.setWindowState('<%= LiferayWindowState.EXCLUSIVE.toString() %>');
-								renderUrl.setPortletId('<%=portletDisplay.getId()%>');
-								renderUrl.setParameter('userId', userId);
-								renderUrl.setParameter('jspPage', '/html/evaluationtaskactivity/popups/grades.jsp');
-	
-								window.<portlet:namespace />popupGrades = new A.Dialog({
-									id:'<portlet:namespace />showPopupGrades',
-						            title: '<%=LanguageUtil.get(pageContext, "evaluationtaskactivity.set.grades")%>',
-						            centered: true,
-						            modal: true,
-						            after: {   
-							          	close: function(event){ 
-							          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
-						            	}
-						            }
-						        }).plug(A.Plugin.IO, {
-						            uri: renderUrl.toString(),
-						            parseContent: true
-						        }).render().show();   
-							});
-					    }
-				    //-->
-				</script>
 				
 				<% 
 				   if(!hasFiredDate) {
@@ -232,7 +126,17 @@ if(actId==0){
 				   if(hasActivities) {
 				%>
 				<aui:button-row>
-					<button name="Calculate" value="calculate" onclick="<portlet:namespace />calculateEvaluation();" type="button">
+					<button name="Calculate" value="calculate" onclick="<%="AUI().use('aui-dialog', function(A) { "+
+																		   " 	var dialog1 = new A.Dialog({ "+
+																		   " 		id:'"+renderResponse.getNamespace()+"calculatePopup', "+
+																		   " 		title: '"+LanguageUtil.get(pageContext, "evaluationtaskactivity.calculate")+"', "+
+																		   " 		bodyContent: A.one('#"+renderResponse.getNamespace()+"calculateContents').getContent(), "+
+																		   " 		height: 200, "+
+																		   " 		width: 400, "+
+																		   " 		modal: true, "+
+																		   " 		centered: true "+
+																		   " 	}).render().show(); "+
+																		   "}); " %>" type="button">
 						<liferay-ui:message key="evaluationtaskactivity.calculate" />
 					</button>
 				</aui:button-row>
@@ -241,7 +145,17 @@ if(actId==0){
 				   else if(!hasPublishDate) {
 				%>
 				<aui:button-row>
-					<button name="publish" value="publish" onclick="<portlet:namespace />publish();" type="button">
+					<button name="publish" value="publish" onclick="<%="AUI().use('aui-dialog', function(A) { "+
+																	   " 	var dialog1 = new A.Dialog({ "+
+																	   " 		id:'"+renderResponse.getNamespace()+"publishPopup', "+
+																	   " 		title: '"+LanguageUtil.get(pageContext, "evaluationtaskactivity.publish")+"', "+
+																	   " 		bodyContent: A.one('#"+renderResponse.getNamespace()+"publishContents').getContent(), "+
+																	   " 		height: 200, "+
+																	   " 		width: 400, "+
+																	   " 		modal: true, "+
+																	   " 		centered: true "+
+																	   " 	}).render().show(); "+
+																	   "}); " %>" type="button">
 						<liferay-ui:message key="evaluationtaskactivity.publish" />
 					</button>
 				</aui:button-row>
@@ -362,7 +276,26 @@ if(actId==0){
 										</a> <liferay-ui:icon-help message="evaluationtaskactivity.recalculate.help" />
 									</p>
 								    <p class="see-more">
-										<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
+								    	<portlet:renderURL var="popupGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+									   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+									   		<portlet:param name="jspPage" value="/html/evaluationtaskactivity/popups/grades.jsp"/>
+									   	</portlet:renderURL>
+										<a href="<%="javascript:AUI().use('aui-dialog', function(A){ "+
+											        "	new A.Dialog({ "+
+											        "		id:'"+renderResponse.getNamespace()+"showPopupGrades', "+
+											        "		title: '"+LanguageUtil.get(pageContext, "evaluationtaskactivity.set.grades")+"', "+
+											        "		centered: true, "+
+											        "		modal: true, "+
+											        "		after: { "+   
+											        "		  	close: function(event){ "+ 
+											        "		  		Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"'),{'p_t_lifecycle':0,'"+renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY+"':'"+StringPool.TRUE+"'}); "+	
+											        "		 	} "+
+											        "		} "+
+											        "     }).plug(A.Plugin.IO, { "+
+											        "         uri: '"+popupGradesURL+"', "+
+											        "         parseContent: true "+
+											        "     }).render().show(); "+   
+											        "}); " %>">
 											<liferay-ui:message key="evaluationtaskactivity.set.grades"/>
 										</a> <liferay-ui:icon-help message="evaluationtaskactivity.set.grades.help" />
 									</p>
