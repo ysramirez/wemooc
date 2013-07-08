@@ -1,3 +1,5 @@
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="java.math.RoundingMode"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
 <%@page import="java.util.Map"%>
@@ -92,6 +94,8 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 		modelVar="activity"
 	>
 	<%
+	
+	DecimalFormat df = new DecimalFormat("#.#");
 	long astarted=LearningActivityResultLocalServiceUtil.countStarted(activity.getActId());
 	
 	
@@ -124,9 +128,9 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.passed"><%=afinished %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.failed"><%=notpassed %></liferay-ui:search-container-column-text>
 	
-	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.trials.average"><%=numberFormat.format(triesPerUser) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.marks.average"><%=numberFormat.format(avgResult) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.pass.mark"><%=numberFormat.format(activity.getPasspuntuation()) %></liferay-ui:search-container-column-text>	
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.trials.average"><%=df.format(triesPerUser) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.marks.average"><%=df.format(avgResult) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.pass.mark"><%=df.format(activity.getPasspuntuation()) %></liferay-ui:search-container-column-text>	
 	<liferay-ui:search-container-column-text cssClass="number-column"  name="coursestats.modulestats.trials.numbers"><%=numberFormat.format(activity.getTries()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=LanguageUtil.get(pageContext, "dependencies."+String.valueOf(hasPrecedence)) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=classTypes.get((long)activity.getTypeId()) %></liferay-ui:search-container-column-text>
