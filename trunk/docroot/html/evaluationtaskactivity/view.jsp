@@ -209,7 +209,24 @@ if(actId==0){
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
 				message="<%=(hasActivities)?\"evaluationtaskactivity.evaluation.configuration\":\"evaluationtaskactivity.evaluation.configuration.define\"%>"
-				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupActivities();" %>'
+				url="<%=\"	javascript:AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
+						\"			id:'\"+renderResponse.getNamespace()+\"showPopupActivities', \"+
+						\"            title: ' \"+LanguageUtil.format(pageContext,(hasActivities)?\"evaluationtaskactivity.evaluations\":\"evaluationtaskactivity.evaluations.define\", new Object[]{}) +\"', \"+
+						\"            modal: true, \"+
+						\"            xy:A.one('#p_p_id\"+renderResponse.getNamespace()+\"').getXY (), \"+
+						\"    		height: 550, \"+
+						\"    		width: 900, \"+
+						\"            resizable: true, \"+
+						\"            after: {    \"+
+						\"	          	close: function(event){  \"+
+						\"	          		Liferay.Portlet.refresh(A.one('#p_p_id\"+renderResponse.getNamespace()+\"'),{'p_t_lifecycle':0,'\"+renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY +\"':'\"+StringPool.TRUE +\"'}); \"+	
+						\"            	} \"+
+						\"            } \"+
+						\"        }).plug(A.Plugin.IO, { \"+
+						\"            uri: '\"+viewEvaluationsURL +\"', \"+
+						\"            parseContent: true \"+
+						\"        }).render().show();  \"+  
+						\" }); \" %>"
 				/>
 				<% 
 				   if(hasActivities) {
