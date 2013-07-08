@@ -42,13 +42,14 @@
 				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 				<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
 				
-			
+				<%if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE)){ %>
 					<portlet:renderURL var="stadisticsURL">
 						<portlet:param name="jspPage" value="/html/surveyactivity/stadistics.jsp"></portlet:param>
 						<portlet:param name="actId" value="<%=String.valueOf(actId) %>" />
 					</portlet:renderURL>
 					<liferay-ui:icon image="view" message="surveyactivity.stadistics" label="true" url="<%=stadisticsURL.toString() %>" />
 				<%
+				}
 				
 				
 					if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
