@@ -104,6 +104,8 @@
 					            title: '<%=LanguageUtil.format(pageContext,(courseEvalModel.has("evaluations"))?"evaluationAvg.evaluations":"evaluationAvg.evaluations.define", new Object[]{})%>',
 					            modal: true,
 					            xy:A.one('#p_p_id<portlet:namespace />').getXY (),
+					    		height: 550,
+					    		width: 900,
 					            resizable: true,
 					            after: {   
 						          	close: function(event){ 

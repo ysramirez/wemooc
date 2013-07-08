@@ -110,6 +110,8 @@ if(actId==0){
 					            title: '<%=LanguageUtil.format(pageContext,(hasActivities)?"evaluationtaskactivity.evaluations":"evaluationtaskactivity.evaluations.define", new Object[]{})%>',
 					            modal: true,
 					            xy:A.one('#p_p_id<portlet:namespace />').getXY (),
+					    		height: 550,
+					    		width: 900,
 					            resizable: true,
 					            after: {   
 						          	close: function(event){ 
