@@ -24,6 +24,17 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
+<script type="text/javascript">
+<!--
+
+	AUI().ready('aui-dialog',function(A) {
+		new A.Dialog({
+			id:'menuErrorDialog'
+	    });   
+	});
+
+//-->
+</script>
 
 <%
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
