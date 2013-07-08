@@ -24,17 +24,6 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
-<script type="text/javascript">
-<!--
-
-	AUI().ready('aui-dialog',function(A) {
-		new A.Dialog({
-			id:'menuErrorDialog'
-	    });   
-	});
-
-//-->
-</script>
 
 <%
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
@@ -193,7 +182,24 @@
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
 				message="<%=(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluation.configuration\":\"evaluationAvg.evaluation.configuration.define\" %>"
-				url='<%="javascript:"+renderResponse.getNamespace() + "showPopupEvaluations();" %>'
+				url="<%=\"	javascript:AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
+						\"			id:'\"+renderResponse.getNamespace()+\"showPopupEvaluations', \"+
+						\"          title: ' \"+LanguageUtil.format(pageContext,(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluations\":\"evaluationAvg.evaluations.define\", new Object[]{}) +\"', \"+
+						\"          modal: true, \"+
+						\"          xy:A.one('#p_p_id\"+renderResponse.getNamespace()+\"').getXY (), \"+
+						\"    		height: 550, \"+
+						\"    		width: 900, \"+
+						\"            resizable: true, \"+
+						\"            after: {    \"+
+						\"	          	close: function(event){  \"+
+						\"	          		Liferay.Portlet.refresh(A.one('#p_p_id\"+renderResponse.getNamespace()+\"'),{'p_t_lifecycle':0,'\"+renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY +\"':'\"+StringPool.TRUE +\"'}); \"+	
+						\"            	} \"+
+						\"            } \"+
+						\"        }).plug(A.Plugin.IO, { \"+
+						\"            uri: '\"+viewEvaluationsURL +\"', \"+
+						\"            parseContent: true \"+
+						\"        }).render().show();  \"+  
+						\" }); \" %>"
 				/>
 				<% 
 				   if(courseEvalModel.has("evaluations")) {
