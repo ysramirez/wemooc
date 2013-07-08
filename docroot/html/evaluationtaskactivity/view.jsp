@@ -250,26 +250,31 @@ if(actId==0){
 									<portlet:actionURL name="reCalculate" var="reCalculateURL">
 								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
 								   	</portlet:actionURL>
+								   	
+								   	<div id="<portlet:namespace />recalculateContents_<%=Long.toString(user.getUserId()) %>" class="aui-helper-hidden">
+							        	<portlet:actionURL name="reCalculate" var="reCalculateURL">
+									   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+									    </portlet:actionURL>
+							        	<liferay-ui:message key="evaluationtaskactivity.recalculate.confirm" />
+								        <aui:button-row  cssClass="container-buttons">
+								        	<aui:button type="button" name="cancel" value="cancel"  
+								        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"recalculatePopup_\"+user.getUserId()+\"'); }); \" %>"
+								        	/>
+								        	<aui:button type="button" name="acept" value="acept"  
+								        		onclick="<%= \"location.href='\"+reCalculateURL+\"';\" %>"
+								        	/>
+										</aui:button-row>
+							       </div>
 						            <p class="see-more">
 										<a onClick="AUI().use('aui-dialog', function(A) {
 										   	var dialog1 = new A.Dialog({
+										   		id: '<portlet:namespace />recalculatePopup_<%=Long.toString(user.getUserId()) %>',
 												title: '<liferay-ui:message key="evaluationtaskactivity.recalculate" />',
-											    bodyContent: '<liferay-ui:message key="evaluationtaskactivity.recalculate.confirm" />',
+											    bodyContent: A.one('#<portlet:namespace />recalculateContents_<%=Long.toString(user.getUserId()) %>').getContent(),
 											    height: 200,
 											    width: 400,
 											    modal: true,
-											    centered: true,
-											    buttons: [{
-											    	label: '<liferay-ui:message key="cancel" />',
-											    	handler: function() {
-											    		this.close();
-											    	}
-											    },{
-											    	label: '<liferay-ui:message key="acept" />',
-											    	handler: function() {
-											    		location.href='<%=reCalculateURL %>';
-											    	}
-											    }]
+											    centered: true
 											}).render().show();
 										});">
 											<liferay-ui:message key="evaluationtaskactivity.recalculate"/>
