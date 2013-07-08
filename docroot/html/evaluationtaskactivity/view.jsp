@@ -21,6 +21,19 @@
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
 
 <%@ include file="/init.jsp" %>
+<script type="text/javascript">
+<!--
+
+	AUI().ready('aui-dialog',function(A) {
+		new A.Dialog({
+			id:'menuErrorDialog'
+	    });   
+	});
+
+//-->
+</script>
+
+
 <div class="container-activity">
 <%
 long actId = ParamUtil.getLong(request,"actId",0);
@@ -329,12 +342,12 @@ if(actId==0){
 											}).render().show();
 										});">
 											<liferay-ui:message key="evaluationtaskactivity.recalculate"/>
-										</a>
+										</a> <liferay-ui:icon-help message="evaluationtaskactivity.recalculate.help" />
 									</p>
 								    <p class="see-more">
 										<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
 											<liferay-ui:message key="evaluationtaskactivity.set.grades"/>
-										</a>
+										</a> <liferay-ui:icon-help message="evaluationtaskactivity.set.grades.help" />
 									</p>
 								<%}else if(hasPublishDate && (!learningActivityResult.getComments().trim().equals(""))){%>
 									<p class="see-more">
