@@ -51,8 +51,10 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 <%
 if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
 {
+	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
 %>
-<liferay-ui:icon image="group" message="courseadmin.adminactions.teachers" url="<%=teachersURL.toString() %>" />
+
+<liferay-ui:icon image="group" message="<%=teacherName %>" url="<%=teachersURL.toString() %>" />
 
 <%
 }
@@ -65,8 +67,9 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class
 <%
 if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
 {
+String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
 %>
-<liferay-ui:icon image="group" message="courseadmin.adminactions.editors" url="<%=editorsURL.toString() %>" />
+<liferay-ui:icon image="group" message="<%=editorName %>" url="<%=editorsURL.toString() %>" />
 
 <%
 }
