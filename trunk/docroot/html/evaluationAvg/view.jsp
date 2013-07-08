@@ -86,93 +86,6 @@
 			        	/>
 					</aui:button-row>
 		        </div>
-		        		        
-				<script type="text/javascript">
-			    <!--
-					<% 
-					   if(!courseEvalModel.has("firedDate")) {
-					%>
-      
-				    function <portlet:namespace />showPopupEvaluations()
-				    {
-	
-						AUI().use('aui-dialog','liferay-portlet-url', function(A){
-							
-							
-							new A.Dialog({
-								id:'<portlet:namespace />showPopupEvaluations',
-					            title: '<%=LanguageUtil.format(pageContext,(courseEvalModel.has("evaluations"))?"evaluationAvg.evaluations":"evaluationAvg.evaluations.define", new Object[]{})%>',
-					            modal: true,
-					            xy:A.one('#p_p_id<portlet:namespace />').getXY (),
-					    		height: 550,
-					    		width: 900,
-					            resizable: true,
-					            after: {   
-						          	close: function(event){ 
-						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
-					            	}
-					            }
-					        }).plug(A.Plugin.IO, {
-					            uri: '<%=viewEvaluationsURL %>',
-					            parseContent: true
-					        }).render().show();   
-						});
-				    }
-
-					<% 
-					   if(courseEvalModel.has("evaluations")) {
-					%>
-
-				    function <portlet:namespace />calculateEvaluation()
-				    {
-					    AUI().use('aui-dialog', function(A) {
-					    	var dialog1 = new A.Dialog({
-					    		id:'<portlet:namespace />calculatePopup',
-					    		title: '<liferay-ui:message key="evaluationAvg.calculate" />',
-					    		bodyContent: A.one('#<portlet:namespace />calculateContents').getContent(),
-					    		height: 200,
-					    		width: 400,
-					    		modal: true,
-					    		centered: true
-					    	}).render().show();
-					    });
-
-				    }
-
-					<% 
-					   }}
-					%>
-
-				    function <portlet:namespace />showPopupGrades(userId)
-				    {
-
-						AUI().use('aui-dialog','liferay-portlet-url', function(A){
-							var renderUrl = Liferay.PortletURL.createRenderURL();							
-							renderUrl.setWindowState('<%= LiferayWindowState.EXCLUSIVE.toString() %>');
-							renderUrl.setPortletId('<%=portletDisplay.getId()%>');
-							renderUrl.setParameter('userId', userId);
-							renderUrl.setParameter('jspPage', '/html/evaluationAvg/popups/grades.jsp');
-
-							window.<portlet:namespace />popupGrades = new A.Dialog({
-								id:'<portlet:namespace />showPopupGrades',
-					            title: '<%=LanguageUtil.get(pageContext, "evaluationAvg.set.grade")%>',
-					            centered: true,
-					            modal: true,
-					            after: {   
-						          	close: function(event){ 
-						          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});	
-					            	}
-					            }
-					        }).plug(A.Plugin.IO, {
-					            uri: renderUrl.toString(),
-					            parseContent: true
-					        }).render().show();   
-						});
-
-				    }
-			
-				    //-->
-				</script>
 				
 				<% 
 				   if(!courseEvalModel.has("firedDate")) {
@@ -184,7 +97,7 @@
 				message="<%=(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluation.configuration\":\"evaluationAvg.evaluation.configuration.define\" %>"
 				url="<%=\"	javascript:AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
 						\"			id:'\"+renderResponse.getNamespace()+\"showPopupEvaluations', \"+
-						\"          title: ' \"+LanguageUtil.format(pageContext,(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluations\":\"evaluationAvg.evaluations.define\", new Object[]{}) +\"', \"+
+						\"          title: ' \"+LanguageUtil.get(pageContext,(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluations\":\"evaluationAvg.evaluations.define\") +\"', \"+
 						\"          modal: true, \"+
 						\"          xy:A.one('#p_p_id\"+renderResponse.getNamespace()+\"').getXY (), \"+
 						\"    		height: 550, \"+
@@ -205,7 +118,17 @@
 				   if(courseEvalModel.has("evaluations")) {
 				%>
 				<aui:button-row>
-					<button name="Calculate" value="calculate" onclick="<portlet:namespace />calculateEvaluation();" type="button">
+					<button name="Calculate" value="calculate" onclick="<%="AUI().use('aui-dialog', function(A) { "+
+																		   " 	var dialog1 = new A.Dialog({ "+
+																		   " 		id:'<portlet:namespace />calculatePopup', "+
+																		   " 		title: '"+LanguageUtil.get(pageContext, "evaluationAvg.calculate")+"', "+
+																		   " 		bodyContent: A.one('#"+renderResponse.getNamespace()+"calculateContents').getContent(), "+
+																		   " 		height: 200, "+
+																		   " 		width: 400, "+
+																		   " 		modal: true, "+
+																		   " 		centered: true "+
+																		   " 	}).render().show(); "+
+																		   "}); " %>" type="button">
 						<liferay-ui:message key="evaluationAvg.calculate" />
 					</button>
 				</aui:button-row>
@@ -337,12 +260,31 @@
 											    	}).render().show();
 											    });">
 										<liferay-ui:message key="evaluationAvg.recalculate"/>
-									</a>
+									</a> <liferay-ui:icon-help message="evaluationAvg.recalculate.help" />
 									</p>
-								     <p class="see-more">
-									<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);">
+								    <p class="see-more">
+								    <portlet:renderURL var="popupGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+								   		<portlet:param name="jspPage" value="/html/evaluationAvg/popups/grades.jsp"/>
+								   	</portlet:renderURL>
+									<a href="<%="javascript:AUI().use('aui-dialog', function(A){ "+
+											    "	new A.Dialog({ "+
+											    "		id:'"+renderResponse.getNamespace()+"showPopupGrades', "+
+											    "		title: '"+LanguageUtil.get(pageContext, "evaluationAvg.set.grade")+"', "+
+											    "		centered: true, "+
+											    "		modal: true, "+
+											    "		after: { "+   
+											    "		  	close: function(event){ "+ 
+											    "		  		Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"'),{'p_t_lifecycle':0,'"+renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY+"':'"+StringPool.TRUE+"'}); "+	
+											    "		 	} "+
+											    "		} "+
+											    "     }).plug(A.Plugin.IO, { "+
+											    "         uri: '"+popupGradesURL+"', "+
+											    "         parseContent: true "+
+											    "     }).render().show(); "+   
+											    "}); " %>">
 										<liferay-ui:message key="evaluationAvg.set.grades"/>
-									</a>
+									</a> <liferay-ui:icon-help message="evaluationAvg.set.grades.help" />
 									</p>
 								<%
 							  
