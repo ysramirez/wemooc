@@ -740,6 +740,8 @@
 			<role-name>user</role-name>
 		</security-role-ref>
         <supported-public-render-parameter>categoryId</supported-public-render-parameter>
+               <supported-public-render-parameter>categoryIds</supported-public-render-parameter>
+         
 	</portlet>
 	
 	<portlet>
@@ -1682,6 +1684,10 @@
         <public-render-parameter>
         <identifier>moduleId</identifier>
         <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:moduleId</qname>
+    </public-render-parameter>
+        <public-render-parameter>
+        <identifier>categoryIds</identifier>
+        <qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryIds</qname>
     </public-render-parameter>
     <public-render-parameter>
         <identifier>actionEditing</identifier>
