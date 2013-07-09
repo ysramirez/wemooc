@@ -298,6 +298,10 @@
 	</aui:fieldset>
 <% } %>
 
+	<liferay-util:buffer var="weightHelp">
+		<liferay-ui:icon-help message="evaluationAvg.evaluation.weight.help" />
+	</liferay-util:buffer>
+
 	<liferay-ui:search-container iteratorURL="<%=viewEvaluationsURL%>" emptyResultsMessage="there-are-no-results" delta="5" deltaConfigurable="true" >
 
 	   	<liferay-ui:search-container-results>
@@ -331,7 +335,7 @@
 				<%=evaluation.getTitle(themeDisplay.getLocale()) %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.weight" title="evaluationAvg.evaluation.weight">
-				<aui:input type="text" label="" name="<%=\"weight_\"+evaluation.getActId() %>" size="3" />
+				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+evaluation.getActId() %>" size="3" >  </aui:input>
 				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
