@@ -1,3 +1,4 @@
+<%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
@@ -57,6 +58,7 @@
 						<liferay-ui:user-display userId="<%=usuario.getUserId() %>" url = "<%=userDetailsURL%>"/>
 					</liferay-ui:search-container-column-text>
 					<% 	List<LearningActivity> activities = LearningActivityServiceUtil.getLearningActivitiesOfModule(theModule.getModuleId());
+					activities = LiferaylmsUtil.getVisibleActivities(themeDisplay, activities, permissionChecker);
 					for(LearningActivity learningActivity: activities){
 						long result=0;
 						String status="not-started";
