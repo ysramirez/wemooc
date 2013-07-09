@@ -255,6 +255,7 @@ if(actId==0){
 							        	<portlet:actionURL name="reCalculate" var="reCalculateURL">
 									   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
 									    </portlet:actionURL>
+									    <h1><%=user.getFullName() %></h1>
 							        	<liferay-ui:message key="evaluationtaskactivity.recalculate.confirm" />
 								        <aui:button-row  cssClass="container-buttons">
 								        	<aui:button type="button" name="cancel" value="cancel"  
@@ -271,7 +272,7 @@ if(actId==0){
 										   		id: '<portlet:namespace />recalculatePopup_<%=Long.toString(user.getUserId()) %>',
 												title: '<liferay-ui:message key="evaluationtaskactivity.recalculate" />',
 											    bodyContent: A.one('#<portlet:namespace />recalculateContents_<%=Long.toString(user.getUserId()) %>').getContent(),
-											    height: 200,
+											    height: 250,
 											    width: 400,
 											    modal: true,
 											    centered: true
