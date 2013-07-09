@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
 <%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryQuery"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
@@ -12,25 +13,64 @@
 <portlet:param name="jspPage" value="/html/courseadmin/editcourse.jsp"></portlet:param>
 </portlet:renderURL>
 <div class="portlet-toolbar search-form">
+<h1 class="taglib-categorization-filter entry-title">
 <%
 java.util.List<Course> courses=null;
+
 long catId=ParamUtil.getLong(request, "categoryId",0);
 AssetCategory category=null;
-if(catId!=0)
+long[] catIds=ParamUtil.getLongValues(request, "categoryIds");
+for(long cat:catIds)
 {
-	category=AssetCategoryLocalServiceUtil.getCategory(catId);
+	if(cat!=0)
+	{
+	AssetCategory categ=AssetCategoryLocalServiceUtil.getAssetCategory(cat);
+	
+		String cats=StringUtil.merge(ArrayUtil.remove(catIds, cat));
+	    if(cats==null || cats.equals(""))
+	    {
+	    	cats="0";
+	    }
 	%>
-	<h1><%=category.getTitle(themeDisplay.getLocale()) %></h1>
+	<liferay-portlet:renderURL var="choseCatURL" >
+		<liferay-portlet:param name="jspPage" value="/html/courseadmin/view.jsp"/>
+		<liferay-portlet:param name="categoryIds" value="<%=cats %>"/>
+		</liferay-portlet:renderURL>
+	<span class="asset-entry">
+	<%=categ.getTitle(locale) %>
+	<a href="<%= choseCatURL %>" title="<liferay-ui:message key="remove" />">
+				<span class="aui-icon aui-icon-close aui-textboxlistentry-close"></span>
+			</a>
+	</span>
 	<%
+	}
+}
+%>
+</h1>
+<%
+if(catIds==null ||catIds.length==0)
+{
+	if(catId!=0)
+	{
+		catIds=new long[]{catId};
+	}
+}
+if(catIds!=null&&catIds.length>0)
+{
+	catIds=ArrayUtil.remove(catIds, 0l);
+}
+if(catIds!=null&&catIds.length>0)
+{
+
+	
 	AssetEntryQuery entryQuery=new AssetEntryQuery();
-	long[] catIds={catId};
 	long[] groupIds={themeDisplay.getScopeGroupId()};
 	entryQuery.setAllCategoryIds(catIds);
 	entryQuery.setGroupIds(groupIds);
 	entryQuery.setClassName(Course.class.getName());
 	entryQuery.setEnablePermissions(true);
 	entryQuery.setExcludeZeroViewCount(false);
-	entryQuery.setVisible(false);
+	//entryQuery.setVisible(false);
 	courses=new ArrayList<Course>();
 	java.util.List<AssetEntry> entries=AssetEntryLocalServiceUtil.getEntries(entryQuery);
 	for(AssetEntry entry:entries)
