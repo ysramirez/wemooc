@@ -78,7 +78,10 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			PortletResponse portletResponse) {
 		PortletRequest actionRequest = (PortletRequest)uploadRequest.getAttribute(
 				JavaConstants.JAVAX_PORTLET_REQUEST);
-		boolean validate=true;
+		
+		boolean validate = true;
+		boolean start = ParamUtil.getBoolean(uploadRequest, "startdate-enabled", false);
+		boolean stop  = ParamUtil.getBoolean(uploadRequest, "stopdate-enabled", false);
 		
 		Date upload = getDateFromRequest(uploadRequest,"upload");
 		Date end = getDateFromRequest(uploadRequest,"stop");
@@ -90,7 +93,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			validate=false;
 		}
 		
-		if(upload.after(end))
+		if(start && stop && upload.after(end))
 		{
 			SessionErrors.add(actionRequest, "p2ptaskactivity.editActivity.dateupload.afteractivity");
 			validate=false;

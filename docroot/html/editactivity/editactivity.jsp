@@ -89,16 +89,22 @@ if(learnact!=null)
 {
 	actId=learnact.getActId();
 	description=learnact.getDescription(themeDisplay.getLocale());
-	startDay=Integer.parseInt(formatDay.format(learnact.getStartdate()));
-	startMonth=Integer.parseInt(formatMonth.format(learnact.getStartdate()))-1;
-	startYear=Integer.parseInt(formatYear.format(learnact.getStartdate()));
-	startHour=Integer.parseInt(formatHour.format(learnact.getStartdate()));
-	startMin=Integer.parseInt(formatMin.format(learnact.getStartdate()));
-	endDay=Integer.parseInt(formatDay.format(learnact.getEnddate()));
-	endMonth=Integer.parseInt(formatMonth.format(learnact.getEnddate()))-1;
-	endYear=Integer.parseInt(formatYear.format(learnact.getEnddate()));
-	endHour=Integer.parseInt(formatHour.format(learnact.getEnddate()));
-	endMin=Integer.parseInt(formatMin.format(learnact.getEnddate()));
+	
+	if(learnact.getStartdate() != null){
+		startDay=Integer.parseInt(formatDay.format(learnact.getStartdate()));
+		startMonth=Integer.parseInt(formatMonth.format(learnact.getStartdate()))-1;
+		startYear=Integer.parseInt(formatYear.format(learnact.getStartdate()));
+		startHour=Integer.parseInt(formatHour.format(learnact.getStartdate()));
+		startMin=Integer.parseInt(formatMin.format(learnact.getStartdate()));
+	}
+	
+	if(learnact.getEnddate() != null){
+		endDay=Integer.parseInt(formatDay.format(learnact.getEnddate()));
+		endMonth=Integer.parseInt(formatMonth.format(learnact.getEnddate()))-1;
+		endYear=Integer.parseInt(formatYear.format(learnact.getEnddate()));
+		endHour=Integer.parseInt(formatHour.format(learnact.getEnddate()));
+		endMin=Integer.parseInt(formatMin.format(learnact.getEnddate()));
+	}
 	%>
 	
 	<portlet:actionURL name="deleteMyTries" var="deleteMyTriesURL">
@@ -247,6 +253,10 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	});
 });
 
+
+
+
+
 //-->
 </script>
 <aui:form name="fm" action="<%=saveactivityURL%>"  method="post"  enctype="multipart/form-data">
@@ -322,7 +332,7 @@ Liferay.provide(
 	%>
 	<aui:input type="hidden" name="type" value="<%=typeId %>"></aui:input>
 	<% 
-		}
+	}
 	%>
 
 		<aui:input name="title" label="title" defaultLanguageId="<%=renderRequest.getLocale().toString() %>">
@@ -332,18 +342,59 @@ Liferay.provide(
 	    	<%=(SessionErrors.contains(renderRequest, "title-required"))?
 	    			LanguageUtil.get(pageContext,"title-required"):StringPool.BLANK %>
 	    </div>
+	    
+	    <script type="text/javascript">
 
-	
+
+		    
+		    function setStarDateState(){
+		    	AUI().use('node',function(A) {
+			    	var enabled = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>startdate-enabledCheckbox').checked; 
+
+		    		var selector = 'form[name="<%=renderResponse.getNamespace() %>fm"]';
+		    		
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startDay"]').set('disabled', !enabled);
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startMon"]').set('disabled', !enabled);
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startYear"]').set('disabled', !enabled);
+		    		
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startMin"]').set('disabled', !enabled);
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startHour"]').set('disabled', !enabled);
+
+		    	});
+		    }
+		    
+		    function setStopDateState(){
+		    	AUI().use('node',function(A) {
+			    	var enabled = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>stopdate-enabledCheckbox').checked; 
+
+		    		var selector = 'form[name="<%=renderResponse.getNamespace() %>fm"]';
+		    		
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopDay"]').set('disabled', !enabled);
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopMon"]').set('disabled', !enabled);
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopYear"]').set('disabled', !enabled);
+		    		
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopMin"]').set('disabled', !enabled);
+		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopHour"]').set('disabled', !enabled);
+
+		    	});
+		    }
+
+	    </script>
+		
 		<aui:field-wrapper label="start-date">
-			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
+			<aui:input id="<%=renderResponse.getNamespace()+\"startdate-enabled\" %>" name="startdate-enabled" checked="<%=learnact != null && learnact.getStartdate() != null  %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
+			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"
 				 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
-			<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>"></liferay-ui:input-time>
+			<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"></liferay-ui:input-time>
 		</aui:field-wrapper>
+		
 		<aui:field-wrapper label="end-date">
-			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012" dayParam="stopDay" monthParam="stopMon"
+			<aui:input id="<%=renderResponse.getNamespace()+\"stopdate-enabled\" %>" name="stopdate-enabled" checked="<%=learnact != null && learnact.getEnddate()!= null  %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
+			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012" dayParam="stopDay" monthParam="stopMon" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"
 				 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
-			<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time></br>
+			<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"></liferay-ui:input-time></br>
 		</aui:field-wrapper>
+		
 		<%
 		if(larntype.isTriesConfigurable())
 		{

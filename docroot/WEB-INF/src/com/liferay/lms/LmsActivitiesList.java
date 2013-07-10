@@ -2,6 +2,7 @@
 package com.liferay.lms;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -188,31 +189,46 @@ public class LmsActivitiesList extends MVCPortlet {
 		
 		String description = uploadRequest.getParameter("description");
 		int type = ParamUtil.getInteger(uploadRequest, "type", -1);
-		int startMonth = ParamUtil.getInteger(uploadRequest, "startMon");
-		int startYear = ParamUtil.getInteger(uploadRequest, "startYear");
-		int startDay = ParamUtil.getInteger(uploadRequest, "startDay");
-		int startHour = ParamUtil.getInteger(uploadRequest, "startHour");
-		int startMinute = ParamUtil.getInteger(uploadRequest, "startMin");
-		int startAMPM = ParamUtil.getInteger(uploadRequest, "startAMPM");
+		
 		String feedbackCorrect = ParamUtil.getString(uploadRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(uploadRequest, "feedbackNoCorrect", "");
-
-		if (startAMPM > 0) {
-			startHour += 12;
+		
+		Date startDate = null;
+		boolean start =  ParamUtil.getBoolean(uploadRequest, "startdate-enabled", false);
+		
+		if(start){
+			int startMonth = ParamUtil.getInteger(uploadRequest, "startMon");
+			int startYear = ParamUtil.getInteger(uploadRequest, "startYear");
+			int startDay = ParamUtil.getInteger(uploadRequest, "startDay");
+			int startHour = ParamUtil.getInteger(uploadRequest, "startHour");
+			int startMinute = ParamUtil.getInteger(uploadRequest, "startMin");
+			int startAMPM = ParamUtil.getInteger(uploadRequest, "startAMPM");
+			
+			if (startAMPM > 0) {
+				startHour += 12;
+			}
+			
+			startDate = PortalUtil.getDate(startMonth, startDay, startYear, startHour, startMinute, user.getTimeZone(), new EntryDisplayDateException());
 		}
-		Date startDate = PortalUtil.getDate(startMonth, startDay, startYear, startHour, startMinute, user.getTimeZone(), new EntryDisplayDateException());
 
-		int stopMonth = ParamUtil.getInteger(uploadRequest, "stopMon");
-		int stopYear = ParamUtil.getInteger(uploadRequest, "stopYear");
-		int stopDay = ParamUtil.getInteger(uploadRequest, "stopDay");
-		int stopHour = ParamUtil.getInteger(uploadRequest, "stopHour");
-		int stopMinute = ParamUtil.getInteger(uploadRequest, "stopMin");
-		int stopAMPM = ParamUtil.getInteger(uploadRequest, "stopAMPM");
-		if (stopAMPM > 0) {
-			stopHour += 12;
+		Date stopDate = null;
+		boolean stop =  ParamUtil.getBoolean(uploadRequest, "stopdate-enabled", false);
+		
+		if(stop){
+			int stopMonth = ParamUtil.getInteger(uploadRequest, "stopMon");
+			int stopYear = ParamUtil.getInteger(uploadRequest, "stopYear");
+			int stopDay = ParamUtil.getInteger(uploadRequest, "stopDay");
+			int stopHour = ParamUtil.getInteger(uploadRequest, "stopHour");
+			int stopMinute = ParamUtil.getInteger(uploadRequest, "stopMin");
+			int stopAMPM = ParamUtil.getInteger(uploadRequest, "stopAMPM");
+			
+			if (stopAMPM > 0) {
+				stopHour += 12;
+			}
+			
+			stopDate = PortalUtil.getDate(stopMonth, stopDay, stopYear, stopHour, stopMinute, user.getTimeZone(), new EntryDisplayDateException());
 		}
-		Date stopDate = PortalUtil.getDate(stopMonth, stopDay, stopYear, stopHour, stopMinute, user.getTimeZone(), new EntryDisplayDateException());
-
+				
 		long tries = ParamUtil.getLong(uploadRequest, "tries", 0);
 		int passpuntuation = ParamUtil.getInteger(uploadRequest, "passpuntuation", 0);
 		java.util.Date ahora = new java.util.Date(System.currentTimeMillis());
@@ -249,7 +265,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		
 		//Date validation
-		if (startDate.after(stopDate)){
+		if (start && stop && startDate.after(stopDate)){
 			SessionErrors.add(actionRequest, "activity-startDate-before-endDate");
 		}
 		
@@ -458,6 +474,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			AssetRenderer assetRenderer = laf.getAssetRenderer(actId, 0);
 			String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) actionRequest, (LiferayPortletResponse) actionResponse).toString();			
 			Portlet urlEditPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(urlEdit, "p_p_id",false));
+			
 			if(urlEditPortlet!=null) {
 				PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
 				if(actIdPublicParameter!=null) {
