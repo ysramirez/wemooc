@@ -62,7 +62,7 @@ if(catIds!=null&&catIds.length>0)
 if(catIds!=null&&catIds.length>0)
 {
 
-	
+	java.util.List<AssetEntry> entries=new java.util.ArrayList<AssetEntry>();
 	AssetEntryQuery entryQuery=new AssetEntryQuery();
 	long[] groupIds={themeDisplay.getScopeGroupId()};
 	entryQuery.setAllCategoryIds(catIds);
@@ -70,9 +70,11 @@ if(catIds!=null&&catIds.length>0)
 	entryQuery.setClassName(Course.class.getName());
 	entryQuery.setEnablePermissions(true);
 	entryQuery.setExcludeZeroViewCount(false);
-	//entryQuery.setVisible(false);
+	entryQuery.setVisible(true);
 	courses=new ArrayList<Course>();
-	java.util.List<AssetEntry> entries=AssetEntryLocalServiceUtil.getEntries(entryQuery);
+	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
+	entryQuery.setVisible(false);
+	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
 	for(AssetEntry entry:entries)
 	{
 		courses.add(CourseLocalServiceUtil.getCourse(entry.getClassPK()));
