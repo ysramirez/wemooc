@@ -59,6 +59,11 @@ vocabularies.addAll(AssetVocabularyLocalServiceUtil.getGroupVocabularies(searchG
 			var popUp = instance._getPopupSuper(); 
 			popUp.set('draggable',false);
 			popUp.set('resizable',false);
+			var button_y = instance.icons.get('boundingBox').getY();
+			popUp.before(['dialog:destroy', 'dialog:modalChange', 'dialog:render', 'dialog:visibleChange'], function(event) {
+					this.get('boundingBox').setY(button_y);
+				}
+			);
 			popUp.after(
 				['dialog:destroy', 'dialog:modalChange', 'dialog:render', 'dialog:visibleChange'],function(event) {
 					if ((!!window.postMessage)&&(window.parent != window)) {
@@ -66,7 +71,8 @@ vocabularies.addAll(AssetVocabularyLocalServiceUtil.getGroupVocabularies(searchG
 							window.location.origin = window.location.protocol+"//"+window.location.host;
 						}
 						parent.postMessage({name:'resizeIframe',height:(popUp.get('visible'))?popUp.get('boundingBox').height():0}, window.location.origin);
-					}	
+					}
+					this.get('boundingBox').setY(button_y);	
 				});
 			
 			return popUp;	

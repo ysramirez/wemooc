@@ -76,7 +76,9 @@ for(String className:allowedAssetTypes)
 
 <aui:input name="groupId" type="hidden" value="<%=Long.toString(searchGroupId) %>" />
 
-<%@ include file="/html/resourceInternalActivity/admin/catselector.jspf" %>
+<aui:field-wrapper label="categories" helpMessage="resourceInternalActivity.categories.helpmessage">
+	<%@ include file="/html/resourceInternalActivity/admin/catselector.jspf" %>
+</aui:field-wrapper>
 
 <aui:button type="submit" value="search" />
 </aui:form>

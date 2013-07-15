@@ -27,7 +27,7 @@ PortletResponse portletResponse =
 String namespace = portletResponse.getNamespace();
 themeDisplay.setIncludeServiceJs(true);
 String randomNamespace = PortalUtil.generateRandomKey(request, "taglib_ui_asset_categories_selector_page") + StringPool.UNDERLINE;
-String className="com.liferay.portlet.bookmarks.model.BookmarksEntry";
+String className="com.liferay.lms.model.SCORMContent";
 long classPK = 0;
 String hiddenInput = "assetCategoryIds";
 String curCategoryIds = "";
@@ -56,17 +56,26 @@ vocabularies.addAll(AssetVocabularyLocalServiceUtil.getGroupVocabularies(searchG
 	
 		Liferay.AssetCategoriesSelector.prototype._getPopup = function(){
 			var instance = this;
-			var popUp = instance._getPopupSuper(); 
+			var popUp = instance._getPopupSuper();
 			popUp.set('draggable',false);
 			popUp.set('resizable',false);
+			var button_y = instance.icons.get('boundingBox').getY();
+			popUp.before(['dialog:destroy', 'dialog:modalChange', 'dialog:render', 'dialog:visibleChange'], function(event) {
+					this.get('boundingBox').setY(button_y);
+				}
+			);
 			popUp.after(
 				['dialog:destroy', 'dialog:modalChange', 'dialog:render', 'dialog:visibleChange'],function(event) {
+					
 					if ((!!window.postMessage)&&(window.parent != window)) {
 						if (!window.location.origin){
 							window.location.origin = window.location.protocol+"//"+window.location.host;
 						}
 						parent.postMessage({name:'resizeIframe',height:(popUp.get('visible'))?popUp.get('boundingBox').height():0}, window.location.origin);
+					
+					
 					}	
+					this.get('boundingBox').setY(button_y);
 				});
 			
 			return popUp;	

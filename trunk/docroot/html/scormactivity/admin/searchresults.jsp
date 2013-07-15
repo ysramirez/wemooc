@@ -32,7 +32,7 @@ portletURL.setParameter("groupId",Long.toString(groupIdSelected));
 portletURL.setParameter("actionEditing","true");
 
 %>
-<liferay-ui:search-container emptyResultsMessage="there-are-no-assets" iteratorURL="<%=portletURL%>"
+<liferay-ui:search-container emptyResultsMessage="scormactivity.there-are-no-assets" iteratorURL="<%=portletURL%>"
  delta="10">
 <liferay-ui:search-container-results>
 

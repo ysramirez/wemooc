@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.model.SCORMContent"%>
 <%@page import="com.liferay.portlet.PortletURLUtil"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
 <%@page import="com.liferay.portal.theme.PortletDisplay"%>
@@ -24,14 +25,13 @@ if(course!=null)
 {
 	searchGroupId=course.getGroupId();
 }
-String assetTypes=PropsUtil.get("lms.scorm.assettypes");
-String[] allowedAssetTypes=assetTypes.split(",");
+
 
 %>
-<liferay-ui:icon-menu message="add">
+<liferay-ui:icon-menu message="add" showWhenSingleIcon="true" >
 <%
-for(String assetType:allowedAssetTypes)
-{
+String assetType = "com.liferay.lms.model.SCORMContent";
+if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.scormmodel",themeDisplay.getScopeGroupId(), "ADD_SCORM")) {
 	PortletURL pURL=getAddPortletURL(course.getGroupId(), liferayPortletRequest, liferayPortletResponse, assetType);
 	if(pURL!=null) {
 		AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetType);
@@ -44,8 +44,9 @@ for(String assetType:allowedAssetTypes)
 		liferayPortletResponse.getNamespace() + "editAsset', title: '" + ResourceActionsUtil.getModelResource(locale, assetType) +
 		"', uri:'" + HtmlUtil.escapeURL(addPortletURLString) + "'});";
 		
+		
 		%>
-		<liferay-ui:icon
+		<liferay-ui:icon 
 					message="<%= HtmlUtil.escape(assetType) %>"
 					src="<%= assetRendererFactory.getIconPath(renderRequest) %>"
 					url="<%= addPortletURLString %>"
@@ -59,24 +60,14 @@ for(String assetType:allowedAssetTypes)
 	<liferay-portlet:param name="jspPage" value="/html/scormactivity/admin/searchresults.jsp"/>
 </liferay-portlet:renderURL>
 <aui:form name="<portlet:namespace />ressearch" action="<%=selectResource %>" method="POST">
-<aui:select name="className" label="asset-type">
-<% 
 
-for(String className:allowedAssetTypes)
-{	
-	String assettypename=LanguageUtil.get(pageContext, "model.resource." + className);	
-	%>
-	<aui:option value="<%=className%>" label="<%=assettypename%>"></aui:option>
-	<%
-	
-}
-%>
-</aui:select>
 <aui:input name="keywords" size="20" type="text"/>
 
 <aui:input name="groupId" type="hidden" value="<%=Long.toString(searchGroupId) %>" />
 
-<%@ include file="/html/scormactivity/admin/catselector.jspf" %>
+<aui:field-wrapper label="categories" helpMessage="scormactivity.categories.helpmessage">
+	<%@ include file="/html/scormactivity/admin/catselector.jspf" %>
+</aui:field-wrapper>
 
 <aui:button type="submit" value="search" />
 </aui:form>
