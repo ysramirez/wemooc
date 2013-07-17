@@ -61,6 +61,8 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 </liferay-portlet:renderURL>
 <aui:form name="<portlet:namespace />ressearch" action="<%=selectResource %>" method="POST">
 
+<aui:input name="className" type="hidden" value="<%= SCORMContent.class.getName() %>" />
+
 <aui:input name="keywords" size="20" type="text"/>
 
 <aui:input name="groupId" type="hidden" value="<%=Long.toString(searchGroupId) %>" />
