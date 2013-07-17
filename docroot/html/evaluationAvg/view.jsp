@@ -95,7 +95,8 @@
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
 				message="<%=(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluation.configuration\":\"evaluationAvg.evaluation.configuration.define\" %>"
-				url="<%=\"	javascript:AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
+				url="#"
+				onClick="<%=\"	AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
 						\"			id:'\"+renderResponse.getNamespace()+\"showPopupEvaluations', \"+
 						\"          title: ' \"+LanguageUtil.get(pageContext,(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluations\":\"evaluationAvg.evaluations.define\") +\"', \"+
 						\"          modal: true, \"+
