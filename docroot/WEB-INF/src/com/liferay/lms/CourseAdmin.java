@@ -218,7 +218,7 @@ public class CourseAdmin extends MVCPortlet {
 		if(fileName!=null && !fileName.equals(""))
 		{
 			File file = request.getFile("fileName");
-			System.out.println(" file: "+file);
+			//System.out.println(" file: "+file);
 			LayoutSetLocalServiceUtil.updateLogo(course.getGroupId(), true, true, file);
 		}
 
@@ -440,7 +440,7 @@ public class CourseAdmin extends MVCPortlet {
 				
 			}catch(Exception e){
 				
-				System.out.println(" Error: "+e.getMessage());
+				//System.out.println(" Error: "+e.getMessage());
 				e.printStackTrace();
 				
 			}
@@ -461,26 +461,26 @@ public class CourseAdmin extends MVCPortlet {
 			boolean privateLayout = ParamUtil.getBoolean(uploadRequest, "privateLayout");
 			File file = uploadRequest.getFile("importFileName");
 			
-			System.out.println("groupId: "+groupId+", privateLayout:"+privateLayout+", file: "+file.getName());
+			//System.out.println("groupId: "+groupId+", privateLayout:"+privateLayout+", file: "+file.getName());
 			
-			System.out.println("actionRequest.getParameterMap().size: "+actionRequest.getParameterMap().size());
+			//System.out.println("actionRequest.getParameterMap().size: "+actionRequest.getParameterMap().size());
 
 			if (!file.exists()) {
-				System.out.println("Import file does not exist");
+			//	System.out.println("Import file does not exist");
 				throw new LARFileException("Import file does not exist");
 			}
-			System.out.println("importLayouts 1, portletId"+themeDisplay.getPortletDisplay().getId());
+			//System.out.println("importLayouts 1, portletId"+themeDisplay.getPortletDisplay().getId());
 			
 			String portletId = (String) actionRequest.getAttribute(WebKeys.PORTLET_ID);
 			LayoutServiceUtil.importPortletInfo(themeDisplay.getLayout().getPlid(), groupId,portletId, uploadRequest.getParameterMap(), file);
 
-			System.out.println("importLayouts 2");
+			//System.out.println("importLayouts 2");
 
 			addSuccessMessage(actionRequest, actionResponse);
 			
 		}
 		catch (Exception e) {
-			System.out.println("Error importando lar.");
+			//System.out.println("Error importando lar.");
 			
 			if ((e instanceof LARFileException) || (e instanceof LARTypeException)) {
 
