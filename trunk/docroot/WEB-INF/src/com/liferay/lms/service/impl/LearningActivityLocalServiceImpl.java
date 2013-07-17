@@ -79,9 +79,19 @@ public class LearningActivityLocalServiceImpl
 		{
 			return true;
 		}
-		if(larn.getEnddate().before(now) ||larn.getStartdate().after(now))
-		{
+		if(larn.getEnddate()==null){
 			return true;
+		} else {
+			if(larn.getStartdate()==null){
+				return true;
+			} 
+			else {
+				if(larn.getEnddate().before(now) ||larn.getStartdate().after(now))
+				{
+					return true;
+				}
+				
+			}
 		}
 		
 		if(larn.getPrecedence()!=0)
