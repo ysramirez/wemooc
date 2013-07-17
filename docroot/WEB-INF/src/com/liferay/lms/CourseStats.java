@@ -169,7 +169,7 @@ public class CourseStats extends MVCPortlet {
 		    //Iniciaron/finalizaron
 		    writer.writeNext(new String[]{rb.getString("coursestats.start.course") + iniciados});// + rb.getString("coursestats.end.course") + finalizados});
 		    
-		    //Fechas del módulo
+		    //Fechas del mï¿½dulo
 		    writer.writeNext(new String[]{mStartDate + " " + mEndDate});
 		    
 		    int numCols = 14;
@@ -207,8 +207,10 @@ public class CourseStats extends MVCPortlet {
 		    	NumberFormat numberFormat = NumberFormat.getNumberInstance(themeDisplay.getLocale());
 		    	
 		    	resultados[0]=activity.getTitle(themeDisplay.getLocale());
-		    	resultados[1]=sdf.format(activity.getStartdate());
-		    	resultados[2]=sdf.format(activity.getEnddate());
+		    	if(activity.getStartdate()!=null) resultados[1]=sdf.format(activity.getStartdate());
+		    	else resultados[1]="-";
+		    	if(activity.getStartdate()!=null) resultados[2]=sdf.format(activity.getEnddate());
+		    	else resultados[2]="-";
 		    	resultados[3]=Long.toString(started);
 		    	resultados[4]=Long.toString(finished);
 		    	resultados[5]=Long.toString(notpassed);
@@ -331,12 +333,12 @@ public class CourseStats extends MVCPortlet {
 	
 	private String replaceAcutes(String text){
 		String result = text;
-		result = result.replaceAll("&aacute;", "á");
-		result = result.replaceAll("&eacute;", "é");
-		result = result.replaceAll("&iacute;", "í");
-		result = result.replaceAll("&oacute;", "ó");
-		result = result.replaceAll("&uacute;", "ú");
-		result = result.replaceAll("&ntilde;", "ñ");
+		result = result.replaceAll("&aacute;", "ï¿½");
+		result = result.replaceAll("&eacute;", "ï¿½");
+		result = result.replaceAll("&iacute;", "ï¿½");
+		result = result.replaceAll("&oacute;", "ï¿½");
+		result = result.replaceAll("&uacute;", "ï¿½");
+		result = result.replaceAll("&ntilde;", "ï¿½");
 		return result;
 	}
 
