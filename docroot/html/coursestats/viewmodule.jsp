@@ -121,8 +121,19 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 		hasPrecedence = true;
 		%>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.activity"><%=title %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.start"><%=dateFormatDateTime.format(activity.getStartdate()) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.end"><%=dateFormatDateTime.format(activity.getEnddate()) %></liferay-ui:search-container-column-text>
+	<% if (activity.getStartdate()==null) { %>
+		<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.start">-</liferay-ui:search-container-column-text>
+	<% } else { %>
+		<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.start"><%=dateFormatDateTime.format(activity.getStartdate()) %></liferay-ui:search-container-column-text>
+	<% } %>
+	
+	
+	<% if (activity.getEnddate()==null) { %>
+		<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.end">-</liferay-ui:search-container-column-text>
+	<% } else { %>
+		<liferay-ui:search-container-column-text cssClass="date-column" name="coursestats.modulestats.activity.end"><%=dateFormatDateTime.format(activity.getEnddate()) %></liferay-ui:search-container-column-text>
+	<% } %>
+	
 	
 	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.init"><%=astarted %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.passed"><%=afinished %></liferay-ui:search-container-column-text>
