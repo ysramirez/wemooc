@@ -162,7 +162,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 						//Obtenermos el Id de directorio. Creamos el directorio si no existe.
 						long folderId = createDLFolders(user.getUserId(), repositoryId, request);
 						
-						System.out.println(" folderId " + folderId);
+						//System.out.println(" folderId " + folderId);
 
 						//Subimos el Archivo en la Document Library
 						InputStream is = new FileInputStream(file);
@@ -173,10 +173,10 @@ public class P2PActivityPortlet extends MVCPortlet {
 						//Asociamos con el fichero subido.
 						p2pActivity.setFileEntryId(dlDocument.getFileEntryId());
 						
-						System.out.println(" dlDocument.getFileEntryId() " + dlDocument.getFileEntryId());
+						//System.out.println(" dlDocument.getFileEntryId() " + dlDocument.getFileEntryId());
 					}
 					
-					//Añadir la actividad a bd
+					//Aï¿½adir la actividad a bd
 					P2pActivityLocalServiceUtil.addP2pActivity(p2pActivity);
 					
 					//Creamos el LearningActivityTry
