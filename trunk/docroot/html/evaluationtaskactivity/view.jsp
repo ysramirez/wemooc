@@ -103,7 +103,8 @@ if(actId==0){
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
 				message="<%=(hasActivities)?\"evaluationtaskactivity.evaluation.configuration\":\"evaluationtaskactivity.evaluation.configuration.define\"%>"
-				url="<%=\"	javascript:AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
+				url="#"
+				onClick="<%=\"	AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
 						\"			id:'\"+renderResponse.getNamespace()+\"showPopupActivities', \"+
 						\"            title: ' \"+LanguageUtil.format(pageContext,(hasActivities)?\"evaluationtaskactivity.evaluations\":\"evaluationtaskactivity.evaluations.define\", new Object[]{}) +\"', \"+
 						\"            modal: true, \"+
