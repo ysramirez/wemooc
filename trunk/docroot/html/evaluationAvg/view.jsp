@@ -272,7 +272,7 @@
 								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
 								   		<portlet:param name="jspPage" value="/html/evaluationAvg/popups/grades.jsp"/>
 								   	</portlet:renderURL>
-									<a href="<%="javascript:AUI().use('aui-dialog', function(A){ "+
+									<a onClick="<%="AUI().use('aui-dialog', function(A){ "+
 											    "	new A.Dialog({ "+
 											    "		id:'"+renderResponse.getNamespace()+"showPopupGrades', "+
 											    "		title: '"+LanguageUtil.get(pageContext, "evaluationAvg.set.grades")+"', "+
