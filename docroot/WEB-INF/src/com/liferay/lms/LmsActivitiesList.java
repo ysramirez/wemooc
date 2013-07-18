@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -255,8 +256,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			SessionErrors.add(actionRequest, "title-required");
 			return;
 		}
-		if(Validator.isNull(description))
-		{
+		if (Validator.isNull(HtmlUtil.extractText(description))) {
 			SessionErrors.add(actionRequest, "description-required");
 		}
 		if(Validator.equals(moduleId, 0))
