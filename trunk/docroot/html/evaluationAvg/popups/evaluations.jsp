@@ -424,11 +424,12 @@
 </aui:form>
 
 <aui:button-row>
-	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
-		<liferay-ui:message key="offlinetaskactivity.cancel" />
-	</button>
+	
 	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button">
 		<liferay-ui:message key="offlinetaskactivity.save" />
+	</button>
+	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
+		<liferay-ui:message key="offlinetaskactivity.cancel" />
 	</button>
 </aui:button-row>
 <div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.bad-updating"))?

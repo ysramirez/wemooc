@@ -187,10 +187,8 @@ else
 	<aui:input name="tags" type="assetTags" />
 	<aui:input name="categories" type="assetCategories" />
 	<aui:button-row>
-	<%
-		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
-	%>									
+									
 		<aui:button onClick="<%=cancel %>" type="cancel" />
-		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
+		<aui:button type="submit"></aui:button>
 	</aui:button-row>
 </aui:form>
