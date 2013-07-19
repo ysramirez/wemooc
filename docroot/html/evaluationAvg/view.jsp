@@ -78,12 +78,13 @@
 		        	<portlet:actionURL name="updateCourse" var="updateCourseURL" />
 		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
 			        <aui:button-row  cssClass="container-buttons">
+			      	  <aui:button type="button" name="calculate" value="evaluationAvg.calculate.acept"  
+			        		onclick="<%= \"location.href='\"+updateCourseURL+\"';\" %>"
+			        	/>
 			        	<aui:button type="button" name="cancel" value="cancel"  
 			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"calculatePopup'); }); \" %>"
 			        	/>
-			        	<aui:button type="button" name="calculate" value="evaluationAvg.calculate.acept"  
-			        		onclick="<%= \"location.href='\"+updateCourseURL+\"';\" %>"
-			        	/>
+			        	
 					</aui:button-row>
 		        </div>
 				
@@ -244,11 +245,12 @@
 									    <h1><%=user.getFullName() %></h1>
 							        	<liferay-ui:message key="evaluationAvg.recalculate.confirm" />
 								        <aui:button-row  cssClass="container-buttons">
-								        	<aui:button type="button" name="cancel" value="cancel"  
-								        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"recalculatePopup_\"+user.getUserId()+\"'); }); \" %>"
-								        	/>
+								        	
 								        	<aui:button type="button" name="acept" value="acept"  
 								        		onclick="<%= \"location.href='\"+reCalculateURL+\"';\" %>"
+								        	/>
+								        	<aui:button type="button" name="cancel" value="cancel"  
+								        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"recalculatePopup_\"+user.getUserId()+\"'); }); \" %>"
 								        	/>
 										</aui:button-row>
 							       </div>
