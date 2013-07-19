@@ -179,13 +179,12 @@ String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationAvg.grades.
 </aui:form>
 
 <aui:button-row>
+		<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">
+		<liferay-ui:message key="evaluationAvg.save" />
+	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupGrades();" type="button">
 		<liferay-ui:message key="offlinetaskactivity.cancel" />
 	</button>
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveGrades();" type="button">
-		<liferay-ui:message key="evaluationAvg.save" />
-	</button>
-	
 </aui:button-row>
 <div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.grades.bad-updating"))?
 									   "portlet-msg-error":((SessionMessages.contains(renderRequest, "evaluationAvg.grades.updating"))?
