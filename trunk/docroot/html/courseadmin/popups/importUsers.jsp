@@ -22,15 +22,15 @@
 		</aui:field-wrapper>
 	</aui:fieldset>
 	<aui:button-row>
-		<button name="Close" value="close" onclick="AUI().use('aui-dialog', function(A) {
-		    												A.DialogManager.closeByChild('#<portlet:namespace />showPopupImportUsers');
-		    											  });" type="button">
-			<liferay-ui:message key="courseadmin.importuserrole.cancel" />
-		</button>
 		<button name="Save" value="save" onclick="AUI().use(function(A) {
 	    												A.one('#<portlet:namespace />fm').submit();
 	    											  });" type="button">
 		<liferay-ui:message key="courseadmin.importuserrole.save" />
+		</button>
+		<button name="Close" value="close" onclick="AUI().use('aui-dialog', function(A) {
+		    												A.DialogManager.closeByChild('#<portlet:namespace />showPopupImportUsers');
+		    											  });" type="button">
+			<liferay-ui:message key="courseadmin.importuserrole.cancel" />
 		</button>
 	</aui:button-row>
 </aui:form>
