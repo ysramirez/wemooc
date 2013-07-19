@@ -36,10 +36,10 @@
 		    	if(mr.getPassed()) mstatus="passed";
 		    }%>
 			<%if(mstatus.equals("passed")){%>
-				<liferay-ui:icon image="checked"></liferay-ui:icon>
+				<liferay-ui:icon image="checked" alt="passed"></liferay-ui:icon>
 			<%}
 			if(mstatus.equals("not-passed")){%>
-				<liferay-ui:icon image="close"></liferay-ui:icon>
+				<liferay-ui:icon image="close" alt="not-passed"></liferay-ui:icon>
 			<%}
 			if(mstatus.equals("started")){%>
 				<liferay-ui:icon image="unchecked"></liferay-ui:icon>
@@ -65,10 +65,10 @@
 				<p><%=learningActivity.getTitle(themeDisplay.getLocale()) %></p>
 				<%=result %>
 				<%if(status.equals("passed")){%>
-					<liferay-ui:icon image="checked"></liferay-ui:icon>
+					<liferay-ui:icon image="checked" alt="passed"></liferay-ui:icon>
 				<%}
 				if(status.equals("not-passed")){%>
-					<liferay-ui:icon image="close"></liferay-ui:icon>
+					<liferay-ui:icon image="close" alt="not-passed"></liferay-ui:icon>
 				<%}
 				if(status.equals("started")){%>
 					<liferay-ui:icon image="unchecked"></liferay-ui:icon>
