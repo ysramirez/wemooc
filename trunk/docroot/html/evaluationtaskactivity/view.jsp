@@ -73,11 +73,11 @@ if(actId==0){
 		        	<portlet:actionURL name="update" var="updateURL" />
 		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
 			        <aui:button-row cssClass="container-buttons">
+			        				        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate.acept"  
+			        		onclick="<%= \"location.href='\"+updateURL+\"';\" %>"
+			        	/>
 			        	<aui:button type="button" name="cancel" value="cancel"  
 			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"calculatePopup'); }); \" %>"
-			        	/>
-			        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate.acept"  
-			        		onclick="<%= \"location.href='\"+updateURL+\"';\" %>"
 			        	/>
 					</aui:button-row>
 		        </div>
@@ -86,11 +86,12 @@ if(actId==0){
 		        	<portlet:actionURL name="publish" var="publishURL" />
 		        	<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />
 			        <aui:button-row  cssClass="container-buttons">
-			        	<aui:button type="button" name="cancel" value="cancel"  
-			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"publishPopup'); }); \" %>"
-			        	/>
+			        	
 			        	<aui:button type="button" name="publish" value="evaluationtaskactivity.publish"  
 			        		onclick="<%= \"location.href='\"+publishURL+\"';\" %>"
+			        		<aui:button type="button" name="cancel" value="cancel"  
+			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"publishPopup'); }); \" %>"
+			        	/>
 			        	/>
 					</aui:button-row>
 		        </div>
@@ -259,12 +260,13 @@ if(actId==0){
 									    <h1><%=user.getFullName() %></h1>
 							        	<liferay-ui:message key="evaluationtaskactivity.recalculate.confirm" />
 								        <aui:button-row  cssClass="container-buttons">
+								      		  <aui:button type="button" name="acept" value="acept"  
+								        		onclick="<%= \"location.href='\"+reCalculateURL+\"';\" %>"
+								        	/>
 								        	<aui:button type="button" name="cancel" value="cancel"  
 								        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"recalculatePopup_\"+user.getUserId()+\"'); }); \" %>"
 								        	/>
-								        	<aui:button type="button" name="acept" value="acept"  
-								        		onclick="<%= \"location.href='\"+reCalculateURL+\"';\" %>"
-								        	/>
+								        	
 										</aui:button-row>
 							       </div>
 						            <p class="see-more">
