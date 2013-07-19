@@ -44,8 +44,8 @@ public class courseupdateresult extends MVCPortlet {
 					int calculated = 0;
 					
 					trace += " course: "+course.getTitle(Locale.getDefault())+" ("+ course.getCourseId() +")\n"; 
-					System.out.println(" course: "+course.getTitle(Locale.getDefault())+" ("+ course.getCourseId() +")\n");
-					System.out.print("Calculando.");
+					//System.out.println(" course: "+course.getTitle(Locale.getDefault())+" ("+ course.getCourseId() +")\n");
+					//System.out.print("Calculando.");
 					
 					//Obtenemos todos los usuarios del curso.
 					List<User> usersList = UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId());
@@ -97,7 +97,7 @@ public class courseupdateresult extends MVCPortlet {
 							
 							courseResult = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(),user.getUserId());
 
-							//Si no existía el resultado del curso.
+							//Si no existï¿½a el resultado del curso.
 							if(courseResult==null){
 								courseResult = CourseResultLocalServiceUtil.createCourseResult(CounterLocalServiceUtil.increment(CourseResult.class.getName()));
 								courseResult.setUserId(user.getUserId());
