@@ -31,12 +31,18 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
@@ -51,7 +57,17 @@ import com.liferay.portal.service.LayoutSetPrototypeServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetVocabulary;
+import com.liferay.portlet.documentlibrary.DuplicateFileException;
+import com.liferay.portlet.documentlibrary.FileExtensionException;
+import com.liferay.portlet.documentlibrary.FileNameException;
+import com.liferay.portlet.documentlibrary.FileSizeException;
+import com.liferay.portlet.documentlibrary.InvalidFileEntryTypeException;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
 
@@ -94,15 +110,12 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return coursePersistence.fetchByGroupCreatedId(groupId);
 	}
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
-			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,
-		ServiceContext serviceContext)
-			throws SystemException, 
-			PortalException {
+			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,ServiceContext serviceContext)
+			throws SystemException, PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long userId=serviceContext.getUserId();
-		Course course =
-				coursePersistence.create(counterLocalService.increment(
-						Course.class.getName()));
+		Course course = course = coursePersistence.create(counterLocalService.increment(Course.class.getName()));		
+		try{
 			course.setCompanyId(serviceContext.getCompanyId());
 			course.setGroupId(serviceContext.getScopeGroupId());
 			course.setUserId(userId);
@@ -114,48 +127,19 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setStatus(WorkflowConstants.STATUS_APPROVED);
 			course.setExpandoBridgeAttributes(serviceContext);
 			coursePersistence.update(course, true);
-			try
-			{
-			resourceLocalService.addResources(
-					serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
-			Course.class.getName(), course.getPrimaryKey(), false,
-			true, true);
-			assetEntryLocalService.updateEntry(
-					userId, course.getGroupId(), Course.class.getName(),
+			resourceLocalService.addResources(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,Course.class.getName(), course.getPrimaryKey(), false,true, true);
+			assetEntryLocalService.updateEntry(userId, course.getGroupId(), Course.class.getName(),
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
-					serviceContext.getAssetTagNames(), true, null, null,
-					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(locale),null, null, 0, 0,
-					null, false);
-					
-			}
-			catch(Exception e)
-			{
-				System.out.println("CourseLocalServiceImpl.addCourse()"+e);
-			}
+					serviceContext.getAssetTagNames(), true, null, null,new java.util.Date(System.currentTimeMillis()), null,
+					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(locale),null, null, 0, 0,null, false);
 			//creating group
-			Group group = GroupLocalServiceUtil.addGroup(userId,null, 0,
-					title,summary,GroupConstants.TYPE_SITE_PRIVATE,friendlyURL,true,true,serviceContext);
+			Group group = GroupLocalServiceUtil.addGroup(userId,null, 0, title,summary,GroupConstants.TYPE_SITE_PRIVATE,friendlyURL,true,true,serviceContext);
 			
 			//Añadimos el rol Teacher al usuario que crea el blog
-			//System.out.println("Add TO ROL::UserId "+userId);
 			long[] usuarios = new long[1];
 			usuarios[0] = userId;
-			try
-			{
 			UserLocalServiceUtil.addRoleUsers(lmsPrefs.getTeacherRole(), usuarios);
-			}
-			catch (Exception e)
-			{
-				
-			}
-			try
-			{
 			UserLocalServiceUtil.addRoleUsers(lmsPrefs.getEditorRole(), usuarios);
-			}
-			catch (Exception e)
-			{
-			}
 			course.setGroupCreatedId(group.getGroupId());
 			GroupLocalServiceUtil.addUserGroups(userId, new long[] { group.getGroupId() });
 			course.setFriendlyURL(group.getFriendlyURL());
@@ -164,13 +148,15 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
 			/* activamos social activity para la comunidad creada */ 		
 			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);	
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					Course.class);
-
+			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(Course.class);
 			indexer.reindex(course);
-			return course;
+		}catch(Exception e){
+			System.out.println("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
+		}
+		return course;
 		
 	}
+	
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
 		ServiceContext serviceContext)

@@ -49,7 +49,10 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
@@ -68,8 +71,15 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.announcements.EntryDisplayDateException;
+import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.DuplicateFileException;
+import com.liferay.portlet.documentlibrary.FileExtensionException;
+import com.liferay.portlet.documentlibrary.FileNameException;
+import com.liferay.portlet.documentlibrary.FileSizeException;
+import com.liferay.portlet.documentlibrary.InvalidFileEntryTypeException;
 import com.liferay.portlet.dynamicdatalists.util.DDLExportFormat;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
@@ -77,9 +87,9 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  * Portlet implementation class CourseAdmin
  */
 public class CourseAdmin extends MVCPortlet {
-	
+
 	private static Log _log = LogFactoryUtil.getLog(CourseAdmin.class);
-	
+
 	public void deleteCourse(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
@@ -168,7 +178,7 @@ public class CourseAdmin extends MVCPortlet {
 			if (paramName.startsWith("title_")
 					&& paramName.length() > 6
 					&& ParamUtil.getString(actionRequest, paramName, "")
-							.length() > 0) {
+					.length() > 0) {
 				noTitle = false;
 			}
 		}
@@ -179,27 +189,55 @@ public class CourseAdmin extends MVCPortlet {
 			return;
 		}
 
+		try{
+			AssetEntryLocalServiceUtil.validate(serviceContext.getScopeGroupId(), Course.class.getName(), serviceContext.getAssetCategoryIds(),
+					serviceContext.getAssetTagNames());
+		}catch(Exception e){
+			actionResponse.setRenderParameters(actionRequest.getParameterMap());
+			List<String> errors = new ArrayList<String>();
+			if (e instanceof AssetCategoryException) {
+				AssetCategoryException ace = (AssetCategoryException)e;
+				AssetVocabulary assetVocabulary = ace.getVocabulary();
+				String vocabularyTitle = StringPool.BLANK;
+				if (assetVocabulary != null) 
+					vocabularyTitle = assetVocabulary.getTitle(themeDisplay.getLocale());
+
+				if (ace.getType() == AssetCategoryException.AT_LEAST_ONE_CATEGORY) 
+					errors.add(LanguageUtil.format(themeDisplay.getLocale(),"please-select-at-least-one-category-for-x", vocabularyTitle));
+				else if (ace.getType() ==AssetCategoryException.TOO_MANY_CATEGORIES) 
+					errors.add(LanguageUtil.format(themeDisplay.getLocale(), "you-cannot-select-more-than-one-category-for-x", vocabularyTitle));
+			}else 
+				errors.add(LanguageUtil.get(themeDisplay.getLocale(), "an-unexpected-error-occurred-while-saving"));
+
+			SessionErrors.add(actionRequest, "newCourseErrors", errors);
+			actionResponse.setRenderParameter("jspPage", "/html/courseadmin/editcourse.jsp");
+			return;
+		}
+
+
 		Course course = null;
 		if (courseId == 0) {
 			course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
 					title, description, summary, friendlyURL,
 					themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,
 					serviceContext);
-			long[] groupIds = new long[1];
-			groupIds[0] = course.getGroupCreatedId();
-			GroupLocalServiceUtil.addUserGroups(user.getUserId(), groupIds);
-			long[] roles = new long[2];
-			LmsPrefs prefs = LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay
-					.getCompanyId());
-			roles[0] = prefs.getEditorRole();
-			roles[1] = prefs.getTeacherRole();
-			UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(),
-					course.getGroupCreatedId(), roles);
+			if(course != null){
+				long[] groupIds = new long[1];
+				groupIds[0] = course.getGroupCreatedId();
+				GroupLocalServiceUtil.addUserGroups(user.getUserId(), groupIds);
+				long[] roles = new long[2];
+				LmsPrefs prefs = LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay
+						.getCompanyId());
+				roles[0] = prefs.getEditorRole();
+				roles[1] = prefs.getTeacherRole();
+				UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(),
+						course.getGroupCreatedId(), roles);
 
-			/* activamos el social equity */
-			AssetEntry aEntryCourse = AssetEntryLocalServiceUtil.getEntry(
-					Course.class.getName(), course.getCourseId());
-	
+				/* activamos el social equity */
+				AssetEntry aEntryCourse = AssetEntryLocalServiceUtil.getEntry(
+						Course.class.getName(), course.getCourseId());
+			}
+
 		}
 		// Estamos editando un curso existente.
 		else {
@@ -211,59 +249,61 @@ public class CourseAdmin extends MVCPortlet {
 			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
 					summary, serviceContext);
 		}
-		
-		//Cambiar la imagen de la comunidad
-		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
-		String fileName = request.getFileName("fileName");
-		if(fileName!=null && !fileName.equals(""))
-		{
-			File file = request.getFile("fileName");
-			//System.out.println(" file: "+file);
-			LayoutSetLocalServiceUtil.updateLogo(course.getGroupId(), true, true, file);
-		}
 
-		boolean oneTitleNotEmpty = false;
-		parNames = actionRequest.getParameterNames();
-		while (parNames.hasMoreElements()) {
-			String paramName = parNames.nextElement();
-			if (paramName.startsWith("title_") && paramName.length() > 6) {
-				String language = paramName.substring(6);
-				Locale locale = LocaleUtil.fromLanguageId(language);
-				course.setTitle(actionRequest.getParameter(paramName),locale);
+		if(course!= null){
+			//Cambiar la imagen de la comunidad
+			UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
+			String fileName = request.getFileName("fileName");
+			if(fileName!=null && !fileName.equals(""))
+			{
+				File file = request.getFile("fileName");
+				//System.out.println(" file: "+file);
+				LayoutSetLocalServiceUtil.updateLogo(course.getGroupId(), true, true, file);
+			}
 
-				if (!actionRequest.getParameter(paramName).equals("")) {
-					oneTitleNotEmpty = true;
+			boolean oneTitleNotEmpty = false;
+			parNames = actionRequest.getParameterNames();
+			while (parNames.hasMoreElements()) {
+				String paramName = parNames.nextElement();
+				if (paramName.startsWith("title_") && paramName.length() > 6) {
+					String language = paramName.substring(6);
+					Locale locale = LocaleUtil.fromLanguageId(language);
+					course.setTitle(actionRequest.getParameter(paramName),locale);
+
+					if (!actionRequest.getParameter(paramName).equals("")) {
+						oneTitleNotEmpty = true;
+					}
 				}
 			}
-		}
 
-		if (!oneTitleNotEmpty) {
-			SessionErrors.add(actionRequest, "title-empty");
-			actionResponse.setRenderParameter("jspPage",
-					"/html/courseadmin/editcourse.jsp");
-			return;
-		}
-		course.setCourseEvalId(courseEvalId);
-		com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
-				summary, serviceContext);
-		PermissionChecker permissionChecker = PermissionCheckerFactoryUtil
-				.getPermissionCheckerFactory().create(user);
-		if (permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),
-				Course.class.getName(), 0, "PUBLISH")) {
+			if (!oneTitleNotEmpty) {
+				SessionErrors.add(actionRequest, "title-empty");
+				actionResponse.setRenderParameter("jspPage",
+						"/html/courseadmin/editcourse.jsp");
+				return;
+			}
+			course.setCourseEvalId(courseEvalId);
+			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
+					summary, serviceContext);
+			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil
+					.getPermissionCheckerFactory().create(user);
+			if (permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),
+					Course.class.getName(), 0, "PUBLISH")) {
 
-			com.liferay.lms.service.CourseLocalServiceUtil.setVisible(
-					course.getCourseId(), visible);
-		}
-		SessionMessages.add(actionRequest, "course-saved-successfully");
-		WindowState windowState = actionRequest.getWindowState();
-		if (redirect != null && !"".equals(redirect)) {
-			if (!windowState.equals(LiferayWindowState.POP_UP)) {
-				actionResponse.sendRedirect(redirect);
-			} else {
-				redirect = PortalUtil.escapeRedirect(redirect);
-
-				if (Validator.isNotNull(redirect)) {
+				com.liferay.lms.service.CourseLocalServiceUtil.setVisible(
+						course.getCourseId(), visible);
+			}
+			SessionMessages.add(actionRequest, "course-saved-successfully");
+			WindowState windowState = actionRequest.getWindowState();
+			if (redirect != null && !"".equals(redirect)) {
+				if (!windowState.equals(LiferayWindowState.POP_UP)) {
 					actionResponse.sendRedirect(redirect);
+				} else {
+					redirect = PortalUtil.escapeRedirect(redirect);
+
+					if (Validator.isNotNull(redirect)) {
+						actionResponse.sendRedirect(redirect);
+					}
 				}
 			}
 		}
@@ -318,8 +358,8 @@ public class CourseAdmin extends MVCPortlet {
 				course.getGroupCreatedId(), roleId);
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 	}
-	
-	
+
+
 	public void importUserRole(PortletRequest portletRequest,
 			PortletResponse portletResponse) throws NestableException, IOException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) portletRequest
@@ -330,10 +370,10 @@ public class CourseAdmin extends MVCPortlet {
 		long roleId = ParamUtil.getLong(portletRequest, "roleId", 0);
 		String fileName = request.getFileName("fileName");
 		Course course = CourseLocalServiceUtil.getCourse(courseId);
-		
+
 		List<String> errors = new ArrayList<String>();
 		List<Long> users = new ArrayList<Long>();
-		
+
 		if(fileName==null || StringPool.BLANK.equals(fileName)){
 			SessionErrors.add(portletRequest, "courseadmin.importuserrole.csv.fileRequired");
 		}
@@ -370,25 +410,25 @@ public class CourseAdmin extends MVCPortlet {
 									errors.add(LanguageUtil.format(getPortletConfig(),themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.user-id-not-found",
 											new Object[] { line,userId }, false));
 								}
-								
+
 							}
-							
+
 							if(correct){
-															
+
 								if(!GroupLocalServiceUtil.hasUserGroup(userId,
 										course.getGroupCreatedId())){
 									GroupLocalServiceUtil.addUserGroups(userId,
 											new long[] { course.getGroupCreatedId() });
 								}
-								
+
 								users.add(userId);
 							}
 						}
 					}
-					
-					
 
-										
+
+
+
 				} catch (FileNotFoundException e) {
 					errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(),
 							"courseadmin.importuserrole.csvError.empty-file"));
@@ -397,7 +437,7 @@ public class CourseAdmin extends MVCPortlet {
 						reader.close();
 					}
 				}
-				
+
 				if(errors.isEmpty()){
 					for (Long user : users) {
 						UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user },
@@ -411,81 +451,81 @@ public class CourseAdmin extends MVCPortlet {
 			}	
 		}
 	}
-		
-	
+
+
 	@Override
 	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
-		
+
 		String action = ParamUtil.getString(resourceRequest, "action");
-		
+
 		ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-	
+
 		if(action.equals("export")){
-			
+
 			try {	
-				
+
 				long groupId = ParamUtil.getLong(resourceRequest, "groupId");
 				String fileName = ParamUtil.getString(resourceRequest, "exportFileName");
-				
+
 				File file = LayoutServiceUtil.exportPortletInfoAsFile(themeDisplay.getLayout().getPlid(), groupId, themeDisplay.getPortletDisplay().getId(), resourceRequest.getParameterMap(), null, null);
-				
+
 				HttpServletRequest request = PortalUtil.getHttpServletRequest(resourceRequest);
 				HttpServletResponse response = PortalUtil.getHttpServletResponse(resourceResponse);
-	
+
 				InputStream is = new FileInputStream(file);
 
 				String contentType = MimeTypesUtil.getContentType(file);
 
 				ServletResponseUtil.sendFile(request, response, fileName, is, contentType);
-				
+
 			}catch(Exception e){
-				
+
 				//System.out.println(" Error: "+e.getMessage());
 				e.printStackTrace();
-				
+
 			}
-			
+
 		} else {
 			super.serveResource(resourceRequest, resourceResponse);
 		}
 	}
-	
+
 	public void importCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
-		
+
 		try {
 			UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
-			
+
 			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 
 			long groupId = ParamUtil.getLong(uploadRequest, "groupId");
 			boolean privateLayout = ParamUtil.getBoolean(uploadRequest, "privateLayout");
 			File file = uploadRequest.getFile("importFileName");
-			
+
 			//System.out.println("groupId: "+groupId+", privateLayout:"+privateLayout+", file: "+file.getName());
-			
+
 			//System.out.println("actionRequest.getParameterMap().size: "+actionRequest.getParameterMap().size());
 
 			if (!file.exists()) {
-			//	System.out.println("Import file does not exist");
+				//	System.out.println("Import file does not exist");
 				throw new LARFileException("Import file does not exist");
 			}
 			//System.out.println("importLayouts 1, portletId"+themeDisplay.getPortletDisplay().getId());
-			
+
 			String portletId = (String) actionRequest.getAttribute(WebKeys.PORTLET_ID);
 			LayoutServiceUtil.importPortletInfo(themeDisplay.getLayout().getPlid(), groupId,portletId, uploadRequest.getParameterMap(), file);
 
 			//System.out.println("importLayouts 2");
 
 			addSuccessMessage(actionRequest, actionResponse);
-			
+
 		}
 		catch (Exception e) {
 			//System.out.println("Error importando lar.");
-			
+
 			if ((e instanceof LARFileException) || (e instanceof LARTypeException)) {
 
 				SessionErrors.add(actionRequest, e.getClass().getName());
-				
+
 			}
 			else {
 				_log.error(e, e);
@@ -493,8 +533,8 @@ public class CourseAdmin extends MVCPortlet {
 			}
 		}
 	}
-	
-	
+
+
 	@Override
 	protected void doDispatch(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
