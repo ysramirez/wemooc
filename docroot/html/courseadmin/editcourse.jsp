@@ -21,7 +21,7 @@
 <portlet:actionURL var="savecourseURL" name="saveCourse" />
 <portlet:renderURL var="cancel" />
 
-<a href="<%=cancel.toString()%>"><liferay-ui:message key="back" /></a>
+
 <%
 
 String publishPermission="PUBLISH";
@@ -187,8 +187,7 @@ else
 	<aui:input name="tags" type="assetTags" />
 	<aui:input name="categories" type="assetCategories" />
 	<aui:button-row>
-									
+		<aui:button type="submit"></aui:button>							
 		<aui:button onClick="<%=cancel %>" type="cancel" />
-		<aui:button type="submit"></aui:button>
 	</aui:button-row>
 </aui:form>
