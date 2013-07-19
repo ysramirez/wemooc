@@ -88,11 +88,11 @@ if(actId==0){
 			        <aui:button-row  cssClass="container-buttons">
 			        	
 			        	<aui:button type="button" name="publish" value="evaluationtaskactivity.publish"  
-			        		onclick="<%= \"location.href='\"+publishURL+\"';\" %>"
+			        		onclick="<%= \"location.href='\"+publishURL+\"';\" %>"/>
 			        		<aui:button type="button" name="cancel" value="cancel"  
 			        		onclick="<%= \"AUI().use('aui-dialog', function(A) { A.DialogManager.closeByChild('#\"+renderResponse.getNamespace()+\"publishPopup'); }); \" %>"
 			        	/>
-			        	/>
+			        
 					</aui:button-row>
 		        </div>
 				
