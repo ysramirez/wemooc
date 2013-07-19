@@ -178,9 +178,9 @@
 						<liferay-ui:search-container-column-text cssClass="number-column" name = "<%=learningActivity.getTitle(themeDisplay.getLocale()) %>">
 							<%=result %>
 							<% if(status.equals("passed")){%>
-							 	<liferay-ui:icon image="checked"></liferay-ui:icon>
+							 	<liferay-ui:icon image="checked" alt="passed"></liferay-ui:icon>
 							<%} else if(status.equals("not-passed")){%>
-							 	<liferay-ui:icon image="close"></liferay-ui:icon>
+							 	<liferay-ui:icon image="close" alt="not-passed"></liferay-ui:icon>
 							<%} else if(status.equals("started")){%>
 						 		<liferay-ui:icon image="unchecked"></liferay-ui:icon>
 						 	<%}
