@@ -1,3 +1,5 @@
+<%@page import="java.util.Iterator"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="java.util.Map"%>
 <%@page import="java.util.Collections"%>
 <%@page import="com.liferay.portal.model.LayoutSetPrototype"%>
@@ -20,6 +22,26 @@
 
 <portlet:actionURL var="savecourseURL" name="saveCourse" />
 <portlet:renderURL var="cancel" />
+<liferay-ui:error key="title-required" message="title-required" />
+<liferay-ui:error key="title-empty" message="title-empty" />
+	
+	<%if(SessionErrors.contains(renderRequest, "newCourseErrors")) { %>
+		<div class="portlet-msg-error">
+			<% List<String> errors = (List<String>)SessionErrors.get(renderRequest, "newCourseErrors");
+			   if(errors.size()==1) {
+				  %><%=errors.get(0) %><%
+			   }	
+			   else {
+			%>
+				<ul>
+				<% for(String error : errors){ %>
+				 	<li><%=error %></li>
+				<% } %>
+				</ul>
+			<% } %>
+		</div>
+	<% }%>
+	
 
 
 <%
@@ -104,8 +126,6 @@ else
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="courseId" type="hidden" value="<%=courseId %>"/>
-	<liferay-ui:error key="title-required" message="title-required" />
-	<liferay-ui:error key="title-empty" message="title-empty" />
 	<aui:input name="title" label="title"></aui:input>
 <%
 	String value="";
