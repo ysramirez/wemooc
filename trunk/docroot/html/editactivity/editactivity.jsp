@@ -601,8 +601,9 @@ Liferay.provide(
 		    
 		//-->
 		</script>
-		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
 		<aui:button type="submit" value="savechanges"></aui:button>
+		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
+		
 	</aui:button-row>
 </aui:form>
  <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
