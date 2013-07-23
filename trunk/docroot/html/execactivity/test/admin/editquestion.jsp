@@ -170,7 +170,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 	</div>
 	<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
-	<aui:input size="120" name="feedbackCorrect" label="feedback"></aui:input>
+	<aui:input name="feedbackCorrect" label="feedback"></aui:input>
 	<br/>
 	<aui:column>
 		<aui:input  type="checkbox" name="correct" label="correct"></aui:input>
