@@ -268,13 +268,10 @@ int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryF
 				</div>
 
 				<aui:input  name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
-				<br />
-				<aui:column>
-					<aui:input type="checkbox" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
-				</aui:column>
-				<aui:column>
-					<aui:button type="submit" value="modify"></aui:button>
-				</aui:column>
+				<aui:input type="checkbox" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
+				
+				<aui:button type="submit" value="modify"></aui:button>
+				
 			</aui:form>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-jsp
