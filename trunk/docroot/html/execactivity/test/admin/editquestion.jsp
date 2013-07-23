@@ -170,8 +170,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 	</div>
 	<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
-	<aui:input name="feedbackCorrect" label="feedback"></aui:input>
-	<br/>
+	<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedback"></aui:input>
 	<aui:column>
 		<aui:input  type="checkbox" name="correct" label="correct"></aui:input>
 	</aui:column>
@@ -179,7 +178,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 		<aui:button type="submit" value="add-more-answers" ></aui:button>
 	</aui:column>
 </aui:form>
-<br />
+
 <liferay-ui:success key="answer-added-successfully" message="answer-added-successfully" />
 
 <%
