@@ -72,27 +72,17 @@ public class LearningActivityLocalServiceImpl
 	public boolean islocked(long actId, long userId) throws Exception
 	{
 		LearningActivity larn =
-			learningActivityPersistence.fetchByPrimaryKey(actId);
-		java.util.Date now=new java.util.Date(System.currentTimeMillis());
-		
-		if(larn.getModuleId()>0&&moduleLocalService.isLocked(larn.getModuleId(), userId))
-		{
-			return true;
-		}
-		if(larn.getEnddate()==null){
-			return true;
-		} else {
-			if(larn.getStartdate()==null){
+				learningActivityPersistence.fetchByPrimaryKey(actId);
+			java.util.Date now=new java.util.Date(System.currentTimeMillis());
+			
+			if(larn.getModuleId()>0&&moduleLocalService.isLocked(larn.getModuleId(), userId))
+			{
 				return true;
-			} 
-			else {
-				if(larn.getEnddate().before(now) ||larn.getStartdate().after(now))
-				{
-					return true;
-				}
-				
 			}
-		}
+			if((larn.getEnddate()!=null&&larn.getEnddate().before(now)) ||(larn.getStartdate()!=null&&larn.getStartdate().after(now)))
+			{
+				return true;
+			}
 		
 		if(larn.getPrecedence()!=0)
 		{
