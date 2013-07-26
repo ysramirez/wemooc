@@ -166,8 +166,16 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','
 				%>
 				
 				<%--li class='<%= moduleId == theModule.getModuleId() ? "option-less" : "option-more"%>' --%>
-				<li class='option-none  <%=theModule.getModuleId() == moduleId ? "option-less":"option-more" %>'>
-					<span class="desplegar"></span>					
+				<li class='option-none  <%=theModule.getModuleId() == moduleId ? "option-less":"" %>'>
+					<%
+					if(theModule.getModuleId() == moduleId)
+					{
+						%>
+						<span class="desplegar"></span>
+						<%
+					}
+					%>
+										
 					<%
 					ModuleResult moduleResult=ModuleResultLocalServiceUtil.getByModuleAndUser(theModule.getModuleId(),themeDisplay.getUserId());
 					long done=0;
@@ -185,12 +193,33 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','
 					    gotoModuleURL.setParameter("themeId", Long.toString(themeId));
 					    gotoModuleURL.setPlid(themeDisplay.getPlid());
 						%>
-						<a href="<%=gotoModuleURL.toString() %>"><%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())})  %></a>
+						<a href="<%=gotoModuleURL.toString() %>">
+						<%
+					if(theModule.getModuleId() != moduleId)
+					{
+						if(ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()))
+						{
+							%>
+							<span class="locked"></span>
+							<%
+						}
+						else
+						{
+							
+						
+						%>
+						<span class="desplegar"></span>
+						<%
+						}
+					}
+					%>
+						<%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())})  %></a>
 						<%if(actionEditing){%>
 							<div class="iconsedit"><%@ include file="/JSPs/module/edit_actions.jspf" %></div>
 						<%}
-					}else{%>
-						<%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %> <span class="module-percent"><%=done %>%</span>
+					}else
+					{%>
+						<span class="locked"></span><%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %> <span class="module-percent"><%=done %>%</span>
 						<%if(actionEditing){}
 					}
 					if((theModule.getModuleId()==moduleId)&&(ParamUtil.getBoolean(renderRequest, "viewCurrentModule",true))){%>
