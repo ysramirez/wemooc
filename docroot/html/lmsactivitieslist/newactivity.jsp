@@ -11,6 +11,21 @@
 
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 
+<script type="text/javascript">
+<!--
+AUI().ready(
+    function(A) {
+		A.all('img[onblur*=hide]').each(function(img){
+			img.after(['blur','mouseout'],function(event){ 
+				Liferay.Portal.ToolTip._cached.destroy();
+				Liferay.Portal.ToolTip._cached=null;
+			 });
+		});
+    }
+);
+//-->
+</script>
+
 <ul class="activity-list">
 <%
 AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
