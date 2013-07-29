@@ -45,7 +45,7 @@ for(Long key:classTypes.keySet())
 	</liferay-util:buffer>
 
 	<li class="activity_<%=key%>">
-		<liferay-ui:icon image="add" label="<%=true%>" message="<%=activityMessage %>" url="<%=newactivityURL%>" cssClass="activity-icon" imageHover="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>" />
+		<liferay-ui:icon image="add" label="<%=true%>" message="<%=activityMessage %>" url="<%=newactivityURL%>" cssClass="activity-icon" />
 	</li>
 <%
 }
