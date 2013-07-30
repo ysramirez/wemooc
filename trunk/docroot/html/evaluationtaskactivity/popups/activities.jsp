@@ -373,7 +373,7 @@
 				<%=activityToEvaluate.getTitle(themeDisplay.getLocale()) %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="type" title="evaluationtaskactivity.evaluation.type">
-				<span class="activity-<%=activityToEvaluate.getTypeId() %>>" ><liferay-ui:message key="<%=learningActivityTypeRegistry.getLearningActivityType(activityToEvaluate.getTypeId()).getName() %>" /></span>
+				<span class="activity-<%=activityToEvaluate.getTypeId() %>" ><liferay-ui:message key="<%=learningActivityTypeRegistry.getLearningActivityType(activityToEvaluate.getTypeId()).getName() %>" /></span>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="weight" title="evaluationtaskactivity.evaluation.weight">
 				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+activityToEvaluate.getActId() %>"  size="3" />
