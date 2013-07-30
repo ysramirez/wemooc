@@ -369,13 +369,13 @@
 		</liferay-ui:search-container-results>
 		
 		<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="activityToEvaluate">
-			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.name" title="evaluationtaskactivity.evaluation.name">
+			<liferay-ui:search-container-column-text name="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.evaluation.name\") %>" title="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.evaluation.name\") %>">
 				<%=activityToEvaluate.getTitle(themeDisplay.getLocale()) %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.type" title="evaluationtaskactivity.evaluation.type">
+			<liferay-ui:search-container-column-text name="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.evaluation.type\") %>" title="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.evaluation.type\") %>">
 				<span class="activity-<%=activityToEvaluate.getTypeId() %>>" ><liferay-ui:message key="<%=learningActivityTypeRegistry.getLearningActivityType(activityToEvaluate.getTypeId()).getName() %>" /></span>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="evaluationtaskactivity.evaluation.weight" title="evaluationtaskactivity.evaluation.weight">
+			<liferay-ui:search-container-column-text name="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.evaluation.weight\") %>" title="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.evaluation.weight\") %>">
 				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+activityToEvaluate.getActId() %>"  size="3" />
 				<div id="<portlet:namespace />weight_<%=activityToEvaluate.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+activityToEvaluate.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
