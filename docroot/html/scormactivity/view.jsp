@@ -138,10 +138,6 @@
 	Object [] arg =  new Object [] { activity.getPasspuntuation() };
 %>
 
-<% if (activity.getPasspuntuation() > 0) { %>
-<h3><liferay-ui:message key="activity.try.pass.puntuation" arguments="<%= arg %>" /></h3>
-<% } %>
-
 <script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
 <script type="text/javascript">
 Liferay.provide(

@@ -1,5 +1,75 @@
 Type.createNamespace('Player');
 
+SCORM_1_2.API_LIB.prototype.$27 = function($p0) {
+	var $0 = false;
+	if ($p0) {
+		if (this.$1F.getDataTreeValue('cmi.core.exit') == null || this.$1F.getDataTreeValue('cmi.core.exit') == '') {
+			this.$1F.setDataTreeValue('cmi.core.exit', 'suspend', false);
+		}
+		if (this.$1F.getDataTreeValue('cmi.core.exit') === 'suspend') {
+			$0 = true;
+			this.$1F.setDataTreeValue('cmi.core.entry', 'resume', false);
+		} else {
+			this.$1F.setDataTreeValue('cmi.core.entry', '', false);
+		}
+		if (this.$1F.getDataTreeValue('cmi.core.lesson_status') === 'not attempted') {
+			if (this.$1F.getDataTreeValue('cmi.core.lesson_mode') === 'browse') {
+				this.$1F.setDataTreeValue('cmi.core.lesson_status',
+						'browsed', false);
+			} else {
+				this.$1F.setDataTreeValue('cmi.core.lesson_status',
+						'completed', false);
+			}
+		}
+		if (this.$1F.getDataTreeValue('cmi.core.lesson_mode') === 'normal') {
+			if (this.$1F.getDataTreeValue('cmi.core.credit') === 'credit') {
+				if (this.$1F.getDataTreeValue('cmi.core.lesson_status') === 'completed') {
+					if (this.$1F
+							.getDataTreeValue('cmi.student_data.mastery_score') !== ''
+							&& this.$1F
+									.getDataTreeValue('cmi.core.score.raw') !== '') {
+						if (parseFloat(this.$1F
+								.getDataTreeValue('cmi.core.score.raw')) >= parseFloat(this.$1F
+								.getDataTreeValue('cmi.student_data.mastery_score'))) {
+							this.$1F.setDataTreeValue(
+									'cmi.core.lesson_status', 'passed',
+									false);
+						} else {
+							this.$1F.setDataTreeValue(
+									'cmi.core.lesson_status', 'failed',
+									false);
+						}
+					}
+				}
+			}
+		}
+		if (this.$1F.getDataTreeValue('cmi.core.session_time') === (this.$1E['cmi.core.session_time'])['defaultvalue']) {
+			this.$1F.setDataTreeValue('cmi.core.session_time', this
+					.$28((new Date().getTime() - this.$24) / 1000), false);
+		}
+		if (this.$1F.getDataTreeValue('cmi.core.session_time') != null
+				&& this.$1F.getDataTreeValue('cmi.core.session_time') !== '') {
+			this.$1F.setDataTreeValue('cmi.core.total_time', this.$29(
+					this.$1F.getDataTreeValue('cmi.core.total_time'),
+					this.$1F.getDataTreeValue('cmi.core.session_time')),
+					false);
+		}
+	}
+	if (!$0
+			&& this.$1F.getLessonstatus() !== this.$1F
+					.getDataTreeValue('cmi.core.lesson_status')) {
+		this.$1F.setLessonstatus(this.$1F
+				.getDataTreeValue('cmi.core.lesson_status'));
+		if (this.$1F.getRoot() != null) {
+			this.$1F.getRoot().reEvaluate();
+		}
+	}
+	if (this.$1F.getRoot() != null) {
+		this.$1F.getRoot().onEventSCO(
+				new API_BASE.BaseActivityTreeNodeEventArgs(this.$1F, 1));
+	}
+}
+
 Player.PersistentStateStorage.prototype.$3 = function($p0) {
 	try {
 		this.$0.setObjectItem('scormpool', $p0);
@@ -48,6 +118,83 @@ Player.ContentPlayer.prototype.$1B = function() {
 	}
 }
 
+Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
+	if ($p1.get_eventType() === 5 || $p1.get_eventType() === 3
+			|| $p1.get_eventType() === 4) {
+		if (this.$1 && this.$C != null) {
+			API_BASE.LOG.displayMessage('Unloading '
+					+ this.$C.getScormType() + ': '
+					+ this.$C.getIdentifier(), '0', null);
+			
+		}
+		if ($p1.get_eventType() === 5) {
+			this.$C = null;
+			this.$B = null;
+			this.$D = null;
+			if (!isNullOrUndefined(update_scorm)) {
+				update_scorm(null);
+			}
+			this.hidePlayer(!this.$1);
+			document.getElementById('open-close-scorm-menu').style.display = 'none';
+			if (this.$1) {
+				API_BASE.LOG.displayMessage('End Session!', '0', null);
+			}
+		} else {
+			if (this.$B != null && this.$C.getScormType() === 'sco'
+					&& !this.$B.isInitAttempted()) {
+				return;
+			}
+		}
+		if ($p1.get_eventType() !== 4) {
+			this.$F = true;
+			this.$3.attachEvent('onload', this.$4);
+		} else {
+			if (isNullOrUndefined(this.$C)) {
+				API_BASE.LOG
+						.displayMessage('No SCO to deliver!', '0', null);
+				this.$23();
+			}
+			this.$12.disabled = true;
+			this.$14.disabled = true;
+		}
+		this.$3.src = '/liferaylms-portlet/blank.html';
+	} else if ($p1.get_eventType() === 1) {
+		if (this.$B != null) {
+			if (!this.$B.isFinishAttempted()) {
+				this.$23();
+			}
+			if (this.$17 != null) {
+				this.$17.saveItemCMI(this.$C.getIdentifier(), this.$C
+						.getDataTree());
+			}
+		}
+	} else if ($p1.get_eventType() === 0) {
+		if (this.$17 != null) {
+			if (this.$2 === 1) {
+				this.$17.saveState(null, (this.$9).getStoredStatuses(),
+						null, null, null);
+			} else if (this.$2 === 2) {
+				var $0 = this.$9;
+				this.$17
+						.saveState(
+								$0.getADLCPData(),
+								$0.getStoredStatuses(),
+								($0.savedSuspendedActivity != null) ? null
+										: ($0.isObjectivesglobaltoSystem()) ? $0
+												.getClonedGlobalObjectives()
+												: null,
+								($0.savedSuspendedActivity != null) ? $0.savedSuspendedActivity
+										.getIdentifier()
+										: null,
+								($0.savedSuspendedActivity != null) ? $0
+										.getClonedGlobalObjectives() : null);
+			}
+		}
+	} else if ($p1.get_eventType() === 2) {
+		this.$28($p1.get_treeNode());
+	}
+};
+
 Player.ContentPlayer.prototype.$26 = function() {
 	if (this.$1) {
 		API_BASE.LOG.displayMessage('Loading ' + this.$C.getScormType()
@@ -67,7 +214,42 @@ Player.ContentPlayer.prototype.$26 = function() {
 	}
 }
 
+Player.ContentPlayer.prototype.$28 = function($p0) {
+	if ($p0 != null) {
+		var $0 = this.$D;
+		if (this.$17 != null) {
+			$p0.setDataTree(this.$17.getItemCMI($p0.getIdentifier()));
+		}
+		if (this.$2 === 1) {
+			this.$B = new SCORM_1_2.API_LIB($p0);
+		} else if (this.$2 === 2) {
+			this.$B = new SCORM_1_3.API_1484_11_LIB($p0);
+		}
+		this.$C = $p0;
+		this.$D = this.$C.getData();
+		this.$9.setActiveAPI(this.$B);
+		if ($0 != null && this.$E != null) {
+			$0.getIcon().src = this.$E;
+		}
+		if (!isNullOrUndefined(PlayerConfiguration.TreeActiveIcon)
+				&& PlayerConfiguration.TreeActiveIcon.length > 0
+				&& !isNullOrUndefined(this.$D.getIcon())) {
+			this.$E = this.$D.getIcon().src;
+			this.$D.getIcon().src = PlayerConfiguration.TreeActiveIcon;
+		}
+		var $1 = $p0.getHideLMSUI();
 
+		if (!isNullOrUndefined(this.$13) && window.opener == null) {
+			this.$13.style.display = ($1.contains('exitall')) ? 'none'
+					: 'inline';
+			this.$13.disabled = false;
+		}
+
+		if (!this.$F) {
+			this.$26();
+		}
+	}
+}
 
 
 Player.PersistentStateStorage.createClass('Player.PersistentStateStorage');

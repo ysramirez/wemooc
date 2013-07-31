@@ -49,11 +49,11 @@ try {
        PlayerConfiguration.TreeLeafIcon = "<%= iconsDir %>/icons/scorm/leaf.gif";
        PlayerConfiguration.TreeActiveIcon = "<%= iconsDir %>/icons/scorm/select.gif";
 
-       PlayerConfiguration.BtnPreviousLabel = "Previous";
-       PlayerConfiguration.BtnContinueLabel = "Continue";
-       PlayerConfiguration.BtnExitLabel = "Exit";
-       PlayerConfiguration.BtnExitAllLabel = "Exit All";
-       PlayerConfiguration.BtnAbandonLabel = "Abandon";
+       PlayerConfiguration.BtnPreviousLabel = "<liferay-ui:message key="previous" />";
+       PlayerConfiguration.BtnContinueLabel = "<liferay-ui:message key="next" />";
+       PlayerConfiguration.BtnExitLabel = "<liferay-ui:message key="sign-out" />";
+       PlayerConfiguration.BtnExitAllLabel = "<liferay-ui:message key="activity.try.exit" />";
+       PlayerConfiguration.BtnAbandonLabel = "<liferay-ui:message key="leave" />";
        PlayerConfiguration.BtnAbandonAllLabel = "Abandon All";
        PlayerConfiguration.BtnSuspendAllLabel = "Suspend All";
 
@@ -98,8 +98,10 @@ try {
 	       			iframe.setStyle('height', ifra.style.height);
 	       		}
 	       	 }
-	       	 */
-	       	 A.one("#close-scorm").on('click', function() {<portlet:namespace/>update_scorm(event);});
+	       	 
+	       	document.getElementById("btnExitAll").onclick = function(event) {<portlet:namespace/>update_scorm(event);};
+			document.getElementById("btnExit").onclick = function(event) {<portlet:namespace/>update_scorm(event);};
+	       	*/
     	},
     	['node', 'event', 'node-event-simulate']
      );
@@ -132,10 +134,12 @@ try {
   </script>
   <div id="placeholder_barContainer">
   	<a id="clicker" href="#" style="display: none">__</a>
-  	<aui:button id="close-scorm" value="activity.try.exit" style="float: right; display: none" />
+  	<!--<aui:button id="close-scorm" value="activity.try.exit" />-->
+  	<div id="placeholder_navigationContainer" style="float: right;"></div>
   	<a id="open-close-scorm-menu" href="#" onclick="javascript:toggleScormBar(event)">+</a>
   	
   </div>
+  
 <div id="placeholder_treecontentContainer">
 	<div id="placeholder_treeContainer"></div>
 	<div id="placeholder_contentIFrame" style="height: 670px;">
