@@ -445,14 +445,17 @@
 	<portlet>
 		<portlet-name>scormadmin</portlet-name>
 		<icon>/icon.png</icon>
-		<indexer-class>com.liferay.lms.indexer.SCORMContentIndexer</indexer-class>
 		
+		<indexer-class>com.liferay.lms.indexer.SCORMContentIndexer</indexer-class>
+		<portlet-data-handler-class>com.liferay.lms.lar.ScormDataHandlerImpl</portlet-data-handler-class>
 		<control-panel-entry-category>
 			content
 		</control-panel-entry-category>
 		<control-panel-entry-weight>1.9</control-panel-entry-weight>
+		
 			<asset-renderer-factory>com.liferay.lms.asset.SCORMContentAssetRendererFactory</asset-renderer-factory>
 	
+		
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>

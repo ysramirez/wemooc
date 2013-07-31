@@ -31,14 +31,22 @@ if(entryId != 0) {
 <script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
 <script type="text/javascript">
 	localStorage.removeItem('scormpool');
+	var tryResultDataOld = '<%= learningTry.getTryResultData() %>';
+	if (tryResultDataOld != '') {
+		localStorage.setItem('scormpool', tryResultDataOld);
+	}
 </script>
 <liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>"></liferay-util:include>
 <script type="text/javascript">
+/*
 		if (window.opener) {
 			window.onunload = function() {<portlet:namespace />update_scorm(null);};
-		} else {
-			document.getElementById('close-scorm').style.display = 'block';
 		}
+		else {
+			document.getElementById("btnExitAll").onclick = function(event) {<portlet:namespace/>update_scorm(event);};
+			document.getElementById("btnExit").onclick = function(event) {<portlet:namespace/>update_scorm(event);};
+		}
+		*/
         var <portlet:namespace />update_scorm = function(e) {
         	
 			var scormpool = localStorage['scormpool'];
@@ -123,10 +131,8 @@ if(entryId != 0) {
 	                     // Process Success - A LearningActivityResult returned
 	                     if (window.opener) {
 	                    	window.opener.<portlet:namespace />actualizarActividad();
+	                    	window.close();
 	                     } else {
-	                    	document.getElementById('placeholder_contentIFrame').style.display = 'none';
-	                     	document.getElementById('open-close-scorm-menu').style.display = 'none';
-	                     	document.getElementById('close-scorm').style.display = 'none';
 	                    	window.<portlet:namespace />actualizarActividad();
 	                     }
 	                 }
@@ -137,6 +143,7 @@ if(entryId != 0) {
 	             }
 	      	);
         }
+        var update_scorm = <portlet:namespace />update_scorm;
 
         /*
 	if(window.addEventListener) {
@@ -144,8 +151,9 @@ if(entryId != 0) {
 	} else {
 	    document.getElementById('clicker').attachEvent('onclick', <portlet:namespace />update_scorm);
 	}
-	document.getElementById('contentIFrame').unload = function() {update_scorm(null); };
 	*/
+	
+	
 </script>
 
 <% } %>

@@ -46,6 +46,7 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -265,6 +266,9 @@ public class SCORMContentLocalServiceImpl
 			    org.w3c.dom.Document doc = documentBuilderFactory.newDocumentBuilder().parse(inputStream);
 			    NodeList nodeList = doc.getElementsByTagName("schemaversion");
 			    Node node = nodeList.item(0);
+			    if (node == null) {
+			    	return false;
+			    }
 			    node.setTextContent(version);
 			    StringWriter stw = new StringWriter();
 			    Transformer serializer = TransformerFactory.newInstance().newTransformer();
