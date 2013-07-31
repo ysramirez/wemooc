@@ -199,7 +199,8 @@ Liferay.provide(
 					
 					if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())
 							|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") 
-							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing)){
+							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing))
+					{
 						
 						LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
 						AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
