@@ -47,7 +47,9 @@ public class StartupAction extends SimpleAction {
 	public void run(String[] ids) throws ActionException {
 		try {
 			System.out.println("initialice Lmsliferay");
-			doRun(GetterUtil.getLong(ids[0]));
+			for (int i = 0; i < ids.length; i++) {
+				doRun(GetterUtil.getLong(ids[i]));
+			}
 		}
 		catch (Exception e) {
 			throw new ActionException(e);
