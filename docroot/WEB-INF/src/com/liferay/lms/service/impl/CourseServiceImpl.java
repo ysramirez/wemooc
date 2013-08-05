@@ -177,10 +177,11 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			Date birthday = new Date(0);
 					
 			User creatorUser=getUser();
+			
 
 			UserLocalServiceUtil.addUser(creatorUser.getUserId(), serviceContext.getCompanyId(), false, /*password1*/login, /*password2*/login, false, login, 
 					email, new Long(0), "", creatorUser.getLocale(), firstName, StringPool.BLANK, lastName, -1, -1, 
-					creatorUser.isMale(), birthday.getMonth(), birthday.getDay(), birthday.getYear(), StringPool.BLANK, null, null, null, roles, 
+					creatorUser.isMale(), birthday.getMonth(), birthday.getDay(), birthday.getYear()+1900 , StringPool.BLANK, null, null, null, roles, 
 					false, ServiceContextThreadLocal.getServiceContext());
 		} catch (PortalException e) {
 		} catch (SystemException e) {
