@@ -23,42 +23,78 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 
 public class ScormDataHandlerImpl extends BasePortletDataHandler {
 
-	public PortletDataHandlerControl[] getExportControls() {
-		return new PortletDataHandlerControl[] { _entries, _categories,
-				_comments, _ratings, _tags };
-	}
-
-	@Override
-	public PortletDataHandlerControl[] getImportControls() {
-		return new PortletDataHandlerControl[] { _entries, _categories,
-				_comments, _ratings, _tags };
-	}
-
 	private static final String _NAMESPACE = "scorm"; // mejorable??
+	
+	private static final boolean _ALWAYS_EXPORTABLE = true;
+
+	private static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
+	
+	private static PortletDataHandlerBoolean _foldersAndDocuments =
+			new PortletDataHandlerBoolean(
+				_NAMESPACE, "folders-and-documents", true, true);
 
 	private static PortletDataHandlerBoolean _categories = new PortletDataHandlerBoolean(
-			_NAMESPACE, "categories");
-
-	private static PortletDataHandlerBoolean _comments = new PortletDataHandlerBoolean(
-			_NAMESPACE, "comments");
+			_NAMESPACE, "categories", true, true);
 
 	private static PortletDataHandlerBoolean _entries = new PortletDataHandlerBoolean(
 			_NAMESPACE, "entries", true, true);
 
-	private static PortletDataHandlerBoolean _ratings = new PortletDataHandlerBoolean(
-			_NAMESPACE, "ratings");
-
 	private static PortletDataHandlerBoolean _tags = new PortletDataHandlerBoolean(
-			_NAMESPACE, "tags");
+			_NAMESPACE, "tags", true, true);
+	
+	private static PortletDataHandlerControl[] _metadataControls =
+		new PortletDataHandlerControl[] {
+			_categories,
+			_tags
+		};
+
+	@Override
+	public boolean isAlwaysExportable() {
+		return _ALWAYS_EXPORTABLE;
+	}
+	
+	@Override
+	public boolean isPublishToLiveByDefault() {
+		return _PUBLISH_TO_LIVE_BY_DEFAULT;
+	}
+	
+	@Override
+	public PortletDataHandlerControl[] getExportControls() {
+		return new PortletDataHandlerControl[] { _entries, _foldersAndDocuments};
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getImportControls() {
+		return new PortletDataHandlerControl[] { _entries, _foldersAndDocuments};
+	}
+	
+	@Override
+	public PortletDataHandlerControl[] getExportMetadataControls() {
+		return new PortletDataHandlerControl[] {
+			new PortletDataHandlerBoolean(
+				_NAMESPACE, "entries", true, _metadataControls)
+		};
+	}
+
+	@Override
+	public PortletDataHandlerControl[] getImportMetadataControls() {
+		return new PortletDataHandlerControl[] {
+			new PortletDataHandlerBoolean(
+				_NAMESPACE, "entries", true, _metadataControls)
+		};
+	}
 
 	@Override
 	protected PortletPreferences doDeleteData(PortletDataContext context,
@@ -132,6 +168,15 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 
 	private void exportEntry(PortletDataContext context, Element root,
 			SCORMContent entry) throws PortalException, SystemException {
+
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(SCORMContent.class.getName(), entry.getScormId());
+		if (!context.isWithinDateRange(assetEntry.getModifiedDate())) {
+			return;
+		}
+
+		if (entry.getStatus() != WorkflowConstants.STATUS_APPROVED) {
+			return;
+		}
 
 		String path = getEntryPath(context, entry);
 
@@ -239,7 +284,7 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 
 	private void importEntry(PortletDataContext context, Element entryElement,
 			SCORMContent entry) throws SystemException, PortalException {
-
+		
 		long userId = context.getUserId(entry.getUserUuid());
 		entry.setGroupId(context.getScopeGroupId());
 		entry.setUserId(userId);
