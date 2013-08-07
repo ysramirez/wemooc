@@ -34,6 +34,7 @@
 	JSONObject courseEvalModel = JSONFactoryUtil.createJSONObject();
 	JSONArray activities = JSONFactoryUtil.createJSONArray();
 	courseEvalModel.put("activities", activities);
+	boolean hasFiredDate=false;
 	try{
 		if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)) {
 			Element activitiesElement = SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement().element("activities");
@@ -53,6 +54,8 @@
 					}
 				}				
 			}
+			Element rootElement = SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement();
+			hasFiredDate = rootElement.element("firedDate")!=null;
 		}
 	}
 	catch(Throwable e){
@@ -71,7 +74,6 @@
 	PortletURL viewActivitiesURL = renderResponse.createRenderURL();
 	viewActivitiesURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
 	viewActivitiesURL.setParameter("jspPage","/html/evaluationtaskactivity/popups/activities.jsp");
-
 %>
 
 <script type="text/javascript">
@@ -376,7 +378,7 @@
 				<span class="activity-<%=activityToEvaluate.getTypeId() %>" ><liferay-ui:message key="<%=learningActivityTypeRegistry.getLearningActivityType(activityToEvaluate.getTypeId()).getName() %>" /></span>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.evaluation.weight\") %>" translate="false" >
-				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+activityToEvaluate.getActId() %>"  size="3" />
+				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+activityToEvaluate.getActId() %>"  size="3" disabled="<%=hasFiredDate%>"/>
 				<div id="<portlet:namespace />weight_<%=activityToEvaluate.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+activityToEvaluate.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.weight_"+activityToEvaluate.getActId()+".bad-format"))?
@@ -504,7 +506,7 @@
 </aui:form>
 
 <aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveActivities();" type="button">
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveActivities();" type="button" hidden=<%=hasFiredDate%>">
 		<liferay-ui:message key="evaluationtaskactivity.save" />
 	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">

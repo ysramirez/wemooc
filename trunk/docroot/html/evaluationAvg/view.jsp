@@ -89,13 +89,13 @@
 		        </div>
 				
 				<% 
-				   if(!courseEvalModel.has("firedDate")) {
+				   
 				%>
 				
 				<liferay-ui:icon
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
-				message="<%=(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluation.configuration\":\"evaluationAvg.evaluation.configuration.define\" %>"
+				message="<%=(courseEvalModel.has(\"firedDate\"))?\"evaluationTask.activity.evaluation.configuration.view\":((courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluation.configuration\":\"evaluationAvg.evaluation.configuration.define\") %>"
 				url="#"
 				onClick="<%=\"	AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
 						\"			id:'\"+renderResponse.getNamespace()+\"showPopupEvaluations', \"+
@@ -117,6 +117,7 @@
 						\" }); \" %>"
 				/>
 				<% 
+				if(!courseEvalModel.has("firedDate")) {
 				   if(courseEvalModel.has("evaluations")) {
 				%>
 				<aui:button-row>
