@@ -21,6 +21,8 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
@@ -203,6 +205,17 @@ public class SCORMContentIndexer extends BaseIndexer {
 			PortletURL portletURL) throws Exception {
 		// TODO Auto-generated method stub
 		return getSummary(document, snippet, portletURL);
+	}
+	
+	@Override
+	public boolean hasPermission( PermissionChecker permissionChecker, long entryClassPK, String actionId) throws Exception {
+		SCORMContent entry = SCORMContentLocalServiceUtil.getSCORMContent(entryClassPK);
+		return permissionChecker.hasPermission(entry.getGroupId(), SCORMContent.class.getName(), entryClassPK, ActionKeys.VIEW);
+	}
+	
+	@Override
+	public boolean isPermissionAware() {
+		return true;
 	}
 
 }
