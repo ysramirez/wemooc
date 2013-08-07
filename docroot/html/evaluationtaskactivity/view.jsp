@@ -96,14 +96,10 @@ if(actId==0){
 					</aui:button-row>
 		        </div>
 				
-				<% 
-				   if(!hasFiredDate) {
-				%>
-				
 				<liferay-ui:icon
 				image="add" cssClass="newitem2"
 				label="<%= true %>"
-				message="<%=(hasActivities)?\"evaluationtaskactivity.evaluation.configuration\":\"evaluationtaskactivity.evaluation.configuration.define\"%>"
+				message="<%=(hasFiredDate)?\"evaluationTask.activity.evaluation.configuration.view\":((hasActivities)?\"evaluationtaskactivity.evaluation.configuration\":\"evaluationtaskactivity.evaluation.configuration.define\")%>"
 				url="#"
 				onClick="<%=\"	AUI().use('aui-dialog', function(A) {  new A.Dialog({ \"+
 						\"			id:'\"+renderResponse.getNamespace()+\"showPopupActivities', \"+
@@ -125,6 +121,7 @@ if(actId==0){
 						\" }); \" %>"
 				/>
 				<% 
+				if(!hasFiredDate) {
 				   if(hasActivities) {
 				%>
 				<aui:button-row>

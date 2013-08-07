@@ -289,7 +289,7 @@
 %>
 	<aui:fieldset>
 	    <aui:input type="text" name="passPuntuation" label="evaluationAvg.passPuntuation"
-	               value='<%= courseEvalModel.getLong("passPuntuation") %>' />
+	               value='<%= courseEvalModel.getLong("passPuntuation") %>' disabled='<%=courseEvalModel.has("firedDate") %>' />
 	    <div id="<portlet:namespace />passPuntuationError" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.passPuntuation.result-bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    	<%=(SessionErrors.contains(renderRequest, "evaluationAvg.passPuntuation.result-bad-format"))?
@@ -335,7 +335,7 @@
 				<%=evaluation.getTitle(themeDisplay.getLocale()) %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.weight" title="evaluationAvg.evaluation.weight">
-				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+evaluation.getActId() %>" size="3" >  </aui:input>
+				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+evaluation.getActId() %>" size="3" disabled='<%=(courseEvalModel.has("firedDate")) %>'>  </aui:input>
 				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
 	    														<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
@@ -425,7 +425,7 @@
 
 <aui:button-row>
 	
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button">
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button" hidden='<%=(courseEvalModel.has("firedDate")) %>'>
 		<liferay-ui:message key="offlinetaskactivity.save" />
 	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
