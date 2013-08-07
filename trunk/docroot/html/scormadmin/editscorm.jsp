@@ -16,7 +16,23 @@
 <portlet:actionURL var="savescormURL" name="saveSCORM" />
 <portlet:renderURL var="cancel" />
 
+<script type="text/javascript" >
+<!--
+setTimeout(resizeThisFrame, 500);
 
+function resizeThisFrame() {
+	if ((!!window.postMessage)&&(window.parent != window)) {
+		if (!window.location.origin){
+			var nada = '';
+			window.location.origin = window.location.protocol+"/"+nada+"/"+window.location.host;
+		}
+		var bodyHeight = document.getElementsByTagName('body')[0].offsetHeight;
+		parent.postMessage({name:'resizeIframe', height : bodyHeight}, window.location.origin);
+	}
+	setTimeout(resizeThisFrame, 500);
+}
+//-->
+</script>
 <%
 String redirect = ParamUtil.getString(request, "redirect","");
 String backURL = ParamUtil.getString(request, "backURL");
@@ -69,7 +85,9 @@ else
 		</liferay-ui:input-permissions>
 	</aui:field-wrapper>
 	</c:if>
-	
+	<aui:field-wrapper label="ciphered.options">
+		<aui:input inlineLabel="right" inlineField="true" name="ciphered" label="ciphered" id="ciphered" type="checkbox" value="<%= scormId == 0 ? false : scorm.getCiphered() %>"/>
+	</aui:field-wrapper>
 	
 		<liferay-ui:custom-attributes-available className="<%= SCORMContent.class.getName() %>">
 		<liferay-ui:custom-attribute-list 
