@@ -16,6 +16,7 @@ if (learningTry == null) {
 	long latId = ParamUtil.getLong(request, "latId", 0L);
 	learningTry = LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
 }
+request.setAttribute("learningTry", learningTry);
 
 long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "assetEntry"), 0);
 			
