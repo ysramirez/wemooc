@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
 <%@page import="com.liferay.taglib.portlet.RenderURLTag"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
@@ -30,150 +32,131 @@
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 
 <%@ include file="/init.jsp" %>
-<div class="container-activity">
-<%
-long actId=ParamUtil.getLong(request,"actId",0);
-boolean improve =ParamUtil.getBoolean(request, "improve",false);
-long userId = themeDisplay.getUserId();
-Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-
-
-//Obtener si puede hacer un intento de mejorar el resultado.
-boolean improving = false;
-LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
-if(result != null){
-	int done =  LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId,userId);
-	LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
-	if(result.getResult() < 100
-	   && !LearningActivityLocalServiceUtil.islocked(actId, userId)
-	   && LearningActivityResultLocalServiceUtil.userPassed(actId, userId)
-	   && done < act.getTries()){
-		improving = true;
-	}
-}
-
-
-if(actId==0)
-{
-	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-}
-else
-{
-	LearningActivity activity=LearningActivityLocalServiceUtil.getLearningActivity(actId);
-	long typeId=activity.getTypeId();
 	
-	if( typeId==0
-			&& (!LearningActivityLocalServiceUtil.islocked(actId,userId)
-			|| permissionChecker.hasPermission( activity.getGroupId(),LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
-			|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
-	{
-		%>
+	<div class="container-activity">
+<%
+		long actId=ParamUtil.getLong(request,"actId",0);
+		boolean improve =ParamUtil.getBoolean(request, "improve",false);
+		long userId = themeDisplay.getUserId();
+		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
-		<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-		<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
+		//Obtener si puede hacer un intento de mejorar el resultado.
+		boolean improving = false;
+		LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
 		
-		<%
-		if((!LearningActivityLocalServiceUtil.islocked(actId,userId)
-			|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
-			|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
-		{		
-		if((!improve) && (LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())))
-		{
-			request.setAttribute("learningActivity",activity);
-			request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
-			%>
-			<liferay-util:include page="/html/execactivity/test/results.jsp" servletContext="<%=this.getServletContext() %>">
-				<liferay-util:param value="<%=Long.toString(activity.getActId()) %>" name="actId"/>
-			</liferay-util:include>
-			<% 
+		if(result != null){
+			int done =  LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId,userId);
+			LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			
+			if(result.getResult() < 100 && !LearningActivityLocalServiceUtil.islocked(actId, userId) && LearningActivityResultLocalServiceUtil.userPassed(actId, userId) && done < act.getTries()){
+				improving = true;
+			}
 		}
-		else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
-				|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
-				|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")
-			    || improving )
-		{
-			String passwordParam = ParamUtil.getString(renderRequest, "password",StringPool.BLANK).trim();
-			String password = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "password"),StringPool.BLANK).trim();
-
+	
+		if(actId==0)
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		else{
+			LearningActivity activity=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			long typeId=activity.getTypeId();
+	
+			if( typeId==0 && (!LearningActivityLocalServiceUtil.islocked(actId,userId)
+				|| permissionChecker.hasPermission( activity.getGroupId(),LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
+				|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"))){
+%>
+				<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
+<%
+				if((!LearningActivityLocalServiceUtil.islocked(actId,userId)
+					|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
+					|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"))){		
+					
+					if((!improve) && (LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))){
+						request.setAttribute("learningActivity",activity);
+						request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
+%>
+						<liferay-util:include page="/html/execactivity/test/results.jsp" servletContext="<%=this.getServletContext() %>">
+							<liferay-util:param value="<%=Long.toString(activity.getActId()) %>" name="actId"/>
+						</liferay-util:include>
+<% 
+					} else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
+						|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
+						|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")
+			    		|| improving ){
 						
-			if((StringPool.BLANK.equals(password))||(passwordParam.equals(password)))
-			{
-			ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
-			long activityTimestamp=0;
-			long timestamp=0;
-			
-			LearningActivityTry learningTry = LearningActivityTryLocalServiceUtil.getLearningActivityTryNotFinishedByActUser(actId,userId);
-			
-			//Comprobar si tenemos un try sin fecha de fin, para continuar en ese try.
-			if(learningTry == null)
-			{
-				learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
-			}
-			else
-			{
-				activityTimestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"timeStamp"));
-				timestamp=activityTimestamp*1000 - (new Date().getTime() - learningTry.getStartDate().getTime());
-			}
-			
-			if((activityTimestamp!=0)&&(timestamp<0)){
-				request.setAttribute("learningActivity",activity);
-				request.setAttribute("larntry",learningTry);
-				%>
-				<liferay-util:include page="/html/execactivity/test/expired.jsp" servletContext="<%=this.getServletContext() %>">
-  					<liferay-util:param value="<%=Long.toString(activity.getActId()) %>" name="actId"/>
-  				</liferay-util:include>  	
-				<%
-			}
-			else {	
-
-				
-			List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
-			Object  [] arg =  new Object[]{activity.getPasspuntuation()};
-			%>
-			
-			<% if (activity.getPasspuntuation()>0){ %><h3><liferay-ui:message key="execativity.test.try.pass.puntuation" arguments="<%=arg %>" /></h3><% } %>
-			
-			<portlet:actionURL name="correct" var="correctURL">
-			<portlet:param name="actId" value="<%=Long.toString(actId) %>" ></portlet:param>
-			<portlet:param name="latId" value="<%=Long.toString(learningTry.getLatId()) %>"></portlet:param>
-			</portlet:actionURL>
-									
-			<script type="text/javascript">
-			<!--
-
-			<%
-				if(activityTimestamp == 0){
-					activityTimestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"timeStamp"));
-				}	
-			
-				if(activityTimestamp !=0){ 
-					if(timestamp==0) {
-				   		timestamp=activityTimestamp*1000 - (new Date().getTime() - learningTry.getStartDate().getTime());
-					}
-				
-			%>
-
-				AUI().ready('liferay-notice', 'collection', function(A) {
-
-					var TestActivity = function(options) {
-						var instance = this;
-						instance.timeout=options.timeout||false;
-						instance.warningText=options.warningText||'Timeout Warning: <span class="countdown-timer"/>';
-						instance.expiredText=options.expiredText||'Text timeout';
-						instance.onClose=options.onClose;
+						String passwordParam = ParamUtil.getString(renderRequest, "password",StringPool.BLANK).trim();
+						String password = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "password"),StringPool.BLANK).trim();
 						
-						instance.banner=null;
-						if(instance.timeout) {
-							instance.banner=new Liferay.Notice({content:instance.warningText,closeText:false,toggleText:false});
-							instance.countdowntext=instance.banner.one('.countdown-timer');
-							if(instance.countdowntext){
-								instance.countdowntext.text(instance._formatTime(instance.timeout));
+						if((StringPool.BLANK.equals(password))||(passwordParam.equals(password))){
+							ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
+							long activityTimestamp=0;
+							long timestamp=0;			
+							LearningActivityTry learningTry = LearningActivityTryLocalServiceUtil.getLearningActivityTryNotFinishedByActUser(actId,userId);
+			
+							//Comprobar si tenemos un try sin fecha de fin, para continuar en ese try.
+							if(learningTry == null)
+								learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+							else{
+								activityTimestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"timeStamp"));
+								timestamp=activityTimestamp*1000 - (new Date().getTime() - learningTry.getStartDate().getTime());
 							}
+			
+							if((activityTimestamp!=0)&&(timestamp<0)){
+								request.setAttribute("learningActivity",activity);
+								request.setAttribute("larntry",learningTry);
+%>
+								<liferay-util:include page="/html/execactivity/test/expired.jsp" servletContext="<%=this.getServletContext() %>">
+  									<liferay-util:param value="<%=Long.toString(activity.getActId()) %>" name="actId"/>
+  								</liferay-util:include>  	
+<%
+							}else{	
+								List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
+								Object  [] arg =  new Object[]{activity.getPasspuntuation()};
+			
+								if (activity.getPasspuntuation()>0){ 
+%>
+									<h3><liferay-ui:message key="execativity.test.try.pass.puntuation" arguments="<%=arg %>" /></h3>
+<% 
+								} 
+%>
+								<portlet:actionURL name="correct" var="correctURL">
+									<portlet:param name="actId" value="<%=Long.toString(actId) %>" ></portlet:param>
+									<portlet:param name="latId" value="<%=Long.toString(learningTry.getLatId()) %>"></portlet:param>
+								</portlet:actionURL>
+								
+								<script type="text/javascript">
+								<!--
+<%
+									if(activityTimestamp == 0){
+										activityTimestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"timeStamp"));
+									}	
+			
+									if(activityTimestamp !=0){ 
+										if(timestamp==0) {
+				   							timestamp=activityTimestamp*1000 - (new Date().getTime() - learningTry.getStartDate().getTime());
+										}
+%>
 
-							var interval=1000;
-							instance.finishtime = new Date().getTime()+instance.timeout;
+										AUI().ready('liferay-notice', 'collection', function(A) {
 
-							instance._countdownTimer = setInterval(
+										var TestActivity = function(options) {
+											var instance = this;
+											instance.timeout=options.timeout||false;
+											instance.warningText=options.warningText||'Timeout Warning: <span class="countdown-timer"/>';
+											instance.expiredText=options.expiredText||'Text timeout';
+											instance.onClose=options.onClose;
+						
+											instance.banner=null;
+											if(instance.timeout) {
+												instance.banner=new Liferay.Notice({content:instance.warningText,closeText:false,toggleText:false});
+												instance.countdowntext=instance.banner.one('.countdown-timer');
+												if(instance.countdowntext){
+													instance.countdowntext.text(instance._formatTime(instance.timeout));
+												}
+
+												var interval=1000;
+												instance.finishtime = new Date().getTime()+instance.timeout;
+
+												instance._countdownTimer = setInterval(
 									function() {
 
 										var currentTimeout = instance.finishtime-new Date().getTime();
@@ -248,16 +231,17 @@ else
 					    var questions = Y.all('div.question')
 
 					    for(var i=0;i<questions.size();i++){
-					        if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
-					        	if(!confirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>')) {
+					    	 //Pte adaptar VIR x ahora comentado bajo peticion de Roberto
+					        //if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
+					        	//if(!confirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>')) {
 
-									if (e.target) targ = e.target.blur();
-									else if (e.srcElement) targ = e.srcElement.blur();
+									//if (e.target) targ = e.target.blur();
+									//else if (e.srcElement) targ = e.srcElement.blur();
 							        
-							        returnValue=false;  
-					        	}
-					        	 i=questions.size();
-						    }
+							        //returnValue=false;  
+					        	//}
+					        	 //i=questions.size();
+						    //}
 						}
 					    
 					});
@@ -265,6 +249,7 @@ else
 					return returnValue; 
 									    
 				}
+				
 			//-->
 			</script>
 
@@ -285,22 +270,10 @@ else
 			
 			for(int index=0; index<random; index++) {
 				TestQuestion question = questions.get(index);
-				%>
-				<div class="question">
-				<aui:input type="hidden" name="question" value="<%=question.getQuestionId()%>"/>
-				<div class="questiontext"><%=question.getText() %></div>
-				<%
-				List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-				for(TestAnswer answer:testAnswers)
-				{
-					%>
-					<div class="answer"><input type="radio" name="<portlet:namespace/>question_<%=question.getQuestionId()%>" value="<%=answer.getAnswerId() %>" ><%=answer.getAnswer() %>
-					</div>
-					<%
-				}
-				%>
-				</div>
-				<%
+				QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+%>
+				<%=qt.getHtmlView(question.getQuestionId(), themeDisplay)%>
+<%
 			}
 			
 				if (questions.size()>0){%>

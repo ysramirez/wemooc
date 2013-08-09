@@ -25,6 +25,8 @@ import org.jsoup.Jsoup;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
+import com.liferay.lms.learningactivity.questiontype.QuestionType;
+import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
@@ -68,10 +70,7 @@ public class ExecActivity extends MVCPortlet
 	
 	HashMap<Long, TestAnswer> answersMap = new HashMap<Long, TestAnswer>(); 
 		
-	public void correct
-	(
-			ActionRequest actionRequest,ActionResponse actionResponse)
-		throws Exception {
+	public void correct	(ActionRequest actionRequest,ActionResponse actionResponse)	throws Exception {
 		
 		long actId=ParamUtil.getLong(actionRequest, "actId");
 		long latId=ParamUtil.getLong(actionRequest,"latId" );
@@ -79,82 +78,36 @@ public class ExecActivity extends MVCPortlet
 		LearningActivityTry larntry=LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
 				    
 		//Comprobar que el usuario tenga intentos posibles.
-		if (larntry.getEndDate() == null)
-		{
+		if (larntry.getEndDate() == null){
 			
 			long correctanswers=0;
-			Enumeration<String> params=actionRequest.getParameterNames();
-			List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
-			Map<Long,Long> resultadosIds=new Hashtable<Long,Long>();
-			Map<Long, TestAnswer> resultados=new Hashtable<Long, TestAnswer>();
-			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"random"));
-			long[] questionIds = ParamUtil.getLongValues(actionRequest, "question");
-
-			
-			while(params.hasMoreElements())
-			{
-				String param=params.nextElement();
-				if(param.startsWith("question_"))
-				{
-					String squestionId=param.substring("question_".length());
-					long questionId=Long.parseLong(squestionId);					
-					long answerId=ParamUtil.getLong(actionRequest, param);
-					TestAnswer testAnswer=TestAnswerLocalServiceUtil.getTestAnswer(answerId);
-					resultadosIds.put(questionId, answerId);
-					resultados.put(questionId, testAnswer);
-					if(testAnswer.isIsCorrect())
-					{
-						correctanswers++;
-					}	
-				}
-			}
-			
 			Element resultadosXML=SAXReaderUtil.createElement("results");
 			Document resultadosXMLDoc=SAXReaderUtil.createDocument(resultadosXML);
+			long[] questionIds = ParamUtil.getLongValues(actionRequest, "question");
+			for (long questionId : questionIds) {
+				TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
+				QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+				if(qt.correct(actionRequest, questionId)) correctanswers++;
+				resultadosXML.add(qt.getResults(actionRequest, questionId));								
+			}
 			
-			if(random==0){
-				for(Map.Entry<Long, Long> questionEntry:resultadosIds.entrySet()){
-					Element questionXML=SAXReaderUtil.createElement("question");
-					questionXML.addAttribute("id", Long.toString(questionEntry.getKey()));
-					Element answerXML=SAXReaderUtil.createElement("answer");
-					answerXML.addAttribute("id", Long.toString(questionEntry.getValue()));
-					questionXML.add(answerXML);
-					resultadosXML.add(questionXML);						
-				}
-			}
-			else
-			{
-				for (long questionId : questionIds) {
-					Element questionXML=SAXReaderUtil.createElement("question");
-					questionXML.addAttribute("id", Long.toString(questionId));
-					if(resultadosIds.containsKey(questionId)) {
-						Element answerXML=SAXReaderUtil.createElement("answer");
-						answerXML.addAttribute("id", Long.toString(resultadosIds.get(questionId)));
-						questionXML.add(answerXML);
-					}
-					resultadosXML.add(questionXML);											
-				}
-			}
-						
+			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"random"));
+			List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
 			long score=correctanswers*100/((random!=0 && random<questions.size())?random:questions.size());
 		 	
 			LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, PortalUtil.getUserId(actionRequest));
 			long oldResult=-1;
-			if(learningActivityResult!=null){
-				oldResult=learningActivityResult.getResult();
-			}
+			if(learningActivityResult!=null) oldResult=learningActivityResult.getResult();
 			
 			larntry.setResult(score);
 			larntry.setTryResultData(resultadosXMLDoc.formattedString());
 			larntry.setEndDate(new java.util.Date(System.currentTimeMillis()));
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(larntry);
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
-			actionRequest.setAttribute("resultados", resultados);
-			actionRequest.setAttribute("oldResult", oldResult);
+			actionResponse.setRenderParameter("oldResult", Long.toString(oldResult));
+			actionResponse.setRenderParameter("correction", Boolean.toString(true));
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/results.jsp");
-		}
-		else
-		{
+		}else{
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
 			actionRequest.setAttribute("actId", actId);
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/preview.jsp");
@@ -218,9 +171,8 @@ public class ExecActivity extends MVCPortlet
 		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		
-		if(Validator.isNull(answers)) {
+		if(Validator.isNull(answers)) 
 			SessionErrors.add(actionRequest, "answer-test-required");
-		}
 		else{
 			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answers, feedbackCorrect, feedbackNoCorrect, correct);
 			SessionMessages.add(actionRequest, "answer-added-successfully");
@@ -228,17 +180,18 @@ public class ExecActivity extends MVCPortlet
 		
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
 		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
-
+		
 		if (learnact.getTypeId() == 0) {
+			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
 			actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
+			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
 		}
 	}
 
 	public void importQuestions(ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception 
-	{
+	throws Exception {
 
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
 		
@@ -293,14 +246,16 @@ public class ExecActivity extends MVCPortlet
 		TestQuestion question = TestQuestionLocalServiceUtil.addQuestion(actid, text, questionType);
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(actid);
 		actionResponse.setRenderParameter("questionId", Long.toString(question.getQuestionId()));
+		
 		if (learnact.getTypeId() == 0) {
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(questionType);
 			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
 			actionResponse.setRenderParameter("resId", Long.toString(actid));
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
+			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
 		}
+		
 		actionRequest.setAttribute("activity", learnact);
 		actionRequest.setAttribute("questionId", question.getQuestionId());
-		
 		actionRequest.setAttribute("primKey", question.getQuestionId());
 		
 		
@@ -316,9 +271,11 @@ public class ExecActivity extends MVCPortlet
 		actionResponse.setRenderParameter("questionId", Long.toString(answer.getQuestionId()));
 	
 		if (learnact.getTypeId() == 0) {
+			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(answer.getQuestionId());
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
 			actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
+			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
 		}
 	
 	}
@@ -330,13 +287,13 @@ public class ExecActivity extends MVCPortlet
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
 		TestQuestionLocalServiceUtil.deleteTestQuestion(question.getQuestionId());
 		SessionMessages.add(actionRequest, "question-deleted-successfully");
+		
 		if (learnact.getTypeId() == 0) {
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
 			actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestions.jsp");
+			actionResponse.setRenderParameter("jspPage", qt.getURLBack());
 		}
-		
-	
 	}
 
 	public void editanswer(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -347,12 +304,10 @@ public class ExecActivity extends MVCPortlet
 		boolean correct = ParamUtil.getBoolean(actionRequest, "correct");
 		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
-	
 		TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(answerId);
 		
-		if(Validator.isNull(answer)) {
+		if(Validator.isNull(answer)) 
 			SessionErrors.add(actionRequest, "answer-test-required_"+answerId);
-		}
 		else{
 			testanswer.setAnswer(answer);
 			testanswer.setIsCorrect(correct);
@@ -365,14 +320,12 @@ public class ExecActivity extends MVCPortlet
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(testanswer.getQuestionId()).getActId());
 		actionResponse.setRenderParameter("questionId", Long.toString(testanswer.getQuestionId()));
 		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
+		
 		if (learnact.getTypeId() == 0) {
-	
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
+			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(testanswer.getQuestionId());
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
 		}
-	}
-
-	public void editest(ActionRequest actionRequest, ActionResponse actionResponse) {
-	
 	}
 
 	public void editquestion(ActionRequest actionRequest, ActionResponse actionResponse)
@@ -391,9 +344,9 @@ public class ExecActivity extends MVCPortlet
 		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
 		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
 	
-		if (learnact.getTypeId() == 0) {
-	
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestion.jsp");
+		if (learnact.getTypeId() == 0){ 
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(questionType);
+			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
 		}
 	
 	}
