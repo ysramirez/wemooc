@@ -70,11 +70,15 @@ for(Group groupCourse:groups)
 			long logoId = groupCourse.getPublicLayoutSet().getLogoId();
 			%>
 			<img src="/image/layout_set_logo?img_id=<%=logoId%>">
+			<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
 			<%
-		}
+		} else {
+			%>
+			<a class="course-no-image" href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+		<% }
 				
 		%>
-			<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a> <span class="challenges"><%=passed %>/<%= modulescount%><liferay-ui:message key="finished.modules" /></span><span class="ico-desplegable"></span>
+			 <span class="challenges"><%=passed %>/<%= modulescount%><liferay-ui:message key="finished.modules" /></span><span class="ico-desplegable"></span>
 			<div class="collapsable"  style="display:none;">
 				<table class="moduleList">
 		<%
