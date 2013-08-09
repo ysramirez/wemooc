@@ -16,7 +16,6 @@
 <liferay-util:include page="/html/execactivity/test/admin/editHeader.jsp" servletContext="<%=this.getServletContext() %>" />
 
 <script type="text/javascript">
-<!--
 
 AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
 
@@ -59,7 +58,6 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	});
 });
 
-//-->
 </script>
 
 <portlet:actionURL var="addquestionURL" name="addquestion" />
@@ -68,7 +66,6 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	<aui:input name="resId" type="hidden" value="<%= learningActivity.getActId()%>"></aui:input>
 	
 	<script type="text/javascript">
-	<!--
 		Liferay.provide(
 	        window,
 	        '<portlet:namespace />onChangeText',
@@ -82,7 +79,6 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	        ['node']
 	    );
 	    
-	//-->
 	</script>
     
 	<aui:field-wrapper label="execativity.editquestions.editquestion.enunciation">

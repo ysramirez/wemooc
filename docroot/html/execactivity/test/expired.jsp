@@ -14,25 +14,12 @@
 <% 
 
 	LearningActivity learnact=null;
-	if(request.getAttribute("learningActivity")!=null)
-	{
-	 learnact=(LearningActivity)request.getAttribute("learningActivity");
-	}
-	else
-	{
-		learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
-	}
-	
+	if(request.getAttribute("learningActivity")!=null) learnact=(LearningActivity)request.getAttribute("learningActivity");
+	else learnact=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId"));
+		
 	LearningActivityTry learnactTry=null;
-	if(request.getAttribute("larntry")!=null)
-	{
-		learnactTry=(LearningActivityTry)request.getAttribute("larntry");
-	}
-	else
-	{
-		learnactTry=LearningActivityTryLocalServiceUtil
-				.getLearningActivityTryNotFinishedByActUser(learnact.getActId(),themeDisplay.getUserId());
-	}
+	if(request.getAttribute("larntry")!=null) learnactTry=(LearningActivityTry)request.getAttribute("larntry");
+	else learnactTry=LearningActivityTryLocalServiceUtil.getLearningActivityTryNotFinishedByActUser(learnact.getActId(),themeDisplay.getUserId());
 	
 	request.setAttribute("learningActivity",learnact);
 	request.setAttribute("larntry",learnactTry);
@@ -41,29 +28,18 @@
 	
 	if(activityTimestamp !=0){ 
 		long timestamp=0;
-		if(learnactTry.getEndDate()!=null) {
-		    timestamp=activityTimestamp*1000 - (learnactTry.getEndDate().getTime() - learnactTry.getStartDate().getTime());				
-		}
-		else {
-		    timestamp=activityTimestamp*1000 - (new Date().getTime() - learnactTry.getStartDate().getTime());			
-		}
+		if(learnactTry.getEndDate()!=null) timestamp=activityTimestamp*1000 - (learnactTry.getEndDate().getTime() - learnactTry.getStartDate().getTime());				
+		else timestamp=activityTimestamp*1000 - (new Date().getTime() - learnactTry.getStartDate().getTime());			
 				
-	  if(timestamp<0) { 
-		  
-		  
+		if(timestamp<0) { 
 			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"random"));
-			if (random==0){
-				learnactTry.setTryResultData(StringPool.BLANK);				
-			}
+			if (random==0) learnactTry.setTryResultData(StringPool.BLANK);				
 			else {
-
 				List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(learnact.getActId());
-				
 				questions = new ArrayList<TestQuestion>(questions);
 				Collections.shuffle(questions);	
-				if(random>questions.size()){
-					random=questions.size();
-				}
+				
+				if(random>questions.size()) random=questions.size();
 				
 				Element resultadosXML=SAXReaderUtil.createElement("results");
 				Document resultadosXMLDoc=SAXReaderUtil.createDocument(resultadosXML);
@@ -75,20 +51,20 @@
 					resultadosXML.add(questionXML);	
 				}
 				learnactTry.setTryResultData(resultadosXMLDoc.formattedString());
-
 			}
 	  
 			learnactTry.setEndDate(new Date(learnactTry.getStartDate().getTime()+activityTimestamp));
 			learnactTry.setResult(0);
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learnactTry);		  
-	  }}
+		}
+	}
 	
-		  request.setAttribute("resultados", new Hashtable<TestQuestion, TestAnswer>());
+	request.setAttribute("resultados", new Hashtable<TestQuestion, TestAnswer>());
 %>	    
-	 	<liferay-util:include page="/html/execactivity/test/results.jsp" servletContext="<%=this.getServletContext() %>">
-			<liferay-util:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
-			<liferay-util:param value="<%=Long.toString(learnactTry.getActId()) %>" name="latId"/>
-		</liferay-util:include>       
+	<liferay-util:include page="/html/execactivity/test/results.jsp" servletContext="<%=this.getServletContext() %>">
+		<liferay-util:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
+		<liferay-util:param value="<%=Long.toString(learnactTry.getActId()) %>" name="latId"/>
+	</liferay-util:include>       
 
 
 

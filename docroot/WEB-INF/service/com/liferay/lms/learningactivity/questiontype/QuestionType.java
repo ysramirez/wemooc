@@ -1,9 +1,11 @@
 package com.liferay.lms.learningactivity.questiontype;
 
 import java.util.Locale;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
+import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.Module;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -22,19 +24,14 @@ public interface QuestionType
 	public String getName();
 	public String getTitle(Locale locale);
 	public String getDescription(Locale locale);
-	public PortletURL getURLAdd(
-			LiferayPortletRequest liferayPortletRequest,
-			LiferayPortletResponse liferayPortletResponse) throws Exception;
-	
-	public PortletURL getURLEdit(
-			LiferayPortletRequest liferayPortletRequest,
-			LiferayPortletResponse liferayPortletResponse) throws Exception;
+	public String getURLEdit();
+	public String getURLBack();
 	public void delete(long questionId) throws PortalException, SystemException;
 	public boolean correct(ActionRequest actionRequest, long questionId);
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay);
-	public Document getResults(ActionRequest actionRequest, long questionId);
-	public String getHtmlFeedback(Document result,long questionId);
-	public void exportQuestion(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException;
-	public void importQuestion(PortletDataContext context, Element entryElement) throws SystemException, PortalException;
+	public Element getResults(ActionRequest actionRequest, long questionId);
+	public String getHtmlFeedback(Document document,long questionId);
+	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException;
+	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId) throws SystemException, PortalException;
 
 }

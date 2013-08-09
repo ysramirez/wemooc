@@ -7,6 +7,8 @@ import java.util.Locale;
 
 import javax.portlet.PortletPreferences;
 
+import com.liferay.lms.learningactivity.questiontype.QuestionType;
+import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.TestAnswer;
@@ -221,14 +223,8 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 			Element entryElementq= entryElementLoc.addElement("question");
 			entryElementq.addAttribute("path", pathqu);
 			context.addZipEntry(pathqu, question);
-			List<TestAnswer> answers=TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			for(TestAnswer answer:answers)
-			{
-				String patha = getEntryPath(context, answer);
-				Element entryElementa= entryElementq.addElement("questionanswer");
-				entryElementa.addAttribute("path", patha);
-				context.addZipEntry(patha, answer);
-			}
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+			qt.exportQuestionAnswers(context, entryElementq, question.getQuestionId());
 			
 		}
 		
@@ -251,16 +247,6 @@ private String getFilePath(PortletDataContext context,DLFileEntry file, long act
 	StringBundler sb = new StringBundler(4);
 	sb.append(context.getPortletPath("moduleportlet_WAR_liferaylmsportlet"));
 	sb.append("/moduleentries/activities/"+String.valueOf(actId)+"/");
-	return sb.toString();
-}
-
-private String getEntryPath(PortletDataContext context, TestAnswer answer) {
-	
-	StringBundler sb = new StringBundler(4);
-	sb.append(context.getPortletPath("moduleportlet_WAR_liferaylmsportlet"));
-	sb.append("/moduleentries/activities/questions/answers");
-	sb.append(answer.getAnswerId());
-	sb.append(".xml");
 	return sb.toString();
 }
 
@@ -404,13 +390,9 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			TestQuestion question=(TestQuestion)context.getZipEntryAsObject(pathq);
 			question.setActId(nuevaLarn.getActId());
 			TestQuestion nuevaQuestion=TestQuestionLocalServiceUtil.addQuestion(question.getActId(), question.getText(), question.getQuestionType());
-			for(Element aElement:qElement.elements("questionanswer"))
-			{
-				String patha = aElement.attributeValue("path");
-
-				TestAnswer answer=(TestAnswer)context.getZipEntryAsObject(patha);
-				TestAnswer nuevaAnser=TestAnswerLocalServiceUtil.addTestAnswer(nuevaQuestion.getQuestionId(), answer.getAnswer(), answer.getFeedbackCorrect(), answer.getFeedbacknocorrect(), answer.isIsCorrect());
-				
+			for(Element aElement:qElement.elements("questionanswer")){
+				QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+				if(qt != null) qt.importQuestionAnswers(context, aElement, nuevaQuestion.getQuestionId());
 			}
 		}
 	}
