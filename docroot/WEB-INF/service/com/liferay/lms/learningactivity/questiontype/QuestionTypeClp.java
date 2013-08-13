@@ -14,6 +14,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityClp;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -330,6 +331,25 @@ public class QuestionTypeClp implements QuestionType {
 			}
 		}
 
+	}
+	
+	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+		Object returnObj = null;
+
+		try {
+			returnObj = clp.invoke("importMoodle", new Object[] {});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
 	}
 
 }

@@ -15,6 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.TestAnswer;
+import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -105,5 +106,7 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 		sb.append(".xml");
 		return sb.toString();
 	}
+	
+	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {}
 	
 }

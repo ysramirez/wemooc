@@ -9,6 +9,7 @@ import javax.portlet.ActionRequest;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -175,6 +176,17 @@ public class OptionsQuestionType extends BaseQuestionType {
 	         }
 	    }	
 		return answerSelected;
+	}
+	
+	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+		for(Element answerElement:question.elements("answer")){
+			boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
+			String answer=answerElement.elementText("text");
+			String feedback="";
+			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
+			 feedback=answerElement.element("feedback").element("text").getText();	 
+			testAnswerLocalService.addTestAnswer(questionId, answer, feedback, feedback, correct);
+		}
 	}
 	
 	
