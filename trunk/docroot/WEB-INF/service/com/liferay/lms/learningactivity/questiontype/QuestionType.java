@@ -8,6 +8,7 @@ import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.Module;
+import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
@@ -33,5 +34,6 @@ public interface QuestionType
 	public String getHtmlFeedback(Document document,long questionId);
 	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException;
 	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId) throws SystemException, PortalException;
+	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException;
 
 }

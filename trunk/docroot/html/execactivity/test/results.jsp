@@ -39,8 +39,6 @@
 		boolean userPassed=false;
 		boolean comesFromCorrection = ParamUtil.get(request, "correction", false);
 		long oldResult= ParamUtil.get(request, "oldResult", -1);
-		System.out.println("oldResult: " + oldResult);
-		System.out.println("comesFromCorrection: " + comesFromCorrection);
 		if(!comesFromCorrection) {
 			userPassed=LearningActivityResultLocalServiceUtil.userPassed(learningActivity.getActId(),themeDisplay.getUserId());
 		}else {

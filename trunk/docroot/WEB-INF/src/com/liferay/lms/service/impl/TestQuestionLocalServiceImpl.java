@@ -14,6 +14,8 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.learningactivity.questiontype.QuestionType;
+import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.base.TestQuestionLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -54,27 +56,15 @@ public class TestQuestionLocalServiceImpl
 		
 	}
 	private void importXMLQuestion(long actId, Element question) throws SystemException, PortalException {
-		if(question.attribute("type")==null  ||"multichoice".equals(question.attributeValue("type")) || "truefalse".equals(question.attributeValue("type")))
-		{
+		if("multichoice".equals(question.attributeValue("type")) || "truefalse".equals(question.attributeValue("type"))){
 			Element questiontext=question.element("questiontext");
-			Element text=questiontext.element("text");
-			String description=questiontext.elementText("text");		
-			TestQuestion theQuestion=addQuestion(actId,description,0);
-			for(Element answerElement:question.elements("answer"))
-			{
-				boolean correct=false;
-				if("100".equals(answerElement.attributeValue("fraction")))
-				{
-					correct=true;
-				}
-				String answer=answerElement.elementText("text");
-				String feedback="";
-				if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
-				{
-				 feedback=answerElement.element("feedback").element("text").getText();	 
-				}
-				testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
-			}
+			//Element text=questiontext.element("text");
+			String description=questiontext.elementText("text");
+			long type = 0; //Respuesta única (truefalse o multichoice con single = true;
+			if("multichoice".equals(question.attributeValue("type")) && "false".equals(question.element("single").getText())) type = 1;
+			TestQuestion theQuestion=addQuestion(actId,description,type);
+			QuestionType qt = new QuestionTypeRegistry().getQuestionType(theQuestion.getQuestionType());
+			qt.importMoodle(theQuestion.getQuestionId(), question, testAnswerLocalService);
 		}
 		
 	}
