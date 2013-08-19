@@ -390,10 +390,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			TestQuestion question=(TestQuestion)context.getZipEntryAsObject(pathq);
 			question.setActId(nuevaLarn.getActId());
 			TestQuestion nuevaQuestion=TestQuestionLocalServiceUtil.addQuestion(question.getActId(), question.getText(), question.getQuestionType());
-			for(Element aElement:qElement.elements("questionanswer")){
-				QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-				if(qt != null) qt.importQuestionAnswers(context, aElement, nuevaQuestion.getQuestionId());
-			}
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+			qt.importQuestionAnswers(context, qElement, nuevaQuestion.getQuestionId());
 		}
 	}
 	

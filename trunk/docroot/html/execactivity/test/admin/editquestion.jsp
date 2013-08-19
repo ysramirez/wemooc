@@ -1,3 +1,7 @@
+<%@page import="com.liferay.portal.theme.ThemeDisplay"%>
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
+<%@page import="java.util.List"%>
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%
 	TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(request,"questionId"));
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
@@ -96,7 +100,15 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	</div>
 	
 	<aui:select name="typeId" label="qtype">
-		<aui:option value="0" label="options"></aui:option>
+	<%
+		long questionId = question.getQuestionType();
+		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
+		for(QuestionType qt:qtypes){
+	%>
+		<aui:option value="<%=qt.getTypeId() %>" label="<%=qt.getTitle(themeDisplay.getLocale()) %>"  selected="<%= questionId == qt.getTypeId() %>"/>
+	<%	
+		}
+	%>
 	</aui:select>
 	<aui:button-row>
 		<aui:button type="submit" />

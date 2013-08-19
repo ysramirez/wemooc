@@ -60,7 +60,7 @@ public class TestQuestionLocalServiceImpl
 			Element questiontext=question.element("questiontext");
 			//Element text=questiontext.element("text");
 			String description=questiontext.elementText("text");
-			long type = 0; //Respuesta única (truefalse o multichoice con single = true;
+			long type = 0; //Respuesta única (truefalse o multichoice con single = true)
 			if("multichoice".equals(question.attributeValue("type")) && "false".equals(question.element("single").getText())) type = 1;
 			TestQuestion theQuestion=addQuestion(actId,description,type);
 			QuestionType qt = new QuestionTypeRegistry().getQuestionType(theQuestion.getQuestionType());
