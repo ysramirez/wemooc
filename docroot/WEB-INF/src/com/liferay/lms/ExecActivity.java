@@ -242,7 +242,7 @@ public class ExecActivity extends MVCPortlet
 		long actid = ParamUtil.getLong(actionRequest, "resId");
 	
 		String text = ParamUtil.getString(actionRequest, "text");
-		long questionType = ParamUtil.getLong(actionRequest, "qtype");
+		long questionType = ParamUtil.getLong(actionRequest, "typeId");
 		TestQuestion question = TestQuestionLocalServiceUtil.addQuestion(actid, text, questionType);
 		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(actid);
 		actionResponse.setRenderParameter("questionId", Long.toString(question.getQuestionId()));
@@ -332,7 +332,7 @@ public class ExecActivity extends MVCPortlet
 		throws Exception {
 	
 		String text = ParamUtil.getString(actionRequest, "text");
-		long questionType = ParamUtil.getLong(actionRequest, "qtype");
+		long questionType = ParamUtil.getLong(actionRequest, "typeId");
 		long questionId = ParamUtil.getLong(actionRequest, "questionId");
 		TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(questionId);
 		
