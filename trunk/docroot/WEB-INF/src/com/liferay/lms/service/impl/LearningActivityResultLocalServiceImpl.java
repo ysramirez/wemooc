@@ -20,6 +20,7 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityResultLocalServiceBaseImpl;
@@ -30,6 +31,9 @@ import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 
 
 /**
@@ -112,6 +116,81 @@ public class LearningActivityResultLocalServiceImpl
 			Date endDate = new Date(System.currentTimeMillis());
 			learningActivityTry.setEndDate(endDate);
 		}
+		learningActivityTry.setTryResultData(tryResultData);
+		LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+		
+		return update(learningActivityTry);
+	}
+	public LearningActivityResult update(long latId, String tryResultData, long userId) throws SystemException, PortalException {
+		LearningActivityTry learningActivityTry = LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
+		if (userId != learningActivityTry.getUserId()) {
+			throw new PortalException();
+		}
+		
+		LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(learningActivityTry.getActId());
+		Long master_score = new Integer(learningActivity.getPasspuntuation()).longValue();
+		
+		JSONObject scorm = JSONFactoryUtil.createJSONObject();
+		scorm = JSONFactoryUtil.createJSONObject(tryResultData);
+		
+		JSONObject organizations = scorm.getJSONObject("organizations");
+		JSONArray organizationNames = organizations.names();
+		JSONObject organization = organizations.getJSONObject(organizationNames.getString(0));
+		
+		JSONObject cmis = organization.getJSONObject("cmi");
+		JSONArray cmiNames = cmis.names();
+		JSONObject cmi = cmis.getJSONObject(cmiNames.getString(0));
+		
+		String completion_status = null;
+		String success_status = null;
+		Long max_score = null;
+		Long min_score = null;
+		Long raw_score = null;
+		Long scaled_score = null;
+		
+		if (cmi.getJSONObject("cmi.core.lesson_status") != null) { // 1.2
+			String lesson_status = cmi.getJSONObject("cmi.core.lesson_status").getString("value");
+			//"passed", "completed", "failed", "incomplete", "browsed", "not attempted"
+			if ("passed".equals(lesson_status)) {
+				success_status = "passed";
+				completion_status = "completed";
+			} else if ("failed".equals(lesson_status)) {
+				success_status = "failed";
+				completion_status = "completed";
+			} else if ("completed".equals(lesson_status)) { 
+				success_status = "unknown"; // or passed
+				completion_status = "completed";
+			} else if ("browsed".equals(lesson_status)) {
+				success_status = "passed";
+				completion_status = "completed";
+			} else if ("incomplete".equals(lesson_status)) {
+				success_status = "unknown";
+				completion_status = "incomplete";
+			} else if ("not attempted".equals(lesson_status)) {
+				success_status = "unknown";
+				completion_status = "not attempted";
+			}
+			max_score = cmi.getJSONObject("cmi.core.score.max").getLong("value", 100L);
+			min_score = cmi.getJSONObject("cmi.core.score.min").getLong("value", 0L);
+			raw_score = cmi.getJSONObject("cmi.core.score.raw").getLong("value", "completed".equals(completion_status) ? 100L : 0L);
+			scaled_score = new Long(Math.round((raw_score * 100L) / (max_score - min_score)));
+		} else { // 1.3
+			//"completed", "incomplete", "not attempted", "unknown"
+			completion_status = cmi.getJSONObject("cmi.completion_status").getString("value");
+			//"passed", "failed", "unknown"
+			success_status = cmi.getJSONObject("cmi.success_status").getString("value");
+			max_score = cmi.getJSONObject("cmi.score.max").getLong("value", 100L);
+			min_score = cmi.getJSONObject("cmi.score.min").getLong("value", 0L);
+			raw_score = cmi.getJSONObject("cmi.score.raw").getLong("value", "completed".equals(completion_status) ? 100L : 0L);
+			scaled_score = cmi.getJSONObject("cmi.score.scaled").getLong("value", Math.round((raw_score * 100L) / (max_score - min_score)));
+		}
+		
+		if (scaled_score >= master_score && "completed".equals(completion_status)) {
+			learningActivityTry.setResult(scaled_score);
+			Date endDate = new Date(System.currentTimeMillis());
+			learningActivityTry.setEndDate(endDate);
+		}
+		
 		learningActivityTry.setTryResultData(tryResultData);
 		LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
 		

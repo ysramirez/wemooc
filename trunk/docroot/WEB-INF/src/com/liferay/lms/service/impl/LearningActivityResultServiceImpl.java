@@ -76,4 +76,10 @@ public class LearningActivityResultServiceImpl
 		User user=this.getUser();
 		return learningActivityResultLocalService.update(latId, result, tryResultData, user.getUserId());
 	}
+	@JSONWebService
+	public LearningActivityResult update(long latId, String tryResultData) throws PortalException, SystemException
+	{
+		User user=this.getUser();
+		return learningActivityResultLocalService.update(latId, tryResultData, user.getUserId());
+	}
 }

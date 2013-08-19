@@ -6,18 +6,23 @@ import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.SCORMAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.SCORMContentLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 
 public class SCORMLearningActivityType extends BaseLearningActivityType {
 
@@ -104,6 +109,21 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		openWindow.setText(ParamUtil
 				.getString(uploadRequest, "openWindow", "0"));
 		rootElement.add(openWindow);
+		
+		Element uuid = rootElement.element("uuid");
+		if (uuid != null) {
+			uuid.detach();
+			rootElement.remove(uuid);
+		}
+		SCORMContent scorm = null;
+		if (Validator.isNotNull(assetEntry.getText())) {
+			AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Long.valueOf(assetEntry.getText()));
+			scorm = SCORMContentLocalServiceUtil.getSCORMContent(entry.getClassPK());
+		}
+		uuid = SAXReaderUtil.createElement("uuid");
+		uuid.setText(scorm != null ? scorm.getUuid() : "");
+		
+		rootElement.add(uuid);
 
 		learningActivity.setExtracontent(document.formattedString());
 	}

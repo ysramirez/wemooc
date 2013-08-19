@@ -114,14 +114,12 @@ if(entryId != 0) {
 					
 			var serviceParameterTypes = [
 	      		'long',
-	      		'long',
 	      		'java.lang.String'
 	      	];
 						 		
 	      	Liferay.Service.Lms.LearningActivityResult.update(
 	      		{
 	      			latId: <%= learningTry.getLatId() %>,
-	      			result: lesson_score,
 	      			tryResultData: JSON.stringify(results),
 	      			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
 	      		},

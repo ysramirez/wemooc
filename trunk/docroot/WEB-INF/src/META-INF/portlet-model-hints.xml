@@ -176,6 +176,7 @@
 			<hint name="max-length">500000</hint>
 		</field>
 		<field name="index" type="String" />
+		<field name="ciphered" type="boolean" />
 	</model>
 	<model name="com.liferay.lms.model.SurveyResult">
 		<field name="uuid" type="String" />

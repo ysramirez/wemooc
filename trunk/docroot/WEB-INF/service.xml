@@ -372,6 +372,7 @@
 		<column name="title" type="String" localized="false"/>
 		<column name="description" type="String" localized="false"/>
 		<column name="index" type="String" />
+		<column name="ciphered" type="boolean" />
  		<order by="asc">
 			<order-column name="scormId" />
 		</order>

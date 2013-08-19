@@ -39,7 +39,7 @@
 <div class="container-activity">
 <%
 	long actId=ParamUtil.getLong(request,"actId",0);
-	boolean improve =ParamUtil.getBoolean(request, "improve",false);
+	boolean improve =ParamUtil.getBoolean(request, "improve", true);
 	long userId = themeDisplay.getUserId();
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
@@ -81,7 +81,7 @@
 	|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
 	|| permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
 		{		
-		if((!improve) && (LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())))
+		if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 		{
 			request.setAttribute("learningActivity",activity);
 			request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
@@ -100,7 +100,7 @@
 			
 			<% 
 		}
-		else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
+		if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
 		|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
 		|| permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"ACCESSLOCK")
 	    || improving )
@@ -158,10 +158,13 @@ Liferay.provide(
 	                     // Process Success - A LearningActivityResult returned
 	                     if (message) {
 	                    	 window.location.reload(true);
-	                     } else {
+	                     } 
+	                     /*
+	                     else {
 	                    	A.one('h3').html('<liferay-ui:message key="activity.try.finished"/>');
 	 						A.one('h3').setStyle('display', 'inline');
 	                     }
+	                     */
 	                 }
 	                 else {
 	                     // Process Exception
