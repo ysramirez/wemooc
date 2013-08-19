@@ -35,7 +35,7 @@ public class SCORMContentCacheModel implements CacheModel<SCORMContent>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -61,6 +61,8 @@ public class SCORMContentCacheModel implements CacheModel<SCORMContent>,
 		sb.append(description);
 		sb.append(", index=");
 		sb.append(index);
+		sb.append(", ciphered=");
+		sb.append(ciphered);
 		sb.append("}");
 
 		return sb.toString();
@@ -118,6 +120,8 @@ public class SCORMContentCacheModel implements CacheModel<SCORMContent>,
 			scormContentImpl.setIndex(index);
 		}
 
+		scormContentImpl.setCiphered(ciphered);
+
 		scormContentImpl.resetOriginalValues();
 
 		return scormContentImpl;
@@ -135,4 +139,5 @@ public class SCORMContentCacheModel implements CacheModel<SCORMContent>,
 	public String title;
 	public String description;
 	public String index;
+	public boolean ciphered;
 }

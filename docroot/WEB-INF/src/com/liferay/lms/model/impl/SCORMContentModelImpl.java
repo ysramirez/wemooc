@@ -76,9 +76,10 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 			{ "statusDate", Types.TIMESTAMP },
 			{ "title", Types.VARCHAR },
 			{ "description", Types.VARCHAR },
-			{ "index_", Types.VARCHAR }
+			{ "index_", Types.VARCHAR },
+			{ "ciphered", Types.BOOLEAN }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_SCORMContent (uuid_ VARCHAR(75) null,scormId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title VARCHAR(75) null,description TEXT null,index_ VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_SCORMContent (uuid_ VARCHAR(75) null,scormId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title VARCHAR(75) null,description TEXT null,index_ VARCHAR(75) null,ciphered BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_SCORMContent";
 	public static final String ORDER_BY_JPQL = " ORDER BY scormContent.scormId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_SCORMContent.scormId ASC";
@@ -124,6 +125,7 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		model.setTitle(soapModel.getTitle());
 		model.setDescription(soapModel.getDescription());
 		model.setIndex(soapModel.getIndex());
+		model.setCiphered(soapModel.getCiphered());
 
 		return model;
 	}
@@ -194,6 +196,7 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("index", getIndex());
+		attributes.put("ciphered", getCiphered());
 
 		return attributes;
 	}
@@ -270,6 +273,12 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 
 		if (index != null) {
 			setIndex(index);
+		}
+
+		Boolean ciphered = (Boolean)attributes.get("ciphered");
+
+		if (ciphered != null) {
+			setCiphered(ciphered);
 		}
 	}
 
@@ -457,6 +466,18 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		_index = index;
 	}
 
+	public boolean getCiphered() {
+		return _ciphered;
+	}
+
+	public boolean isCiphered() {
+		return _ciphered;
+	}
+
+	public void setCiphered(boolean ciphered) {
+		_ciphered = ciphered;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -581,6 +602,7 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		scormContentImpl.setTitle(getTitle());
 		scormContentImpl.setDescription(getDescription());
 		scormContentImpl.setIndex(getIndex());
+		scormContentImpl.setCiphered(getCiphered());
 
 		scormContentImpl.resetOriginalValues();
 
@@ -723,12 +745,14 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 			scormContentCacheModel.index = null;
 		}
 
+		scormContentCacheModel.ciphered = getCiphered();
+
 		return scormContentCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -754,13 +778,15 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 		sb.append(getDescription());
 		sb.append(", index=");
 		sb.append(getIndex());
+		sb.append(", ciphered=");
+		sb.append(getCiphered());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.SCORMContent");
@@ -814,6 +840,10 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 			"<column><column-name>index</column-name><column-value><![CDATA[");
 		sb.append(getIndex());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>ciphered</column-name><column-value><![CDATA[");
+		sb.append(getCiphered());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -845,6 +875,7 @@ public class SCORMContentModelImpl extends BaseModelImpl<SCORMContent>
 	private String _title;
 	private String _description;
 	private String _index;
+	private boolean _ciphered;
 	private long _columnBitmask;
 	private SCORMContent _escapedModelProxy;
 }

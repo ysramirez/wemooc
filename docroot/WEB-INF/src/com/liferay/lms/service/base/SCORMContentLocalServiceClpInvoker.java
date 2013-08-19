@@ -163,7 +163,7 @@ public class SCORMContentLocalServiceClpInvoker {
 
 		_methodParameterTypes138 = new String[] {
 				"java.lang.String", "java.lang.String", "java.io.File",
-				"com.liferay.portal.service.ServiceContext"
+				"boolean", "com.liferay.portal.service.ServiceContext"
 			};
 
 		_methodName139 = "force";
@@ -326,7 +326,8 @@ public class SCORMContentLocalServiceClpInvoker {
 				Arrays.deepEquals(_methodParameterTypes138, parameterTypes)) {
 			return SCORMContentLocalServiceUtil.addSCORMContent((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1], (java.io.File)arguments[2],
-				(com.liferay.portal.service.ServiceContext)arguments[3]);
+				((Boolean)arguments[3]).booleanValue(),
+				(com.liferay.portal.service.ServiceContext)arguments[4]);
 		}
 
 		if (_methodName139.equals(name) &&

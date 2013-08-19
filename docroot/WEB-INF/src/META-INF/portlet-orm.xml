@@ -291,6 +291,7 @@
 			<basic name="index">
 				<column name="INDEX_" />
 			</basic>
+			<basic name="ciphered" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

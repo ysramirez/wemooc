@@ -197,6 +197,7 @@
 		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="index" type="com.liferay.portal.dao.orm.hibernate.StringType" column="index_" />
+		<property name="ciphered" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.SurveyResultImpl" table="Lms_SurveyResult">
 		<cache usage="read-write" />

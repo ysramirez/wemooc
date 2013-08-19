@@ -623,6 +623,7 @@ public class SCORMContentPersistenceImpl extends BasePersistenceImpl<SCORMConten
 		scormContentImpl.setTitle(scormContent.getTitle());
 		scormContentImpl.setDescription(scormContent.getDescription());
 		scormContentImpl.setIndex(scormContent.getIndex());
+		scormContentImpl.setCiphered(scormContent.isCiphered());
 
 		return scormContentImpl;
 	}

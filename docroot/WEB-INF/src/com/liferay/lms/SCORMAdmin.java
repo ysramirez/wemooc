@@ -45,6 +45,7 @@ public class SCORMAdmin extends MVCPortlet
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actRequest);
 		String title=ParamUtil.getString(request, "title");
 		String description=ParamUtil.getString(request, "description","");
+		boolean ciphered = ParamUtil.getBoolean(request, "ciphered", false);
 		String redirect=ParamUtil.getString(request, "redirect","");
 		long scormId=ParamUtil.getLong(request, "scormId",0);
 		ServiceContext serviceContext =  ServiceContextFactory.getInstance(SCORMContent.class.getName(), request);
@@ -75,10 +76,11 @@ public class SCORMAdmin extends MVCPortlet
 				if (!SessionErrors.isEmpty(actRequest)) {
 					response.setRenderParameters(actRequest.getParameterMap());
 					response.setRenderParameter("jspPage", "/html/scormadmin/editscorm.jsp");
+					return;
 				} else {
 					try 
 					{
-						SCORMContentLocalServiceUtil.addSCORMContent(title, description, file, serviceContext);
+						SCORMContentLocalServiceUtil.addSCORMContent(title, description, file, ciphered, serviceContext);
 					} 
 					catch (IOException e) 
 					{
@@ -93,6 +95,7 @@ public class SCORMAdmin extends MVCPortlet
 			SCORMContent scorm=SCORMContentLocalServiceUtil.getSCORMContent(scormId);
 			scorm.setTitle(title);
 			scorm.setDescription(description);
+			scorm.setCiphered(ciphered);
 			SCORMContentLocalServiceUtil.updateSCORMContent(scorm, serviceContext);
 		}
 		if(redirect!=null &&!"".equals(redirect))

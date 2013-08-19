@@ -162,7 +162,7 @@ public class SCORMContentLocalServiceImpl
 		indexer.reindex(scocontent);
 		return scocontent;
 	}
-	public SCORMContent addSCORMContent (String title, String description,File scormfile,
+	public SCORMContent addSCORMContent (String title, String description, File scormfile, boolean ciphered,
 		ServiceContext serviceContext)
 			throws SystemException, 
 			PortalException, IOException {
@@ -176,6 +176,7 @@ public class SCORMContentLocalServiceImpl
 			scocontent.setUserId(userId);
 			scocontent.setDescription(description);
 			scocontent.setTitle(title);
+			scocontent.setCiphered(ciphered);
 			scocontent.setStatus(WorkflowConstants.STATUS_APPROVED);
 			scocontent.setExpandoBridgeAttributes(serviceContext);
 			scormContentPersistence.update(scocontent, true);
