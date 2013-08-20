@@ -351,7 +351,7 @@ if(actId==0){
    						<div class="activity-comments"><%=result.getComments() %></div></p>
 					<%} 
 				}else {%>
-					<p class="nota_nocorregida"><liferay-ui:message key="evaluationtaskactivity.not.qualificated.activity" /></p>
+					<div class="nota_nocorregida"><liferay-ui:message key="evaluationtaskactivity.not.qualificated.activity" /></div>
 					<% 
 				}
 			}
