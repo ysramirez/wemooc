@@ -325,7 +325,7 @@
 		<p><liferay-ui:message key="offlinetaskactivity.your-result" arguments="<%=new Object[]{(arguments.length>0) ? arguments[0]:\"\"} %>" /></p>
 		<p><liferay-ui:message key="offlinetaskactivity.needed-to-pass" arguments="<%=new Object[]{activity.getPasspuntuation()} %>" /></p>
 	<%}else {%>
-		<p class="nota_nocorregida"><liferay-ui:message key="offlinetaskactivity.not.qualificated.activity" /></p>
+		<div class="nota_nocorregida"><liferay-ui:message key="offlinetaskactivity.not.qualificated.activity" /></div>
 	<%}%>
 	
 	<h3><liferay-ui:message key="offlinetaskactivity.result.teachercoment" /> </h3>
