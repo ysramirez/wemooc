@@ -315,12 +315,12 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<aui:fieldset>
 		<% if(isSetTextoEnr){ %>
 		<aui:input type="hidden" name="text" value=''/>
-		<aui:field-wrapper label="onlinetaskactivity.text" >
+		<aui:field-wrapper label="" >
 			<div id="<portlet:namespace/>DescripcionRichTxt" ></div>
 		</aui:field-wrapper>	
 		<% } 
 		   else { %>
-		<aui:field-wrapper label="onlinetaskactivity.text" >
+		<aui:field-wrapper >
 			<aui:input type="textarea" cols="100" rows="5" name="text" label="" value=''/>
 		</aui:field-wrapper>
 		<% }
@@ -358,15 +358,15 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	<h3><a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h3>
 	<%
 	if(result.getEndDate()!= null){
-		%><h4><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></h4><%
+		%><h4><liferay-ui:message key="your-result-activity" arguments="<%=arguments %>" /></h4><%
 		if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
-			%><h4><liferay-ui:message key="your-result-pass" /> </h4><%
+			%><h4><liferay-ui:message key="your-result-pass-activity" /> </h4><%
 		}else{
 			Object  [] arg =  new Object[]{activity.getPasspuntuation()};
-			%><h4><liferay-ui:message key="your-result-dont-pass"  arguments="<%=arg %>" /> </h4><%
+			%><h4><liferay-ui:message key="your-result-dont-pass-activity"  arguments="<%=arg %>" /> </h4><%
 		}
 		if (!result.getComments().trim().equals("")){ %>
-			<h4>Comentario del profesor:<%=result.getComments() %></h4>
+			<h4><liferay-ui:message key="comment-teacher" /><%=result.getComments() %></h4>
 		<%}
 	}
 }else {
