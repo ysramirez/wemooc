@@ -342,7 +342,7 @@
 	<% } 
 }else {
 %>
-	<p class="nota_nocorregida"><liferay-ui:message key="evaluationAvg.not.qualificated.activity" /></p>
+	<div class="nota_nocorregida"><liferay-ui:message key="evaluationAvg.not.qualificated.activity" /></div>
 <% 
 }	
 }%>
