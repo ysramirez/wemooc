@@ -253,9 +253,15 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 			Element entryElementq= entryElementLoc.addElement("question");
 			entryElementq.addAttribute("path", pathqu);
 			context.addZipEntry(pathqu, question);
+			
+			
+			//Exportar los ficheros que tiene la descripcion de la pregunta
+			descriptionFileParserDescriptionToLar("<root><Description>"+question.getText()+"</Description></root>", actividad.getGroupId(), actividad.getModuleId(), context, entryElementq);	
+			
+			
 			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			qt.exportQuestionAnswers(context, entryElementq, question.getQuestionId());
-			
+
 		}
 		
 	}
@@ -285,7 +291,7 @@ private String getFileToIS(PortletDataContext context, long entryId, long module
 	return "";
 }
 
-private String getDescriptionModulePath(PortletDataContext context, long moduleId) {
+private static String getDescriptionModulePath(PortletDataContext context, long moduleId) {
 	
 	StringBundler sb = new StringBundler(4);	
 	sb.append(context.getPortletPath("moduleportlet_WAR_liferaylmsportlet"));
@@ -311,7 +317,7 @@ private String getEntryPath(PortletDataContext context, DLFileEntry file) {
 	return sb.toString();
 }
 
-private String getEntryPath(PortletDataContext context, FileEntry file) {
+private static String getEntryPath(PortletDataContext context, FileEntry file) {
 
 	StringBundler sb = new StringBundler(4);
 	sb.append(context.getPortletPath("resourceactivity_WAR_liferaylmsportlet"));
@@ -607,6 +613,43 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			TestQuestion question=(TestQuestion)context.getZipEntryAsObject(pathq);
 			question.setActId(nuevaLarn.getActId());
 			TestQuestion nuevaQuestion=TestQuestionLocalServiceUtil.addQuestion(question.getActId(), question.getText(), question.getQuestionType());
+			
+			//Si tenemos ficheros en las descripciones de las preguntas.
+			for (Element actElementFile : qElement.elements("descriptionfile")) {
+				
+				FileEntry oldFile = (FileEntry)context.getZipEntryAsObject(actElementFile.attributeValue("path"));
+										
+				FileEntry newFile;
+				long folderId=0;
+				String description = "";
+				
+				try {
+					
+					InputStream input = context.getZipEntryAsInputStream(actElementFile.attributeValue("file"));
+					
+					long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+					folderId=createDLFolders(userId,repositoryId,serviceContext);
+					
+					newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
+					
+					description = descriptionFileParserLarToDescription(theModule.getDescription(), oldFile, newFile);
+					
+				} catch(DuplicateFileException dfl){
+					
+					FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
+					description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, existingFile);
+					
+				} catch (IOException e) {
+
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				System.out.println("   description : " + description );
+				question.setText(description);
+				//TestQuestionLocalServiceUtil.updateTestQuestion(question);
+				
+			}
+			
 			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			qt.importQuestionAnswers(context, qElement, nuevaQuestion.getQuestionId());
 		}
@@ -716,10 +759,12 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 	}
 
 	
-	private void descriptionFileParserDescriptionToLar(String description, long oldGroupId, long moduleId, PortletDataContext context, Element element){
+	public static void descriptionFileParserDescriptionToLar(String description, long oldGroupId, long moduleId, PortletDataContext context, Element element){
 
 		try {
-			Document document = SAXReaderUtil.read(description.replace("&lt;","<"));
+			System.out.println(" +++ description : " + description +" ----- "+description.replace("&lt;","<") );
+			
+			Document document = SAXReaderUtil.read(description.replace("&lt;","<").replace("&nbsp;",""));
 			
 			Element rootElement = document.getRootElement();
 			
@@ -733,12 +778,9 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 						String []srcInfo = src.split("/");
 						String fileUuid = "", fileGroupId ="";
 						
-						if(srcInfo.length >= 6){
+						if(srcInfo.length >= 6  && srcInfo[1].compareTo("documents") == 0){
 							fileUuid = srcInfo[srcInfo.length-1];
 							fileGroupId = srcInfo[2];
-						}
-						
-						if(!fileUuid.equals("")){
 							
 							String []uuidInfo = fileUuid.split("\\?");
 							String uuid="";
@@ -749,7 +791,47 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 							FileEntry file;
 							try {
 								file = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, Long.parseLong(fileGroupId));
-								System.out.println(" *** file : " + file.getTitle() +" "+file.getFileEntryId() );
+								System.out.println(" *** file image : " + file.getTitle() +" "+file.getFileEntryId() );
+								
+								String pathqu = getEntryPath(context, file);
+								String pathFile = getDescriptionModulePath(context, moduleId); 
+										
+								context.addZipEntry(pathqu, file);
+								context.addZipEntry(pathFile + file.getTitle(), file.getContentStream());
+
+								Element entryElementLoc= element.addElement("descriptionfile");
+								entryElementLoc.addAttribute("path", pathqu);
+								entryElementLoc.addAttribute("file", pathFile + file.getTitle());
+								
+							} catch (Exception e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+						}
+					}
+					
+					for (Element entryElementImg : entryElementP.elements("a")) {
+						
+						String href = entryElementImg.attributeValue("href");
+						System.out.println(" href : " + href );
+						
+						String []hrefInfo = href.split("/");
+						String fileUuid = "", fileGroupId ="";
+						
+						if(hrefInfo.length >= 6 && hrefInfo[1].compareTo("documents") == 0){
+							fileUuid = hrefInfo[hrefInfo.length-1];
+							fileGroupId = hrefInfo[2];
+							
+							String []uuidInfo = fileUuid.split("\\?");
+							String uuid="";
+							if(hrefInfo.length > 0){
+								uuid=uuidInfo[0];
+							}
+							
+							FileEntry file;
+							try {
+								file = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, Long.parseLong(fileGroupId));
+								System.out.println(" *** file pdf : " + file.getTitle() +" "+file.getFileEntryId() );
 								
 								String pathqu = getEntryPath(context, file);
 								String pathFile = getDescriptionModulePath(context, moduleId); 
@@ -785,10 +867,11 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			return res;
 		}
 		
-		//src="/documents/10808/0/GibbonIndexer.jpg/b24c4a8f-e65c-434a-ba36-3b3e10b21a8d?t=1376472516221"
+		//<img src="/documents/10808/0/GibbonIndexer.jpg/b24c4a8f-e65c-434a-ba36-3b3e10b21a8d?t=1376472516221"
+		//<a  href="/documents/10808/10884/documento.pdf/32c193ed-16b3-4a83-93da-630501b72ee4">Documento</a></p>
 		
-		String target = "src=\"/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+oldFile.getTitle()+"/"+oldFile.getUuid()+"?t=";
-		String replacement = "src=\"/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid()+"?t=";;
+		String target = "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+oldFile.getTitle()+"/"+oldFile.getUuid();
+		String replacement = "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid();
 		
 			
 		System.out.println("  target      : " + target );	
