@@ -231,7 +231,7 @@
 					    var questions = Y.all('div.question')
 
 					    for(var i=0;i<questions.size();i++){
-					    	 //Pte adaptar VIR x ahora comentado bajo peticion de Roberto
+					    	 //Pte adaptar, x ahora comentado
 					        //if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
 					        	//if(!confirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>')) {
 
