@@ -106,7 +106,7 @@
 	
 		for(TestQuestion question:questions){
 			QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-			//qt.setLocale(themeDisplay.getLocale());
+			qt.setLocale(themeDisplay.getLocale());
 			%><%=qt.getHtmlFeedback(SAXReaderUtil.read(larntry.getTryResultData()), question.getQuestionId())%><%
 		}
 	

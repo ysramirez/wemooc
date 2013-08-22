@@ -28,6 +28,10 @@ public class FreetextQuestionType extends BaseQuestionType {
 
 	private static final long serialVersionUID = 1L;
 
+	public void setLocale(Locale locale){
+		super.setLocale(locale);
+	}
+	
 	public long getTypeId(){
 		return 2;
 	}
@@ -103,7 +107,6 @@ public class FreetextQuestionType extends BaseQuestionType {
 	
 	public String getHtmlFeedback(Document document,long questionId){
 		String feedBack = "", answersFeedBack="";
-		//System.out.println("locale: " + ((getLocale()!=null)?getLocale().getCountry():"null"));
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
@@ -145,7 +148,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 			}else{//el profesor lo corregirá manualmente
 				answersFeedBack = answer;
 				cssclass="question";
-				feedMessage = "";//(getLocale()!=null)?LanguageUtil.get(getLocale(), "manually-correction"):"Se evaluará manualmente por el profesor";
+				feedMessage = (locale!=null)?LanguageUtil.get(locale, "manually-correction"):"Se evaluará manualmente por el profesor";
 			}
 			
 			feedBack += "<div class=\"" + cssclass + "\">" + 

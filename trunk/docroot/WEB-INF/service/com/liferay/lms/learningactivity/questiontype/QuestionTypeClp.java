@@ -43,6 +43,10 @@ public class QuestionTypeClp implements QuestionType {
 		throw new UnsupportedOperationException();
 	}
 	
+	public void setLocale(Locale locale){
+		//?
+	}
+	
 	public long getTypeId(){
 		Object returnObj = null;
 

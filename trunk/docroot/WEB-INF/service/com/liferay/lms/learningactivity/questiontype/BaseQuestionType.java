@@ -32,7 +32,14 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 
 public abstract class BaseQuestionType implements QuestionType, Serializable {
+	
+	protected static Locale locale=null;
 
+	@Override
+	public void setLocale(Locale locale){
+		this.locale=locale;
+	}
+	
 	@Override
 	public long getTypeId(){
 		return -1;
