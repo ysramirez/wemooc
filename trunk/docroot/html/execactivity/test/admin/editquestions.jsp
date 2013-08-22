@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
 <%@page import="com.liferay.portal.model.PortletConstants"%>
@@ -75,35 +76,23 @@ url='<%= importquestionsURL %>'
 %>
 <liferay-ui:search-container emptyResultsMessage="there-are-no-questions"
  delta="10" iteratorURL="<%=editQuestionsURL%>">
-<liferay-ui:search-container-results>
-<%
-  DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()));
-  pageContext.setAttribute("results", TestQuestionLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),
-		searchContainer.getEnd()));
-  pageContext.setAttribute("total", (int)TestQuestionLocalServiceUtil.dynamicQueryCount(
-		  DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))));
-%>
-</liferay-ui:search-container-results>
-<liferay-ui:search-container-row
-className="com.liferay.lms.model.TestQuestion"
-keyProperty="actId"
-modelVar="activity">
-<liferay-ui:search-container-column-text
-name="text"
-property="text"
-/>
-<!--<liferay-ui:search-container-column-text
-name="questionType"
-property="questionType"
-/>-->
-<liferay-ui:search-container-column-jsp
-path="/html/execactivity/test/admin/admin_actions.jsp"
-align="right"
-/>
-
-</liferay-ui:search-container-row>
-<liferay-ui:search-iterator />
-
+	<liferay-ui:search-container-results>
+	<%
+	  DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()));
+	  pageContext.setAttribute("results", TestQuestionLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),
+			searchContainer.getEnd()));
+	  pageContext.setAttribute("total", (int)TestQuestionLocalServiceUtil.dynamicQueryCount(
+			  DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))));
+	%>
+	</liferay-ui:search-container-results>
+	<liferay-ui:search-container-row className="com.liferay.lms.model.TestQuestion" keyProperty="actId" modelVar="activity">
+		<liferay-ui:search-container-column-text name="text" property="text"/>
+		<liferay-ui:search-container-column-text name="questionType">
+			<%=(new QuestionTypeRegistry().getQuestionType(activity.getQuestionType())).getTitle(themeDisplay.getLocale()) %>
+		</liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-jsp path="/html/execactivity/test/admin/admin_actions.jsp" align="right"/>
+	</liferay-ui:search-container-row>
+	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 
 <aui:button-row>		
