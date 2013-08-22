@@ -164,36 +164,18 @@ public class FreetextQuestionType extends BaseQuestionType {
 		return feedBack;
 	}
 	
-	
-	//pte
 	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
-		for(Element answerElement:question.elements("answer")){
-			boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
-			String answer=answerElement.elementText("text");
-			String feedback="";
-			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
-			 feedback=answerElement.element("feedback").element("text").getText();	 
-			testAnswerLocalService.addTestAnswer(questionId, answer, feedback, feedback, correct);
-		}
-	}
-	
-	//pte
-	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException{
-		List<TestAnswer> answers=TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
-		for(TestAnswer answer:answers){
-			String patha = getEntryPath(context, answer);
-			Element entryElementa= root.addElement("questionanswer");
-			entryElementa.addAttribute("path", patha);
-			context.addZipEntry(patha, answer);
-		}
-	}
-	
-	//pte
-	public void importQuestionAnswers(PortletDataContext context, Element qElement, long questionId) throws SystemException, PortalException{
-		for(Element aElement:qElement.elements("questionanswer")){
-			String patha = aElement.attributeValue("path");
-			TestAnswer answer=(TestAnswer)context.getZipEntryAsObject(patha);
-			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer.getAnswer(), answer.getFeedbackCorrect(), answer.getFeedbacknocorrect(), answer.isIsCorrect());
+		//"essay","numerical","shortanswer"
+		if(!"essay".equals(question.attributeValue("type"))){//los essay en moodle nunca tienen respuesta
+			for(Element answerElement:question.elements("answer")){
+				boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
+				String answer=answerElement.elementText("text");
+				String feedback="";
+				if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
+				 feedback=answerElement.element("feedback").element("text").getText();	 
+				testAnswerLocalService.addTestAnswer(questionId, answer, feedback, feedback, correct);
+				return;//porque inicialmente solo aceptamos una respuesta
+			}
 		}
 	}
 	

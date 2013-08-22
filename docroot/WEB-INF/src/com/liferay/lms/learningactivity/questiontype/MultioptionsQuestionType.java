@@ -57,6 +57,7 @@ public class MultioptionsQuestionType extends OptionsQuestionType {
 	 * Una respuesta es correcta si tiene cualquier valor distinto de cero.
 	 */
 	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+		//"multichoice" (not single)
 		for(Element answerElement:question.elements("answer")){
 			boolean correct=(!"0".equals(answerElement.attributeValue("fraction")))? true:false;
 			String answer=answerElement.elementText("text");

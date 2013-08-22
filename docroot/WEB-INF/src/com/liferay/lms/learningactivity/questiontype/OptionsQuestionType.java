@@ -198,6 +198,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 	 * Sólo hay una respuesta correcta, por lo que ésta debe tener valor 100
 	 */
 	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+		//"multichoice" (single),"truefalse"
 		for(Element answerElement:question.elements("answer")){
 			boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
 			String answer=answerElement.elementText("text");
@@ -205,24 +206,6 @@ public class OptionsQuestionType extends BaseQuestionType {
 			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
 			 feedback=answerElement.element("feedback").element("text").getText();	 
 			testAnswerLocalService.addTestAnswer(questionId, answer, feedback, feedback, correct);
-		}
-	}
-	
-	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException{
-		List<TestAnswer> answers=TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
-		for(TestAnswer answer:answers){
-			String patha = getEntryPath(context, answer);
-			Element entryElementa= root.addElement("questionanswer");
-			entryElementa.addAttribute("path", patha);
-			context.addZipEntry(patha, answer);
-		}
-	}
-	
-	public void importQuestionAnswers(PortletDataContext context, Element qElement, long questionId) throws SystemException, PortalException{
-		for(Element aElement:qElement.elements("questionanswer")){
-			String patha = aElement.attributeValue("path");
-			TestAnswer answer=(TestAnswer)context.getZipEntryAsObject(patha);
-			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer.getAnswer(), answer.getFeedbackCorrect(), answer.getFeedbacknocorrect(), answer.isIsCorrect());
 		}
 	}
 	
