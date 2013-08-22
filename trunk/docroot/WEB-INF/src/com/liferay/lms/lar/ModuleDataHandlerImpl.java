@@ -488,8 +488,13 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			
 		} catch(DuplicateFileException dfl){
 			
-			FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
-			description = descriptionFileParserLarToDescription(theModule.getDescription(), oldFile, existingFile);
+			try{
+				FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
+				description = descriptionFileParserLarToDescription(theModule.getDescription(), oldFile, existingFile);
+			} catch (Exception e) {
+				description = theModule.getDescription();
+			}
+			
 			
 		} catch (IOException e) {
 
@@ -590,8 +595,12 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					
 				} catch(DuplicateFileException dfl){
 					
-					FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
-					description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, existingFile);
+					try{
+						FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
+						description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, existingFile);
+					}catch(Exception e){
+						description = nuevaLarn.getDescription();
+					}
 					
 				} catch (IOException e) {
 
