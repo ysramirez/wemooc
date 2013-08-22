@@ -23,6 +23,7 @@ String title = "";
  
 <%
 boolean isP2P=false;
+if(learnResult != null){
 if(learnResult.getPassed())
 {
 	actFeedback=learningActivity.getFeedbackCorrect();
@@ -71,5 +72,6 @@ $('#activityResult').modal();
 //-->
 </script>
 <%
+}
 }
  %>
