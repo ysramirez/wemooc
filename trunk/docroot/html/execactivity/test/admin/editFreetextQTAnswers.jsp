@@ -167,7 +167,7 @@ function inicializar(totalAnswer){
 			<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedbackCorrect"></aui:input>
 			<aui:input cssClass="input-comment" name="feedbackNoCorrect" label="feedbackNoCorrect"></aui:input>
 			<aui:input  type="hidden" name="correct" value="true"/>
-			<aui:column><aui:button type="submit" /></aui:column>
+			<aui:button type="submit" />
 		</aui:form>
 	<%
 	}
