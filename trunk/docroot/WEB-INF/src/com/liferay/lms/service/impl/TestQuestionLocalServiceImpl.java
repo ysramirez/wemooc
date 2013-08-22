@@ -14,6 +14,10 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
 import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.TestQuestion;
@@ -56,17 +60,22 @@ public class TestQuestionLocalServiceImpl
 		
 	}
 	private void importXMLQuestion(long actId, Element question) throws SystemException, PortalException {
-		if("multichoice".equals(question.attributeValue("type")) || "truefalse".equals(question.attributeValue("type"))){
+		List<String> stringList = Arrays.asList(new String[]{"multichoice","truefalse","essay","numerical","shortanswer"});
+		if(stringList.contains(question.attributeValue("type"))){
 			Element questiontext=question.element("questiontext");
-			//Element text=questiontext.element("text");
 			String description=questiontext.elementText("text");
-			long type = 0; //Respuesta única (truefalse o multichoice con single = true)
-			if("multichoice".equals(question.attributeValue("type")) && "false".equals(question.element("single").getText())) type = 1;
+			long type = getQuestionType(question);
 			TestQuestion theQuestion=addQuestion(actId,description,type);
 			QuestionType qt = new QuestionTypeRegistry().getQuestionType(theQuestion.getQuestionType());
 			qt.importMoodle(theQuestion.getQuestionId(), question, testAnswerLocalService);
 		}
 		
+	}
+	private long getQuestionType(Element question) {
+		long type = 0; //Respuesta única (truefalse o multichoice con single = true)
+		if("multichoice".equals(question.attributeValue("type")) && "false".equals(question.element("single").getText())) type = 1;
+		if("essay".equals(question.attributeValue("type")) || "numerical".equals(question.attributeValue("type")) || "shortanswer".equals(question.attributeValue("type"))) type = 2;
+		return type;
 	}
 	public TestQuestion addQuestion(long actId,String text,long questionType) throws SystemException
 	{

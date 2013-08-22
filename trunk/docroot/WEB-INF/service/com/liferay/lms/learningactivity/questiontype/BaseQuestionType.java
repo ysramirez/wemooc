@@ -99,10 +99,24 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	}
 	
 	@Override
-	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException{}
+	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException{
+		List<TestAnswer> answers=TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+		for(TestAnswer answer:answers){
+			String patha = getEntryPath(context, answer);
+			Element entryElementa= root.addElement("questionanswer");
+			entryElementa.addAttribute("path", patha);
+			context.addZipEntry(patha, answer);
+		}
+	}
 	
 	@Override
-	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId) throws SystemException, PortalException{}
+	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId) throws SystemException, PortalException{
+		for(Element aElement:qElement.elements("questionanswer")){
+			String patha = aElement.attributeValue("path");
+			TestAnswer answer=(TestAnswer)context.getZipEntryAsObject(patha);
+			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer.getAnswer(), answer.getFeedbackCorrect(), answer.getFeedbacknocorrect(), answer.isIsCorrect());
+		}
+	}
 	
 	protected String getEntryPath(PortletDataContext context, TestAnswer answer) {
 		
