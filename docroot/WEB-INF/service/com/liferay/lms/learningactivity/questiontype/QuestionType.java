@@ -21,6 +21,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 public interface QuestionType 
 {
+	public void setLocale(Locale locale);
 	public long getTypeId();
 	public String getName();
 	public String getTitle(Locale locale);

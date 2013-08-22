@@ -22,26 +22,52 @@
 	<INPUT TYPE=RADIO id="notIncludeSolution" NAME="includeSolution" VALUE="n" onclick="showHideSolution()"><%=LanguageUtil.get(pageContext,"includeSolution.no") %>
 </div>
 
+<%
+	int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryFactoryUtil.forClass(TestAnswer.class).
+															add(PropertyFactoryUtil.forName("questionId").eq(question.getQuestionId())));
+%>
+
 <script type="text/javascript">
 function showHideSolution(){
 	if(document.getElementById('includeSolution').checked) {
 	  document.getElementById('solution').style.display = 'block';
+	  document.getElementById('noSolution').style.display = 'none';
 	}else if(document.getElementById('notIncludeSolution').checked) {
 		document.getElementById('solution').style.display = 'none';
+		document.getElementById('noSolution').style.display = 'block';
+	}
+}
+
+window.onload = function(){
+		inicializar(<%=totalAnswer%>)
+	};
+
+function inicializar(totalAnswer){
+	if(totalAnswer==0){ 
+		document.getElementById('includeSolution').checked = false;
+		document.getElementById('notIncludeSolution').checked = true;
+		document.getElementById('solution').style.display = 'none';
+		document.getElementById('noSolution').style.display = 'block';
+	}else{
+		document.getElementById('includeSolution').checked = true;
+		document.getElementById('notIncludeSolution').checked = false;
+		document.getElementById('solution').style.display = 'block';
+		document.getElementById('noSolution').style.display = 'none';
 	}
 }
 </script>
 
-<%
-	//if(){ include solution checked
-%>
+<div id="noSolution">
+	<portlet:actionURL var="saveQuestionWithoutAnswerURL" name="saveQuestionWithoutAnswer" />
+	<aui:form name="qwa" action="<%=saveQuestionWithoutAnswerURL %>" method="post">
+		<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
+		<aui:button type="submit"/>
+	</aui:form>
+</div>
+
 <div id="solution">
-	
-	
 	<liferay-ui:success key="answer-added-successfully" message="answer-added-successfully" />
 	<%
-	int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryFactoryUtil.forClass(TestAnswer.class).
-															add(PropertyFactoryUtil.forName("questionId").eq(question.getQuestionId())));
 	if(totalAnswer>0){
 	%>
 		<liferay-ui:search-container emptyResultsMessage="" delta="10" >

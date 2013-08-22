@@ -161,6 +161,33 @@ public class ExecActivity extends MVCPortlet
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
 						
 		}
+	
+	
+	public void saveQuestionWithoutAnswer(ActionRequest actionRequest, ActionResponse actionResponse) {
+		
+			long questionId = ParamUtil.getLong(actionRequest, "questionId");
+			List<TestAnswer> answers;
+			try {
+				answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+				for(TestAnswer answer:answers){
+					TestAnswerLocalServiceUtil.deleteTestAnswer(answer.getAnswerId());
+				}
+				LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
+				actionResponse.setRenderParameter("questionId", Long.toString(questionId));
+				
+				if (learnact.getTypeId() == 0) {
+					TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
+					QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+					actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+					actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
+					actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
+				}
+			} catch (SystemException e) {
+				e.printStackTrace();
+			} catch (PortalException e) {
+				e.printStackTrace();
+			}
+		}
 
 	public void addanswer(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
