@@ -70,6 +70,159 @@ SCORM_1_2.API_LIB.prototype.$27 = function($p0) {
 	}
 }
 
+SCORM_1_2.API_LIB.prototype.LMSInitialize = function(param) {
+	this.$23 = '0';
+	this.$22 = false;
+	if (isNullOrUndefined(param)) {
+		param = '';
+	}
+	if (param === '') {
+		if (!this.$21) {
+			this.$21 = true;
+			this.$23 = '0';
+			this.$1F.setDataTreeValue('cmi.core.session_time',
+					(this.$1E['cmi.core.session_time'])['defaultvalue'],
+					false);
+			this.$24 = new Date().getTime();
+			API_BASE.LOG.displayMessage('LMSInitialize with param: \''
+					+ param + '\'', this.$23, this.$25(this.$23));
+			return 'true';
+		} else {
+			//this.$23 = '101';
+		}
+	} else {
+		this.$23 = '201';
+	}
+	API_BASE.LOG.displayMessage('LMSInitialize with param: \'' + param
+			+ '\'', this.$23, this.$25(this.$23));
+	return 'false';
+}
+
+SCORM_1_2.API_LIB.prototype.LMSFinish = function(param) {
+	this.$23 = '0';
+	if (isNullOrUndefined(param)) {
+		param = '';
+	}
+	if (param === '') {
+		if (this.$21 && (!this.$22)) {
+			this.$21 = false;
+			this.$22 = true;
+			var $0 = this.$1F.getDataTreeValue('nav.event');
+			this.$27(true);
+			if (this.$1F.getRoot() != null) {
+				this.$1F.getRoot().onEventSCO(
+						new API_BASE.BaseActivityTreeNodeEventArgs(
+								this.$1F, 0));
+				if (!isNullOrUndefined($0) && $0.length > 0) {
+					this.$1F.getRoot().requestNavigation($0);
+				} else if (this.$20) {
+					this.$1F.getRoot().requestNavigation('continue');
+				}
+			}
+			API_BASE.LOG.displayMessage('LMSFinish with param: \'' + param
+					+ '\'', this.$23, this.$25(this.$23));
+			return 'true';
+		} else {
+			//this.$23 = '301';
+		}
+	} else {
+		this.$23 = '201';
+	}
+	API_BASE.LOG.displayMessage('LMSFinish with param: \'' + param + '\'',
+			this.$23, this.$25(this.$23));
+	return 'false';
+}
+
+SCORM_1_2.API_LIB.prototype.LMSGetValue = function(element) {
+	this.$23 = '0';
+	if (!this.$21) {
+		this.LMSInitialize('');
+	}
+	if (this.$21) {
+		if (isNullOrUndefined(element)) {
+			element = '';
+		}
+		if (element !== '') {
+			var $0 = new RegExp(this.$9, 'g');
+			var $1 = element.replace($0, '.n.');
+			if (!isUndefined(this.$1E[$1])) {
+				if ((Type.safeCast(this.$1E[$1], Object))['mod'] !== 'w') {
+					element = element.replace($0, '$1.');
+					var $2 = this.$1F.getDataTreeValue(element);
+					if (!isUndefined($2)) {
+						this.$23 = '0';
+						API_BASE.LOG.displayMessage('LMSGetValue '
+								+ element + ', \'' + $2 + '\'', this.$23,
+								this.$25(this.$23));
+						return $2;
+					} else {
+						this.$23 = '201';
+					}
+				} else {
+					this.$23 = (Type.safeCast(this.$1E[$1], Object))['readerror'];
+				}
+			} else {
+				var $3 = '._children';
+				var $4 = '._count';
+				if ($1.substr($1.length - $3.length, $1.length) === $3) {
+					var $5 = $1.substr(0, $1.length - $3.length);
+					if (!isUndefined(this.$1E[$5])) {
+						this.$23 = '202';
+					} else {
+						this.$23 = '201';
+					}
+				} else if ($1.substr($1.length - $4.length, $1.length) === $4) {
+					var $6 = $1.substr(0, $1.length - $4.length);
+					if (!isUndefined(this.$1E[$6])) {
+						this.$23 = '203';
+					} else {
+						this.$23 = '201';
+					}
+				} else {
+					if (element.startsWith('cmi.')) {
+						this.$23 = '201';
+					} else {
+						this.$23 = '401';
+					}
+				}
+			}
+		} else {
+			this.$23 = '201';
+		}
+	} else {
+		this.$23 = '301';
+	}
+	API_BASE.LOG.displayMessage('LMSGetValue ' + element + ', \'\'',
+			this.$23, this.$25(this.$23));
+	return '';
+}
+
+SCORM_1_2.API_LIB.prototype.LMSCommit = function(param) {
+	this.$23 = '0';
+	if (isNullOrUndefined(param)) {
+		param = '';
+	}
+	if (param === '') {
+		if (this.$21) {
+			this.$27(false);
+			API_BASE.LOG.displayMessage('LMSCommit with param: \'' + param
+					+ '\'', this.$23, this.$25(this.$23));
+			var $0 = this.$1F.getDataTreeValue('nav.event');
+			if ($0) {
+				this.LMSFinish('');
+			}
+			return 'true';
+		} else {
+			this.$23 = '301';
+		}
+	} else {
+		this.$23 = '201';
+	}
+	API_BASE.LOG.displayMessage('LMSCommit with param: \'' + param + '\'',
+			this.$23, this.$25(this.$23));
+	return 'false';
+}
+
 Player.PersistentStateStorage.prototype.$3 = function($p0) {
 	try {
 		this.$0.setObjectItem('scormpool', $p0);
@@ -239,7 +392,7 @@ Player.ContentPlayer.prototype.$28 = function($p0) {
 		}
 		var $1 = $p0.getHideLMSUI();
 
-		if (!isNullOrUndefined(this.$13) && window.opener == null) {
+		if (!isNullOrUndefined(this.$13)) {
 			this.$13.style.display = ($1.contains('exitall')) ? 'none'
 					: 'inline';
 			this.$13.disabled = false;
