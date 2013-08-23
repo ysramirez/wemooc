@@ -138,45 +138,6 @@
 	Object [] arg =  new Object [] { activity.getPasspuntuation() };
 %>
 
-<script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
-<script type="text/javascript">
-Liferay.provide(
-    window,
-    '<portlet:namespace />actualizarActividad',
-    function() {
-    	var A = AUI();
-    	var serviceParameterTypes = ['long'];
-    	Liferay.Service.Lms.LearningActivityResult.userPassed(
-	      		{
-	      			actId: <%= learningTry.getActId() %>,
-	      			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
-	      		},
-	      		function(message) {
-	                 var exception = message.exception;
-	
-	                 if (!exception) {
-	                     // Process Success - A LearningActivityResult returned
-	                     if (message) {
-	                    	 window.location.reload(true);
-	                     } 
-	                     /*
-	                     else {
-	                    	A.one('h3').html('<liferay-ui:message key="activity.try.finished"/>');
-	 						A.one('h3').setStyle('display', 'inline');
-	                     }
-	                     */
-	                 }
-	                 else {
-	                     // Process Exception
-	                	 window.location.reload(true);
-	                 }
-	             }
-	      	);
-    },
-    ['node']
-);
-</script>
-
 <% if ("true".equals(openWindow)) { %>
 				<liferay-portlet:renderURL var="scormwindow" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<liferay-portlet:param name="jspPage" value="/html/scormactivity/window.jsp"/>
@@ -184,19 +145,6 @@ Liferay.provide(
 				</liferay-portlet:renderURL>
 				
 			<script type="text/javascript">
-			Liferay.provide(
-					window,
-					'<portlet:namespace />checker',
-					function() {
-						window.temporizador = setInterval(function() {
-							if (window.ventana.closed) {
-								<portlet:namespace />actualizarActividad();
-								clearInterval(window.temporizador);
-							}
-						}, 500);
-					}
-				);
-			
 			Liferay.provide(
 					window,
 					'<portlet:namespace />abrirActividad',
@@ -209,7 +157,18 @@ Liferay.provide(
 							A.one('p.activity-message').setStyle('display', 'none');
 							A.one('span.newitem2').setStyle('display', 'none');
 						}
-						<portlet:namespace />checker();
+						window.messageHandler = A.one(window).on('message', 
+							function(event) {
+								var html5Event = event._event;
+								if (html5Event.data.name == 'update_scorm') {
+									if (html5Event.data.passed) {
+										Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+									} else {
+										
+									}
+								}
+							}
+						);
 						if (e != null && e.preventDefault) {
 							e.preventDefault();
 						} else {
@@ -218,13 +177,23 @@ Liferay.provide(
 					},
 					['node']
 			);
-			AUI().ready(function() {<portlet:namespace />abrirActividad(null);});
 			</script>
-				
+			<% if(!LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())) { %>
+			
+			<script type="text/javascript">
+				AUI().ready(function() {<portlet:namespace />abrirActividad(null);});
+			</script>
+			
 				<p class="activity-message"><liferay-ui:message key="activity.openwindow"></liferay-ui:message></p>
 				
 				<span class="newitem2"><a class="newitem2" href="#" onclick="<portlet:namespace />abrirActividad();" ><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
-				<%
+			
+			<% } else { %>
+				
+				<p class="activity-message"><liferay-ui:message key="activity.openwindow.passed"></liferay-ui:message></p>
+				
+				<span class="newitem2"><a class="newitem2" href="#" onclick="<portlet:namespace />abrirActividad();" ><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<% }
 			} else {
 				request.setAttribute("learningTry", learningTry);
 				%>

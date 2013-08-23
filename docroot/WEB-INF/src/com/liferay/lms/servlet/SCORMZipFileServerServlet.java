@@ -195,16 +195,16 @@ public class SCORMZipFileServerServlet extends HttpServlet {
 					}
 					fis.close();
 				} else {
-					java.io.OutputStream out = response.getOutputStream();
-					out.write(uri.getBytes());
+					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
 			} else {
-				// Sin permiso
+				response.sendError(HttpServletResponse.SC_FORBIDDEN);
 			}
 		} catch (Exception e) {
 			System.out
 					.println("Error en el processRequest() de ServidorArchivos: "
 							+ e.getMessage());
+			response.sendError(HttpServletResponse.SC_SERVICE_UNAVAILABLE);
 		}
 	}
 
