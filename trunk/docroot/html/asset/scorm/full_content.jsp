@@ -85,15 +85,17 @@ try {
 	       		iframe.setStyle('width', '100%');
 	       		menuA.replaceClass('close-scorm-menu', 'open-scorm-menu');
 	       	 }
+	       	 
 	       	 var initiated = (treeContainer.all('img[src*="select.gif"]').size() > 0);
 	       	 if (!initiated) {
 	       		treeContainer.one('a[href="#"]').simulate('click');
 	       	 }
-	       	 /*
+	       	 
+	       	 
 	       	 var iFrameID = document.getElementById('contentIFrame');
 	       	 iFrameID.style.height = "";
-	       	 iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight : 600) + "px";
-	       	 iframe.setStyle('height', iFrameID.style.height + "px");
+	       	 iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight + 50 : 600) + "px";
+	       	 iframe.setStyle('height', iFrameID.style.height);
 	       	 var iframes = iFrameID.contentWindow.document.getElementsByTagName('frame');
 	       	 for (var i = 0; i < iframes.length; i++) {
 	       		var ifra = iframes[0];
@@ -105,10 +107,7 @@ try {
 	       			iframe.setStyle('height', ifra.style.height);
 	       		}
 	       	 }
-	       	 
-	       	document.getElementById("btnExitAll").onclick = function(event) {<portlet:namespace/>update_scorm(event);};
-			document.getElementById("btnExit").onclick = function(event) {<portlet:namespace/>update_scorm(event);};
-	       	*/
+	       	
     	},
     	['node', 'event', 'node-event-simulate']
      );
@@ -141,7 +140,6 @@ try {
   </script>
   <div id="placeholder_barContainer">
   	<a id="clicker" href="#" style="display: none">__</a>
-  	<!--<aui:button id="close-scorm" value="activity.try.exit" />-->
   	<div id="placeholder_navigationContainer" style="float: right;"></div>
   	<a id="open-close-scorm-menu" href="#" onclick="javascript:toggleScormBar(event)">+</a>
   	

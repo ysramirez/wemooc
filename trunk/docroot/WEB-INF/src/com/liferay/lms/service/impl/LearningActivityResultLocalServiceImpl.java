@@ -184,17 +184,19 @@ public class LearningActivityResultLocalServiceImpl
 			raw_score = cmi.getJSONObject("cmi.score.raw").getLong("value", "completed".equals(completion_status) ? 100L : 0L);
 			scaled_score = cmi.getJSONObject("cmi.score.scaled").getLong("value", Math.round((raw_score * 100L) / (max_score - min_score)));
 		}
-		
-		if (scaled_score >= master_score && "completed".equals(completion_status)) {
+		if ("incomplete".equals(completion_status) || "completed".equals(completion_status)) {
+			learningActivityTry.setTryResultData(tryResultData);
 			learningActivityTry.setResult(scaled_score);
-			Date endDate = new Date(System.currentTimeMillis());
-			learningActivityTry.setEndDate(endDate);
+			
+			if (scaled_score >= master_score) {
+				Date endDate = new Date(System.currentTimeMillis());
+				learningActivityTry.setEndDate(endDate);
+			}
+			
+			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
 		}
 		
-		learningActivityTry.setTryResultData(tryResultData);
-		LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
-		
-		return update(learningActivityTry);
+		return this.getByActIdAndUserId(learningActivityTry.getActId(), userId);
 	}
 	public boolean existsLearningActivityResult(long actId,long userId) throws SystemException
 	{

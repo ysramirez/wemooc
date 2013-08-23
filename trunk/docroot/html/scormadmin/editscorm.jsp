@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.service.ServiceContextFactory"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
 <%@page import="com.liferay.portal.model.ResourcePermission"%>
 <%@page import="com.liferay.portal.model.ResourceConstants"%>
@@ -38,7 +39,10 @@ String redirect = ParamUtil.getString(request, "redirect","");
 String backURL = ParamUtil.getString(request, "backURL");
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 long scormId=ParamUtil.getLong(request, "scormId",0);
-String description="";
+String description=ParamUtil.getString(request, "description", "");
+String title=ParamUtil.getString(request, "title", "");
+String[] tags = ParamUtil.getParameterValues(request, "tags", new String[0]);
+String[] categories = ParamUtil.getParameterValues(request, "categories", new String[0]);
 SCORMContent scorm=null;
 if(scormId>0)
 {
@@ -47,7 +51,8 @@ if(scormId>0)
 	<aui:model-context bean="<%= scorm %>" model="<%= SCORMContent.class %>" />
 	
 	<%
-	description=scorm.getDescription();
+	title = scorm.getTitle();
+	description = scorm.getDescription();
 }
 else
 {
@@ -56,7 +61,10 @@ else
 	
 	<%
 }
+
 %>
+<liferay-ui:error key="scormadmin.error.notitle" message="scormadmin.error.notitle"/>
+<liferay-ui:error key="scormadmin.error.nodescription" message="scormadmin.error.nodescription"/>
 <liferay-ui:error key="scormadmin.error.nozip" message="scormadmin.error.nozip"/>
 <liferay-ui:error key="scormadmin.error.nomanifest" message="scormadmin.error.nomanifest"/>
 <aui:form name="fm" action="<%=savescormURL%>"  method="post" enctype="multipart/form-data">
@@ -66,10 +74,14 @@ else
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="scormId" type="hidden" value="<%=scormId %>"/>
-	<aui:input name="title" label="title"></aui:input>
+	<aui:input name="title" label="title" value="<%= title %>">
+		<aui:validator name="required"></aui:validator>
+	</aui:input>
 	<aui:field-wrapper label="description">
 			<liferay-ui:input-editor name="description" width="100%" />
-			<aui:input name="description" type="hidden" />
+			<aui:input name="description" type="hidden" >
+				<aui:validator name="required"></aui:validator>
+			</aui:input>
 				<script type="text/javascript">
         function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
     </script>
@@ -78,7 +90,10 @@ else
 
 		<aui:field-wrapper label="zipfile">
 		<aui:input inlineLabel="left" inlineField="true"
-		  	name="fileName" label="" id="fileName" type="file" value="" />
+		  	name="fileName" label="" id="fileName" type="file" value="" >
+		  	<aui:validator name="required"></aui:validator>
+		  	<aui:validator name="acceptFiles">'zip'</aui:validator>
+		  	</aui:input>
 </aui:field-wrapper>	
 <aui:field-wrapper name="permissions">
 		<liferay-ui:input-permissions modelName="<%= SCORMContent.class.getName() %>">
@@ -93,8 +108,8 @@ else
 		<liferay-ui:custom-attribute-list 
 			className="<%=com.liferay.lms.model.SCORMContent.class.getName()%>" classPK="<%=scormId %>" editable="true" label="true"></liferay-ui:custom-attribute-list>
 	</liferay-ui:custom-attributes-available>
-	<aui:input name="tags" type="assetTags" />
-	<aui:input name="categories" type="assetCategories" />
+	<aui:input name="tags" type="assetTags" ignoreRequestValue="true" value='<%= Validator.isNull(tags) ? "" : StringUtil.merge(tags, ",") %>' />
+	<aui:input name="categories" type="assetCategories" ignoreRequestValue="true"  value='<%= Validator.isNull(categories) ? "" : StringUtil.merge(categories, ",") %>'/>
 	<aui:button-row>
 	<%
 		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
