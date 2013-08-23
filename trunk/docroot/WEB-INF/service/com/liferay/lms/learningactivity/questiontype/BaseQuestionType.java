@@ -111,7 +111,7 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	
 	@Override
 	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId) throws SystemException, PortalException{
-		for(Element aElement:qElement.elements("questionanswer")){
+		for(Element aElement:entryElement.elements("questionanswer")){
 			String patha = aElement.attributeValue("path");
 			TestAnswer answer=(TestAnswer)context.getZipEntryAsObject(patha);
 			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer.getAnswer(), answer.getFeedbackCorrect(), answer.getFeedbacknocorrect(), answer.isIsCorrect());
