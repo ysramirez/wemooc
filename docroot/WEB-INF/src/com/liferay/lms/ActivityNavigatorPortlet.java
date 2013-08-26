@@ -69,6 +69,14 @@ public class ActivityNavigatorPortlet extends MVCPortlet {
 
 		}
 
+	@Override
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
+			throws PortletException, IOException {
 
+		//Cuando no tenemos actividad, ocultamos el portlet.
+		if(ParamUtil.getLong(renderRequest, "actId", 0) == 0){
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		}
+	}
 }
 
