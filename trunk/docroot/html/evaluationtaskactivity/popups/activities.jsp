@@ -506,7 +506,7 @@
 </aui:form>
 
 <aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveActivities();" type="button" hidden=<%=hasFiredDate%>">
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveActivities();" type="button" class='<%=(courseEvalModel.has("firedDate"))?"aui-helper-hidden":"" %>' >
 		<liferay-ui:message key="evaluationtaskactivity.save" />
 	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
