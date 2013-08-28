@@ -46,6 +46,11 @@ public class ActivityNavigatorPortlet extends MVCPortlet {
 	public void doView(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
 		
+		//Cuando no tenemos actividad, ocultamos el portlet.
+		if(ParamUtil.getLong(renderRequest, "actId", 0) == 0){
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		}
+				
 		if(ParamUtil.getBoolean(renderRequest, WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,true)) {
 			super.doView(renderRequest, renderResponse);
 		}
@@ -69,14 +74,5 @@ public class ActivityNavigatorPortlet extends MVCPortlet {
 
 		}
 
-	@Override
-	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
-			throws PortletException, IOException {
-
-		//Cuando no tenemos actividad, ocultamos el portlet.
-		if(ParamUtil.getLong(renderRequest, "actId", 0) == 0){
-			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-		}
-	}
 }
 
