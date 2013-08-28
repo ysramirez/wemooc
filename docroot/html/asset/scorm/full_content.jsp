@@ -24,10 +24,10 @@ if (Validator.isNotNull(scorm.getDescription()) && learningTry == null) {
 	<script src="/liferaylms-portlet/js/scorm/ssfx.Core.js" type="text/javascript"></script> 
  
 	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/API_BASE.js"></script>    
-        <script type="text/javascript" src="/liferaylms-portlet/js/scorm/API.js"></script>  
-        <script type="text/javascript" src="/liferaylms-portlet/js/scorm/API_1484_11.js"></script>
+    <script type="text/javascript" src="/liferaylms-portlet/js/scorm/API.js"></script>  
+    <script type="text/javascript" src="/liferaylms-portlet/js/scorm/API_1484_11.js"></script>
 
-        <script type="text/javascript" src="/liferaylms-portlet/js/scorm/Controls.js"></script>        
+    <script type="text/javascript" src="/liferaylms-portlet/js/scorm/Controls.js"></script>        
 	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/LocalStorage.js"></script>
 	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/Player.js"></script>
 	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/PersistenceStoragePatched.js"></script>
@@ -56,99 +56,34 @@ try {
        PlayerConfiguration.TreeLeafIcon = "<%= iconsDir %>/icons/scorm/leaf.gif";
        PlayerConfiguration.TreeActiveIcon = "<%= iconsDir %>/icons/scorm/select.gif";
 
-       PlayerConfiguration.BtnPreviousLabel = "<liferay-ui:message key="previous" />";
-       PlayerConfiguration.BtnContinueLabel = "<liferay-ui:message key="next" />";
-       PlayerConfiguration.BtnExitLabel = "<liferay-ui:message key="sign-out" />";
+       PlayerConfiguration.BtnPreviousLabel = "<liferay-ui:message key="scorm.previous" />";
+       PlayerConfiguration.BtnContinueLabel = "<liferay-ui:message key="scorm.next" />";
+       PlayerConfiguration.BtnExitLabel = "<liferay-ui:message key="scorm.exit" />";
        PlayerConfiguration.BtnExitAllLabel = "<liferay-ui:message key="activity.try.exit" />";
-       PlayerConfiguration.BtnAbandonLabel = "<liferay-ui:message key="leave" />";
-       PlayerConfiguration.BtnAbandonAllLabel = "Abandon All";
-       PlayerConfiguration.BtnSuspendAllLabel = "Suspend All";
+       PlayerConfiguration.BtnAbandonLabel = "<liferay-ui:message key="scorm.abandon" />";
+       PlayerConfiguration.BtnAbandonAllLabel = "<liferay-ui:message key="scorm.abandonall" />";
+       PlayerConfiguration.BtnSuspendAllLabel = "<liferay-ui:message key="scorm.suspendall" />";
 
        //manifest by URL   
        Run.ManifestByURL("<%=urlIndex%>", false);
      }
      
-     Liferay.provide(
-    	window,
-    	'adjustScorm',
-    	function() {
-    		var A = AUI();
-    		var iframe = A.one('#placeholder_contentIFrame');
-	       	 var treeContainer = A.one('#placeholder_treeContainer');
-	       	 var menuA = A.one('#open-close-scorm-menu');
-	       	 
-	       	 if (treeContainer.getStyle('display') != 'none') {
-	       		 iframe.setStyle('width', '80%');
-	       		 treeContainer.setStyle('width', '20%');
-	       		 menuA.replaceClass('open-scorm-menu', 'close-scorm-menu');
-	       	 } else {
-	       		iframe.setStyle('width', '100%');
-	       		menuA.replaceClass('close-scorm-menu', 'open-scorm-menu');
-	       	 }
-	       	 
-	       	 var initiated = (treeContainer.all('img[src*="select.gif"]').size() > 0);
-	       	 if (!initiated) {
-	       		treeContainer.one('a[href="#"]').simulate('click');
-	       	 }
-	       	 
-	       	 
-	       	 var iFrameID = document.getElementById('contentIFrame');
-	       	 iFrameID.style.height = "";
-	       	 iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight + 50 : 600) + "px";
-	       	 iframe.setStyle('height', iFrameID.style.height);
-	       	 var iframes = iFrameID.contentWindow.document.getElementsByTagName('frame');
-	       	 for (var i = 0; i < iframes.length; i++) {
-	       		var ifra = iframes[0];
-	       		ifra.style.height = ifra.contentWindow.document.body.scrollHeight + "px";
-	       		
-	       		if (parseInt(iframe.getStyle('height').replace('px', '')) < parseInt(ifra.style.height.replace('px', ''))) {
-	       			iFrameID.style.height = "";
-	       			iFrameID.style.height = ifra.style.height;
-	       			iframe.setStyle('height', ifra.style.height);
-	       		}
-	       	 }
-	       	
-    	},
-    	['node', 'event', 'node-event-simulate']
-     );
-     
      AUI().ready(function() {
     	 InitPlayer();
-    	 
-    	 document.getElementById('contentIFrame').onload = function() {setTimeout(adjustScorm, 400);}
    	 });
      
-     function toggleScormBar(evt) {
-    	 var treeContainer = document.getElementById('placeholder_treeContainer');
-    	 var iframe = document.getElementById('placeholder_contentIFrame');
-    	 var menuA = document.getElementById('open-close-scorm-menu');
-    	 if (treeContainer.style.display != 'none') {
-    		 treeContainer.style.display = 'none';
-    		 iframe.style.width = '100%';
-    		 menuA.setAttribute('class', 'open-scorm-menu');
-    	 } else {
-    		 treeContainer.style.display = 'block';
-    		 iframe.style.width = '80%';
-    		 menuA.setAttribute('class', 'close-scorm-menu');
-    	 }
-    	 if (evt.preventDefault) {
-     	 	evt.preventDefault();
-     	 }
-     	 evt.returnValue = false;
-     }
-     
   </script>
-  <div id="placeholder_barContainer">
-  	<a id="clicker" href="#" style="display: none">__</a>
-  	<div id="placeholder_navigationContainer" style="float: right;"></div>
-  	<a id="open-close-scorm-menu" href="#" onclick="javascript:toggleScormBar(event)">+</a>
-  	
+
+  <div id="placeholder_clicker" style="display: none"></div>
+  <div style="width: 99%;">
+ 	<div id="placeholder_navigationContainer"></div>
+ 	<div id="placeholder_treeContainer"></div>
   </div>
-  
 <div id="placeholder_treecontentContainer">
-	<div id="placeholder_treeContainer"></div>
-	<div id="placeholder_contentIFrame" style="height: 670px;">
+	
+	<div id="placeholder_contentIFrame" style="height: 670px; width: 99%;">
           <iframe id="contentIFrame" style="height:100%; width:100%"></iframe>
-    </div>          
+    </div>
 </div>
+<div id="placeholder_navigationContainer2"></div>
 
