@@ -68,7 +68,7 @@ SCORM_1_2.API_LIB.prototype.$27 = function($p0) {
 		this.$1F.getRoot().onEventSCO(
 				new API_BASE.BaseActivityTreeNodeEventArgs(this.$1F, 1));
 	}
-}
+};
 
 SCORM_1_2.API_LIB.prototype.LMSInitialize = function(param) {
 	this.$23 = '0';
@@ -96,7 +96,7 @@ SCORM_1_2.API_LIB.prototype.LMSInitialize = function(param) {
 	API_BASE.LOG.displayMessage('LMSInitialize with param: \'' + param
 			+ '\'', this.$23, this.$25(this.$23));
 	return 'false';
-}
+};
 
 SCORM_1_2.API_LIB.prototype.LMSFinish = function(param) {
 	this.$23 = '0';
@@ -131,7 +131,7 @@ SCORM_1_2.API_LIB.prototype.LMSFinish = function(param) {
 	API_BASE.LOG.displayMessage('LMSFinish with param: \'' + param + '\'',
 			this.$23, this.$25(this.$23));
 	return 'false';
-}
+};
 
 SCORM_1_2.API_LIB.prototype.LMSGetValue = function(element) {
 	this.$23 = '0';
@@ -195,7 +195,7 @@ SCORM_1_2.API_LIB.prototype.LMSGetValue = function(element) {
 	API_BASE.LOG.displayMessage('LMSGetValue ' + element + ', \'\'',
 			this.$23, this.$25(this.$23));
 	return '';
-}
+};
 
 SCORM_1_2.API_LIB.prototype.LMSCommit = function(param) {
 	this.$23 = '0';
@@ -221,7 +221,9 @@ SCORM_1_2.API_LIB.prototype.LMSCommit = function(param) {
 	API_BASE.LOG.displayMessage('LMSCommit with param: \'' + param + '\'',
 			this.$23, this.$25(this.$23));
 	return 'false';
-}
+};
+
+Player.PersistentStateStorage.prototype.$77 = null;
 
 Player.PersistentStateStorage.prototype.$3 = function($p0) {
 	try {
@@ -234,27 +236,34 @@ Player.PersistentStateStorage.prototype.$3 = function($p0) {
 		    evt.initEvent(eventName, false, true);
 		    element.dispatchEvent(evt);
 		} else {
+			var clicker = document.getElementById('clicker');
+			if (clicker == null) {
+				var clicker = document.createElement('a');
+				clicker.setAttribute('id', 'clicker');
+				clicker.setAttribute('href', '#');
+				clicker.innerHTML = '__';
+				clicker.style.display = 'none';
+				document.getElementById('placeholder_clicker').appendChild(clicker);
+			}
 			var evt = document.createEventObject();
 			evt.eventName = "click";
-			document.getElementById('clicker').fireEvent("onclick", evt);
+			clicker.fireEvent("onclick", evt);
 		}
 	} catch ($0) {
 		alert('Error! Can\'t save data to Local Storage. Problem can be related to storage size limit.');
 		this.$2 = false;
 	}
-}
+};
 
 Player.ContentPlayer.prototype.$1B = function() {
 	this.$7 = document.getElementById('navigationContainer');
+	this.$77 = document.getElementById('navigationContainer2');
 	this.$8 = Delegate.create(this, this.$1D);
 	if (isNullOrUndefined(this.$7)) {
 		this.$7 = document.createElement('div');
 		this.$7.id = 'navigationContainer';
 		this.$7.style.display = 'none';
-		this.$10 = this.$1C('btnPrevious',
-				PlayerConfiguration.BtnPreviousLabel);
-		this.$11 = this.$1C('btnContinue',
-				PlayerConfiguration.BtnContinueLabel);
+		
 		this.$12 = this.$1C('btnExit', PlayerConfiguration.BtnExitLabel);
 		this.$13 = this.$1C('btnExitAll',
 				PlayerConfiguration.BtnExitAllLabel);
@@ -269,7 +278,204 @@ Player.ContentPlayer.prototype.$1B = function() {
 			$0.appendChild(this.$7);
 		}
 	}
-}
+	if (isNullOrUndefined(this.$77)) {
+		this.$77 = document.createElement('div');
+		this.$77.id = 'navigationContainer2';
+		this.$77.style.display = 'none';
+		this.$10 = this.$1C('btnPrevious',
+				PlayerConfiguration.BtnPreviousLabel);
+		this.$11 = this.$1C('btnContinue',
+				PlayerConfiguration.BtnContinueLabel);
+		var $0 = document.getElementById('placeholder_navigationContainer2');
+		if (!isNullOrUndefined($0)) {
+			$0.appendChild(this.$77);
+		}
+	}
+};
+
+Player.ContentPlayer.prototype.$1C = function($p0, $p1) {
+	if ($p0 == 'btnPrevious' || $p0 == 'btnContinue') {
+		var $00 = document.createElement('div');
+		$00.id = $p0 + '-link';
+		var $0 = document.createElement('a');
+		$0.setAttribute('id', $p0);
+		$0.setAttribute('href', '#');
+		$0.innerHTML = $p1;
+		$0.style.display = 'none';
+		$0.attachEvent('onclick', this.$8);
+		$00.appendChild($0);
+	
+		this.$77.appendChild($00);
+		return $0;
+	} else {
+		var $0 = document.createElement('input');
+		$0.setAttribute('id', $p0);
+		$0.setAttribute('type', 'button');
+		$0.setAttribute('value', $p1);
+		$0.style.display = 'none';
+		$0.attachEvent('onclick', this.$8);
+		
+		this.$7.appendChild($0);
+		return $0;
+	}
+};
+
+Player.ContentPlayer.prototype.$1D = function() {
+	var $0 = window.event.srcElement;
+	if (isNullOrUndefined($0)) {
+		return;
+	}
+	if (this.$F) {
+		return;
+	}
+	if ($0.id === 'btnPrevious') {
+		this.$9.requestNavigation('previous');
+		if (window.event.preventDefault) {
+     	 	window.event.preventDefault();
+     	} else {
+     		window.event.returnValue = false;
+     	}
+	} else if ($0.id === 'btnContinue') {
+		this.$9.requestNavigation('continue');
+		if (window.event.preventDefault) {
+     	 	window.event.preventDefault();
+     	} else {
+     		window.event.returnValue = false;
+     	}
+	} else if ($0.id === 'btnExit') {
+		this.$9.requestNavigation('exit');
+		this.$12.disabled = true;
+		this.$14.disabled = true;
+	} else if ($0.id === 'btnExitAll') {
+		this.$9.requestNavigation('exitAll');
+	} else if ($0.id === 'btnAbandon') {
+		this.$9.requestNavigation('abandon');
+		this.$12.disabled = true;
+		this.$14.disabled = true;
+	} else if ($0.id === 'btnAbandonAll') {
+		this.$9.requestNavigation('abandonAll');
+	} else if ($0.id === 'btnSuspendAll') {
+		this.$9.requestNavigation('suspendAll');
+	}
+};
+
+Player.ContentPlayer.prototype.toggleScorm = function() {
+	var evt = window.event;
+	var treeContainer = document.getElementById('treeContainer');
+	var menuA = document.getElementById('open-close-scorm-menu');
+	if (treeContainer.style.display != 'none') {
+		treeContainer.style.display = 'none';
+		menuA.setAttribute('class', 'open-scorm-menu');
+	} else {
+		treeContainer.style.display = 'block';
+		menuA.setAttribute('class', 'close-scorm-menu');
+	}
+	if (evt.preventDefault) {
+		evt.preventDefault();
+	}
+	evt.returnValue = false;
+};
+
+Player.ContentPlayer.prototype.$1E = function() {
+	this.$5 = document.getElementById('treeContainer');
+	if (isNullOrUndefined(this.$5)) {
+		this.$5 = document.createElement('div');
+		this.$5.id = 'treeContainer';
+		this.$5.style.display = 'none';
+		var togglerContainer = document.createElement('div');
+		togglerContainer.id = 'placeholder_barContainer';
+		togglerContainer.style.display = 'block';
+		var toggler = document.createElement('a');
+		toggler.id = 'open-close-scorm-menu';
+		toggler.href = '#';
+		
+		if (this.$9.isSingleItem()) {
+			toggler.className = 'open-scorm-menu';
+      	} else {
+      		toggler.className = 'close-scorm-menu';
+      	}
+		
+		toggler.attachEvent('onclick', Delegate.create(this, this.toggleScorm));
+		togglerContainer.appendChild(toggler);
+		
+		var $0 = document.getElementById('placeholder_treeContainer');
+		if (isNullOrUndefined($0)) {
+			document.body.appendChild(this.$5);
+			if (this.$9.isSingleItem()) {
+				this.$5.style.display = 'none';
+			}
+		} else {
+			$0.appendChild(togglerContainer);
+			$0.appendChild(this.$5);
+			if (this.$9.isSingleItem()) {
+				this.$5.style.display = 'none';
+			}
+		}
+		var $1 = new ControlsCollection.TreeView(this.$5,
+				PlayerConfiguration.TreeMinusIcon,
+				PlayerConfiguration.TreePlusIcon);
+		this.$9
+				.scan(
+						this.$9.getOrganization(),
+						Delegate
+								.create(
+										this,
+										function($p1_0) {
+											var $1_0;
+											if ($p1_0 !== this.$9
+													.getOrganization()) {
+												var $1_1 = ($p1_0
+														.isVisible()) ? '#'
+														: null;
+												if (this.$2 === 1) {
+													$1_1 = (isNullOrUndefined($p1_0
+															.getUrl()) || $p1_0
+															.getUrl()
+															.trim().length <= 0) ? null
+															: $1_1;
+												} else if (this.$2 === 2) {
+													var $1_2 = $p1_0;
+													if (!$1_2
+															.getParentSequencing().choice) {
+														$1_1 = null;
+													} else if (isNullOrUndefined($1_2
+															.getScormType())
+															&& !$1_2
+																	.getSequencing().flow) {
+														$1_1 = null;
+													}
+												}
+												if ($p1_0.isLeaf()) {
+													$1_0 = ($p1_0
+															.getParent()
+															.getData())
+															.addNode(
+																	$p1_0
+																			.getTitle(),
+																	$1_1,
+																	PlayerConfiguration.TreeLeafIcon);
+												} else {
+													$1_0 = ($p1_0
+															.getParent()
+															.getData())
+															.addNode(
+																	$p1_0
+																			.getTitle(),
+																	$1_1);
+												}
+												if ($1_1 != null) {
+													this.$18.add($1_0);
+												}
+											} else {
+												$1_0 = $1;
+											}
+											$p1_0.setData($1_0);
+											$1_0.set_userData($p1_0);
+											return true;
+										}), null);
+		$1.add_nodeClick(Delegate.create(this, this.$21));
+	}
+};
 
 Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
 	if ($p1.get_eventType() === 5 || $p1.get_eventType() === 3
@@ -365,7 +571,7 @@ Player.ContentPlayer.prototype.$26 = function() {
 			this.$3.src = this.$C.getUrl();
 		}
 	}
-}
+};
 
 Player.ContentPlayer.prototype.$28 = function($p0) {
 	if ($p0 != null) {
@@ -391,18 +597,122 @@ Player.ContentPlayer.prototype.$28 = function($p0) {
 			this.$D.getIcon().src = PlayerConfiguration.TreeActiveIcon;
 		}
 		var $1 = $p0.getHideLMSUI();
-
+		if (!isNullOrUndefined(this.$10)) {
+			this.$10.style.display = (this.$9.isSingleItem() || $1
+					.contains('previous')) ? 'none' : 'inline';
+			this.$10.disabled = false;
+		}
+		if (!isNullOrUndefined(this.$11)) {
+			this.$11.style.display = (this.$9.isSingleItem() || $1
+					.contains('continue')) ? 'none' : 'inline';
+			this.$11.disabled = false;
+		}
 		if (!isNullOrUndefined(this.$13)) {
 			this.$13.style.display = ($1.contains('exitall')) ? 'none'
 					: 'inline';
 			this.$13.disabled = false;
+		}
+		
+		if (this.$10.style.display == 'none' && this.$11.style.display == 'none') {
+			this.$77.style.display = 'none';
+		} else {
+			this.$77.style.display = 'block';
 		}
 
 		if (!this.$F) {
 			this.$26();
 		}
 	}
+};
+
+Player.ContentPlayer.prototype.adjustPlayer = function() {
+	var iframe = document.getElementById('placeholder_contentIFrame');
+	var iFrameID = document.getElementById('contentIFrame');
+	iFrameID.style.height = "";
+	iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight + 50 : 600) + "px";
+	iframe.style.height = iFrameID.style.height;
+	var iframes = iFrameID.contentWindow.document.getElementsByTagName('frame');
+	for (var i = 0; i < iframes.length; i++) {
+		var ifra = iframes[0];
+		ifra.style.height = ifra.contentWindow.document.body.scrollHeight + "px";
+		
+		if (parseInt(iframe.style.height.replace('px', '')) < parseInt(ifra.style.height.replace('px', ''))) {
+			iFrameID.style.height = "";
+			iFrameID.style.height = ifra.style.height;
+			iframe.style.height = ifra.style.height;
+		}
+	}
 }
+
+Player.ContentPlayer.prototype.checkPlayer = function() {
+   	var treeContainer = document.getElementById('treeContainer');
+   	
+   	var imgs = treeContainer.getElementsByTagName('img');
+   	var linkToClickIndex = -1;
+   	var initiated = false;
+   	for (var i = 0; i < imgs.length; i++) {
+   		var img = imgs[i];
+   		if (img.src.endsWith('select.gif')) {
+   			initiated = true;
+   			break;
+   		}
+   		if (linkToClickIndex == -1 && img.src.endsWith('leaf.gif')) {
+   			linkToClickIndex = i;
+   		}
+   	}
+   	
+   	if (!initiated) {
+   		var links = treeContainer.getElementsByTagName('a');
+   		var link = links[linkToClickIndex];
+   		var event;
+   	    if (document.createEvent) {
+   	      event = document.createEvent("HTMLEvents");
+   	      event.initEvent("click", true, true);
+   	    } else {
+   	      event = document.createEventObject();
+   	      event.eventType = "click";
+   	    }
+   	  
+   		if (document.createEvent) {
+   		  link.dispatchEvent(event);
+   		} else {
+   		  link.fireEvent("onclick", event);
+   		}
+   		links[linkToClickIndex].dispatchEvent();
+   	}
+};
+
+Player.ContentPlayer.prototype.showPlayer = function() {
+	if (this.$2 !== 0) {
+		this.$3.style.display = 'block';
+		this.$5.style.display = (!this.$9.isSingleItem()) ? 'block' : 'none';
+		this.$7.style.display = 'block';
+		if (this.$10.style.display == 'none' && this.$11.style.display == 'none') {
+			this.$77.style.display = 'none';
+		} else {
+			this.$77.style.display = 'block';
+		}
+		if (!isNullOrUndefined(this.$6)) {
+			this.$6.style.display = (this.$1) ? 'block' : 'none';
+		}
+		document.getElementById('contentIFrame').attachEvent('onload', Delegate.create(this, function() {
+			this.adjustPlayer(); 
+			this.checkPlayer(); 
+		}));
+	}
+};
+
+Player.ContentPlayer.prototype.hidePlayer = function(includeDebugger) {
+	if (this.$2 !== 0) {
+		this.$3.style.display = 'none';
+		this.$5.style.display = 'none';
+		this.$7.style.display = 'none';
+		this.$77.style.display = 'none';
+		if (includeDebugger && !isNullOrUndefined(this.$6)) {
+			this.$6.style.display = 'none';
+		}
+	}
+};
 
 
 Player.PersistentStateStorage.createClass('Player.PersistentStateStorage');
