@@ -425,7 +425,7 @@
 
 <aui:button-row>
 	
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button" hidden='<%=(courseEvalModel.has("firedDate")) %>'>
+	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button" class='<%=(courseEvalModel.has("firedDate"))?"aui-helper-hidden":"" %>'>
 		<liferay-ui:message key="offlinetaskactivity.save" />
 	</button>
 	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
