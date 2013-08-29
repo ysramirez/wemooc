@@ -432,7 +432,7 @@ protected PortletPreferences doImportData(PortletDataContext context, String por
 		}
 		Module entry = (Module)context.getZipEntryAsObject(path);
 
-		System.out.println("\n  Module: " + entry.getModuleId() +" "+ entry.getTitle(Locale.getDefault()) );
+		System.out.println("\n  Module: " + entry.getTitle(Locale.getDefault()) );
 		
 		importEntry(context,entryElement, entry);
 	}
@@ -612,8 +612,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
-				System.out.println("      ERROR! dlfileentry: " + actElement.element("dlfileentry").attributeValue("path") +"\n        "+e.getMessage());
+				//e.printStackTrace();
+				System.out.println("      ERROR! dlfileentry path: " + actElement.element("dlfileentry").attributeValue("path") +" - "+e.getMessage());
 			}
 			
 			//Si tenemos ficheros en las descripciones de las actividades
