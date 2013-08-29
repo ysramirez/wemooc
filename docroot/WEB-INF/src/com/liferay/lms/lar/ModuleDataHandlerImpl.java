@@ -553,7 +553,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		LearningActivity larn=(LearningActivity)context.getZipEntryAsObject(path);
 		
 		if(larn == null){
-			System.out.println("    LearningActivity ERROR!, path: " + path);
+			System.out.println("    ERROR! LearningActivity, path: " + path);
 			continue;
 		}
 		
@@ -606,7 +606,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "assetEntry", String.valueOf(asset.getEntryId()));
 				}
 				
-				LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
+				//LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
 				//System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
 				
 
