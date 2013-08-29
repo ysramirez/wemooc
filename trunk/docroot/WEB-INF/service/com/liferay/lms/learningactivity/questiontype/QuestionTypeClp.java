@@ -337,7 +337,7 @@ public class QuestionTypeClp implements QuestionType {
 
 	}
 	
-	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		Object returnObj = null;
 
 		try {

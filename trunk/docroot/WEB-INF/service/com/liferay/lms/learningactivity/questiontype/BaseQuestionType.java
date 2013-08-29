@@ -128,6 +128,6 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 		return sb.toString();
 	}
 	
-	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {}
+	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {}
 	
 }
