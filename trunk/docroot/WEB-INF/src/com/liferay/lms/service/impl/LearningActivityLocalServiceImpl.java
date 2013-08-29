@@ -505,6 +505,8 @@ public class LearningActivityLocalServiceImpl
 			case 5: res = "offline"; break;
 			//online
 			case 6: res = "online"; break;
+			//resource internal
+			case 7: res = "resourceInternal"; break;
 		}
 		
 		return res;
