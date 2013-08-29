@@ -13,6 +13,7 @@ import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
+import com.liferay.lms.service.impl.TestQuestionLocalServiceImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -197,15 +198,18 @@ public class OptionsQuestionType extends BaseQuestionType {
 	/**
 	 * Sólo hay una respuesta correcta, por lo que ésta debe tener valor 100
 	 */
-	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		//"multichoice" (single),"truefalse"
+		Element questiontext=question.element("questiontext");
+		String description=questiontext.elementText("text");
+		TestQuestion theQuestion=TestQuestionLocalServiceUtil.addQuestion(actId,description,getTypeId());
 		for(Element answerElement:question.elements("answer")){
 			boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
 			String answer=answerElement.elementText("text");
 			String feedback="";
 			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
 			 feedback=answerElement.element("feedback").element("text").getText();	 
-			testAnswerLocalService.addTestAnswer(questionId, answer, feedback, feedback, correct);
+			testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
 		}
 	}
 	

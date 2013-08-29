@@ -164,8 +164,11 @@ public class FreetextQuestionType extends BaseQuestionType {
 		return feedBack;
 	}
 	
-	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		//"essay","numerical","shortanswer"
+		Element questiontext=question.element("questiontext");
+		String description=questiontext.elementText("text");
+		TestQuestion theQuestion=TestQuestionLocalServiceUtil.addQuestion(actId,description,getTypeId());
 		if(!"essay".equals(question.attributeValue("type"))){//los essay en moodle nunca tienen respuesta
 			for(Element answerElement:question.elements("answer")){
 				boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
@@ -173,7 +176,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 				String feedback="";
 				if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
 				 feedback=answerElement.element("feedback").element("text").getText();	 
-				testAnswerLocalService.addTestAnswer(questionId, answer, feedback, feedback, correct);
+				testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
 				return;//porque inicialmente solo aceptamos una respuesta
 			}
 		}

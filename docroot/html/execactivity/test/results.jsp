@@ -103,7 +103,6 @@
 		         if("question".equals(element.getName())) questions.add(TestQuestionLocalServiceUtil.getTestQuestion(Long.valueOf(element.attributeValue("id"))));
 		    }	
 		}
-	
 		for(TestQuestion question:questions){
 			QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			qt.setLocale(themeDisplay.getLocale());
