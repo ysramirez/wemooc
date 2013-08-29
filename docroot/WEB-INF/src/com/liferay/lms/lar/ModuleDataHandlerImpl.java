@@ -220,7 +220,7 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 
 	
 		//Exportar las imagenes de los resources.
-		if(actividad.getTypeId() == 2){
+		if(actividad.getTypeId() == 2 || actividad.getTypeId() == 7 ){
 			
 			String img = LearningActivityLocalServiceUtil.getExtraContentValue(actividad.getActId(), "document");
 			
@@ -241,7 +241,8 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 
 					context.addZipEntry(getFilePath(context, docfile,actividad.getActId())+containsCharUpper(docfile.getTitle()), input);
 					
-					System.out.println("    - Resource external: " + containsCharUpper(docfile.getTitle()));
+					String txt = (actividad.getTypeId() == 2) ? "external":"internal";
+					System.out.println("    - Resource "+ txt + ": " + containsCharUpper(docfile.getTitle()));
 					
 					context.addZipEntry(pathlo, actividad);
 	
@@ -471,6 +472,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			
 		} catch (Exception e) {
 			//e.printStackTrace();
+			System.out.println(" * ERROR! module file: " + e.getMessage());
 		}
 		
 	}
@@ -506,7 +508,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+			//e.printStackTrace();
+			System.out.println(" * ERROR! descriptionfile: " + e.getMessage());
 		}
 
 		theModule.setDescription(description);
@@ -615,7 +618,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
-					System.out.println("      ERROR! : " + entryElement.element("descriptionfile").attributeValue("path") +"\n        "+e.getMessage());
+					System.out.println("      ERROR! descriptionfile: " + entryElement.element("descriptionfile").attributeValue("path") +"\n        "+e.getMessage());
 				}
 
 				nuevaLarn.setDescription(description);
@@ -661,7 +664,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				} catch (IOException e) {
 
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					//e.printStackTrace();
+					System.out.println(" * ERROR! descriptionfile: " + e.getMessage());
 				}
 				//System.out.println("   description : " + description );
 				question.setText(description);
@@ -733,14 +737,13 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				newDLFolder.setModifiedDate(now);
 				
 				DLFolderLocalServiceUtil.updateDLFolder(newDLFolder);
-				
-				//DLFolderLocalServiceUtil.addFolderResources(newDLFolder, true, false);
-				
+
 			}
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			//e.printStackTrace();
+			System.out.println(" * ERROR! createDLFoldersForLearningActivity: " + e.getMessage());
 		}
 		
     	return newDLFolder;
@@ -758,7 +761,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
         	dlMainFolderId = dlFolderMain.getFolderId();
         	dlMainFolderFound = true;
         	//Get portlet folder
-        } catch (Exception ex){
+        } catch (Exception e){
+        	System.out.println(" * ERROR! createDLFolders: " + e.getMessage());
         }
         
 		//Damos permisos al archivo para usuarios de comunidad.
@@ -822,7 +826,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 								
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								//e.printStackTrace();
+								System.out.println(" * ERROR! Description file image : " + e.getMessage());
 							}
 						}
 					}
@@ -862,7 +867,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 								
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
-								e.printStackTrace();
+								//e.printStackTrace();
+								System.out.println(" * ERROR! Description file pdf : " + e.getMessage());
 							}
 						}
 					}
