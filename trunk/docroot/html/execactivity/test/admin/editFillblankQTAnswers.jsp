@@ -82,6 +82,7 @@
 					
 					//-->
 					</script>
+					<liferay-ui:message key="fillblank.advise"/>
 					<portlet:actionURL var="editanswerURL" name="editanswer" />
 					<aui:form name="<%=\"afm_\"+testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 						<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
@@ -113,6 +114,7 @@
 	<%
 	}else{
 	%>
+		<liferay-ui:message key="fillblank.advise"/>
 		<portlet:actionURL var="addanswerURL" name="addanswer" />
 		<aui:form name="afm" action="<%=addanswerURL%>" method="post">
 			<aui:input type="textarea" rows="4" cols="60" maxlength="1000" name="answer" label="answer"></aui:input>
