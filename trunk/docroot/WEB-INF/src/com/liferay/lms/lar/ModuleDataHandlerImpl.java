@@ -600,20 +600,20 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 						serviceContext.getUserId(), repositoryId , dlFolder.getFolderId() , oldFile.getTitle(), oldFile.getMimeType(), 
 						oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
 
-				
-				System.out.println("      DLFileEntry newFile: "+newFile.getTitle()); 				
 				AssetEntry asset = AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), newFile.getPrimaryKey());
+				System.out.println("      DLFileEntry newFile: "+newFile.getTitle()+", newFile PrimaryKey: "+newFile.getPrimaryKey()+", EntryId: "+asset.getEntryId());
 				
 				//Ponemos a la actividad el fichero que hemos recuperado.
-				String img = "";
+				System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
 				if(larn.getTypeId() == 2){
 					LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
 				}else if(larn.getTypeId() == 7){
 					LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "assetEntry", String.valueOf(asset.getEntryId()));
 				}
-				
+				LearningActivityLocalServiceUtil.updateLearningActivity(nuevaLarn);
 				//LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
-				//System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
+				System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
+				
 				
 
 			} catch (Exception e) {
