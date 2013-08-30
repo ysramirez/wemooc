@@ -604,7 +604,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				System.out.println("      DLFileEntry newFile: "+newFile.getTitle()+", newFile PrimaryKey: "+newFile.getPrimaryKey()+", EntryId: "+asset.getEntryId());
 				
 				//Ponemos a la actividad el fichero que hemos recuperado.
-				System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
+				
 				if(larn.getTypeId() == 2){
 					LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
 				}else if(larn.getTypeId() == 7){
@@ -616,7 +616,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				
 				LearningActivityLocalServiceUtil.updateLearningActivity(nuevaLarn);
 				//LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
-				System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
+				//System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
 				
 				
 
