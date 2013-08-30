@@ -107,6 +107,8 @@ public class FillblankQuestionType extends BaseQuestionType {
 	}
 
 	private List<String> getBlankSols(String solution, boolean onlyCorrectOnes) {
+		boolean isNumerical = false;
+		if(solution.contains(":NUMERICAL:") || solution.contains(":NM:")) isNumerical = true;
 		String aux = solution.substring(solution.indexOf(":", solution.indexOf(":")+1)+1);
 		if(aux.endsWith("}")) aux = aux.substring(0, aux.length()-1);
 		String[] sols = aux.split("~");
@@ -121,7 +123,8 @@ public class FillblankQuestionType extends BaseQuestionType {
 				}
 				if(!sol.startsWith("*#")){
 					if(sol.contains("#")) sol=sol.substring(0,sol.indexOf("#"));
-					correctSols.add(sol);	
+					if(isNumerical && sol.contains(":")) sol = sol.substring(0, sol.indexOf(":"));
+					if(!correctSols.contains(sol)) correctSols.add(sol);	
 				}
 			}
 		}
@@ -152,7 +155,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 						List<String> sols = getBlankSols(temp, false);
 						fin +="<br/>";
 						for(String sol:sols)
-							fin+="<div class=\"answer\"><input type=\"radio\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\"" + sol + "\" >" + sol + "</div><br/>";//radiobuttons
+							fin+="<div class=\"answer\"><input type=\"radio\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\"" + sol + "\" >" + sol + "</div>";//radiobuttons
 					}else if(temp.contains(":MULTICHOICE:") || temp.contains(":MC:")){
 						List<String> sols = getBlankSols(temp, false);
 						fin+="<select name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\">";
@@ -279,7 +282,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 								if(solok != "") solok += " | ";
 								solok += blankSol;
 							}
-							auxans += "<div class=\"answer font_14 color_cuarto negrita\"> (" + solok + ") </div>";
+							auxans += "<div class=\" font_14 color_cuarto negrita\"> (" + solok + ") </div>";
 						}
 					}
 					else if(sol.contains(":MULTICHOICE_") || sol.contains(":MCV") || sol.contains(":MCH")){
@@ -290,17 +293,17 @@ public class FillblankQuestionType extends BaseQuestionType {
 							String checked = "", correct = "";
 							if(blankSol.equals(ans)) checked="checked='checked'";
 							if("true".equals(showCorrectAnswer) && blankSols.contains(blankSol)) correct = "font_14 color_cuarto negrita";
-							aux = "<div class=\"answer " + correct + "\"><input type=\"radio\"" + checked + "value=\"" + blankSol + " disabled=\"disabled\" \" >" + blankSol + "</div><br/>";//radiobuttons
+							aux = "<div class=\"answer " + correct + "\"><input type=\"radio\"" + checked + "value=\"" + blankSol + " disabled=\"disabled\" \" >" + blankSol + "</div>";//radiobuttons
 							auxans += aux;
 						}
 					}else if(sol.contains(":MULTICHOICE:") || sol.contains(":MC:")){
 						auxans+="<select>";
 						auxans+="<option value=\"\" disabled label=\"\"/>";//primer valor vacío
 						List<String> totalBlankSols = getBlankSols(sol, false);
-						boolean selected = false;
 						for(String blankSol:totalBlankSols){
-							selected = blankSol == ans;
-							auxans+="<option value=\""+ blankSol +"\" disabled label=\""+blankSol +"\" selected=\""+ selected +"\"/>";//dropdown
+							String selected = "";
+							if(ans.equals(blankSol)) selected ="selected";
+							auxans+="<option value=\""+ blankSol +"\" disabled label=\""+blankSol +"\" "+ selected +"/>";//dropdown
 						}
 						auxans+="</select>";
 						if("true".equals(showCorrectAnswer)) {
@@ -308,7 +311,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 								if(solok != "") solok += " | ";
 								solok += blankSol;
 							}
-							auxans += "<div class=\"answer font_14 color_cuarto negrita\"> (" + solok + ") </div>";
+							auxans += "<div class=\" font_14 color_cuarto negrita\"> (" + solok + ") </div>";
 						}
 					}
 					answersFeedBack = answersFeedBack.replace(sol, auxans);
