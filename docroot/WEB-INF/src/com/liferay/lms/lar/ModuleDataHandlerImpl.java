@@ -138,6 +138,9 @@ protected String doExportData(PortletDataContext context, String portletId, Port
 
 	System.out.println("\n-----------------------------\ndoExportData STARTS, groupId : " + context.getScopeGroupId() );
 	
+	Group group = GroupLocalServiceUtil.getGroup(context.getScopeGroupId());
+	System.out.println(" Course: "+ group.getName());
+	
 	context.addPermissions("com.liferay.lms.model.module", context.getScopeGroupId());
 	
 	Document document = SAXReaderUtil.createDocument();
@@ -235,7 +238,7 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 					DLFileEntry docfile=DLFileEntryLocalServiceUtil.getDLFileEntry(docAsset.getClassPK());
 					
 					String extension = "";
-					if(!docfile.getTitle().contains(".")){
+					if(!docfile.getTitle().contains(".") && docfile.getExtension().equals("")){
 						if(docfile.getMimeType().equals("image/jpeg")){
 							extension= ".jpg";
 						}else if(docfile.getMimeType().equals("image/png")){
@@ -419,6 +422,9 @@ protected PortletPreferences doImportData(PortletDataContext context, String por
 	context.importPermissions("com.liferay.lms.model.module", context.getSourceGroupId(),context.getScopeGroupId());
 	
 	System.out.println("\n-----------------------------\ndoImportData STARTS");
+	
+	Group group = GroupLocalServiceUtil.getGroup(context.getScopeGroupId());
+	System.out.println(" Course: "+ group.getName());
 
 	Document document = SAXReaderUtil.read(data);
 
@@ -613,7 +619,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
-				System.out.println("      ERROR! dlfileentry path: " + actElement.element("dlfileentry").attributeValue("path") +" - "+e.getMessage());
+				System.out.println("*ERROR! dlfileentry path: " + actElement.element("dlfileentry").attributeValue("path") +", message: "+e.getMessage());
 			}
 			
 			//Si tenemos ficheros en las descripciones de las actividades
@@ -752,7 +758,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 
 			if(newDLFolder == null){
 				
-				newDLFolder = DLFolderLocalServiceUtil.addFolder(userId, groupId, dlMainFolder.getRepositoryId(), false, dlMainFolder.getFolderId(), title, title, serviceContext);
+				newDLFolder = DLFolderLocalServiceUtil.addFolder(userId, groupId, dlMainFolder.getRepositoryId(), false, dlMainFolder.getFolderId(), String.valueOf(actId), title, serviceContext);
 	
 				newDLFolder.setGroupId(serviceContext.getScopeGroupId());
 				newDLFolder.setName(String.valueOf(actId));
@@ -793,7 +799,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
         	dlMainFolderFound = true;
         	//Get portlet folder
         } catch (Exception e){
-        	System.out.println("* ERROR! createDLFolders: " + e.getMessage());
+        	//e.printStackTrace()
+        	dlMainFolderFound = false;
         }
         
 		//Damos permisos al archivo para usuarios de comunidad.
