@@ -610,6 +610,10 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				}else if(larn.getTypeId() == 7){
 					LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "assetEntry", String.valueOf(asset.getEntryId()));
 				}
+				
+				Long newActId = nuevaLarn.getActId();
+				nuevaLarn = LearningActivityLocalServiceUtil.getLearningActivity(newActId);
+				
 				LearningActivityLocalServiceUtil.updateLearningActivity(nuevaLarn);
 				//LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
 				System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
