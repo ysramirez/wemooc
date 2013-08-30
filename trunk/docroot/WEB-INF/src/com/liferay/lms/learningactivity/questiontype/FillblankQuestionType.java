@@ -87,8 +87,13 @@ public class FillblankQuestionType extends BaseQuestionType {
 			end = textAnswer.indexOf("}");
 			if(end != -1){
 				if(end+1 == textAnswer.length()) temp = textAnswer.substring(start);
-				else temp = textAnswer.substring(start, end+1);
-				sols.add(temp);
+				else {
+					if(textAnswer.charAt(end+1) == '}')
+						if(end+2 == textAnswer.length()) temp = textAnswer.substring(start);
+						else temp = textAnswer.substring(start, end+2);
+					else temp = textAnswer.substring(start, end+1);
+				}
+				if(temp.startsWith("{{") || isMoodleAnswer(temp))sols.add(temp);
 				textAnswer = textAnswer.replace(temp, "");
 				start = textAnswer.indexOf("{");
 			}
@@ -102,29 +107,38 @@ public class FillblankQuestionType extends BaseQuestionType {
 		c.setStrength(Collator.PRIMARY);
 		List<String> sols = getBlankSols(solution, true);
 		for(String sol:sols)
-			if(c.compare(answer,sol)==0) return true;
+			if(c.compare(answer,sol)==0) {
+				correct = true;
+				break;
+			}
 		return correct;
 	}
 
 	private List<String> getBlankSols(String solution, boolean onlyCorrectOnes) {
-		boolean isNumerical = false;
-		if(solution.contains(":NUMERICAL:") || solution.contains(":NM:")) isNumerical = true;
-		String aux = solution.substring(solution.indexOf(":", solution.indexOf(":")+1)+1);
-		if(aux.endsWith("}")) aux = aux.substring(0, aux.length()-1);
-		String[] sols = aux.split("~");
 		List<String> correctSols =new ArrayList<String>();
-		for(String sol:sols){
-			if(!sol.startsWith("*#")){
-				if(sol.startsWith("=")) sol = sol.replace("=", "");
-				else if(sol.startsWith("%") && !sol.startsWith("%0%")) sol = sol.replace(sol.substring(sol.indexOf("%"), sol.lastIndexOf("%")+1), "");
-				else {
-					if(sol.startsWith("%0%")) sol = sol.replace(sol.substring(sol.indexOf("%"), sol.lastIndexOf("%")+1), "");
-					if(onlyCorrectOnes) sol = "*#";//para que no incluya las q son falsas
-				}
+		if(solution.startsWith("{{")){
+			solution = solution.replace("{{", "");
+			if(solution.contains("}}")) solution = solution.replace("}}", "");
+			correctSols.add(solution);
+		}else if(solution.startsWith("{")){
+			boolean isNumerical = false;
+			if(solution.contains(":NUMERICAL:") || solution.contains(":NM:")) isNumerical = true;
+			String aux = solution.substring(solution.indexOf(":", solution.indexOf(":")+1)+1);
+			if(aux.endsWith("}")) aux = aux.substring(0, aux.length()-1);
+			String[] sols = aux.split("~");
+			for(String sol:sols){
 				if(!sol.startsWith("*#")){
-					if(sol.contains("#")) sol=sol.substring(0,sol.indexOf("#"));
-					if(isNumerical && sol.contains(":")) sol = sol.substring(0, sol.indexOf(":"));
-					if(!correctSols.contains(sol)) correctSols.add(sol);	
+					if(sol.startsWith("=")) sol = sol.replace("=", "");
+					else if(sol.startsWith("%") && !sol.startsWith("%0%")) sol = sol.replace(sol.substring(sol.indexOf("%"), sol.lastIndexOf("%")+1), "");
+					else {
+						if(sol.startsWith("%0%")) sol = sol.replace(sol.substring(sol.indexOf("%"), sol.lastIndexOf("%")+1), "");
+						if(onlyCorrectOnes) sol = "*#";//para que no incluya las q son falsas
+					}
+					if(!sol.startsWith("*#")){
+						if(sol.contains("#")) sol=sol.substring(0,sol.indexOf("#"));
+						if(isNumerical && sol.contains(":")) sol = sol.substring(0, sol.indexOf(":"));
+						if(!correctSols.contains(sol)) correctSols.add(sol);	
+					}
 				}
 			}
 		}
@@ -149,7 +163,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 				int i=0;
 				for(String temp:questionSols){
 					if(temp.contains(":SHORTANSWER") || temp.contains(":SA") || temp.contains(":MW")
-							|| temp.contains(":NUMERICAL:") || temp.contains(":NM:")) 
+							|| temp.contains(":NUMERICAL:") || temp.contains(":NM:") || temp.contains("{{")) 
 						fin+="<input type=\"text\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\"\" >";//input
 					else if(temp.contains(":MULTICHOICE_") || temp.contains(":MCV") || temp.contains(":MCH")){
 						List<String> sols = getBlankSols(temp, false);
@@ -163,7 +177,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 						for(String sol:sols)
 							fin+="<option value=\""+ sol +"\" label=\""+sol +"\"/>";//dropdown
 						fin+="</select>";
-					}
+					}else fin+=temp;
 					
 					textAnswer = textAnswer.replace(temp, fin);
 					fin="";i++;
@@ -178,6 +192,14 @@ public class FillblankQuestionType extends BaseQuestionType {
 		
 		
 		return view;
+	}
+	
+	private boolean isMoodleAnswer(String temp) {
+		if(temp.contains(":SHORTANSWER") || temp.contains(":SA") || temp.contains(":MW")
+				|| temp.contains(":NUMERICAL:") || temp.contains(":NM:") || temp.contains("{{") 
+				|| temp.contains(":MULTICHOICE_") || temp.contains(":MCV") || temp.contains(":MCH")
+				|| temp.contains(":MULTICHOICE:") || temp.contains(":MC:")) return true;
+		return false;
 	}
 	
 	public Element getResults(ActionRequest actionRequest, long questionId){
@@ -275,7 +297,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 					List<String> blankSols = getBlankSols(sol, true);
 					
 					if(sol.contains(":SHORTANSWER") || sol.contains(":SA") || sol.contains(":MW")
-							|| sol.contains(":NUMERICAL:") || sol.contains(":NM:")) {
+							|| sol.contains(":NUMERICAL:") || sol.contains(":NM:") || sol.contains("{{")) {
 						auxans= "<input readonly type=\"text\" value=\""+ans+"\" >";//input
 						if("true".equals(showCorrectAnswer)) {
 							for(String blankSol:blankSols){
@@ -313,7 +335,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 							}
 							auxans += "<div class=\" font_14 color_cuarto negrita\"> (" + solok + ") </div>";
 						}
-					}
+					}else auxans+=sol;
 					answersFeedBack = answersFeedBack.replace(sol, auxans);
 					i++;solok="";
 				}
