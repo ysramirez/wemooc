@@ -85,7 +85,7 @@
 					<portlet:actionURL var="editanswerURL" name="editanswer" />
 					<aui:form name="<%=\"afm_\"+testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 						<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
-						<aui:input type="textarea"  rows="4" cols="60" maxlength="1000" name="answer" value="<%=testanswer.getAnswer() %>"></aui:input>
+						<aui:input type="textarea"  rows="20" cols="70" maxlength="4000" name="answer" value="<%=testanswer.getAnswer() %>"></aui:input>
 						<div id="<portlet:namespace />answerError_<%=Long.toString(testanswer.getAnswerId()) %>" class="<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
 						   														"portlet-msg-error":StringPool.BLANK %>">
 						   	<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
