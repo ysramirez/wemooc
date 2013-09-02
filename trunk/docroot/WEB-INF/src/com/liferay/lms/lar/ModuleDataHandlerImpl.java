@@ -33,10 +33,13 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -439,6 +442,17 @@ protected PortletPreferences doImportData(PortletDataContext context, String por
 		importEntry(context,entryElement, entry);
 	}
 	
+	
+
+	Company company = CompanyLocalServiceUtil.getCompanyById(context.getCompanyId());
+	PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
+	PortalUtil.getPortalPort(false);
+	
+	System.out.println("  : " + company.getHomeURL() );
+System.out.println("  : " + PortalUtil.getPortalPort(false) );
+System.out.println("  : " + PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(false), false) );
+
+	
 	System.out.println("doImportData ENDS" + "\n-----------------------------\n"  );
 	
 	return null;
@@ -623,7 +637,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			}
 			
 			//Si tenemos ficheros en las descripciones de las actividades
-			for (Element actElementFile : entryElement.elements("descriptionfile")) {
+			for (Element actElementFile : actElement.elements("descriptionfile")) {
 				
 				FileEntry oldFile = (FileEntry)context.getZipEntryAsObject(actElementFile.attributeValue("path"));
 										
@@ -639,7 +653,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					folderId=createDLFolders(userId,repositoryId,serviceContext);
 					
 					newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
-					
+										
 					description = descriptionFileParserLarToDescription(theModule.getDescription(), oldFile, newFile);
 					
 				} catch(DuplicateFileException dfl){
@@ -983,18 +997,22 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		
 		//<img src="/documents/10808/0/GibbonIndexer.jpg/b24c4a8f-e65c-434a-ba36-3b3e10b21a8d?t=1376472516221"
 		//<a  href="/documents/10808/10884/documento.pdf/32c193ed-16b3-4a83-93da-630501b72ee4">Documento</a></p>
+				
+		System.out.println("   description         : " + description );
 		
 		String target = "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+oldFile.getTitle()+"/"+oldFile.getUuid();
 		String replacement = "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid();
 			
 		System.out.println("   target      : " + target );	
-		System.out.println("   replacement : " + replacement );
+		//System.out.println("   replacement : " + replacement );
 		
 		res = description.replace(target, replacement);
 		
 		System.out.println("   res         : " + res );
+				
+		String changed = (!res.equals(description))?" changed":" not changed";
 		
-		System.out.println("   + Description file : " + newFile.getTitle() +" (" + newFile.getMimeType() + ")");
+		System.out.println("   + Description file : " + newFile.getTitle() +" (" + newFile.getMimeType() + ")" + changed);
 		
 		return res;
 	}
