@@ -574,6 +574,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		}
 		
 		System.out.println("    Learning Activity: " + larn.getTitle(Locale.getDefault()) + " (" + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(larn.getTypeId()).getName())+")" );
+		System.out.println("    Learning Activity path: " + path);
 		
 		serviceContext.setAssetCategoryIds(context.getAssetCategoryIds(LearningActivity.class, larn.getActId()));
 		serviceContext.setAssetTagNames(context.getAssetTagNames(LearningActivity.class, larn.getActId()));
@@ -635,49 +636,53 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				e.printStackTrace();
 				System.out.println("*ERROR! dlfileentry path: " + actElement.element("dlfileentry").attributeValue("path") +", message: "+e.getMessage());
 			}
-			
-			//Si tenemos ficheros en las descripciones de las actividades
-			for (Element actElementFile : actElement.elements("descriptionfile")) {
-				
-				FileEntry oldFile = (FileEntry)context.getZipEntryAsObject(actElementFile.attributeValue("path"));
-										
-				FileEntry newFile;
-				long folderId=0;
-				String description = "";
-				
-				try {
-					
-					InputStream input = context.getZipEntryAsInputStream(actElementFile.attributeValue("file"));
-					
-					long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-					folderId=createDLFolders(userId,repositoryId,serviceContext);
-					
-					newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
-										
-					description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, newFile);
-					
-				} catch(DuplicateFileException dfl){
-					
-					try{
-						FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
-						description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, existingFile);
-					}catch(Exception e){
-						description = nuevaLarn.getDescription();
-					}
-					
-				} catch (Exception e) {
 
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-					System.out.println("      ERROR! descriptionfile: " + entryElement.element("descriptionfile").attributeValue("path") +"\n        "+e.getMessage());
-				}
-
-				nuevaLarn.setDescription(description);
-				LearningActivityLocalServiceUtil.updateLearningActivity(nuevaLarn);
-				
-			}
 		}
 
+		
+		//Si tenemos ficheros en las descripciones de las actividades
+		for (Element actElementFile : actElement.elements("descriptionfile")) {
+			
+			FileEntry oldFile = (FileEntry)context.getZipEntryAsObject(actElementFile.attributeValue("path"));
+			
+			System.out.println("      Description File: " + oldFile.getTitle()); 
+									
+			FileEntry newFile;
+			long folderId=0;
+			String description = "";
+			
+			try {
+				
+				InputStream input = context.getZipEntryAsInputStream(actElementFile.attributeValue("file"));
+				
+				long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+				folderId=createDLFolders(userId,repositoryId,serviceContext);
+				
+				newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
+									
+				description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, newFile);
+				
+			} catch(DuplicateFileException dfl){
+				
+				try{
+					FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
+					description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, existingFile);
+				}catch(Exception e){
+					System.out.println("      ERROR! descriptionfile descriptionFileParserLarToDescription : " +e.getMessage());
+					description = nuevaLarn.getDescription();
+				}
+				
+			} catch (Exception e) {
+
+				// TODO Auto-generated catch block
+				//e.printStackTrace();
+				System.out.println("      ERROR! descriptionfile: " + entryElement.element("descriptionfile").attributeValue("path") +"\n        "+e.getMessage());
+			}
+
+			nuevaLarn.setDescription(description);
+			LearningActivityLocalServiceUtil.updateLearningActivity(nuevaLarn);
+			
+		}
 	
 		for(Element qElement:actElement.elements("question"))
 		{
