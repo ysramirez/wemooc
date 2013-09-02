@@ -2,6 +2,7 @@ package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
 
+import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.SCORMAssetRenderer;
@@ -11,7 +12,9 @@ import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.SCORMContentLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadRequest;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
@@ -126,6 +129,22 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		rootElement.add(uuid);
 
 		learningActivity.setExtracontent(document.formattedString());
+	}
+	
+	@Override
+	public boolean especificValidations(UploadRequest uploadRequest,
+			PortletResponse portletResponse) {
+		PortletRequest actionRequest = (PortletRequest)uploadRequest.getAttribute(
+				JavaConstants.JAVAX_PORTLET_REQUEST);
+		boolean validate=true;
+		
+		if((Validator.isNotNull(uploadRequest.getParameter("assetEntryId")))&&
+		   ((!Validator.isNumber(uploadRequest.getParameter("assetEntryId")))||
+		    (Long.parseLong(uploadRequest.getParameter("assetEntryId")) <= 0))) {
+			SessionErrors.add(actionRequest, "scormactivity.error.invalid-asset");
+			validate = false;
+		}
+		return validate;
 	}
 
 	@Override

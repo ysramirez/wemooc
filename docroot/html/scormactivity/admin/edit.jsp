@@ -117,9 +117,13 @@ if(request.getAttribute("activity")!=null) {
 
 %>
 
-<aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>"/>
+<aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>">
+	<aui:validator name="required"></aui:validator>
+</aui:input>
 <aui:field-wrapper name="activity.edit.asserts" cssClass="search-button-container">
-	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50"/>
+	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50">
+		<aui:validator name="required"></aui:validator>
+	</aui:input>
 	<button type="button" id="<portlet:namespace/>searchEntry" onclick="<portlet:namespace/>search();" >
 	    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
