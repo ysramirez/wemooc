@@ -1,6 +1,5 @@
 package com.liferay.lms.lar;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.util.Date;
 import java.util.List;
@@ -10,7 +9,6 @@ import javax.portlet.PortletPreferences;
 
 import org.apache.commons.io.IOUtils;
 
-import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
 import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
@@ -33,7 +31,6 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
@@ -822,7 +819,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 	}
 
 	
-	public static void descriptionFileParserDescriptionToLar(String description, long oldGroupId, long moduleId, PortletDataContext context, Element element){
+	public void descriptionFileParserDescriptionToLar(String description, long oldGroupId, long moduleId, PortletDataContext context, Element element){
 
 		try {
 
@@ -832,6 +829,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			
 			for (Element entryElement : rootElement.elements("Description")) {
 				for (Element entryElementP : entryElement.elements("p")) {
+					
+					//Para las imagenes
 					for (Element entryElementImg : entryElementP.elements("img")) {
 						
 						String src = entryElementImg.attributeValue("src");
@@ -873,9 +872,10 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 						}
 					}
 					
-					for (Element entryElementImg : entryElementP.elements("a")) {
+					//Para los enlaces
+					for (Element entryElementLink : entryElementP.elements("a")) {
 						
-						String href = entryElementImg.attributeValue("href");
+						String href = entryElementLink.attributeValue("href");
 						
 						String []hrefInfo = href.split("/");
 						String fileUuid = "", fileGroupId ="";
@@ -912,6 +912,12 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 								System.out.println("* ERROR! Description file pdf : " + e.getMessage());
 							}
 						}
+						
+						//Si en los enlaces tienen una imagen para hacer click.
+						for (Element entryElementLinkImage : entryElementLink.elements("img")) {
+							parseImage(entryElementLinkImage, element, context, moduleId);
+						}
+						
 					}
 				}
 			}
@@ -922,6 +928,49 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			System.out.println("* ERROR! Document Exception : " + e.getMessage());
 		}
 
+	}
+	
+	private void parseImage(Element imgElement, Element element, PortletDataContext context, Long moduleId){
+	
+		String src = imgElement.attributeValue("src");
+		
+		String []srcInfo = src.split("/");
+		String fileUuid = "", fileGroupId ="";
+		
+		if(srcInfo.length >= 6  && srcInfo[1].compareTo("documents") == 0){
+			fileUuid = srcInfo[srcInfo.length-1];
+			fileGroupId = srcInfo[2];
+			
+			String []uuidInfo = fileUuid.split("\\?");
+			String uuid="";
+			if(srcInfo.length > 0){
+				uuid=uuidInfo[0];
+			}
+			
+			FileEntry file;
+			try {
+				file = DLAppLocalServiceUtil.getFileEntryByUuidAndGroupId(uuid, Long.parseLong(fileGroupId));
+
+				String pathqu = getEntryPath(context, file);
+				String pathFile = getDescriptionModulePath(context, moduleId); 
+						
+				context.addZipEntry(pathqu, file);
+				context.addZipEntry(pathFile + file.getTitle(), file.getContentStream());
+
+				Element entryElementLoc= element.addElement("descriptionfile");
+				entryElementLoc.addAttribute("path", pathqu);
+				entryElementLoc.addAttribute("file", pathFile + file.getTitle());
+				
+				System.out.println("   + Description file image : " + file.getTitle() +" ("+file.getMimeType()+")");
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				System.out.println("* ERROR! Description file image : " + e.getMessage());
+			}
+		}
+		
+	
 	}
 	
 	private String descriptionFileParserLarToDescription(String description, FileEntry oldFile, FileEntry newFile){
