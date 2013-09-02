@@ -293,6 +293,8 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 			entryElementq.addAttribute("path", pathqu);
 			context.addZipEntry(pathqu, question);
 			
+			System.out.println("      Test Question: " + question.getQuestionId() /*Jsoup.parse(nuevaQuestion.getText()).text()*/);
+			
 			//Exportar los ficheros que tiene la descripcion de la pregunta
 			descriptionFileParserDescriptionToLar("<root><Description>"+question.getText()+"</Description></root>", actividad.getGroupId(), actividad.getModuleId(), context, entryElementq);	
 			
@@ -834,7 +836,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 	public void descriptionFileParserDescriptionToLar(String description, long oldGroupId, long moduleId, PortletDataContext context, Element element){
 
 		try {
-
+			System.out.println("Description:\n" + description);
 			Document document = SAXReaderUtil.read(description.replace("&lt;","<").replace("&nbsp;",""));
 			
 			Element rootElement = document.getRootElement();
