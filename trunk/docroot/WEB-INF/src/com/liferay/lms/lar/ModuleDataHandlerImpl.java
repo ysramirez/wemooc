@@ -442,17 +442,6 @@ protected PortletPreferences doImportData(PortletDataContext context, String por
 		importEntry(context,entryElement, entry);
 	}
 	
-	
-
-	Company company = CompanyLocalServiceUtil.getCompanyById(context.getCompanyId());
-	PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
-	PortalUtil.getPortalPort(false);
-	
-	System.out.println("  : " + company.getHomeURL() );
-System.out.println("  : " + PortalUtil.getPortalPort(false) );
-System.out.println("  : " + PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(false), false) );
-
-	
 	System.out.println("doImportData ENDS" + "\n-----------------------------\n"  );
 	
 	return null;
@@ -574,7 +563,6 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		}
 		
 		System.out.println("    Learning Activity: " + larn.getTitle(Locale.getDefault()) + " (" + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(larn.getTypeId()).getName())+")" );
-		System.out.println("    Learning Activity path: " + path);
 		
 		serviceContext.setAssetCategoryIds(context.getAssetCategoryIds(LearningActivity.class, larn.getActId()));
 		serviceContext.setAssetTagNames(context.getAssetTagNames(LearningActivity.class, larn.getActId()));
