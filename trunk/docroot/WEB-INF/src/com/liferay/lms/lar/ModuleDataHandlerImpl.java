@@ -987,10 +987,12 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		String target = "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+oldFile.getTitle()+"/"+oldFile.getUuid();
 		String replacement = "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid();
 			
-		//System.out.println("  target      : " + target );	
-		//System.out.println("  replacement : " + replacement );
+		System.out.println("   target      : " + target );	
+		System.out.println("   replacement : " + replacement );
 		
 		res = description.replace(target, replacement);
+		
+		System.out.println("   res         : " + res );
 		
 		System.out.println("   + Description file : " + newFile.getTitle() +" (" + newFile.getMimeType() + ")");
 		
