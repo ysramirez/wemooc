@@ -8,6 +8,7 @@ import java.util.Locale;
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.io.IOUtils;
+import org.jsoup.Jsoup;
 
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
@@ -253,6 +254,8 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 								extension = ext[1];
 							}
 						}
+					}else if(!docfile.getTitle().contains(".") && !docfile.getExtension().equals("")){
+						extension="."+docfile.getExtension();
 					}
 
 					String pathqu = getEntryPath(context, docfile);
@@ -633,7 +636,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			
 			FileEntry oldFile = (FileEntry)context.getZipEntryAsObject(actElementFile.attributeValue("path"));
 			
-			System.out.println("      Description File: " + oldFile.getTitle()); 
+			//System.out.println("      Description File: " + oldFile.getTitle()); 
 									
 			FileEntry newFile;
 			long folderId=0;
@@ -680,6 +683,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			question.setActId(nuevaLarn.getActId());
 			TestQuestion nuevaQuestion=TestQuestionLocalServiceUtil.addQuestion(question.getActId(), question.getText(), question.getQuestionType());
 			
+			System.out.println("      Test Question: " + nuevaQuestion.getQuestionId() /*Jsoup.parse(nuevaQuestion.getText()).text()*/);
+			
 			//Si tenemos ficheros en las descripciones de las preguntas.
 			for (Element actElementFile : qElement.elements("descriptionfile")) {
 				
@@ -698,18 +703,18 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					
 					newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
 					
-					description = descriptionFileParserLarToDescription(theModule.getDescription(), oldFile, newFile);
+					description = descriptionFileParserLarToDescription(question.getText(), oldFile, newFile);
 					
 				} catch(DuplicateFileException dfl){
 					
 					FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
-					description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, existingFile);
+					description = descriptionFileParserLarToDescription(question.getText(), oldFile, existingFile);
 					
 				} catch (Exception e) {
 
 					// TODO Auto-generated catch block
 					//e.printStackTrace();
-					System.out.println("* ERROR! descriptionfile: " + e.getMessage());
+					System.out.println("* ERROR! Question descriptionfile: " + e.getMessage());
 				}
 				//System.out.println("   description : " + description );
 				question.setText(description);
