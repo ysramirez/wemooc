@@ -721,7 +721,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				}
 				//System.out.println("   description : " + description );
 				question.setText(description);
-				//TestQuestionLocalServiceUtil.updateTestQuestion(question);
+				TestQuestionLocalServiceUtil.updateTestQuestion(question);
 				
 			}
 			
