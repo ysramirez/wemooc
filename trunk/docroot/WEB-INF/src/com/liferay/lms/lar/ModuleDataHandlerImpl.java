@@ -654,7 +654,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					
 					newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
 										
-					description = descriptionFileParserLarToDescription(theModule.getDescription(), oldFile, newFile);
+					description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, newFile);
 					
 				} catch(DuplicateFileException dfl){
 					
@@ -1004,7 +1004,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		String replacement = "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid();
 			
 		System.out.println("   target      : " + target );	
-		//System.out.println("   replacement : " + replacement );
+		System.out.println("   replacement : " + replacement );
 		
 		res = description.replace(target, replacement);
 		
