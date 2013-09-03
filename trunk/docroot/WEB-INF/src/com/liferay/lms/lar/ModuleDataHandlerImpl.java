@@ -706,12 +706,12 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					
 					newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
 					
-					description = descriptionFileParserLarToDescription(question.getText(), oldFile, newFile);
+					description = descriptionFileParserLarToDescription(nuevaQuestion.getText(), oldFile, newFile);
 					
 				} catch(DuplicateFileException dfl){
 					
 					FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
-					description = descriptionFileParserLarToDescription(question.getText(), oldFile, existingFile);
+					description = descriptionFileParserLarToDescription(nuevaQuestion.getText(), oldFile, existingFile);
 					
 				} catch (Exception e) {
 
@@ -720,8 +720,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					System.out.println("* ERROR! Question descriptionfile: " + e.getMessage());
 				}
 				//System.out.println("   description : " + description );
-				question.setText(description);
-				TestQuestionLocalServiceUtil.updateTestQuestion(question);
+				nuevaQuestion.setText(description);
+				TestQuestionLocalServiceUtil.updateTestQuestion(nuevaQuestion);
 				
 			}
 			
