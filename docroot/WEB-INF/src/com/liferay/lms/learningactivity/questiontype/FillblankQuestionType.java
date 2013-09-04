@@ -147,45 +147,86 @@ public class FillblankQuestionType extends BaseQuestionType {
 	
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		String view = "";
+		String answersView="";
 		try {
+			//Cogemos las respuestas a los blancos (separadas por coma) de la pregunta a partir del xml de learningactivityresult
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			TestAnswer answer = (answers!=null && answers.size()>0)?answers.get(0):null;
-			if(answer != null){
-				//leer e interpretar el answer, poner el texto y sustituir los bloques {} por lo q corresponda: input, dropdown o radiobuttons
+			String answer="";
+			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
+			while(nodeItr.hasNext()) {
+				Element element = nodeItr.next();
+		         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
+		        	 Iterator<Element> elementItr = element.elementIterator();
+		        	 if(elementItr.hasNext()) {
+		        		 Element elementElement = elementItr.next();
+		        		 if("answer".equals(elementElement.getName())) {
+		        			 try {
+								answer = elementElement.getText();
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
+		        		 }
+		        	 }
+		         }
+		    }	
+			
+			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
+			if(testAnswers!=null && testAnswers.size()>0){
+								
 				view += "<div class=\"question\">"+
-							"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
-							"<div class=\"questiontext\">" + question.getText() + "</div>"+
-							"<div class=\"answer\">";
+						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
+						"<div class=\"questiontext\">" + question.getText() + "</div>"+
+						"<div class=\"answer\">";
 				
-				String textAnswer = translateNewLines(answer.getAnswer()), fin="";
-				List<String> questionSols = getQuestionSols(textAnswer);
+				
+				TestAnswer solution = testAnswers.get(0);
+				List<String> sols = getQuestionSols(solution.getAnswer());
+				String[] answers = answer.split(",");
+				answersView = translateNewLines(solution.getAnswer());
 				int i=0;
-				for(String temp:questionSols){
-					if(temp.contains(":SHORTANSWER") || temp.contains(":SA") || temp.contains(":MW")
-							|| temp.contains(":NUMERICAL:") || temp.contains(":NM:") || temp.contains("{{")) 
-						fin+="<input type=\"text\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\"\" >";//input
-					else if(temp.contains(":MULTICHOICE_") || temp.contains(":MCV") || temp.contains(":MCH")){
-						List<String> sols = getBlankSols(temp, false);
-						fin +="<br/>";
-						for(String sol:sols)
-							fin+="<div class=\"answer\"><input type=\"radio\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\"" + sol + "\" >" + sol + "</div>";//radiobuttons
-					}else if(temp.contains(":MULTICHOICE:") || temp.contains(":MC:")){
-						List<String> sols = getBlankSols(temp, false);
-						fin+="<select name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\">";
-						fin+="<option value=\"\" label=\"\"/>";//primer valor vac�o
-						for(String sol:sols)
-							fin+="<option value=\""+ sol +"\" label=\""+sol +"\"/>";//dropdown
-						fin+="</select>";
-					}else fin+=temp;
+				for(String sol:sols){
+					String ans = (answers.length>i)?answers[i]:"";
+					String auxans = "";
 					
-					textAnswer = textAnswer.replace(temp, fin);
-					fin="";i++;
+					if(sol.contains(":SHORTANSWER") || sol.contains(":SA") || sol.contains(":MW")
+							|| sol.contains(":NUMERICAL:") || sol.contains(":NM:") || sol.contains("{{")) {
+						auxans= "<input type=\"text\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\""+ans+"\" >";//input
+					}
+					else if(sol.contains(":MULTICHOICE_") || sol.contains(":MCV") || sol.contains(":MCH")){
+						String aux = "";
+						auxans = "<br/>";
+						List<String> totalBlankSols = getBlankSols(sol, false);
+						for(String blankSol:totalBlankSols){
+							String checked = "";
+							if(blankSol.equals(ans)) {
+								checked="checked='checked'";
+							}
+							aux = "<div class=\"answer\"><input type=\"radio\"" + checked + "name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\"" + sol + "\" >" + sol + "</div>";//radiobuttons
+							auxans += aux;
+						}
+					}else if(sol.contains(":MULTICHOICE:") || sol.contains(":MC:")){
+						auxans+="<select name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\">";
+						auxans+="<option value=\"\" label=\"\"/>";
+						List<String> totalBlankSols = getBlankSols(sol, false);
+						for(String blankSol:totalBlankSols){
+							String selected = "";
+							if(ans.equals(blankSol)) {
+								selected ="selected";
+							}
+							auxans+="<option value=\""+ blankSol +"\" label=\""+blankSol +"\" "+ selected +"/>";//dropdown
+						}
+						auxans+="</select>";
+					}else {
+						auxans+=sol;
+					}
+					answersView = answersView.replace(sol, auxans);
+					i++;
 				}
-				view += 		textAnswer+
-							"</div>"+
-						"</div>";
 			}
+			
+			view += answersView+"</div>" +
+				"</div>";
+			
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}

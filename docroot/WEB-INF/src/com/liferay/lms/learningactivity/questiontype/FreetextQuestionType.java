@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -79,10 +80,14 @@ public class FreetextQuestionType extends BaseQuestionType {
 		String view = "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
+			String answerGiven = new String();
+			if (Validator.isNotNull(document)) {
+				answerGiven = getAnswerGiven(document, questionId);
+			}
 			view += "<div class=\"question\">"+
 						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 						"<div class=\"questiontext\">" + question.getText() + "</div>"+
-						"<div class=\"answer\"><textarea rows=\"4\" cols=\"60\" maxlength=\"1000\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId() + "\" label=\"answer\"></textarea></div>"+
+						"<div class=\"answer\"><textarea rows=\"4\" cols=\"60\" maxlength=\"1000\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId() + "\" label=\"answer\">"+answerGiven+"</textarea></div>"+
 					"</div>";
 		} catch (SystemException e) {
 			e.printStackTrace();
@@ -167,6 +172,28 @@ public class FreetextQuestionType extends BaseQuestionType {
 			e.printStackTrace();
 		}
 		return feedBack;
+	}
+	
+	protected String getAnswerGiven(Document document,long questionId){
+		String answerGiven = "";
+		Iterator<Element> nodeItr = document.getRootElement().elementIterator();
+		while(nodeItr.hasNext()) {
+			Element element = nodeItr.next();
+	         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
+	        	 Iterator<Element> elementItr = element.elementIterator();
+	        	 while(elementItr.hasNext()) {
+	        		 Element elementElement = elementItr.next();
+	        		 if("answer".equals(elementElement.getName())) {
+	        			try {
+	        				answerGiven = elementElement.getText();
+						} catch (NumberFormatException e) {
+							e.printStackTrace();
+						}
+	        		 }
+	        	 }
+	         }
+	    }	
+		return answerGiven;
 	}
 	
 	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
