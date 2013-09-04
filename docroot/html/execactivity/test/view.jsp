@@ -123,6 +123,143 @@
 									<portlet:param name="latId" value="<%=Long.toString(learningTry.getLatId()) %>"></portlet:param>
 								</portlet:actionURL>
 								
+								<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+  								<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+  								
+  								 <style>
+		
+									.drop-containers {
+										width:40%;
+										height:40%;
+										display:inline-block;
+										margin-left:20px;
+									}
+									.drop-containers > div {
+										width:auto;
+										height:auto;
+										border:1px solid;
+										display:block;
+										background:#eee;
+										color:#555555;
+										font-family: Verdana,Arial,sans-serif;
+										font-size: 1.1em;
+										margin: 10px;
+										padding: 10px;
+										list-style-type: none;
+									}
+									
+									#background {
+									   position: absolute;
+									   top: 0;
+									   left: 0;
+									   bottom: 0;
+									   right: 0;
+									   z-index: -1;
+									   overflow: hidden;
+									}
+									
+									#container {
+									   position: relative;
+									}
+									
+									.ui-corner-all {
+										border-radius: 4px;
+									}
+							
+									.items,.draggable-helper {
+										width:40%;
+										display:inline-block;
+										list-style-type:none;
+									}
+									.items > div,.draggable-helper > div {
+										width:auto;
+										height:auto;
+										border:1px solid;
+										background:#fff;
+										color:#555555;
+										font-family: Verdana,Arial,sans-serif;
+										font-size: 1.1em;
+										margin: 10px;
+										padding: 10px;
+									}
+							
+							  </style>
+							  <script>		
+									(function ($) {
+									   $.fn.liveDraggable = function (opts) {
+										  this.on("mouseover", function() {
+											 if (!$(this).data("init")) {
+												$(this).data("init", true).draggable(opts);
+											 }
+										  });
+										  return this;
+									   };
+									}(jQuery));
+							  
+									$(document).ready(function() {
+										$('.draganddrop').each(function() {
+											var elem = '#'+$(this).attr('id');
+											$(elem + ' > .items > div').liveDraggable({
+												helper: function(event) {
+													var helperList = $('<ul class="draggable-helper">');
+													helperList.append($(this).clone());
+													return helperList;
+												},
+												drag: function( event, ui ) {
+													ui.offset = {"top" : "0", "left" : "0"};
+													$(ui.helper).html("Selected Item").css({"border" : "1px solid #000"});        
+												},
+												cursorAt: { top: 0, left: 0 }
+											});
+											
+											$(elem + ' > .drop-containers > div > div').liveDraggable({
+												helper: function(event) {
+													var $this = $(this);
+													if(!$this.hasClass('base')){
+														var helperList = $('<ul class="draggable-helper2">');
+														helperList.append($(this).clone());
+														return helperList;
+													}
+												},
+												drag: function( event, ui ) {
+													var $this = $(this).parent();
+													if(!$this.hasClass('base')){
+														ui.offset = {"top" : "0", "left" : "0"};
+														$(ui.helper).html("Selected Item").css({"border" : "1px solid #000"}); 
+													}
+												},
+												cursorAt: { top: 0, left: 0 }
+											});
+											
+											$(elem + ' > .drop-containers > div').droppable({
+												tolerance : 'pointer',
+												accept: elem + ' > .items > div',
+												drop: function(event, ui) {
+													var $this = $(this);
+													if (!$this.hasClass('occupied')){
+														$this.text('');
+														$this.append(ui.draggable);
+														$this.addClass('occupied');
+														$this.removeClass('base');
+													}
+												}
+											});
+											$(elem + ' > .items').droppable({
+												tolerance : 'pointer',
+												accept: elem + ' > .drop-containers > div > div',
+												drop: function(event, ui) {
+													var $this = $(this);
+													var padre = ui.draggable.parent();
+													$this.append(ui.draggable);
+													padre.text(Liferay.Language.get('drop',(padre.attr('id')).replace(/[^\d]/g, '')));
+													padre.removeClass('occupied');
+													padre.addClass('base');
+												}
+											});
+										});
+									});
+							  </script>
+  								
 								<script type="text/javascript">
 								<!--
 <%
@@ -271,8 +408,9 @@
 			for(int index=0; index<random; index++) {
 				TestQuestion question = questions.get(index);
 				QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+				qt.setLocale(themeDisplay.getLocale());
 %>
-				<%=qt.getHtmlView(question.getQuestionId(), themeDisplay)%>
+				<%=qt.getHtmlView(question.getQuestionId(), themeDisplay, null)%>
 <%
 			}
 			
