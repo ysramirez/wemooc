@@ -83,7 +83,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 		return (testAnswer!=null)?testAnswer.isIsCorrect():false;
 	}
 	
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay){
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		String view = "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
@@ -104,11 +104,17 @@ public class OptionsQuestionType extends BaseQuestionType {
 	
 	public Element getResults(ActionRequest actionRequest, long questionId){
 		long[] answersId= ParamUtil.getLongValues(actionRequest, "question_"+questionId);
+		
 		List<Long> arrayAnswersId = new ArrayList<Long>();
 		for(long answerId:answersId) arrayAnswersId.add(answerId);
     	
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
+		
+		long currentQuestionId = ParamUtil.getLong(actionRequest, "currentQuestionId");
+		if (currentQuestionId == questionId) {
+			questionXML.addAttribute("current", "true");
+		}
 		
 		for(long answer:arrayAnswersId){
 			if(answer >0){
@@ -196,7 +202,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 	}
 	
 	/**
-	 * Sólo hay una respuesta correcta, por lo que ésta debe tener valor 100
+	 * Sï¿½lo hay una respuesta correcta, por lo que ï¿½sta debe tener valor 100
 	 */
 	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		//"multichoice" (single),"truefalse"

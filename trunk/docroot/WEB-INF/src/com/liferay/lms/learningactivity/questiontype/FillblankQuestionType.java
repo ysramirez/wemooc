@@ -145,7 +145,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 		return correctSols;
 	}
 	
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay){
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		String view = "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
@@ -173,7 +173,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 					}else if(temp.contains(":MULTICHOICE:") || temp.contains(":MC:")){
 						List<String> sols = getBlankSols(temp, false);
 						fin+="<select name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\">";
-						fin+="<option value=\"\" label=\"\"/>";//primer valor vacío
+						fin+="<option value=\"\" label=\"\"/>";//primer valor vacï¿½o
 						for(String sol:sols)
 							fin+="<option value=\""+ sol +"\" label=\""+sol +"\"/>";//dropdown
 						fin+="</select>";
@@ -226,6 +226,11 @@ public class FillblankQuestionType extends BaseQuestionType {
     	
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
+		
+		long currentQuestionId = ParamUtil.getLong(actionRequest, "currentQuestionId");
+		if (currentQuestionId == questionId) {
+			questionXML.addAttribute("current", "true");
+		}
 		
 		Element answerXML=SAXReaderUtil.createElement("answer");
 		answerXML.addText(answer);
@@ -320,7 +325,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 						}
 					}else if(sol.contains(":MULTICHOICE:") || sol.contains(":MC:")){
 						auxans+="<select>";
-						auxans+="<option value=\"\" disabled label=\"\"/>";//primer valor vacío
+						auxans+="<option value=\"\" disabled label=\"\"/>";//primer valor vacï¿½o
 						List<String> totalBlankSols = getBlankSols(sol, false);
 						for(String blankSol:totalBlankSols){
 							String selected = "";

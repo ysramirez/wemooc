@@ -13,8 +13,8 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.theme.ThemeDisplay;
 
 /**
- * Heredado todo de OptionsQuestionType (caso base de esta clase), salvo la creación y la importación, 
- * donde se limita si sólo puede haber una respuesta correcta o varias.
+ * Heredado todo de OptionsQuestionType (caso base de esta clase), salvo la creaciï¿½n y la importaciï¿½n, 
+ * donde se limita si sï¿½lo puede haber una respuesta correcta o varias.
  * 
  * @author je10396
  *
@@ -42,9 +42,9 @@ public class MultioptionsQuestionType extends OptionsQuestionType {
 	/**
 	 * Lo mismo que el caso base pero como puede tener varias respuestas correctas se muestra checkboxes en vez de radio buttons.
 	 */
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay){
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		super.setInputType("checkbox");
-		return super.getHtmlView(questionId, themeDisplay);
+		return super.getHtmlView(questionId, themeDisplay, document);
 	}
 	
 	/**

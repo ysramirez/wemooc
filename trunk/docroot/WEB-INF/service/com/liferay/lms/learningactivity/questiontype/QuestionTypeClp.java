@@ -234,7 +234,7 @@ public class QuestionTypeClp implements QuestionType {
 		return ((Boolean)returnObj);
 	}
 	
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay){
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		Object returnObj = null;
 
 		try {
