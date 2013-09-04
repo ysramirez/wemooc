@@ -84,7 +84,7 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	}
 	
 	@Override
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay){
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		return "";
 	}
 	

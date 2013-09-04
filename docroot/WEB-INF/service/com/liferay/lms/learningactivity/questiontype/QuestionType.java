@@ -30,7 +30,7 @@ public interface QuestionType
 	public String getURLBack();
 	public void delete(long questionId) throws PortalException, SystemException;
 	public boolean correct(ActionRequest actionRequest, long questionId);
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay);
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document);
 	public Element getResults(ActionRequest actionRequest, long questionId);
 	public String getHtmlFeedback(Document document,long questionId);
 	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException;

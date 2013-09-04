@@ -75,7 +75,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 		return false;
 	}
 	
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay){
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		String view = "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
@@ -97,6 +97,11 @@ public class FreetextQuestionType extends BaseQuestionType {
     	
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
+		
+		long currentQuestionId = ParamUtil.getLong(actionRequest, "currentQuestionId");
+		if (currentQuestionId == questionId) {
+			questionXML.addAttribute("current", "true");
+		}
 		
 		Element answerXML=SAXReaderUtil.createElement("answer");
 		answerXML.addText(answer);
@@ -130,7 +135,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 		    }	
 			String cssclass="question incorrect";
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			if(testAnswers!=null && testAnswers.size()>0){//el profesor puso alguna solución para corrección automática
+			if(testAnswers!=null && testAnswers.size()>0){//el profesor puso alguna soluciï¿½n para correcciï¿½n automï¿½tica
 				TestAnswer solution = testAnswers.get(0);
 				String showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
 				if(isCorrect(solution, answer)){
@@ -145,10 +150,10 @@ public class FreetextQuestionType extends BaseQuestionType {
 				if("true".equals(showCorrectAnswer)) answersFeedBack += "<br/>" +"<div class=\"answer font_14 color_cuarto negrita\">" +
 																			solution.getAnswer() +
 																		"</div>";
-			}else{//el profesor lo corregirá manualmente
+			}else{//el profesor lo corregirï¿½ manualmente
 				answersFeedBack = answer;
 				cssclass="question";
-				feedMessage = (locale!=null)?LanguageUtil.get(locale, "manually-correction"):"Se evaluará manualmente por el profesor";
+				feedMessage = (locale!=null)?LanguageUtil.get(locale, "manually-correction"):"Se evaluarï¿½ manualmente por el profesor";
 			}
 			
 			feedBack += "<div class=\"" + cssclass + "\">" + 
