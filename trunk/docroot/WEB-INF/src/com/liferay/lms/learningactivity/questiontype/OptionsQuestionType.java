@@ -13,12 +13,11 @@ import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
-import com.liferay.lms.service.impl.TestQuestionLocalServiceImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.lar.PortletDataContext;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -91,8 +90,18 @@ public class OptionsQuestionType extends BaseQuestionType {
 					"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 					"<div class=\"questiontext\">" + question.getText() + "</div>";
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			for(TestAnswer answer:testAnswers)
-				view += "<div class=\"answer\"><input type=\"" + inputType + "\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId() + "\" value=\"" + answer.getAnswerId() + "\" >" + answer.getAnswer() + "</div>";
+			
+			List<TestAnswer> answersSelected = new ArrayList<TestAnswer>();
+			if (Validator.isNotNull(document)) {
+				answersSelected = getAnswerSelected(document, questionId);
+			}
+			for(TestAnswer answer:testAnswers) {
+				String checked="";
+				if(answersSelected.contains(answer)){
+					checked="checked='checked'";
+				}
+				view += "<div class=\"answer\"><input type=\"" + inputType + "\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId() + "\" " + checked + "\" value=\"" + answer.getAnswerId() + "\" >" + answer.getAnswer() + "</div>";
+			}
 			view += "</div>";
 		} catch (SystemException e) {
 			e.printStackTrace();
