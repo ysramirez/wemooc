@@ -1,20 +1,16 @@
 package com.liferay.lms.learningactivity.questiontype;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 
-import javax.persistence.criteria.CriteriaBuilder.In;
 import javax.portlet.ActionRequest;
 
-import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
-import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -25,7 +21,6 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.sun.org.apache.bcel.internal.generic.CPInstruction;
 
 public class DraganddropQuestionType extends BaseQuestionType {
 
@@ -147,7 +142,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 					}else
 						answersSelectedIds.add(new Long(-1));
 				}
-				//sino, creamos el array de respuestas con el tamaño que tiene q tener para pintar las cajas grises vacías.
+				//sino, creamos el array de respuestas con el tamaï¿½o que tiene q tener para pintar las cajas grises vacï¿½as.
 			}else{
 				for(int k=0; k<sols.size(); k++) answersSelectedIds.add(new Long(-1));
 			}
@@ -163,14 +158,14 @@ public class DraganddropQuestionType extends BaseQuestionType {
 						"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
 						"<div class=\"questiontext\">" + question.getText() + "</div>";
 
-			//en la columna de la izq el contenido de testAnswers, con las que el estudiante dejó sin arrastrar
+			//en la columna de la izq el contenido de testAnswers, con las que el estudiante dejï¿½ sin arrastrar
 			leftCol +=	"<div class=\"items\">";
 			for(TestAnswer answer:testAnswers){
 				leftCol += "<div id=\""+answer.getAnswerId()+"\" class=\"ui-corner-all\">"+answer.getAnswer()+"</div>";
 			}
 			leftCol +=	"</div>";
 
-			//en la columna de la derecha el contenido de answersSelected, con las respuestas que dió el estudiante
+			//en la columna de la derecha el contenido de answersSelected, con las respuestas que diï¿½ el estudiante
 			rightCol +=	"<div class=\"drop\">";
 			for(int i=0;i<answersSelectedIds.size();i++){
 				int aux = i+1;
