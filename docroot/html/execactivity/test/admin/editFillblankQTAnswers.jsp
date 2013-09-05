@@ -24,6 +24,7 @@
 
 	<liferay-ui:success key="answer-added-successfully" message="answer-added-successfully" />
 	<%
+	String advise = ParamUtil.getString(request, "advise", "");
 	if(totalAnswer>0){
 	%>
 		<liferay-ui:search-container emptyResultsMessage="" delta="10" >
@@ -82,7 +83,13 @@
 					
 					//-->
 					</script>
-					<liferay-ui:message key="fillblank.advise"/>
+					<%
+					if(!"".equals(advise)){
+						%>
+							<liferay-ui:message key="<%=advise %>"/>
+						<%
+					}
+					%>
 					<portlet:actionURL var="editanswerURL" name="editanswer" />
 					<aui:form name="<%=\"afm_\"+testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 						<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
@@ -114,7 +121,13 @@
 	<%
 	}else{
 	%>
-		<liferay-ui:message key="fillblank.advise"/>
+		<%
+		if(!"".equals(advise)){
+		%>
+			<liferay-ui:message key="<%=advise %>"/>
+		<%
+		}
+		%>
 		<portlet:actionURL var="addanswerURL" name="addanswer" />
 		<aui:form name="afm" action="<%=addanswerURL%>" method="post">
 			<aui:input type="textarea" rows="4" cols="60" maxlength="1000" name="answer" label="answer"></aui:input>

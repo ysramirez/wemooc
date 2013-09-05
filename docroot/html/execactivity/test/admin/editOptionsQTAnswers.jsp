@@ -20,6 +20,15 @@
 <h2><liferay-ui:message key="answers"></liferay-ui:message></h2>
 <h3><liferay-ui:message key="add-answer"></liferay-ui:message></h3>
 
+<%
+	String advise = ParamUtil.getString(request, "advise", "");
+	if(!"".equals(advise)){
+%>
+	<liferay-ui:message key="<%=advise %>"/>
+<%
+	}
+%>
+
 <portlet:actionURL var="addanswerURL" name="addanswer" />
 <aui:form name="afm" action="<%=addanswerURL%>" method="post">
 	<aui:input type="textarea" rows="4" name="answer" label="answer"></aui:input>
@@ -28,6 +37,7 @@
 	</div>
 	<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
 	<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedback"></aui:input>
+	<aui:input cssClass="input-comment" name="feedbackNoCorrect" label="feedbackNoCorrect"></aui:input>
 	<aui:input  type="checkbox" name="correct" label="correct"></aui:input>
 	<aui:button type="submit" value="add-more-answers" ></aui:button>
 </aui:form>
@@ -105,6 +115,7 @@ if(totalAnswer>0){
 					   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 					</div>
 					<aui:input  name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
+					<aui:input  name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>"></aui:input>
 					<aui:input type="checkbox" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
 					<aui:button type="submit" value="modify"></aui:button>
 				</aui:form>

@@ -43,6 +43,10 @@ public class FillblankQuestionType extends BaseQuestionType {
 		return LanguageUtil.get(locale, "fillblank.description");
 	}
 	
+	public String getAnswerEditingAdvise(Locale locale) {
+		return LanguageUtil.get(locale, "fillblank.advise");
+	}
+	
 	public String getURLEdit(){
 		return "/html/execactivity/test/admin/editFillblankQTAnswers.jsp";
 	}
