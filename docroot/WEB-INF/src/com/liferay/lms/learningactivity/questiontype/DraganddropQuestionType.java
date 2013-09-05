@@ -104,6 +104,11 @@ public class DraganddropQuestionType extends BaseQuestionType {
 
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
+		
+		long currentQuestionId = ParamUtil.getLong(actionRequest, "currentQuestionId");
+		if (currentQuestionId == questionId) {
+			questionXML.addAttribute("current", "true");
+		}
 
 		for(long answer:answersId){
 			Element answerXML=SAXReaderUtil.createElement("answer");
