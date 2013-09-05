@@ -61,6 +61,11 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	}
 	
 	@Override
+	public String getAnswerEditingAdvise(Locale locale){
+		return "";
+	}
+	
+	@Override
 	public String getURLEdit(){
 		return "";
 	}

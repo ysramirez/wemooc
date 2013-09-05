@@ -17,7 +17,7 @@
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
 
-<%@ include file="/init.jsp" %>
+<%@ include file="/init.jsp" %>				
 
 <%
 	if(ParamUtil.getLong(request,"actId",0 )==0) renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);

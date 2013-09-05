@@ -16,6 +16,7 @@ QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestion
 
 <portlet:renderURL var="editURL">
 	<portlet:param name="jspPage" value="<%=qt.getURLEdit() %>"></portlet:param>
+	<portlet:param name="advise" value="<%=qt.getAnswerEditingAdvise(themeDisplay.getLocale()) %>"></portlet:param>
 	<portlet:param name="questionId" value="<%=primKey %>" />
 	<portlet:param name="resId" value="<%= actId %>" />
 	<portlet:param name="actionEditingDetails" value="<%= StringPool.TRUE %>" />	

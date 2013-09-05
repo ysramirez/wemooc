@@ -126,64 +126,6 @@
 								<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
   								<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
   								
-  								 <style>
-		
-									.drop-containers {
-										width:40%;
-										height:40%;
-										display:inline-block;
-										margin-left:20px;
-									}
-									.drop-containers > div {
-										width:auto;
-										height:auto;
-										border:1px solid;
-										display:block;
-										background:#eee;
-										color:#555555;
-										font-family: Verdana,Arial,sans-serif;
-										font-size: 1.1em;
-										margin: 10px;
-										padding: 10px;
-										list-style-type: none;
-									}
-									
-									#background {
-									   position: absolute;
-									   top: 0;
-									   left: 0;
-									   bottom: 0;
-									   right: 0;
-									   z-index: -1;
-									   overflow: hidden;
-									}
-									
-									#container {
-									   position: relative;
-									}
-									
-									.ui-corner-all {
-										border-radius: 4px;
-									}
-							
-									.items,.draggable-helper {
-										width:40%;
-										display:inline-block;
-										list-style-type:none;
-									}
-									.items > div,.draggable-helper > div {
-										width:auto;
-										height:auto;
-										border:1px solid;
-										background:#fff;
-										color:#555555;
-										font-family: Verdana,Arial,sans-serif;
-										font-size: 1.1em;
-										margin: 10px;
-										padding: 10px;
-									}
-							
-							  </style>
 							  <script>		
 									(function ($) {
 									   $.fn.liveDraggable = function (opts) {
@@ -207,12 +149,12 @@
 												},
 												drag: function( event, ui ) {
 													ui.offset = {"top" : "0", "left" : "0"};
-													$(ui.helper).html("Selected Item").css({"border" : "1px solid #000"});        
+													$(ui.helper).html(ui.draggable);        
 												},
 												cursorAt: { top: 0, left: 0 }
 											});
 											
-											$(elem + ' > .drop-containers > div > div').liveDraggable({
+											$(elem + ' > .drop > .drop-containers').liveDraggable({
 												helper: function(event) {
 													var $this = $(this);
 													if(!$this.hasClass('base')){
@@ -225,13 +167,13 @@
 													var $this = $(this).parent();
 													if(!$this.hasClass('base')){
 														ui.offset = {"top" : "0", "left" : "0"};
-														$(ui.helper).html("Selected Item").css({"border" : "1px solid #000"}); 
+														$(ui.helper).html(ui.draggable); 
 													}
 												},
 												cursorAt: { top: 0, left: 0 }
 											});
 											
-											$(elem + ' > .drop-containers > div').droppable({
+											$(elem + ' > .drop > .drop-containers').droppable({
 												tolerance : 'pointer',
 												accept: elem + ' > .items > div',
 												drop: function(event, ui) {
@@ -241,12 +183,13 @@
 														$this.append(ui.draggable);
 														$this.addClass('occupied');
 														$this.removeClass('base');
+														$('input[name="' + $this.attr("name")+'hidden"]').val(ui.draggable.attr('id'));
 													}
 												}
 											});
 											$(elem + ' > .items').droppable({
 												tolerance : 'pointer',
-												accept: elem + ' > .drop-containers > div > div',
+												accept: elem + ' > .drop > .drop-containers > div',
 												drop: function(event, ui) {
 													var $this = $(this);
 													var padre = ui.draggable.parent();
@@ -254,6 +197,7 @@
 													padre.text(Liferay.Language.get('drop',(padre.attr('id')).replace(/[^\d]/g, '')));
 													padre.removeClass('occupied');
 													padre.addClass('base');
+													$('input[name="' + padre.attr("name")+'hidden"]').val(-1);
 												}
 											});
 										});

@@ -26,6 +26,7 @@ public interface QuestionType
 	public String getName();
 	public String getTitle(Locale locale);
 	public String getDescription(Locale locale);
+	public String getAnswerEditingAdvise(Locale locale);
 	public String getURLEdit();
 	public String getURLBack();
 	public void delete(long questionId) throws PortalException, SystemException;

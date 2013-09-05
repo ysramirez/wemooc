@@ -23,6 +23,7 @@
 </div>
 
 <%
+	String advise = ParamUtil.getString(request, "advise", "");
 	int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryFactoryUtil.forClass(TestAnswer.class).
 															add(PropertyFactoryUtil.forName("questionId").eq(question.getQuestionId())));
 %>
@@ -68,6 +69,11 @@ function inicializar(totalAnswer){
 <div id="solution">
 	<liferay-ui:success key="answer-added-successfully" message="answer-added-successfully" />
 	<%
+	if(!"".equals(advise)){
+	%>
+		<liferay-ui:message key="<%=advise %>"/>
+	<%
+	}
 	if(totalAnswer>0){
 	%>
 		<liferay-ui:search-container emptyResultsMessage="" delta="10" >

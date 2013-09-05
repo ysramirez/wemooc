@@ -131,6 +131,27 @@ public class QuestionTypeClp implements QuestionType {
 		return ((String)returnObj);
 	}
 	
+	public String getAnswerEditingAdvise(Locale locale){
+		Object returnObj = null;
+
+		try {
+			returnObj = clp.invoke("getAnswerEditingAdvise", new Object[] {});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((String)returnObj);
+	}
+	
 	public String getURLEdit(){
 		Object returnObj = null;
 
