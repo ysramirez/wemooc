@@ -51,11 +51,11 @@ public class OptionsQuestionType extends BaseQuestionType {
 	public String getDescription(Locale locale) {
 		return LanguageUtil.get(locale, "options.description");
 	}
-	
+
 	public String getURLEdit(){
 		return "/html/execactivity/test/admin/editOptionsQTAnswers.jsp";
 	}
-	
+
 	public boolean correct(ActionRequest actionRequest, long questionId){
 		long[] answersId= ParamUtil.getLongValues(actionRequest, "question_"+questionId);
 		List<Long> arrayAnswersId = new ArrayList<Long>();
@@ -73,58 +73,33 @@ public class OptionsQuestionType extends BaseQuestionType {
 				if(arrayAnswersId.contains(answer.getAnswerId())) correctAnswered++;
 			}else if(arrayAnswersId.contains(answer.getAnswerId())) incorrectAnswered++;
 		}
-		
+
 		if(correctAnswers==correctAnswered && incorrectAnswered==0)	return true;
 		else return false;
 	}
-	
+
 	protected boolean isCorrect(TestAnswer testAnswer){
 		return (testAnswer!=null)?testAnswer.isIsCorrect():false;
 	}
-	
+
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		String view = "";
-		try {
-			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			view += "<div class=\"question\">"+
-					"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
-					"<div class=\"questiontext\">" + question.getText() + "</div>";
-			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			
-			List<TestAnswer> answersSelected = new ArrayList<TestAnswer>();
-			if (Validator.isNotNull(document)) {
-				answersSelected = getAnswerSelected(document, questionId);
-			}
-			for(TestAnswer answer:testAnswers) {
-				String checked="";
-				if(answersSelected.contains(answer)){
-					checked="checked='checked'";
-				}
-				view += "<div class=\"answer\"><input type=\"" + inputType + "\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId() + "\" " + checked + "\" value=\"" + answer.getAnswerId() + "\" >" + answer.getAnswer() + "</div>";
-			}
-			view += "</div>";
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		
-		
-		return view;
+		return getHtml(document, questionId, false);
 	}
-	
+
 	public Element getResults(ActionRequest actionRequest, long questionId){
 		long[] answersId= ParamUtil.getLongValues(actionRequest, "question_"+questionId);
-		
+
 		List<Long> arrayAnswersId = new ArrayList<Long>();
 		for(long answerId:answersId) arrayAnswersId.add(answerId);
-    	
+
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
-		
+
 		long currentQuestionId = ParamUtil.getLong(actionRequest, "currentQuestionId");
 		if (currentQuestionId == questionId) {
 			questionXML.addAttribute("current", "true");
 		}
-		
+
 		for(long answer:arrayAnswersId){
 			if(answer >0){
 				Element answerXML=SAXReaderUtil.createElement("answer");
@@ -134,23 +109,26 @@ public class OptionsQuestionType extends BaseQuestionType {
 		}
 		return questionXML;
 	}
-	
-	public String getHtmlFeedback(Document document,long questionId){
-		String feedBack = "", answersFeedBack="";
+
+	private String getHtml(Document document, long questionId, boolean feedback){
+		String html = "", answersFeedBack="", feedMessage = "", cssclass="";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
-			List<TestAnswer> answersSelected=getAnswerSelected(document, questionId);
-			String cssclass="question incorrect";
+			List<TestAnswer> answersSelected=getAnswersSelected(document, questionId);
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			int correctAnswers=0, correctAnswered=0, incorrectAnswered=0;
+			
+			if(feedback) feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+			
 			for(TestAnswer answer:testAnswers){
-				String checked="";
-				String correct="";
-				String showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+				String correct="", checked="", showCorrectAnswer="false", disabled ="";
+				if(feedback) {
+					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+					disabled = "disabled='disabled'";
+				}
 				if(isCorrect(answer)){
 					correctAnswers++;
-					if(showCorrectAnswer.equals("true")) correct="font_14 color_cuarto negrita";
+					if("true".equals(showCorrectAnswer)) correct="font_14 color_cuarto negrita";
 					if(answersSelected.contains(answer)){
 						correctAnswered++;
 						checked="checked='checked'";
@@ -161,55 +139,62 @@ public class OptionsQuestionType extends BaseQuestionType {
 					checked="checked='checked'";
 					feedMessage=(!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+answer.getFeedbacknocorrect():answer.getFeedbacknocorrect();
 				}
-				
-		
+
 				answersFeedBack += "<div class=\"answer " + correct + "\">" +
-								"<input type=\"" + inputType + "\" name=\"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\"  disabled=\"disabled\">" + answer.getAnswer() +
-							"</div>";
+										"<input type=\"" + inputType + "\" name=\"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\" " + disabled + ">" + answer.getAnswer() +
+									"</div>";
 			}
+
+			if(feedback){
+				if(correctAnswers==correctAnswered && incorrectAnswered==0)	cssclass=" correct";
+				else cssclass=" incorrect";
+				answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
+			}
+
+			html += "<div class=\"question" + cssclass + "\">" + 
+						"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
+						"<div class=\"questiontext\">" + question.getText() + "</div>" +
+						answersFeedBack +
+					"</div>";	
 			
-			if(correctAnswers==correctAnswered && incorrectAnswered==0)	cssclass="question correct";
-			else cssclass="question incorrect";
-			
-			feedBack += "<div class=\"" + cssclass + "\">" + 
-							"<div class=\"questiontext\">" + question.getText() + "</div>" +
-							"<div class=\"content_answer\">" +
-								answersFeedBack +
-							"</div>" +
-							"<div class=\"questionFeedback\">" + feedMessage + "</div>" +
-						"</div>";	
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-		return feedBack;
+		return html;
 	}
-	
-	protected List<TestAnswer> getAnswerSelected(Document document,long questionId){
+
+	public String getHtmlFeedback(Document document,long questionId){
+		return getHtml(document, questionId, true);
+	}
+
+	protected List<TestAnswer> getAnswersSelected(Document document,long questionId){
 		List<TestAnswer> answerSelected = new ArrayList<TestAnswer>();
-		Iterator<Element> nodeItr = document.getRootElement().elementIterator();
-		while(nodeItr.hasNext()) {
-			Element element = nodeItr.next();
-	         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
-	        	 Iterator<Element> elementItr = element.elementIterator();
-	        	 while(elementItr.hasNext()) {
-	        		 Element elementElement = elementItr.next();
-	        		 if("answer".equals(elementElement.getName())) {
-	        			 try {
-							answerSelected.add(TestAnswerLocalServiceUtil.getTestAnswer(Long.valueOf(elementElement.attributeValue("id"))));
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
-						} catch (PortalException e) {
-							e.printStackTrace();
-						} catch (SystemException e) {
-							e.printStackTrace();
+		if(document != null){
+			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
+			while(nodeItr.hasNext()) {
+				Element element = nodeItr.next();
+				if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
+					Iterator<Element> elementItr = element.elementIterator();
+					while(elementItr.hasNext()) {
+						Element elementElement = elementItr.next();
+						if("answer".equals(elementElement.getName())) {
+							try {
+								answerSelected.add(TestAnswerLocalServiceUtil.getTestAnswer(Long.valueOf(elementElement.attributeValue("id"))));
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (PortalException e) {
+								e.printStackTrace();
+							} catch (SystemException e) {
+								e.printStackTrace();
+							}
 						}
-	        		 }
-	        	 }
-	         }
-	    }	
+					}
+				}
+			}	
+		}
 		return answerSelected;
 	}
-	
+
 	/**
 	 * S�lo hay una respuesta correcta, por lo que �sta debe tener valor 100
 	 */
@@ -223,9 +208,9 @@ public class OptionsQuestionType extends BaseQuestionType {
 			String answer=answerElement.elementText("text");
 			String feedback="";
 			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
-			 feedback=answerElement.element("feedback").element("text").getText();	 
+				feedback=answerElement.element("feedback").element("text").getText();	 
 			testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
 		}
 	}
-	
+
 }

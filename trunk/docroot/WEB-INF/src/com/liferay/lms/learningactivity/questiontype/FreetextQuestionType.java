@@ -32,11 +32,11 @@ public class FreetextQuestionType extends BaseQuestionType {
 	public void setLocale(Locale locale){
 		super.setLocale(locale);
 	}
-	
+
 	public long getTypeId(){
 		return 2;
 	}
-	
+
 	public String getName() {
 		return "freetext";
 	}
@@ -48,11 +48,11 @@ public class FreetextQuestionType extends BaseQuestionType {
 	public String getDescription(Locale locale) {
 		return LanguageUtil.get(locale, "freetext.description");
 	}
-	
+
 	public String getURLEdit(){
 		return "/html/execactivity/test/admin/editFreetextQTAnswers.jsp";
 	}
-	
+
 	public boolean correct(ActionRequest actionRequest, long questionId){
 		String answer= ParamUtil.getString(actionRequest, "question_"+questionId, "");
 		List<TestAnswer> testAnswers = new ArrayList<TestAnswer>();
@@ -61,141 +61,113 @@ public class FreetextQuestionType extends BaseQuestionType {
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-		
+
 		if(testAnswers!=null && testAnswers.size()>0){
 			TestAnswer solution = testAnswers.get(0);
 			return isCorrect(solution, answer);
 		}
 		return false;
 	}
-	
+
 	protected boolean isCorrect(TestAnswer solution, String answer){
 		Collator c = Collator.getInstance();
 		c.setStrength(Collator.PRIMARY);
 		if(c.compare(solution.getAnswer(), answer) == 0) return true;
 		return false;
 	}
-	
+
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		String view = "";
-		try {
-			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			String answerGiven = new String();
-			if (Validator.isNotNull(document)) {
-				answerGiven = getAnswerGiven(document, questionId);
-			}
-			view += "<div class=\"question\">"+
-						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
-						"<div class=\"questiontext\">" + question.getText() + "</div>"+
-						"<div class=\"answer\"><textarea rows=\"4\" cols=\"60\" maxlength=\"1000\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId() + "\" label=\"answer\">"+answerGiven+"</textarea></div>"+
-					"</div>";
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		
-		
-		return view;
+		return getHtml(document, questionId, false);
 	}
-	
+
 	public Element getResults(ActionRequest actionRequest, long questionId){
 		String answer= ParamUtil.getString(actionRequest, "question_"+questionId, "");
-    	
+
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
-		
+
 		long currentQuestionId = ParamUtil.getLong(actionRequest, "currentQuestionId");
 		if (currentQuestionId == questionId) {
 			questionXML.addAttribute("current", "true");
 		}
-		
+
 		Element answerXML=SAXReaderUtil.createElement("answer");
 		answerXML.addText(answer);
 		questionXML.add(answerXML);
-		
+
 		return questionXML;
 	}
-	
-	public String getHtmlFeedback(Document document,long questionId){
-		String feedBack = "", answersFeedBack="";
+
+	private String getHtml(Document document, long questionId, boolean feedback){
+		String feedBack = "", answersFeedBack= "", cssclass = "", showCorrectAnswer = "false";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
-			String answer="";
-			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
-			while(nodeItr.hasNext()) {
-				Element element = nodeItr.next();
-		         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
-		        	 Iterator<Element> elementItr = element.elementIterator();
-		        	 if(elementItr.hasNext()) {
-		        		 Element elementElement = elementItr.next();
-		        		 if("answer".equals(elementElement.getName())) {
-		        			 try {
-								answer = elementElement.getText();
-							} catch (NumberFormatException e) {
-								e.printStackTrace();
-							}
-		        		 }
-		        	 }
-		         }
-		    }	
-			String cssclass="question incorrect";
+			String answer=getAnswersSelected(document, questionId);
+	
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			if(testAnswers!=null && testAnswers.size()>0){//el profesor puso alguna soluci�n para correcci�n autom�tica
 				TestAnswer solution = testAnswers.get(0);
-				String showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
-				if(isCorrect(solution, answer)){
+				if(feedback){
+					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+					if(isCorrect(solution, answer)){
 						feedMessage=solution.getFeedbackCorrect();
-						cssclass="question correct";
-				}else {
-					feedMessage=solution.getFeedbacknocorrect();
-					cssclass="question incorrect";
+						cssclass=" correct";
+					}else {
+						feedMessage=solution.getFeedbacknocorrect();
+						cssclass=" incorrect";
+					}
 				}
-				
+
 				answersFeedBack = answer;
 				if("true".equals(showCorrectAnswer)) answersFeedBack += "<br/>" +"<div class=\"answer font_14 color_cuarto negrita\">" +
-																			solution.getAnswer() +
-																		"</div>";
-			}else{//el profesor lo corregir� manualmente
+																						solution.getAnswer() +
+																				"</div>";
+			}else{//el profesor lo corregira manualmente
 				answersFeedBack = answer;
-				cssclass="question";
-				feedMessage = (locale!=null)?LanguageUtil.get(locale, "manually-correction"):"Se evaluar� manualmente por el profesor";
+				if(feedback) feedMessage = (locale!=null)?LanguageUtil.get(locale, "manually-correction"):"A evaluar manualmente por el profesor";
 			}
-			
-			feedBack += "<div class=\"" + cssclass + "\">" + 
-							"<div class=\"questiontext\">" + question.getText() + "</div>" +
-							"<div class=\"content_answer\">" +
-								answersFeedBack +
-							"</div>" +
-							"<div class=\"questionFeedback\">" + feedMessage + "</div>" +
-						"</div>";	
+
+			if(feedback) answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
+
+			feedBack += "<div class=\"question" + cssclass + "\">" + 
+					"<div class=\"questiontext\">" + question.getText() + "</div>" +
+					answersFeedBack +
+					"</div>";	
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
 		return feedBack;
 	}
-	
-	protected String getAnswerGiven(Document document,long questionId){
+
+	public String getHtmlFeedback(Document document,long questionId){
+		return getHtml(document, questionId, true);
+	}
+
+	protected String getAnswersSelected(Document document,long questionId){
 		String answerGiven = "";
-		Iterator<Element> nodeItr = document.getRootElement().elementIterator();
-		while(nodeItr.hasNext()) {
-			Element element = nodeItr.next();
-	         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
-	        	 Iterator<Element> elementItr = element.elementIterator();
-	        	 while(elementItr.hasNext()) {
-	        		 Element elementElement = elementItr.next();
-	        		 if("answer".equals(elementElement.getName())) {
-	        			try {
-	        				answerGiven = elementElement.getText();
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
+		if(document != null){
+			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
+			while(nodeItr.hasNext()) {
+				Element element = nodeItr.next();
+				if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
+					Iterator<Element> elementItr = element.elementIterator();
+					while(elementItr.hasNext()) {
+						Element elementElement = elementItr.next();
+						if("answer".equals(elementElement.getName())) {
+							try {
+								answerGiven = elementElement.getText();
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
 						}
-	        		 }
-	        	 }
-	         }
-	    }	
+					}
+				}
+			}	
+		}
 		return answerGiven;
 	}
-	
+
 	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		//"essay","numerical","shortanswer"
 		Element questiontext=question.element("questiontext");
@@ -207,11 +179,11 @@ public class FreetextQuestionType extends BaseQuestionType {
 				String answer=answerElement.elementText("text");
 				String feedback="";
 				if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
-				 feedback=answerElement.element("feedback").element("text").getText();	 
+					feedback=answerElement.element("feedback").element("text").getText();	 
 				testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
 				return;//porque inicialmente solo aceptamos una respuesta
 			}
 		}
 	}
-	
+
 }
