@@ -32,7 +32,7 @@
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 
 <%@ include file="/init.jsp" %>
-	
+
 	<div class="container-activity">
 <%
 		long actId=ParamUtil.getLong(request,"actId",0);
@@ -136,6 +136,24 @@
 										  });
 										  return this;
 									   };
+									   $.fn.serial = function() {
+									    	var content;
+									        var array = [];
+									        var $elem = $(this);
+									        var n;
+									        $elem.each(function(i) {
+									            var menu = this.id;
+									            
+									            n= "_execactivity_WAR_liferaylmsportlet_" + menu + "_contentlist";
+									            content = document.getElementById(n);
+									            content.value="";
+									            $('li', this).each(function(e) {
+									                array.push(menu + '[' + e + ']=' + this.id);
+									                content.value = content.value + menu + '[' + e + ']=' + this.id + '&';    
+									            });
+									        });
+									        return array.join('&');
+									    }
 									}(jQuery));
 							  
 									$(document).ready(function() {
@@ -202,6 +220,17 @@
 											});
 										});
 									});
+									$(function() {
+										    $("ul.sortable").sortable({
+										        connectWith: '.sortable',
+										        update: function(event, ui) {
+										        var position = $('.sortable').serial();
+										        }
+										    });
+										});
+
+										
+									
 							  </script>
   								
 								<script type="text/javascript">
@@ -333,46 +362,12 @@
 				
 			//-->
 			</script>
-			 <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-				<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
-				<style>
+			<style>
 					#sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
 					#sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
 					#ui-sortable-default li{ background: url("images/ui-bg_glass_75_e6e6e6_1x400.png") repeat-x scroll 50% 50% #E6E6E6; border: 1px solid #D3D3D3; color: #555555; font-weight: normal;}
 				</style>
-			 <script>
-				$(function() {
-				    $("ul.sortable").sortable({
-				        connectWith: '.sortable',
-				        update: function(event, ui) {
-				        var position = $('.sortable').serial();
-				        }
-				    });
-				});
-
-				// this function make your UL LI a serialized object
-
-				(function($) {
-				    $.fn.serial = function() {
-				    	var content;
-				        var array = [];
-				        var $elem = $(this);
-				        var n;
-				        $elem.each(function(i) {
-				            var menu = this.id;
-				            
-				            n= "_execactivity_WAR_liferaylmsportlet_" + menu + "_contentlist";
-				            content = document.getElementById(n);
-				            content.value="";
-				            $('li', this).each(function(e) {
-				                array.push(menu + '[' + e + ']=' + this.id);
-				                content.value = content.value + menu + '[' + e + ']=' + this.id + '&';    
-				            });
-				        });
-				        return array.join('&');
-				    }
-				})(jQuery);
-			</script>
+			
 
 			<aui:form name="formulario" action="<%=correctURL %>" method="POST">
 			<%
