@@ -148,28 +148,30 @@ public class FillblankQuestionType extends BaseQuestionType {
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		String view = "";
 		String answersView="";
+		
 		try {
 			//Cogemos las respuestas a los blancos (separadas por coma) de la pregunta a partir del xml de learningactivityresult
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			String answer="";
-			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
-			while(nodeItr.hasNext()) {
-				Element element = nodeItr.next();
-		         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
-		        	 Iterator<Element> elementItr = element.elementIterator();
-		        	 if(elementItr.hasNext()) {
-		        		 Element elementElement = elementItr.next();
-		        		 if("answer".equals(elementElement.getName())) {
-		        			 try {
-								answer = elementElement.getText();
-							} catch (NumberFormatException e) {
-								e.printStackTrace();
-							}
-		        		 }
-		        	 }
-		         }
-		    }	
-			
+			if (document != null) {
+				Iterator<Element> nodeItr = document.getRootElement().elementIterator();
+				while(nodeItr.hasNext()) {
+					Element element = nodeItr.next();
+			         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
+			        	 Iterator<Element> elementItr = element.elementIterator();
+			        	 if(elementItr.hasNext()) {
+			        		 Element elementElement = elementItr.next();
+			        		 if("answer".equals(elementElement.getName())) {
+			        			 try {
+									answer = elementElement.getText();
+								} catch (NumberFormatException e) {
+									e.printStackTrace();
+								}
+			        		 }
+			        	 }
+			         }
+			    }	
+			}
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			if(testAnswers!=null && testAnswers.size()>0){
 								
