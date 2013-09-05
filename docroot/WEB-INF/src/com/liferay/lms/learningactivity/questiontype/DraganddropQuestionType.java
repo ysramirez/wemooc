@@ -118,7 +118,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			//String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
-			List<TestAnswer> answersSelected=getAnswerSelected(document, questionId);
+			List<TestAnswer> answersSelected=getAnswersSelected(document, questionId);
 			List<TestAnswer> tA= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			List<Long>answersSelectedIds = new ArrayList<Long>();
 			List<TestAnswer> sols = new ArrayList<TestAnswer>();
@@ -204,7 +204,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 		return getHtml(document, questionId, true);
 	}
 
-	protected List<TestAnswer> getAnswerSelected(Document document,long questionId){
+	protected List<TestAnswer> getAnswersSelected(Document document,long questionId){
 		List<TestAnswer> answerSelected = new ArrayList<TestAnswer>();
 		if(document != null){
 			Iterator<Element> nodeItr = document.getRootElement().elementIterator();

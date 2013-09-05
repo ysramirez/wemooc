@@ -150,95 +150,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 	}
 	
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		String view = "";
-		String answersView="";
-		
-		try {
-			//Cogemos las respuestas a los blancos (separadas por coma) de la pregunta a partir del xml de learningactivityresult
-			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			String answer="";
-			if (document != null) {
-				Iterator<Element> nodeItr = document.getRootElement().elementIterator();
-				while(nodeItr.hasNext()) {
-					Element element = nodeItr.next();
-			         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
-			        	 Iterator<Element> elementItr = element.elementIterator();
-			        	 if(elementItr.hasNext()) {
-			        		 Element elementElement = elementItr.next();
-			        		 if("answer".equals(elementElement.getName())) {
-			        			 try {
-									answer = elementElement.getText();
-								} catch (NumberFormatException e) {
-									e.printStackTrace();
-								}
-			        		 }
-			        	 }
-			         }
-			    }	
-			}
-			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			if(testAnswers!=null && testAnswers.size()>0){
-								
-				view += "<div class=\"question\">"+
-						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
-						"<div class=\"questiontext\">" + question.getText() + "</div>"+
-						"<div class=\"answer\">";
-				
-				
-				TestAnswer solution = testAnswers.get(0);
-				List<String> sols = getQuestionSols(solution.getAnswer());
-				String[] answers = answer.split(",");
-				answersView = translateNewLines(solution.getAnswer());
-				int i=0;
-				for(String sol:sols){
-					String ans = (answers.length>i)?answers[i]:"";
-					String auxans = "";
-					
-					if(sol.contains(":SHORTANSWER") || sol.contains(":SA") || sol.contains(":MW")
-							|| sol.contains(":NUMERICAL:") || sol.contains(":NM:") || sol.contains("{{")) {
-						auxans= "<input type=\"text\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\""+ans+"\" >";//input
-					}
-					else if(sol.contains(":MULTICHOICE_") || sol.contains(":MCV") || sol.contains(":MCH")){
-						String aux = "";
-						auxans = "<br/>";
-						List<String> totalBlankSols = getBlankSols(sol, false);
-						for(String blankSol:totalBlankSols){
-							String checked = "";
-							if(blankSol.equals(ans)) {
-								checked="checked='checked'";
-							}
-							aux = "<div class=\"answer\"><input type=\"radio\"" + checked + "name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\" value=\"" + sol + "\" >" + sol + "</div>";//radiobuttons
-							auxans += aux;
-						}
-					}else if(sol.contains(":MULTICHOICE:") || sol.contains(":MC:")){
-						auxans+="<select name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_" + question.getQuestionId()+"_"+i + "\">";
-						auxans+="<option value=\"\" label=\"\"/>";
-						List<String> totalBlankSols = getBlankSols(sol, false);
-						for(String blankSol:totalBlankSols){
-							String selected = "";
-							if(ans.equals(blankSol)) {
-								selected ="selected";
-							}
-							auxans+="<option value=\""+ blankSol +"\" label=\""+blankSol +"\" "+ selected +"/>";//dropdown
-						}
-						auxans+="</select>";
-					}else {
-						auxans+=sol;
-					}
-					answersView = answersView.replace(sol, auxans);
-					i++;
-				}
-			}
-			
-			view += answersView+"</div>" +
-				"</div>";
-			
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		
-		
-		return view;
+		return getHtml(document, questionId, false);
 	}
 	
 	private boolean isMoodleAnswer(String temp) {
@@ -286,63 +198,47 @@ public class FillblankQuestionType extends BaseQuestionType {
 		return questionXML;
 	}
 	
-	public String getHtmlFeedback(Document document,long questionId){
-		String feedBack = "", answersFeedBack="";
+	private String getHtml(Document document, long questionId, boolean feedback){
+		String html = "", answersFeedBack="", cssclass="", showCorrectAnswer = "false", feedMessage = "";
 		try {
 			
 			//Cogemos las respuestas a los blancos (separadas por coma) de la pregunta a partir del xml de learningactivityresult
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
-			String answer="";
-			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
-			while(nodeItr.hasNext()) {
-				Element element = nodeItr.next();
-		         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
-		        	 Iterator<Element> elementItr = element.elementIterator();
-		        	 if(elementItr.hasNext()) {
-		        		 Element elementElement = elementItr.next();
-		        		 if("answer".equals(elementElement.getName())) {
-		        			 try {
-								answer = elementElement.getText();
-							} catch (NumberFormatException e) {
-								e.printStackTrace();
-							}
-		        		 }
-		        	 }
-		         }
-		    }	
+			String answer = getAnswersSelected(document, questionId);	
 			
-			//Cogemos el TestAnswer de la pregunta en formato Moodle para el chequeo del feedback
-			String cssclass="question incorrect";
+			//Cogemos el TestAnswer de la pregunta en formato Moodle para rellenar las respuestas dadas por el alumno
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			if(testAnswers!=null && testAnswers.size()>0){
 				
 				//Comprobamos si todos los blancos son acertados para ver si la pregunta resulta correcta o no
 				TestAnswer solution = testAnswers.get(0);
-				String showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
 				List<String> sols = getQuestionSols(solution.getAnswer());
 				String[] answers = answer.split(",");
-				int i=0, correctAnswers=0;
-				for(String sol:sols){
-					String ans= (answers.length>i)?answers[i]:"";
-					if(isCorrect(sol, ans)){
-						correctAnswers++;
+				if (feedback){
+					feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+					int i=0, correctAnswers=0;
+					for(String sol:sols){
+						String ans= (answers.length>i)?answers[i]:"";
+						if(isCorrect(sol, ans)){
+							correctAnswers++;
+						}
+						i++;
 					}
-					i++;
-				}
-				if(correctAnswers==sols.size()){
-					feedMessage=solution.getFeedbackCorrect();
-					cssclass="question correct";
-				}else {
-					feedMessage=solution.getFeedbacknocorrect();
-					cssclass="question incorrect";
+					if(correctAnswers==sols.size()){
+						feedMessage=solution.getFeedbackCorrect();
+						cssclass=" correct";
+					}else {
+						feedMessage=solution.getFeedbacknocorrect();
+						cssclass=" incorrect";
+					}
 				}
 				
 				//Obtain feedback
 				String solok="";
 				answersFeedBack = translateNewLines(solution.getAnswer());
 				
-				i=0;
+				int i=0;
 				for(String sol:sols){
 					String ans = (answers.length>i)?answers[i]:"";
 					String auxans = "";
@@ -351,6 +247,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 					if(sol.contains(":SHORTANSWER") || sol.contains(":SA") || sol.contains(":MW")
 							|| sol.contains(":NUMERICAL:") || sol.contains(":NM:") || sol.contains("{{")) {
 						auxans= "<input readonly type=\"text\" value=\""+ans+"\" >";//input
+						
 						if("true".equals(showCorrectAnswer)) {
 							for(String blankSol:blankSols){
 								if(solok != "") solok += " | ";
@@ -364,10 +261,11 @@ public class FillblankQuestionType extends BaseQuestionType {
 						auxans = "<br/>";
 						List<String> totalBlankSols = getBlankSols(sol, false);
 						for(String blankSol:totalBlankSols){
-							String checked = "", correct = "";
+							String checked = "", disabled = "", correct = "";
 							if(blankSol.equals(ans)) checked="checked='checked'";
+							if(feedback) disabled = "disabled='disabled'";
 							if("true".equals(showCorrectAnswer) && blankSols.contains(blankSol)) correct = "font_14 color_cuarto negrita";
-							aux = "<div class=\"answer " + correct + "\"><input type=\"radio\"" + checked + "value=\"" + blankSol + " disabled=\"disabled\" \" >" + blankSol + "</div>";//radiobuttons
+							aux = "<div class=\"answer " + correct + "\"><input type=\"radio\"" + checked + "value=\"" + blankSol + " "+disabled+" \" >" + blankSol + "</div>";//radiobuttons
 							auxans += aux;
 						}
 					}else if(sol.contains(":MULTICHOICE:") || sol.contains(":MC:")){
@@ -392,18 +290,46 @@ public class FillblankQuestionType extends BaseQuestionType {
 					i++;solok="";
 				}
 				
-				feedBack += "<div class=\"" + cssclass + "\">" + 
-								"<div class=\"questiontext\">" + question.getText() + "</div>" +
-								"<div class=\"content_answer\">" +
-									answersFeedBack +
-								"</div>" +
-								"<div class=\"questionFeedback\">" + feedMessage + "</div>" +
-							"</div>";
+				if(feedback) answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
+				
+				html += "<div class=\"question" + cssclass + "\">" + 
+							"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
+							"<div class=\"questiontext\">" + question.getText() + "</div>" +
+							answersFeedBack +
+						"</div>";
 			}
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-		return feedBack;
+		return html;
+	}
+	
+	public String getHtmlFeedback(Document document,long questionId){
+		return getHtml(document, questionId, true);
+	}
+
+	protected String getAnswersSelected(Document document, long questionId) {
+		String answer = "";
+		if(document != null){
+			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
+			while(nodeItr.hasNext()) {
+				Element element = nodeItr.next();
+			     if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
+			    	 Iterator<Element> elementItr = element.elementIterator();
+			    	 if(elementItr.hasNext()) {
+			    		 Element elementElement = elementItr.next();
+			    		 if("answer".equals(elementElement.getName())) {
+			    			 try {
+								answer = elementElement.getText();
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							}
+			    		 }
+			    	 }
+			     }
+			}
+		}
+		return answer;
 	}
 	
 	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
