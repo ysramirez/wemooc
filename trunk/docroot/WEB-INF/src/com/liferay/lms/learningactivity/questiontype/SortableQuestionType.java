@@ -95,7 +95,7 @@ public class SortableQuestionType extends BaseQuestionType {
 		return (testAnswer!=null)?testAnswer.isIsCorrect():false;
 	}
 	
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay){
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
 		String view = "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
