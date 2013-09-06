@@ -61,6 +61,18 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 //-->
 </script>
 
+<aui:select name="typeId" label="questionType">
+	<%
+		long questionId = question.getQuestionType();
+		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
+		for(QuestionType qt:qtypes){
+	%>
+		<aui:option value="<%=qt.getTypeId() %>" label="<%=qt.getTitle(themeDisplay.getLocale()) %>"  selected="<%= questionId == qt.getTypeId() %>"/>
+	<%	
+		}
+	%>
+	</aui:select>
+
 <portlet:actionURL var="editquestionURL" name="editquestion" />
 <aui:form name="qfm" action="<%=editquestionURL %>" method="post">
 	<aui:input name="resId" type="hidden" value="<%=question.getActId() %>"></aui:input>
@@ -98,18 +110,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
    	<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.editquestion.error.test.required"))?
    			LanguageUtil.get(pageContext,"execativity.editquestions.editquestion.error.test.required"):StringPool.BLANK %>
 	</div>
-	
-	<aui:select name="typeId" label="qtype">
-	<%
-		long questionId = question.getQuestionType();
-		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
-		for(QuestionType qt:qtypes){
-	%>
-		<aui:option value="<%=qt.getTypeId() %>" label="<%=qt.getTitle(themeDisplay.getLocale()) %>"  selected="<%= questionId == qt.getTypeId() %>"/>
-	<%	
-		}
-	%>
-	</aui:select>
+
 	<aui:button-row>
 		<aui:button type="submit" />
 		<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />

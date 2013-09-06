@@ -62,6 +62,17 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 
 </script>
 
+<aui:select name="typeId" label="questionType">
+	<%
+		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
+		for(QuestionType qt:qtypes){
+	%>
+		<aui:option value="<%=qt.getTypeId() %>" label="<%=qt.getTitle(themeDisplay.getLocale()) %>" />
+	<%	
+		}
+	%>
+	</aui:select>
+
 <portlet:actionURL var="addquestionURL" name="addquestion" />
 
 <aui:form name="qfm" action="<%=addquestionURL%>"  method="post">
@@ -99,16 +110,6 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
    			LanguageUtil.get(pageContext,"execativity.editquestions.newquestion.error.test.required"):StringPool.BLANK %>
 	</div>
 	
-	<aui:select name="typeId" label="qtype">
-	<%
-		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
-		for(QuestionType qt:qtypes){
-	%>
-		<aui:option value="<%=qt.getTypeId() %>" label="<%=qt.getTitle(themeDisplay.getLocale()) %>" />
-	<%	
-		}
-	%>
-	</aui:select>
 	<aui:button-row>
 		<aui:button type="submit"/>
 		<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
