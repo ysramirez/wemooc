@@ -662,7 +662,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
 					description = descriptionFileParserLarToDescription(nuevaLarn.getDescription(), oldFile, existingFile);
 				}catch(Exception e){
-					System.out.println("      ERROR! descriptionfile descriptionFileParserLarToDescription : " +e.getMessage());
+					System.out.println("ERROR! descriptionfile descriptionFileParserLarToDescription : " +e.getMessage());
 					description = nuevaLarn.getDescription();
 				}
 				
@@ -670,7 +670,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
-				System.out.println("      ERROR! descriptionfile: " + entryElement.element("descriptionfile").attributeValue("path") +"\n        "+e.getMessage());
+				System.out.println("ERROR! descriptionfile: " + entryElement.element("descriptionfile").attributeValue("path") +"\n        "+e.getMessage());
 			}
 
 			nuevaLarn.setDescription(description);

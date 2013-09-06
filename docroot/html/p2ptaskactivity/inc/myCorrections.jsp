@@ -96,10 +96,12 @@ if(!p2pActCorList.isEmpty()){
 					 		<%=propietary.getFullName() %>
 					 	</span>
 				 	</c:if>
-				 	<span class="number">
-				 		<liferay-ui:message key="number" /> 
-				 		<%=cont%>
-				 	</span> 
+				 	<c:if test="<%=!anonimous %>">
+					 	<span class="number">
+					 		<liferay-ui:message key="number" /> 
+					 		<%=cont%>
+					 	</span> 
+				 	</c:if>
 				 	<c:if test="<%=myP2PActCor.getDate() != null %>">
 				 		<span class="date"><liferay-ui:message key="p2ptaskactivity.inc.correctiondate" /> <%=correctionDate %></span>
 				 	</c:if>

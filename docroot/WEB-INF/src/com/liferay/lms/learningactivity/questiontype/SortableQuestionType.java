@@ -79,6 +79,7 @@ public class SortableQuestionType extends BaseQuestionType {
 			while (i < testAnswers.size()){
 				if(isCorrect(testAnswers.get(i))){
 					correctAnswers++;
+					//System.out.println(i+"  - "+arrayAnswersId.get(i)+" == " + testAnswers.get(i).getAnswerId() );
 					if(arrayAnswersId.get(i).equals(testAnswers.get(i).getAnswerId())) correctAnswered++;
 				}else if(arrayAnswersId.contains(testAnswers.get(i).getAnswerId())) incorrectAnswered++;
 			i++;	
@@ -107,7 +108,7 @@ public class SortableQuestionType extends BaseQuestionType {
 			Collections.shuffle(tmp);
 			view += "<ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
 			for(TestAnswer answer:tmp)
-				view += "<div class=\"answer\"><li class=\"ui-sortable-default\" id=\""+answer.getAnswerId()+"\">"+ answer.getAnswer() + "</li> </div>";
+				view += "<li class=\"ui-sortable-default\" id=\""+answer.getAnswerId()+"\"><div class=\"answer\">"+ answer.getAnswer() + "</div></li> ";
 			view += "</ul>";
 			view += "<input type=hidden id=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\"/>";
 		} catch (SystemException e) {
@@ -119,10 +120,20 @@ public class SortableQuestionType extends BaseQuestionType {
 	}
 	
 	public Element getResults(ActionRequest actionRequest, long questionId){
-		long[] answersId= ParamUtil.getLongValues(actionRequest, "question_"+questionId);
+		
+		String answersValue = ParamUtil.getString(actionRequest, "question_"+questionId+"_contentlist");
+		//System.out.println(" answers : " + answersValue.toString() );
+		
 		List<Long> arrayAnswersId = new ArrayList<Long>();
-		for(long answerId:answersId) arrayAnswersId.add(answerId);
-    	
+		String answers[] = answersValue.split("&");
+		
+		for(String answer:answers){
+			String values[] = answer.split("=");
+			if(values.length > 1){
+				arrayAnswersId.add(Long.parseLong(values[1]));
+			}
+		}
+		
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
 		

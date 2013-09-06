@@ -93,7 +93,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			validate=false;
 		}
 		
-		if(start && stop && upload.after(end))
+		if(start && stop && upload != null && end != null && upload.after(end))
 		{
 			SessionErrors.add(actionRequest, "p2ptaskactivity.editActivity.dateupload.afteractivity");
 			validate=false;
