@@ -20,7 +20,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
@@ -52,6 +54,13 @@ public class SCORMAdmin extends MVCPortlet
 
 		if(scormId==0)	
 		{
+			if (Validator.isNull(title)) {
+				SessionErrors.add(actRequest, "scormadmin.error.notitle");
+			}
+			
+			if (Validator.isNull(description)) {
+				SessionErrors.add(actRequest, "scormadmin.error.nodescription");
+			}
 			
 			String fileName = request.getFileName("fileName");
 			File file = request.getFile("fileName");
@@ -72,23 +81,33 @@ public class SCORMAdmin extends MVCPortlet
 						e.printStackTrace();
 					}
 				}
+			} else {
+				SessionErrors.add(actRequest, "scormadmin.error.nozip");
+			}
 				
-				if (!SessionErrors.isEmpty(actRequest)) {
-					response.setRenderParameters(actRequest.getParameterMap());
-					response.setRenderParameter("jspPage", "/html/scormadmin/editscorm.jsp");
-					return;
-				} else {
-					try 
-					{
-						SCORMContentLocalServiceUtil.addSCORMContent(title, description, file, ciphered, serviceContext);
-					} 
-					catch (IOException e) 
-					{
-							// TODO Auto-generated catch block
-						e.printStackTrace();
-					}
+			if (!SessionErrors.isEmpty(actRequest)) {
+				PortalUtil.copyRequestParameters(actRequest, response);
+				response.setRenderParameter("title", title);
+				response.setRenderParameter("description", description);
+				response.setRenderParameter("ciphered",	new Boolean(ciphered).toString());
+				response.setRenderParameter("redirect", redirect);
+				response.setRenderParameter("tags", serviceContext.getAssetTagNames());
+				response.setRenderParameter("categories", ArrayUtil.toStringArray(serviceContext.getAssetCategoryIds()));
+				response.setRenderParameter("mvcPath", "/html/scormadmin/editscorm.jsp");
+				response.setRenderParameter("jspPage", "/html/scormadmin/editscorm.jsp");
+				return;
+			} else {
+				try 
+				{
+					SCORMContentLocalServiceUtil.addSCORMContent(title, description, file, ciphered, serviceContext);
+				} 
+				catch (IOException e) 
+				{
+						// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
+			
 		}
 		else
 		{
@@ -98,7 +117,7 @@ public class SCORMAdmin extends MVCPortlet
 			scorm.setCiphered(ciphered);
 			SCORMContentLocalServiceUtil.updateSCORMContent(scorm, serviceContext);
 		}
-		if(redirect!=null &&!"".equals(redirect))
+		if(redirect!=null && !"".equals(redirect))
 		{
 			response.sendRedirect(redirect);
 		}
