@@ -62,7 +62,10 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 
 </script>
 
-<aui:select name="typeId" label="questionType">
+<portlet:actionURL var="addquestionURL" name="addquestion" />
+
+<aui:form name="qfm" action="<%=addquestionURL%>"  method="post">
+	<aui:select name="typeId" label="questionType">
 	<%
 		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
 		for(QuestionType qt:qtypes){
@@ -73,9 +76,6 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	%>
 	</aui:select>
 
-<portlet:actionURL var="addquestionURL" name="addquestion" />
-
-<aui:form name="qfm" action="<%=addquestionURL%>"  method="post">
 	<aui:input name="resId" type="hidden" value="<%= learningActivity.getActId()%>"></aui:input>
 	
 	<script type="text/javascript">
