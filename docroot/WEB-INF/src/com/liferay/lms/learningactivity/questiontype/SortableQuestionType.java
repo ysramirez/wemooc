@@ -106,10 +106,10 @@ public class SortableQuestionType extends BaseQuestionType {
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			List<TestAnswer> tmp = ListUtil.copy(testAnswers);
 			Collections.shuffle(tmp);
-			view += "<ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
+			view += "<div class=\"question_sortable\"><ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
 			for(TestAnswer answer:tmp)
 				view += "<li class=\"ui-sortable-default\" id=\""+answer.getAnswerId()+"\"><div class=\"answer\">"+ answer.getAnswer() + "</div></li> ";
-			view += "</ul>";
+			view += "</ul></div>";
 			view += "<input type=hidden id=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\"/>";
 		} catch (SystemException e) {
 			e.printStackTrace();
