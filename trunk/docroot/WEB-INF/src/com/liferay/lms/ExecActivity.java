@@ -83,7 +83,10 @@ public class ExecActivity extends MVCPortlet
 			long correctanswers=0;
 			Element resultadosXML=SAXReaderUtil.createElement("results");
 			Document resultadosXMLDoc=SAXReaderUtil.createDocument(resultadosXML);
+			
 			long[] questionIds = ParamUtil.getLongValues(actionRequest, "question");
+			
+			
 			for (long questionId : questionIds) {
 				TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 				QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
@@ -102,7 +105,9 @@ public class ExecActivity extends MVCPortlet
 			larntry.setResult(score);
 			larntry.setTryResultData(resultadosXMLDoc.formattedString());
 			larntry.setEndDate(new java.util.Date(System.currentTimeMillis()));
+			
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(larntry);
+			
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
 			actionResponse.setRenderParameter("oldResult", Long.toString(oldResult));
 			actionResponse.setRenderParameter("correction", Boolean.toString(true));
@@ -328,7 +333,7 @@ public class ExecActivity extends MVCPortlet
 		throws Exception {
 	
 		long answerId = ParamUtil.getLong(actionRequest, "answerId");
-		String answer = ParamUtil.getString(actionRequest, "answer");
+		String answer = ParamUtil.getString(actionRequest, "answer_"+answerId);
 		boolean correct = ParamUtil.getBoolean(actionRequest, "correct");
 		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect", "");
