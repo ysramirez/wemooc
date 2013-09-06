@@ -53,7 +53,7 @@
 	   	<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 	</div>
 	<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
-	<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedback"></aui:input>
+	<aui:input type="hidden" cssClass="input-comment" name="feedbackCorrect" label="feedback"></aui:input>
 	<aui:input  type="hidden" name="correct" label="correct" value="<%=true %>"></aui:input>
 	<aui:button type="submit" value="add-more-answers" ></aui:button>
 </aui:form>
