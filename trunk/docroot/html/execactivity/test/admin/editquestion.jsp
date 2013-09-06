@@ -61,7 +61,10 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 //-->
 </script>
 
-<aui:select name="typeId" label="questionType">
+<portlet:actionURL var="editquestionURL" name="editquestion" />
+<aui:form name="qfm" action="<%=editquestionURL %>" method="post">
+
+	<aui:select id="typeId" name="typeId" label="questionType">
 	<%
 		long questionId = question.getQuestionType();
 		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
@@ -73,8 +76,6 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	%>
 	</aui:select>
 
-<portlet:actionURL var="editquestionURL" name="editquestion" />
-<aui:form name="qfm" action="<%=editquestionURL %>" method="post">
 	<aui:input name="resId" type="hidden" value="<%=question.getActId() %>"></aui:input>
 	<aui:input name="questionId" type="hidden" value="<%=question.getQuestionId() %>"></aui:input>
 	
