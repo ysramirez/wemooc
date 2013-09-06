@@ -10,6 +10,7 @@
 <%
 	long moduleId=ParamUtil.getLong(renderRequest,"resModuleId",0);
 	long random = 0;
+	long questionsPerPage = 0;
 	String password = StringPool.BLANK;
 	long hourDuration=0,minuteDuration=0,secondDuration=0;
 	boolean showCorrectAnswer= false;
@@ -18,7 +19,8 @@
 	
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
-		random = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random"));		
+		random = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random"));
+		questionsPerPage = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"questionsPerPage"));
 		password = HtmlUtil.unescape(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"password")).trim();
 		
 		long timestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"timeStamp"));		
@@ -70,7 +72,13 @@ AUI().use('aui-form-validator', function(A) {
 					return YUI.AUI.defaults.FormValidator.REGEX.positiveLong.test(val);
 				}
 				return true;
-			}		
+			},
+			qppRule: function(val, fieldNode, ruleValue) {
+				if(!A.Node.getDOMNode(fieldNode).form.<portlet:namespace />questionsPerPage.disabled){
+					return YUI.AUI.defaults.FormValidator.REGEX.positiveLong.test(val);
+				}
+				return true;
+			}
 		},
 		true
 	);
@@ -83,13 +91,19 @@ window.<portlet:namespace />validate_execactivity={
 			<portlet:namespace />random: {
 				required: true,
 				randomRule: true
+			},
+			<portlet:namespace />questionsPerPage: {
+				qppRule: true
 			}
 		},
 		fieldStrings:
 		{
 			<portlet:namespace />random: {
-				randomRule: '<liferay-ui:message key="execactivity.editActivity.random.number" />'
-            }
+				randomRule: '<liferay-ui:message key="execActivity.options.error.random" />'
+            },
+            <portlet:namespace />questionsPerPage: {
+            	qppRule: '<liferay-ui:message key="execActivity.options.error.questionsPerPage" />'
+			}
 		}	
 };
 
@@ -143,6 +157,12 @@ window.<portlet:namespace />validate_execactivity={
 	<div id="<portlet:namespace />randomError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
+	</div>
+	
+	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" ignoreRequestValue="true"></aui:input>
+	<div id="<portlet:namespace />questionsPerPageError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?"portlet-msg-error":StringPool.BLANK %>">
+	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?
+				LanguageUtil.get(pageContext,"execActivity.options.error.questionsPerPage"):StringPool.BLANK %>
 	</div>
 	
 	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"execActivity.options.password.help\")%>"></aui:input>

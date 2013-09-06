@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
@@ -371,35 +372,169 @@
 
 			<aui:form name="formulario" action="<%=correctURL %>" method="POST">
 			<%
-			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"random"));
 			
-			if(random!=0){
-				questions = new ArrayList<TestQuestion>(questions);
-				Collections.shuffle(questions);	
-				if(random>questions.size()){
+			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"random"));
+			long currentQuestionId = 0;
+			if (learningTry != null && Validator.isXml(learningTry.getTryResultData())) {
+				String tryResultData = learningTry.getTryResultData();
+				Document docQuestions = SAXReaderUtil.read(tryResultData);
+				List<Element> xmlQuestions = docQuestions.getRootElement().elements("question");
+				
+				Map<Long, TestQuestion> questionMap = new HashMap<Long, TestQuestion>();
+				for (TestQuestion question : questions) {
+					questionMap.put(question.getQuestionId(), question);
+				}
+				questions = new ArrayList<TestQuestion>();
+				for (Element xmlQuestion : xmlQuestions) {
+					String questionIdString = xmlQuestion.attributeValue("id");
+					if (Validator.isNotNull(questionIdString) && Validator.isNumber(questionIdString)) {
+						Long questionId = Long.valueOf(questionIdString);
+						TestQuestion testQuestion = questionMap.get(questionId);
+						if (testQuestion != null) {
+							questions.add(testQuestion);
+							String currentString = xmlQuestion.attributeValue("current");
+							if ("true".equals(currentString)) {
+								currentQuestionId = questionId;
+							}
+						}
+					}
+				}
+				random = questions.size();
+			} else {
+				if (random != 0){
+					questions = new ArrayList<TestQuestion>(questions);
+					Collections.shuffle(questions);	
+					if (random > questions.size()){
+						random=questions.size();
+					}
+				}
+				else{
 					random=questions.size();
 				}
 			}
-			else{
-				random=questions.size();
+			
+			long questionsPerPage = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(), "questionsPerPage"));
+			
+			boolean showPrevious = false;
+			boolean showNext = false;
+						
+			long limitChunk = questionsPerPage == 0 ? random : questionsPerPage;
+			
+			long currentPage = 0;
+			long totalPages = (random / limitChunk) + (random % limitChunk != 0 ? 1 : 0);
+			
+			for(int index = 0; index < random; index += limitChunk) {
+				boolean questionPageCurrent = false;
+				StringBuilder sb = new StringBuilder();
+				
+				for(int jndex = 0; jndex < Math.min(limitChunk, random - index); jndex++) {
+					TestQuestion question = questions.get(jndex + index);
+					QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+					if (question.getQuestionId() == currentQuestionId) {
+						questionPageCurrent = true;
+					}
+					qt.setLocale(themeDisplay.getLocale());
+					Document document = null;
+					if (Validator.isNotNull(learningTry.getTryResultData())) {
+						document = SAXReaderUtil.read(learningTry.getTryResultData());
+					}
+					sb.append(qt.getHtmlView(question.getQuestionId(), themeDisplay, document));
+ 					
+				} 
+				boolean markAsCurrentPage = questionPageCurrent || (currentQuestionId == 0 && index == 0);
+				if (markAsCurrentPage && index != 0) {
+					showPrevious = true;
+				}
+				if (markAsCurrentPage && (index + limitChunk < random)) {
+					showNext = true;
+				}
+				if (markAsCurrentPage) {
+					currentPage = (questionsPerPage == 0 ? 0 : index / questionsPerPage) + 1;
+				}
+				%>
+				<div class='question-page<%= markAsCurrentPage ? " question-page-current" : "" %>' id="question-page-<%= questionsPerPage == 0 ? 0 : index / questionsPerPage %>">
+				<%= sb.toString() %>
+				</div>
+				<%
 			}
 			
-			for(int index=0; index<random; index++) {
-				TestQuestion question = questions.get(index);
-				QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-				qt.setLocale(themeDisplay.getLocale());
-%>
-				<%=qt.getHtmlView(question.getQuestionId(), themeDisplay, null)%>
-<%
-			}
-			
-				if (questions.size()>0){%>
-				<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event);" %>' ></aui:button>
-				<% }  else {%>
+				if (questions.size()>0){
+					if (questionsPerPage == 0) { %>
+				<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndSave(event);" %>' ></aui:button>
+				<% } else { %>
+				
+				<div id="testactivity-navigator">
+				<% if (showPrevious) { %>
+					<div id="testactivity-navigator-previous">
+						<aui:button type="submit" value="previous" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndBackward(event);" %>' ></aui:button>
+					</div>
+					<% }
+				if ((showPrevious || showNext) && currentPage >= 1) { %>
+					<div id="testactivity-navigator-pages"><p><%= currentPage + " / " + totalPages %></p></div>
+				<% } %>
+				<div id="testactivity-navigator-next">
+				<% if (showNext) { %>
+					<aui:button type="submit" value="next" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndForward(event);" %>' ></aui:button>
+				<% } else { %>
+					<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndSave(event);" %>' ></aui:button>
+				<% } %>
+				</div>
+				</div>
+				<aui:input type="hidden" name="currentQuestionId" value="<%= currentQuestionId %>"/>
+				<aui:input type="hidden" name="navigate" value=""/>
+				<% }
+					}  else {%>
 					<p class="color_tercero negrita"><liferay-ui:message key="execativity.test.no.question" /></p>
 				<% }  %>
 			
 			</aui:form>
+			<script type="text/javascript">
+	<!--
+	function <portlet:namespace/>formValidationAndSave(e) {
+		var A = AUI();
+		A.one('#<portlet:namespace/>currentQuestionId').val("0");
+		return <portlet:namespace/>formValidation(e);
+	}
+	
+	function <portlet:namespace/>formValidationAndBackward(e) {
+		var A = AUI();
+		A.one('#<portlet:namespace/>navigate').val('backward');
+		var page = A.one('.question-page-current');
+		var n = page.attr('id').split("-");
+		n[n.length - 1]--;
+		var backValue = A.one('#'+n.join("-")).one('.question > input').val();
+		A.one('#<portlet:namespace/>currentQuestionId').val(backValue);
+		return <portlet:namespace/>formValidation(e);
+	}
+	
+	function <portlet:namespace/>formValidationAndForward(e) {
+		var A = AUI();
+		A.one('#<portlet:namespace/>navigate').val('forward');
+		var page = A.one('.question-page-current');
+		var n = page.attr('id').split("-");
+		n[n.length - 1]++;
+		var forValue = A.one('#'+n.join("-")).one('.question > input').val();
+		A.one('#<portlet:namespace/>currentQuestionId').val(forValue);
+		return <portlet:namespace/>formValidation(e);
+	}
+	
+	
+	//-->
+</script>
+			<style type="text/css">
+				.question-page {
+					display: none;
+				}
+				.question-page.question-page-current {
+					display: block;
+				}
+				#testactivity-navigator-previous {
+					float: left;
+				}
+				#testactivity-navigator-next {
+					float: right;
+				}
+			</style>
 			<%
 			}
 			}

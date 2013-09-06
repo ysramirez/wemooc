@@ -107,6 +107,13 @@ public class TestLearningActivityType extends BaseLearningActivityType
 			SessionErrors.add(actionRequest, "execactivity.editActivity.random.number");
 			validate=false;
 		}
+		if((Validator.isNotNull(uploadRequest.getParameter("questionsPerPage")))&&
+		   ((!Validator.isNumber(uploadRequest.getParameter("questionsPerPage")))||
+		    (Long.parseLong(uploadRequest.getParameter("questionsPerPage"))<0)))
+		{
+			SessionErrors.add(actionRequest, "execactivity.editActivity.questionsPerPage.number");
+			validate=false;
+		}
 		return validate;
 	}
 	
@@ -185,6 +192,16 @@ public class TestLearningActivityType extends BaseLearningActivityType
 			improve = SAXReaderUtil.createElement("improve");
 			improve.setText(Boolean.toString(ParamUtil.get(uploadRequest,"improve",false)));		
 			rootElement.add(improve);	
+			
+			Element questionsPerPage=rootElement.element("questionsPerPage");
+			if(questionsPerPage!=null)
+			{
+				questionsPerPage.detach();
+				rootElement.remove(questionsPerPage);
+			}
+			questionsPerPage = SAXReaderUtil.createElement("questionsPerPage");
+			questionsPerPage.setText(Long.toString(ParamUtil.get(uploadRequest,"questionsPerPage", 0L)));
+			rootElement.add(questionsPerPage);	
 			
 			learningActivity.setExtracontent(document.formattedString());
 	    }

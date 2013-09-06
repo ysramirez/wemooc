@@ -26,15 +26,24 @@ if(course!=null)
 	searchGroupId=course.getGroupId();
 }
 
+String assetTypes=PropsUtil.get("lms.scorm.assettypes");
+String[] allowedAssetTypes=assetTypes.split(",");
 
 %>
 <liferay-ui:icon-menu message="add" showWhenSingleIcon="true" >
 <%
-String assetType = "com.liferay.lms.model.SCORMContent";
-if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.scormmodel",themeDisplay.getScopeGroupId(), "ADD_SCORM")) {
+for(String assetType:allowedAssetTypes) {
+	/*String permissionAssetType = "";
+	String resourceAssetType = "";
+if("com.liferay.lms.model.SCORMContent".equals(assetType)) {
+	permissionAssetType = "ADD_SCORM";
+	resourceAssetType = "com.liferay.lms.scormmodel";
+}
+if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), resourceAssetType, themeDisplay.getScopeGroupId(), permissionAssetType)) {*/
 	PortletURL pURL=getAddPortletURL(course.getGroupId(), liferayPortletRequest, liferayPortletResponse, assetType);
 	if(pURL!=null) {
 		AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetType);
+		assetRendererFactory.getURLAdd(liferayPortletRequest, liferayPortletResponse);
 		String addPortletURLString=pURL.toString();
 		Group theGroup = GroupLocalServiceUtil.getGroup(course.getGroupId());
 		addPortletURLString = HttpUtil.addParameter(addPortletURLString, "doAsGroupId", course.getGroupId());
@@ -53,6 +62,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 				/>
 		<%
 	}
+//}
 }
 %>
 </liferay-ui:icon-menu>
@@ -61,7 +71,19 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 </liferay-portlet:renderURL>
 <aui:form name="<portlet:namespace />ressearch" action="<%=selectResource %>" method="POST">
 
-<aui:input name="className" type="hidden" value="<%= SCORMContent.class.getName() %>" />
+<aui:select name="className" label="asset-type">
+<% 
+
+for(String className:allowedAssetTypes)
+{	
+	String assettypename=LanguageUtil.get(pageContext, "model.resource." + className);	
+	%>
+	<aui:option value="<%=className%>" label="<%=assettypename%>"></aui:option>
+	<%
+	
+}
+%>
+</aui:select>
 
 <aui:input name="keywords" size="20" type="text"/>
 

@@ -1,14 +1,10 @@
 package com.liferay.lms;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -74,6 +70,13 @@ public class ExecActivity extends MVCPortlet
 		
 		long actId=ParamUtil.getLong(actionRequest, "actId");
 		long latId=ParamUtil.getLong(actionRequest,"latId" );
+		String navigate = ParamUtil.getString(actionRequest, "navigate");
+		boolean isPartial = false;
+		if (Validator.isNotNull(navigate)) {
+			if (Validator.equals(navigate, "backward") || Validator.equals(navigate, "forward")) {
+				isPartial = true;
+			}
+		}
 		
 		LearningActivityTry larntry=LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
 				    
@@ -90,28 +93,37 @@ public class ExecActivity extends MVCPortlet
 			for (long questionId : questionIds) {
 				TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 				QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-				if(qt.correct(actionRequest, questionId)) correctanswers++;
+				if(!isPartial && qt.correct(actionRequest, questionId)) {
+					correctanswers++;
+				}
 				resultadosXML.add(qt.getResults(actionRequest, questionId));								
 			}
 			
 			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"random"));
 			List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
-			long score=correctanswers*100/((random!=0 && random<questions.size())?random:questions.size());
+			long score=isPartial ? 0 : correctanswers*100/((random!=0 && random<questions.size())?random:questions.size());
 		 	
 			LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, PortalUtil.getUserId(actionRequest));
 			long oldResult=-1;
 			if(learningActivityResult!=null) oldResult=learningActivityResult.getResult();
 			
-			larntry.setResult(score);
 			larntry.setTryResultData(resultadosXMLDoc.formattedString());
-			larntry.setEndDate(new java.util.Date(System.currentTimeMillis()));
+			if (!isPartial) {
+				larntry.setResult(score);
+				larntry.setEndDate(new java.util.Date(System.currentTimeMillis()));
+			}
 			
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(larntry);
 			
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
-			actionResponse.setRenderParameter("oldResult", Long.toString(oldResult));
-			actionResponse.setRenderParameter("correction", Boolean.toString(true));
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/results.jsp");
+			
+			if (isPartial) {
+				actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/view.jsp");
+			} else {
+				actionResponse.setRenderParameter("oldResult", Long.toString(oldResult));
+				actionResponse.setRenderParameter("correction", Boolean.toString(true));
+				actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/results.jsp");
+			}
 		}else{
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
 			actionRequest.setAttribute("actId", actId);
@@ -133,6 +145,8 @@ public class ExecActivity extends MVCPortlet
 			
 			String showCorrectAnswer=ParamUtil.getString(actionRequest, "showCorrectAnswer", "false");
 			String improve=ParamUtil.getString(actionRequest, "improve", "false");
+			
+			long questionesPerPage = ParamUtil.getInteger(actionRequest, "questionesPerPage", 1);
 			
 			if(randomString==0) {
 				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", StringPool.BLANK);
@@ -160,6 +174,13 @@ public class ExecActivity extends MVCPortlet
 				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "true");
 			}else if(improve.equals("false")) {
 				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "false");
+			}
+			
+			if(questionesPerPage == 0) {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", StringPool.BLANK);
+			}
+			else {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", Long.toString(questionesPerPage));
 			}
 
 			SessionMessages.add(actionRequest, "activity-saved-successfully");
@@ -468,7 +489,7 @@ public class ExecActivity extends MVCPortlet
 	
 		        //Crear la cabecera con las preguntas.
 		        List<TestQuestion> questionsTitle = TestQuestionLocalServiceUtil.getQuestions(actId);
-		        //Añadimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
+		        //Aï¿½adimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
 		        int numExtraCols = 3;
 		        String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
 		        
@@ -486,7 +507,7 @@ public class ExecActivity extends MVCPortlet
 		        }
 		        writer.writeNext(cabeceras);
 		        
-		      //Partiremos del usuario para crear el csv para que sea más facil ver los intentos.
+		      //Partiremos del usuario para crear el csv para que sea mï¿½s facil ver los intentos.
 		        List<User> users = LearningActivityTryLocalServiceUtil.getUsersByLearningActivity(actId);
 		        
 		        for(User user:users){
@@ -564,10 +585,10 @@ public class ExecActivity extends MVCPortlet
 		 
 		 String res = "";
 		 
-		//Jsoup elimina todas la etiquetas html del string que se le pasa, devolviendo únicamente el texto plano.
+		//Jsoup elimina todas la etiquetas html del string que se le pasa, devolviendo ï¿½nicamente el texto plano.
 		 res = Jsoup.parse(str).text();
 		 
-		//Si el texto es muy largo, lo recortamos para que sea más legible.
+		//Si el texto es muy largo, lo recortamos para que sea mï¿½s legible.
 		 if(res.length() > 50){
 			 res = res.substring(0, 50);
 		 }

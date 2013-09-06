@@ -159,7 +159,7 @@ if(learnact!=null)
 <script type="text/javascript">
 <!--
 
-AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
+AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'widget-locale', function(A) {
 
 	<% if(larntype.hasEditDetails()){ %>
 		A.one('.taglib-icon').focus();
