@@ -165,6 +165,9 @@ public class SortableQuestionType extends BaseQuestionType {
 	
 	public String getHtmlFeedback(Document document,long questionId){
 		String feedBack = "", answersFeedBack="";
+		
+		System.out.println(" document : " + document );
+		
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
@@ -191,7 +194,7 @@ public class SortableQuestionType extends BaseQuestionType {
 					feedMessage=(!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+testAnswers.get(i).getFeedbacknocorrect():testAnswers.get(i).getFeedbacknocorrect();
 				}
 				
-		
+				inputType="hidden";
 				answersFeedBack += "<div class=\"answer " + correct + "\">" +
 								"<input type=\"" + inputType + "\" name=\"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + testAnswers.get(i).getAnswerId() +"\"  disabled=\"disabled\">" + testAnswers.get(i).getAnswer() +
 							"</div>";
