@@ -211,10 +211,7 @@ public class SortableQuestionType extends BaseQuestionType {
 							"<div class=\"questiontext\">" + question.getText() + "</div>" +
 							"<div class=\"content_answer\">" + answersFeedBack + "</div>" +
 						"</div>";	
-		} catch (SystemException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 		return feedBack;
