@@ -167,9 +167,9 @@ public class SortableQuestionType extends BaseQuestionType {
 	
 	public String getHtmlFeedback(Document document,long questionId){
 
+		String feedBack = "", answersFeedBack="";
+		
 		try {
-	
-			String feedBack = "", answersFeedBack="";
 			
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			
