@@ -61,6 +61,11 @@ public class SortableQuestionType extends BaseQuestionType {
 	
 	public boolean correct(ActionRequest actionRequest, long questionId){
 		String cl = ParamUtil.getString(actionRequest, "question_"+questionId+"_contentlist");
+		
+		if(cl.equals("")){
+			return false;
+		}
+		
 		String[] positions = cl.split("&");
 		List<Long> arrayAnswersId = new ArrayList<Long>();
 		for(String answerId:positions){
@@ -106,11 +111,17 @@ public class SortableQuestionType extends BaseQuestionType {
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			List<TestAnswer> tmp = ListUtil.copy(testAnswers);
 			Collections.shuffle(tmp);
+			
+			String value="";
+			int cont = 0;
+			
 			view += "<div class=\"question_sortable\"><ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
-			for(TestAnswer answer:tmp)
+			for(TestAnswer answer:tmp){
+				value += "question_"+answer.getQuestionId()+ "["+ (cont++) +"]=" + answer.getAnswerId()+"&";
 				view += "<li class=\"ui-sortable-default\" id=\""+answer.getAnswerId()+"\"><div class=\"answer\">"+ answer.getAnswer() + "</div></li> ";
+			}
 			view += "</ul></div>";
-			view += "<input type=hidden id=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\"/>";
+			view += "<input type=hidden id=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" value=\""+value+"\"/>";
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
