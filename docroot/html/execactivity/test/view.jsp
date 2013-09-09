@@ -124,7 +124,7 @@
 									<portlet:param name="latId" value="<%=Long.toString(learningTry.getLatId()) %>"></portlet:param>
 								</portlet:actionURL>
 								
-								<script>$(elem + ' > .items > div').draggable();</script>
+								
   								
   								
 							  <script>		
@@ -145,7 +145,7 @@
 									        $elem.each(function(i) {
 									            var menu = this.id;
 									            
-									            n= "_execactivity_WAR_liferaylmsportlet_" + menu + "_contentlist";
+									            n= "<portlet:namespace/>" + menu + "_contentlist";
 									            content = document.getElementById(n);
 									            content.value="";
 									            $('li', this).each(function(e) {
@@ -469,7 +469,7 @@
 				<div id="testactivity-navigator">
 				<% if (showPrevious) { %>
 					<div id="testactivity-navigator-previous">
-						<aui:button type="submit" value="previous" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndBackward(event);" %>' ></aui:button>
+						<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.previous" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndBackward(event);" %>' ></aui:button>
 					</div>
 					<% }
 				if ((showPrevious || showNext) && currentPage >= 1) { %>
@@ -477,7 +477,7 @@
 				<% } %>
 				<div id="testactivity-navigator-next">
 				<% if (showNext) { %>
-					<aui:button type="submit" value="next" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndForward(event);" %>' ></aui:button>
+					<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.next" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndForward(event);" %>' ></aui:button>
 				<% } else { %>
 					<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndSave(event);" %>' ></aui:button>
 				<% } %>
