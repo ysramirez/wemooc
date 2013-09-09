@@ -80,7 +80,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 	}
 
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		return getHtml(document, questionId, false);
+		return getHtml(document, questionId, false, themeDisplay);
 	}
 
 	public Element getResults(ActionRequest actionRequest, long questionId){
@@ -118,8 +118,9 @@ public class DraganddropQuestionType extends BaseQuestionType {
 		return questionXML;
 	}
 
-	private String getHtml(Document document, long questionId, boolean feedback){
+	private String getHtml(Document document, long questionId, boolean feedback, ThemeDisplay themeDisplay){
 		String html = "", leftCol="", rightCol = "", feedMessage="", feedsol="", showCorrectAnswer="false";
+		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			//String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
@@ -160,7 +161,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 			}
 
 			html += "<div id=\"id"+questionId+"\" class=\"question draganddrop"+correctionClass+"\">"+
-						"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
+						"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 						"<div class=\"questiontext\">" + question.getText() + "</div>";
 
 			//en la columna de la izq el contenido de testAnswers, con las que el estudiante dej� sin arrastrar
@@ -187,7 +188,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 					if("true".equals(showCorrectAnswer)) feedsol = "<div class=\" font_14 color_cuarto negrita\">" + sols.get(i).getAnswer() + "</div>";
 				}
 				
-				rightCol +=	"<input type=\"hidden\" name=\"question_" + question.getQuestionId() + "_" + i +"hidden\"  value=\""+value+"\"/>" +
+				rightCol +=	"<input type=\"hidden\" name=\""+namespace+"question_" + question.getQuestionId() + "_" + i +"hidden\"  value=\""+value+"\"/>" +
 						"<div name=\"question_" + question.getQuestionId() + "_" + i +"\" id=\"Drop"+aux +"\" class=\"drop-containers ui-corner-all background base\">"+ text +"</div>"
 						+ feedsol;
 			}
@@ -206,7 +207,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 	}
 
 	public String getHtmlFeedback(Document document,long questionId){
-		return getHtml(document, questionId, true);
+		return getHtml(document, questionId, true, null);
 	}
 
 	protected List<TestAnswer> getAnswersSelected(Document document,long questionId){

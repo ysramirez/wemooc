@@ -77,7 +77,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 	}
 
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		return getHtml(document, questionId, false);
+		return getHtml(document, questionId, false, themeDisplay);
 	}
 
 	public Element getResults(ActionRequest actionRequest, long questionId){
@@ -98,8 +98,9 @@ public class FreetextQuestionType extends BaseQuestionType {
 		return questionXML;
 	}
 
-	private String getHtml(Document document, long questionId, boolean feedback){
+	private String getHtml(Document document, long questionId, boolean feedback, ThemeDisplay themeDisplay){
 		String feedBack = "", answersFeedBack= "", cssclass = "", showCorrectAnswer = "false";
+		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
@@ -131,8 +132,9 @@ public class FreetextQuestionType extends BaseQuestionType {
 			if(feedback) answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
 
 			feedBack += "<div class=\"question" + cssclass + "\">" + 
-					"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
+					"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 					"<div class=\"questiontext\">" + question.getText() + "</div>" +
+					(!feedback ? "<div class=\"answer\"><textarea rows=\"4\" cols=\"60\" maxlength=\"1000\" name=\""+namespace+"question_" + question.getQuestionId() + "\" label=\"answer\">"+answer+"</textarea></div>" : "") +
 					answersFeedBack +
 					"</div>";	
 		} catch (SystemException e) {
@@ -142,7 +144,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 	}
 
 	public String getHtmlFeedback(Document document,long questionId){
-		return getHtml(document, questionId, true);
+		return getHtml(document, questionId, true, null);
 	}
 
 	protected String getAnswersSelected(Document document,long questionId){
