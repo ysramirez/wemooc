@@ -379,59 +379,61 @@ public class CourseAdmin extends MVCPortlet {
 		}
 		else{ 
 			String contentType = request.getContentType("fileName");	
-			if (!ContentTypes.TEXT_CSV.equals(contentType) && !ContentTypes.TEXT_CSV_UTF8.equals(contentType) && 
-					!(ContentTypes.APPLICATION_VND_MS_EXCEL.equals(contentType)&&(DDLExportFormat.CSV.toString().equals(FileUtil.getExtension(fileName))))) {
+			System.out.println(" contentType : " + contentType );
+			System.out.println(" fileName : " + fileName );
+			if (!fileName.endsWith(".csv")) {
 				SessionErrors.add(portletRequest, "courseadmin.importuserrole.csv.badFormat");	
 			}
 			else {
 				CSVReader reader = null;
 				try {
-					reader = new CSVReader(new InputStreamReader(request.getFileAsStream("fileName"), "ISO-8859-1"), ';');
-					int line = 0;
+					File file = request.getFile("fileName");
+					System.out.println("----------------------------\n  Import users ");
+					reader = new CSVReader(new InputStreamReader(new FileInputStream(file), "ISO-8859-1"), ';');
+
 					String[] currLine;
 
 					while ((currLine = reader.readNext()) != null) {
-						if (line++ != 0){
-							boolean correct = true;
-							long userId=0;
-							try {
-								userId = Long.parseLong(currLine[0].trim());
-							} catch (NumberFormatException e) {
-								correct = false;
-								errors.add(LanguageUtil.format(getPortletConfig(),themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.user-id-bad-format",
-										new Object[] { line }, false));
-							}
 
-							if(correct){
+						for(String userIdStr:currLine){
+						
+							if (!userIdStr.equals("")){
+	
+								long userId=0;
+								System.out.println("    userId : " + userIdStr.trim() );
 								try {
-									UserLocalServiceUtil.getUser(userId);
+									
+									userId = Long.parseLong(userIdStr.trim());
+									
+									User user = UserLocalServiceUtil.getUser(userId);
+									
+									if(user != null){
+										System.out.println("      User Name : " + user.getFullName() );
+										if(!GroupLocalServiceUtil.hasUserGroup(userId, course.getGroupCreatedId())){
+											GroupLocalServiceUtil.addUserGroups(userId, new long[] { course.getGroupCreatedId() });
+										}
+	
+										users.add(userId);
+									}else{
+										System.out.println("      User not exits (userId:"+userId+").");
+									}
+									
+									
+								} catch (NumberFormatException e) {
+									errors.add(LanguageUtil.format(getPortletConfig(),themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.user-id-bad-format", new Object[] { userId }, false));
 								} catch (PortalException e) {
-									correct = false;
-									errors.add(LanguageUtil.format(getPortletConfig(),themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.user-id-not-found",
-											new Object[] { line,userId }, false));
+									errors.add(LanguageUtil.format(getPortletConfig(),themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.user-id-not-found",	new Object[] { userId,userId }, false));
+								} catch (Exception e){
+									errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(),"courseadmin.importuserrole.csvError"));
 								}
-
-							}
-
-							if(correct){
-
-								if(!GroupLocalServiceUtil.hasUserGroup(userId,
-										course.getGroupCreatedId())){
-									GroupLocalServiceUtil.addUserGroups(userId,
-											new long[] { course.getGroupCreatedId() });
-								}
-
-								users.add(userId);
 							}
 						}
 					}
 
-
-
-
 				} catch (FileNotFoundException e) {
-					errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(),
-							"courseadmin.importuserrole.csvError.empty-file"));
+					errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.empty-file"));
+				}catch(Exception e){
+					e.printStackTrace();
 				} finally {
 					if (reader != null) {
 						reader.close();
@@ -440,8 +442,7 @@ public class CourseAdmin extends MVCPortlet {
 
 				if(errors.isEmpty()){
 					for (Long user : users) {
-						UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user },
-								course.getGroupCreatedId(), roleId);
+						UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user }, course.getGroupCreatedId(), roleId);
 					}
 					SessionMessages.add(portletRequest, "courseadmin.importuserrole.csv.saved");
 				}
@@ -451,7 +452,6 @@ public class CourseAdmin extends MVCPortlet {
 			}	
 		}
 	}
-
 
 	@Override
 	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
