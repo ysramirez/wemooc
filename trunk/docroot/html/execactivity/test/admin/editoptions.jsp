@@ -18,9 +18,11 @@
 	boolean newOrCourseEditor=true;
 	
 	if(request.getAttribute("activity")!=null) {
-		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
-		random = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random"));
-		questionsPerPage = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"questionsPerPage"));
+		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
+		String randomString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random");
+		random = Long.parseLong(Validator.isNumber(randomString) ? randomString : "0");
+		String questionsPerPageString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"questionsPerPage");
+		questionsPerPage = Long.parseLong(Validator.isNumber(questionsPerPageString) ? questionsPerPageString : "0");
 		password = HtmlUtil.unescape(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"password")).trim();
 		
 		long timestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"timeStamp"));		

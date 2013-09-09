@@ -419,6 +419,9 @@
 			boolean showNext = false;
 						
 			long limitChunk = questionsPerPage == 0 ? random : questionsPerPage;
+			if (limitChunk == 0) {
+				limitChunk = 1;
+			}
 			
 			long currentPage = 0;
 			long totalPages = (random / limitChunk) + (random % limitChunk != 0 ? 1 : 0);
