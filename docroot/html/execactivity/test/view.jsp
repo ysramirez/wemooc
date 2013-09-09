@@ -124,8 +124,8 @@
 									<portlet:param name="latId" value="<%=Long.toString(learningTry.getLatId()) %>"></portlet:param>
 								</portlet:actionURL>
 								
-								<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
-  								<script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+								<script>$(elem + ' > .items > div').draggable();</script>
+  								
   								
 							  <script>		
 									(function ($) {
