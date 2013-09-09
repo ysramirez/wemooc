@@ -131,6 +131,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 			if(feedback) answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
 
 			feedBack += "<div class=\"question" + cssclass + "\">" + 
+					"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
 					"<div class=\"questiontext\">" + question.getText() + "</div>" +
 					answersFeedBack +
 					"</div>";	
