@@ -63,7 +63,7 @@
 %>	    
 	<liferay-util:include page="/html/execactivity/test/results.jsp" servletContext="<%=this.getServletContext() %>">
 		<liferay-util:param value="<%=Long.toString(learnact.getActId()) %>" name="actId"/>
-		<liferay-util:param value="<%=Long.toString(learnactTry.getActId()) %>" name="latId"/>
+		<liferay-util:param value="<%=Long.toString(learnactTry.getLatId()) %>" name="latId"/>
 	</liferay-util:include>       
 
 

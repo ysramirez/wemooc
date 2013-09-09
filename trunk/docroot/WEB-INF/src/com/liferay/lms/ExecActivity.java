@@ -121,7 +121,6 @@ public class ExecActivity extends MVCPortlet
 				actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/view.jsp");
 			} else {
 				actionResponse.setRenderParameter("oldResult", Long.toString(oldResult));
-				actionResponse.setRenderParameter("latId", String.valueOf(larntry.getLatId()));
 				actionResponse.setRenderParameter("correction", Boolean.toString(true));
 				actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/results.jsp");
 			}
