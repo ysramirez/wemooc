@@ -1,5 +1,6 @@
 package com.liferay.lms.learningactivity.questiontype;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -165,54 +166,55 @@ public class SortableQuestionType extends BaseQuestionType {
 	}
 	
 	public String getHtmlFeedback(Document document,long questionId){
-		String feedBack = "", answersFeedBack="";
-		
-		System.out.println(" document : " + document );
-		
+
 		try {
+	
+			String feedBack = "", answersFeedBack="";
+			
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
+			
+			String showCorrectAnswerStr = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+			boolean showCorrectAnswer = showCorrectAnswerStr.equals("true");
+			
+			List<TestAnswer> answersSelectedOrder 	 = getAnswerSelected(document, questionId);
+			List<TestAnswer> testAnswersCorrectOrder = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
+
 			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
-			List<TestAnswer> answersSelected=getAnswerSelected(document, questionId);
-			String cssclass="question incorrect";
-			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			int correctAnswers=0, correctAnswered=0, incorrectAnswered=0;
+			boolean allRight = true, questionCorrect = false;
+				
 			int i=0;
-			while( i < testAnswers.size()){
-				String checked="";
-				String correct="";
-				String showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
-				if(isCorrect(testAnswers.get(i))){
-					correctAnswers++;
-					if(showCorrectAnswer.equals("true")) correct="font_14 color_cuarto negrita";
-					if(!answersSelected.isEmpty() && answersSelected.get(i).equals(testAnswers.get(i))){
-						correctAnswered++;
-						checked="checked='checked'";
-						feedMessage=(!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+testAnswers.get(i).getFeedbackCorrect():testAnswers.get(i).getFeedbackCorrect();
+			while( i < answersSelectedOrder.size()){
+				
+				questionCorrect = answersSelectedOrder.get(i).equals(testAnswersCorrectOrder.get(i));
+				
+				if(questionCorrect){
+					
+					feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.correct");
+					
+				} else {
+					allRight = false;
+					
+					feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect");
+					
+					if(showCorrectAnswer){
+						feedMessage += LanguageUtil.format(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswersCorrectOrder.indexOf(answersSelectedOrder.get(i))+1)});
 					}
-				}else if(!answersSelected.isEmpty() && answersSelected.contains(testAnswers.get(i))){
-					incorrectAnswered++;
-					checked="checked='checked'";
-					feedMessage=(!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+testAnswers.get(i).getFeedbacknocorrect():testAnswers.get(i).getFeedbacknocorrect();
 				}
 				
-				inputType="hidden";
-				answersFeedBack += "<div class=\"answer " + correct + "\">" +
-								"<input type=\"" + inputType + "\" name=\"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + testAnswers.get(i).getAnswerId() +"\"  disabled=\"disabled\">" + testAnswers.get(i).getAnswer() +
-							"</div>";
+				answersFeedBack += "<div class=\"answer\">" + answersSelectedOrder.get(i).getAnswer() 
+								+ "<div class=\"message "+ (questionCorrect?"correct":"incorrect")+"\">"+feedMessage+"</div> </div>";
+				
 				i++;
-			}
-			
-			if(correctAnswers==correctAnswered && incorrectAnswered==0)	cssclass="question correct";
-			else cssclass="question incorrect";
-			
-			feedBack += "<div class=\"" + cssclass + "\">" + 
+			}	
+						
+			feedBack += "<div class=\"" + (allRight?"question correct":"question incorrect") + "\">" + 
 							"<div class=\"questiontext\">" + question.getText() + "</div>" +
-							"<div class=\"content_answer\">" +
-								answersFeedBack +
-							"</div>" +
-							"<div class=\"questionFeedback\">" + feedMessage + "</div>" +
+							"<div class=\"content_answer\">" + answersFeedBack + "</div>" +
 						"</div>";	
 		} catch (SystemException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return feedBack;
