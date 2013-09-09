@@ -150,7 +150,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 	}
 	
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		return getHtml(document, questionId, false);
+		return getHtml(document, questionId, false, themeDisplay);
 	}
 	
 	private boolean isMoodleAnswer(String temp) {
@@ -198,8 +198,9 @@ public class FillblankQuestionType extends BaseQuestionType {
 		return questionXML;
 	}
 	
-	private String getHtml(Document document, long questionId, boolean feedback){
+	private String getHtml(Document document, long questionId, boolean feedback, ThemeDisplay themeDisplay){
 		String html = "", answersFeedBack="", cssclass="", showCorrectAnswer = "false", feedMessage = "";
+		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			
 			//Cogemos las respuestas a los blancos (separadas por coma) de la pregunta a partir del xml de learningactivityresult
@@ -246,7 +247,11 @@ public class FillblankQuestionType extends BaseQuestionType {
 					
 					if(sol.contains(":SHORTANSWER") || sol.contains(":SA") || sol.contains(":MW")
 							|| sol.contains(":NUMERICAL:") || sol.contains(":NM:") || sol.contains("{{")) {
-						auxans= "<input readonly type=\"text\" value=\""+ans+"\" >";//input
+						String readonly = "";
+						if (feedback) {
+							readonly = "readonly";
+						}
+						auxans= "<input name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" "+readonly+" type=\"text\" value=\""+ans+"\" >";//input
 						
 						if("true".equals(showCorrectAnswer)) {
 							for(String blankSol:blankSols){
@@ -265,17 +270,19 @@ public class FillblankQuestionType extends BaseQuestionType {
 							if(blankSol.equals(ans)) checked="checked='checked'";
 							if(feedback) disabled = "disabled='disabled'";
 							if("true".equals(showCorrectAnswer) && blankSols.contains(blankSol)) correct = "font_14 color_cuarto negrita";
-							aux = "<div class=\"answer " + correct + "\"><input type=\"radio\"" + checked + "value=\"" + blankSol + " "+disabled+" \" >" + blankSol + "</div>";//radiobuttons
+							aux = "<div class=\"answer " + correct + "\"><input name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" type=\"radio\"" + checked + "value=\"" + blankSol + " "+disabled+" \" >" + blankSol + "</div>";//radiobuttons
 							auxans += aux;
 						}
 					}else if(sol.contains(":MULTICHOICE:") || sol.contains(":MC:")){
-						auxans+="<select>";
-						auxans+="<option value=\"\" disabled label=\"\"/>";//primer valor vac�o
+						String disabled = "";
+						if(feedback) disabled = "disabled='disabled'";
+						auxans+="<select "+disabled+" name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" >";
+						auxans+="<option value=\"\" "+disabled+" label=\"\"/>";//primer valor vac�o
 						List<String> totalBlankSols = getBlankSols(sol, false);
 						for(String blankSol:totalBlankSols){
 							String selected = "";
-							if(ans.equals(blankSol)) selected ="selected";
-							auxans+="<option value=\""+ blankSol +"\" disabled label=\""+blankSol +"\" "+ selected +"/>";//dropdown
+							if(ans.equals(blankSol)) selected ="selected";							
+							auxans+="<option value=\""+ blankSol +"\" "+disabled+" label=\""+blankSol +"\" "+ selected +"/>";//dropdown
 						}
 						auxans+="</select>";
 						if("true".equals(showCorrectAnswer)) {
@@ -293,7 +300,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 				if(feedback) answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
 				
 				html += "<div class=\"question" + cssclass + "\">" + 
-							"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
+							"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 							"<div class=\"questiontext\">" + question.getText() + "</div>" +
 							answersFeedBack +
 						"</div>";
@@ -305,7 +312,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 	}
 	
 	public String getHtmlFeedback(Document document,long questionId){
-		return getHtml(document, questionId, true);
+		return getHtml(document, questionId, true, null);
 	}
 
 	protected String getAnswersSelected(Document document, long questionId) {

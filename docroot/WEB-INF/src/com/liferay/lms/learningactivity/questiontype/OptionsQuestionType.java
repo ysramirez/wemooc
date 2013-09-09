@@ -83,7 +83,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 	}
 
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		return getHtml(document, questionId, false);
+		return getHtml(document, questionId, false, themeDisplay);
 	}
 
 	public Element getResults(ActionRequest actionRequest, long questionId){
@@ -110,8 +110,9 @@ public class OptionsQuestionType extends BaseQuestionType {
 		return questionXML;
 	}
 
-	private String getHtml(Document document, long questionId, boolean feedback){
+	private String getHtml(Document document, long questionId, boolean feedback, ThemeDisplay themeDisplay){
 		String html = "", answersFeedBack="", feedMessage = "", cssclass="";
+		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 			List<TestAnswer> answersSelected=getAnswersSelected(document, questionId);
@@ -141,7 +142,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 				}
 
 				answersFeedBack += "<div class=\"answer " + correct + "\">" +
-										"<input type=\"" + inputType + "\" name=\"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\" " + disabled + ">" + answer.getAnswer() +
+										"<input type=\"" + inputType + "\" name=\""+namespace+"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\" " + disabled + ">" + answer.getAnswer() +
 									"</div>";
 			}
 
@@ -152,7 +153,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 			}
 
 			html += "<div class=\"question" + cssclass + "\">" + 
-						"<input type=\"hidden\" name=\"question\" value=\"" + question.getQuestionId() + "\"/>"+
+						"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 						"<div class=\"questiontext\">" + question.getText() + "</div>" +
 						answersFeedBack +
 					"</div>";	
@@ -164,7 +165,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 	}
 
 	public String getHtmlFeedback(Document document,long questionId){
-		return getHtml(document, questionId, true);
+		return getHtml(document, questionId, true, null);
 	}
 
 	protected List<TestAnswer> getAnswersSelected(Document document,long questionId){

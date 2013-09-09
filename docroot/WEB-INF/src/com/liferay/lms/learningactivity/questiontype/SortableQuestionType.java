@@ -122,6 +122,7 @@ public class SortableQuestionType extends BaseQuestionType {
 			}
 			view += "</ul></div>";
 			view += "<input type=hidden id=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" value=\""+value+"\"/>";
+			view += "</div>";
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
