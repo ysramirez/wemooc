@@ -169,7 +169,14 @@ else
 	<%
 	if(course==null)
 	{
+		String[] layusprsel=renderRequest.getPreferences().getValue("courseTemplates", "").split(",");
+
 		String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
+		if(layusprsel!=null &&layusprsel.length>0)
+		{
+			lspist=layusprsel;
+
+		}
 		%>
 		<aui:select name="courseTemplate" label="course-template">
 		<%
