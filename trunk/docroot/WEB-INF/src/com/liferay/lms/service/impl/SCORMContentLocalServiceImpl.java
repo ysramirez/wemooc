@@ -172,6 +172,10 @@ public class SCORMContentLocalServiceImpl
 						SCORMContent.class.getName()));
 			long userId=serviceContext.getUserId();
 			scocontent.setCompanyId(serviceContext.getCompanyId());
+			String uuid = serviceContext.getUuid();
+			if (Validator.isNotNull(uuid)) {
+				scocontent.setUuid(uuid);
+			}
 			scocontent.setGroupId(serviceContext.getScopeGroupId());
 			scocontent.setUserId(userId);
 			scocontent.setDescription(description);

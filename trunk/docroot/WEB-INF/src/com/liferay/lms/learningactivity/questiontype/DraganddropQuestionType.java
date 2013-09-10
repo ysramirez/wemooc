@@ -189,7 +189,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 				}
 				
 				rightCol +=	"<input type=\"hidden\" name=\""+namespace+"question_" + question.getQuestionId() + "_" + i +"hidden\"  value=\""+value+"\"/>" +
-						"<div name=\"question_" + question.getQuestionId() + "_" + i +"\" id=\"Drop"+aux +"\" class=\"drop-containers ui-corner-all background base\">"+ text +"</div>"
+						"<div name=\""+namespace+"question_" + question.getQuestionId() + "_" + i +"\" id=\"Drop"+aux +"\" class=\"drop-containers ui-corner-all background base\">"+ text +"</div>"
 						+ feedsol;
 			}
 			rightCol += "</div>";
