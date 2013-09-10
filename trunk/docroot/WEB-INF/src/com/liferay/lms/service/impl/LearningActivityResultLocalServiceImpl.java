@@ -46,7 +46,9 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ClassName;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.ClassNameLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
@@ -400,5 +402,18 @@ public class LearningActivityResultLocalServiceImpl
 	public LearningActivityResult getByActIdAndUserId(long actId,long userId) throws SystemException
 	{
 		return learningActivityResultPersistence.fetchByact_user(actId, userId);
+	}
+	
+	public List<LearningActivityResult> getByActId(long actId) throws SystemException
+	{
+		List<LearningActivityResult> results;
+		
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class)
+					.add(PropertyFactoryUtil.forName("actId").eq(new Long(actId)));
+					
+		results = (List<LearningActivityResult>)learningActivityResultPersistence.findWithDynamicQuery(consulta);
+
+		return results;	
+		
 	}
 }

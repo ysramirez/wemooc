@@ -1,4 +1,7 @@
 
+<%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
+<%@page import="com.liferay.portal.util.PortalUtil"%>
+<%@page import="com.liferay.util.portlet.PortletProps"%>
 <%@page import="com.liferay.portal.kernel.util.StringPool"%>
 <%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
 <%@page import="com.liferay.portal.security.permission.ActionKeys"%>
@@ -255,3 +258,60 @@ ActionKeys.PERMISSIONS) %>">
 %>
 
 <liferay-ui:icon alt="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+
+<!-- Mostrar calificaciones actividad. -->
+
+<%
+boolean visibleCalifications = GetterUtil.getBoolean(PortletProps.get("lms.activitylist.showcalifications"));
+%>
+<c:if test="<%=visibleCalifications %>">
+	<liferay-portlet:actionURL  name="showCalifications" var="showCalificationsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:param name="resId" value="<%=primKey %>" />
+		<liferay-portlet:param name="resModuleId" value="<%=Long.toString(myActivity.getModuleId()) %>" />
+	</liferay-portlet:actionURL>
+	<%
+		
+	StringBuilder showCalificationsPopup = new StringBuilder("javascript:AUI().use('aui-dialog','aui-dialog-iframe', "+
+			"	function(A){ "+
+			"	new A.Dialog( "+
+			"		{ "+
+			"    		id: 'showCalifications', "+ 
+			"			title: '"+LanguageUtil.get(pageContext,"activity.showcalifications.popup")+"', "+
+		    "			destroyOnClose: true, "+
+		    "			width: 750, "+
+		    "			modal:true, "+
+		    "			x:50, "+
+		    "			y:50, "+
+		    "			on: { "+
+			"    			close: function(evt){ "+
+			"					Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"')); ");
+			
+	if(myActivity.getActId()==actId) {	
+		String activityPortletId = HttpUtil.getParameter(
+				learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
+						getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+	
+		if(activityPortletId!=null) {
+			showCalificationsPopup.append(
+			 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+			 "         			if(activityTitlePortlet!=null) {  "+
+			 "		      			Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+			 "	       			}  ");
+		}
+	}		
+			
+	showCalificationsPopup.append(
+			"				} "+
+			"			} "+
+			"		} "+
+			"	).plug( "+
+			"		A.Plugin.DialogIframe, "+
+			"		{ "+
+			"			uri: '" + JavaScriptUtil.markupToStringLiteral(showCalificationsURL) + "' "+
+			"		} "+
+			"	).render().show(); "+
+			"});");
+
+%>
+	<liferay-ui:icon alt="<%=(visibleCalifications)?\"activity.visible\":\"activity.invisible\" %>" message="activity.showcalifications"  image="page" url="#" onClick="<%=showCalificationsPopup.toString() %>"/>
+</c:if>
