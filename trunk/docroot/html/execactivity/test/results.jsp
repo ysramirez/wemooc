@@ -28,9 +28,16 @@
 		request.setAttribute("learningActivity",learningActivity);
 	
 		LearningActivityTry larntry=(LearningActivityTry)request.getAttribute("larntry");
+		
 		if(larntry==null) larntry=LearningActivityTryLocalServiceUtil.getLearningActivityTry(ParamUtil.getLong(request,"latId" ));
-		request.setAttribute("larntry",larntry);
-	
+		
+		if(larntry.getActId() == learningActivity.getActId()){
+			request.setAttribute("larntry",larntry);
+		}else{
+			larntry=LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(ParamUtil.getLong(request,"actId",0 ), learningActivity.getUserId());
+			request.setAttribute("larntry",larntry);
+		}
+				
 		Long tries = learningActivity.getTries();
 		Long userTries = Long.valueOf(LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(learningActivity.getActId(),themeDisplay.getUserId()));
 	
@@ -103,6 +110,7 @@
 		         if("question".equals(element.getName())) questions.add(TestQuestionLocalServiceUtil.getTestQuestion(Long.valueOf(element.attributeValue("id"))));
 		    }	
 		}
+		
 		for(TestQuestion question:questions){
 			QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			qt.setLocale(themeDisplay.getLocale());
