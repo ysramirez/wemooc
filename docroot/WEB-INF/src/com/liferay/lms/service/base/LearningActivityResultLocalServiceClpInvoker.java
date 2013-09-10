@@ -161,6 +161,10 @@ public class LearningActivityResultLocalServiceClpInvoker {
 		_methodName128 = "getByActIdAndUserId";
 
 		_methodParameterTypes128 = new String[] { "long", "long" };
+
+		_methodName129 = "getByActId";
+
+		_methodParameterTypes129 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -323,6 +327,11 @@ public class LearningActivityResultLocalServiceClpInvoker {
 				((Long)arguments[1]).longValue());
 		}
 
+		if (_methodName129.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
+			return LearningActivityResultLocalServiceUtil.getByActId(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -384,4 +393,6 @@ public class LearningActivityResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes127;
 	private String _methodName128;
 	private String[] _methodParameterTypes128;
+	private String _methodName129;
+	private String[] _methodParameterTypes129;
 }

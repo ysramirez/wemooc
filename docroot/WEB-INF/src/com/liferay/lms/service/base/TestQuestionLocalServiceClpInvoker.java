@@ -118,15 +118,15 @@ public class TestQuestionLocalServiceClpInvoker {
 				"long", "com.liferay.portal.kernel.xml.Document"
 			};
 
-		_methodName120 = "addQuestion";
+		_methodName121 = "addQuestion";
 
-		_methodParameterTypes120 = new String[] {
+		_methodParameterTypes121 = new String[] {
 				"long", "java.lang.String", "long"
 			};
 
-		_methodName121 = "getQuestions";
+		_methodName122 = "getQuestions";
 
-		_methodParameterTypes121 = new String[] { "long" };
+		_methodParameterTypes122 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -234,14 +234,14 @@ public class TestQuestionLocalServiceClpInvoker {
 				(com.liferay.portal.kernel.xml.Document)arguments[1]);
 		}
 
-		if (_methodName120.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes120, parameterTypes)) {
+		if (_methodName121.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes121, parameterTypes)) {
 			return TestQuestionLocalServiceUtil.addQuestion(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1], ((Long)arguments[2]).longValue());
 		}
 
-		if (_methodName121.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes121, parameterTypes)) {
+		if (_methodName122.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes122, parameterTypes)) {
 			return TestQuestionLocalServiceUtil.getQuestions(((Long)arguments[0]).longValue());
 		}
 
@@ -286,8 +286,8 @@ public class TestQuestionLocalServiceClpInvoker {
 	private String[] _methodParameterTypes113;
 	private String _methodName118;
 	private String[] _methodParameterTypes118;
-	private String _methodName120;
-	private String[] _methodParameterTypes120;
 	private String _methodName121;
 	private String[] _methodParameterTypes121;
+	private String _methodName122;
+	private String[] _methodParameterTypes122;
 }
