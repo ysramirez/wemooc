@@ -2,7 +2,6 @@
 package com.liferay.lms;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
@@ -45,7 +44,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadRequest;
@@ -76,7 +74,6 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletQNameUtil;
 import com.liferay.portlet.announcements.EntryDisplayDateException;
 import com.liferay.portlet.asset.model.AssetRenderer;
-import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -533,6 +530,10 @@ public class LmsActivitiesList extends MVCPortlet {
 		{
 			include("/html/editactivity/editactivity.jsp",renderRequest,renderResponse);
 		}
+		else if(renderRequest.getAttribute("califications")!=null && renderRequest.getAttribute("califications").equals("true"))
+		{
+			include("/html/lmsactivitieslist/califications.jsp",renderRequest,renderResponse);
+		}
 		else
 		{
 			super.doView(renderRequest, renderResponse);
@@ -574,6 +575,17 @@ public class LmsActivitiesList extends MVCPortlet {
 		SessionMessages.add(actionRequest, "activity-modified-successfully");
 	}
 	
+	public void showCalifications(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException, SystemException, Exception {
+		
+		long actId = ParamUtil.getLong(actionRequest, "resId",0);
+		
+		if(actId>0){
+			actionRequest.setAttribute("actId", actId);
+		}
 	
+		actionResponse.setRenderParameters(actionRequest.getParameterMap());
+		actionRequest.setAttribute("califications", "true");
+		
+	}
 	
 }
