@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
 public class CourseAdminConfigurationAction implements ConfigurationAction {
@@ -33,8 +34,12 @@ public class CourseAdminConfigurationAction implements ConfigurationAction {
 		PortletPreferences portletPreferences =
 		PortletPreferencesFactoryUtil.getPortletSetup( 
 				actionRequest, ParamUtil.getString(actionRequest, "portletResource")); 
-
+		
 		portletPreferences.setValue("showInscriptionDate",Boolean.toString(ParamUtil.getBoolean(actionRequest, "inscriptionDate",true)));
+	    System.out.println("S:"+StringUtil.merge(actionRequest.getParameterMap().get( "courseTemplates")));
+		portletPreferences.setValue("courseTemplates",	StringUtil.merge(actionRequest.getParameterMap().get( "courseTemplates")));
+		
+		
 		portletPreferences.store();
 		SessionMessages.add( 
 				actionRequest, portletConfig.getPortletName() + ".doConfigure"); 
