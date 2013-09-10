@@ -12,6 +12,7 @@
 		<portlet id="resourceInternalActivity"></portlet>
 		<portlet id="changeEditingMode"></portlet>
 		<portlet id="activityNavigator"></portlet>
+		<portlet id="activityDates"></portlet>
 		<portlet id="moduleDescription"></portlet>
 		<portlet id="moduleEditing"></portlet>
 		<portlet id="ModuleTitle"></portlet>
