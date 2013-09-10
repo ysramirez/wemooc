@@ -14,7 +14,7 @@
 	dateFormat.setTimeZone(timeZone);
 %>
 
-<h2><%=learnActivity.getTitle(themeDisplay.getLocale()) %></h2>
+<h2 class="table_title"><%=learnActivity.getTitle(themeDisplay.getLocale()) %></h2>
 
 <portlet:renderURL var="calificacionesURL">
 	<portlet:param name="jspPage" value="/html/lmsactivitieslist/califications.jsp"></portlet:param>
@@ -49,9 +49,9 @@
 		%>
 
 		<liferay-ui:search-container-column-text name="user"><%=usu.getFullName() %> </liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="activity.showcalifications.puntuation"><%=puntuation %> </liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="activity.showcalifications.result"><%=res %> </liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="activity.showcalifications.startdate"><%=startdate %> </liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="activity.showcalifications.puntuation">	<%=puntuation %> </liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="activity.showcalifications.result">		<%=res %> </liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="activity.showcalifications.startdate">	<%=startdate %> </liferay-ui:search-container-column-text>
 		
 	</liferay-ui:search-container-row>
 	
