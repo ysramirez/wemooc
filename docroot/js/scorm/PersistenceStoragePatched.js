@@ -361,14 +361,70 @@ Player.ContentPlayer.prototype.$1D = function() {
 
 Player.ContentPlayer.prototype.toggleScorm = function() {
 	var evt = window.event;
-	var treeContainer = document.getElementById('treeContainer');
 	var menuA = document.getElementById('open-close-scorm-menu');
-	if (treeContainer.style.display != 'none') {
-		treeContainer.style.display = 'none';
-		menuA.setAttribute('class', 'open-scorm-menu');
+	var A = AUI().use('anim', 'anim-easing');
+	A.one("#treeContainer").setStyle('display', 'block');
+	
+	var coapagar = new A.Anim(
+      {
+	    node: '#treeContainer',
+	    to: {
+	        opacity: 0.0
+	    },
+	    duration: 0.3,
+	    easing:   A.Easing.easeOut
+	  }
+	);
+	var apagar = new A.Anim(
+	  {
+	    node: '#placeholder_treeContainer',
+	    to: {
+	        height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2,
+	        
+	    },
+	    duration: 0.8,
+	    easing:   A.Easing.easeOut,
+	    on: {
+	    	start: function() {
+	    		menuA.setAttribute('class', 'open-scorm-menu');
+	    		coapagar.run();
+	    	}
+	    }
+	  }
+	);
+	var coencender = new A.Anim(
+      {
+	    node: '#treeContainer',
+	    to: {
+	        opacity: 1.0
+	    },
+	    duration: 1.0,
+	    easing:   A.Easing.easeIn
+	  }
+	);
+	var encender = new A.Anim(
+	  {
+	    node: '#placeholder_treeContainer',
+	    to: {
+	    	height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11,
+	    	
+	    },
+	    duration: 0.5,
+	    easing:   A.Easing.easeIn,
+	    on: {
+	    	start: function() {
+	    		menuA.setAttribute('class', 'close-scorm-menu');
+	    		coencender.run();
+	    	}
+	    }
+	  }
+	);
+	if (menuA.getAttribute('class') != 'open-scorm-menu') {
+		console.log('apagar');
+		apagar.run();
 	} else {
-		treeContainer.style.display = 'block';
-		menuA.setAttribute('class', 'close-scorm-menu');
+		console.log('encender');
+		encender.run();
 	}
 	if (evt.preventDefault) {
 		evt.preventDefault();
@@ -381,7 +437,6 @@ Player.ContentPlayer.prototype.$1E = function() {
 	if (isNullOrUndefined(this.$5)) {
 		this.$5 = document.createElement('div');
 		this.$5.id = 'treeContainer';
-		this.$5.style.display = 'none';
 		var togglerContainer = document.createElement('div');
 		togglerContainer.id = 'placeholder_barContainer';
 		togglerContainer.style.display = 'block';
@@ -402,13 +457,13 @@ Player.ContentPlayer.prototype.$1E = function() {
 		if (isNullOrUndefined($0)) {
 			document.body.appendChild(this.$5);
 			if (this.$9.isSingleItem()) {
-				this.$5.style.display = 'none';
+				this.$5.style.opacity = 0.0;
 			}
 		} else {
 			$0.appendChild(togglerContainer);
 			$0.appendChild(this.$5);
 			if (this.$9.isSingleItem()) {
-				this.$5.style.display = 'none';
+				this.$5.style.opacity = 0.0;
 			}
 		}
 		var $1 = new ControlsCollection.TreeView(this.$5,
@@ -685,6 +740,7 @@ Player.ContentPlayer.prototype.checkPlayer = function() {
 Player.ContentPlayer.prototype.showPlayer = function() {
 	if (this.$2 !== 0) {
 		this.$3.style.display = 'block';
+		this.$5.style.opacity = (!this.$9.isSingleItem()) ? 1.0 : 0.0;
 		this.$5.style.display = (!this.$9.isSingleItem()) ? 'block' : 'none';
 		this.$7.style.display = 'block';
 		if (this.$10.style.display == 'none' && this.$11.style.display == 'none') {

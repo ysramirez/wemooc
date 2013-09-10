@@ -9,9 +9,6 @@ import java.util.List;
 
 import javax.portlet.PortletPreferences;
 
-import net.lingala.zip4j.core.ZipFile;
-import net.lingala.zip4j.exception.ZipException;
-
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
@@ -108,16 +105,10 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 				+ context.getScopeGroupId());
 
 		try {
-			String groupIdStr = String.valueOf(context.getScopeGroupId());
-
 			Group group = GroupLocalServiceUtil.getGroup(context
 					.getScopeGroupId());
 
-			long groupId = 0;
-
-			if (Validator.isNumber(groupIdStr)) {
-				groupId = Long.parseLong(groupIdStr);
-			}
+			long groupId = context.getScopeGroupId();
 
 			System.out.println("   groupId : " + groupId + ", name: "
 					+ group.getName());
