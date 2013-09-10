@@ -35,12 +35,23 @@
 		
 		<%
 			User usu = UserLocalServiceUtil.getUser(result.getUserId());
+			
+			String puntuation = String.valueOf(result.getResult());
+			String res = result.getPassed()?LanguageUtil.get(themeDisplay.getLocale(),"passed"):LanguageUtil.get(themeDisplay.getLocale(),"not-passed");
+			String startdate = (result.getStartDate()!=null)?dateFormat.format(result.getStartDate()):"";
+			
+			//Si es de tipo test y no se ha entregado
+			if(learnActivity.getTypeId() == 0 && result.getEndDate() == null){
+				puntuation = LanguageUtil.get(themeDisplay.getLocale(),"activity.showcalifications.notsubmitted");
+				res = LanguageUtil.get(themeDisplay.getLocale(),"activity.showcalifications.notsubmitted");
+				startdate = LanguageUtil.get(themeDisplay.getLocale(),"activity.showcalifications.notsubmitted");
+			}
 		%>
 
 		<liferay-ui:search-container-column-text name="user"><%=usu.getFullName() %> </liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="activity.showcalifications.puntuation"><%=result.getResult() %> </liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="activity.showcalifications.result"><%=result.getPassed()?LanguageUtil.get(themeDisplay.getLocale(),"passed"):LanguageUtil.get(themeDisplay.getLocale(),"not-passed") %> </liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text name="activity.showcalifications.startdate"><%=(result.getStartDate()!=null)?dateFormat.format(result.getStartDate()):"" %> </liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="activity.showcalifications.puntuation"><%=puntuation %> </liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="activity.showcalifications.result"><%=res %> </liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text name="activity.showcalifications.startdate"><%=startdate %> </liferay-ui:search-container-column-text>
 		
 	</liferay-ui:search-container-row>
 	
