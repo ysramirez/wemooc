@@ -185,7 +185,7 @@ Liferay.provide(
 					if (learningActivityResult.isPassed()&&!actionEditing) {
 						status = "passed";
 					}
-					else if((userTried >= tries) && (!learningActivityResult.isPassed()) ){
+					else if((userTried >= tries) && ((!learningActivityResult.isPassed()) && (!actionEditing))){
 						status = "failed";
 					}
 
