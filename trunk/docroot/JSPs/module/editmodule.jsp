@@ -186,10 +186,10 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	<aui:input type="hidden" name="icon" />
 	<br />
 	 
-<aui:field-wrapper label="icon">
-		<aui:input inlineLabel="left" inlineField="true"
-		  	name="fileName" label="" id="fileName" type="file" value="" />
-</aui:field-wrapper>	
+	 <liferay-ui:error key="error-file-size" message="error-file-size" />
+	<aui:field-wrapper label="icon">
+		<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" />
+	</aui:field-wrapper>	
 	
 	<liferay-ui:error key="module-icon-required" message="module-icon-required" />
 	<liferay-ui:error key="error_number_format" message="error_number_format" />

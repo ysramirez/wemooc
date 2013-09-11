@@ -1,6 +1,7 @@
 
 package com.liferay.lms;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -10,8 +11,18 @@ import java.util.Properties;
 import javax.portlet.PortletRequest;
 
 import com.liferay.lms.model.Module;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.service.ImageLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 
 public class moduleValidator {
 
@@ -23,14 +34,12 @@ public class moduleValidator {
 		props.load(is);
 
 
-	//Field title
+		//Field title
 		if (Validator.isNull(module.getTitle(request.getLocale(), true))) {
 			errors.add("title-required");
 		}
 	
-		
-
-	//Field description
+		//Field description
 	
 	
 		if(!validateDescription(props, ParamUtil.getString(request, "description"))){
@@ -39,13 +48,17 @@ public class moduleValidator {
 		if (Validator.isNull(module.getDescription(request.getLocale(), true))) {
 			errors.add("module-description-required");
 		}
-	//Field order
+		//Field order
+			
+		//Date validation
+		if (module.getStartDate().after(module.getEndDate())){
+			errors.add("module-startDate-before-endDate");			
+		}
 		
-	//Date validation
-	if (module.getStartDate().after(module.getEndDate())){
-		errors.add("module-startDate-before-endDate");			
-	}
-
+		//File size validation
+		if (!validateFileSize(props, module.getIcon())){
+			errors.add("error-file-size");			
+		}
 
 		return errors;
 	}
@@ -97,6 +110,56 @@ public class moduleValidator {
 		} catch (NumberFormatException nfe) {
 		    valid = false;
 		}
+		return valid;
+	}
+	//Field file size
+	private static boolean validateFileSize(Properties props,File file) {
+		boolean valid = true;
+
+		//Comprobar que el tamaño del fichero no supere los 5mb
+		long size = 5 * 1024 * 1024;
+				
+		if(file.length() > size){
+			valid = false;
+		}
+		
+		return valid;
+	}
+	//Field file size
+	private static boolean validateFileSize(Properties props, long imageId) {
+		boolean valid = true;
+				
+		if(imageId == 0){
+			return false;
+		}
+		
+		try {
+			
+			FileEntry img = DLAppLocalServiceUtil.getFileEntry(imageId);
+			
+			//Comprobar que el tamaño del fichero no supere los 5mb
+			//long size = 1024;
+			
+			long fileMaxSize = Long.parseLong(PrefsPropsUtil.getString(PropsKeys.DL_FILE_MAX_SIZE));
+			//System.out.println(" fileMaxSize 1 : " + fileMaxSize+", "+ img.getSize() );
+			if(img.getSize() > fileMaxSize){
+				valid = false;
+			}
+			
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		return valid;
 	}
 }
