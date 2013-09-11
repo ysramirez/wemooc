@@ -362,70 +362,69 @@ Player.ContentPlayer.prototype.$1D = function() {
 Player.ContentPlayer.prototype.toggleScorm = function() {
 	var evt = window.event;
 	var menuA = document.getElementById('open-close-scorm-menu');
-	var A = AUI().use('anim', 'anim-easing');
-	A.one("#treeContainer").setStyle('display', 'block');
-	
-	var coapagar = new A.Anim(
-      {
-	    node: '#treeContainer',
-	    to: {
-	        opacity: 0.0
-	    },
-	    duration: 0.3,
-	    easing:   A.Easing.easeOut
-	  }
-	);
-	var apagar = new A.Anim(
-	  {
-	    node: '#placeholder_treeContainer',
-	    to: {
-	        height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2,
-	        
-	    },
-	    duration: 0.8,
-	    easing:   A.Easing.easeOut,
-	    on: {
-	    	start: function() {
-	    		menuA.setAttribute('class', 'open-scorm-menu');
-	    		coapagar.run();
-	    	}
-	    }
-	  }
-	);
-	var coencender = new A.Anim(
-      {
-	    node: '#treeContainer',
-	    to: {
-	        opacity: 1.0
-	    },
-	    duration: 1.0,
-	    easing:   A.Easing.easeIn
-	  }
-	);
-	var encender = new A.Anim(
-	  {
-	    node: '#placeholder_treeContainer',
-	    to: {
-	    	height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11,
-	    	
-	    },
-	    duration: 0.5,
-	    easing:   A.Easing.easeIn,
-	    on: {
-	    	start: function() {
-	    		menuA.setAttribute('class', 'close-scorm-menu');
-	    		coencender.run();
-	    	}
-	    }
-	  }
-	);
-	if (menuA.getAttribute('class') != 'open-scorm-menu') {
-		console.log('apagar');
-		apagar.run();
-	} else {
-		console.log('encender');
-		encender.run();
-	}
+	document.getElementById('treeContainer').style.display = 'block';
+	var A = AUI();
+	A.use('anim', 'anim-easing', function() {
+		var coapagar = new A.Anim(
+	      {
+		    node: '#treeContainer',
+		    to: {
+		        opacity: 0.0
+		    },
+		    duration: 0.3,
+		    //easing:   A.Easing.easeIn
+		  }
+		);
+		var apagar = new A.Anim(
+		  {
+		    node: '#placeholder_treeContainer',
+		    to: {
+		        height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2,
+		        
+		    },
+		    duration: 0.8,
+		    easing:   A.Easing.easeIn,
+		    on: {
+		    	start: function() {
+		    		menuA.setAttribute('class', 'open-scorm-menu');
+		    		coapagar.run();
+		    	}
+		    }
+		  }
+		);
+		var coencender = new A.Anim(
+	      {
+		    node: '#treeContainer',
+		    to: {
+		        opacity: 1.0
+		    },
+		    duration: 1.0,
+		    easing:   A.Easing.easeIn
+		  }
+		);
+		var encender = new A.Anim(
+		  {
+		    node: '#placeholder_treeContainer',
+		    to: {
+		    	height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11,
+		    	
+		    },
+		    duration: 0.5,
+		    easing:   A.Easing.easeIn,
+		    on: {
+		    	start: function() {
+		    		menuA.setAttribute('class', 'close-scorm-menu');
+		    		coencender.run();
+		    	}
+		    }
+		  }
+		);
+		if (menuA.getAttribute('class') != 'open-scorm-menu') {
+			apagar.run();
+		} else {
+			encender.run();
+		}
+	});
 	if (evt.preventDefault) {
 		evt.preventDefault();
 	}

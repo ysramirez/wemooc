@@ -474,6 +474,15 @@
 					<% }
 				if ((showPrevious || showNext) && currentPage >= 1) { %>
 					<div id="testactivity-navigator-pages"><p><%= currentPage + " / " + totalPages %></p></div>
+					<div id="testactivity-navigator-progress">
+						<% 
+						long width_frame = 10000 / totalPages;
+						for (int i = 1; i <= totalPages; i++) {
+							boolean browsed = (i <= currentPage);
+							%>
+						<div id="testactivity-navigator-progress-frame-<%= i %>" class='testactivity-navigator-progress-frame <%= browsed ? "testactivity-navigator-progress-frame-browsed" : "testactivity-navigator-progress-frame-not-browsed" %>' style='width: <%= (width_frame / 100) + "." + (width_frame % 100) %>%'></div>
+						<% } %>
+					</div>
 				<% } %>
 				<div id="testactivity-navigator-next">
 				<% if (showNext) { %>

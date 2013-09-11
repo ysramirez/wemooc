@@ -88,7 +88,7 @@
 				<portlet:actionURL name="viewactivity" var="viewstartURL">
 					<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
 				</portlet:actionURL>
-				<div id="startactivity"><a href="<%=viewstartURL.toString()%>"><liferay-ui:message key="start" /></a></div>
+				<div id="startactivity"><a href="<%=viewstartURL.toString()%>"><liferay-ui:message key="activityNavigator.start" /></a></div>
 			<%
 			break;
 		}
@@ -101,7 +101,7 @@
 					<portlet:actionURL name="viewactivity" var="viewnextURL">
 						<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
 					</portlet:actionURL>
-					<div id="nextactivity"><a href="<%=viewnextURL.toString()%>"><liferay-ui:message key="next" /></a></div>
+					<div id="nextactivity"><a href="<%=viewnextURL.toString()%>"><liferay-ui:message key="activityNavigator.next" /></a></div>
 				<%
 				//Tenemos la anterior y la siguiente, no necesitamos buscar más.
 				break;
@@ -122,7 +122,7 @@
 						<portlet:actionURL name="viewactivity" var="viewURL">
 							<portlet:param name="actId" value="<%=Long.toString(prevActivity.getActId()) %>" />
 						</portlet:actionURL>
-						<div id="previusactivity"><a href="<%=viewURL.toString()%>"><liferay-ui:message key="prev" /></a></div>
+						<div id="previusactivity"><a href="<%=viewURL.toString()%>"><liferay-ui:message key="activityNavigator.prev" /></a></div>
 					<%
 				}			
 			}
