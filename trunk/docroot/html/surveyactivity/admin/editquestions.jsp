@@ -49,6 +49,17 @@ AUI().ready(function(A) {
 //-->
 </script>
 
+<portlet:renderURL var="importquestionsURL">
+	<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
+	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
+	<portlet:param name="jspPage" value="/html/surveyactivity/admin/importquestions.jsp"></portlet:param>
+</portlet:renderURL>
+<liferay-ui:icon
+image="add"
+label="<%= true %>"
+message="surveyactivity.editquestions.importquestions"
+url='<%= importquestionsURL %>'
+/>
 <liferay-portlet:resourceURL var="exportURL" >
 	<portlet:param name="action" value="export"/>
 	<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>

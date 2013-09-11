@@ -1,11 +1,15 @@
 package com.liferay.lms;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -17,6 +21,7 @@ import javax.portlet.ResourceResponse;
 
 import org.jsoup.Jsoup;
 
+import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
@@ -33,11 +38,13 @@ import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -48,6 +55,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
@@ -223,6 +231,88 @@ public class SurveyActivity extends MVCPortlet {
 		actionResponse.setRenderParameter("resId", Long.toString(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId()));
 
 		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestion.jsp");
+	}
+	
+	public void importSurveyQuestions(RenderRequest renderRequest, RenderResponse renderResponse) throws PortletException, IOException {
+		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(renderRequest);
+		long actId = ParamUtil.getLong(renderRequest, "resId",0);
+		
+		List<String> errors = new ArrayList<String>();
+		renderRequest.setAttribute("errorsInCSV", errors);
+		List<String> warnings = new ArrayList<String>();
+		renderRequest.setAttribute("warningsInCSV", warnings);
+		ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		Locale locale = themeDisplay.getLocale();
+		InputStream csvFile = uploadRequest.getFileAsStream("fileName");
+
+		if (csvFile == null) {
+			errors.add(LanguageUtil.get(getPortletConfig(), locale,	"surveyactivity.csvError.empty-file"));
+		} else {
+			CSVReader reader = null;
+			try {
+				reader = new CSVReader(new InputStreamReader(csvFile, "ISO-8859-1"), ';');
+				int line = 0;
+				String questionText="";
+				String[] currLine;
+				while ((currLine = reader.readNext()) != null) {
+					boolean correct = true;
+					line++;
+					if (currLine.length == 2) {
+					try{
+						if(currLine[0].trim().equalsIgnoreCase("")){
+							errors.add(LanguageUtil.format(getPortletConfig(),locale,"surveyactivity.csvError.bad-question",
+									new Object[] {line}, false));
+							correct=false;
+						}else{
+							questionText= currLine[0].trim();
+						}
+						String allAnswers = currLine[1].trim();
+						String[] answers = allAnswers.split(",");
+						for(String a:answers){
+							if(a.equalsIgnoreCase("")){
+								warnings.add(LanguageUtil.format(getPortletConfig(),locale,"usermanagement.csvWarning.bad-answer",
+									new Object[] {line}, false));
+								correct=false;
+								break;
+							}
+						}
+						
+						if(correct){
+							TestQuestion q= TestQuestionLocalServiceUtil.addQuestion(actId, questionText, 0);
+							for(String a:answers){
+								if(!a.equalsIgnoreCase("")){
+									TestAnswerLocalServiceUtil.addTestAnswer(q.getQuestionId(), a, "", "",false);
+								}
+							}
+						}
+						} catch (PortalException e1) {
+								e1.printStackTrace();
+								errors.add(LanguageUtil.format(getPortletConfig(),locale,"surveyactivity.csvError.user-group-id-not-exists",
+										new Object[] { line}, false));
+							} catch (SystemException e1) {
+								errors.add(LanguageUtil.format(getPortletConfig(),locale,"surveyactivity.csvError.question-system-error",
+										new Object[] { line}, false));
+							}
+					questionText = "";
+					} else {
+						if (currLine.length != 0) {
+							errors.add(LanguageUtil.format(getPortletConfig(),
+									locale,
+									"surveyactivity.csvError.bad-format",
+									new Object[] { line }, false));
+						}
+					}
+				}
+
+			} catch (FileNotFoundException e) {
+				errors.add(LanguageUtil.get(getPortletConfig(), locale,
+						"usermanagement.csvError.empty-file"));
+			} finally {
+				if (reader != null) {
+					reader.close();
+				}
+			}
+		}
 	}
 		
 	public void editanswer(ActionRequest actionRequest, ActionResponse actionResponse)
