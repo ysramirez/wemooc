@@ -48,6 +48,8 @@ import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -691,22 +693,40 @@ public static String SEPARATOR = "_";
 		String title = fileName;// + " uploaded by " + user.getFullName();
 		File file = request.getFile("fileName");
 		
+		long fileMaxSize = 1024 * 1024;
+		try {
+			fileMaxSize = Long.parseLong(PrefsPropsUtil.getString(PropsKeys.DL_FILE_MAX_SIZE));
+			//System.out.println("---\n fileMaxSize 0 : " + fileMaxSize+", "+ file.length());
+		} catch (NumberFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
-		if(fileName!=null && !fileName.equals("")){
+		if(fileName!=null && !fileName.equals("") && file.length() <= fileMaxSize){
 			
-			String contentType = request.getContentType("fileName");
-			long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-			long igFolderId=createIGFolders(actRequest, themeDisplay.getUserId(),repositoryId);
+			try {
+				String contentType = request.getContentType("fileName");
+				long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+				long igFolderId=createIGFolders(actRequest, themeDisplay.getUserId(),repositoryId);
+							
+				//Subimos el Archivo en la Document Library
+				ServiceContext serviceContextImg= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
+				//Damos permisos al archivo para usuarios de comunidad.
+				serviceContextImg.setAddGroupPermissions(true);
+				FileEntry image = DLAppLocalServiceUtil.addFileEntry(
+					                      themeDisplay.getUserId(), repositoryId , igFolderId , fileName, contentType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContextImg ) ;
 						
-			//Subimos el Archivo en la Document Library
-			ServiceContext serviceContextImg= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
-			//Damos permisos al archivo para usuarios de comunidad.
-			serviceContextImg.setAddGroupPermissions(true);
-			FileEntry image = DLAppLocalServiceUtil.addFileEntry(
-				                      themeDisplay.getUserId(), repositoryId , igFolderId , fileName, contentType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContextImg ) ;
-					
-			module.setIcon(image.getFileEntryId());			
+				module.setIcon(image.getFileEntryId());
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}			
 			
+		} else if(file.length() > fileMaxSize){
+			module.setIcon(0);
 		}
 
 		return module;
