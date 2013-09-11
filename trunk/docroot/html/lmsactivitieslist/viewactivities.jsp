@@ -25,6 +25,7 @@
 <%@page import="com.liferay.lms.model.Module"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
@@ -179,8 +180,13 @@ Liferay.provide(
 							.getByActIdAndUserId(activity.getActId(),
 									themeDisplay.getUserId());
 					result = learningActivityResult.getResult();
+					long tries = activity.getTries();
+					long userTried = Long.valueOf(LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(activity.getActId(),themeDisplay.getUserId()));
 					if (learningActivityResult.isPassed()&&!actionEditing) {
 						status = "passed";
+					}
+					else if((userTried >= tries) && (!learningActivityResult.isPassed()) ){
+						status = "failed";
 					}
 
 				}
@@ -222,7 +228,7 @@ Liferay.provide(
 							<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
 						</portlet:actionURL>
 
-						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
 						
 							<a href="<%=goToActivity.toString() %>"  ><%=activity.getTitle(themeDisplay.getLocale())%></a>
 							
@@ -231,7 +237,7 @@ Liferay.provide(
 					else
 					{
 					%>
-						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
 							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
 					<%
 					}
