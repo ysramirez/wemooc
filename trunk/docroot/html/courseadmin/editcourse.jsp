@@ -169,7 +169,11 @@ else
 	<%
 	if(course==null)
 	{
-		String[] layusprsel=renderRequest.getPreferences().getValue("courseTemplates", "").split(",");
+		String[] layusprsel=null;
+		if(renderRequest.getPreferences().getValue("courseTemplates", null)!=null&&renderRequest.getPreferences().getValue("courseTemplates", null).length()>0)
+		{
+				layusprsel=renderRequest.getPreferences().getValue("courseTemplates", "").split(",");
+		}
 
 		String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
 		if(layusprsel!=null &&layusprsel.length>0)
