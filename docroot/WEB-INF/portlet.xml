@@ -1721,6 +1721,38 @@
         <supported-public-render-parameter>moduleId</supported-public-render-parameter>
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 	</portlet>
+	<portlet>
+		<portlet-name>announcementsdelivery</portlet-name>
+		<display-name>MyCourses</display-name>
+		<portlet-class>com.liferay.lms.AnnouncementsDeliver</portlet-class>
+		<init-param>
+			<name>view-jsp</name>
+			<value>/html/announcementsdelivery/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+			<resource-bundle>content/announcementsdelivery/Language</resource-bundle>
+		<portlet-info>
+			<title>AnnouncementsDelivery</title>
+			<short-title>AnnouncementsD</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	
     <event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
