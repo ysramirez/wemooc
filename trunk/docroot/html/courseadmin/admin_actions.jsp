@@ -118,4 +118,13 @@ ActionKeys.PERMISSIONS) %>">
 	<liferay-ui:icon image="post" message="courseadmin.adminactions.import" url="<%=importURL %>" />			
 </c:if>
 
+<c:if test="<%= permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(),
+ActionKeys.PERMISSIONS) %>">
+	<portlet:renderURL var="cloneURL">
+		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
+		<portlet:param name="jspPage" value="/html/courseadmin/clone.jsp" />
+	</portlet:renderURL>
+	<liferay-ui:icon image="copy" message="courseadmin.adminactions.clone" url="<%=cloneURL%>" />			
+</c:if>
+
 </liferay-ui:icon-menu>
