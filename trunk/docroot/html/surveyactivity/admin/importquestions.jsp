@@ -45,12 +45,25 @@ else
 	</aui:button-row>
 </aui:form>
 
-<liferay-ui:error key="surveyactivity.editquestions.importquestions.csv.fileRequired" message="execativity.editquestions.importquestions.xml.fileRequired" />
-<liferay-ui:error key="surveyactivity.editquestions.importquestions.csv.badFormat" message="execativity.editquestions.importquestions.xml.badFormat" />
-<liferay-ui:error key="surveyactivity.editquestions.importquestions.csv.parseXML" message="execativity.editquestions.importquestions.xml.parseXML" />
-<% if(SessionErrors.contains(renderRequest, "surveyactivity.csvError.bad-format")) { %>
+<liferay-ui:error key="surveyactivity.csvError.empty-file" message="surveyactivity.csvError.empty-file" />
+<liferay-ui:error key="surveyactivity.csvError.bad-format" message="surveyactivity.csvError.bad-format" />
+<!--
+<liferay-ui:error key="surveyactivity.csvError.bad-question" message="surveyactivity.csvError.bad-question" />
+<liferay-ui:error key="surveyactivity.csvError.bad-answer" message="surveyactivity.csvError.bad-answer" />
+-->
+<% if(SessionErrors.contains(renderRequest, "surveyactivity.csvError.bad-format-line")) { %>
 <div class="portlet-msg-error">
-	<%=LanguageUtil.format(pageContext, "execativity.editquestions.importquestions.xml.parseXMLLine", SessionErrors.get(renderRequest, "execativity.editquestions.importquestions.xml.parseXMLLine"),false) %>
+	<%=LanguageUtil.format(pageContext, "surveyactivity.csvError.bad-format-line", SessionErrors.get(renderRequest, "surveyactivity.csvError.bad-format-line"),false) %>
+</div>
+<% } %>
+<% if(SessionErrors.contains(renderRequest, "surveyactivity.csvError.bad-answer")) { %>
+<div class="portlet-msg-error">
+	<%=LanguageUtil.format(pageContext, "surveyactivity.csvError.bad-answer", SessionErrors.get(renderRequest, "surveyactivity.csvError.bad-answer"),false) %>
+</div>
+<% } %>
+<% if(SessionErrors.contains(renderRequest, "surveyactivity.csvError.bad-question")) { %>
+<div class="portlet-msg-error">
+	<%=LanguageUtil.format(pageContext, "surveyactivity.csvError.bad-question", SessionErrors.get(renderRequest, "surveyactivity.csvError.bad-question"),false) %>
 </div>
 <% } %>
 

@@ -13,6 +13,7 @@
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@ include file="/init.jsp" %>
 <%
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"resId"));
@@ -65,7 +66,11 @@ url='<%= importquestionsURL %>'
 	<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
 </liferay-portlet:resourceURL>
 <liferay-ui:icon image="export" label="<%= true %>" message="surveyactivity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
-
+<% if(SessionMessages.contains(renderRequest, "questions-added-successfully")) { %>
+<div class="portlet-msg-success">
+	<%=LanguageUtil.format(pageContext, "questions-added-successfully", SessionMessages.get(renderRequest, "questions-added-successfully"),false) %>
+</div>
+<% } %>
 <%
 	PortletURL editQuestionsURL = renderResponse.createRenderURL();
 	editQuestionsURL.setParameter("jspPage","/html/surveyactivity/admin/editquestions.jsp");
