@@ -547,4 +547,13 @@ public class CourseAdmin extends MVCPortlet {
 		}
 		super.doDispatch(renderRequest, renderResponse);
 	}
+	
+	public void cloneCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		
+		long groupId  = ParamUtil.getLong(actionRequest, "groupId", 0);
+		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
+			
+	}
+	
+	
 }
