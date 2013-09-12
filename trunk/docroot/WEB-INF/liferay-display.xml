@@ -49,6 +49,7 @@
 		<portlet id="scormactivity"></portlet>
 		<portlet id="evaluation"></portlet>
 		<portlet id="evaluationAvg"></portlet>
+		<portlet id="announcementsdelivery"></portlet>
 	</category>
 
 </display>
