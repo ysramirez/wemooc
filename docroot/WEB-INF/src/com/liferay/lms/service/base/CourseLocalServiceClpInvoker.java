@@ -187,6 +187,12 @@ public class CourseLocalServiceClpInvoker {
 		_methodName146 = "getCourseByGroupCreatedId";
 
 		_methodParameterTypes146 = new String[] { "long" };
+
+		_methodName147 = "existsCourseName";
+
+		_methodParameterTypes147 = new String[] {
+				"java.lang.Long", "java.lang.Long", "java.lang.String"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -384,6 +390,12 @@ public class CourseLocalServiceClpInvoker {
 			return CourseLocalServiceUtil.getCourseByGroupCreatedId(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName147.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes147, parameterTypes)) {
+			return CourseLocalServiceUtil.existsCourseName((java.lang.Long)arguments[0],
+				(java.lang.Long)arguments[1], (java.lang.String)arguments[2]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -453,4 +465,6 @@ public class CourseLocalServiceClpInvoker {
 	private String[] _methodParameterTypes145;
 	private String _methodName146;
 	private String[] _methodParameterTypes146;
+	private String _methodName147;
+	private String[] _methodParameterTypes147;
 }

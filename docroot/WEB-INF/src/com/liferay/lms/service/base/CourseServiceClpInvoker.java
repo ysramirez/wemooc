@@ -120,6 +120,12 @@ public class CourseServiceClpInvoker {
 		_methodParameterTypes131 = new String[] {
 				"java.lang.String", "java.lang.String"
 			};
+
+		_methodName132 = "existsCourseName";
+
+		_methodParameterTypes132 = new String[] {
+				"java.lang.Long", "java.lang.Long", "java.lang.String"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -250,6 +256,12 @@ public class CourseServiceClpInvoker {
 				(java.lang.String)arguments[1]);
 		}
 
+		if (_methodName132.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes132, parameterTypes)) {
+			return CourseServiceUtil.existsCourseName((java.lang.Long)arguments[0],
+				(java.lang.Long)arguments[1], (java.lang.String)arguments[2]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -295,4 +307,6 @@ public class CourseServiceClpInvoker {
 	private String[] _methodParameterTypes130;
 	private String _methodName131;
 	private String[] _methodParameterTypes131;
+	private String _methodName132;
+	private String[] _methodParameterTypes132;
 }
