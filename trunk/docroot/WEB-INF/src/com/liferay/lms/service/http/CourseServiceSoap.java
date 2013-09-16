@@ -313,5 +313,21 @@ public class CourseServiceSoap {
 		}
 	}
 
+	public static boolean existsCourseName(java.lang.Long companyId,
+		java.lang.Long groupId, java.lang.String groupName)
+		throws RemoteException {
+		try {
+			boolean returnValue = CourseServiceUtil.existsCourseName(companyId,
+					groupId, groupName);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(CourseServiceSoap.class);
 }

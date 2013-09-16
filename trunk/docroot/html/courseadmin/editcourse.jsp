@@ -24,6 +24,7 @@
 <portlet:renderURL var="cancel" />
 <liferay-ui:error key="title-required" message="title-required" />
 <liferay-ui:error key="title-empty" message="title-empty" />
+<liferay-ui:error key="title-repeated" message="title-repeated" />
 	
 	<%if(SessionErrors.contains(renderRequest, "newCourseErrors")) { %>
 		<div class="portlet-msg-error">
@@ -126,7 +127,8 @@ else
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="courseId" type="hidden" value="<%=courseId %>"/>
-	<aui:input name="title" label="title"></aui:input>
+	<aui:input name="title" label="title">
+	</aui:input>
 <%
 	String value="";
 	if(courseId!=0){
@@ -222,3 +224,39 @@ else
 		<aui:button onClick="<%=cancel %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
+
+<% themeDisplay.setIncludeServiceJs(true); %>
+<script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+function <portlet:namespace />checkduplicate(val, field) {
+	var courseId = document.getElementById('<portlet:namespace />courseId').value;
+   	return !Liferay.Service.Lms.Course.existsCourseName(
+   		{
+   			companyId: themeDisplay.getCompanyId(),
+   			courseId: (courseId > 0 ? courseId : null),
+   			groupName: val,
+   			serviceParameterTypes: JSON.stringify(['java.lang.Long', 'java.lang.Long', 'java.lang.String'])
+   		}
+   	);
+}
+</script>
+
+<aui:script use="liferay-form">
+	Liferay.Form.register(
+	     {
+	        id: '<portlet:namespace />fm',
+	        
+	        fieldRules: [
+	            {
+	                 body: function(val, fieldNode, ruleValue) {var res = <portlet:namespace />checkduplicate(val, fieldNode); console.log(res); return res; },
+	                 custom: true,
+	                 errorMessage: '<liferay-ui:message key="title-repeated" />',
+	                 fieldName: '<portlet:namespace />title_'+Liferay.ThemeDisplay.getLanguageId(),
+	                 validatorName: 'checkduplicate1'
+	            },
+	            
+	        ]
+	    }
+	);
+</aui:script>

@@ -24,10 +24,12 @@ import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.model.SCORMContent;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.base.CourseLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -40,6 +42,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -131,11 +134,11 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			assetEntryLocalService.updateEntry(userId, course.getGroupId(), Course.class.getName(),
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(locale),null, null, 0, 0,null, false);
+					ContentTypes.TEXT_HTML, course.getTitle(), course.getDescription(locale), summary, null, null, 0, 0,null, false);
 			//creating group
 			Group group = GroupLocalServiceUtil.addGroup(userId,null, 0, title,summary,GroupConstants.TYPE_SITE_PRIVATE,friendlyURL,true,true,serviceContext);
 			
-			//Añadimos el rol Teacher al usuario que crea el blog
+			//Aï¿½adimos el rol Teacher al usuario que crea el blog
 			long[] usuarios = new long[1];
 			usuarios[0] = userId;
 			UserLocalServiceUtil.addRoleUsers(lmsPrefs.getTeacherRole(), usuarios);
@@ -179,9 +182,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	
 	private static User getAdministratorUser(long companyId) throws PortalException, SystemException
 	{
-		// El nombre del rol "Administrator" no puede cambiar a través del UI, es un caso excepcional de sólo lectura
+		// El nombre del rol "Administrator" no puede cambiar a travï¿½s del UI, es un caso excepcional de sï¿½lo lectura
 		// Sin embargo pueden haber varios administradores (con el rol "Administrator"),
-		// hacemos lo siguiente: devolvemos el que tenga userName "test" y así tenderemos
+		// hacemos lo siguiente: devolvemos el que tenga userName "test" y asï¿½ tenderemos
 		// a devolver siempre el mismo, si no hay un administrador "test" (pues puede cambiarse) devolvemos el primero.
 		long adminRoleId = RoleLocalServiceUtil.getRole(companyId, "Administrator").getRoleId();
 		List<User> adminList = UserLocalServiceUtil.getRoleUsers(adminRoleId);
@@ -295,7 +298,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, course.getTitle(),null,  course.getDescription(locale),null, null, 0, 0,
+					ContentTypes.TEXT_HTML, course.getTitle(), course.getDescription(locale), summary, null, null, 0, 0,
 					null, false);
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 					Course.class);
@@ -373,5 +376,25 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		}
 
 		return null;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean existsCourseName(Long companyId, Long courseId, String groupName) throws SystemException, PortalException {
+		
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(Group.class, PortalClassLoaderUtil.getClassLoader());
+		consulta.add(PropertyFactoryUtil.forName("name").eq(groupName));
+		consulta.add(PropertyFactoryUtil.forName("companyId").eq(companyId));
+		if (courseId != null) {
+			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			consulta.add(PropertyFactoryUtil.forName("groupId").ne(course.getGroupCreatedId()));
+		}
+		
+		List<Group> list = (List<Group>)GroupLocalServiceUtil.dynamicQuery(consulta);
+		
+		if(!list.isEmpty() && list.size() > 0){
+			return true;
+		}
+		
+		return false;
 	}
 }

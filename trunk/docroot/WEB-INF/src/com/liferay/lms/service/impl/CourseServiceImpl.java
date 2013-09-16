@@ -20,12 +20,17 @@ import java.util.Iterator;
 import java.util.List;
 
 import com.liferay.lms.model.Course;
+import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
@@ -309,5 +314,19 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			SocialRelationLocalServiceUtil.deleteRelation(student.getUserId(), tutor.getUserId(), SocialRelationConstants.TYPE_UNI_SUBORDINATE);
 		} catch (Exception e) {
 		}		
+	}
+	@JSONWebService
+	public boolean existsCourseName(Long companyId, Long groupId, String groupName) {
+		
+		try {
+			return CourseLocalServiceUtil.existsCourseName(companyId, groupId, groupName);
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 }
