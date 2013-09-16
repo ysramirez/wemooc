@@ -44,7 +44,6 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
-import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -68,7 +67,6 @@ import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.LayoutSetLocalServiceUtil;
@@ -220,12 +218,6 @@ public class CourseAdmin extends MVCPortlet {
 
 		Course course = null;
 		if (courseId == 0) {
-			if (CourseLocalServiceUtil.existsCourseName(themeDisplay.getCompanyId(), null, title)) {
-				SessionErrors.add(actionRequest, "title-repeated");
-				actionResponse.setRenderParameter("jspPage",
-						"/html/courseadmin/editcourse.jsp");
-				return;
-			}
 			course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
 					title, description, summary, friendlyURL,
 					themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,
@@ -250,14 +242,8 @@ public class CourseAdmin extends MVCPortlet {
 		}
 		// Estamos editando un curso existente.
 		else {
-			course = CourseLocalServiceUtil.getCourse(courseId);
-			if (CourseLocalServiceUtil.existsCourseName(themeDisplay.getCompanyId(), course.getCourseId(), title)) {
-				SessionErrors.add(actionRequest, "title-repeated");
-				actionResponse.setRenderParameter("jspPage",
-						"/html/courseadmin/editcourse.jsp");
-				return;
-			}
 
+			course = CourseLocalServiceUtil.getCourse(courseId);
 			course.setDescription( description,themeDisplay.getLocale());
 			course.setStartDate(startDate);
 			course.setEndDate(stopDate);
@@ -266,7 +252,6 @@ public class CourseAdmin extends MVCPortlet {
 		}
 
 		if(course!= null){
-			
 			//Cambiar la imagen de la comunidad
 			UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
 			String fileName = request.getFileName("fileName");
