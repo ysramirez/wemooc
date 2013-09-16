@@ -335,13 +335,68 @@
 
 				<% } %>
 				
+				Liferay.provide(
+				        window,
+				        '<portlet:namespace />questionValidation',
+				        function(url) {
+							var A = AUI();
+				        },
+				        ['node']
+				        );
+				
+					Liferay.provide(
+					        window,
+					        '<portlet:namespace />popConfirm',
+					        function(content) {
+								var A = AUI();
+							
+								window.<portlet:namespace />confirmDialog = new A.Dialog(
+								    {
+								        title: '<liferay-ui:message key="confirm"/>',
+								        bodyContent: content,
+								        buttons: [
+								                  {
+								                	  label: 'Accept',
+								                	  handler: function() {
+								                		  <portlet:namespace />confirmDialog.close();
+								                	  }
+								                  },
+								                  {
+								                	  label: 'Cancel',
+								                	  handler: function() {
+								                		  <portlet:namespace />confirmDialog.close();
+								                	  }
+								                  }
+								                  ],
+								        width: 'auto',
+								        height: 'auto',
+								        destroyOnClose: true,
+								        centered: true,
+								        modal: true
+								    }
+								).render();
+								
+								
+					        },
+					        ['aui-dialog']
+					    );
+				
 				function <%= renderResponse.getNamespace() %>formValidation(e){
-					var returnValue=true;
+					var returnValue = true;
+					
 					
 					AUI().use('node', function(Y){
-					    var questions = Y.all('div.question')
+					    var questions = Y.all('div.question-page-current div.question');
+					    var navigate = Y.one('#navigate');
 
-					    for(var i=0;i<questions.size();i++){
+					    for (var i = 0; i < questions.size(); i++) {
+					    	var question = questions.item(i);
+					    	//if (!<portlet:namespace />questionValidation(question)) {
+					    		//if (<%= renderResponse.getNamespace() %>popConfirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>')) {
+					    			
+					    		//}
+					    		//returnValue = true;
+					    	//}
 					    	 //Pte adaptar, x ahora comentado
 					        //if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
 					        	//if(!confirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>')) {
@@ -473,15 +528,17 @@
 					</div>
 					<% }
 				if ((showPrevious || showNext) && currentPage >= 1) { %>
-					<div id="testactivity-navigator-pages"><p><%= currentPage + " / " + totalPages %></p></div>
-					<div id="testactivity-navigator-progress">
-						<% 
-						long width_frame = 10000 / totalPages;
-						for (int i = 1; i <= totalPages; i++) {
-							boolean browsed = (i <= currentPage);
-							%>
-						<div id="testactivity-navigator-progress-frame-<%= i %>" class='testactivity-navigator-progress-frame <%= browsed ? "testactivity-navigator-progress-frame-browsed" : "testactivity-navigator-progress-frame-not-browsed" %>' style='width: <%= (width_frame / 100) + "." + (width_frame % 100) %>%'></div>
-						<% } %>
+					<div id="testactivity-navigator-pages">
+						<p><%= currentPage + " / " + totalPages %></p>
+						<div id="testactivity-navigator-progress">
+							<% 
+							long width_frame = 10000 / totalPages;
+							for (int i = 1; i <= totalPages; i++) {
+								boolean browsed = (i <= currentPage);
+								%>
+							<div id="testactivity-navigator-progress-frame-<%= i %>" class='testactivity-navigator-progress-frame <%= browsed ? "testactivity-navigator-progress-frame-browsed" : "testactivity-navigator-progress-frame-not-browsed" %>' style='width: <%= (width_frame / 100) + "." + (width_frame % 100) %>%'></div>
+							<% } %>
+						</div>
 					</div>
 				<% } %>
 				<div id="testactivity-navigator-next">
@@ -516,7 +573,7 @@
 		n[n.length - 1]--;
 		var backValue = A.one('#'+n.join("-")).one('.question > input').val();
 		A.one('#<portlet:namespace/>currentQuestionId').val(backValue);
-		return <portlet:namespace/>formValidation(e);
+		return true;
 	}
 	
 	function <portlet:namespace/>formValidationAndForward(e) {
@@ -533,20 +590,6 @@
 	
 	//-->
 </script>
-			<style type="text/css">
-				.question-page {
-					display: none;
-				}
-				.question-page.question-page-current {
-					display: block;
-				}
-				#testactivity-navigator-previous {
-					float: left;
-				}
-				#testactivity-navigator-next {
-					float: right;
-				}
-			</style>
 			<%
 			}
 			}
