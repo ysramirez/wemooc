@@ -89,11 +89,15 @@
             	  	
             	    <propertyfile file="${lang.dir}${portlet.name.lower}/${lang.native.file.basename}"
             	       comment="Generated from ${lang.native.file.basename}">
-            	    	<entry key="javax.portlet.title" value="${portlet.title.trim}" />
-                	 	<entry key="javax.portlet.long-title" value="${portlet.long-title.trim}" />
-            	    	<entry key="javax.portlet.description" value="${portlet.description.trim}" />
+            	    	<entry key="javax.portlet.title" operation="del" />
+                	 	<entry key="javax.portlet.long-title" operation="del" />
+            	    	<entry key="javax.portlet.description" operation="del" />
             	    </propertyfile>
             	  	
+            	  	<echo file="${lang.dir}${portlet.name.lower}/${lang.native.file.basename}" append="true" message="javax.portlet.title=${portlet.title.trim}${line.separator}"/>
+            	  	<echo file="${lang.dir}${portlet.name.lower}/${lang.native.file.basename}" append="true" message="javax.portlet.long-title=${portlet.long-title.trim}${line.separator}"/>
+            	  	<echo file="${lang.dir}${portlet.name.lower}/${lang.native.file.basename}" append="true" message="javax.portlet.description=${portlet.description.trim}${line.separator}"/>
+            	  	            	  	
             	  	<var name="portlet.name.lower" unset="true"/> 
                 	<var name="portlet.title" unset="true"/>  
                 	<var name="portlet.long-title" unset="true"/>   
