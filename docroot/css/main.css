@@ -9,6 +9,19 @@
 	margin: 4px;
 }
 
+.question-page {
+	display: none;
+}
+.question-page.question-page-current {
+	display: block;
+}
+#testactivity-navigator-previous {
+	float: left;
+}
+#testactivity-navigator-next {
+	float: right;
+}
+
 .teacher {
 	margin: 5px;
 	display: inline-block;
