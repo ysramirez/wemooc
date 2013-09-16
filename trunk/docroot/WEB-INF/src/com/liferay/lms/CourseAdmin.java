@@ -27,16 +27,27 @@ import javax.servlet.http.HttpServletResponse;
 
 import au.com.bytecode.opencsv.CSVReader;
 
+import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
+import com.liferay.lms.model.Module;
+import com.liferay.lms.model.TestAnswer;
+import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.CourseLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.lms.service.TestAnswerLocalServiceUtil;
+import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
 import com.liferay.portal.NoSuchGroupException;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -45,15 +56,10 @@ import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
-import com.liferay.portal.kernel.util.ContentTypes;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
@@ -78,12 +84,6 @@ import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.DuplicateFileException;
-import com.liferay.portlet.documentlibrary.FileExtensionException;
-import com.liferay.portlet.documentlibrary.FileNameException;
-import com.liferay.portlet.documentlibrary.FileSizeException;
-import com.liferay.portlet.documentlibrary.InvalidFileEntryTypeException;
-import com.liferay.portlet.dynamicdatalists.util.DDLExportFormat;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -564,12 +564,161 @@ public class CourseAdmin extends MVCPortlet {
 		super.doDispatch(renderRequest, renderResponse);
 	}
 	
+	@SuppressWarnings("unchecked")
 	public void cloneCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);	
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(Course.class.getName(), actionRequest);
+		
+		int startMonth = 	ParamUtil.getInteger(actionRequest, "startMon");
+		int startYear = 	ParamUtil.getInteger(actionRequest, "startYear");
+		int startDay = 		ParamUtil.getInteger(actionRequest, "startDay");
+		int startHour = 	ParamUtil.getInteger(actionRequest, "startHour");
+		int startMinute = 	ParamUtil.getInteger(actionRequest, "startMin");
+		int startAMPM = 	ParamUtil.getInteger(actionRequest, "startAMPM");
+		if (startAMPM > 0) {
+			startHour += 12;
+		}
+		Date startDate = PortalUtil.getDate(startMonth, startDay, startYear, startHour, startMinute, themeDisplay.getTimeZone(), new EntryDisplayDateException());
+		
+		int stopMonth = 	ParamUtil.getInteger(actionRequest, "stopMon");
+		int stopYear = 		ParamUtil.getInteger(actionRequest, "stopYear");
+		int stopDay = 		ParamUtil.getInteger(actionRequest, "stopDay");
+		int stopHour = 		ParamUtil.getInteger(actionRequest, "stopHour");
+		int stopMinute = 	ParamUtil.getInteger(actionRequest, "stopMin");
+		int stopAMPM = 		ParamUtil.getInteger(actionRequest, "stopAMPM");
+		if (stopAMPM > 0) {
+			stopHour += 12;
+		}
+		Date endDate = PortalUtil.getDate(stopMonth, stopDay, stopYear, stopHour, stopMinute, themeDisplay.getTimeZone(), new EntryDisplayDateException());
+		
 		long groupId  = ParamUtil.getLong(actionRequest, "groupId", 0);
-		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+		Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
+		
+		String newCourseName  = ParamUtil.getString(actionRequest, "newCourseName", group.getName());
+		
+		Date today=new Date(System.currentTimeMillis());
+		
+		Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(), "", themeDisplay.getLocale() , today, startDate, endDate, serviceContext);
+		
+		//newCourse.setDescription()
+		newCourse.setUserId(themeDisplay.getUserId());
+		
+		System.out.println("-----------------------\n  Course: "+  group.getName());
+		System.out.println("  + Course: "+  newCourse.getTitle());
+		
+		LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+		List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(groupId);
+
+		for(Module module:modules){
 			
+			Module newModule;
+			try {
+				newModule = ModuleLocalServiceUtil.createModule(CounterLocalServiceUtil.increment(Module.class.getName()));
+				
+				newModule.setTitle(module.getTitle());
+				newModule.setDescription(module.getDescription());
+				newModule.setGroupId(newCourse.getGroupId());
+				
+				newModule.setCompanyId(newCourse.getCompanyId());
+				newModule.setGroupId(newCourse.getGroupCreatedId());
+				newModule.setUserId(newCourse.getUserId());
+				newModule.setOrdern(newModule.getModuleId());
+				
+				newModule.setStartDate(startDate);
+				newModule.setEndDate(endDate);
+				
+				ModuleLocalServiceUtil.addModule(newModule);
+				
+				System.out.println("\n    Module : " + module.getTitle(Locale.getDefault()) +"("+module.getModuleId()+")");
+				System.out.println("    + Module : " + newModule.getTitle(Locale.getDefault()) +"("+newModule.getModuleId()+")" );
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+				continue;
+			}
+			
+			List<LearningActivity> activities = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(module.getModuleId());
+			for(LearningActivity activity:activities){
+				
+				LearningActivity newLearnActivity;
+				try {
+					newLearnActivity = LearningActivityLocalServiceUtil.createLearningActivity(CounterLocalServiceUtil.increment(Module.class.getName()));
+					
+					newLearnActivity.setTitle(activity.getTitle());
+					newLearnActivity.setDescription(activity.getDescription());
+					newLearnActivity.setExtracontent(activity.getExtracontent());
+					newLearnActivity.setTypeId(activity.getTypeId());
+					newLearnActivity.setTries(activity.getTries());
+					newLearnActivity.setPasspuntuation(activity.getPasspuntuation());
+					newLearnActivity.setPriority(newLearnActivity.getActId());
+					
+					newLearnActivity.setGroupId(newModule.getGroupId());
+					newLearnActivity.setModuleId(newModule.getModuleId());
+					
+					//newLearnActivity.setStartdate(startDate);
+					//newLearnActivity.setEnddate(endDate);
+					
+					LearningActivityLocalServiceUtil.addLearningActivity(newLearnActivity);
+					
+					System.out.println("      Learning Activity : " + activity.getTitle(Locale.getDefault())+ " ("+activity.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(activity.getTypeId()).getName())+")");
+					System.out.println("      + Learning Activity : " + newLearnActivity.getTitle(Locale.getDefault())+ " ("+newLearnActivity.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(activity.getTypeId()).getName())+")");
+					
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+					continue;
+				}
+
+				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(activity.getActId());
+				for(TestQuestion question:questions)
+				{
+					TestQuestion newTestQuestion;
+					try {
+						newTestQuestion = TestQuestionLocalServiceUtil.addQuestion(activity.getActId(), question.getText(), question.getQuestionType());
+						
+						newTestQuestion.setQuestionType(question.getQuestionType());
+						newTestQuestion.setActId(newLearnActivity.getActId());
+						
+						TestQuestionLocalServiceUtil.updateTestQuestion(newTestQuestion, true);
+						
+						System.out.println("      Test question : " + question.getQuestionId() );
+						System.out.println("      + Test question : " + newTestQuestion.getQuestionId() );
+						
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+						continue;
+					}
+					
+					List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
+					for(TestAnswer answer:answers){
+						
+						try {
+							TestAnswer newTestAnswer = TestAnswerLocalServiceUtil.addTestAnswer(question.getQuestionId(), answer.getAnswer(), answer.getFeedbackCorrect(), answer.getFeedbacknocorrect(), answer.isIsCorrect());
+							
+							newTestAnswer.setQuestionId(newTestQuestion.getQuestionId());
+							
+							TestAnswerLocalServiceUtil.updateTestAnswer(newTestAnswer, true);
+							
+							System.out.println("        Test answer : " + answer.getAnswerId());
+							System.out.println("        + Test answer : " + newTestAnswer.getAnswerId());
+							
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+					}
+
+				}
+
+			}
+			
+		}
+		
 	}
-	
 	
 }
