@@ -53,11 +53,11 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), resourceAsse
 		String taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" +
 		liferayPortletResponse.getNamespace() + "editAsset', title: '" + ResourceActionsUtil.getModelResource(locale, assetType) +
 		"', uri:'" + HtmlUtil.escapeURL(addPortletURLString) + "'});";
-		
+		String assettypename=LanguageUtil.get(pageContext, "model.resource." + assetType);	
 		
 		%>
 		<liferay-ui:icon 
-					message="<%= HtmlUtil.escape(assetType) %>"
+					message="<%= HtmlUtil.escape(assettypename) %>"
 					src="<%= assetRendererFactory.getIconPath(renderRequest) %>"
 					url="<%= addPortletURLString %>"
 				/>
