@@ -105,7 +105,11 @@ if(resultString.equals("true")){
 				var selector = 'form[name="'+formName+'"]';
 				var fileName = A.one(selector).one('input[name="<portlet:namespace />fileName"]').val();
 				var textDesc = A.one(selector).one('textarea[name="<portlet:namespace />description"]').val();
-				var textResult = A.one('select[name="<portlet:namespace />resultuser"]').val();
+				var textResult = ''; 
+					
+				if(	A.one('select[name="<portlet:namespace />resultuser"]') != null){
+					textResult = A.one('select[name="<portlet:namespace />resultuser"]').val();
+				}
 
 				if (fileName != "") {
 					var pos = fileName.lastIndexOf("\\");
