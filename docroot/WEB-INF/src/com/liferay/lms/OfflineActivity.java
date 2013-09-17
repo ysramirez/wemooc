@@ -4,10 +4,14 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.text.DateFormat;
 import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -42,6 +46,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -61,7 +66,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class OfflineActivity extends MVCPortlet {
 	
 	private static DateFormat _dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
-			"dd-MM-yyyy",Locale.US);
+			"dd/MM/yyyy",Locale.US);
 	
 	public static final String NOT_TEACHER_SQL = "WHERE User_.userId NOT IN "+
 			 "( SELECT Usergrouprole.userId "+
@@ -158,14 +163,14 @@ public class OfflineActivity extends MVCPortlet {
 		
 		long actId = ParamUtil.getLong(renderRequest,"actId");
 		long groupId = themeDisplay.getScopeGroupId();
-		File csvFile = uploadRequest.getFile("fileName");
+		InputStream csvFile = uploadRequest.getFileAsStream("fileName");
 		
 		if(csvFile==null){
 			errors.add(LanguageUtil.get(getPortletConfig(),locale,"offlinetaskactivity.csvError.empty-file"));
 		}else{
 			CSVReader reader=null;
 			try {
-				reader = new CSVReader(new FileReader(csvFile),';');
+				reader = new CSVReader(new InputStreamReader(csvFile, "ISO-8859-1"), ';');
 				int line=0;
 				String[] currLine;
 				while ((currLine = reader.readNext()) != null) {
