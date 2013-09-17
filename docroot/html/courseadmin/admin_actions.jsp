@@ -118,7 +118,7 @@ ActionKeys.PERMISSIONS) %>">
 	<liferay-ui:icon image="post" message="courseadmin.adminactions.import" url="<%=importURL %>" />			
 </c:if>
 
-<c:if test="<%= permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(),
+<c:if test="<%=false && permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(),
 ActionKeys.PERMISSIONS) %>">
 	<portlet:renderURL var="cloneURL">
 		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
