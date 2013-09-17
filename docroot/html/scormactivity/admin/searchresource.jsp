@@ -26,10 +26,11 @@ if(course!=null)
 	searchGroupId=course.getGroupId();
 }
 
-String assetTypes=PropsUtil.get("lms.scorm.assettypes");
+String assetTypes=StringUtil.merge(PropsUtil.getArray("lms.scorm.assettypes"));
 String[] allowedAssetTypes=assetTypes.split(",");
 
 %>
+
 <liferay-ui:icon-menu message="add" showWhenSingleIcon="true" >
 <%
 for(String assetType:allowedAssetTypes) {

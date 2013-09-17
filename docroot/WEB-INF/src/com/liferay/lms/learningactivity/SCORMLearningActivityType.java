@@ -23,8 +23,10 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 
 public class SCORMLearningActivityType extends BaseLearningActivityType {
@@ -118,10 +120,11 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 			uuid.detach();
 			rootElement.remove(uuid);
 		}
-		SCORMContent scorm = null;
+		AssetRenderer scorm = null;
 		if (Validator.isNotNull(assetEntry.getText())) {
 			AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Long.valueOf(assetEntry.getText()));
-			scorm = SCORMContentLocalServiceUtil.getSCORMContent(entry.getClassPK());
+			AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
+			scorm = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 		}
 		uuid = SAXReaderUtil.createElement("uuid");
 		uuid.setText(scorm != null ? scorm.getUuid() : "");
