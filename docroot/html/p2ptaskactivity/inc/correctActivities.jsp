@@ -139,7 +139,9 @@ if(resultString.equals("true")){
 		        
 				A.one("#contentFileCorrec").html(fileName);
 				A.one("#contentDescriptionCorrec").html(textDesc);
-				A.one("#contentResult").html(textResult);
+				if(textResult != ''){
+					A.one("#contentResult").html(textResult);
+				}
 				A.one("#submitCorrec").on('click', function(){<portlet:namespace />commitForm(formName);});
 				
 				window.<portlet:namespace />p2pconfrmCorrec.show();
