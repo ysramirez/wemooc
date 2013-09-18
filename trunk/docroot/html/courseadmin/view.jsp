@@ -115,11 +115,8 @@ url='<%= newactivityURL %>'
 	<liferay-ui:search-container-row className="com.liferay.lms.model.Course" keyProperty="courseId" modelVar="course">
 	
 		<liferay-ui:search-container-column-text>
-		<% if (PortalUtil.isOmniadmin(user.getUserId())) { %>
-			<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
-		<% } else { %>
-			<%=course.getTitle(themeDisplay.getLocale()) %>
-		<% } %>
+		<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+		
 		</liferay-ui:search-container-column-text>
 		
 	<%
