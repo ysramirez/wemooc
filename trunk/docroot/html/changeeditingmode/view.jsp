@@ -4,7 +4,8 @@
 <%@ include file="/init.jsp" %>
 <%
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), Course.class.getName(), course.getCourseId(), ActionKeys.UPDATE)) {
+if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(),
+		"com.liferay.lms.model", themeDisplay.getScopeGroupId(), "ADD_MODULE")) {
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 }else{
 	boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
