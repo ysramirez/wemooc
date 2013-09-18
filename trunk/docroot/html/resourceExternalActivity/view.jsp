@@ -306,7 +306,7 @@ else
 				%>
 				<div class="additionalDocument">
 				
-				<a href="<%=docURL%>"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= docfileVersion.getIcon() %>.png" /><liferay-ui:message key="resourceexternalactivity.downloadFile"  arguments="<%=new Object[]{HtmlUtil.escape(docfileVersion.getTitle())} %>" /></a>
+				<a href="<%=docURL%>"  target="_blank"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= docfileVersion.getIcon() %>.png" /><liferay-ui:message key="resourceexternalactivity.downloadFile"  arguments="<%=new Object[]{HtmlUtil.escape(docfileVersion.getTitle())} %>" /></a>
 				</div>
 				<%
 				}
