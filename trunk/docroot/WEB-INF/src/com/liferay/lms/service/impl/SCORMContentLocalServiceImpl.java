@@ -20,7 +20,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
-import java.util.Locale;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.Transformer;
@@ -35,9 +34,8 @@ import org.apache.commons.io.FileUtils;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.liferay.lms.model.Course;
-import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.model.SCORMContent;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.base.SCORMContentLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -52,13 +50,10 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.GroupConstants;
-import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.LayoutSetPrototypeServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.util.PortalUtil;
 
 /**
  * The implementation of the s c o r m content local service.
@@ -238,13 +233,21 @@ public class SCORMContentLocalServiceImpl
 						
 					}
 			
+				String urlManifest = 
+						PortalUtil.getPortalURL(serviceContext.getRequest())+"/"+
+								ClpSerializer.getServletContextName()+
+								"/scorm/"+
+								Long.toString(scocontent.getCompanyId())+"/"+
+								Long.toString(scocontent.getGroupId())+"/"+
+								scocontent.getUuid()+"/imsmanifest.xml";
 			assetEntryLocalService.updateEntry(
 					userId, scocontent.getGroupId(), SCORMContent.class.getName(),
 					scocontent.getScormId(), scocontent.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()),null, null, 0, 0,
-					null, false);
+					ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()), 
+					urlManifest, 
+					null, 0, 0, null, false);
 					
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 					SCORMContent.class);
@@ -253,6 +256,16 @@ public class SCORMContentLocalServiceImpl
 				
 			return scocontent;
 		
+	}
+	
+	public String getUrlManifest(SCORMContent scocontent) {
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		return PortalUtil.getPortalURL(serviceContext.getRequest())+"/"+
+						ClpSerializer.getServletContextName()+
+						"/scorm/"+
+						Long.toString(scocontent.getCompanyId())+"/"+
+						Long.toString(scocontent.getGroupId())+"/"+
+						scocontent.getUuid()+"/imsmanifest.xml";
 	}
 	
 	public boolean force(long scormId, String version)
