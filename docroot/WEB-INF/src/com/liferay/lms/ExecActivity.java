@@ -53,6 +53,7 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -294,7 +295,7 @@ public class ExecActivity extends MVCPortlet
 		throws Exception {
 	
 		long actid = ParamUtil.getLong(actionRequest, "resId");
-	
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		String text = ParamUtil.getString(actionRequest, "text");
 		long questionType = ParamUtil.getLong(actionRequest, "typeId");
 		TestQuestion question = TestQuestionLocalServiceUtil.addQuestion(actid, text, questionType);
@@ -304,6 +305,7 @@ public class ExecActivity extends MVCPortlet
 		if (learnact.getTypeId() == 0) {
 			QuestionType qt =new QuestionTypeRegistry().getQuestionType(questionType);
 			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+			actionResponse.setRenderParameter("advise", qt.getAnswerEditingAdvise(themeDisplay.getLocale()));
 			actionResponse.setRenderParameter("resId", Long.toString(actid));
 			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
 		}
