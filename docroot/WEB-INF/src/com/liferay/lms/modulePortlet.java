@@ -123,9 +123,7 @@ public static String SEPARATOR = "_";
 			throw new IOException(e);
 		}
 		
-		if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), Course.class.getName(), course.getCourseId(), ActionKeys.UPDATE)) {
-			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-		}
+		
 
 		if(renderRequest.getWindowState().equals(LiferayWindowState.POP_UP)){
 			String popUpAction = ParamUtil.getString(renderRequest, "popUpAction");
