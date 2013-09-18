@@ -1,6 +1,7 @@
 package com.liferay.lms.hook.events;
 
 import java.io.InputStream;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Locale;
@@ -30,10 +31,12 @@ import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
+import com.liferay.portal.service.ResourceBlockLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
+
 import com.liferay.portlet.blogs.model.BlogsEntry;
 import com.liferay.portlet.messageboards.model.MBCategory;
 
@@ -169,12 +172,10 @@ titleMap.put(
 		courseCreator= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseCreator"
 				,titleMap, descriptionMap, RoleConstants.TYPE_SITE);
 		long courseCreatorId=courseCreator.getRoleId();
-		java.util.List<ResourceAction>actions= ResourceActionLocalServiceUtil.getResourceActions(Course.class.getName());
-		for(ResourceAction raction:actions)
-		{
-			ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,Course.class.getName(),scope, Long.toString(companyId),courseCreatorId,raction.getActionId());
-			
-		}
+		java.util.List<ResourceAction> actions= ResourceActionLocalServiceUtil.getResourceActions(Course.class.getName());
+		setRolePermissions(courseCreator,Course.class.getName(),actions);
+		actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.coursemodel");
+		setRolePermissions(courseCreator,"com.liferay.lms.coursemodel",actions);
 descriptionMap = new HashMap<Locale, String>();
 		
 titleMap = new HashMap<Locale, String>();
@@ -187,17 +188,11 @@ titleMap.put(
 			"Editors can Edit a course.");
 		courseEditor= RoleLocalServiceUtil.addRole(0, companyId, "courseEditor",titleMap, descriptionMap, RoleConstants.TYPE_SITE);
 		actions= ResourceActionLocalServiceUtil.getResourceActions(Module.class.getName());
-		for(ResourceAction raction:actions)
-		{
-			ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,Module.class.getName(),scope, Long.toString(companyId),courseEditor.getRoleId(),raction.getActionId());
-			
-		}
+		setRolePermissions(courseEditor,Module.class.getName(),actions);
+		actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.model");
+		setRolePermissions(courseEditor,"com.liferay.lms.model",actions);
 		actions= ResourceActionLocalServiceUtil.getResourceActions(LearningActivity.class.getName());
-		for(ResourceAction raction:actions)
-		{
-			ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,LearningActivity.class.getName(),scope, Long.toString(companyId),courseEditor.getRoleId(),raction.getActionId());
-			
-		}
+		setRolePermissions(courseEditor,LearningActivity.class.getName(),actions);
 		titleMap = new HashMap<Locale, String>();
 
 		titleMap.put(
@@ -222,6 +217,31 @@ titleMap.put(
 		}
 		ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,LearningActivity.class.getName(),scope, Long.toString(companyId),courseTeacher.getRoleId(),"CORRECT");
 
+	}
+	private static void setRolePermissions(
+			Role role, String name, java.util.List<ResourceAction>actions)
+		throws PortalException, SystemException 
+		
+		{
+		String[] actionIds=new String[actions.size()];
+		int counter=0;
+		for(ResourceAction raction:actions)
+		{
+			actionIds[counter]=raction.getActionId();
+			counter++;
+		}
+			if (ResourceBlockLocalServiceUtil.isSupported(name)) {
+				ResourceBlockLocalServiceUtil.setCompanyScopePermissions(
+					role.getCompanyId(), name, role.getRoleId(),
+					Arrays.asList(actionIds));
+			}
+			else {
+				ResourcePermissionLocalServiceUtil.setResourcePermissions(
+					role.getCompanyId(), name, ResourceConstants.SCOPE_COMPANY,
+					String.valueOf(role.getCompanyId()), role.getRoleId(),
+					actionIds);
+			}
+		
 	}
 
 }
