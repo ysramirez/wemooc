@@ -1,4 +1,3 @@
-
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.portal.kernel.util.StringPool"%>
 <%@page import="com.liferay.portal.util.PortalUtil"%>
@@ -11,26 +10,14 @@
 <%@ page import="com.liferay.util.JavaScriptUtil"%>
 <%@ page import="com.liferay.portal.model.PortletConstants"%>
 
-<%
-if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), Course.class.getName(), themeDisplay.getScopeGroupId(), ActionKeys.UPDATE)) {
-	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-}else{
-%>
-	
+
 	<jsp:useBean id="addmoduleURL" class="java.lang.String" scope="request" />
 	<jsp:useBean id="moduleFilterURL" class="java.lang.String" scope="request" />
 	<jsp:useBean id="moduleFilter" class="java.lang.String" scope="request" />
-	
-	<%--liferay-ui:success key="module-prefs-success" message="module-prefs-success" />
-	<liferay-ui:success key="module-added-successfully" message="module-added-successfully" />
-	<liferay-ui:success key="module-deleted-successfully" message="module-deleted-successfully" />
-	<liferay-ui:success key="module-updated-successfully" message="module-updated-successfully" />
-	<liferay-ui:error key="module-error-deleting" message="module-error-deleting" />
-	<liferay-ui:error key="dependent-rows-exist-error-deleting" message="dependent-rows-exist-error-deleting" /--%>
 	<%
 	long moduleId=ParamUtil.getLong(request,"moduleId",0);
-	boolean actionEditing=(ParamUtil.getBoolean(request,"actionEditing",false))||(!themeDisplay.getLayout().getFriendlyURL().equals("/reto"));
-	if((Boolean)request.getAttribute("hasAddPermission") && actionEditing)
+	boolean actionEditing=(ParamUtil.getBoolean(request,"actionEditing",false));
+	if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ADD_MODULE") && actionEditing)
 	{
 	
 	%>
@@ -102,5 +89,5 @@ if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGrou
 	
 	<% 
 	}
-}
+
 %>
