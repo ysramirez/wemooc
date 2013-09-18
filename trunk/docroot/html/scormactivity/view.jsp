@@ -145,18 +145,50 @@
 				</liferay-portlet:renderURL>
 				
 			<script type="text/javascript">
+			function _checkPopupBlocker(poppedWindow) {
+				setTimeout(function() {
+					if (_doCheckPopupBlocker(poppedWindow)) {
+						var A = AUI();
+						A.one('p.activity-message').setStyle('display', 'block');
+						A.one('span.newitem2').setStyle('display', 'block');
+					}
+				}, 2000);
+			}
+			function _doCheckPopupBlocker(poppedWindow) {
+			    var result = false;
+
+			    try {
+			        if (typeof poppedWindow == 'undefined') {
+			            // Safari with popup blocker... leaves the popup window handle undefined
+			            result = true;
+			        }
+			        else if (poppedWindow && poppedWindow.closed) {
+			            // This happens if the user opens and closes the client window...
+			            // Confusing because the handle is still available, but it's in a "closed" state.
+			            // We're not saying that the window is not being blocked, we're just saying
+			            // that the window has been closed before the test could be run.
+			            result = false;
+			        }
+			        else if (poppedWindow && poppedWindow.outerHeight > 0) {
+			            // This is the actual test. The client window should be fine.
+			            result = false;
+			        }
+			        else {
+			            // Else we'll assume the window is not OK
+			            result = true;
+			        }
+
+			    } catch (err) {
+			    	
+			    }
+			    return result;
+			}
+			
 			Liferay.provide(
 					window,
 					'<portlet:namespace />abrirActividad',
 					function(e) {
 						var A = AUI();
-						window.ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
-						window.ventana.location = '<%= scormwindow %>';
-						
-						if (ventana != null) {
-							A.one('p.activity-message').setStyle('display', 'none');
-							A.one('span.newitem2').setStyle('display', 'none');
-						}
 						window.messageHandler = A.one(window).on('message', 
 							function(event) {
 								var html5Event = event._event;
@@ -169,30 +201,31 @@
 								}
 							}
 						);
-						if (e != null && e.preventDefault) {
-							e.preventDefault();
-						} else {
-							return false;
-						}
+						window.ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
+						window.ventana.location = '<%= scormwindow %>';
+						_checkPopupBlocker(window.ventana);
 					},
 					['node']
 			);
+			
 			</script>
 			<% if(!LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())) { %>
 			
 			<script type="text/javascript">
-				AUI().ready(function() {<portlet:namespace />abrirActividad(null);});
+				AUI().ready(function() {					
+					<portlet:namespace />abrirActividad(null);					
+				});
 			</script>
 			
-				<p class="activity-message"><liferay-ui:message key="activity.openwindow"></liferay-ui:message></p>
+				<p style="display:none" class="activity-message"><liferay-ui:message key="activity.openwindow"></liferay-ui:message></p>
 				
-				<span class="newitem2"><a class="newitem2" href="#" onclick="<portlet:namespace />abrirActividad();" ><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<span style="display:none" class="newitem2"><a  class="newitem2" target="_blank" href="<%= scormwindow %>"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
 			
 			<% } else { %>
 				
-				<p class="activity-message"><liferay-ui:message key="activity.openwindow.passed"></liferay-ui:message></p>
+				<p style="display:none" class="activity-message"><liferay-ui:message key="activity.openwindow.passed"></liferay-ui:message></p>
 				
-				<span class="newitem2"><a class="newitem2" href="#" onclick="<portlet:namespace />abrirActividad();" ><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<span style="display:none" class="newitem2"><a class="newitem2" target="_blank" href="<%= scormwindow %>"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
 				<% }
 			} else {
 				request.setAttribute("learningTry", learningTry);
