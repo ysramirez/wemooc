@@ -116,7 +116,7 @@ public class moduleValidator {
 	private static boolean validateFileSize(Properties props,File file) {
 		boolean valid = true;
 
-		//Comprobar que el tamaño del fichero no supere los 5mb
+		//Comprobar que el tamano del fichero no supere los 5mb
 		long size = 5 * 1024 * 1024;
 				
 		if(file.length() > size){
@@ -130,14 +130,14 @@ public class moduleValidator {
 		boolean valid = true;
 				
 		if(imageId == 0){
-			return false;
+			return true;
 		}
 		
 		try {
 			
 			FileEntry img = DLAppLocalServiceUtil.getFileEntry(imageId);
 			
-			//Comprobar que el tamaño del fichero no supere los 5mb
+			//Comprobar que el tamano del fichero no supere los 5mb
 			//long size = 1024;
 			
 			long fileMaxSize = Long.parseLong(PrefsPropsUtil.getString(PropsKeys.DL_FILE_MAX_SIZE));
