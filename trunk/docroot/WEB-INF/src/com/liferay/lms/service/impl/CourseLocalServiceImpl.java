@@ -136,7 +136,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					serviceContext.getAssetTagNames(), true, null, null,new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, course.getTitle(), course.getDescription(locale), summary, null, null, 0, 0,null, false);
 			//creating group
-			Group group = GroupLocalServiceUtil.addGroup(userId,null, 0, title,summary,GroupConstants.TYPE_SITE_PRIVATE,friendlyURL,true,true,serviceContext);
+			Group group = GroupLocalServiceUtil.addGroup( getAdministratorUser(serviceContext.getCompanyId()).getUserId(),null, 0, title,summary,GroupConstants.TYPE_SITE_PRIVATE,friendlyURL,true,true,serviceContext);
 			
 			//A�adimos el rol Teacher al usuario que crea el blog
 			long[] usuarios = new long[1];
@@ -147,7 +147,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			GroupLocalServiceUtil.addUserGroups(userId, new long[] { group.getGroupId() });
 			course.setFriendlyURL(group.getFriendlyURL());
 			coursePersistence.update(course, true);
-			LayoutSetPrototype lsProto=LayoutSetPrototypeServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
+			LayoutSetPrototype lsProto=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
 			/* activamos social activity para la comunidad creada */ 		
 			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);	
