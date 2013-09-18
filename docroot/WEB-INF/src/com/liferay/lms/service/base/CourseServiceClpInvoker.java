@@ -138,6 +138,8 @@ public class CourseServiceClpInvoker {
 		if (_methodName107.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes107, parameterTypes)) {
 			CourseServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName112.equals(name) &&
@@ -169,36 +171,48 @@ public class CourseServiceClpInvoker {
 				Arrays.deepEquals(_methodParameterTypes117, parameterTypes)) {
 			CourseServiceUtil.addStudentToCourse(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName118.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes118, parameterTypes)) {
 			CourseServiceUtil.addTeacherToCourse(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName119.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes119, parameterTypes)) {
 			CourseServiceUtil.addEditorToCourse(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName120.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes120, parameterTypes)) {
 			CourseServiceUtil.removeStudentFromCourse(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName121.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes121, parameterTypes)) {
 			CourseServiceUtil.removeTeacherFromCourse(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName122.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes122, parameterTypes)) {
 			CourseServiceUtil.removeEditorFromCourse(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName123.equals(name) &&
@@ -220,6 +234,8 @@ public class CourseServiceClpInvoker {
 				((Boolean)arguments[4]).booleanValue(),
 				((Boolean)arguments[5]).booleanValue(),
 				((Boolean)arguments[6]).booleanValue());
+
+			return null;
 		}
 
 		if (_methodName127.equals(name) &&
@@ -230,30 +246,40 @@ public class CourseServiceClpInvoker {
 				((Boolean)arguments[4]).booleanValue(),
 				((Boolean)arguments[5]).booleanValue(),
 				((Boolean)arguments[6]).booleanValue());
+
+			return null;
 		}
 
 		if (_methodName128.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
 			CourseServiceUtil.setParent((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName129.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
 			CourseServiceUtil.unsetParent((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName130.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
 			CourseServiceUtil.setTutor((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName131.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
 			CourseServiceUtil.unsetTutor((java.lang.String)arguments[0],
 				(java.lang.String)arguments[1]);
+
+			return null;
 		}
 
 		if (_methodName132.equals(name) &&

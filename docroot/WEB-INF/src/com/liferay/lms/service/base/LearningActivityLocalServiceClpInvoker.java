@@ -334,6 +334,8 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName124.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes124, parameterTypes)) {
 			LearningActivityLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName129.equals(name) &&
@@ -414,6 +416,8 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName139.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes139, parameterTypes)) {
 			LearningActivityLocalServiceUtil.deleteLearningactivity((com.liferay.lms.model.LearningActivity)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName140.equals(name) &&
@@ -429,11 +433,15 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName142.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes142, parameterTypes)) {
 			LearningActivityLocalServiceUtil.goUpLearningActivity(((Long)arguments[0]).longValue());
+
+			return null;
 		}
 
 		if (_methodName143.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes143, parameterTypes)) {
 			LearningActivityLocalServiceUtil.goDownLearningActivity(((Long)arguments[0]).longValue());
+
+			return null;
 		}
 
 		if (_methodName144.equals(name) &&
@@ -449,6 +457,8 @@ public class LearningActivityLocalServiceClpInvoker {
 		if (_methodName146.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes146, parameterTypes)) {
 			LearningActivityLocalServiceUtil.deleteLearningactivity(((Long)arguments[0]).longValue());
+
+			return null;
 		}
 
 		if (_methodName147.equals(name) &&
@@ -461,6 +471,8 @@ public class LearningActivityLocalServiceClpInvoker {
 				Arrays.deepEquals(_methodParameterTypes148, parameterTypes)) {
 			LearningActivityLocalServiceUtil.setExtraContentValue(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1], (java.lang.String)arguments[2]);
+
+			return null;
 		}
 
 		if (_methodName149.equals(name) &&
@@ -472,6 +484,8 @@ public class LearningActivityLocalServiceClpInvoker {
 				Arrays.deepEquals(_methodParameterTypes150, parameterTypes)) {
 			LearningActivityLocalServiceUtil.saveHashMapToXMLExtraContent(((Long)arguments[0]).longValue(),
 				(java.util.HashMap<java.lang.String, java.lang.String>)arguments[1]);
+
+			return null;
 		}
 
 		throw new UnsupportedOperationException();

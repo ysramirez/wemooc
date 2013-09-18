@@ -42,6 +42,8 @@ public class ModuleResultServiceClpInvoker {
 		if (_methodName97.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes97, parameterTypes)) {
 			ModuleResultServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		throw new UnsupportedOperationException();

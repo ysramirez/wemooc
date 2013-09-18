@@ -63,6 +63,11 @@ public class TestLearningActivityType extends BaseLearningActivityType
 	public boolean isFeedbackNoCorrectConfigurable() {
 		return true;
 	}
+	
+	@Override
+	public boolean hasDeleteTries() {
+		return true;
+	}
 
 
 	@Override

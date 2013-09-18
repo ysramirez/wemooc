@@ -4,7 +4,6 @@ import java.io.IOException;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.model.LearningActivity;
@@ -34,6 +33,7 @@ public interface LearningActivityType extends InvokableService
 	public boolean gradebook();
 	String getMesageEditDetails();
 	public boolean hasEditDetails();
+	public boolean hasDeleteTries();
 	
 	public String getExpecificContentPage();
 	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException;
