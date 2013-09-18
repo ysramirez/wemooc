@@ -1,3 +1,4 @@
+<%@page import="java.util.Properties"%>
 <%@page import="com.liferay.lms.model.SCORMContent"%>
 <%@page import="com.liferay.portlet.PortletURLUtil"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
@@ -26,8 +27,11 @@ if(course!=null)
 	searchGroupId=course.getGroupId();
 }
 
-String assetTypes=StringUtil.merge(PropsUtil.getArray("lms.scorm.assettypes"));
-String[] allowedAssetTypes=assetTypes.split(",");
+Properties props = PropsUtil.getProperties("lms.scorm.assettypes", true);
+List<String> allowedAssetTypes = new ArrayList<String>();
+for (Object key:props.keySet()) {
+	allowedAssetTypes.addAll(ListUtil.toList(props.get(key).toString().split(",")));
+}
 
 %>
 

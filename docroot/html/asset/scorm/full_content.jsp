@@ -2,18 +2,14 @@
 <%@page import="java.io.IOException"%>
 <%@page import="java.net.URL"%>
 <%@page import="java.io.File"%>
-<%@page import="com.liferay.lms.model.LearningActivityTry"%>
-<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.SCORMContentLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.SCORMContent"%>
 
 <%@ include file="/init.jsp" %>
 
 <% SCORMContent scorm=(SCORMContent)request.getAttribute("scorm"); 
-LearningActivityTry learningTry = (LearningActivityTry) request.getAttribute("learningTry");
 
-if (Validator.isNotNull(scorm.getDescription()) && learningTry == null) {
-%>
+if (Validator.isNotNull(scorm.getDescription()) && request.getAttribute("learningTry") == null) { %>
 
 <div class="asset-description"><%=scorm.getDescription() %></div>
 
