@@ -83,6 +83,7 @@ if(learningActivity!=null){  %>
 </liferay-util:buffer>
 <% 
 	editResourceUnicode = UnicodeFormatter.toString(editResource);
+}
 %>
 
 <script type="text/javascript">
@@ -95,7 +96,7 @@ if(learningActivity!=null){  %>
 		editResource.set('href',editResource.get('href')+'&assertId='+
 				encodeURIComponent(<%=assetId %>));
 	});
-<% }} %>
+<% } %>
 
 function <portlet:namespace />search() {
 	AUI().use('node',function(A) {
