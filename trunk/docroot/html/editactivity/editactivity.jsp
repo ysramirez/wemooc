@@ -136,12 +136,13 @@ if(learnact!=null)
 				}
 				%>
 				<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails()%>" label="true" url="<%=urlEdit%>" />
-					
-				<liferay-ui:icon-delete label="true" url="<%=deleteMyTriesURL.toString()%>" message="delete-mi-tries" />
-				
-				
-				<%
+				<% 
 			}
+		}
+		if(larntype.hasDeleteTries()) {
+			%>
+			<liferay-ui:icon-delete label="true" url="<%=deleteMyTriesURL.toString()%>" message="delete-mi-tries" />	
+			<%		
 		}
 	%>
 </div>

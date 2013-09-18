@@ -1,3 +1,8 @@
+<%@page import="com.liferay.portal.kernel.exception.NestableException"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
+<%@page import="sun.nio.cs.UnicodeEncoder"%>
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.lms.model.SCORMContent"%>
 <%@page import="com.liferay.portal.kernel.exception.PortalException"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
@@ -7,13 +12,90 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ include file="/init.jsp" %>
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
+<% 
+	long assetId=ParamUtil.getLong(request, "assertId");
+	boolean openWindow = true, editDetails = false; 
+	String assetTitle=StringPool.BLANK;
+	long typeId=ParamUtil.getLong(request, "type");
+	LearningActivity learningActivity=null;
+	if(assetId!=0){
+		try{
+			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(assetId);
+			assetId=entry.getEntryId();
+			assetTitle=entry.getTitle(renderRequest.getLocale());
+			editDetails = GetterUtil.getBoolean(PropsUtil.get("lms.scorm.editable."+entry.getClassName()),false);	
+		}
+		catch(NestableException e)
+		{
+			assetId=0;
+		}
+	}
+	
+	if(request.getAttribute("activity")!=null) {	
+		learningActivity=(LearningActivity)request.getAttribute("activity");
+		typeId=learningActivity.getTypeId();
+	
+		if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
+			try{
+				if(assetId==0){
+					AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(
+						GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"assetEntry")));
+					assetId=entry.getEntryId();
+					assetTitle=entry.getTitle(renderRequest.getLocale());
+					editDetails = GetterUtil.getBoolean(PropsUtil.get("lms.scorm.editable."+entry.getClassName()),false);
+				}	
+				openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));	
+			}
+			catch(NestableException e)
+			{
+			}
+			
+		}	
+	}
+	
+%>
 
 <liferay-portlet:renderURL var="selectResource" windowState="<%=LiferayWindowState.POP_UP.toString() %>">
 	<liferay-portlet:param name="jspPage" value="/html/scormactivity/admin/searchresource.jsp"/>
 </liferay-portlet:renderURL>
 
+<% 
+
+String editResourceUnicode = StringPool.BLANK;
+if(learningActivity!=null){  %>
+<liferay-util:buffer var="editResource">
+	<liferay-portlet:renderURL var="editResourceURL" windowState="<%=LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:param name="mvcPath" value="/html/scormactivity/admin/editDetails.jsp"/>
+		<liferay-portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
+	</liferay-portlet:renderURL>
+	<% 
+	   String editResourceClick="(function(source){ "+
+				"if ((!!window.postMessage)&&(window.parent != window)) { "+
+				"	AUI().use('json-stringify', function(A){ "+
+				"		parent.postMessage(JSON.stringify({name:'resizeWidthActivity', "+
+		        "							   width:'1000px'}), window.location.origin); "+
+				"	}); "+
+				"} "+
+		        "})(this);";	
+	%>
+	<liferay-ui:icon id="editResource" image="edit" message="<%=new LearningActivityTypeRegistry().getLearningActivityType(typeId).getMesageEditDetails()%>" 
+					 label="true" url="<%=editResourceURL%>"  onClick="<%=editResourceClick %>" />
+</liferay-util:buffer>
+<% 
+	editResourceUnicode = UnicodeFormatter.toString(editResource);
+%>
+
 <script type="text/javascript">
 <!--
+
+<% if(editDetails){ %>
+	AUI().ready('node',function(A) {
+		A.one('.acticons').html('<%=editResourceUnicode%>');
+		var editResource=A.one('#<portlet:namespace/>editResource');
+		editResource.set('href',editResource.get('href')+'&assertId='+
+				encodeURIComponent(<%=assetId %>));
+	});
+<% }} %>
 
 function <portlet:namespace />search() {
 	AUI().use('node',function(A) {
@@ -55,13 +137,26 @@ function <portlet:namespace />load(source) {
 	
 		if((params['<portlet:namespace />jspPage']=='/html/scormactivity/admin/result.jsp')&&
            (A.Lang.isNumber(params['<portlet:namespace />assertId']))&&
-           (A.Lang.isString(params['<portlet:namespace />assertTitle']))) {
+           (A.Lang.isString(params['<portlet:namespace />assertTitle']))&&
+           (A.Lang.isString(params['<portlet:namespace />assertEditable']))) {
 			A.one('#<portlet:namespace/>backbutton').remove();
 			A.one('#<portlet:namespace/>finder').remove();
 			A.all('.acticons').each(function(icon){ icon.show(); });
 			A.one('#<portlet:namespace/>fm').show();
 			A.one('#<portlet:namespace/>assetEntryId').set('value',params['<portlet:namespace />assertId']);		
 			A.one('#<portlet:namespace/>assetEntryName').set('value',params['<portlet:namespace />assertTitle']);	
+			
+			<% if(learningActivity!=null){  %>
+				if(params['<portlet:namespace />assertEditable']=='true') {
+					A.one('.acticons').html('<%=editResourceUnicode%>');
+					var editResource=A.one('#<portlet:namespace/>editResource');
+					editResource.set('href',editResource.get('href')+'&assertId='+
+							encodeURIComponent(params['<portlet:namespace />assertId']));
+				}
+				else{
+					A.one('.acticons').html('');
+				}
+			<% } %>
 
 			window.messageHandler.detach();
 			window.messageHandler=null;
@@ -94,26 +189,7 @@ function <portlet:namespace />back() {
 </script>
 
 <%
-long assetId=0;
-Boolean openWindow = true;
-String assetTitle=StringPool.BLANK;
 
-if(request.getAttribute("activity")!=null) {	
-	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
-	if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
-		try{
-			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(
-				GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"assetEntry")));
-			assetId=entry.getEntryId();
-			assetTitle=entry.getTitle(renderRequest.getLocale());
-			
-			openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
-		}
-		catch(PortalException e)
-		{
-		}
-	}	
-}
 
 %>
 

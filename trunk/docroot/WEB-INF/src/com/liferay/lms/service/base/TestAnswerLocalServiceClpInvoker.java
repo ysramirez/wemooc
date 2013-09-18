@@ -217,6 +217,8 @@ public class TestAnswerLocalServiceClpInvoker {
 		if (_methodName113.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes113, parameterTypes)) {
 			TestAnswerLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName118.equals(name) &&

@@ -46,6 +46,8 @@ public class LearningActivityTryServiceClpInvoker {
 		if (_methodName97.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes97, parameterTypes)) {
 			LearningActivityTryServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName102.equals(name) &&
