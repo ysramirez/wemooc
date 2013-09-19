@@ -149,7 +149,9 @@ public class SCORMContentLocalServiceImpl
 				scocontent.getScormId(), scocontent.getUuid(),0, serviceContext.getAssetCategoryIds(),
 				serviceContext.getAssetTagNames(), true, null, null,
 				new java.util.Date(System.currentTimeMillis()), null,
-				ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()),null, null, 0, 0,
+				ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()),
+				getUrlManifest(scocontent), 
+				null, 0, 0,
 				null, false);
 		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				SCORMContent.class);
@@ -233,20 +235,13 @@ public class SCORMContentLocalServiceImpl
 						
 					}
 			
-				String urlManifest = 
-						PortalUtil.getPortalURL(serviceContext.getRequest())+"/"+
-								ClpSerializer.getServletContextName()+
-								"/scorm/"+
-								Long.toString(scocontent.getCompanyId())+"/"+
-								Long.toString(scocontent.getGroupId())+"/"+
-								scocontent.getUuid()+"/imsmanifest.xml";
 			assetEntryLocalService.updateEntry(
 					userId, scocontent.getGroupId(), SCORMContent.class.getName(),
 					scocontent.getScormId(), scocontent.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, scocontent.getTitle(),null,  HtmlUtil.extractText(scocontent.getDescription()), 
-					urlManifest, 
+					getUrlManifest(scocontent), 
 					null, 0, 0, null, false);
 					
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(

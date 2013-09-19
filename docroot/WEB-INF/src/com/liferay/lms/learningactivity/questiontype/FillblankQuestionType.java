@@ -297,9 +297,14 @@ public class FillblankQuestionType extends BaseQuestionType {
 					i++;solok="";
 				}
 				
-				if(feedback) answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
+				if(feedback) {
+					answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div>";
+					if (!"".equals(feedMessage)) {
+						answersFeedBack += "<div class=\"questionFeedback\">" + feedMessage + "</div>";
+					}
+				}
 				
-				html += "<div class=\"question" + cssclass + "\">" + 
+				html += "<div class=\"question" + cssclass + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">" + 
 							"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 							"<div class=\"questiontext\">" + question.getText() + "</div>" +
 							answersFeedBack +

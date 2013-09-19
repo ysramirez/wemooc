@@ -160,7 +160,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 				else correctionClass = " incorrect";
 			}
 
-			html += "<div id=\"id"+questionId+"\" class=\"question draganddrop"+correctionClass+"\">"+
+			html += "<div id=\"id"+questionId+"\" class=\"question draganddrop"+correctionClass + " questiontype_" + getName() + " questiontype_" + getTypeId() +"\">"+
 						"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 						"<div class=\"questiontext\">" + question.getText() + "</div>";
 
@@ -183,9 +183,15 @@ public class DraganddropQuestionType extends BaseQuestionType {
 				}
 				
 				if(feedback){
-					if(answersSelectedIds.get(i) == sols.get(i).getAnswerId()) feedMessage = (!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbackCorrect():sols.get(i).getFeedbackCorrect();
-					else feedMessage = (!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbacknocorrect():sols.get(i).getFeedbacknocorrect();
-					if("true".equals(showCorrectAnswer)) feedsol = "<div class=\" font_14 color_cuarto negrita\">" + sols.get(i).getAnswer() + "</div>";
+					if(answersSelectedIds.get(i) == sols.get(i).getAnswerId()) {
+						feedMessage = (!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbackCorrect():sols.get(i).getFeedbackCorrect();
+					}
+					else {
+						feedMessage = (!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbacknocorrect():sols.get(i).getFeedbacknocorrect();
+					}
+					if("true".equals(showCorrectAnswer)) {
+						feedsol = "<div class=\" font_14 color_cuarto negrita\">" + sols.get(i).getAnswer() + "</div>";
+					}
 				}
 				
 				rightCol +=	"<input type=\"hidden\" name=\""+namespace+"question_" + question.getQuestionId() + "_" + i +"hidden\"  value=\""+value+"\"/>" +
@@ -194,7 +200,12 @@ public class DraganddropQuestionType extends BaseQuestionType {
 			}
 			rightCol += "</div>";
 
-			if(feedback) html += "<div class=\"content_answer\">" + leftCol + rightCol + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
+			if(feedback) {
+				html += "<div class=\"content_answer\">" + leftCol + rightCol + "</div>";
+				if (!"".equals(feedMessage)) {
+					html += "<div class=\"questionFeedback\">" + feedMessage + "</div>";
+				}
+			}
 			else html += leftCol + rightCol;
 			html+=	"</div>";
 

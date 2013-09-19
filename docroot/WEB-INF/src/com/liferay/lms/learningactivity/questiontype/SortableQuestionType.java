@@ -106,7 +106,7 @@ public class SortableQuestionType extends BaseQuestionType {
 		String view = "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			view += "<div class=\"question\">"+
+			view += "<div class=\"question"  + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">"+
 					"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 					"<div class=\"questiontext\">" + question.getText() + "</div>";
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
