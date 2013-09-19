@@ -156,7 +156,6 @@
 			}
 			function _doCheckPopupBlocker(poppedWindow) {
 			    var result = false;
-
 			    try {
 			        if (typeof poppedWindow == 'undefined') {
 			            // Safari with popup blocker... leaves the popup window handle undefined
@@ -169,7 +168,7 @@
 			            // that the window has been closed before the test could be run.
 			            result = false;
 			        }
-			        else if (poppedWindow && poppedWindow.outerHeight > 0) {
+			        else if (poppedWindow && (poppedWindow.outerHeight > 0 || typeof poppedWindow.outerHeight == 'undefined')) {
 			            // This is the actual test. The client window should be fine.
 			            result = false;
 			        }
@@ -202,8 +201,13 @@
 							}
 						);
 						window.ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
-						window.ventana.location = '<%= scormwindow %>';
-						_checkPopupBlocker(window.ventana);
+						if (window.ventana != null) {
+							window.ventana.location = '<%= scormwindow %>';
+							_checkPopupBlocker(window.ventana);
+						} else {
+							A.one('p.activity-message').setStyle('display', 'block');
+							A.one('span.newitem2').setStyle('display', 'block');
+						}
 					},
 					['node']
 			);
