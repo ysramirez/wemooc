@@ -182,13 +182,14 @@ Liferay.provide(
 					result = learningActivityResult.getResult();
 					long tries = activity.getTries();
 					long userTried = Long.valueOf(LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(activity.getActId(),themeDisplay.getUserId()));
-					if (learningActivityResult.isPassed()&&!actionEditing) {
-						status = "passed";
+					if (!actionEditing) {
+						if (learningActivityResult.isPassed()) {
+							status = "passed";
+						}
+						else if ((userTried >= tries && tries > 0) && (!learningActivityResult.isPassed())) {
+							status = "failed";
+						}
 					}
-					else if((userTried >= tries) && ((!learningActivityResult.isPassed()) && (!actionEditing))){
-						status = "failed";
-					}
-
 				}
 				if (actId == activity.getActId()) {
 						activityEnd = "activado";

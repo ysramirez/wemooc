@@ -129,9 +129,14 @@ public class FreetextQuestionType extends BaseQuestionType {
 				if(feedback) feedMessage = (locale!=null)?LanguageUtil.get(locale, "manually-correction"):"A evaluar manualmente por el profesor";
 			}
 
-			if(feedback) answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div><div class=\"questionFeedback\">" + feedMessage + "</div>";
+			if(feedback) { 
+				answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div>";
+				if (!"".equals(feedMessage)) {
+					answersFeedBack += "<div class=\"questionFeedback\">" + feedMessage + "</div>";
+				}
+			}
 
-			feedBack += "<div class=\"question" + cssclass + "\">" + 
+			feedBack += "<div class=\"question" + cssclass + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">" + 
 					"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 					"<div class=\"questiontext\">" + question.getText() + "</div>" +
 					(!feedback ? "<div class=\"answer\"><textarea rows=\"4\" cols=\"60\" maxlength=\"1000\" name=\""+namespace+"question_" + question.getQuestionId() + "\" label=\"answer\">"+answer+"</textarea></div>" : "") +

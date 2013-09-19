@@ -149,11 +149,7 @@ public class LearningActivityResultLocalServiceImpl
 		
 		LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(learningActivityTry.getActId());
 		String assetEntryId = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivityTry.getActId(), "assetEntry");
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getAssetEntry(Long.valueOf(assetEntryId));
-		ClassName cn = ClassNameLocalServiceUtil.getClassName(assetEntry.getClassNameId());
-		AssetRendererFactory arf = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(cn.getValue());
-		AssetRenderer assetRenderer = arf.getAssetRenderer(assetEntry.getClassPK(), 0);
-		
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getAssetEntry(Long.valueOf(assetEntryId));		
 		
 		List<String> manifestItems = new ArrayList<String>();
 		Map<String, String> recursos = new HashMap<String, String>();
@@ -161,7 +157,7 @@ public class LearningActivityResultLocalServiceImpl
 		Map<String, String> manifestResources = new HashMap<String, String>();
 		
 		try {
-			String urlString = assetRenderer.getURLViewInContext(null, null, null);
+			String urlString = assetEntry.getUrl();
 			if (Validator.isNotNull(urlString)) {
 				Document imsdocument = null;
 				URL url = new URL(urlString);
@@ -320,7 +316,7 @@ public class LearningActivityResultLocalServiceImpl
 		for (int i = 0; i < scores.size(); i++) {
 			total_score += scores.get(i);
 		}
-		total_score = total_score / manifestItems.size();
+		total_score = total_score / (manifestItems.size() > 0 ? manifestItems.size() : 1);
 		
 		if ("incomplete".equals(total_completion_status) || "completed".equals(total_completion_status)) {
 			learningActivityTry.setTryResultData(tryResultData);
