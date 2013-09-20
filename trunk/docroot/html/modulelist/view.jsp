@@ -14,10 +14,12 @@
 <%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@ include file="/init.jsp"%>
-<table class="coursemodule">
 <%
 boolean registrado=UserLocalServiceUtil.hasGroupUser(themeDisplay.getScopeGroupId(),themeDisplay.getUserId());
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+%>
+<table class="coursemodule <%="course-status-".concat(String.valueOf(course.getStatus()))%>">
+<%
 if(course!=null && permissionChecker.hasPermission(course.getGroupCreatedId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW))
 {
 java.util.List<Module> theModules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
