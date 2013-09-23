@@ -46,6 +46,9 @@ if(actId==0){
 		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");
 %>
 			<div class="evaluationAvg view">
+				<h2 class="description-title"><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
+				<h3><liferay-ui:message key="description" /> </h3>
+				<p><%=learningActivity.getDescription(themeDisplay.getLocale()) %></p>
 			<%if(isTeacher){ 
 				boolean hasFiredDate=false;
 				boolean hasPublishDate=false;
