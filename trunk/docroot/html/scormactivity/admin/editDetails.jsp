@@ -48,14 +48,9 @@
 
 	}
 
-	function <portlet:namespace />load(source) {
-	    if (source.Document && source.Document.body.scrollHeight) 
-	        source.height = source.contentWindow.document.body.scrollHeight;
-	    else if (source.contentDocument && source.contentDocument.body.scrollHeight) 
-	        source.height = source.contentDocument.body.scrollHeight + 35;
-	    else if (source.contentDocument && source.contentDocument.body.offsetHeight) 
-	        source.height = source.contentDocument.body.offsetHeight + 35;
-	}
+	AUI().ready('aui-resize-iframe', function(A) {
+		A.one('#<portlet:namespace/>editor').plug(A.Plugin.ResizeIframe);
+	});
 
 //-->
 </script>
@@ -66,4 +61,4 @@
 								getAssetRendererFactoryByClassName(LearningActivity.class.getName()).
 								getClassTypes(new long[0], themeDisplay.getLocale()).get(Long.valueOf(learningActivity.getTypeId()))%>"></liferay-ui:header>
 <liferay-ui:header title="<%=learningActivity.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
-<iframe id="<portlet:namespace/>editor" src="<%=path.toString() %>" onload="<portlet:namespace />load(this)" frameBorder="0" scrolling="no" width="100%" height="0"></iframe>
+<iframe id="<portlet:namespace/>editor" src="<%=path.toString() %>" frameBorder="0" scrolling="no" width="100%" height="0"></iframe>
