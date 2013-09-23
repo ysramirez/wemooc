@@ -259,7 +259,7 @@ Liferay.provide(
 			
 			<c:if test="<%=!dateUpload.equals(\"\") %>">
 				<div class="description">
-					<p><liferay-ui:message key="p2ptaskactivity.dateexpire" arguments="<%=dateUpload%>" /></p>
+					<span class="destacado"><liferay-ui:message key="p2ptaskactivity.dateexpire" arguments="<%=dateUpload%>" /></span>
 				</div>
 			</c:if>
 			
@@ -282,7 +282,7 @@ Liferay.provide(
 				<aui:input name="check" id="check" checked="false" label='<liferay-ui:message key="p2ptask-publish-task" />' type="checkbox" value="1"></aui:input>
 			</div>
 			 -->
-			<div>
+			<div class="container-buttons">
 				<input type="button" class="button floatr" value="<liferay-ui:message key="p2ptask-send" />" onclick="<%= renderResponse.getNamespace() %>checkDataform()" />
 			</div>
 		</form>
