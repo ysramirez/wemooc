@@ -274,7 +274,7 @@ else
 				String videoURL=themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + videofileVersion.getGroupId() + StringPool.SLASH + videofileVersion.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(videofileVersion.getTitle()));
 				
 				%>
-		
+			<div class="video">
 				
  	<embed type="application/x-shockwave-flash" src="<%=request.getContextPath()%>/flash/flvplayer/playervideo.swf" 
 			  width="560" height="315" style="undefined" id="cab" name="cab" bgcolor="#FFFFFF" quality="high" allowfullscreen="true" allowscriptaccess="always" wmode="transparent" menu="false" 
@@ -284,12 +284,15 @@ else
   					<source src="<%=videoURL %>" type="video/mp4">
   					</video>
 --%>
+		</div>
 				<%
 				}
 				else
 				{
 					%>
+					<div class="video">
 					<%=video.getText()%>
+					</div>
 					<%
 				}
 			}
