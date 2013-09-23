@@ -227,9 +227,9 @@
 			
 			<% } else { %>
 				
-				<p style="display:none" class="activity-message"><liferay-ui:message key="activity.openwindow.passed"></liferay-ui:message></p>
+				<p class="activity-message"><liferay-ui:message key="activity.openwindow.passed"></liferay-ui:message></p>
 				
-				<span style="display:none" class="newitem2"><a class="newitem2" target="_blank" href="<%= scormwindow %>"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<span class="newitem2"><a class="newitem2" target="_blank" href="<%= scormwindow %>"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
 				<% }
 			} else {
 				request.setAttribute("learningTry", learningTry);
