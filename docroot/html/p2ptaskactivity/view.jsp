@@ -169,7 +169,9 @@ else
 		if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),LearningActivity.class.getName() , actId, "CORRECT")){
 			String urlCorrection = "self.location = '"+correctionPage.toString()+"';";
 			%>
-			<aui:button style="margin-top:10px" value="p2ptask-see-corrections" onClick="<%=urlCorrection.toString() %>" type="button" />
+			<div class="container-buttons lms-valoraciones">
+				<aui:button style="margin-top:10px" value="p2ptask-see-corrections" onClick="<%=urlCorrection.toString() %>" type="button" />
+			</div>
 			<%
 		}
 	}
