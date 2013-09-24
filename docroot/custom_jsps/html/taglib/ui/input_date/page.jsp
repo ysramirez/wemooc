@@ -182,6 +182,7 @@ else if (yearNullable) {
 						<c:choose>
 							<c:when test="<%= dateFormatOrder.equals(_DATE_FORMAT_ORDER_MDY) %>">
 								dateFormat: '%m/%d/%y',
+								
 							</c:when>
 							<c:when test="<%= dateFormatOrder.equals(_DATE_FORMAT_ORDER_YMD) %>">
 								dateFormat: '%y/%m/%d',
@@ -201,6 +202,7 @@ else if (yearNullable) {
 						}
 					},
 					dayNode: '#<%= dayParam %>',
+					disabled: <%= disabled %>,
 					monthNode: '#<%= monthParam %>',
 					nullableDay: <%= dayNullable %>,
 					nullableMonth: <%= monthNullable %>,
@@ -216,7 +218,7 @@ else if (yearNullable) {
 					yearNode: '#<%= yearParam %>',
 					yearRange: [<%= yearRangeStart %>, <%= yearRangeEnd %>]
 				}
-			).render();
+			).render().detach('mousemove');
 
 			displayDatePickerHandle.detach();
 		}
