@@ -89,8 +89,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 <%
 }
 %>
-<c:if test="<%= permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(),
-ActionKeys.PERMISSIONS) %>">
+<c:if test="<%= permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(), ActionKeys.PERMISSIONS) %>">
 	<liferay-security:permissionsURL
 		modelResource="<%=Course.class.getName() %>"
 		modelResourceDescription="<%= myCourse.getTitle(themeDisplay.getLocale()) %>"
@@ -98,28 +97,19 @@ ActionKeys.PERMISSIONS) %>">
 		var="permissionsURL"
 	/>
 	<liferay-ui:icon image="permissions" message="courseadmin.adminactions.permissions" url="<%=permissionsURL %>" />			
-</c:if>
 
-<c:if test="<%= permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(),
-ActionKeys.PERMISSIONS) %>">
 	<portlet:renderURL var="exportURL">
 		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
 		<portlet:param name="jspPage" value="/html/courseadmin/export.jsp" />
 	</portlet:renderURL>
 	<liferay-ui:icon image="download" message="courseadmin.adminactions.export" url="<%=exportURL %>" />			
-</c:if>
 
-<c:if test="<%= permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(),
-ActionKeys.PERMISSIONS) %>">
 	<portlet:renderURL var="importURL">
 		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
 		<portlet:param name="jspPage" value="/html/courseadmin/import.jsp" />
 	</portlet:renderURL>
 	<liferay-ui:icon image="post" message="courseadmin.adminactions.import" url="<%=importURL %>" />			
-</c:if>
 
-<c:if test="<%=false && permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(),
-ActionKeys.PERMISSIONS) %>">
 	<portlet:renderURL var="cloneURL">
 		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
 		<portlet:param name="jspPage" value="/html/courseadmin/clone.jsp" />
