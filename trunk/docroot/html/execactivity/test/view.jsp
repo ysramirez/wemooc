@@ -338,31 +338,85 @@
 				Liferay.provide(
 				        window,
 				        '<portlet:namespace />questionValidation',
-				        function(url) {
+				        function(question) {
 							var A = AUI();
+							var questionValidators = {
+								questiontype_options : function(question) {
+									return (question.all('div.answer input[type="radio"]:checked').size() > 0);
+								},
+								questiontype_multioptions : function(question) {
+									return (question.all('div.answer input[type="checkbox"]:checked').size() > 0);
+								},
+								questiontype_freetext : function(question) {
+									return (A.Lang.trim(question.one('div.answer textarea').val()) != '');
+								},
+								questiontype_fillblank : function(question) {
+									var texts = question.all(':text');
+									var validTexts = true;
+									texts.each(function(node) {
+										validTexts = validTexts && (A.Lang.trim(node.val()) != '');
+									});
+									
+									var selecteds = question.all(':selected');
+									var validSelecteds = true;
+									selecteds.each(function(node) {
+										validSelecteds = validSelecteds && (node.val() != '');
+									});
+									
+									var validCheckeds = (question.all(':radio:checked').size() == question.all('.multichoice').size());
+									
+									return validTexts && validSelecteds && validCheckeds;
+								},
+								questiontype_sortable : function(question) {
+									return true;
+								},
+								questiontype_draganddrop : function(question) {
+									return (question.all('div.drop > input[type="hidden"][value="-1"]').size() == 0);
+								},
+								
+							};
+							
+							var clases = question.getAttribute('class').split(" ");
+							var questiontypevalidator = '';
+							for ( var i = 0; i < clases.length; i++) {
+								var clase = clases[i];
+								if (clase.indexOf('questiontype_') == 0) {
+									questiontypevalidator = clase;
+									break;
+								}
+							}
+							if (questionValidators[questiontypevalidator] != null) {
+								var resultado = questionValidators[questiontypevalidator](question);
+								return resultado;
+							} else {
+								return true;
+							}
+							
 				        },
-				        ['node']
+				        ['node', 'aui-dialog', 'event', 'node-event-simulate']
 				        );
 				
 					Liferay.provide(
 					        window,
 					        '<portlet:namespace />popConfirm',
-					        function(content) {
+					        function(content, boton) {
 								var A = AUI();
 							
 								window.<portlet:namespace />confirmDialog = new A.Dialog(
 								    {
-								        title: '<liferay-ui:message key="confirm"/>',
+								        title: '<liferay-ui:message key="execactivity.confirm"/>',
 								        bodyContent: content,
 								        buttons: [
 								                  {
-								                	  label: 'Accept',
+								                	  label: '<liferay-ui:message key="ok"/>',
 								                	  handler: function() {
+								                		  A.one('#<portlet:namespace/>formulario').detach('submit');
+								                		  document.getElementById('<portlet:namespace/>formulario').submit();
 								                		  <portlet:namespace />confirmDialog.close();
 								                	  }
 								                  },
 								                  {
-								                	  label: 'Cancel',
+								                	  label: '<liferay-ui:message key="cancel"/>',
 								                	  handler: function() {
 								                		  <portlet:namespace />confirmDialog.close();
 								                	  }
@@ -376,56 +430,68 @@
 								    }
 								).render();
 								
-								
 					        },
-					        ['aui-dialog']
+					        ['node', 'aui-dialog', 'event', 'node-event-simulate']
 					    );
 				
-				function <%= renderResponse.getNamespace() %>formValidation(e){
-					var returnValue = true;
-					
-					
-					AUI().use('node', function(Y){
-					    var questions = Y.all('div.question-page-current div.question');
-					    var navigate = Y.one('#navigate');
-
-					    for (var i = 0; i < questions.size(); i++) {
-					    	var question = questions.item(i);
-					    	//if (!<portlet:namespace />questionValidation(question)) {
-					    		//if (<%= renderResponse.getNamespace() %>popConfirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>')) {
-					    			
-					    		//}
-					    		//returnValue = true;
-					    	//}
-					    	 //Pte adaptar, x ahora comentado
-					        //if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
-					        	//if(!confirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>')) {
-
-									//if (e.target) targ = e.target.blur();
-									//else if (e.srcElement) targ = e.srcElement.blur();
-							        
-							        //returnValue=false;  
-					        	//}
-					        	 //i=questions.size();
-						    //}
+					Liferay.provide(
+					        window,
+					        '<portlet:namespace/>formValidation',
+					function(e, navigate) {
+						var returnValue = true;
+						
+						var A = AUI();
+					    var questions = A.all('div.question-page-current div.question');
+	
+					    if (navigate != 'backward') {
+						    for (var i = 0; i < questions.size(); i++) {
+						    	var question = questions.item(i);
+						    	var validQuestion = <portlet:namespace />questionValidation(question);
+						    	if (typeof validQuestion == 'undefined') {
+						    		validQuestion = <portlet:namespace />questionValidation(question);
+						    	}
+						    	if (!validQuestion) {
+						    		returnValue = false;
+						    		break;
+						    	}
+							}
+							
+						    if (!returnValue) {
+						    	if (e.target) {
+						    		targ = e.target.blur();
+						    	} else if (e.srcElement) {
+						    		targ = e.srcElement.blur();
+						    	}
+						    	<%= renderResponse.getNamespace() %>popConfirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>', e.srcElement);
+				    		}
+					    }
+						
+						if (navigate == 'backward' || navigate == 'forward') {
+							A.one('#<portlet:namespace/>navigate').val(navigate);
+							var page = A.one('.question-page-current');
+							var n = page.attr('id').split("-");
+							if (navigate == 'backward') {
+								n[n.length - 1]--;
+							} else {
+								n[n.length - 1]++;
+							}
+							var valor = A.one('#'+n.join("-")).one('.question > input').val();
+							A.one('#<portlet:namespace/>currentQuestionId').val(valor);
+						} else {
+							A.one('#<portlet:namespace/>currentQuestionId').val("0");
 						}
-					    
-					});
-
-					return returnValue; 
-									    
-				}
+						if (!returnValue && e.preventDefault) {
+							e.preventDefault();
+						}
+						return returnValue;
+					},
+					['node', 'aui-dialog', 'event', 'node-event-simulate']
+				);
 				
 			//-->
-			</script>
-			<style>
-					#sortable { list-style-type: none; margin: 0; padding: 0; width: 450px; }
-					#sortable li { margin: 3px 3px 3px 0; padding: 1px; float: left; width: 100px; height: 90px; font-size: 4em; text-align: center; }
-					#ui-sortable-default li{ background: url("images/ui-bg_glass_75_e6e6e6_1x400.png") repeat-x scroll 50% 50% #E6E6E6; border: 1px solid #D3D3D3; color: #555555; font-weight: normal;}
-				</style>
-			
+			</script>			
 
-			<aui:form name="formulario" action="<%=correctURL %>" method="POST">
+			<aui:form name="formulario" action="<%=correctURL %>" method="post" onSubmit="javascript:return false;">
 			<%
 			
 			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"random"));
@@ -516,15 +582,15 @@
 				<%
 			}
 			
-				if (questions.size()>0){
+				if (questions.size() > 0){
 					if (questionsPerPage == 0) { %>
-				<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndSave(event);" %>' ></aui:button>
+				<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event, null);" %>' ></aui:button>
 				<% } else { %>
 				
 				<div id="testactivity-navigator">
 				<% if (showPrevious) { %>
 					<div id="testactivity-navigator-previous">
-						<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.previous" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndBackward(event);" %>' ></aui:button>
+						<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.previous" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event, \'backward\');" %>' ></aui:button>
 					</div>
 					<% }
 				if ((showPrevious || showNext) && currentPage >= 1) { %>
@@ -543,53 +609,22 @@
 				<% } %>
 				<div id="testactivity-navigator-next">
 				<% if (showNext) { %>
-					<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.next" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndForward(event);" %>' ></aui:button>
+					<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.next" onClick='<%= "return "+renderResponse.getNamespace() + "formValidation(event, \'forward\');" %>' ></aui:button>
 				<% } else { %>
-					<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidationAndSave(event);" %>' ></aui:button>
+					<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event, null);" %>' ></aui:button>
 				<% } %>
 				</div>
 				</div>
 				<aui:input type="hidden" name="currentQuestionId" value="<%= currentQuestionId %>"/>
 				<aui:input type="hidden" name="navigate" value=""/>
+				<aui:input type="hidden" name="improve" value="<%= new Boolean(improve).toString() %>" />
 				<% }
 					}  else {%>
 					<p class="color_tercero negrita"><liferay-ui:message key="execativity.test.no.question" /></p>
 				<% }  %>
 			
 			</aui:form>
-			<script type="text/javascript">
-	<!--
-	function <portlet:namespace/>formValidationAndSave(e) {
-		var A = AUI();
-		A.one('#<portlet:namespace/>currentQuestionId').val("0");
-		return <portlet:namespace/>formValidation(e);
-	}
-	
-	function <portlet:namespace/>formValidationAndBackward(e) {
-		var A = AUI();
-		A.one('#<portlet:namespace/>navigate').val('backward');
-		var page = A.one('.question-page-current');
-		var n = page.attr('id').split("-");
-		n[n.length - 1]--;
-		var backValue = A.one('#'+n.join("-")).one('.question > input').val();
-		A.one('#<portlet:namespace/>currentQuestionId').val(backValue);
-		return true;
-	}
-	
-	function <portlet:namespace/>formValidationAndForward(e) {
-		var A = AUI();
-		A.one('#<portlet:namespace/>navigate').val('forward');
-		var page = A.one('.question-page-current');
-		var n = page.attr('id').split("-");
-		n[n.length - 1]++;
-		var forValue = A.one('#'+n.join("-")).one('.question > input').val();
-		A.one('#<portlet:namespace/>currentQuestionId').val(forValue);
-		return <portlet:namespace/>formValidation(e);
-	}
-	
-	
-	//-->
-</script>
+
 			<%
 			}
 			}

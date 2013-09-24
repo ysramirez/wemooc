@@ -119,6 +119,7 @@ public class ExecActivity extends MVCPortlet
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
 			
 			if (isPartial) {
+				actionResponse.setRenderParameter("improve", ParamUtil.getString(actionRequest, "improve", Boolean.FALSE.toString()));
 				actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/view.jsp");
 			} else {
 				actionResponse.setRenderParameter("oldResult", Long.toString(oldResult));
