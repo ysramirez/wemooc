@@ -103,33 +103,7 @@ public class SortableQuestionType extends BaseQuestionType {
 	}
 	
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		String view = "";
-		try {
-			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			view += "<div class=\"question"  + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">"+
-					"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
-					"<div class=\"questiontext\">" + question.getText() + "</div>";
-			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			List<TestAnswer> tmp = ListUtil.copy(testAnswers);
-			Collections.shuffle(tmp);
-			
-			String value="";
-			int cont = 0;
-			
-			view += "<div class=\"question_sortable\"><ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
-			for(TestAnswer answer:tmp){
-				value += "question_"+answer.getQuestionId()+ "["+ (cont++) +"]=" + answer.getAnswerId()+"&";
-				view += "<li class=\"ui-sortable-default\" id=\""+answer.getAnswerId()+"\"><div class=\"answer\">"+ answer.getAnswer() + "</div></li> ";
-			}
-			view += "</ul></div>";
-			view += "<input type=hidden id=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question_"+question.getQuestionId() +"_contentlist\" value=\""+value+"\"/>";
-			view += "</div>";
-		} catch (SystemException e) {
-			e.printStackTrace();
-		}
-		
-		
-		return view;
+		return getHtml(document,questionId,false,themeDisplay);
 	}
 	
 	public Element getResults(ActionRequest actionRequest, long questionId){
@@ -165,56 +139,81 @@ public class SortableQuestionType extends BaseQuestionType {
 		return questionXML;
 	}
 	
-	public String getHtmlFeedback(Document document,long questionId){
-
-		String feedBack = "", answersFeedBack="";
-		
+	private String getHtml(Document document, long questionId, boolean feedback, ThemeDisplay themeDisplay){
+		String html = "", answersFeedBack="", feedMessage = "", cssclass="question correct";
+		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
-			
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			
-			String showCorrectAnswerStr = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
-			boolean showCorrectAnswer = showCorrectAnswerStr.equals("true");
-			
-			List<TestAnswer> answersSelectedOrder 	 = getAnswerSelected(document, questionId);
-			List<TestAnswer> testAnswersCorrectOrder = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 
-			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
-			boolean allRight = true, questionCorrect = false;
-				
+			List<TestAnswer> answersSelected=new ArrayList<TestAnswer>();
+			if(feedback){
+				answersSelected=getAnswerSelected(document, questionId);
+			}
+			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
+			List<TestAnswer> tmp = ListUtil.copy(testAnswers);
+			boolean questionCorrect = false;
+								
+			if(feedback){ 
+				feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+			}else{
+				html += "<div class=\"question"  + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">"+
+						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
+						"<div class=\"questiontext\">" + question.getText() + "</div>";
+				Collections.shuffle(tmp);
+				html += "<div class=\"question_sortable\"><ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
+				}
+			String value="";
 			int i=0;
-			while( i < answersSelectedOrder.size()){
-				
-				questionCorrect = answersSelectedOrder.get(i).equals(testAnswersCorrectOrder.get(i));
-				
-				if(questionCorrect){
+			while( i < testAnswers.size()){
+				String showCorrectAnswer="false";
+				if(feedback) {
+					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+					questionCorrect = answersSelected.get(i).equals(testAnswers.get(i));
 					
-					feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.correct");
-					
-				} else {
-					allRight = false;
-					
-					feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect");
-					
-					if(showCorrectAnswer){
-						feedMessage += LanguageUtil.format(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswersCorrectOrder.indexOf(answersSelectedOrder.get(i))+1)});
+					if(questionCorrect){
+						
+						feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.correct");
+						
+					} else {
+						cssclass="question incorrect";
+						feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect");
+						
+						if(showCorrectAnswer.equals("true")){
+							feedMessage += LanguageUtil.format(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswers.indexOf(answersSelected.get(i))+1)});
+						}
 					}
+					answersFeedBack += "<div class=\"answer\">" + answersSelected.get(i).getAnswer() 
+							+ "<div class=\"message "+ cssclass +"\">"+feedMessage+"</div> </div>";
+			
+				}
+				else{
+					value += "question_"+tmp.get(i).getQuestionId()+ "["+ (i) +"]=" + tmp.get(i).getAnswerId()+"&";
+					html += "<li class=\"ui-sortable-default\" id=\""+tmp.get(i).getAnswerId()+"\"><div class=\"answer\">"+ tmp.get(i).getAnswer() + "</div></li> ";
+
 				}
 				
-				answersFeedBack += "<div class=\"answer\">" + answersSelectedOrder.get(i).getAnswer() 
-								+ "<div class=\"message "+ (questionCorrect?"correct":"incorrect")+"\">"+feedMessage+"</div> </div>";
-				
 				i++;
-			}	
-						
-			feedBack += "<div class=\"" + (allRight?"question correct":"question incorrect") + "\">" + 
-							"<div class=\"questiontext\">" + question.getText() + "</div>" +
-							"<div class=\"content_answer\">" + answersFeedBack + "</div>" +
-						"</div>";	
-		} catch (Exception e) {
+			}
+			if(feedback){
+				html += "<div class=\"" + cssclass + "\">" + 
+					"<div class=\"questiontext\">" + question.getText() + "</div>" +
+					"<div class=\"content_answer\">" + answersFeedBack + "</div>" +
+				"</div>";
+			}
+			else{
+				html += "</ul></div>";
+				html += "<input type=hidden id=\""+ namespace +"question_"+question.getQuestionId() +"_contentlist\" name=\""+ namespace +"question_"+question.getQuestionId() +"_contentlist\" value=\""+value+"\"/>";
+				html += "</div>";
+			}
+		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-		return feedBack;
+		return html;
+	}
+	
+	public String getHtmlFeedback(Document document,long questionId){
+
+		return getHtml(document, questionId, true, null);
 	}
 	
 	protected List<TestAnswer> getAnswerSelected(Document document,long questionId){
