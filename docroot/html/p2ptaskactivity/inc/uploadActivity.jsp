@@ -259,7 +259,7 @@ Liferay.provide(
 			
 			<c:if test="<%=!dateUpload.equals(\"\") %>">
 				<div class="description">
-					<span class="destacado"><liferay-ui:message key="p2ptaskactivity.dateexpire" arguments="<%=dateUpload%>" /></span>
+					<span class="date-destacado"><liferay-ui:message key="p2ptaskactivity.dateexpire" arguments="<%=dateUpload%>" /></span>
 				</div>
 			</c:if>
 			
