@@ -544,7 +544,7 @@ Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
 			this.$C = null;
 			this.$B = null;
 			this.$D = null;
-			if (!isNullOrUndefined(update_scorm)) {
+			if (!typeof update_scorm != 'undefined') {
 				update_scorm(null);
 			}
 			this.hidePlayer(!this.$1);
@@ -696,7 +696,7 @@ Player.ContentPlayer.prototype.adjustPlayer = function() {
 			iframe.style.height = ifra.style.height;
 		}
 	}
-}
+};
 
 Player.ContentPlayer.prototype.checkPlayer = function() {
    	var treeContainer = document.getElementById('treeContainer');
@@ -750,9 +750,10 @@ Player.ContentPlayer.prototype.showPlayer = function() {
 		if (!isNullOrUndefined(this.$6)) {
 			this.$6.style.display = (this.$1) ? 'block' : 'none';
 		}
+		
 		document.getElementById('contentIFrame').attachEvent('onload', Delegate.create(this, function() {
-			this.adjustPlayer(); 
-			this.checkPlayer(); 
+			this.adjustPlayer();
+			this.checkPlayer();
 		}));
 	}
 };

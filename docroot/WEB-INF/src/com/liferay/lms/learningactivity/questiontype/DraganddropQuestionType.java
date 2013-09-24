@@ -53,7 +53,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 	public boolean correct(ActionRequest actionRequest, long questionId){
 		List<TestAnswer> testAnswers = new ArrayList<TestAnswer>();
 		try {
-			testAnswers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			testAnswers.addAll(TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId));
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
@@ -86,7 +86,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 	public Element getResults(ActionRequest actionRequest, long questionId){
 		List<TestAnswer> testAnswers = new ArrayList<TestAnswer>();
 		try {
-			testAnswers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			testAnswers.addAll(TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId));
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}

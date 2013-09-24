@@ -263,16 +263,17 @@ public class FillblankQuestionType extends BaseQuestionType {
 					}
 					else if(sol.contains(":MULTICHOICE_") || sol.contains(":MCV") || sol.contains(":MCH")){
 						String aux = "";
-						auxans = "<br/>";
+						auxans = "<br/><div class=\"multichoice\">";
 						List<String> totalBlankSols = getBlankSols(sol, false);
 						for(String blankSol:totalBlankSols){
 							String checked = "", disabled = "", correct = "";
 							if(blankSol.equals(ans)) checked="checked='checked'";
 							if(feedback) disabled = "disabled='disabled'";
 							if("true".equals(showCorrectAnswer) && blankSols.contains(blankSol)) correct = "font_14 color_cuarto negrita";
-							aux = "<div class=\"answer " + correct + "\"><input name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" type=\"radio\"" + checked + "value=\"" + blankSol + " "+disabled+" \" >" + blankSol + "</div>";//radiobuttons
+							aux = "<div class=\"answer " + correct + "\"><input name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" type=\"radio\"" + checked + "value=\"" + blankSol + "\" "+disabled+" >" + blankSol + "</div>";//radiobuttons
 							auxans += aux;
 						}
+						auxans += "</div>";
 					}else if(sol.contains(":MULTICHOICE:") || sol.contains(":MC:")){
 						String disabled = "";
 						if(feedback) disabled = "disabled='disabled'";
