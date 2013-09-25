@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
 import java.util.zip.ZipFile;
@@ -14,15 +16,19 @@ import javax.portlet.ActionResponse;
 
 import org.apache.commons.io.FileUtils;
 
+import com.liferay.lms.model.Course;
 import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.SCORMContentLocalServiceUtil;
 import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
 import com.liferay.portal.kernel.util.WebKeys;
@@ -34,7 +40,9 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
@@ -64,11 +72,27 @@ public class SCORMAdmin extends MVCPortlet
 			if (Validator.isNull(description)) {
 				SessionErrors.add(actRequest, "scormadmin.error.nodescription");
 			}
-			
+						
 			try {
-				AssetEntryLocalServiceUtil.validate(serviceContext.getScopeGroupId(), SCORMContent.class.getName(), serviceContext.getAssetCategoryIds(), serviceContext.getAssetTagNames());
-			} catch (Exception e) {
-				SessionErrors.add(actRequest, "scormadmin.error.requiredcategories");
+				AssetEntryLocalServiceUtil.validate(serviceContext.getScopeGroupId(), SCORMContent.class.getName(), 
+						serviceContext.getAssetCategoryIds(), serviceContext.getAssetTagNames());						
+			} catch(Exception e) {
+				if (e instanceof AssetCategoryException) {
+					AssetCategoryException ace = (AssetCategoryException) e;
+					AssetVocabulary assetVocabulary = ace.getVocabulary();
+					String vocabularyTitle = StringPool.BLANK;
+					if (assetVocabulary != null) {
+						vocabularyTitle = assetVocabulary.getTitle(themeDisplay.getLocale());
+					}
+
+					if (ace.getType() == AssetCategoryException.AT_LEAST_ONE_CATEGORY) {
+						SessionErrors.add(actRequest, "please-select-at-least-one-category-for-x", vocabularyTitle);
+					} else if (ace.getType() == AssetCategoryException.TOO_MANY_CATEGORIES) { 
+						SessionErrors.add(actRequest, "you-cannot-select-more-than-one-category-for-x", vocabularyTitle);
+					}
+				} else {
+					SessionErrors.add(actRequest, "an-unexpected-error-occurred-while-saving");
+				}
 			}
 			
 			String fileName = request.getFileName("fileName");

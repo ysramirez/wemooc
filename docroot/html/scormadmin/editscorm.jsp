@@ -15,7 +15,6 @@
 <%@page import="com.liferay.lms.model.SCORMContent"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <portlet:actionURL var="savescormURL" name="saveSCORM" />
-<portlet:renderURL var="cancel" />
 
 <script type="text/javascript" >
 <!--
@@ -149,7 +148,7 @@ if(scormId > 0 && permissionChecker.hasPermission(themeDisplay.getScopeGroupId()
 <%
 }
 %>
-		<aui:button onClick="<%=cancel %>" type="cancel" />
+		<aui:button onClick="<%= redirect %>" type="cancel" />
 	</aui:button-row>
 		
 		
