@@ -137,15 +137,24 @@ function <portlet:namespace />load(source) {
 		var params=A.QueryString.parse(source.contentWindow.location.search.replace('?',''));
 	
 		if((params['<portlet:namespace />jspPage']=='/html/scormactivity/admin/result.jsp')&&
-           (A.Lang.isNumber(params['<portlet:namespace />assertId']))&&
-           (A.Lang.isString(params['<portlet:namespace />assertTitle']))&&
-           (A.Lang.isString(params['<portlet:namespace />assertEditable']))) {
+           (A.Lang.isNumber(params['<portlet:namespace />assertId'])) &&
+           (A.Lang.isString(params['<portlet:namespace />assertTitle'])) &&
+           (A.Lang.isString(params['<portlet:namespace />assertEditable'])) &&
+           (A.Lang.isString(params['<portlet:namespace />assertWindowable']))) {
 			A.one('#<portlet:namespace/>backbutton').remove();
 			A.one('#<portlet:namespace/>finder').remove();
 			A.all('.acticons').each(function(icon){ icon.show(); });
 			A.one('#<portlet:namespace/>fm').show();
 			A.one('#<portlet:namespace/>assetEntryId').set('value',params['<portlet:namespace />assertId']);		
-			A.one('#<portlet:namespace/>assetEntryName').set('value',params['<portlet:namespace />assertTitle']);	
+			A.one('#<portlet:namespace/>assetEntryName').set('value',params['<portlet:namespace />assertTitle']);
+			
+			if(params['<portlet:namespace />assertWindowable']=='true') {
+				document.getElementById("<portlet:namespace/>openWindow").value = "true";
+				document.getElementById("<portlet:namespace/>openWindowCheckbox").checked = true;
+			} else {
+				document.getElementById("<portlet:namespace/>openWindow").value = "false";
+				document.getElementById("<portlet:namespace/>openWindowCheckbox").checked = false;
+			}
 			
 			<% if(learningActivity!=null){  %>
 				if(params['<portlet:namespace />assertEditable']=='true') {
@@ -157,6 +166,7 @@ function <portlet:namespace />load(source) {
 				else{
 					A.one('.acticons').html('');
 				}
+				
 			<% } %>
 
 			window.messageHandler.detach();
