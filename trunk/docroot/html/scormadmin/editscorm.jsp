@@ -114,7 +114,7 @@ else
 	<%
 		String extractCodeFromEditor = renderResponse.getNamespace() + "extractCodeFromEditor()";
 	%>									
-		<aui:button type="submit" onClick="<%=extractCodeFromEditor%>"></aui:button>
+		<aui:button type="submit"></aui:button>
 			<%if(scormId>0) 
 	{
 	%>

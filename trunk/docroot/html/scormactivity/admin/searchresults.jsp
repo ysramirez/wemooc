@@ -32,14 +32,12 @@ portletURL.setParameter("groupId",Long.toString(groupIdSelected));
 portletURL.setParameter("actionEditing","true");
 
 %>
-<liferay-ui:search-container emptyResultsMessage="scormactivity.there-are-no-assets" iteratorURL="<%=portletURL%>"
- delta="10">
+<liferay-ui:search-container emptyResultsMessage="scormactivity.there-are-no-assets" iteratorURL="<%=portletURL%>" delta="10">
 <liferay-ui:search-container-results>
 
 <%
 total=0;
-if(keywords.length()>0)
-{
+if (keywords.length() > 0) {
 
 	SearchContext searchContext=SearchContextFactory.getInstance(request);
 	searchContext.setAssetCategoryIds(serviceContext.getAssetCategoryIds());
@@ -51,37 +49,36 @@ if(keywords.length()>0)
 	searchContext.setEnd(searchContainer.getEnd());
 	
 	Indexer indexer=IndexerRegistryUtil.getIndexer(className);
-Hits hits = indexer.search(searchContext);
+	Hits hits = indexer.search(searchContext);
+	
+	total=hits.getLength();
 
-
-results = new ArrayList<AssetEntry>();
-for(Document doc : hits.getDocs()) { 
-	Long classPK = Long.parseLong(doc.get(Field.ENTRY_CLASS_PK)); 
-    
-    AssetEntry asset = AssetEntryLocalServiceUtil.getEntry(className, classPK);
-    results.add(asset);
-    total=hits.getLength();
-}
-}
-else
-{
-	AssetEntryQuery query=new AssetEntryQuery();
+	results = new ArrayList<AssetEntry>();
+	for (Document doc : hits.getDocs()) { 
+		Long classPK = Long.parseLong(doc.get(Field.ENTRY_CLASS_PK)); 
+	    
+	    AssetEntry asset = AssetEntryLocalServiceUtil.getEntry(className, classPK);
+	    results.add(asset);
+	    
+	}
+} else {
+	MultiVMPoolUtil.clear(AssetEntry.class.getName());
+	AssetEntryQuery query = new AssetEntryQuery();
 	query.setClassName(className);
 	query.setGroupIds(groupIds);
-	query.setStart(searchContainer.getStart());
-	query.setEnd(searchContainer.getEnd());
 	query.setEnablePermissions(true);
 	query.setExcludeZeroViewCount(false);
-	if(serviceContext.getAssetCategoryIds()!=null)
-	{
-	query.setAllCategoryIds(serviceContext.getAssetCategoryIds());
+	if (serviceContext.getAssetCategoryIds() != null) {
+		query.setAllCategoryIds(serviceContext.getAssetCategoryIds());
 	}
 	query.setVisible(true);
+	
 	total = AssetEntryServiceUtil.getEntriesCount(query);
+	
+	query.setStart(searchContainer.getStart());
+	query.setEnd(searchContainer.getEnd());
 	results = AssetEntryServiceUtil.getEntries(query);
 }
-
-
 
 pageContext.setAttribute("results", results);
 pageContext.setAttribute("total", total);
