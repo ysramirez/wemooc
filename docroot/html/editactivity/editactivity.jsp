@@ -162,9 +162,21 @@ if(learnact!=null)
 
 AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'widget-locale', function(A) {
 
-	<% if(larntype.hasEditDetails()){ %>
-		A.one('.taglib-icon').focus();
-	<% } %>
+	try{
+		<% if(larntype.hasEditDetails()){ %>
+			A.one('.taglib-icon').focus();
+		<% } %>
+	}catch (err){
+		
+	}
+	
+	var enabledStart = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>startdate-enabledCheckbox').checked;
+	if(enabledStart)  A.all("#startDate").one("#container-calendar-icon").show();
+			    		else  A.all("#startDate").one("#container-calendar-icon").hide();
+
+	var enabledEnd = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>stopdate-enabledCheckbox').checked; 
+	if(enabledEnd)  A.all("#endDate").one("#container-calendar-icon").show();
+			    		else A.all("#endDate").one("#container-calendar-icon").hide();
 
 	var rules = {			
 			<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
@@ -360,6 +372,9 @@ Liferay.provide(
 		    		
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startMin"]').set('disabled', !enabled);
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startHour"]').set('disabled', !enabled);
+		    		
+		    		if(enabled) A.all("#startDate").one("#container-calendar-icon").show();
+		    		else A.all("#startDate").one("#container-calendar-icon").hide();
 
 		    	});
 		    }
@@ -376,25 +391,35 @@ Liferay.provide(
 		    		
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopMin"]').set('disabled', !enabled);
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopHour"]').set('disabled', !enabled);
+		    		
+		    		if(enabled) A.all("#endDate").one("#container-calendar-icon").show();
+		    		else A.all("#endDate").one("#container-calendar-icon").hide();
 
 		    	});
 		    }
 
 	    </script>
+		<div id="startDate">
+			<aui:field-wrapper label="start-date">
+				<aui:input id="<%=renderResponse.getNamespace()+\"startdate-enabled\" %>" name="startdate-enabled" checked="<%=learnact != null && learnact.getStartdate() != null  %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
+				<span class="hide-calendar">
+					<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"
+					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
+				</span>
+				<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"></liferay-ui:input-time>
+			</aui:field-wrapper>
+		</div>
 		
-		<aui:field-wrapper label="start-date">
-			<aui:input id="<%=renderResponse.getNamespace()+\"startdate-enabled\" %>" name="startdate-enabled" checked="<%=learnact != null && learnact.getStartdate() != null  %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
-			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"
-				 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
-			<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"></liferay-ui:input-time>
-		</aui:field-wrapper>
-		
-		<aui:field-wrapper label="end-date">
-			<aui:input id="<%=renderResponse.getNamespace()+\"stopdate-enabled\" %>" name="stopdate-enabled" checked="<%=learnact != null && learnact.getEnddate()!= null  %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
-			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012" dayParam="stopDay" monthParam="stopMon" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"
-				 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
-			<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"></liferay-ui:input-time></br>
-		</aui:field-wrapper>
+		<div id="endDate">
+			<aui:field-wrapper label="end-date">
+				<aui:input id="<%=renderResponse.getNamespace()+\"stopdate-enabled\" %>" name="stopdate-enabled" checked="<%=learnact != null && learnact.getEnddate()!= null  %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
+				<span class="hide-calendar">
+					<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012" dayParam="stopDay" monthParam="stopMon" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"
+					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
+				</span>
+				<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"></liferay-ui:input-time></br>
+			</aui:field-wrapper>
+		</div>
 		
 		<%
 		if(larntype.isTriesConfigurable())
