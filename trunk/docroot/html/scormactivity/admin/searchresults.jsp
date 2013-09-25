@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.cache.MultiVMPoolUtil"%>
 <%@page import="com.liferay.portal.kernel.search.IndexerRegistryUtil"%>
 <%@page import="com.liferay.portal.kernel.search.Indexer"%>
 <%@page import="com.liferay.portal.kernel.search.SearchContextFactory"%>
