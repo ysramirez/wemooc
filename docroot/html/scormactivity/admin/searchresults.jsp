@@ -1,4 +1,4 @@
-<%@page import="com.liferay.portal.kernel.cache.MultiVMPoolUtil"%>
+<%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryUtil"%>
 <%@page import="com.liferay.portal.kernel.search.IndexerRegistryUtil"%>
 <%@page import="com.liferay.portal.kernel.search.Indexer"%>
 <%@page import="com.liferay.portal.kernel.search.SearchContextFactory"%>
@@ -63,7 +63,8 @@ if (keywords.length() > 0) {
 	    
 	}
 } else {
-	MultiVMPoolUtil.clear(AssetEntry.class.getName());
+	AssetEntryUtil.clearCache();
+	
 	AssetEntryQuery query = new AssetEntryQuery();
 	query.setClassName(className);
 	query.setGroupIds(groupIds);

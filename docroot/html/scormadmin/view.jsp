@@ -1,8 +1,9 @@
-<%@page import="com.liferay.lms.service.SCORMContentServiceUtil"%>
+<%@page import="com.liferay.lms.model.SCORMContent"%>
 <%@page import="com.liferay.lms.service.SCORMContentLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 <portlet:renderURL var="newactivityURL">
 <portlet:param name="jspPage" value="/html/scormadmin/editscorm.jsp"></portlet:param>
+<portlet:param name="redirect" value="<%= currentURL %>"></portlet:param>
 </portlet:renderURL>
 <div class="newitem">
 <%
@@ -20,14 +21,15 @@ url='<%= newactivityURL %>'
 }
 %>
 </div>
-<liferay-ui:search-container
+<% List<SCORMContent> resultados = SCORMContentLocalServiceUtil.getSCORMContentOfGroup(themeDisplay.getScopeGroupId()); %>
+<liferay-ui:search-container 
  delta="10">
 <liferay-ui:search-container-results>
 <%
-results=SCORMContentServiceUtil.getSCORMContentOfGroup(themeDisplay.getScopeGroupId()); // TODO better pagination
-total=results.size();
-pageContext.setAttribute("results", results.subList(searchContainer.getStart() >= results.size() ? 0 : searchContainer.getStart(), results.size() <= searchContainer.getEnd() ? results.size() : searchContainer.getEnd()));
-pageContext.setAttribute("total", total);
+ // TODO better pagination
+pageContext.setAttribute("total", resultados.size());
+pageContext.setAttribute("results", resultados.subList(searchContainer.getStart() >= resultados.size() ? 0 : searchContainer.getStart(), resultados.size() <= searchContainer.getEnd() ? resultados.size() : searchContainer.getEnd()));
+
 %>
 </liferay-ui:search-container-results>
 <liferay-ui:search-container-row

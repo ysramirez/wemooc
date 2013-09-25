@@ -95,7 +95,7 @@ public class TestLearningActivityType extends BaseLearningActivityType
 		
 	@Override
 	public String getMesageEditDetails() {
-		return "execativity.editquestions";
+		return "execactivity.editquestions";
 	}
 	
 	@Override
