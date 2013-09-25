@@ -67,6 +67,7 @@ else
 <liferay-ui:error key="scormadmin.error.nodescription" message="scormadmin.error.nodescription"/>
 <liferay-ui:error key="scormadmin.error.nozip" message="scormadmin.error.nozip"/>
 <liferay-ui:error key="scormadmin.error.nomanifest" message="scormadmin.error.nomanifest"/>
+<liferay-ui:error key="scormadmin.error.requiredcategories" message="scormadmin.error.requiredcategories"/>
 <aui:form name="fm" action="<%=savescormURL%>"  method="post" enctype="multipart/form-data">
 
 	<aui:input type="hidden" name="scormId" value="<%=scormId %>" />

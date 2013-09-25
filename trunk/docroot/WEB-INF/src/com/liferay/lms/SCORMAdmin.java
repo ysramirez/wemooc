@@ -16,6 +16,7 @@ import org.apache.commons.io.FileUtils;
 
 import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.SCORMContentLocalServiceUtil;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -33,6 +34,8 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -60,6 +63,12 @@ public class SCORMAdmin extends MVCPortlet
 			
 			if (Validator.isNull(description)) {
 				SessionErrors.add(actRequest, "scormadmin.error.nodescription");
+			}
+			
+			try {
+				AssetEntryLocalServiceUtil.validate(serviceContext.getScopeGroupId(), SCORMContent.class.getName(), serviceContext.getAssetCategoryIds(), serviceContext.getAssetTagNames());
+			} catch (Exception e) {
+				SessionErrors.add(actRequest, "scormadmin.error.requiredcategories");
 			}
 			
 			String fileName = request.getFileName("fileName");
@@ -117,6 +126,8 @@ public class SCORMAdmin extends MVCPortlet
 			scorm.setCiphered(ciphered);
 			SCORMContentLocalServiceUtil.updateSCORMContent(scorm, serviceContext);
 		}
+//		MultiVMPoolUtil.clear(AssetEntry.class.getName());
+//		MultiVMPoolUtil.clear(SCORMContent.class.getName());
 		if(redirect!=null && !"".equals(redirect))
 		{
 			response.sendRedirect(redirect);
