@@ -131,9 +131,9 @@ else if (yearNullable) {
 				</c:when>
 			</c:choose>
 		</div>
-		<div class="aui-datepicker-button-wrapper">
+		<div class="aui-datepicker-button-wrapper" id="container-calendar-icon">
 			<button class="aui-buttonitem aui-buttonitem-content aui-buttonitem-icon-only aui-component aui-state-default yui3-widget" id="buttonTest" type="button">
-				<span class="aui-buttonitem-icon aui-icon aui-icon-calendar"></span>
+					<span class="aui-buttonitem-icon aui-icon aui-icon-calendar"></span>
 			</button>
 		</div>
 	</div>
@@ -218,7 +218,7 @@ else if (yearNullable) {
 					yearNode: '#<%= yearParam %>',
 					yearRange: [<%= yearRangeStart %>, <%= yearRangeEnd %>]
 				}
-			).render().detach('mousemove');
+			).render().detach('mousemove', 'mouseout', 'mouseover', 'focus', 'blur');
 
 			displayDatePickerHandle.detach();
 		}
