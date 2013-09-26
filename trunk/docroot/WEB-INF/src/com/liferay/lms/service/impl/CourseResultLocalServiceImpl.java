@@ -14,19 +14,17 @@
 
 package com.liferay.lms.service.impl;
 
-import com.liferay.lms.learningactivity.courseeval.CourseEval;
-
-
-import java.util.ArrayList;
-import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import java.util.List;
 
+import com.liferay.lms.learningactivity.courseeval.CourseEval;
+import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
-import com.liferay.lms.model.ModuleResult;
-import com.liferay.lms.model.P2pActivityCorrections;
 import com.liferay.lms.model.Module;
+import com.liferay.lms.model.ModuleResult;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.base.CourseResultLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
@@ -90,10 +88,10 @@ public class CourseResultLocalServiceImpl
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public CourseResult getCourseResultByCourseAndUser(long courseId,long userId) throws SystemException{
 
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(CourseResult.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(CourseResult.class, classLoader)
 				.add(PropertyFactoryUtil.forName("courseId").eq(courseId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId));
 	
@@ -106,5 +104,7 @@ public class CourseResultLocalServiceImpl
 		}
 		
 		return null;
+		
+		//return courseResultPersistence.fetchByuc(userId, courseId);
 	}
 }

@@ -26,10 +26,12 @@ import java.util.Map;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityResultLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -45,14 +47,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.model.ClassName;
-import com.liferay.portal.model.User;
-import com.liferay.portal.service.ClassNameLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.model.AssetRenderer;
-import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 
 
@@ -362,7 +357,8 @@ public class LearningActivityResultLocalServiceImpl
 	}
 	public long countNotPassed(long actId) throws SystemException
 	{
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class, classLoader);
 		Criterion criterion=PropertyFactoryUtil.forName("passed").eq(false);
 		dq.add(criterion);
 		criterion=PropertyFactoryUtil.forName("actId").eq(actId);
@@ -373,7 +369,8 @@ public class LearningActivityResultLocalServiceImpl
 	}
 	public Double avgResult(long actId) throws SystemException
 	{
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class);
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class, classLoader);
 		Criterion criterion=PropertyFactoryUtil.forName("actId").eq(actId);
 		dq.add(criterion);
 		criterion=PropertyFactoryUtil.forName("endDate").isNotNull();
@@ -404,7 +401,8 @@ public class LearningActivityResultLocalServiceImpl
 	{
 		List<LearningActivityResult> results;
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class, classLoader)
 					.add(PropertyFactoryUtil.forName("actId").eq(new Long(actId)));
 					
 		results = (List<LearningActivityResult>)learningActivityResultPersistence.findWithDynamicQuery(consulta);

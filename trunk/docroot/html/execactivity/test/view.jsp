@@ -424,6 +424,9 @@
 								                  ],
 								        width: 'auto',
 								        height: 'auto',
+								        resizable: false,
+								        draggable: false,
+								        close: true,
 								        destroyOnClose: true,
 								        centered: true,
 								        modal: true

@@ -18,21 +18,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletURL;
-
-import com.liferay.lms.NoSuchCourseException;
 import com.liferay.lms.P2PSendMailAsignation;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.model.P2pActivityCorrections;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
-import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.P2pActivityCorrectionsLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
@@ -48,7 +46,6 @@ import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.PortletURLFactoryUtil;
 
 
 /**
@@ -142,7 +139,8 @@ public class P2pActivityCorrectionsLocalServiceImpl
 	
 	@SuppressWarnings("unchecked")
 	public List<P2pActivityCorrections> findByActIdAndUserIdOrderByDate(Long actId, Long userId) throws SystemException{
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId))
 				.addOrder(OrderFactoryUtil.getOrderFactory().desc("date"));
@@ -217,7 +215,7 @@ public class P2pActivityCorrectionsLocalServiceImpl
 	
 public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int numValidaciones, List<P2pActivity> activityList, long userId) throws SystemException{
 		
-		//Precondici�n: Solo asignamos las tareas cuando tengamos todas las que necesitamos.	
+		//Precondicion: Solo asignamos las tareas cuando tengamos todas las que necesitamos.	
 		if(activityList == null || activityList.isEmpty() || activityList.size() < numValidaciones){
 			return;
 		}
@@ -239,7 +237,7 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 			
 		}
 		
-		//Ponemos que ya est�n realizadas las asignaciones para no tener que calcular de nuevo las asignaciones.
+		//Ponemos que ya estan realizadas las asignaciones para no tener que calcular de nuevo las asignaciones.
 		try {
 			P2pActivity p2pActivity = P2pActivityLocalServiceUtil.getP2pActivity(p2pActivityId);
 			p2pActivity.setAsignationsCompleted(true);
@@ -290,7 +288,8 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 	@SuppressWarnings("unchecked")
 	public int getNumCorrectionsAsignToP2P(long p2pActId) throws SystemException{
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
 				.add(PropertyFactoryUtil.forName("p2pActivityId").eq(p2pActId));
 	
 		List<P2pActivityCorrections> activities = (List<P2pActivityCorrections>)p2pActivityCorrectionsPersistence.findWithDynamicQuery(consulta);
@@ -301,7 +300,8 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 	@SuppressWarnings("unchecked")
 	public int getNumCorrectionsAsignToUser(long actId, long userId) throws SystemException{
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId));
 	
@@ -315,7 +315,8 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 		
 		List<P2pActivityCorrections> res = new ArrayList<P2pActivityCorrections>();
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId))
 				.add(PropertyFactoryUtil.forName("date").isNotNull());
@@ -341,7 +342,8 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 		String validations = LearningActivityLocalServiceUtil.getExtraContentValue(actId, "validaciones");
 		try {numAsigns = Integer.valueOf(validations);} catch (Exception e) {}
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId))
 				.add(PropertyFactoryUtil.forName("date").isNotNull());
@@ -365,7 +367,8 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 		//Para devolver una lista vacia en lugar de null.
 		List<P2pActivityCorrections> res = new ArrayList<P2pActivityCorrections>();
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
 				.add(PropertyFactoryUtil.forName("p2pActivityId").eq(p2pActivityId));
 	
 		List<P2pActivityCorrections> list = (List<P2pActivityCorrections>)p2pActivityCorrectionsPersistence.findWithDynamicQuery(consulta);
@@ -412,7 +415,8 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 	@SuppressWarnings("unchecked")
 	public boolean isP2PAsignationDone(long p2pActivityId, long userId) throws SystemException{
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
 				.add(PropertyFactoryUtil.forName("p2pActivityId").eq(p2pActivityId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId));
 	

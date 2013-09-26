@@ -16,17 +16,18 @@ package com.liferay.lms.service.impl;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.P2pActivity;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
 import com.liferay.lms.service.base.P2pActivityLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -130,7 +131,8 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 			throws SystemException {
 		try{
 			
-			DynamicQuery dq=DynamicQueryFactoryUtil.forClass(P2pActivity.class);
+			ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+			DynamicQuery dq=DynamicQueryFactoryUtil.forClass(P2pActivity.class, classLoader);
 			Criterion criterion=PropertyFactoryUtil.forName("actId").eq(actId);
 			dq.add(criterion);
 			Order createOrder=OrderFactoryUtil.getOrderFactory().asc("p2pActivityId");
@@ -171,7 +173,8 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		int selected = 0;
 	
 		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("userId").ne(userId))
 				.add(PropertyFactoryUtil.forName("date").between(calendarStar.getTime(), calendarEnd.getTime()))
@@ -194,7 +197,7 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 			}
 		}
 		
-		//Si no tenemos suficientes usuarios, buscamos otras 24 horas atrás. Llamada recursiva con un día menos.
+		//Si no tenemos suficientes usuarios, buscamos otras 24 horas atras. Llamada recursiva con un dia menos.
 		LearningActivity l = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 
 		Calendar calendarAct = Calendar.getInstance();
@@ -211,7 +214,7 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		Calendar endDay =  Calendar.getInstance();
 		endDay.setTime(l.getStartdate());
 		
-		//Paramos la recursividad cuando no tengamos más días en los que buscar.
+		//Paramos la recursividad cuando no tengamos mas dias en los que buscar.
 		if(l.getStartdate().compareTo(dayBefore.getTime())<=0){
 			
 			List<User> usersBefore = getUsersToCorrectP2P(actId, userId, numUsers, dayBefore);
@@ -235,14 +238,15 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		List<P2pActivity> res = new ArrayList<P2pActivity>();
 		
 		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("p2pActivityId").ne(p2pActivityId))
 				.addOrder(OrderFactoryUtil.getOrderFactory().asc("countCorrections"));
 	
 		List<P2pActivity> activities = p2pActivityPersistence.findWithDynamicQuery(consulta,0,numValidaciones);
 		
-		//Si no es null ni está vacía, la asignamos para devolver, sino devolveremos vacía.
+		//Si no es null ni esta vacia, la asignamos para devolver, sino devolveremos vacia.
 		if(activities!=null && !activities.isEmpty()){
 			res = activities;
 		}
@@ -273,12 +277,13 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		int numAsigns = 3;
 	
 		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class, classLoader)
 				.add(PropertyFactoryUtil.forName("date").between(calendarStar.getTime(), calendarEnd.getTime()));
 		
 		activities = (List<P2pActivity>)p2pActivityPersistence.findWithDynamicQuery(consulta);
 		
-		//Creamos una lista con sólo las p2pactivities que les falten asignar correctores.
+		//Creamos una lista con solo las p2pactivities que les falten asignar correctores.
 		for(P2pActivity activity:activities){
 
 			String validations = LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"validaciones");
@@ -312,7 +317,8 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		calendarEnd.set(Calendar.SECOND, 59);
 		
 		//Seleccionamos las actividades p2p entre ayer y antes de ayer.
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivity.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId))
 				.add(PropertyFactoryUtil.forName("date").between(calendarStar, calendarEnd))
 				.addOrder(OrderFactoryUtil.getOrderFactory().asc("countCorrections"));
