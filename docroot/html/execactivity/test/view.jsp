@@ -615,11 +615,12 @@
 				<% } %>
 				</div>
 				</div>
+				
+				<% } %>
 				<aui:input type="hidden" name="currentQuestionId" value="<%= currentQuestionId %>"/>
 				<aui:input type="hidden" name="navigate" value=""/>
 				<aui:input type="hidden" name="improve" value="<%= new Boolean(improve).toString() %>" />
-				<% }
-					}  else {%>
+					<%}  else {%>
 					<p class="color_tercero negrita"><liferay-ui:message key="execativity.test.no.question" /></p>
 				<% }  %>
 			
