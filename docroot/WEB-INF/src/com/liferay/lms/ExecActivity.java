@@ -357,7 +357,12 @@ public class ExecActivity extends MVCPortlet
 		throws Exception {
 	
 		long answerId = ParamUtil.getLong(actionRequest, "answerId");
+		
+		//Inicialmente tiene que ser ParamUtil.getString(actionRequest, "answer"), que es lo que tienene todas las actividades, pero el FCKEditor necesita que cada editor 
+		//tenga un nombre único, y las test de ordenar usan FCKEditor por lo que, temporalmente dejamos la comprobación de ambos campos hasta que todo se pase a FCKEditor.
 		String answer = ParamUtil.getString(actionRequest, "answer_"+answerId);
+		if("".equals(answer)) answer = ParamUtil.getString(actionRequest, "answer");
+		
 		boolean correct = ParamUtil.getBoolean(actionRequest, "correct");
 		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect", "");
