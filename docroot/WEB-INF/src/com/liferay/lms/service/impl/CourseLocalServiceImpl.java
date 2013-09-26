@@ -23,29 +23,22 @@ import java.util.Map;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
-import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.base.CourseLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.servlet.SessionErrors;
-import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
@@ -56,22 +49,9 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
-import com.liferay.portal.service.LayoutSetPrototypeServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portal.util.PortalUtil;
-import com.liferay.portal.kernel.util.PrefsPropsUtil;
-import com.liferay.portlet.asset.AssetCategoryException;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.model.AssetVocabulary;
-import com.liferay.portlet.documentlibrary.DuplicateFileException;
-import com.liferay.portlet.documentlibrary.FileExtensionException;
-import com.liferay.portlet.documentlibrary.FileNameException;
-import com.liferay.portlet.documentlibrary.FileSizeException;
-import com.liferay.portlet.documentlibrary.InvalidFileEntryTypeException;
-import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
 
 
@@ -117,7 +97,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			throws SystemException, PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long userId=serviceContext.getUserId();
-		Course course = course = coursePersistence.create(counterLocalService.increment(Course.class.getName()));		
+		Course course = coursePersistence.create(counterLocalService.increment(Course.class.getName()));		
 		try{
 			course.setCompanyId(serviceContext.getCompanyId());
 			course.setGroupId(serviceContext.getScopeGroupId());
@@ -194,7 +174,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 				return user;
 		}
 		return adminList.get(0); // Devolvemos el primero.
-	}	
+	}
+	
+	@SuppressWarnings("unused")
 	private static LayoutSetPrototype fetchLayoutSetPrototypeByDescription(String description,long companyId) throws SystemException,PortalException
 	{
 		LayoutSetPrototype lspRes = null;
@@ -292,7 +274,6 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			theGroup.setName(course.getTitle(locale, true));
 			theGroup.setDescription(summary);
 			GroupLocalServiceUtil.updateGroup(theGroup);
-			AssetEntry asset=null;
 			assetEntryLocalService.updateEntry(
 					userId, course.getGroupId(), Course.class.getName(),
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
@@ -363,10 +344,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return res;
 	}
 	
-	@SuppressWarnings("unchecked")
 	public Course getCourseByGroupCreatedId(long groupCreatedId) throws SystemException{
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(Course.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(Course.class, classLoader)
 				.add(PropertyFactoryUtil.forName("groupCreatedId").eq(groupCreatedId));
 	
 		List<Course> list = (List<Course>)coursePersistence.findWithDynamicQuery(consulta);
@@ -376,6 +357,8 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		}
 
 		return null;
+		
+		//return coursePersistence.fetchByGroupCreatedId(groupCreatedId);
 	}
 	
 	@SuppressWarnings("unchecked")

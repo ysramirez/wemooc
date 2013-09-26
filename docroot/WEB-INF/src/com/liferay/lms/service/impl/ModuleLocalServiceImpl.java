@@ -18,19 +18,18 @@ package com.liferay.lms.service.impl;
 import java.util.Date;
 import java.util.List;
 
+import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.model.Course;
-import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
-import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.model.Module;
+import com.liferay.lms.model.ModuleResult;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.ModuleLocalServiceBaseImpl;
 import com.liferay.lms.service.persistence.ModuleUtil;
-import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.OrderByComparator;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -39,8 +38,9 @@ import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
-
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -114,7 +114,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 	}
 
 	public Module getPreviusModule(Module theModule) throws SystemException {
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(Module.class);
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(Module.class, classLoader);
 		Criterion criterion=PropertyFactoryUtil.forName("ordern").lt(theModule.getOrdern());
 		dq.add(criterion);
 		criterion=PropertyFactoryUtil.forName("groupId").eq(theModule.getGroupId());
@@ -139,7 +140,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 	}
 
 	public Module getNextModule(Module theModule) throws SystemException {
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(Module.class);
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(Module.class, classLoader);
 		Criterion criterion=PropertyFactoryUtil.forName("ordern").gt(theModule.getOrdern());
 		dq.add(criterion);
 		criterion=PropertyFactoryUtil.forName("groupId").eq(theModule.getGroupId());
@@ -318,7 +320,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 	}
 	public long usersStarted(long moduleId) throws SystemException
 	{
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class, classLoader);
 		java.util.List<Long> actIds=LearningActivityLocalServiceUtil.getLearningActivityIdsOfModule(moduleId);
 		long result=0;
 		Criterion crit;

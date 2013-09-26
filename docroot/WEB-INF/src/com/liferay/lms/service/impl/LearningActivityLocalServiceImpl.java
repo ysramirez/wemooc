@@ -17,15 +17,13 @@ package com.liferay.lms.service.impl;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.LearningActivityTry;
-import com.liferay.lms.model.Module;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
-import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -42,9 +40,7 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 /**
@@ -296,7 +292,8 @@ public class LearningActivityLocalServiceImpl
 		
 	}
 	public LearningActivity getPreviusLearningActivity(LearningActivity larn) throws SystemException {
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivity.class);
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");  
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivity.class, classLoader);
 		Criterion criterion=PropertyFactoryUtil.forName("priority").lt(larn.getPriority());
 		dq.add(criterion);
 		criterion=PropertyFactoryUtil.forName("moduleId").eq(larn.getModuleId());
@@ -353,7 +350,8 @@ public class LearningActivityLocalServiceImpl
 		
 	}
 	public LearningActivity getNextLearningActivity(LearningActivity larn) throws SystemException {
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivity.class);
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivity.class, classLoader);
 		Criterion criterion=PropertyFactoryUtil.forName("priority").gt(larn.getPriority());
 		dq.add(criterion);
 		criterion=PropertyFactoryUtil.forName("moduleId").eq(larn.getModuleId());

@@ -139,7 +139,9 @@ public class LearningActivityTryLocalServiceImpl
 	public List<User> getUsersByLearningActivity(long actId) throws SystemException, PortalException
 	{ 			
 		List<User> users = new ArrayList<User>();
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class)
+		
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class, classLoader)
 					.add(PropertyFactoryUtil.forName("actId").eq(new Long(actId)));
 					
 		List<LearningActivityTry> activities = (List<LearningActivityTry>)learningActivityTryPersistence.findWithDynamicQuery(consulta);
@@ -243,7 +245,8 @@ public class LearningActivityTryLocalServiceImpl
 		}
 		
 		//Mirar que alguno de sus intentos no se terminase.
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(new Long(actId)))
 				.add(PropertyFactoryUtil.forName("userId").eq(new Long(userId)))
 				.add(PropertyFactoryUtil.forName("endDate").isNull());

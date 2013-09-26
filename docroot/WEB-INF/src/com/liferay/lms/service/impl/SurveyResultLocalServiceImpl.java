@@ -17,8 +17,10 @@ package com.liferay.lms.service.impl;
 import java.util.List;
 
 import com.liferay.lms.model.SurveyResult;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.SurveyResultLocalServiceUtil;
 import com.liferay.lms.service.base.SurveyResultLocalServiceBaseImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
@@ -51,7 +53,8 @@ public class SurveyResultLocalServiceImpl
 	@SuppressWarnings("unchecked")
 	public java.util.List<SurveyResult> getSurveyResultByActId(long actId) throws SystemException
 	{ 
-		DynamicQuery query = DynamicQueryFactoryUtil.forClass(SurveyResult.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(SurveyResult.class, classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(actId));
 		
 		return surveyResultPersistence.findWithDynamicQuery(query);
@@ -61,7 +64,8 @@ public class SurveyResultLocalServiceImpl
 	{ 
 		double res = 0;
 		
-		DynamicQuery query = DynamicQueryFactoryUtil.forClass(SurveyResult.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(SurveyResult.class, classLoader)
 				.add(PropertyFactoryUtil.forName("questionId").eq(new Long(questionId)))
 				.add(PropertyFactoryUtil.forName("answerId").eq(new Long(answerId)))
 				.setProjection(ProjectionFactoryUtil.count("answerId"));
@@ -82,7 +86,8 @@ public class SurveyResultLocalServiceImpl
 	{ 
 		long res = new Long(0);
 
-		DynamicQuery query = DynamicQueryFactoryUtil.forClass(SurveyResult.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery query = DynamicQueryFactoryUtil.forClass(SurveyResult.class, classLoader)
 				.add(PropertyFactoryUtil.forName("questionId").eq(new Long(questionId)))
 				.setProjection(ProjectionFactoryUtil.count("questionId"));
 		

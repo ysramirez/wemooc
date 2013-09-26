@@ -22,27 +22,23 @@ import java.util.Locale;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
-import com.liferay.lms.model.ModuleResult;
-import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.model.Module;
+import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
-import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.base.ModuleResultLocalServiceBaseImpl;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
-import com.liferay.portal.service.UserGroupLocalServiceUtil;
-import com.liferay.portal.service.UserGroupServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.GroupUtil;
 
@@ -83,10 +79,11 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 	 * @throws SystemException
 	 */
 	public List<ModuleResult> getListModuleResultByModuleAndUser(long moduleId, long userId) throws SystemException {
-		
+				
 		List<ModuleResult> res = new ArrayList<ModuleResult>();
 		
-		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(ModuleResult.class)
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(ModuleResult.class, classLoader)
 				.add(PropertyFactoryUtil.forName("moduleId").eq(moduleId))
 				.add(PropertyFactoryUtil.forName("userId").eq(userId));
 	

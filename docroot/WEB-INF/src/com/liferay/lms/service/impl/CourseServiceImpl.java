@@ -21,26 +21,33 @@ import java.util.List;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.CourseLocalServiceUtil;
+import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.DuplicateGroupException;
+import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.social.model.SocialRelationConstants;
 import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
 
@@ -71,10 +78,50 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		
 	
 	}
+	
 	@JSONWebService
 	public Course createCourse(String name)
 	{
-		return null;
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		
+		Course course = null;
+		
+		try {
+			if (CourseLocalServiceUtil.existsCourseName(serviceContext.getCompanyId(), null, name)) {
+				throw new DuplicateGroupException(LanguageUtil.get(LocaleUtil.getDefault(), "title-repeated"));
+			}
+			
+			String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(serviceContext.getCompanyId()).getLmsTemplates().split(",");
+			Date now = new Date();
+			long guestId = GroupLocalServiceUtil.getGroup(serviceContext.getCompanyId(), GroupConstants.GUEST).getGroupId();
+			List<Long> assetCategoryIds = new ArrayList<Long>();
+									
+			User user = getUser();
+			serviceContext.setUserId(user.getUserId());
+			serviceContext.setScopeGroupId(user.getGroupId());
+			
+			serviceContext.setLanguageId(LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
+			
+			serviceContext.setAssetCategoryIds(ArrayUtil.toArray(assetCategoryIds.toArray(new Long[assetCategoryIds.size()])));
+			
+			
+			course = CourseLocalServiceUtil.addCourse(
+					name, StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
+					LocaleUtil.getDefault(), now, now, now,Long.parseLong(lspist[0]),
+					serviceContext);
+			course.setCourseEvalId(1); // EvaluationAvgCourseEval.getTypeId();
+			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
+					serviceContext);
+			
+			course.setGroupId(guestId);
+			CourseLocalServiceUtil.updateCourse(course);
+			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
+			assetEntry.setGroupId(guestId);
+			AssetEntryLocalServiceUtil.updateAssetEntry(assetEntry);
+		} catch (NestableException e) {
+		}
+		
+		return course;
 	}
 	@JSONWebService
 	public java.util.List<String> getCourseStudents(long courseId)
@@ -94,32 +141,88 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	@JSONWebService
 	public void addStudentToCourse(long courseId,String login)
 	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
+		try {
+			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
+			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
+				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
+			}
+			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
+					course.getGroupCreatedId(), RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER).getRoleId());
+		} catch (NestableException e) {
+		} 
 	}
 	@JSONWebService
 	public void addTeacherToCourse(long courseId,String login)
 	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
+		try {
+			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
+			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
+				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
+			}
+			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
+					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
+		} catch (NestableException e) {
+		} 	
 	}
 	@JSONWebService
 	public void addEditorToCourse(long courseId,String login)
 	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
+		try {
+			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
+			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
+				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
+			}
+			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
+					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
+		} catch (NestableException e) {
+		}
 	}
 	@JSONWebService
 	public void removeStudentFromCourse(long courseId,String login)
 	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
+		try {
+			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
+			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			GroupLocalServiceUtil.unsetUserGroups(user.getUserId(),new long[] { course.getGroupCreatedId() });
+		} catch (NestableException e) {
+		}
 	}
 	@JSONWebService
 	public void removeTeacherFromCourse(long courseId,String login)
 	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
+		try {
+			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
+			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(new long[] { user.getUserId() },
+					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
+		} catch (NestableException e) {
+		}
 	}
 	@JSONWebService
 	public void removeEditorFromCourse(long courseId,String login)
 	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
+		try {
+			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
+			Course course = CourseLocalServiceUtil.getCourse(courseId);
+			UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(new long[] { user.getUserId() },
+					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
+		} catch (NestableException e) {
+		} 
 	}
 	@JSONWebService
 	public long getUserResult(long courseId,String login)
