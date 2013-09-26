@@ -404,7 +404,7 @@
 							
 								window.<portlet:namespace />confirmDialog = new A.Dialog(
 								    {
-								        title: '<liferay-ui:message key="execactivity.confirm"/>',
+								        title: '<liferay-ui:message key="execactivity.confirm.title"/>',
 								        bodyContent: content,
 								        buttons: [
 								                  {
