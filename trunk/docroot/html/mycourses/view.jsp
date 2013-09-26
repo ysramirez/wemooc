@@ -60,6 +60,8 @@ for(Group groupCourse:groups)
 	{
 	long passed=ModuleLocalServiceUtil.modulesUserPassed(groupCourse.getGroupId(),themeDisplay.getUserId());
 	long modulescount=ModuleLocalServiceUtil.countByGroupId(groupCourse.getGroupId());
+	Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+
 	if(modulescount>0)
 	{
 		%>
@@ -70,11 +72,11 @@ for(Group groupCourse:groups)
 			long logoId = groupCourse.getPublicLayoutSet().getLogoId();
 			%>
 			<img src="/image/layout_set_logo?img_id=<%=logoId%>">
-			<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+			<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
 			<%
 		} else {
 			%>
-			<a class="course-no-image" href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+			<a class="course-no-image" href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
 		<% }
 				
 		%>

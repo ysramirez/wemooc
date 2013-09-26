@@ -66,7 +66,10 @@ String path=renderer.render(renderRequest,renderResponse,AssetRenderer.TEMPLATE_
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 <liferay-util:include page="<%= path %>" portletId="<%= rendererFactory.getPortletId() %>" />
 <div class="asset-more">
-<a href="/web/<%=course.getFriendlyURL()%>" ><liferay-ui:message key="searchresults.seecoursecard" /></a>
+<% 
+Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+%>
+<a href="/web/<%=groupsel.getFriendlyURL()%>" ><liferay-ui:message key="searchresults.seecoursecard" /></a>
 </div>
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>

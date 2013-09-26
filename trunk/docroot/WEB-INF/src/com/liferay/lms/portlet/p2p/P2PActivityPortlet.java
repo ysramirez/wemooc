@@ -547,7 +547,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
-				courseFriendlyUrl = portalUrl + pathPublic + course.getFriendlyURL();
+				courseFriendlyUrl = portalUrl + pathPublic + group.getFriendlyURL();
 				courseTitle = course.getTitle(Locale.getDefault());
 			}
 							
@@ -635,7 +635,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
-				courseFriendlyUrl = portalUrl + pathPublic + course.getFriendlyURL();
+				courseFriendlyUrl = portalUrl + pathPublic + group.getFriendlyURL();
 				courseTitle = course.getTitle(Locale.getDefault());
 			}
 			
