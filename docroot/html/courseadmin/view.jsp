@@ -101,6 +101,7 @@ url='<%= newactivityURL %>'
 <%
 }
 %>
+<liferay-ui:success key="courseadmin.clone.confirmation.success" message="courseadmin.clone.confirmation.success" />
 <liferay-ui:error ></liferay-ui:error>
 <liferay-ui:search-container emptyResultsMessage="there-are-no-courses" delta="10">
 	<liferay-ui:search-container-results>
