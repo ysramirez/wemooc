@@ -56,6 +56,10 @@ public class SortableQuestionType extends BaseQuestionType {
 		return LanguageUtil.get(locale, "sortable.description");
 	}
 	
+	public String getAnswerEditingAdvise(Locale locale) {
+		return LanguageUtil.get(locale, "sortable.advise");
+	}
+	
 	public String getURLEdit(){
 		return "/html/execactivity/test/admin/editSortableQTAnswers.jsp";
 	}
@@ -140,15 +144,14 @@ public class SortableQuestionType extends BaseQuestionType {
 	}
 	
 	private String getHtml(Document document, long questionId, boolean feedback, ThemeDisplay themeDisplay){
-		String html = "", answersFeedBack="", feedMessage = "", cssclass="question correct";
+		String html = "", answersFeedBack="", feedMessage = "", cssclass="correct";
 		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 
 			List<TestAnswer> answersSelected=new ArrayList<TestAnswer>();
-			if(feedback){
-				answersSelected=getAnswerSelected(document, questionId);
-			}
+			if(feedback) answersSelected=getAnswerSelected(document, questionId);
+
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			List<TestAnswer> tmp = ListUtil.copy(testAnswers);
 			boolean questionCorrect = false;
@@ -161,29 +164,26 @@ public class SortableQuestionType extends BaseQuestionType {
 						"<div class=\"questiontext\">" + question.getText() + "</div>";
 				Collections.shuffle(tmp);
 				html += "<div class=\"question_sortable\"><ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
-				}
+			}
 			String value="";
 			int i=0;
 			while( i < testAnswers.size()){
-				String showCorrectAnswer="false";
+				String showCorrectAnswer="false", correct = "";
 				if(feedback) {
 					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+					if("true".equals(showCorrectAnswer)) correct="font_14 color_cuarto negrita";
 					questionCorrect = answersSelected.get(i).equals(testAnswers.get(i));
-					
-					if(questionCorrect){
-						
-						feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.correct");
-						
-					} else {
-						cssclass="question incorrect";
-						feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect");
-						
-						if(showCorrectAnswer.equals("true")){
-							feedMessage += LanguageUtil.format(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswers.indexOf(answersSelected.get(i))+1)});
+
+					if("true".equals(showCorrectAnswer))
+						if(questionCorrect) feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.correct");
+						else {
+							cssclass="incorrect";
+							feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect") + 						
+									LanguageUtil.format(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswers.indexOf(answersSelected.get(i))+1)});
 						}
-					}
+					
 					answersFeedBack += "<div class=\"answer\">" + answersSelected.get(i).getAnswer() 
-							+ "<div class=\"message "+ cssclass +"\">"+feedMessage+"</div> </div>";
+							+ "<div class=\"message  " + correct + " "+ cssclass +"\">"+feedMessage+"</div> </div>";
 			
 				}
 				else{
@@ -195,7 +195,7 @@ public class SortableQuestionType extends BaseQuestionType {
 				i++;
 			}
 			if(feedback){
-				html += "<div class=\"" + cssclass + "\">" + 
+				html += "<div class=\"question " + cssclass + "\">" + 
 					"<div class=\"questiontext\">" + question.getText() + "</div>" +
 					"<div class=\"content_answer\">" + answersFeedBack + "</div>" +
 				"</div>";
