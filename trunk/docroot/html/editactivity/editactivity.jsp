@@ -60,7 +60,7 @@ else
 String typeName=classTypes.get(typeId);
 LearningActivityType larntype=new LearningActivityTypeRegistry().getLearningActivityType(typeId);
 
-String description="";
+String description="", startCalendarClass="", endCalendarClass="";
 SimpleDateFormat formatDay    = new SimpleDateFormat("dd");
 formatDay.setTimeZone(timeZone);
 SimpleDateFormat formatMonth    = new SimpleDateFormat("MM");
@@ -171,12 +171,16 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 	}
 	
 	var enabledStart = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>startdate-enabledCheckbox').checked;
-	if(enabledStart)  A.all("#startDate").one("#container-calendar-icon").show();
-			    		else  A.all("#startDate").one("#container-calendar-icon").hide();
+	if(enabledStart){
+		A.all("#startDate").one("#container-calendar-icon").show();
+		A.all("#startDate").one("#startDateSpan").removeClass('hide-calendar');
+	}else  A.all("#startDate").one("#container-calendar-icon").hide();
 
 	var enabledEnd = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>stopdate-enabledCheckbox').checked; 
-	if(enabledEnd)  A.all("#endDate").one("#container-calendar-icon").show();
-			    		else A.all("#endDate").one("#container-calendar-icon").hide();
+	if(enabledEnd){
+		A.all("#endDate").one("#container-calendar-icon").show();
+		A.all("#endDate").one("#endDateSpan").removeClass('hide-calendar');
+	}else A.all("#endDate").one("#container-calendar-icon").hide();
 
 	var rules = {			
 			<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
@@ -373,8 +377,13 @@ Liferay.provide(
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startMin"]').set('disabled', !enabled);
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startHour"]').set('disabled', !enabled);
 		    		
-		    		if(enabled) A.all("#startDate").one("#container-calendar-icon").show();
-		    		else A.all("#startDate").one("#container-calendar-icon").hide();
+		    		if(enabled) {
+		    			A.all("#startDate").one("#container-calendar-icon").show();
+		    			A.all("#startDate").one("#startDateSpan").removeClass('hide-calendar');
+		    		}else {
+		    			A.all("#startDate").one("#container-calendar-icon").hide();
+		    			A.all("#startDate").one("#startDateSpan").addClass('hide-calendar');
+		    		}
 
 		    	});
 		    }
@@ -392,8 +401,13 @@ Liferay.provide(
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopMin"]').set('disabled', !enabled);
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopHour"]').set('disabled', !enabled);
 		    		
-		    		if(enabled) A.all("#endDate").one("#container-calendar-icon").show();
-		    		else A.all("#endDate").one("#container-calendar-icon").hide();
+		    		if(enabled) {
+		    			A.all("#endDate").one("#container-calendar-icon").show();
+		    			A.all("#endDate").one("#endDateSpan").removeClass('hide-calendar');
+		    		}else {
+		    			A.all("#endDate").one("#container-calendar-icon").hide();
+		    			A.all("#endDate").one("#endDateSpan").addClass('hide-calendar');
+		    		}
 
 		    	});
 		    }
@@ -402,7 +416,7 @@ Liferay.provide(
 		<div id="startDate">
 			<aui:field-wrapper label="start-date">
 				<aui:input id="<%=renderResponse.getNamespace()+\"startdate-enabled\" %>" name="startdate-enabled" checked="<%=learnact != null && learnact.getStartdate() != null  %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
-				<span class="hide-calendar">
+				<span id="startDateSpan" class="hide-calendar">
 					<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"
 					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
 				</span>
@@ -413,7 +427,7 @@ Liferay.provide(
 		<div id="endDate">
 			<aui:field-wrapper label="end-date">
 				<aui:input id="<%=renderResponse.getNamespace()+\"stopdate-enabled\" %>" name="stopdate-enabled" checked="<%=learnact != null && learnact.getEnddate()!= null  %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
-				<span class="hide-calendar">
+				<span id="endDateSpan" class="hide-calendar">
 					<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012" dayParam="stopDay" monthParam="stopMon" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"
 					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 				</span>

@@ -22,6 +22,15 @@
 <h2><liferay-ui:message key="answers"></liferay-ui:message></h2>
 <h3><liferay-ui:message key="add-answer"></liferay-ui:message></h3>
 
+<%
+	String advise = ParamUtil.getString(request, "advise", "");
+	if(!"".equals(advise)){
+%>
+	<liferay-ui:message key="<%=advise %>"/>
+<%
+	}
+%>
+
 <portlet:actionURL var="addanswerURL" name="addanswer" />
 <aui:form name="afm" action="<%=addanswerURL%>" method="post">
 
@@ -153,8 +162,8 @@ if(totalAnswer>0){
 					   	<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
 					   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 					</div>
-					<aui:input  name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
-					<aui:input type="checkbox" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
+					<aui:input type="hidden" name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
+					<aui:input type="hidden" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
 					<aui:button type="submit" value="modify"></aui:button>
 				</aui:form>
 			</liferay-ui:search-container-column-text>
