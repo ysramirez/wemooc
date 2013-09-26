@@ -109,13 +109,17 @@ url='<%= newactivityURL %>'
 		total = courses.size();
 		pageContext.setAttribute("results", results);
 		pageContext.setAttribute("total", total);
+		
 	%>
 	</liferay-ui:search-container-results>
 
 	<liferay-ui:search-container-row className="com.liferay.lms.model.Course" keyProperty="courseId" modelVar="course">
-	
+	<%
+		
+		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+	%>
 		<liferay-ui:search-container-column-text>
-		<a href="/web/<%=course.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+		<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
 		
 		</liferay-ui:search-container-column-text>
 		

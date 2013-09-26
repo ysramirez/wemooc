@@ -131,8 +131,9 @@ else
 	</aui:input>
 <%
 	String value="";
-	if(courseId!=0){
-		value=course.getFriendlyURL();
+		if(courseId!=0){
+		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+		value=groupsel.getFriendlyURL();
 	}
 %>
 
