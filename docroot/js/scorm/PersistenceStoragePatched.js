@@ -208,7 +208,7 @@ SCORM_1_2.API_LIB.prototype.LMSCommit = function(param) {
 			API_BASE.LOG.displayMessage('LMSCommit with param: \'' + param
 					+ '\'', this.$23, this.$25(this.$23));
 			var $0 = this.$1F.getDataTreeValue('nav.event');
-			if ($0) {
+			if ($0 && $0 != 'exitAll' && $0 != 'exit') {
 				this.LMSFinish('');
 			}
 			return 'true';
@@ -544,7 +544,7 @@ Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
 			this.$C = null;
 			this.$B = null;
 			this.$D = null;
-			if (!typeof update_scorm != 'undefined') {
+			if (typeof update_scorm != 'undefined') {
 				update_scorm(null);
 			}
 			this.hidePlayer(!this.$1);
@@ -685,17 +685,22 @@ Player.ContentPlayer.prototype.adjustPlayer = function() {
 	iFrameID.style.height = "";
 	iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight + 50 : 600) + "px";
 	iframe.style.height = iFrameID.style.height;
-	var iframes = iFrameID.contentWindow.document.getElementsByTagName('frame');
-	for (var i = 0; i < iframes.length; i++) {
-		var ifra = iframes[0];
-		ifra.style.height = ifra.contentWindow.document.body.scrollHeight + "px";
-		
-		if (parseInt(iframe.style.height.replace('px', '')) < parseInt(ifra.style.height.replace('px', ''))) {
-			iFrameID.style.height = "";
-			iFrameID.style.height = ifra.style.height;
-			iframe.style.height = ifra.style.height;
+	/*
+	var frameset = iFrameID.contentWindow.document.getElementsByTagName('frameset');
+	if (frameset != null) {
+		var iframes = iFrameID.contentWindow.document.getElementsByTagName('frame');
+		for (var i = 0; i < iframes.length; i++) {
+			var ifra = iframes[i];
+			ifra.style.height = ifra.contentWindow.document.body.scrollHeight + "px";
+			
+			if (parseInt(iframe.style.height.replace('px', '')) < parseInt(ifra.style.height.replace('px', ''))) {
+				iFrameID.style.height = "";
+				iFrameID.style.height = ifra.style.height;
+				iframe.style.height = ifra.style.height;
+			}
 		}
 	}
+	*/
 };
 
 Player.ContentPlayer.prototype.checkPlayer = function() {
