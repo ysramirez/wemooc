@@ -149,6 +149,23 @@ else if (yearNullable) {
 		function(event) {
 			new A.DatePickerSelect(
 				{
+					after: {
+						render: function(event) {
+							var instance = this;
+
+							<c:if test="<%= dayEmpty %>">
+								instance.get('dayNode').val('-1');
+							</c:if>
+
+							<c:if test="<%= monthEmpty %>">
+								instance.get('monthNode').val('-1');
+							</c:if>
+
+							<c:if test="<%= yearEmpty %>">
+								instance.get('yearNode').val('-1');
+							</c:if>
+						}
+					},
 					appendOrder: '<%= dateFormatOrder %>',
 					boundingBox: displayDateNode,
 					calendar: {
