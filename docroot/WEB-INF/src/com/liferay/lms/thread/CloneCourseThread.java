@@ -110,12 +110,25 @@ public class CloneCourseThread extends Thread {
 	@SuppressWarnings("unchecked")
 	public void cloneCourse() throws Exception {
 		
+		System.out.println("  + groupId: "+groupId);
+		
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 		Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
+		
+		System.out.println("  + course: "+course.getTitle(themeDisplay.getLocale()));
 		
 		Date today=new Date(System.currentTimeMillis());
 
 		long layoutSetPrototypeId = LayoutSetLocalServiceUtil.getLayoutSet(groupId, true).getLayoutSetPrototypeId();
+		
+		try{
+			AssetEntryLocalServiceUtil.validate(course.getGroupCreatedId(), Course.class.getName(), serviceContext.getAssetCategoryIds(), serviceContext.getAssetTagNames());
+			serviceContext.setAssetCategoryIds(AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId()).getCategoryIds());
+			System.out.println("  + AssetCategoryIds: "+AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId()).getCategoryIds().toString());
+		}catch(Exception e){
+			serviceContext.setAssetCategoryIds(new long[]{});
+			//serviceContext.setAssetTagNames(AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId()).getTags());
+		}
 		
 		//Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(), "", themeDisplay.getLocale() , today, startDate, endDate, serviceContext);
 		Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(), "", "", themeDisplay.getLocale(), today, today, today, layoutSetPrototypeId, serviceContext);
@@ -123,6 +136,7 @@ public class CloneCourseThread extends Thread {
 		Group newGroup = GroupLocalServiceUtil.getGroup(newCourse.getGroupCreatedId());
 		serviceContext.setScopeGroupId(newCourse.getGroupCreatedId());
 		
+
 		newCourse.setUserId(themeDisplay.getUserId());
 
 		System.out.println("-----------------------\n  From course: "+  group.getName());
