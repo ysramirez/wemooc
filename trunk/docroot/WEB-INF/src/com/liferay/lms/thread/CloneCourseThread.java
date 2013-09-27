@@ -16,11 +16,13 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
@@ -35,6 +37,7 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
@@ -119,7 +122,27 @@ public class CloneCourseThread extends Thread {
 		
 		Date today=new Date(System.currentTimeMillis());
 
-		long layoutSetPrototypeId = LayoutSetLocalServiceUtil.getLayoutSet(groupId, true).getLayoutSetPrototypeId();
+		long layoutSetPrototypeId=0;
+		LmsPrefs lmsPrefs=LmsPrefsLocalServiceUtil.getLmsPrefsIni(serviceContext.getCompanyId());
+		
+		System.out.println("  + getLmsTemplates: "+lmsPrefs.getLmsTemplates());
+		
+		if(lmsPrefs.getLmsTemplates().contains(",")){
+			String []ids = lmsPrefs.getLmsTemplates().split(",");
+			
+			for(String id:ids){
+				LayoutSetPrototype layout = LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.valueOf(id));
+				layoutSetPrototypeId=Long.valueOf(id);
+				System.out.println("  + layout: "+layout.getDescription());
+				if(layout.getDescription().equals("course")){
+					break;
+				}
+			}
+		}else{
+			layoutSetPrototypeId = LayoutSetLocalServiceUtil.getLayoutSet(groupId, true).getLayoutSetPrototypeId();
+		}
+		
+		System.out.println("  + layoutSetPrototypeId: "+layoutSetPrototypeId);
 		
 		try{
 			AssetEntryLocalServiceUtil.validate(course.getGroupCreatedId(), Course.class.getName(), serviceContext.getAssetCategoryIds(), serviceContext.getAssetTagNames());
