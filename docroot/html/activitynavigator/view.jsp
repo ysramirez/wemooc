@@ -50,9 +50,17 @@
 	}
 	
 	if(ModuleLocalServiceUtil.isUserPassed(moduleId,themeDisplay.getUserId()))
-	{
+	{%>
+		<div id="modulegreetings">
+	<%
+			String titleAct = ModuleLocalServiceUtil.getModule(moduleId).getTitle(themeDisplay.getLocale());
+			if (titleAct.length() > 13){
+				titleAct= StringUtil.shorten(titleAct,13);
+			}
+			titleAct="\""+titleAct+"\"";
 	%>
-		<div id="modulegreetings"><liferay-ui:message key="module-finissed-greetings" /></div>
+			<liferay-ui:message key="module-finissed-greetings" arguments="<%=new Object[]{titleAct} %>" />
+		</div>		
 	<%
 	}
 
