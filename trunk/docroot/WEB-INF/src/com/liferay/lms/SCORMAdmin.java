@@ -44,6 +44,7 @@ import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.asset.service.persistence.AssetEntryUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -150,8 +151,7 @@ public class SCORMAdmin extends MVCPortlet
 			scorm.setCiphered(ciphered);
 			SCORMContentLocalServiceUtil.updateSCORMContent(scorm, serviceContext);
 		}
-//		MultiVMPoolUtil.clear(AssetEntry.class.getName());
-//		MultiVMPoolUtil.clear(SCORMContent.class.getName());
+		AssetEntryUtil.clearCache();
 		if(redirect!=null && !"".equals(redirect))
 		{
 			response.sendRedirect(redirect);

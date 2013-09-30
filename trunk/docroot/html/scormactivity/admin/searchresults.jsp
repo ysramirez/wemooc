@@ -63,7 +63,6 @@ if (keywords.length() > 0) {
 	    
 	}
 } else {
-	AssetEntryUtil.clearCache();
 	
 	AssetEntryQuery query = new AssetEntryQuery();
 	query.setClassName(className);
