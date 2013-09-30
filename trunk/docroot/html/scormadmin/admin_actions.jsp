@@ -10,6 +10,10 @@
 <%@ include file="/init.jsp" %>
 <liferay-ui:icon-menu>
 <%
+SearchContainer<SCORMContent> searchContainer = (SearchContainer<SCORMContent>)request.getAttribute("liferay-ui:search:searchContainer");
+
+String redirect = searchContainer.getIteratorURL().toString();
+
 ResultRow row =
 	(ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
 	 
@@ -20,6 +24,7 @@ String primKey = String.valueOf(myScorm.getScormId());
 %>
 <portlet:actionURL name="deleteSCORM" var="deleteURL">
 <portlet:param name="scormId" value="<%= primKey %>" />
+<portlet:param name="redirect" value="<%= redirect %>"/>
 </portlet:actionURL>
 <%
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  SCORMContent.class.getName(),primKey,ActionKeys.DELETE))
@@ -46,6 +51,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  SCORMConten
 	<portlet:actionURL name="forceSCORM" var="force12URL">
 		<portlet:param name="scormId" value="<%= primKey %>" />
 		<portlet:param name="version" value="1.2" />
+		<portlet:param name="redirect" value="<%= redirect %>"/>
 </portlet:actionURL>
 
 <liferay-ui:icon image="edit" message="scormadmin.force.12" url="<%=force12URL %>" />	
@@ -53,6 +59,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  SCORMConten
 <portlet:actionURL name="forceSCORM" var="force13URL">
 		<portlet:param name="scormId" value="<%= primKey %>" />
 		<portlet:param name="version" value="1.3" />
+		<portlet:param name="redirect" value="<%= redirect %>"/>
 </portlet:actionURL>
 
 <liferay-ui:icon image="edit" message="scormadmin.force.13" url="<%=force13URL %>" />	
