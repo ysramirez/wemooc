@@ -253,9 +253,12 @@ public class LmsActivitiesList extends MVCPortlet {
 			SessionErrors.add(actionRequest, "title-required");
 			return;
 		}
+		/* La descripcion es opcional */
+		/*
 		if (Validator.isNull(HtmlUtil.extractText(description))) {
 			SessionErrors.add(actionRequest, "description-required");
 		}
+		*/
 		if(Validator.equals(moduleId, 0))
 		{
 			SessionErrors.add(actionRequest, "module-required");

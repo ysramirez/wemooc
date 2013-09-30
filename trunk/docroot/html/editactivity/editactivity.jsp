@@ -187,7 +187,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 				required: true
 			},
         	<portlet:namespace />description: {
-        		required: true
+        		required: false
             }
 			<% if(larntype.isTriesConfigurable()) { %>
 			,<portlet:namespace />tries: {

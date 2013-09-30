@@ -40,7 +40,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 				required: true
 			},
         	<portlet:namespace />description: {
-        		required: true
+        		required: false
             }
 		},
         fieldStrings: {			
