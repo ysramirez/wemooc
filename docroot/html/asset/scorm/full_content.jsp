@@ -7,28 +7,13 @@
 
 <%@ include file="/init.jsp" %>
 
-<% SCORMContent scorm=(SCORMContent)request.getAttribute("scorm"); 
+<% SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 
 if (Validator.isNotNull(scorm.getDescription()) && request.getAttribute("learningTry") == null) { %>
 
 <div class="asset-description"><%=scorm.getDescription() %></div>
 
-<% } %>
-
-<script src="/liferaylms-portlet/js/scorm/sscompat.js" type="text/javascript"></script> 
-	<script src="/liferaylms-portlet/js/scorm/sscorlib.js" type="text/javascript"></script>  
-	<script src="/liferaylms-portlet/js/scorm/ssfx.Core.js" type="text/javascript"></script> 
- 
-	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/API_BASE.js"></script>    
-    <script type="text/javascript" src="/liferaylms-portlet/js/scorm/API.js"></script>  
-    <script type="text/javascript" src="/liferaylms-portlet/js/scorm/API_1484_11.js"></script>
-
-    <script type="text/javascript" src="/liferaylms-portlet/js/scorm/Controls.js"></script>        
-	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/LocalStorage.js"></script>
-	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/Player.js"></script>
-	<script type="text/javascript" src="/liferaylms-portlet/js/scorm/PersistenceStoragePatched.js"></script>
-<%
-
+<% } 
 String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
 
 String iconsDir = "/liferaylms-portlet";

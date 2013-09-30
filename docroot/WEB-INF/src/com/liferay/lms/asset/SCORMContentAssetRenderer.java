@@ -2,6 +2,7 @@ package com.liferay.lms.asset;
 
 import java.util.Locale;
 
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -71,7 +72,27 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 			request.setAttribute("scorm", _scorm);
 					if (template.equals(TEMPLATE_FULL_CONTENT)) {
 						request.setAttribute("scorm", _scorm);
-						
+						String [] jss = {
+								"/liferaylms-portlet/js/scorm/sscompat.js",
+								"/liferaylms-portlet/js/scorm/sscorlib.js",
+								"/liferaylms-portlet/js/scorm/ssfx.Core.js",
+							 
+								"/liferaylms-portlet/js/scorm/API_BASE.js",
+							    "/liferaylms-portlet/js/scorm/API.js",
+							    "/liferaylms-portlet/js/scorm/API_1484_11.js",
+
+							    "/liferaylms-portlet/js/scorm/Controls.js",
+								"/liferaylms-portlet/js/scorm/LocalStorage.js",
+								"/liferaylms-portlet/js/scorm/Player.js",
+								"/liferaylms-portlet/js/scorm/PersistenceStoragePatched.js"
+						};
+						for (int i = 0; i < jss.length; i++) {
+							org.w3c.dom.Element jsLink = response.createElement("script");
+							jsLink.setAttribute("type", "text/javascript");
+							jsLink.setAttribute("src", jss[i]);
+							jsLink.setTextContent(" "); // important
+							response.addProperty(MimeResponse.MARKUP_HEAD_ELEMENT, jsLink);
+						}
 						return "/html/asset/scorm/" + template + ".jsp";
 						}
 						else {
