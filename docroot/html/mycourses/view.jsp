@@ -71,8 +71,11 @@ for(Group groupCourse:groups)
 		{
 			long logoId = groupCourse.getPublicLayoutSet().getLogoId();
 			%>
-			<img src="/image/layout_set_logo?img_id=<%=logoId%>">
-			<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+			
+			<a href="/web/<%=groupsel.getFriendlyURL()%>" class="course-title">
+				<img src="/image/layout_set_logo?img_id=<%=logoId%>">
+				<%=course.getTitle(themeDisplay.getLocale()) %>
+			</a>
 			<%
 		} else {
 			%>
