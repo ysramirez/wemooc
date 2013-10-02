@@ -307,9 +307,9 @@ public class FillblankQuestionType extends BaseQuestionType {
 				
 				html += "<div class=\"question" + cssclass + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">" + 
 							"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
-							"<div class=\"questiontext\"><div class=\"answer-fillblank\">" + question.getText() + "</div></div>" +
+							"<div class=\"questiontext\">" + question.getText() + "</div><div class=\"answer-fillblank\">" +
 							answersFeedBack +
-						"</div>";
+						"</div></div>";
 			}
 		} catch (SystemException e) {
 			e.printStackTrace();
