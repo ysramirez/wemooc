@@ -142,7 +142,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 				}
 
 				answersFeedBack += "<div class=\"answer " + correct + "\">" +
-										"<input type=\"" + inputType + "\" name=\""+namespace+"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\" " + disabled + ">" + answer.getAnswer() +
+										"<input type=\"" + inputType + "\" name=\""+namespace+"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\" " + disabled + "><div class=\"answer-options\">" + answer.getAnswer() + "</div>" + 
 									"</div>";
 			}
 
