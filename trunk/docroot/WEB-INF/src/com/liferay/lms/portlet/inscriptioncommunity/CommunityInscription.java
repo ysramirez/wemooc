@@ -7,6 +7,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
 import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
@@ -59,14 +60,23 @@ public class CommunityInscription extends MVCPortlet {
 		String portal = themeDisplay.getCompany().getName();
 		String curso = themeDisplay.getCompany().getGroup().getName();
 		String user = themeDisplay.getUser().getFullName();
-    	String subject = PrefsPropsUtil.getString(themeDisplay.getCompanyId(),"inscriptioncommunity.mail.inscripcion.subject");
-    	String body = PrefsPropsUtil.getString(themeDisplay.getCompanyId(),"inscriptioncommunity.mail.inscripcion.body");
+
+    	String subject = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.subject", new String[]{curso});
+    	String body = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.body", new String[]{curso});	
+    	
     	String url = themeDisplay.getURLPortal();
     	String urlcourse = themeDisplay.getURLPortal()+"/web"+themeDisplay.getCompany().getGroup().getFriendlyURL();
     	
     	if(body!=null &&!body.equals("")){
 	    	
     		body = createMessage(body, portal, curso, user, fromName ,url,urlcourse);
+    		
+			System.out.println("\n--------- CommunityInscription -------------");
+			System.out.println(" from: "+from);
+			System.out.println(" to: "+to + " "+user);
+			System.out.println(" subject: "+subject);
+			System.out.println(" body: \n"+body);
+			System.out.println("----------------------\n\n");
 	    	    	
 			try{
 				MailMessage mailm = new MailMessage(from, to, subject, body, true);
@@ -74,7 +84,10 @@ public class CommunityInscription extends MVCPortlet {
 			}
 			catch(Exception ex)
 			{
+				ex.printStackTrace();
 			}		
+    	}else{
+    		System.out.println(" ERROR: No se ha encontrado el contenido del correo.");
     	}
 	}
 	
