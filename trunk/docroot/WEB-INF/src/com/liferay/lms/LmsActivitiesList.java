@@ -17,6 +17,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletException;
+import javax.portlet.PortletURL;
 import javax.portlet.ProcessEvent;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -48,7 +49,6 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -438,6 +438,13 @@ public class LmsActivitiesList extends MVCPortlet {
 			if(actId==renderActId) {
 				actionResponse.removePublicRenderParameter("actId");				
 			}
+			
+			if(!LiferayWindowState.EXCLUSIVE.equals(actionRequest.getWindowState())){
+				actionResponse.sendRedirect(
+						((LiferayPortletResponse)actionResponse).createRenderURL().toString());
+				
+			}
+
 		}
 	}
 	
