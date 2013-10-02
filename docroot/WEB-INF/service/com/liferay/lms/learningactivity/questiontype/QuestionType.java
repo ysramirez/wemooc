@@ -7,6 +7,7 @@ import javax.portlet.ActionRequest;
 import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -17,6 +18,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.InvokableService;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 
 public interface QuestionType 
@@ -34,8 +36,8 @@ public interface QuestionType
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document);
 	public Element getResults(ActionRequest actionRequest, long questionId);
 	public String getHtmlFeedback(Document document,long questionId);
-	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException;
-	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId) throws SystemException, PortalException;
+	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId, LearningActivity activity) throws PortalException, SystemException;
+	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId, long userId, ServiceContext serviceContext) throws SystemException, PortalException;
 	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException;
 
 }

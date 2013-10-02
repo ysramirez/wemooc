@@ -300,7 +300,7 @@ private void exportEntry(PortletDataContext context, Element root, Module entry)
 			descriptionFileParserDescriptionToLar("<root><Description>"+question.getText()+"</Description></root>", actividad.getGroupId(), actividad.getModuleId(), context, entryElementq);	
 			
 			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-			qt.exportQuestionAnswers(context, entryElementq, question.getQuestionId());
+			qt.exportQuestionAnswers(context, entryElementq, question.getQuestionId(), actividad);
 
 		}
 		
@@ -726,7 +726,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			}
 			
 			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-			qt.importQuestionAnswers(context, qElement, nuevaQuestion.getQuestionId());
+			qt.importQuestionAnswers(context, qElement, nuevaQuestion.getQuestionId(), userId, serviceContext);
 		}
 	}
 	
@@ -801,7 +801,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
     	return newDLFolder;
 	}
 	
-	private long createDLFolders(Long userId,Long repositoryId,ServiceContext serviceContext) throws PortalException, SystemException{
+	public long createDLFolders(Long userId,Long repositoryId,ServiceContext serviceContext) throws PortalException, SystemException{
 		//Variables for folder ids
 		Long dlMainFolderId = 0L;
 		//Search for folder in Document Library
@@ -988,7 +988,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 	
 	}
 	
-	private String descriptionFileParserLarToDescription(String description, FileEntry oldFile, FileEntry newFile){
+	public String descriptionFileParserLarToDescription(String description, FileEntry oldFile, FileEntry newFile){
 		String res = description;
 		
 		//Precondicion
