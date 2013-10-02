@@ -361,9 +361,9 @@ Player.ContentPlayer.prototype.$1D = function() {
 
 Player.ContentPlayer.prototype.toggleScorm = function() {
 	var evt = window.event;
-	var menuA = document.getElementById('open-close-scorm-menu');
 	document.getElementById('treeContainer').style.display = 'block';
 	var A = AUI();
+	var menuA = A.one('#open-close-scorm-menu');
 	A.use('anim', 'anim-easing', function() {
 		var coapagar = new A.Anim(
 	      {
@@ -372,15 +372,14 @@ Player.ContentPlayer.prototype.toggleScorm = function() {
 		        opacity: 0.0
 		    },
 		    duration: 0.3,
-		    //easing:   A.Easing.easeIn
+		    easing:   A.Easing.easeIn
 		  }
 		);
 		var apagar = new A.Anim(
 		  {
 		    node: '#placeholder_treeContainer',
 		    to: {
-		        height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2,
-		        
+		        height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2		        
 		    },
 		    duration: 0.8,
 		    easing:   A.Easing.easeIn,
@@ -406,7 +405,7 @@ Player.ContentPlayer.prototype.toggleScorm = function() {
 		  {
 		    node: '#placeholder_treeContainer',
 		    to: {
-		    	height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11,
+		    	height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11
 		    	
 		    },
 		    duration: 0.5,

@@ -189,6 +189,9 @@
 					'<portlet:namespace />abrirActividad',
 					function(e) {
 						var A = AUI();
+						if (e != null && window.ventana != null && !window.ventana.closed) {
+							window.ventana.close();
+						}
 						window.messageHandler = A.one(window).on('message', 
 							function(event) {
 								var html5Event = event._event;
@@ -224,13 +227,13 @@
 			
 				<p style="display:none" class="activity-message"><liferay-ui:message key="activity.openwindow"></liferay-ui:message></p>
 				
-				<span style="display:none" class="newitem2"><a  class="newitem2" target="_blank" href="<%= scormwindow %>"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<span style="display:none" class="newitem2"><a class="newitem2" onclick="<portlet:namespace />abrirActividad(event)" target="scormactivity" href="javascript:void(0)"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
 			
 			<% } else { %>
 				
 				<p class="activity-message"><liferay-ui:message key="activity.openwindow.passed"></liferay-ui:message></p>
 				
-				<span class="newitem2"><a class="newitem2" target="_blank" href="<%= scormwindow %>"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<span class="newitem2"><a class="newitem2" onclick="<portlet:namespace />abrirActividad(event)" target="scormactivity" href="javascript:void(0)"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
 				<% }
 			} else {
 				request.setAttribute("learningTry", learningTry);
