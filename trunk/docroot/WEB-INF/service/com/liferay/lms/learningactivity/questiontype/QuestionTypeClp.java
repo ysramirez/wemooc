@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
@@ -318,7 +319,7 @@ public class QuestionTypeClp implements QuestionType {
 		return ((String)returnObj);
 	}
 	
-	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId) throws PortalException, SystemException{
+	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId, LearningActivity activity) throws PortalException, SystemException{
 		Object returnObj = null;
 
 		try {
@@ -338,7 +339,7 @@ public class QuestionTypeClp implements QuestionType {
 
 	}
 	
-	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId) throws SystemException, PortalException{
+	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId, long userId, ServiceContext serviceContext) throws SystemException, PortalException{
 		Object returnObj = null;
 
 		try {
