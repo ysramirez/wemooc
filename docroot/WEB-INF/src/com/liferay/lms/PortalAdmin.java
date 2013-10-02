@@ -21,10 +21,16 @@ import com.liferay.lms.service.P2pActivityLocalServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -52,7 +58,7 @@ public class PortalAdmin extends MVCPortlet {
 		List<P2pActivity> p2pActivityList = P2pActivityLocalServiceUtil.getP2pActivities(0, P2pActivityLocalServiceUtil.getP2pActivitiesCount());
 		
 		Calendar start = Calendar.getInstance();
-		System.out.println(" ## START ## "+start.getTime()+" tama�o "+p2pActivityList.size());
+		System.out.println(" ## START ## "+start.getTime()+" tamano "+p2pActivityList.size());
 		
 		for(P2pActivity p2pActivity: p2pActivityList){
 			conta++;
@@ -136,7 +142,7 @@ public class PortalAdmin extends MVCPortlet {
 					}
 					
 					if(updateBD.equals("false")){
-						//Evitar que falle la carga del vídeo.
+						//Evitar que falle la carga del video.
 						videoToUpdate = videoToUpdate.replace("<iframe", "&lt;iframe");
 						videoToUpdate = videoToUpdate.replace("></iframe>", "&gt;&lt;/iframe&gt;");
 						
@@ -157,15 +163,15 @@ public class PortalAdmin extends MVCPortlet {
 					}
 					//Actualizamos en la bd.
 					else if(updateBD.equals("true")){
-						//Borramos lo que había.
+						//Borramos lo que habia.
 						activity.setExtracontent("");
 						LearningActivityLocalServiceUtil.updateLearningActivity(activity);
 						
-						//Añadimos los campos.
+						//Anadimos los campos.
 						LearningActivityLocalServiceUtil.setExtraContentValue(activity.getActId(), "video", HtmlUtil.escape(videoToUpdate));
 						LearningActivityLocalServiceUtil.setExtraContentValue(activity.getActId(), "document", documentToUpdate);
 						
-						todas += "<p>Número: "+ (conta++) +", Activity: "+activity.getTitle(Locale.getDefault())+"<br /> newDocument: " + documentToUpdate+"<br /> newVideo: " + videoToUpdate+"</p>";
+						todas += "<p>Numero: "+ (conta++) +", Activity: "+activity.getTitle(Locale.getDefault())+"<br /> newDocument: " + documentToUpdate+"<br /> newVideo: " + videoToUpdate+"</p>";
 					}
 					
 				} catch (DocumentException e) {
@@ -183,6 +189,82 @@ public class PortalAdmin extends MVCPortlet {
 		
 	}
 	
+	public void updateExtraContentScormActivities (ActionRequest request, ActionResponse response) throws Exception {
+				
+		String updateBD = ParamUtil.getString(request, "updateBD", "false");
+
+		List<LearningActivity> learningActivityList = LearningActivityLocalServiceUtil.getLearningActivities(0, LearningActivityLocalServiceUtil.getLearningActivitiesCount());
+
+		int conta = 1;
+		String todas ="<p>Actualizado en base de datos:</p>", sqlUpdate = "";
+		
+		for(LearningActivity activity: learningActivityList) {
+			
+			//Si es un scorm y tiene etiqueta scorm.
+			if (activity.getTypeId() == 9 && activity.getExtracontent().contains("<scorm>")) {
+				
+				String uuid = LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(), "uuid");
+				String openWindow = LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(), "openWindow");
+				String assetEntry = LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(), "assetEntry");
+				
+				if (Validator.isNull(uuid) && Validator.isNotNull(assetEntry) && Validator.isNumber(assetEntry)) {
+					AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Long.valueOf(assetEntry));
+					AssetRenderer scorm = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
+					uuid = scorm.getUuid();
+					if (Validator.isNotNull(openWindow)) {
+						String key = "lms.scorm.windowable."+entry.getClassName();
+						if (Validator.isNull(key)) {
+							key = "false";
+						}
+						openWindow = PropsUtil.get(key);
+					}
+					
+				}
+				
+				if(updateBD.equals("false")){						
+					//Componemos la consulta para actualizar.
+					String newExtraContent = "<?xml version=\"1.0\" encoding=\"UTF-8\"?> <scorm>";
+					if (Validator.isNotNull(openWindow)) {
+						newExtraContent += "<openWindow>"+openWindow +"<openWindow/>";
+					}
+					if (Validator.isNotNull(uuid)) {
+						newExtraContent += "<uuid>"+uuid +"<uuid/>";
+					}
+					if (Validator.isNotNull(assetEntry)) {
+						newExtraContent += "<assetEntry>"+assetEntry +"</assetEntry>";
+					}
+					newExtraContent += "</scorm>";
+					
+					String updateQuery = "UPDATE lms_learningactivity SET extracontent = '"+newExtraContent+"' WHERE actId = "+activity.getActId()+";<br />";
+					
+					sqlUpdate += HtmlUtil.escape(updateQuery);
+					
+				}
+				//Actualizamos en la bd.
+				else if(updateBD.equals("true")){
+					//Borramos lo que había.
+					activity.setExtracontent("<scorm></scorm>");
+					LearningActivityLocalServiceUtil.updateLearningActivity(activity);
+					
+					//Anadimos los campos.
+					LearningActivityLocalServiceUtil.setExtraContentValue(activity.getActId(), "openWindow", openWindow);
+					LearningActivityLocalServiceUtil.setExtraContentValue(activity.getActId(), "uuid", uuid);
+					LearningActivityLocalServiceUtil.setExtraContentValue(activity.getActId(), "assetEntry", assetEntry);
+					
+					todas += "<p>Número: "+ (conta++) +", Activity: "+activity.getTitle(Locale.getDefault())+"<br /> openWindow: " + openWindow+"<br /> uuid: " + uuid+"<br /> assetEntry: " + assetEntry+"</p>";
+				}
+			}
+		}
+		if(updateBD.equals("true")){
+			//System.out.println(todas);
+			response.setRenderParameter("resultados", todas);
+		}else if(updateBD.equals("false")){
+			//System.out.println("-->"+sqlUpdate);
+			response.setRenderParameter("resultados", sqlUpdate);
+		}
+		
+	}
+
 	public static void deleteRepeatedModuleResult(boolean updateBD) throws SystemException{
 
 		int deleted = 0;
@@ -194,7 +276,7 @@ public class PortalAdmin extends MVCPortlet {
 		List<ModuleResult> moduleResultList = ModuleResultLocalServiceUtil.getModuleResults(0, ModuleResultLocalServiceUtil.getModuleResultsCount());
 		
 		Calendar start = Calendar.getInstance();
-		System.out.println(" ## START ## "+start.getTime()+", tama�o "+moduleResultList.size());
+		System.out.println(" ## START ## "+start.getTime()+", tamano "+moduleResultList.size());
 		
 		for(ModuleResult module: moduleResultList){
 			

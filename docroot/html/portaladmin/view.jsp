@@ -36,6 +36,15 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),LearningActivi
 		</aui:form>
 	</div>
 	
+	<portlet:actionURL name="updateExtraContentScormActivities" var="updateExtraContentScormActivitiesURL" />
+	<div class="action">
+		<h4><liferay-ui:message key="portaladmin.scorm.updateextracontent" /></h4>
+		<aui:form action="<%=updateExtraContentScormActivitiesURL %>" method="POST" name="form_mail">
+			<aui:input name="updateBD" label="portaladmin.multimedia.updatebd" type="checkbox"></aui:input>
+			<aui:button type="submit" value="send" label="portaladmin.multimedia.updatebd" class="submit" ></aui:button>
+		</aui:form>
+	</div>
+	
 	<portlet:actionURL name="deleteRepeatedModuleResult" var="deleteRepeatedModuleResultURL" />
 	<div class="action">
 		<h4><liferay-ui:message key="portaladmin.multimedia.deleteRepeatedModuleResult" /></h4>

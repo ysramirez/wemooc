@@ -122,8 +122,7 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		}
 		AssetRenderer scorm = null;
 		if (Validator.isNotNull(assetEntry.getText())) {
-			AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Long.valueOf(assetEntry.getText()));
-			AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
+			AssetEntry entry = AssetEntryLocalServiceUtil.getEntry(Long.valueOf(assetEntry.getText()));		
 			scorm = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 		}
 		uuid = SAXReaderUtil.createElement("uuid");
