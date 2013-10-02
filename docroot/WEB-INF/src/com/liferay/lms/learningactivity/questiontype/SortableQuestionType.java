@@ -157,7 +157,8 @@ public class SortableQuestionType extends BaseQuestionType {
 			boolean questionCorrect = false;
 								
 			if(feedback){ 
-				feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+				//en este caso no existe la pregunta sin contestar
+				//feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
 			}else{
 				html += "<div class=\"question"  + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">"+
 						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+

@@ -31,12 +31,27 @@
 
 <portlet:actionURL var="addanswerURL" name="addanswer" />
 <aui:form name="afm" action="<%=addanswerURL%>" method="post">
-	<aui:input type="textarea" rows="4" name="answer" label="answer"></aui:input>
+	<script type="text/javascript">
+		Liferay.provide(window,'<portlet:namespace />onChangeTextNewAnswer', function(val) {
+	        	var A = AUI();
+				A.one('#<portlet:namespace />answer').set('value',val);
+	        },
+	        ['node']
+	    );
+	</script>
+	<aui:field-wrapper label="answer">
+		<liferay-ui:input-editor name="answer" width="80%" onChangeMethod="onChangeTextNewAnswer" initMethod="initEditorNew" />
+		<script type="text/javascript">
+	        function <portlet:namespace />initEditorNewAnswer() { 
+	            return "<%=JavaScriptUtil.markupToStringLiteral("")%>";
+	        }
+	    </script>
+	</aui:field-wrapper>
 	<div id="<portlet:namespace />answerError" class="<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?"portlet-msg-error":StringPool.BLANK %>">
 	   	<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 	</div>
 	<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
-	<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedback"></aui:input>
+	<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedbackCorrect"></aui:input>
 	<aui:input cssClass="input-comment" name="feedbackNoCorrect" label="feedbackNoCorrect"></aui:input>
 	<aui:input  type="checkbox" name="correct" label="correct"></aui:input>
 	<aui:button type="submit" value="add-more-answers" ></aui:button>
@@ -108,13 +123,31 @@ if(totalAnswer>0){
 				<portlet:actionURL var="editanswerURL" name="editanswer" />
 				<aui:form name="<%=\"afm_\"+testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 					<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
-					<aui:input type="textarea"  rows="4" name="answer" value="<%=testanswer.getAnswer() %>"></aui:input>
+					
+					<script type="text/javascript">
+						Liferay.provide(window, '<portlet:namespace />onChangeTextAnswer_<%=testanswer.getAnswerId() %>', function(val) {
+					        	var A = AUI();
+								A.one('#<portlet:namespace />answer_<%=testanswer.getAnswerId() %>').set('value',val);
+					        },
+					        ['node']
+					    );
+					</script>
+					<aui:field-wrapper label="answer">
+						<liferay-ui:input-editor name="<%=\"answer_\"+testanswer.getAnswerId() %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_\"+testanswer.getAnswerId() %>" initMethod="<%=\"initEditorAnswer\"+testanswer.getAnswerId() %>" />
+						<script type="text/javascript">
+					        function <portlet:namespace />initEditorAnswer<%=testanswer.getAnswerId() %>() { 
+					            return "<%=JavaScriptUtil.markupToStringLiteral(testanswer.getAnswer())%>";
+					        }
+					    </script>
+					</aui:field-wrapper>
+				
 					<div id="<portlet:namespace />answerError_<%=Long.toString(testanswer.getAnswerId()) %>" class="<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
 					   														"portlet-msg-error":StringPool.BLANK %>">
 					   	<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
 					   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 					</div>
-					<aui:input  name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
+					
+					<aui:input  name="feedbackCorrect" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
 					<aui:input  name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>"></aui:input>
 					<aui:input type="checkbox" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
 					<aui:button type="submit" value="modify"></aui:button>
