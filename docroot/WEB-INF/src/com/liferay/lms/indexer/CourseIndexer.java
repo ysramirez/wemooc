@@ -88,11 +88,11 @@ public class CourseIndexer extends BaseIndexer {
 			content=content+" "+HtmlUtil.extractText(entry.getDescription(LocaleUtil.getDefault(),true));
 			
 		String contentSinAcentos=content.toLowerCase();
-		contentSinAcentos=contentSinAcentos.replace('ï¿½', 'a');
-		contentSinAcentos=contentSinAcentos.replace('ï¿½', 'e');
-		contentSinAcentos=contentSinAcentos.replace('ï¿½', 'i');
-		contentSinAcentos=contentSinAcentos.replace('ï¿½', 'o');
-		contentSinAcentos=contentSinAcentos.replace('ï¿½', 'u');
+		contentSinAcentos=contentSinAcentos.replace('á', 'a');
+		contentSinAcentos=contentSinAcentos.replace('é', 'e');
+		contentSinAcentos=contentSinAcentos.replace('í', 'i');
+		contentSinAcentos=contentSinAcentos.replace('ó', 'o');
+		contentSinAcentos=contentSinAcentos.replace('ú', 'u');
 		content=content+" "+contentSinAcentos;
 		Date displayDate = assetEntry.getPublishDate();
 
