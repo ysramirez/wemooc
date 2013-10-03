@@ -114,7 +114,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
 		<portlet:param name="jspPage" value="/html/courseadmin/clone.jsp" />
 	</portlet:renderURL>
-	<% //<liferay-ui:icon image="copy" message="courseadmin.adminactions.clone" url="<%=cloneURL " /> %>			
+	<liferay-ui:icon image="copy" message="courseadmin.adminactions.clone" url="<%=cloneURL%>" />			
 </c:if>
 
 </liferay-ui:icon-menu>
