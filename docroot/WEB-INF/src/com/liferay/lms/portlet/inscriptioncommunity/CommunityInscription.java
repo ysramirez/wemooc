@@ -71,7 +71,7 @@ public class CommunityInscription extends MVCPortlet {
 	    	
     		body = createMessage(body, portal, curso, user, fromName ,url,urlcourse);
     		
-			System.out.println("\n--------- CommunityInscription -------------");
+			System.out.println("\n--------- CommunityInscription. Inscription. -------------");
 			System.out.println(" from: "+from);
 			System.out.println(" to: "+to + " "+user);
 			System.out.println(" subject: "+subject);
@@ -124,6 +124,52 @@ public class CommunityInscription extends MVCPortlet {
 		catch (Exception e) {}
 		
 		_log.warn("DESINSCRIBIR: "+userName +" se ha desincrito de la comunidad "+groupName+" el "+hoy.toString());
+		
+    	// Enviar un email al usuario cuando se desinscribe al curso.
+    	
+    	String emailTo = themeDisplay.getUser().getEmailAddress();
+    	String nameTo = themeDisplay.getUser().getFullName();
+    	InternetAddress to = new InternetAddress(emailTo, nameTo);
+    	
+    	String fromName = PrefsPropsUtil.getString(themeDisplay.getCompanyId(),
+				PropsKeys.ADMIN_EMAIL_FROM_NAME);
+		String fromAddress = PrefsPropsUtil.getString(themeDisplay.getCompanyId(),
+				PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+		
+		InternetAddress from = new InternetAddress(fromAddress, fromName);
+		
+		String portal = themeDisplay.getCompany().getName();
+		String curso = themeDisplay.getCompany().getGroup().getName();
+		String user = themeDisplay.getUser().getFullName();
+
+    	String subject = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.unsubscribe.subject", new String[]{curso});
+    	String body = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.unsubscribe.body", new String[]{curso});	
+    	
+    	String url = themeDisplay.getURLPortal();
+    	String urlcourse = themeDisplay.getURLPortal()+"/web"+themeDisplay.getCompany().getGroup().getFriendlyURL();
+    	
+    	if(body!=null &&!body.equals("")){
+	    	
+    		body = createMessage(body, portal, curso, user, fromName ,url,urlcourse);
+    		
+			System.out.println("\n--------- CommunityInscription. Unsubscribe. -------------");
+			System.out.println(" from: "+from);
+			System.out.println(" to: "+to + " "+user);
+			System.out.println(" subject: "+subject);
+			System.out.println(" body: \n"+body);
+			System.out.println("----------------------\n\n");
+	    	    	
+			try{
+				MailMessage mailm = new MailMessage(from, to, subject, body, true);
+				MailServiceUtil.sendEmail(mailm);
+			}
+			catch(Exception ex)
+			{
+				ex.printStackTrace();
+			}		
+    	}else{
+    		System.out.println(" ERROR: No se ha encontrado el contenido del correo.");
+    	}
 				
 	}
 	
