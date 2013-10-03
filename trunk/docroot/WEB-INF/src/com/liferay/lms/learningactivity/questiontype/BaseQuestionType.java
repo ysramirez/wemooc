@@ -134,8 +134,8 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId, long userId, ServiceContext serviceContext) throws SystemException, PortalException{
 		for(Element aElement:entryElement.elements("questionanswer")){
 			String patha = aElement.attributeValue("path");
-			TestAnswer answer=(TestAnswer)context.getZipEntryAsObject(patha);
-			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer.getAnswer(), answer.getFeedbackCorrect(), answer.getFeedbacknocorrect(), answer.isIsCorrect());
+			TestAnswer oldanswer=(TestAnswer)context.getZipEntryAsObject(patha);
+			TestAnswer answer = TestAnswerLocalServiceUtil.addTestAnswer(questionId, oldanswer.getAnswer(), oldanswer.getFeedbackCorrect(), oldanswer.getFeedbacknocorrect(), oldanswer.isIsCorrect());
 			
 			//Si tenemos ficheros en las descripciones de las respuestas.
 			for (Element actElementFile : aElement.elements("descriptionfile")) {
