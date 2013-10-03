@@ -126,7 +126,7 @@ public class CommunityInscription extends MVCPortlet {
 		_log.warn("DESINSCRIBIR: "+userName +" se ha desincrito de la comunidad "+groupName+" el "+hoy.toString());
 		
     	// Enviar un email al usuario cuando se desinscribe al curso.
-    	
+    	/*
     	String emailTo = themeDisplay.getUser().getEmailAddress();
     	String nameTo = themeDisplay.getUser().getFullName();
     	InternetAddress to = new InternetAddress(emailTo, nameTo);
@@ -170,7 +170,7 @@ public class CommunityInscription extends MVCPortlet {
     	}else{
     		System.out.println(" ERROR: No se ha encontrado el contenido del correo.");
     	}
-				
+		*/		
 	}
 	
 	private static Log _log = LogFactoryUtil.getLog(CommunityInscription.class);
