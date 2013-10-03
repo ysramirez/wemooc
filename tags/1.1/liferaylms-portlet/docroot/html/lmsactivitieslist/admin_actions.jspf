@@ -1,0 +1,327 @@
+
+<%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
+<%@page import="com.liferay.portal.util.PortalUtil"%>
+<%@page import="com.liferay.util.portlet.PortletProps"%>
+<%@page import="com.liferay.portal.kernel.util.StringPool"%>
+<%@page import="com.liferay.portal.kernel.language.LanguageUtil"%>
+<%@page import="com.liferay.portal.security.permission.ActionKeys"%>
+<%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.ResourceConstants"%>
+<%@page import="org.hsqldb.result.ResultConstants"%>
+<%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.Role"%>
+<%@page import="com.liferay.portal.model.PortletConstants"%>
+<%@page import="javax.portlet.RenderResponse"%>
+<%@page import="com.liferay.util.JavaScriptUtil"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletRequest"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%
+
+LearningActivity myActivity = activity;
+
+String name = LearningActivity.class.getName();
+String primKey = String.valueOf(myActivity.getActId());
+%>
+
+<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
+ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
+		ActionKeys.DELETE)||permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
+				ActionKeys.PERMISSIONS)%>">
+				
+<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE) %>">
+	<liferay-portlet:actionURL  name="editactivityoptions" var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:param name="resId" value="<%=primKey %>" />
+		<liferay-portlet:param name="resModuleId" value="<%=Long.toString(myActivity.getModuleId()) %>" />
+	</liferay-portlet:actionURL>
+	<%
+	String portletnamespace = renderResponse.getNamespace();
+		
+	StringBuilder editActivityPopup = new StringBuilder("javascript:AUI().use('aui-dialog','aui-dialog-iframe', "+
+			"	function(A){ "+
+			"	new A.Dialog( "+
+			"		{ "+
+			"    		id: 'editlesson', "+ 
+			"			title: '"+LanguageUtil.get(pageContext,"activity.edition")+"', "+
+		    "			destroyOnClose: true, "+
+		    "			width: 750, "+
+		    "			modal:true, "+
+		    "			x:50, "+
+		    "			y:50, "+
+		    "			on: { "+
+			"    			close: function(evt){ "+
+			"					Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"')); ");
+			
+	if(myActivity.getActId()==actId) {	
+		String activityPortletId = HttpUtil.getParameter(
+				learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
+						getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+	
+		if(activityPortletId!=null) {
+			editActivityPopup.append(
+			 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+			 "         			if(activityTitlePortlet!=null) {  "+
+			 "		      			Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+			 "	       			}  ");
+		}
+	}		
+			
+	editActivityPopup.append(
+			"				} "+
+			"			} "+
+			"		} "+
+			"	).plug( "+
+			"		A.Plugin.DialogIframe, "+
+			"		{ "+
+			"			uri: '" + JavaScriptUtil.markupToStringLiteral(editoptionsURL) + "' "+
+			"		} "+
+			"	).render().show(); "+
+			"});");
+
+%>
+	<liferay-ui:icon image="edit" message="edit" url="#" onClick="<%=editActivityPopup.toString() %>" />
+</c:if>
+
+
+<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
+ActionKeys.DELETE) %>">
+
+	<% 
+		if(myActivity.getActId()==actId){ %>
+			<portlet:actionURL name="deleteactivity" var="deleteURL" >
+				<portlet:param name="resId" value="<%=primKey %>" />
+			</portlet:actionURL>
+			<liferay-ui:icon-delete message="delete" url="<%=deleteURL %>" />
+	<%	}
+		else {
+			%>
+				<portlet:actionURL name="deleteactivity" var="deleteAjaxURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+					<portlet:param name="resId" value="<%=primKey %>" />
+				</portlet:actionURL>	
+			<% 
+			   StringBuilder deleteURLJavascript = new StringBuilder(
+				"javascript:if (confirm('"+LanguageUtil.get(pageContext, "are-you-sure-you-want-to-delete-this")+"')) {"+
+						 "		AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
+						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
+						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+						 "          activitiesListPortlet.hide(); "+	
+						 "          A.io.request('"+ deleteAjaxURL.toString() +"', {  "+
+						 "		      dataType : 'html', "+
+						 "            on: {  "+
+						 "             		success: function() {  "+
+						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+		 				 "			             }  ");
+		 				if(myActivity.getActId()==actId) {	
+		 					String activityPortletId = HttpUtil.getParameter(
+		 							learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
+		 									getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+		 				
+		 					if(activityPortletId!=null) {
+		 						deleteURLJavascript.append(
+		 						 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+		 						 "         			if(activityTitlePortlet!=null) {  "+
+		 						 "		      			Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+		 						 "	       			}  ");
+		 					}
+		 				}	 
+		 				deleteURLJavascript.append( 
+		 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
+						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
+						 "                       portletBody.setContent(this.get('responseData')); "+
+						 "                       activitiesListPortlet.show(); "+	
+						 "          			 placeHolder.remove(true); "+	
+						 "             }  "+
+						 "            }  "+
+						 "          });  "+	 
+						 "		}); "+ 
+						 "  }");
+		    %>
+		    	<liferay-ui:icon image="delete" message="delete" url="#" onClick="<%=deleteURLJavascript.toString() %>" />
+		    <%
+	    }
+	%>
+	
+</c:if>
+<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
+ActionKeys.UPDATE) %>">
+<portlet:actionURL name="downactivity" var="downURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+<portlet:param name="resId" value="<%=primKey %>" />
+</portlet:actionURL>
+
+<%
+	String downURLJavascript=
+			"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
+					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
+					 "		    var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+ 
+					 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
+					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+					 " 			activitiesListPortlet.hide(); "+
+					 "          A.io.request('"+ downURL.toString() +"', {  "+
+					 "		      dataType : 'html', "+
+					 "            on: {  "+
+					 "             		success: function() {  "+
+	 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
+					 "                       portletBody.plug(A.Plugin.ParseContent); "+	
+					 "                       portletBody.setContent(this.get('responseData')); "+	
+					 "          			 placeHolder.remove(true); "+	
+					 " 			             activitiesListPortlet.show(); "+
+					 "             }  "+
+					 "            }  "+
+					 "          });  "+	 
+					 "		}); ";
+%>
+
+<liferay-ui:icon image="bottom" url="#" onClick="<%=downURLJavascript %>"/>
+
+<portlet:actionURL name="upactivity" var="upURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+<portlet:param name="resId" value="<%=primKey %>" />
+</portlet:actionURL>
+
+<%
+	String upURLJavascript=
+			"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
+					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
+					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+					 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
+					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+					 "          activitiesListPortlet.hide(); "+	
+					 "          A.io.request('"+ upURL.toString() +"', {  "+
+					 "		      dataType : 'html', "+
+					 "            on: {  "+
+					 "             		success: function() {  "+
+					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+	 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+	 				 "			             }  "+	
+	 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
+					 "                       portletBody.plug(A.Plugin.ParseContent); "+	
+					 "                       portletBody.setContent(this.get('responseData')); "+	
+					 "                       activitiesListPortlet.show(); "+	
+					 "          			 placeHolder.remove(true); "+	
+					 "             }  "+
+					 "            }  "+
+					 "          });  "+	 
+					 "		}); ";
+%>
+
+<liferay-ui:icon image="top" url="#" onClick="<%=upURLJavascript %>"/>
+
+</c:if>
+
+<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
+ActionKeys.PERMISSIONS) %>">
+				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
+				<liferay-security:permissionsURL
+					modelResource="<%=LearningActivity.class.getName() %>"
+					modelResourceDescription="<%= myActivity.getTitle(themeDisplay.getLocale()) %>"
+					resourcePrimKey="<%= String.valueOf(myActivity.getActId()) %>"
+					redirect="<%=redirectURL %>"
+					var="permissionsURL"
+				/>
+				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			
+			</c:if>
+</c:if>
+
+<portlet:actionURL name="changeVisibility" var="visibiltyURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+	<portlet:param name="resId" value="<%=primKey %>" />
+</portlet:actionURL>
+
+<%
+	Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+	boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+	ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+
+	String visibiltyURLJavascript=
+			"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
+					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
+					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+					 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
+					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+					 "          activitiesListPortlet.hide(); "+	
+					 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
+					 "		      dataType : 'html', "+
+					 "            on: {  "+
+					 "             		success: function() {  "+
+					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+	 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+	 				 "			             }  "+	
+	 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
+					 "                       portletBody.plug(A.Plugin.ParseContent); "+	
+					 "                       portletBody.setContent(this.get('responseData')); "+
+					 "                       activitiesListPortlet.show(); "+	
+					 "          			 placeHolder.remove(true); "+	
+					 "             }  "+
+					 "            }  "+
+					 "          });  "+	 
+					 "		}); ";
+%>
+
+<liferay-ui:icon alt="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+
+<!-- Mostrar calificaciones actividad. -->
+
+<%
+boolean visibleCalifications = GetterUtil.getBoolean(PortletProps.get("lms.activitylist.showcalifications"));
+%>
+<c:if test="<%=visibleCalifications %>">
+	<liferay-portlet:actionURL  name="showCalifications" var="showCalificationsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:param name="resId" value="<%=primKey %>" />
+		<liferay-portlet:param name="resModuleId" value="<%=Long.toString(myActivity.getModuleId()) %>" />
+	</liferay-portlet:actionURL>
+	<%
+		
+	StringBuilder showCalificationsPopup = new StringBuilder("javascript:AUI().use('aui-dialog','aui-dialog-iframe', "+
+			"	function(A){ "+
+			"	new A.Dialog( "+
+			"		{ "+
+			"    		id: 'showCalifications', "+ 
+			"			title: '"+LanguageUtil.get(pageContext,"activity.showcalifications.popup")+"', "+
+		    "			destroyOnClose: true, "+
+		    "			width: 750, "+
+		    "			modal:true, "+
+		    "			x:50, "+
+		    "			y:50, "+
+		    "			on: { "+
+			"    			close: function(evt){ "+
+			"					Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"')); ");
+			
+	if(myActivity.getActId()==actId) {	
+		String activityPortletId = HttpUtil.getParameter(
+				learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
+						getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+	
+		if(activityPortletId!=null) {
+			showCalificationsPopup.append(
+			 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
+			 "         			if(activityTitlePortlet!=null) {  "+
+			 "		      			Liferay.Portlet.refresh(activityTitlePortlet);  "+			 
+			 "	       			}  ");
+		}
+	}		
+			
+	showCalificationsPopup.append(
+			"				} "+
+			"			} "+
+			"		} "+
+			"	).plug( "+
+			"		A.Plugin.DialogIframe, "+
+			"		{ "+
+			"			uri: '" + JavaScriptUtil.markupToStringLiteral(showCalificationsURL) + "' "+
+			"		} "+
+			"	).render().show(); "+
+			"});");
+
+%>
+	<liferay-ui:icon alt="<%=(visibleCalifications)?\"activity.visible\":\"activity.invisible\" %>" message="activity.showcalifications"  image="page" url="#" onClick="<%=showCalificationsPopup.toString() %>"/>
+</c:if>
