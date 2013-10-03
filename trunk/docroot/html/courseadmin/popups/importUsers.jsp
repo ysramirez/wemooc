@@ -20,7 +20,7 @@
 		<aui:field-wrapper label="courseadmin.importuserrole.file" helpMessage="courseadmin.importuserrole.file.help" >
 	    	<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" />
 		</aui:field-wrapper>
-	</aui:fieldset>
+	</aui:fieldset> 
 	<aui:button-row>
 		<button name="Save" value="save" onclick="AUI().use(function(A) {
 	    												A.one('#<portlet:namespace />fm').submit();
