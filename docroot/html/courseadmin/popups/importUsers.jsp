@@ -10,7 +10,7 @@
 	<portlet:param name="ajaxAction" value="importUserRole" /> 
 	<portlet:param name="courseId" value="<%=ParamUtil.getString(renderRequest, \"courseId\") %>" /> 
 	<portlet:param name="roleId" value="<%=ParamUtil.getString(renderRequest, \"roleId\") %>" /> 
-	<portlet:param name="jspPage" value="/html/courseadmin/popups/importUsers.jsp" /> 
+	<portlet:param name="jspPage" value="/html/courseadmin/popups/importUsers.jsp" />  
 </portlet:renderURL>
 
 <% if ((!SessionMessages.contains(renderRequest, "courseadmin.importuserrole.csv.saved"))&&(SessionErrors.isEmpty(renderRequest))) { %>
