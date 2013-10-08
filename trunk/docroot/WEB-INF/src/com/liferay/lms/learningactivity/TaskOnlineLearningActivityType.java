@@ -30,7 +30,7 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 
 	public static String PORTLET_ID = 
 			PortalUtil.getJsSafePortletId(
-					"offlinetaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
+					"onlinetaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 	
 	@Override
 	public AssetRenderer getAssetRenderer(LearningActivity larn) {
