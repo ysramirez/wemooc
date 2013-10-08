@@ -35,42 +35,6 @@ for (Object key:props.keySet()) {
 
 %>
 
-<liferay-ui:icon-menu message="add" showWhenSingleIcon="true" >
-<%
-for(String assetType:allowedAssetTypes) {
-	/*String permissionAssetType = "";
-	String resourceAssetType = "";
-if("com.liferay.lms.model.SCORMContent".equals(assetType)) {
-	permissionAssetType = "ADD_SCORM";
-	resourceAssetType = "com.liferay.lms.scormmodel";
-}
-if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), resourceAssetType, themeDisplay.getScopeGroupId(), permissionAssetType)) {*/
-	PortletURL pURL=getAddPortletURL(course.getGroupId(), liferayPortletRequest, liferayPortletResponse, assetType);
-	if(pURL!=null) {
-		AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetType);
-		assetRendererFactory.getURLAdd(liferayPortletRequest, liferayPortletResponse);
-		String addPortletURLString=pURL.toString();
-		Group theGroup = GroupLocalServiceUtil.getGroup(course.getGroupId());
-		addPortletURLString = HttpUtil.addParameter(addPortletURLString, "doAsGroupId", course.getGroupId());
-		addPortletURLString = HttpUtil.addParameter(addPortletURLString, "refererPlid", plid);
-		addPortletURLString = HttpUtil.addParameter(addPortletURLString, "layoutUuid", layout.getUuid());
-		String taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" +
-		liferayPortletResponse.getNamespace() + "editAsset', title: '" + ResourceActionsUtil.getModelResource(locale, assetType) +
-		"', uri:'" + HtmlUtil.escapeURL(addPortletURLString) + "'});";
-		String assettypename=LanguageUtil.get(pageContext, "model.resource." + assetType);	
-		
-		%>
-		<liferay-ui:icon 
-					message="<%= HtmlUtil.escape(assettypename) %>"
-					src="<%= assetRendererFactory.getIconPath(renderRequest) %>"
-					url="<%= addPortletURLString %>"
-				/>
-		<%
-	}
-//}
-}
-%>
-</liferay-ui:icon-menu>
 <liferay-portlet:renderURL var="selectResource">
 	<liferay-portlet:param name="jspPage" value="/html/scormactivity/admin/searchresults.jsp"/>
 </liferay-portlet:renderURL>
