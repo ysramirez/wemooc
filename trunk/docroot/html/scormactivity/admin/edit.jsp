@@ -73,7 +73,7 @@ if(learningActivity!=null){  %>
 				"if ((!!window.postMessage)&&(window.parent != window)) { "+
 				"	AUI().use('json-stringify', function(A){ "+
 				"		parent.postMessage(JSON.stringify({name:'resizeWidthActivity', "+
-		        "							   width:'1000px'}), window.location.origin); "+
+		        "							   width:'1250px'}), window.location.origin); "+
 				"	}); "+
 				"} "+
 		        "})(this);";	
