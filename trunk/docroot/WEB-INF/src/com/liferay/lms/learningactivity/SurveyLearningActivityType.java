@@ -11,7 +11,7 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 
 	public static String PORTLET_ID = 
 			PortalUtil.getJsSafePortletId(
-					"surveyActivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
+					"surveyactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 	
 	@Override
 	public AssetRenderer getAssetRenderer(LearningActivity larn) {
