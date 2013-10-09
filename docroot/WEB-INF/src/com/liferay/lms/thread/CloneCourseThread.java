@@ -633,36 +633,8 @@ public class CloneCourseThread extends Thread {
 
 			DLFolder dlMainFolder = getMainDLFolder(userId, groupId, serviceContext);
 			
-			//System.out.println("     dlMainFolder: "+dlMainFolder.getFolderId()+", userId: "+dlMainFolder.getUserId()+", groupId: "+dlMainFolder.getUserId());
-
-			try {
-				newDLFolder = DLFolderLocalServiceUtil.getFolder(groupId, dlMainFolder.getFolderId(), String.valueOf(actId));
-				return newDLFolder;
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				//System.out.println("No existe el directorio, crearemos uno. "+e.getMessage());
-			}
-
-			if(newDLFolder == null){
-				
-				newDLFolder = DLFolderLocalServiceUtil.addFolder(userId, groupId, dlMainFolder.getRepositoryId(), false, dlMainFolder.getFolderId(), String.valueOf(actId), title, serviceContext);
-	
-				newDLFolder.setGroupId(serviceContext.getScopeGroupId());
-				newDLFolder.setName(String.valueOf(actId));
-				newDLFolder.setDescription(title);
-				newDLFolder.setParentFolderId(dlMainFolder.getFolderId());
-				
-				newDLFolder.setCompanyId(dlMainFolder.getCompanyId());
-				newDLFolder.setUserId(userId);
-				newDLFolder.setUserName(dlMainFolder.getUserName());
-				
-				Date now = new Date();
-				newDLFolder.setCreateDate(now);
-				newDLFolder.setModifiedDate(now);
-				
-				DLFolderLocalServiceUtil.updateDLFolder(newDLFolder);
-
-			}
+			//A partir de ahora, guardamos los ficheros en el "Resource Uploads".
+			return dlMainFolder;
 			
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
