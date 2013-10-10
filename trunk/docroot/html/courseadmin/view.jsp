@@ -86,7 +86,15 @@ else
 {
 	courses=CourseServiceUtil.getCoursesOfGroup(scopeGroupId);
 }
-
+java.util.List<Course> finalCourses=new ArrayList<Course>();
+for(Course course:courses)
+{
+	if(!course.isClosed())
+	{
+		finalCourses.add(course);
+	}
+}
+courses=finalCourses;
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.coursemodel",themeDisplay.getScopeGroupId(),"ADD_COURSE"))
 {
 %>
@@ -100,6 +108,7 @@ url='<%= newactivityURL %>'
 
 
 </div>
+
 <%
 }
 %>

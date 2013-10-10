@@ -31,7 +31,17 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 <%
 }
 %>
-
+<portlet:actionURL name="closeCourse" var="closeURL">
+<portlet:param name="courseId" value="<%= primKey %>" />
+</portlet:actionURL>
+<%
+if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)&& ! myCourse.isClosed())
+{
+%>
+<liferay-ui:icon image="close" message="close" url="<%=closeURL.toString() %>" />
+<%
+}
+%>
 <portlet:actionURL name="deleteCourse" var="deleteURL">
 <portlet:param name="courseId" value="<%= primKey %>" />
 </portlet:actionURL>

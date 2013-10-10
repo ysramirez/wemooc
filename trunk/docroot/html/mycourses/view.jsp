@@ -56,13 +56,13 @@ for(Group groupCourse:groups)
 	
 	
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(groupCourse.getGroupId());
-	if(course!=null)
+	if(course!=null&&!course.isClosed())
 	{
 	long passed=ModuleLocalServiceUtil.modulesUserPassed(groupCourse.getGroupId(),themeDisplay.getUserId());
 	long modulescount=ModuleLocalServiceUtil.countByGroupId(groupCourse.getGroupId());
 	Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 
-	if(modulescount>0)
+	if(modulescount>0 ||permissionChecker.hasPermission(groupCourse.getGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ADD_MODULE"))
 	{
 		%>
 		<div class="course option-more">
