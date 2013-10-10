@@ -1,5 +1,6 @@
 package com.tls.lms.util;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,9 +45,12 @@ public class LiferaylmsUtil {
 	public static List<LearningActivity> getVisibleActivities(ThemeDisplay themeDisplay,
 			List<LearningActivity> res, PermissionChecker permissionChecker)
 			throws PortalException, SystemException {
+		List<LearningActivity> res2 = null;
 		if(res != null && res.size()>0){
+			res2 = new ArrayList<LearningActivity>();
+			res2.addAll(res);
 			Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
-			for(java.util.ListIterator<LearningActivity> itr = res.listIterator(); itr.hasNext();){
+			for(java.util.ListIterator<LearningActivity> itr = res2.listIterator(); itr.hasNext();){
 				LearningActivity activity = itr.next();
 				try {
 					if(!ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
@@ -58,7 +62,7 @@ public class LiferaylmsUtil {
 				}
 			}
 		}
-		return res;
+		return res2;
 	}
 	
 }
