@@ -7,6 +7,25 @@
 			<access>PROPERTY</access>
 		</persistence-unit-defaults>
 	</persistence-unit-metadata>
+	<mapped-superclass class="com.liferay.lms.model.impl.AuditEntryModelImpl">
+		<attributes>
+			<id name="auditId" />
+			<basic name="auditDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="companyId" />
+			<basic name="groupId" />
+			<basic name="userId" />
+			<basic name="classname" />
+			<basic name="action" />
+			<basic name="extradata" />
+			<basic name="classPK" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
 	<mapped-superclass class="com.liferay.lms.model.impl.CheckP2pMailingModelImpl">
 		<attributes>
 			<id name="checkP2pId" />
@@ -48,6 +67,8 @@
 			<basic name="icon" />
 			<basic name="CourseEvalId" />
 			<basic name="CourseExtraData" />
+			<basic name="closed" />
+			<basic name="maxusers" />
 			<transient name="descriptionCurrentLanguageId" />
 			<transient name="descriptionMap" />
 			<transient name="modelAttributes" />
@@ -350,6 +371,10 @@
 			<transient name="primaryKeyObj" />
 		</attributes>
 	</mapped-superclass>
+	<entity class="com.liferay.lms.model.impl.AuditEntryImpl" name="AuditEntry">
+		<table name="Lms_AuditEntry" />
+		<attributes />
+	</entity>
 	<entity class="com.liferay.lms.model.impl.CheckP2pMailingImpl" name="CheckP2pMailing">
 		<table name="Lms_CheckP2pMailing" />
 		<attributes />

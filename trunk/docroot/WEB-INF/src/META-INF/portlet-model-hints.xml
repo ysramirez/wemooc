@@ -1,6 +1,17 @@
 <?xml version="1.0"?>
 
 <model-hints>
+	<model name="com.liferay.lms.model.AuditEntry">
+		<field name="auditId" type="long" />
+		<field name="auditDate" type="Date" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="classname" type="String" />
+		<field name="action" type="String" />
+		<field name="extradata" type="String" />
+		<field name="classPK" type="long" />
+	</model>
 	<model name="com.liferay.lms.model.CheckP2pMailing">
 		<field name="checkP2pId" type="long" />
 		<field name="actId" type="long" />
@@ -32,6 +43,8 @@
 		<field name="CourseExtraData" type="String">
 			<hint name="max-length">500000</hint>
 		</field>
+		<field name="closed" type="boolean" />
+		<field name="maxusers" type="long" />
 	</model>
 	<model name="com.liferay.lms.model.CourseResult">
 		<field name="crId" type="long" />

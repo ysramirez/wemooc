@@ -2,6 +2,7 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-lazy="false" auto-import="false">
+	<import class="com.liferay.lms.model.AuditEntry" />
 	<import class="com.liferay.lms.model.CheckP2pMailing" />
 	<import class="com.liferay.lms.model.Course" />
 	<import class="com.liferay.lms.model.CourseResult" />
@@ -17,6 +18,20 @@
 	<import class="com.liferay.lms.model.SurveyResult" />
 	<import class="com.liferay.lms.model.TestAnswer" />
 	<import class="com.liferay.lms.model.TestQuestion" />
+	<class name="com.liferay.lms.model.impl.AuditEntryImpl" table="Lms_AuditEntry">
+		<cache usage="read-write" />
+		<id name="auditId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="auditDate" type="org.hibernate.type.TimestampType" />
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="classname" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="action" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="extradata" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
 	<class name="com.liferay.lms.model.impl.CheckP2pMailingImpl" table="Lms_CheckP2pMailing">
 		<cache usage="read-write" />
 		<id name="checkP2pId" type="long">
@@ -47,6 +62,8 @@
 		<property name="icon" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="CourseEvalId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="CourseExtraData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="closed" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="maxusers" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CourseResultImpl" table="Lms_CourseResult">
 		<id name="crId" type="long">
