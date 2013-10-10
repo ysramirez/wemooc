@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
@@ -70,7 +71,11 @@ public class LearningActivityLocalServiceImpl
 		LearningActivity larn =
 				learningActivityPersistence.fetchByPrimaryKey(actId);
 			java.util.Date now=new java.util.Date(System.currentTimeMillis());
-			
+			Course course=courseLocalService.getCourseByGroupCreatedId(larn.getGroupId());
+			if(course.isClosed())
+			{
+				return true;
+			}
 			if(larn.getModuleId()>0&&moduleLocalService.isLocked(larn.getModuleId(), userId))
 			{
 				return true;

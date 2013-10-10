@@ -1892,6 +1892,8 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 		FinderCacheUtil.removeCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
 	}
 
+	@BeanReference(type = AuditEntryPersistence.class)
+	protected AuditEntryPersistence auditEntryPersistence;
 	@BeanReference(type = CheckP2pMailingPersistence.class)
 	protected CheckP2pMailingPersistence checkP2pMailingPersistence;
 	@BeanReference(type = CoursePersistence.class)
