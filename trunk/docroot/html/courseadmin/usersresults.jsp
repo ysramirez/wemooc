@@ -1,5 +1,6 @@
 
 
+<%@page import="com.liferay.portal.util.comparator.UserFirstNameComparator"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.CustomSQLParam"%>
 <%@include file="/init.jsp" %>
 <%@page import="com.liferay.lms.model.Course"%>
@@ -97,7 +98,7 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();			
 	
 
-	OrderByComparator obc = null;
+	OrderByComparator obc = new UserFirstNameComparator(true);
 	
 	params.put("notInCourseRole",new CustomSQLParam("WHERE User_.userId NOT IN "+
 	                                                " (SELECT UserGroupRole.userId "+
