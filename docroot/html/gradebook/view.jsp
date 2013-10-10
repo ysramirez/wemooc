@@ -1,3 +1,5 @@
+<%@page import="java.util.Comparator"%>
+<%@page import="java.util.Collections"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
@@ -44,8 +46,17 @@
 									onlyStudents.add(usu);
 						}else
 							onlyStudents.add(themeDisplay.getUser());
+						
+						List<User> orderedUsers = new ArrayList<User>();
+				        orderedUsers.addAll(onlyStudents);
+				        Collections.sort(orderedUsers, new Comparator<User>() {
+				            @Override
+				            public int compare(final User object1, final User object2) {
+				                return object1.getFullName().toLowerCase().compareTo(object2.getFullName().toLowerCase());
+				            }
+				        } );
 					
-						pageContext.setAttribute("results", onlyStudents);
+						pageContext.setAttribute("results", ListUtil.subList(orderedUsers, searchContainer.getStart(), searchContainer.getEnd()));
 					    pageContext.setAttribute("total", onlyStudents.size());
 					%>
 				</liferay-ui:search-container-results>

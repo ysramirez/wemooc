@@ -1,3 +1,5 @@
+<%@page import="java.util.Comparator"%>
+<%@page import="java.util.Collections"%>
 <%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
 <%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryQuery"%>
@@ -106,7 +108,17 @@ url='<%= newactivityURL %>'
 <liferay-ui:search-container emptyResultsMessage="there-are-no-courses" delta="10">
 	<liferay-ui:search-container-results>
 	<%
-		results = ListUtil.subList(courses, searchContainer.getStart(), searchContainer.getEnd());
+	
+		List<Course> orderedCourses = new ArrayList<Course>();
+		orderedCourses.addAll(courses);
+	    Collections.sort(orderedCourses, new Comparator<Course>() {
+	        @Override
+	        public int compare(final Course object1, final Course object2) {
+	            return object1.getTitle().toLowerCase().compareTo(object2.getTitle().toLowerCase());
+	        }
+	    } );
+	
+		results = ListUtil.subList(orderedCourses, searchContainer.getStart(), searchContainer.getEnd());
 		total = courses.size();
 		pageContext.setAttribute("results", results);
 		pageContext.setAttribute("total", total);

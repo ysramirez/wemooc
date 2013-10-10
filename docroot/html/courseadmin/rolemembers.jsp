@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.util.comparator.UserFirstNameComparator"%>
+<%@page import="java.util.Comparator"%>
+<%@page import="java.util.Collections"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.util.JS"%>
 <%@ include file="/init.jsp" %>
@@ -127,7 +130,17 @@ portletURL.setParameter("roleId",Long.toString(roleId));
  delta="10" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
 <liferay-ui:search-container-results>
 <%
-results = ListUtil.subList(users, searchContainer.getStart(),
+
+List<User> orderedUsers = new ArrayList<User>();
+orderedUsers.addAll(users);
+Collections.sort(orderedUsers, new Comparator<User>() {
+    @Override
+    public int compare(final User object1, final User object2) {
+        return object1.getFullName().toLowerCase().compareTo(object2.getFullName().toLowerCase());
+    }
+} );
+
+results = ListUtil.subList(orderedUsers, searchContainer.getStart(),
 searchContainer.getEnd());
 total = users.size();
 pageContext.setAttribute("results", results);

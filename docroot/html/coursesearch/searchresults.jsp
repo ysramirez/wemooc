@@ -1,3 +1,5 @@
+<%@page import="java.util.Comparator"%>
+<%@page import="java.util.Collections"%>
 <%@ include file="/init.jsp" %>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
@@ -46,7 +48,17 @@ if(!"".equals(text))
  delta="20" >
  <liferay-ui:search-container-results>
 <%
-results = ListUtil.subList(courses, searchContainer.getStart(),
+
+List<Course> orderedCourses = new ArrayList<Course>();
+orderedCourses.addAll(courses);
+Collections.sort(orderedCourses, new Comparator<Course>() {
+    @Override
+    public int compare(final Course object1, final Course object2) {
+        return object1.getTitle().toLowerCase().compareTo(object2.getTitle().toLowerCase());
+    }
+} );
+
+results = ListUtil.subList(orderedCourses, searchContainer.getStart(),
 searchContainer.getEnd());
 total = courses.size();
 pageContext.setAttribute("results", results);
