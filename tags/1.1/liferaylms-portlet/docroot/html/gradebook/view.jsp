@@ -1,3 +1,5 @@
+<%@page import="java.util.Comparator"%>
+<%@page import="java.util.Collections"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
@@ -21,6 +23,7 @@
 <liferay-ui:panel-container >
 <%
 	java.util.List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+	if(modules != null){
 	for(Module theModule:modules){
 %>
 		<liferay-ui:panel id="<%=Long.toString(theModule.getModuleId()) %>" title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" collapsible="true" extended="true" defaultState="collapsed">
@@ -44,8 +47,17 @@
 									onlyStudents.add(usu);
 						}else
 							onlyStudents.add(themeDisplay.getUser());
+						
+						List<User> orderedUsers = new ArrayList<User>();
+				        orderedUsers.addAll(onlyStudents);
+				        Collections.sort(orderedUsers, new Comparator<User>() {
+				            @Override
+				            public int compare(final User object1, final User object2) {
+				                return object1.getFullName().toLowerCase().compareTo(object2.getFullName().toLowerCase());
+				            }
+				        } );
 					
-						pageContext.setAttribute("results", onlyStudents);
+						pageContext.setAttribute("results", ListUtil.subList(orderedUsers, searchContainer.getStart(), searchContainer.getEnd()));
 					    pageContext.setAttribute("total", onlyStudents.size());
 					%>
 				</liferay-ui:search-container-results>
@@ -59,6 +71,7 @@
 					</liferay-ui:search-container-column-text>
 					<% 	List<LearningActivity> activities = LearningActivityServiceUtil.getLearningActivitiesOfModule(theModule.getModuleId());
 					activities = LiferaylmsUtil.getVisibleActivities(themeDisplay, activities, permissionChecker);
+					if(activities != null){
 					for(LearningActivity learningActivity: activities){
 						long result=0;
 						String status="not-started";
@@ -196,11 +209,13 @@
 						  		}
 				 			}%>
 						</liferay-ui:search-container-column-text>
-					<%} %>
+					<%}
+					}%>
 				</liferay-ui:search-container-row>
 			 	<liferay-ui:search-iterator />
 			</liferay-ui:search-container>
 
 		</liferay-ui:panel>
-	<%}%>
+	<%}
+	}%>
 </liferay-ui:panel-container>
