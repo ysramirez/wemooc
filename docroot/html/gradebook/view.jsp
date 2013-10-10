@@ -23,6 +23,7 @@
 <liferay-ui:panel-container >
 <%
 	java.util.List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+	if(modules != null){
 	for(Module theModule:modules){
 %>
 		<liferay-ui:panel id="<%=Long.toString(theModule.getModuleId()) %>" title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" collapsible="true" extended="true" defaultState="collapsed">
@@ -70,6 +71,7 @@
 					</liferay-ui:search-container-column-text>
 					<% 	List<LearningActivity> activities = LearningActivityServiceUtil.getLearningActivitiesOfModule(theModule.getModuleId());
 					activities = LiferaylmsUtil.getVisibleActivities(themeDisplay, activities, permissionChecker);
+					if(activities != null){
 					for(LearningActivity learningActivity: activities){
 						long result=0;
 						String status="not-started";
@@ -207,11 +209,13 @@
 						  		}
 				 			}%>
 						</liferay-ui:search-container-column-text>
-					<%} %>
+					<%} 
+					}%>
 				</liferay-ui:search-container-row>
 			 	<liferay-ui:search-iterator />
 			</liferay-ui:search-container>
 
 		</liferay-ui:panel>
-	<%}%>
+	<%}
+	}%>
 </liferay-ui:panel-container>
