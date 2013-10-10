@@ -98,7 +98,22 @@ public class CourseAdmin extends MVCPortlet {
 			CourseLocalServiceUtil.deleteCourse(courseId);
 		}
 	}
+	public void closeCourse(ActionRequest actionRequest,
+			ActionResponse actionResponse) throws Exception {
 
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(
+				Course.class.getName(), actionRequest);
+
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+				.getAttribute(WebKeys.THEME_DISPLAY);
+		String redirect = ParamUtil.getString(actionRequest, "redirect");
+
+		User user = themeDisplay.getUser();
+		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
+		if (courseId > 0) {
+			CourseLocalServiceUtil.closeCourse(courseId);
+		}
+	}
 	public void saveCourse(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
@@ -135,6 +150,7 @@ public class CourseAdmin extends MVCPortlet {
 		int startAMPM = ParamUtil.getInteger(actionRequest, "startAMPM");
 		String summary = ParamUtil.getString(actionRequest, "summary", "");
 		boolean visible = ParamUtil.getBoolean(actionRequest, "visible", false);
+		
 		long courseEvalId=ParamUtil.getLong(actionRequest, "courseEvalId", 0);
 
 		if (friendlyURL.equals("") && !title.equals("")) {
@@ -275,6 +291,7 @@ public class CourseAdmin extends MVCPortlet {
 				return;
 			}
 			course.setCourseEvalId(courseEvalId);
+		
 			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
 					summary, serviceContext);
 			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil
