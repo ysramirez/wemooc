@@ -186,7 +186,7 @@ titleMap.put(
 		descriptionMap.put(
 			LocaleUtil.getDefault(),
 			"Editors can Edit a course.");
-		courseEditor= RoleLocalServiceUtil.addRole(0, companyId, "courseEditor",titleMap, descriptionMap, RoleConstants.TYPE_SITE);
+		courseEditor= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseEditor",titleMap, descriptionMap, RoleConstants.TYPE_SITE);
 		actions= ResourceActionLocalServiceUtil.getResourceActions(Module.class.getName());
 		setRolePermissions(courseEditor,Module.class.getName(),actions);
 		actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.model");
@@ -202,7 +202,7 @@ titleMap.put(
 		descriptionMap.put(
 				LocaleUtil.getDefault(),
 				"Teachers.");
-		courseTeacher= RoleLocalServiceUtil.addRole(0, companyId, "courseTeacher", titleMap, descriptionMap, RoleConstants.TYPE_SITE);
+		courseTeacher= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseTeacher", titleMap, descriptionMap, RoleConstants.TYPE_SITE);
 		actions= ResourceActionLocalServiceUtil.getResourceActions(BlogsEntry.class.getName());
 		for(ResourceAction raction:actions)
 		{
