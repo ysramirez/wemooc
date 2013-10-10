@@ -1,3 +1,6 @@
+<%@page import="com.liferay.lms.auditing.AuditConstants"%>
+<%@page import="com.liferay.lms.learningactivity.ResourceInternalLearningActivityType"%>
+<%@page import="com.liferay.lms.auditing.AuditingLogFactory"%>
 <%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsKeys"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
@@ -61,6 +64,7 @@ else
 	}
 	else
 	{
+		AuditingLogFactory.getAuditLog().audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(),actId, themeDisplay.getUserId(), AuditConstants.view, Long.toString(learnact.getTypeId()));
 		if(!LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 		{
 			ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);

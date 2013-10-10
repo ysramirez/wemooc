@@ -202,8 +202,8 @@ else
 	boolean showInscriptionDate = GetterUtil.getBoolean(renderRequest.getPreferences().getValues("showInscriptionDate", new String[]{StringPool.TRUE})[0],true);
 
 	%>
-
-	
+<liferay-ui:panel-container >
+	<liferay-ui:panel title="lms-inscription-configuration" extended="false">
 	<aui:field-wrapper label="start-inscription-date" cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
 		<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
 				 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
@@ -214,12 +214,16 @@ else
 				 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 		 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time></br>
 	</aui:field-wrapper>
+	</liferay-ui:panel>
+	<liferay-ui:panel title="categorization" extended="false">
 	<liferay-ui:custom-attributes-available className="<%= Course.class.getName() %>">
 		<liferay-ui:custom-attribute-list 
 			className="<%=com.liferay.lms.model.Course.class.getName()%>" classPK="<%=courseId %>" editable="true" label="true"></liferay-ui:custom-attribute-list>
 	</liferay-ui:custom-attributes-available>
 	<aui:input name="tags" type="assetTags" />
 	<aui:input name="categories" type="assetCategories" />
+	</liferay-ui:panel>
+	</liferay-ui:panel-container>
 	<aui:button-row>
 		<aui:button type="submit"></aui:button>							
 		<aui:button onClick="<%=cancel %>" type="cancel" />
