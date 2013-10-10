@@ -286,6 +286,8 @@
         <column name="icon" type="long"></column>
         <column name="CourseEvalId" type="long"></column>
         <column name="CourseExtraData" type="String"></column>
+        <column name="closed" type="boolean"></column>
+        <column name="maxusers" type="long"></column>
  		<order by="asc">
 			<order-column name="courseId" />
 		</order>
@@ -293,8 +295,16 @@
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
 		</finder>
+		<finder name="GroupIdClosed" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="closed" />
+		</finder>
 		<finder name="CompanyId" return-type="Collection">
 			<finder-column name="companyId" />
+		</finder>
+		<finder name="CompanyIdClosed" return-type="Collection">
+			<finder-column name="companyId" />
+			<finder-column name="closed" />
 		</finder>
 		<finder name="GroupCreatedId" return-type="Course">
 			<finder-column name="groupCreatedId" />
@@ -397,7 +407,18 @@
 		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
 		<reference package-path="com.liferay.portlet.ratings"
 			entity="RatingsStats" />
-	</entity>   
+	</entity>
+    <entity name="AuditEntry" local-service="true" remote-service="false">
+    	<column name="auditId" type="long" primary="true" />
+    	<column name="auditDate" type="Date" primary="false" />
+	    <column name="companyId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="classname" type="String" />
+		<column name="action" type="String" />
+		<column name="extradata" type="String" />
+        <column name="classPK" type="long"></column>
+    </entity>   
 	<exceptions>
 		<exception>NoSuchModule</exception>
 	</exceptions>
