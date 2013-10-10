@@ -80,6 +80,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	{
 		return coursePersistence.findByGroupId(groupId);
 	}
+	public java.util.List<Course> getOpenCoursesOfGroup(long groupId) throws SystemException
+	{
+		return coursePersistence.findByGroupId(groupId);
+	}
 	public java.util.List<Course> getCourses(long companyId) throws SystemException
 	{
 		return coursePersistence.findByCompanyId(companyId);
@@ -296,29 +300,13 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			return this.modCourse(course, "", serviceContext);
 		
 			}
-	public Course deleteCourse(Course course) throws SystemException,
+	public Course closeCourse(long courseId) throws SystemException,
 	PortalException {
-	long companyId = course.getCompanyId();
 	
-	//Cambia el titulo y la friendlyurl y desactiva el grupo
-	Group theGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
-	theGroup.setName("desactivado("+course.getGroupCreatedId()+")");
-	theGroup.setFriendlyURL(course.getFriendlyURL()+"_desac");
-	theGroup.setActive(false);
-	GroupLocalServiceUtil.updateGroup(theGroup);
-	Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-			Course.class);
-
-	indexer.delete(course);
-	assetEntryLocalService.deleteEntry(Course.class.getName(),course.getCourseId());
-	resourceLocalService.deleteResource(
-	companyId, Course.class.getName(),
-	ResourceConstants.SCOPE_INDIVIDUAL, course.getPrimaryKey());
-	assetEntryLocalService.deleteEntry(
-			LearningActivity.class.getName(), course.getCourseId());
-	coursePersistence.remove(course);
-	
-	return null;
+		Course course=CourseLocalServiceUtil.getCourse(courseId);
+		course.setClosed(true);
+		coursePersistence.update(course, true);		
+		return course;
 	}
 	
 	public Course deleteCourse (long courseId) throws SystemException,

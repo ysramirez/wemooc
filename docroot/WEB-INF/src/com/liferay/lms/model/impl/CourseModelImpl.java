@@ -89,9 +89,11 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			{ "endDate", Types.TIMESTAMP },
 			{ "icon", Types.BIGINT },
 			{ "CourseEvalId", Types.BIGINT },
-			{ "CourseExtraData", Types.VARCHAR }
+			{ "CourseExtraData", Types.VARCHAR },
+			{ "closed", Types.BOOLEAN },
+			{ "maxusers", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,groupCreatedId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,groupCreatedId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null,closed BOOLEAN,maxusers LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Course";
 	public static final String ORDER_BY_JPQL = " ORDER BY course.courseId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_Course.courseId ASC";
@@ -107,11 +109,12 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.Course"),
 			true);
-	public static long COMPANYID_COLUMN_BITMASK = 1L;
-	public static long GROUPCREATEDID_COLUMN_BITMASK = 2L;
-	public static long GROUPID_COLUMN_BITMASK = 4L;
-	public static long USERID_COLUMN_BITMASK = 8L;
-	public static long UUID_COLUMN_BITMASK = 16L;
+	public static long CLOSED_COLUMN_BITMASK = 1L;
+	public static long COMPANYID_COLUMN_BITMASK = 2L;
+	public static long GROUPCREATEDID_COLUMN_BITMASK = 4L;
+	public static long GROUPID_COLUMN_BITMASK = 8L;
+	public static long USERID_COLUMN_BITMASK = 16L;
+	public static long UUID_COLUMN_BITMASK = 32L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -144,6 +147,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		model.setIcon(soapModel.getIcon());
 		model.setCourseEvalId(soapModel.getCourseEvalId());
 		model.setCourseExtraData(soapModel.getCourseExtraData());
+		model.setClosed(soapModel.getClosed());
+		model.setMaxusers(soapModel.getMaxusers());
 
 		return model;
 	}
@@ -220,6 +225,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		attributes.put("icon", getIcon());
 		attributes.put("CourseEvalId", getCourseEvalId());
 		attributes.put("CourseExtraData", getCourseExtraData());
+		attributes.put("closed", getClosed());
+		attributes.put("maxusers", getMaxusers());
 
 		return attributes;
 	}
@@ -332,6 +339,18 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 		if (CourseExtraData != null) {
 			setCourseExtraData(CourseExtraData);
+		}
+
+		Boolean closed = (Boolean)attributes.get("closed");
+
+		if (closed != null) {
+			setClosed(closed);
+		}
+
+		Long maxusers = (Long)attributes.get("maxusers");
+
+		if (maxusers != null) {
+			setMaxusers(maxusers);
 		}
 	}
 
@@ -739,6 +758,38 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_CourseExtraData = CourseExtraData;
 	}
 
+	public boolean getClosed() {
+		return _closed;
+	}
+
+	public boolean isClosed() {
+		return _closed;
+	}
+
+	public void setClosed(boolean closed) {
+		_columnBitmask |= CLOSED_COLUMN_BITMASK;
+
+		if (!_setOriginalClosed) {
+			_setOriginalClosed = true;
+
+			_originalClosed = _closed;
+		}
+
+		_closed = closed;
+	}
+
+	public boolean getOriginalClosed() {
+		return _originalClosed;
+	}
+
+	public long getMaxusers() {
+		return _maxusers;
+	}
+
+	public void setMaxusers(long maxusers) {
+		_maxusers = maxusers;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -878,6 +929,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		courseImpl.setIcon(getIcon());
 		courseImpl.setCourseEvalId(getCourseEvalId());
 		courseImpl.setCourseExtraData(getCourseExtraData());
+		courseImpl.setClosed(getClosed());
+		courseImpl.setMaxusers(getMaxusers());
 
 		courseImpl.resetOriginalValues();
 
@@ -955,6 +1008,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		courseModelImpl._originalGroupCreatedId = courseModelImpl._groupCreatedId;
 
 		courseModelImpl._setOriginalGroupCreatedId = false;
+
+		courseModelImpl._originalClosed = courseModelImpl._closed;
+
+		courseModelImpl._setOriginalClosed = false;
 
 		courseModelImpl._columnBitmask = 0;
 	}
@@ -1056,12 +1113,16 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			courseCacheModel.CourseExtraData = null;
 		}
 
+		courseCacheModel.closed = getClosed();
+
+		courseCacheModel.maxusers = getMaxusers();
+
 		return courseCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(41);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1099,13 +1160,17 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		sb.append(getCourseEvalId());
 		sb.append(", CourseExtraData=");
 		sb.append(getCourseExtraData());
+		sb.append(", closed=");
+		sb.append(getClosed());
+		sb.append(", maxusers=");
+		sb.append(getMaxusers());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(58);
+		StringBundler sb = new StringBundler(64);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -1183,6 +1248,14 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			"<column><column-name>CourseExtraData</column-name><column-value><![CDATA[");
 		sb.append(getCourseExtraData());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>closed</column-name><column-value><![CDATA[");
+		sb.append(getClosed());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>maxusers</column-name><column-value><![CDATA[");
+		sb.append(getMaxusers());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1224,6 +1297,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	private long _icon;
 	private long _CourseEvalId;
 	private String _CourseExtraData;
+	private boolean _closed;
+	private boolean _originalClosed;
+	private boolean _setOriginalClosed;
+	private long _maxusers;
 	private long _columnBitmask;
 	private Course _escapedModelProxy;
 }

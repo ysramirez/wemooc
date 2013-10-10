@@ -23,85 +23,85 @@ import java.util.Arrays;
  */
 public class LearningActivityResultServiceClpInvoker {
 	public LearningActivityResultServiceClpInvoker() {
-		_methodName96 = "getBeanIdentifier";
+		_methodName100 = "getBeanIdentifier";
 
-		_methodParameterTypes96 = new String[] {  };
+		_methodParameterTypes100 = new String[] {  };
 
-		_methodName97 = "setBeanIdentifier";
+		_methodName101 = "setBeanIdentifier";
 
-		_methodParameterTypes97 = new String[] { "java.lang.String" };
+		_methodParameterTypes101 = new String[] { "java.lang.String" };
 
-		_methodName102 = "getByActId";
+		_methodName106 = "getByActId";
 
-		_methodParameterTypes102 = new String[] { "long" };
+		_methodParameterTypes106 = new String[] { "long" };
 
-		_methodName103 = "getByActIdAndUser";
+		_methodName107 = "getByActIdAndUser";
 
-		_methodParameterTypes103 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes107 = new String[] { "long", "java.lang.String" };
 
-		_methodName104 = "userPassed";
+		_methodName108 = "userPassed";
 
-		_methodParameterTypes104 = new String[] { "long" };
+		_methodParameterTypes108 = new String[] { "long" };
 
-		_methodName105 = "userLoginPassed";
+		_methodName109 = "userLoginPassed";
 
-		_methodParameterTypes105 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes109 = new String[] { "long", "java.lang.String" };
 
-		_methodName106 = "update";
+		_methodName110 = "update";
 
-		_methodParameterTypes106 = new String[] {
+		_methodParameterTypes110 = new String[] {
 				"long", "long", "java.lang.String"
 			};
 
-		_methodName107 = "update";
+		_methodName111 = "update";
 
-		_methodParameterTypes107 = new String[] { "long", "java.lang.String" };
+		_methodParameterTypes111 = new String[] { "long", "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName96.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes96, parameterTypes)) {
+		if (_methodName100.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes100, parameterTypes)) {
 			return LearningActivityResultServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName97.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes97, parameterTypes)) {
+		if (_methodName101.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes101, parameterTypes)) {
 			LearningActivityResultServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName102.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes102, parameterTypes)) {
-			return LearningActivityResultServiceUtil.getByActId(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName103.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes103, parameterTypes)) {
-			return LearningActivityResultServiceUtil.getByActIdAndUser(((Long)arguments[0]).longValue(),
-				(java.lang.String)arguments[1]);
-		}
-
-		if (_methodName104.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes104, parameterTypes)) {
-			return LearningActivityResultServiceUtil.userPassed(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName105.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes105, parameterTypes)) {
-			return LearningActivityResultServiceUtil.userLoginPassed(((Long)arguments[0]).longValue(),
-				(java.lang.String)arguments[1]);
-		}
-
 		if (_methodName106.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes106, parameterTypes)) {
-			return LearningActivityResultServiceUtil.update(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue(), (java.lang.String)arguments[2]);
+			return LearningActivityResultServiceUtil.getByActId(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName107.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes107, parameterTypes)) {
+			return LearningActivityResultServiceUtil.getByActIdAndUser(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName108.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes108, parameterTypes)) {
+			return LearningActivityResultServiceUtil.userPassed(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName109.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes109, parameterTypes)) {
+			return LearningActivityResultServiceUtil.userLoginPassed(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1]);
+		}
+
+		if (_methodName110.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes110, parameterTypes)) {
+			return LearningActivityResultServiceUtil.update(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(), (java.lang.String)arguments[2]);
+		}
+
+		if (_methodName111.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes111, parameterTypes)) {
 			return LearningActivityResultServiceUtil.update(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1]);
 		}
@@ -109,20 +109,20 @@ public class LearningActivityResultServiceClpInvoker {
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName96;
-	private String[] _methodParameterTypes96;
-	private String _methodName97;
-	private String[] _methodParameterTypes97;
-	private String _methodName102;
-	private String[] _methodParameterTypes102;
-	private String _methodName103;
-	private String[] _methodParameterTypes103;
-	private String _methodName104;
-	private String[] _methodParameterTypes104;
-	private String _methodName105;
-	private String[] _methodParameterTypes105;
+	private String _methodName100;
+	private String[] _methodParameterTypes100;
+	private String _methodName101;
+	private String[] _methodParameterTypes101;
 	private String _methodName106;
 	private String[] _methodParameterTypes106;
 	private String _methodName107;
 	private String[] _methodParameterTypes107;
+	private String _methodName108;
+	private String[] _methodParameterTypes108;
+	private String _methodName109;
+	private String[] _methodParameterTypes109;
+	private String _methodName110;
+	private String[] _methodParameterTypes110;
+	private String _methodName111;
+	private String[] _methodParameterTypes111;
 }

@@ -102,114 +102,114 @@ public class ModuleLocalServiceClpInvoker {
 				"com.liferay.lms.model.Module", "boolean"
 			};
 
-		_methodName113 = "getBeanIdentifier";
+		_methodName117 = "getBeanIdentifier";
 
-		_methodParameterTypes113 = new String[] {  };
+		_methodParameterTypes117 = new String[] {  };
 
-		_methodName114 = "setBeanIdentifier";
+		_methodName118 = "setBeanIdentifier";
 
-		_methodParameterTypes114 = new String[] { "java.lang.String" };
+		_methodParameterTypes118 = new String[] { "java.lang.String" };
 
-		_methodName119 = "findAllInUser";
+		_methodName123 = "findAllInUser";
 
-		_methodParameterTypes119 = new String[] { "long" };
+		_methodParameterTypes123 = new String[] { "long" };
 
-		_methodName120 = "findAllInUser";
-
-		_methodParameterTypes120 = new String[] {
-				"long", "com.liferay.portal.kernel.util.OrderByComparator"
-			};
-
-		_methodName121 = "findAllInGroup";
-
-		_methodParameterTypes121 = new String[] { "long" };
-
-		_methodName122 = "findAllInGroup";
-
-		_methodParameterTypes122 = new String[] {
-				"long", "com.liferay.portal.kernel.util.OrderByComparator"
-			};
-
-		_methodName123 = "findAllInUserAndGroup";
-
-		_methodParameterTypes123 = new String[] { "long", "long" };
-
-		_methodName124 = "findAllInUserAndGroup";
+		_methodName124 = "findAllInUser";
 
 		_methodParameterTypes124 = new String[] {
+				"long", "com.liferay.portal.kernel.util.OrderByComparator"
+			};
+
+		_methodName125 = "findAllInGroup";
+
+		_methodParameterTypes125 = new String[] { "long" };
+
+		_methodName126 = "findAllInGroup";
+
+		_methodParameterTypes126 = new String[] {
+				"long", "com.liferay.portal.kernel.util.OrderByComparator"
+			};
+
+		_methodName127 = "findAllInUserAndGroup";
+
+		_methodParameterTypes127 = new String[] { "long", "long" };
+
+		_methodName128 = "findAllInUserAndGroup";
+
+		_methodParameterTypes128 = new String[] {
 				"long", "long",
 				"com.liferay.portal.kernel.util.OrderByComparator"
 			};
 
-		_methodName125 = "getPreviusModule";
-
-		_methodParameterTypes125 = new String[] { "long" };
-
-		_methodName126 = "getPreviusModule";
-
-		_methodParameterTypes126 = new String[] { "com.liferay.lms.model.Module" };
-
-		_methodName127 = "getNextModule";
-
-		_methodParameterTypes127 = new String[] { "long" };
-
-		_methodName128 = "getNextModule";
-
-		_methodParameterTypes128 = new String[] { "com.liferay.lms.model.Module" };
-
-		_methodName129 = "goUpModule";
+		_methodName129 = "getPreviusModule";
 
 		_methodParameterTypes129 = new String[] { "long" };
 
-		_methodName130 = "goDownModule";
+		_methodName130 = "getPreviusModule";
 
-		_methodParameterTypes130 = new String[] { "long" };
+		_methodParameterTypes130 = new String[] { "com.liferay.lms.model.Module" };
 
-		_methodName131 = "addmodule";
+		_methodName131 = "getNextModule";
 
-		_methodParameterTypes131 = new String[] { "com.liferay.lms.model.Module" };
+		_methodParameterTypes131 = new String[] { "long" };
 
-		_methodName132 = "addModule";
+		_methodName132 = "getNextModule";
 
-		_methodParameterTypes132 = new String[] {
+		_methodParameterTypes132 = new String[] { "com.liferay.lms.model.Module" };
+
+		_methodName133 = "goUpModule";
+
+		_methodParameterTypes133 = new String[] { "long" };
+
+		_methodName134 = "goDownModule";
+
+		_methodParameterTypes134 = new String[] { "long" };
+
+		_methodName135 = "addmodule";
+
+		_methodParameterTypes135 = new String[] { "com.liferay.lms.model.Module" };
+
+		_methodName136 = "addModule";
+
+		_methodParameterTypes136 = new String[] {
 				"java.lang.Long", "java.lang.Long", "java.lang.Long",
 				"java.lang.String", "java.lang.String", "java.util.Date",
 				"java.util.Date", "java.lang.Long"
 			};
 
-		_methodName133 = "remove";
+		_methodName137 = "remove";
 
-		_methodParameterTypes133 = new String[] { "com.liferay.lms.model.Module" };
+		_methodParameterTypes137 = new String[] { "com.liferay.lms.model.Module" };
 
-		_methodName134 = "updateModule";
+		_methodName138 = "updateModule";
 
-		_methodParameterTypes134 = new String[] { "com.liferay.lms.model.Module" };
+		_methodParameterTypes138 = new String[] { "com.liferay.lms.model.Module" };
 
-		_methodName135 = "updateModule";
+		_methodName139 = "updateModule";
 
-		_methodParameterTypes135 = new String[] {
+		_methodParameterTypes139 = new String[] {
 				"com.liferay.lms.model.Module", "boolean"
 			};
 
-		_methodName136 = "isUserPassed";
-
-		_methodParameterTypes136 = new String[] { "long", "long" };
-
-		_methodName137 = "isLocked";
-
-		_methodParameterTypes137 = new String[] { "long", "long" };
-
-		_methodName138 = "countByGroupId";
-
-		_methodParameterTypes138 = new String[] { "long" };
-
-		_methodName139 = "usersStarted";
-
-		_methodParameterTypes139 = new String[] { "long" };
-
-		_methodName140 = "modulesUserPassed";
+		_methodName140 = "isUserPassed";
 
 		_methodParameterTypes140 = new String[] { "long", "long" };
+
+		_methodName141 = "isLocked";
+
+		_methodParameterTypes141 = new String[] { "long", "long" };
+
+		_methodName142 = "countByGroupId";
+
+		_methodParameterTypes142 = new String[] { "long" };
+
+		_methodName143 = "usersStarted";
+
+		_methodParameterTypes143 = new String[] { "long" };
+
+		_methodName144 = "modulesUserPassed";
+
+		_methodParameterTypes144 = new String[] { "long", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -307,94 +307,94 @@ public class ModuleLocalServiceClpInvoker {
 				((Boolean)arguments[1]).booleanValue());
 		}
 
-		if (_methodName113.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes113, parameterTypes)) {
+		if (_methodName117.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes117, parameterTypes)) {
 			return ModuleLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName114.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes114, parameterTypes)) {
+		if (_methodName118.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes118, parameterTypes)) {
 			ModuleLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName119.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes119, parameterTypes)) {
-			return ModuleLocalServiceUtil.findAllInUser(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName120.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes120, parameterTypes)) {
-			return ModuleLocalServiceUtil.findAllInUser(((Long)arguments[0]).longValue(),
-				(com.liferay.portal.kernel.util.OrderByComparator)arguments[1]);
-		}
-
-		if (_methodName121.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes121, parameterTypes)) {
-			return ModuleLocalServiceUtil.findAllInGroup(((Long)arguments[0]).longValue());
-		}
-
-		if (_methodName122.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes122, parameterTypes)) {
-			return ModuleLocalServiceUtil.findAllInGroup(((Long)arguments[0]).longValue(),
-				(com.liferay.portal.kernel.util.OrderByComparator)arguments[1]);
-		}
-
 		if (_methodName123.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes123, parameterTypes)) {
-			return ModuleLocalServiceUtil.findAllInUserAndGroup(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
+			return ModuleLocalServiceUtil.findAllInUser(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName124.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes124, parameterTypes)) {
+			return ModuleLocalServiceUtil.findAllInUser(((Long)arguments[0]).longValue(),
+				(com.liferay.portal.kernel.util.OrderByComparator)arguments[1]);
+		}
+
+		if (_methodName125.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes125, parameterTypes)) {
+			return ModuleLocalServiceUtil.findAllInGroup(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName126.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
+			return ModuleLocalServiceUtil.findAllInGroup(((Long)arguments[0]).longValue(),
+				(com.liferay.portal.kernel.util.OrderByComparator)arguments[1]);
+		}
+
+		if (_methodName127.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+			return ModuleLocalServiceUtil.findAllInUserAndGroup(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName128.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
 			return ModuleLocalServiceUtil.findAllInUserAndGroup(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				(com.liferay.portal.kernel.util.OrderByComparator)arguments[2]);
 		}
 
-		if (_methodName125.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes125, parameterTypes)) {
+		if (_methodName129.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
 			return ModuleLocalServiceUtil.getPreviusModule(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName126.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
+		if (_methodName130.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
 			return ModuleLocalServiceUtil.getPreviusModule((com.liferay.lms.model.Module)arguments[0]);
 		}
 
-		if (_methodName127.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+		if (_methodName131.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
 			return ModuleLocalServiceUtil.getNextModule(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName128.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
+		if (_methodName132.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes132, parameterTypes)) {
 			return ModuleLocalServiceUtil.getNextModule((com.liferay.lms.model.Module)arguments[0]);
 		}
 
-		if (_methodName129.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes129, parameterTypes)) {
+		if (_methodName133.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes133, parameterTypes)) {
 			ModuleLocalServiceUtil.goUpModule(((Long)arguments[0]).longValue());
 
 			return null;
 		}
 
-		if (_methodName130.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes130, parameterTypes)) {
+		if (_methodName134.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes134, parameterTypes)) {
 			ModuleLocalServiceUtil.goDownModule(((Long)arguments[0]).longValue());
 
 			return null;
 		}
 
-		if (_methodName131.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
+		if (_methodName135.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes135, parameterTypes)) {
 			return ModuleLocalServiceUtil.addmodule((com.liferay.lms.model.Module)arguments[0]);
 		}
 
-		if (_methodName132.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes132, parameterTypes)) {
+		if (_methodName136.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes136, parameterTypes)) {
 			return ModuleLocalServiceUtil.addModule((java.lang.Long)arguments[0],
 				(java.lang.Long)arguments[1], (java.lang.Long)arguments[2],
 				(java.lang.String)arguments[3], (java.lang.String)arguments[4],
@@ -402,48 +402,48 @@ public class ModuleLocalServiceClpInvoker {
 				(java.lang.Long)arguments[7]);
 		}
 
-		if (_methodName133.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes133, parameterTypes)) {
+		if (_methodName137.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes137, parameterTypes)) {
 			ModuleLocalServiceUtil.remove((com.liferay.lms.model.Module)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName134.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes134, parameterTypes)) {
-			return ModuleLocalServiceUtil.updateModule((com.liferay.lms.model.Module)arguments[0]);
-		}
-
-		if (_methodName135.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes135, parameterTypes)) {
-			return ModuleLocalServiceUtil.updateModule((com.liferay.lms.model.Module)arguments[0],
-				((Boolean)arguments[1]).booleanValue());
-		}
-
-		if (_methodName136.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes136, parameterTypes)) {
-			return ModuleLocalServiceUtil.isUserPassed(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
-		}
-
-		if (_methodName137.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes137, parameterTypes)) {
-			return ModuleLocalServiceUtil.isLocked(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
-		}
-
 		if (_methodName138.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes138, parameterTypes)) {
-			return ModuleLocalServiceUtil.countByGroupId(((Long)arguments[0]).longValue());
+			return ModuleLocalServiceUtil.updateModule((com.liferay.lms.model.Module)arguments[0]);
 		}
 
 		if (_methodName139.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes139, parameterTypes)) {
-			return ModuleLocalServiceUtil.usersStarted(((Long)arguments[0]).longValue());
+			return ModuleLocalServiceUtil.updateModule((com.liferay.lms.model.Module)arguments[0],
+				((Boolean)arguments[1]).booleanValue());
 		}
 
 		if (_methodName140.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes140, parameterTypes)) {
+			return ModuleLocalServiceUtil.isUserPassed(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName141.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes141, parameterTypes)) {
+			return ModuleLocalServiceUtil.isLocked(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
+		if (_methodName142.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes142, parameterTypes)) {
+			return ModuleLocalServiceUtil.countByGroupId(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName143.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes143, parameterTypes)) {
+			return ModuleLocalServiceUtil.usersStarted(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName144.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes144, parameterTypes)) {
 			return ModuleLocalServiceUtil.modulesUserPassed(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
@@ -485,18 +485,10 @@ public class ModuleLocalServiceClpInvoker {
 	private String[] _methodParameterTypes15;
 	private String _methodName16;
 	private String[] _methodParameterTypes16;
-	private String _methodName113;
-	private String[] _methodParameterTypes113;
-	private String _methodName114;
-	private String[] _methodParameterTypes114;
-	private String _methodName119;
-	private String[] _methodParameterTypes119;
-	private String _methodName120;
-	private String[] _methodParameterTypes120;
-	private String _methodName121;
-	private String[] _methodParameterTypes121;
-	private String _methodName122;
-	private String[] _methodParameterTypes122;
+	private String _methodName117;
+	private String[] _methodParameterTypes117;
+	private String _methodName118;
+	private String[] _methodParameterTypes118;
 	private String _methodName123;
 	private String[] _methodParameterTypes123;
 	private String _methodName124;
@@ -533,4 +525,12 @@ public class ModuleLocalServiceClpInvoker {
 	private String[] _methodParameterTypes139;
 	private String _methodName140;
 	private String[] _methodParameterTypes140;
+	private String _methodName141;
+	private String[] _methodParameterTypes141;
+	private String _methodName142;
+	private String[] _methodParameterTypes142;
+	private String _methodName143;
+	private String[] _methodParameterTypes143;
+	private String _methodName144;
+	private String[] _methodParameterTypes144;
 }

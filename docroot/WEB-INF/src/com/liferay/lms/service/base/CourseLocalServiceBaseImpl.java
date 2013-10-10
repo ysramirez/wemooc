@@ -17,6 +17,7 @@ package com.liferay.lms.service.base;
 import com.liferay.counter.service.CounterLocalService;
 
 import com.liferay.lms.model.Course;
+import com.liferay.lms.service.AuditEntryLocalService;
 import com.liferay.lms.service.CheckP2pMailingLocalService;
 import com.liferay.lms.service.CourseLocalService;
 import com.liferay.lms.service.CourseResultLocalService;
@@ -42,6 +43,7 @@ import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerService;
 import com.liferay.lms.service.TestQuestionLocalService;
 import com.liferay.lms.service.TestQuestionService;
+import com.liferay.lms.service.persistence.AuditEntryPersistence;
 import com.liferay.lms.service.persistence.CheckP2pMailingPersistence;
 import com.liferay.lms.service.persistence.CoursePersistence;
 import com.liferay.lms.service.persistence.CourseResultPersistence;
@@ -154,12 +156,10 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 *
 	 * @param course the course
 	 * @return the course that was removed
-	 * @throws PortalException
 	 * @throws SystemException if a system exception occurred
 	 */
 	@Indexable(type = IndexableType.DELETE)
-	public Course deleteCourse(Course course)
-		throws PortalException, SystemException {
+	public Course deleteCourse(Course course) throws SystemException {
 		return coursePersistence.remove(course);
 	}
 
@@ -324,6 +324,44 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 		course.setNew(false);
 
 		return coursePersistence.update(course, merge);
+	}
+
+	/**
+	 * Returns the audit entry local service.
+	 *
+	 * @return the audit entry local service
+	 */
+	public AuditEntryLocalService getAuditEntryLocalService() {
+		return auditEntryLocalService;
+	}
+
+	/**
+	 * Sets the audit entry local service.
+	 *
+	 * @param auditEntryLocalService the audit entry local service
+	 */
+	public void setAuditEntryLocalService(
+		AuditEntryLocalService auditEntryLocalService) {
+		this.auditEntryLocalService = auditEntryLocalService;
+	}
+
+	/**
+	 * Returns the audit entry persistence.
+	 *
+	 * @return the audit entry persistence
+	 */
+	public AuditEntryPersistence getAuditEntryPersistence() {
+		return auditEntryPersistence;
+	}
+
+	/**
+	 * Sets the audit entry persistence.
+	 *
+	 * @param auditEntryPersistence the audit entry persistence
+	 */
+	public void setAuditEntryPersistence(
+		AuditEntryPersistence auditEntryPersistence) {
+		this.auditEntryPersistence = auditEntryPersistence;
 	}
 
 	/**
@@ -1355,6 +1393,10 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 		}
 	}
 
+	@BeanReference(type = AuditEntryLocalService.class)
+	protected AuditEntryLocalService auditEntryLocalService;
+	@BeanReference(type = AuditEntryPersistence.class)
+	protected AuditEntryPersistence auditEntryPersistence;
 	@BeanReference(type = CheckP2pMailingLocalService.class)
 	protected CheckP2pMailingLocalService checkP2pMailingLocalService;
 	@BeanReference(type = CheckP2pMailingPersistence.class)
