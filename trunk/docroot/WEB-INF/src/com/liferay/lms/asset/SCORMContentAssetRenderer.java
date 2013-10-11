@@ -132,14 +132,14 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 					LiferayPortletRequest liferayPortletRequest,
 					LiferayPortletResponse liferayPortletResponse,
 					String noSuchEntryRedirect) throws Exception {
-				if (liferayPortletRequest == null && liferayPortletResponse == null) {
-					return "file://" + SCORMContentLocalServiceUtil.getDirScormPath(_scorm) + "/imsmanifest.xml";
+				if (liferayPortletRequest != null && liferayPortletResponse == null) {
+					return "file://" + SCORMContentLocalServiceUtil.getDirScormzipPath(_scorm) + "/"+_scorm.getUuid()+".zip";
 					//ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 					//return PortalUtil.getPortalURL(serviceContext.getRequest())+"/"+ClpSerializer.getServletContextName()+"/scorm/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/imsmanifest.xml";
 				}
-				if (liferayPortletRequest != null && liferayPortletResponse == null) {
+				if (liferayPortletRequest == null && liferayPortletResponse == null) {
 					ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-					return PortalUtil.getPortalURL(serviceContext.getRequest())+"/"+ClpSerializer.getServletContextName()+"/scorm/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/imsmanifest.xml";
+					return PortalUtil.getPortalURL(serviceContext.getRequest())+"/"+ClpSerializer.getServletContextName()+"/scormzip/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/"+_scorm.getUuid()+".zip?ciphered="+(_scorm.getCiphered() ? "1" : "0");
 				}
 				return null;
 			}

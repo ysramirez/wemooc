@@ -74,11 +74,12 @@ public class SCORMZipFileServerServlet extends HttpServlet {
 		
 		
 		try {
-			Cookie[] cookies = ((HttpServletRequest) request).getCookies();
-			String userId = null;
-			String companyId = null;
-			User user = null;
-			if (cookies != null) {
+			User user = PortalUtil.getUser(request);
+			
+			if (user == null) {
+				String userId = null;
+				String companyId = null;
+				Cookie[] cookies = ((HttpServletRequest) request).getCookies();
 				for (Cookie c : cookies) {
 					if ("COMPANY_ID".equals(c.getName())) {
 						companyId = c.getValue();
