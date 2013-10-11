@@ -73,13 +73,11 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 	*
 	* @param course the course
 	* @return the course that was removed
-	* @throws PortalException
 	* @throws SystemException if a system exception occurred
 	*/
 	public com.liferay.lms.model.Course deleteCourse(
 		com.liferay.lms.model.Course course)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return _courseLocalService.deleteCourse(course);
 	}
 
@@ -285,6 +283,12 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 		return _courseLocalService.getCoursesOfGroup(groupId);
 	}
 
+	public java.util.List<com.liferay.lms.model.Course> getOpenCoursesOfGroup(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _courseLocalService.getOpenCoursesOfGroup(groupId);
+	}
+
 	public java.util.List<com.liferay.lms.model.Course> getCourses(
 		long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -305,13 +309,13 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 		java.lang.String description, java.lang.String summary,
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
-		java.util.Date endDate, long layoutSetPrototypeId,
+		java.util.Date endDate, long layoutSetPrototypeId, int typesite,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _courseLocalService.addCourse(title, description, summary,
 			friendlyURL, locale, createDate, startDate, endDate,
-			layoutSetPrototypeId, serviceContext);
+			layoutSetPrototypeId, typesite, serviceContext);
 	}
 
 	public com.liferay.lms.model.Course addCourse(java.lang.String title,
@@ -357,6 +361,12 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _courseLocalService.modCourse(course, serviceContext);
+	}
+
+	public com.liferay.lms.model.Course closeCourse(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _courseLocalService.closeCourse(courseId);
 	}
 
 	public boolean existsCourseName(long companyId, long classNameId,

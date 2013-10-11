@@ -80,13 +80,11 @@ public class CourseLocalServiceUtil {
 	*
 	* @param course the course
 	* @return the course that was removed
-	* @throws PortalException
 	* @throws SystemException if a system exception occurred
 	*/
 	public static com.liferay.lms.model.Course deleteCourse(
 		com.liferay.lms.model.Course course)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().deleteCourse(course);
 	}
 
@@ -293,6 +291,12 @@ public class CourseLocalServiceUtil {
 		return getService().getCoursesOfGroup(groupId);
 	}
 
+	public static java.util.List<com.liferay.lms.model.Course> getOpenCoursesOfGroup(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getOpenCoursesOfGroup(groupId);
+	}
+
 	public static java.util.List<com.liferay.lms.model.Course> getCourses(
 		long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException {
@@ -315,13 +319,14 @@ public class CourseLocalServiceUtil {
 		java.lang.String summary, java.lang.String friendlyURL,
 		java.util.Locale locale, java.util.Date createDate,
 		java.util.Date startDate, java.util.Date endDate,
-		long layoutSetPrototypeId,
+		long layoutSetPrototypeId, int typesite,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .addCourse(title, description, summary, friendlyURL, locale,
-			createDate, startDate, endDate, layoutSetPrototypeId, serviceContext);
+			createDate, startDate, endDate, layoutSetPrototypeId, typesite,
+			serviceContext);
 	}
 
 	public static com.liferay.lms.model.Course addCourse(
@@ -370,6 +375,12 @@ public class CourseLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().modCourse(course, serviceContext);
+	}
+
+	public static com.liferay.lms.model.Course closeCourse(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().closeCourse(courseId);
 	}
 
 	public static boolean existsCourseName(long companyId, long classNameId,

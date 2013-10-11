@@ -92,6 +92,8 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		attributes.put("icon", getIcon());
 		attributes.put("CourseEvalId", getCourseEvalId());
 		attributes.put("CourseExtraData", getCourseExtraData());
+		attributes.put("closed", getClosed());
+		attributes.put("maxusers", getMaxusers());
 
 		return attributes;
 	}
@@ -204,6 +206,18 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 
 		if (CourseExtraData != null) {
 			setCourseExtraData(CourseExtraData);
+		}
+
+		Boolean closed = (Boolean)attributes.get("closed");
+
+		if (closed != null) {
+			setClosed(closed);
+		}
+
+		Long maxusers = (Long)attributes.get("maxusers");
+
+		if (maxusers != null) {
+			setMaxusers(maxusers);
 		}
 	}
 
@@ -555,6 +569,26 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		_CourseExtraData = CourseExtraData;
 	}
 
+	public boolean getClosed() {
+		return _closed;
+	}
+
+	public boolean isClosed() {
+		return _closed;
+	}
+
+	public void setClosed(boolean closed) {
+		_closed = closed;
+	}
+
+	public long getMaxusers() {
+		return _maxusers;
+	}
+
+	public void setMaxusers(long maxusers) {
+		_maxusers = maxusers;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -688,6 +722,8 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		clone.setIcon(getIcon());
 		clone.setCourseEvalId(getCourseEvalId());
 		clone.setCourseExtraData(getCourseExtraData());
+		clone.setClosed(getClosed());
+		clone.setMaxusers(getMaxusers());
 
 		return clone;
 	}
@@ -744,7 +780,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(41);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -782,13 +818,17 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		sb.append(getCourseEvalId());
 		sb.append(", CourseExtraData=");
 		sb.append(getCourseExtraData());
+		sb.append(", closed=");
+		sb.append(getClosed());
+		sb.append(", maxusers=");
+		sb.append(getMaxusers());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(58);
+		StringBundler sb = new StringBundler(64);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -866,6 +906,14 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 			"<column><column-name>CourseExtraData</column-name><column-value><![CDATA[");
 		sb.append(getCourseExtraData());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>closed</column-name><column-value><![CDATA[");
+		sb.append(getClosed());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>maxusers</column-name><column-value><![CDATA[");
+		sb.append(getMaxusers());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -894,5 +942,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 	private long _icon;
 	private long _CourseEvalId;
 	private String _CourseExtraData;
+	private boolean _closed;
+	private long _maxusers;
 	private BaseModel<?> _courseRemoteModel;
 }

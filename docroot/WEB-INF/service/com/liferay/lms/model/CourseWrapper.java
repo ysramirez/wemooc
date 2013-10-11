@@ -63,6 +63,8 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 		attributes.put("icon", getIcon());
 		attributes.put("CourseEvalId", getCourseEvalId());
 		attributes.put("CourseExtraData", getCourseExtraData());
+		attributes.put("closed", getClosed());
+		attributes.put("maxusers", getMaxusers());
 
 		return attributes;
 	}
@@ -174,6 +176,18 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 
 		if (CourseExtraData != null) {
 			setCourseExtraData(CourseExtraData);
+		}
+
+		Boolean closed = (Boolean)attributes.get("closed");
+
+		if (closed != null) {
+			setClosed(closed);
+		}
+
+		Long maxusers = (Long)attributes.get("maxusers");
+
+		if (maxusers != null) {
+			setMaxusers(maxusers);
 		}
 	}
 
@@ -778,6 +792,51 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 	}
 
 	/**
+	* Returns the closed of this course.
+	*
+	* @return the closed of this course
+	*/
+	public boolean getClosed() {
+		return _course.getClosed();
+	}
+
+	/**
+	* Returns <code>true</code> if this course is closed.
+	*
+	* @return <code>true</code> if this course is closed; <code>false</code> otherwise
+	*/
+	public boolean isClosed() {
+		return _course.isClosed();
+	}
+
+	/**
+	* Sets whether this course is closed.
+	*
+	* @param closed the closed of this course
+	*/
+	public void setClosed(boolean closed) {
+		_course.setClosed(closed);
+	}
+
+	/**
+	* Returns the maxusers of this course.
+	*
+	* @return the maxusers of this course
+	*/
+	public long getMaxusers() {
+		return _course.getMaxusers();
+	}
+
+	/**
+	* Sets the maxusers of this course.
+	*
+	* @param maxusers the maxusers of this course
+	*/
+	public void setMaxusers(long maxusers) {
+		_course.setMaxusers(maxusers);
+	}
+
+	/**
 	* @deprecated Renamed to {@link #isApproved()}
 	*/
 	public boolean getApproved() {
@@ -904,7 +963,7 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 		return new CourseWrapper((Course)_course.clone());
 	}
 
-	public int compareTo(com.liferay.lms.model.Course course) {
+	public int compareTo(Course course) {
 		return _course.compareTo(course);
 	}
 
@@ -913,11 +972,11 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 		return _course.hashCode();
 	}
 
-	public com.liferay.portal.model.CacheModel<com.liferay.lms.model.Course> toCacheModel() {
+	public com.liferay.portal.model.CacheModel<Course> toCacheModel() {
 		return _course.toCacheModel();
 	}
 
-	public com.liferay.lms.model.Course toEscapedModel() {
+	public Course toEscapedModel() {
 		return new CourseWrapper(_course.toEscapedModel());
 	}
 
