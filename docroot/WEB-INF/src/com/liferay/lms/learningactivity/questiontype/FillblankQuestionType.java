@@ -8,6 +8,8 @@ import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 
+import org.jsoup.Jsoup;
+
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
@@ -110,11 +112,12 @@ public class FillblankQuestionType extends BaseQuestionType {
 		Collator c = Collator.getInstance();
 		c.setStrength(Collator.PRIMARY);
 		List<String> sols = getBlankSols(solution, true);
-		for(String sol:sols)
+		for(String sol:sols){
 			if(c.compare(answer,sol)==0) {
 				correct = true;
 				break;
 			}
+		}
 		return correct;
 	}
 
@@ -123,6 +126,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 		if(solution.startsWith("{{")){
 			solution = solution.replace("{{", "");
 			if(solution.contains("}}")) solution = solution.replace("}}", "");
+			solution = Jsoup.parse(solution).text();
 			correctSols.add(solution);
 		}else if(solution.startsWith("{")){
 			boolean isNumerical = false;
