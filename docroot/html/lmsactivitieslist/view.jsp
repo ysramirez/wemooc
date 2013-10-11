@@ -155,7 +155,7 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','
 		renderRequest.setAttribute("moduleId", Long.toString(moduleId));
 		boolean registrado=UserLocalServiceUtil.hasGroupUser(themeDisplay.getScopeGroupId(),themeDisplay.getUserId());
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-		if(course!=null && permissionChecker.hasPermission(course.getGroupCreatedId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW) && !!course.isClosed()){
+		if(course!=null && permissionChecker.hasPermission(course.getGroupCreatedId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW) && !course.isClosed()){
 			java.util.List<Module> theModules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 			Date today=new java.util.Date(System.currentTimeMillis());
 			long currentThemeId=0;
