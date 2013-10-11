@@ -97,7 +97,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return coursePersistence.fetchByGroupCreatedId(groupId);
 	}
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
-			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,ServiceContext serviceContext)
+			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite,ServiceContext serviceContext)
 			throws SystemException, PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long userId=serviceContext.getUserId();
@@ -120,7 +120,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					serviceContext.getAssetTagNames(), true, null, null,new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, course.getTitle(), course.getDescription(locale), summary, null, null, 0, 0,null, false);
 			//creating group
-			Group group = GroupLocalServiceUtil.addGroup( getAdministratorUser(serviceContext.getCompanyId()).getUserId(),null, 0, title,summary,GroupConstants.TYPE_SITE_PRIVATE,friendlyURL,true,true,serviceContext);
+			Group group = GroupLocalServiceUtil.addGroup( getAdministratorUser(serviceContext.getCompanyId()).getUserId(),null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
 			
 			//A�adimos el rol Teacher al usuario que crea el blog
 			long[] usuarios = new long[1];
@@ -152,7 +152,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long layoutSetPrototypeId=Long.valueOf(lmsPrefs.getLmsTemplates());
 		return addCourse (title, description,summary,friendlyURL, locale,
-				createDate,startDate,endDate,layoutSetPrototypeId,
+				createDate,startDate,endDate,layoutSetPrototypeId,GroupConstants.TYPE_SITE_PRIVATE,
 				 serviceContext);
 	}
 	public Course addCourse (String title, String description,String friendlyURL, Locale locale,
@@ -225,7 +225,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		parameterMap.put(
 				PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE,
 				new String[] {PortletDataHandlerKeys.
-					LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE});
+					LAYOUTS_IMPORT_MODE_ADD_AS_NEW});
 		parameterMap.put(
 			PortletDataHandlerKeys.DATA_STRATEGY,
 			new String[] {PortletDataHandlerKeys.DATA_STRATEGY_MIRROR});

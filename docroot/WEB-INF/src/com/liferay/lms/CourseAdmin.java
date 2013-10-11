@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
@@ -227,7 +228,7 @@ public class CourseAdmin extends MVCPortlet {
 		if (courseId == 0) {
 			course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
 					title, description, summary, friendlyURL,
-					themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,
+					themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,GroupConstants.TYPE_SITE_PRIVATE,
 					serviceContext);
 			if(course != null){
 				long[] groupIds = new long[1];
