@@ -14,6 +14,7 @@
 
 package com.liferay.lms.service;
 
+import com.liferay.lms.model.AuditEntryClp;
 import com.liferay.lms.model.CheckP2pMailingClp;
 import com.liferay.lms.model.CourseClp;
 import com.liferay.lms.model.CourseResultClp;
@@ -116,6 +117,10 @@ public class ClpSerializer {
 
 		String oldModelClassName = oldModelClass.getName();
 
+		if (oldModelClassName.equals(AuditEntryClp.class.getName())) {
+			return translateInputAuditEntry(oldModel);
+		}
+
 		if (oldModelClassName.equals(CheckP2pMailingClp.class.getName())) {
 			return translateInputCheckP2pMailing(oldModel);
 		}
@@ -189,6 +194,16 @@ public class ClpSerializer {
 		}
 
 		return newList;
+	}
+
+	public static Object translateInputAuditEntry(BaseModel<?> oldModel) {
+		AuditEntryClp oldClpModel = (AuditEntryClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getAuditEntryRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
 	}
 
 	public static Object translateInputCheckP2pMailing(BaseModel<?> oldModel) {
@@ -362,6 +377,11 @@ public class ClpSerializer {
 		String oldModelClassName = oldModelClass.getName();
 
 		if (oldModelClassName.equals(
+					"com.liferay.lms.model.impl.AuditEntryImpl")) {
+			return translateOutputAuditEntry(oldModel);
+		}
+
+		if (oldModelClassName.equals(
 					"com.liferay.lms.model.impl.CheckP2pMailingImpl")) {
 			return translateOutputCheckP2pMailing(oldModel);
 		}
@@ -517,6 +537,10 @@ public class ClpSerializer {
 			return new com.liferay.lms.NoSuchModuleException();
 		}
 
+		if (className.equals("com.liferay.lms.NoSuchAuditEntryException")) {
+			return new com.liferay.lms.NoSuchAuditEntryException();
+		}
+
 		if (className.equals("com.liferay.lms.NoSuchCheckP2pMailingException")) {
 			return new com.liferay.lms.NoSuchCheckP2pMailingException();
 		}
@@ -581,6 +605,16 @@ public class ClpSerializer {
 		}
 
 		return throwable;
+	}
+
+	public static Object translateOutputAuditEntry(BaseModel<?> oldModel) {
+		AuditEntryClp newModel = new AuditEntryClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setAuditEntryRemoteModel(oldModel);
+
+		return newModel;
 	}
 
 	public static Object translateOutputCheckP2pMailing(BaseModel<?> oldModel) {

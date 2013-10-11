@@ -82,13 +82,11 @@ public interface CourseLocalService extends BaseLocalService,
 	*
 	* @param course the course
 	* @return the course that was removed
-	* @throws PortalException
 	* @throws SystemException if a system exception occurred
 	*/
 	public com.liferay.lms.model.Course deleteCourse(
 		com.liferay.lms.model.Course course)
-		throws com.liferay.portal.kernel.exception.PortalException,
-			com.liferay.portal.kernel.exception.SystemException;
+		throws com.liferay.portal.kernel.exception.SystemException;
 
 	public com.liferay.portal.kernel.dao.orm.DynamicQuery dynamicQuery();
 
@@ -265,6 +263,11 @@ public interface CourseLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.lms.model.Course> getOpenCoursesOfGroup(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.lms.model.Course> getCourses(
 		long companyId)
 		throws com.liferay.portal.kernel.exception.SystemException;
@@ -280,7 +283,7 @@ public interface CourseLocalService extends BaseLocalService,
 		java.lang.String description, java.lang.String summary,
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
-		java.util.Date endDate, long layoutSetPrototypeId,
+		java.util.Date endDate, long layoutSetPrototypeId, int typesite,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
@@ -315,6 +318,10 @@ public interface CourseLocalService extends BaseLocalService,
 	public com.liferay.lms.model.Course modCourse(
 		com.liferay.lms.model.Course course,
 		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.lms.model.Course closeCourse(long courseId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

@@ -523,6 +523,41 @@ public interface CourseModel extends BaseModel<Course>, WorkflowedModel {
 	public void setCourseExtraData(String CourseExtraData);
 
 	/**
+	 * Returns the closed of this course.
+	 *
+	 * @return the closed of this course
+	 */
+	public boolean getClosed();
+
+	/**
+	 * Returns <code>true</code> if this course is closed.
+	 *
+	 * @return <code>true</code> if this course is closed; <code>false</code> otherwise
+	 */
+	public boolean isClosed();
+
+	/**
+	 * Sets whether this course is closed.
+	 *
+	 * @param closed the closed of this course
+	 */
+	public void setClosed(boolean closed);
+
+	/**
+	 * Returns the maxusers of this course.
+	 *
+	 * @return the maxusers of this course
+	 */
+	public long getMaxusers();
+
+	/**
+	 * Sets the maxusers of this course.
+	 *
+	 * @param maxusers the maxusers of this course
+	 */
+	public void setMaxusers(long maxusers);
+
+	/**
 	 * @deprecated Renamed to {@link #isApproved()}
 	 */
 	public boolean getApproved();

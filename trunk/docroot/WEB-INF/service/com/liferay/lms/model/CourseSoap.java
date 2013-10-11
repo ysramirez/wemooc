@@ -49,6 +49,8 @@ public class CourseSoap implements Serializable {
 		soapModel.setIcon(model.getIcon());
 		soapModel.setCourseEvalId(model.getCourseEvalId());
 		soapModel.setCourseExtraData(model.getCourseExtraData());
+		soapModel.setClosed(model.getClosed());
+		soapModel.setMaxusers(model.getMaxusers());
 
 		return soapModel;
 	}
@@ -245,6 +247,26 @@ public class CourseSoap implements Serializable {
 		_CourseExtraData = CourseExtraData;
 	}
 
+	public boolean getClosed() {
+		return _closed;
+	}
+
+	public boolean isClosed() {
+		return _closed;
+	}
+
+	public void setClosed(boolean closed) {
+		_closed = closed;
+	}
+
+	public long getMaxusers() {
+		return _maxusers;
+	}
+
+	public void setMaxusers(long maxusers) {
+		_maxusers = maxusers;
+	}
+
 	private String _uuid;
 	private long _courseId;
 	private long _companyId;
@@ -263,4 +285,6 @@ public class CourseSoap implements Serializable {
 	private long _icon;
 	private long _CourseEvalId;
 	private String _CourseExtraData;
+	private boolean _closed;
+	private long _maxusers;
 }

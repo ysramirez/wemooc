@@ -434,6 +434,200 @@ public interface CoursePersistence extends BasePersistence<Course> {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns all the courses where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @return the matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> findByGroupIdClosed(
+		long groupId, boolean closed)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the courses where groupId = &#63; and closed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param start the lower bound of the range of courses
+	* @param end the upper bound of the range of courses (not inclusive)
+	* @return the range of matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> findByGroupIdClosed(
+		long groupId, boolean closed, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the courses where groupId = &#63; and closed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param start the lower bound of the range of courses
+	* @param end the upper bound of the range of courses (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> findByGroupIdClosed(
+		long groupId, boolean closed, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first course in the ordered set where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching course
+	* @throws com.liferay.lms.NoSuchCourseException if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course findByGroupIdClosed_First(
+		long groupId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first course in the ordered set where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching course, or <code>null</code> if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course fetchByGroupIdClosed_First(
+		long groupId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last course in the ordered set where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching course
+	* @throws com.liferay.lms.NoSuchCourseException if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course findByGroupIdClosed_Last(long groupId,
+		boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last course in the ordered set where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching course, or <code>null</code> if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course fetchByGroupIdClosed_Last(
+		long groupId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the courses before and after the current course in the ordered set where groupId = &#63; and closed = &#63;.
+	*
+	* @param courseId the primary key of the current course
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next course
+	* @throws com.liferay.lms.NoSuchCourseException if a course with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course[] findByGroupIdClosed_PrevAndNext(
+		long courseId, long groupId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns all the courses that the user has permission to view where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @return the matching courses that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> filterFindByGroupIdClosed(
+		long groupId, boolean closed)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the courses that the user has permission to view where groupId = &#63; and closed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param start the lower bound of the range of courses
+	* @param end the upper bound of the range of courses (not inclusive)
+	* @return the range of matching courses that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> filterFindByGroupIdClosed(
+		long groupId, boolean closed, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the courses that the user has permissions to view where groupId = &#63; and closed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param start the lower bound of the range of courses
+	* @param end the upper bound of the range of courses (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching courses that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> filterFindByGroupIdClosed(
+		long groupId, boolean closed, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the courses before and after the current course in the ordered set of courses that the user has permission to view where groupId = &#63; and closed = &#63;.
+	*
+	* @param courseId the primary key of the current course
+	* @param groupId the group ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next course
+	* @throws com.liferay.lms.NoSuchCourseException if a course with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course[] filterFindByGroupIdClosed_PrevAndNext(
+		long courseId, long groupId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns all the courses where companyId = &#63;.
 	*
 	* @param companyId the company ID
@@ -544,6 +738,133 @@ public interface CoursePersistence extends BasePersistence<Course> {
 	*/
 	public com.liferay.lms.model.Course[] findByCompanyId_PrevAndNext(
 		long courseId, long companyId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns all the courses where companyId = &#63; and closed = &#63;.
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @return the matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> findByCompanyIdClosed(
+		long companyId, boolean closed)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the courses where companyId = &#63; and closed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @param start the lower bound of the range of courses
+	* @param end the upper bound of the range of courses (not inclusive)
+	* @return the range of matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> findByCompanyIdClosed(
+		long companyId, boolean closed, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the courses where companyId = &#63; and closed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @param start the lower bound of the range of courses
+	* @param end the upper bound of the range of courses (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.Course> findByCompanyIdClosed(
+		long companyId, boolean closed, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first course in the ordered set where companyId = &#63; and closed = &#63;.
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching course
+	* @throws com.liferay.lms.NoSuchCourseException if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course findByCompanyIdClosed_First(
+		long companyId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first course in the ordered set where companyId = &#63; and closed = &#63;.
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching course, or <code>null</code> if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course fetchByCompanyIdClosed_First(
+		long companyId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last course in the ordered set where companyId = &#63; and closed = &#63;.
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching course
+	* @throws com.liferay.lms.NoSuchCourseException if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course findByCompanyIdClosed_Last(
+		long companyId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last course in the ordered set where companyId = &#63; and closed = &#63;.
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching course, or <code>null</code> if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course fetchByCompanyIdClosed_Last(
+		long companyId, boolean closed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the courses before and after the current course in the ordered set where companyId = &#63; and closed = &#63;.
+	*
+	* @param courseId the primary key of the current course
+	* @param companyId the company ID
+	* @param closed the closed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next course
+	* @throws com.liferay.lms.NoSuchCourseException if a course with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.Course[] findByCompanyIdClosed_PrevAndNext(
+		long courseId, long companyId, boolean closed,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.lms.NoSuchCourseException,
 			com.liferay.portal.kernel.exception.SystemException;
@@ -966,12 +1287,32 @@ public interface CoursePersistence extends BasePersistence<Course> {
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Removes all the courses where groupId = &#63; and closed = &#63; from the database.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @throws SystemException if a system exception occurred
+	*/
+	public void removeByGroupIdClosed(long groupId, boolean closed)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Removes all the courses where companyId = &#63; from the database.
 	*
 	* @param companyId the company ID
 	* @throws SystemException if a system exception occurred
 	*/
 	public void removeByCompanyId(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Removes all the courses where companyId = &#63; and closed = &#63; from the database.
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @throws SystemException if a system exception occurred
+	*/
+	public void removeByCompanyIdClosed(long companyId, boolean closed)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
@@ -1055,6 +1396,28 @@ public interface CoursePersistence extends BasePersistence<Course> {
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns the number of courses where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @return the number of matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByGroupIdClosed(long groupId, boolean closed)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of courses that the user has permission to view where groupId = &#63; and closed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param closed the closed
+	* @return the number of matching courses that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public int filterCountByGroupIdClosed(long groupId, boolean closed)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns the number of courses where companyId = &#63;.
 	*
 	* @param companyId the company ID
@@ -1062,6 +1425,17 @@ public interface CoursePersistence extends BasePersistence<Course> {
 	* @throws SystemException if a system exception occurred
 	*/
 	public int countByCompanyId(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of courses where companyId = &#63; and closed = &#63;.
+	*
+	* @param companyId the company ID
+	* @param closed the closed
+	* @return the number of matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByCompanyIdClosed(long companyId, boolean closed)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**

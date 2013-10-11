@@ -290,7 +290,7 @@ public class ModuleResultWrapper implements ModuleResult,
 		return new ModuleResultWrapper((ModuleResult)_moduleResult.clone());
 	}
 
-	public int compareTo(com.liferay.lms.model.ModuleResult moduleResult) {
+	public int compareTo(ModuleResult moduleResult) {
 		return _moduleResult.compareTo(moduleResult);
 	}
 
@@ -299,11 +299,11 @@ public class ModuleResultWrapper implements ModuleResult,
 		return _moduleResult.hashCode();
 	}
 
-	public com.liferay.portal.model.CacheModel<com.liferay.lms.model.ModuleResult> toCacheModel() {
+	public com.liferay.portal.model.CacheModel<ModuleResult> toCacheModel() {
 		return _moduleResult.toCacheModel();
 	}
 
-	public com.liferay.lms.model.ModuleResult toEscapedModel() {
+	public ModuleResult toEscapedModel() {
 		return new ModuleResultWrapper(_moduleResult.toEscapedModel());
 	}
 
