@@ -135,7 +135,7 @@ public class CourseLocalServiceClpInvoker {
 		_methodParameterTypes138 = new String[] {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.lang.String", "java.util.Locale", "java.util.Date",
-				"java.util.Date", "java.util.Date", "long",
+				"java.util.Date", "java.util.Date", "long", "int",
 				"com.liferay.portal.service.ServiceContext"
 			};
 
@@ -338,7 +338,8 @@ public class CourseLocalServiceClpInvoker {
 				(java.lang.String)arguments[3], (java.util.Locale)arguments[4],
 				(java.util.Date)arguments[5], (java.util.Date)arguments[6],
 				(java.util.Date)arguments[7], ((Long)arguments[8]).longValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[9]);
+				((Integer)arguments[9]).intValue(),
+				(com.liferay.portal.service.ServiceContext)arguments[10]);
 		}
 
 		if (_methodName139.equals(name) &&
