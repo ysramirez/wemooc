@@ -50,6 +50,7 @@
 		<portlet id="evaluation"></portlet>
 		<portlet id="evaluationAvg"></portlet>
 		<portlet id="announcementsdelivery"></portlet>
+		<portlet id="coursehistory"></portlet>
 	</category>
 
 </display>
