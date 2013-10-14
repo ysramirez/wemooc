@@ -311,7 +311,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	</script>
 	<% } %>
 	
-	<aui:form name="fm" action="<%=setActivity%>"  method="post" enctype="multipart/form-data" >
+	<aui:form name="fm" action="<%=setActivity%>"  method="post" enctype="multipart/form-data" cssClass='<%=(result!=null)?"aui-helper-hidden":""%>' >
 		<aui:fieldset>
 		<% if(isSetTextoEnr){ %>
 		<aui:input type="hidden" name="text" value=''/>
@@ -346,7 +346,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<% } %>
 		</aui:fieldset>
 		<aui:button-row>
-		<aui:button type="submit" value="onlinetaskactivity.save" onClick='<%=renderResponse.getNamespace() + "extractCodeFromEditor()"%>'></aui:button>
+		<aui:button type="submit" value="onlinetaskactivity.save" onClick='<%=(isSetTextoEnr)?(renderResponse.getNamespace() + "extractCodeFromEditor()"):""%>'></aui:button>
 		</aui:button-row>
 	</aui:form>
 	<liferay-ui:success key="onlinetaskactivity.updating" message="onlinetaskactivity.updating" />
@@ -358,7 +358,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	<h3><a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h3>
 	<%
 	if(result.getEndDate()!= null){
-		%><h4><liferay-ui:message key="your-result-activity" arguments="<%=arguments %>" /></h4><%
+		%><h4><liferay-ui:message key="your-result-activity" /><%=arguments[0]%></h4><%
 		if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
 			%><h4><liferay-ui:message key="your-result-pass-activity" /> </h4><%
 		}else{
