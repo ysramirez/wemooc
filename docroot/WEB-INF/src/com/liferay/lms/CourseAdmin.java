@@ -31,7 +31,6 @@ import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
-import com.liferay.lms.thread.CloneCourseThread;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
@@ -40,6 +39,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -588,11 +589,18 @@ public class CourseAdmin extends MVCPortlet {
 		}
 		Date endDate = PortalUtil.getDate(stopMonth, stopDay, stopYear, stopHour, stopMinute, themeDisplay.getTimeZone(), new EntryDisplayDateException());
 		
-		CloneCourseThread cloneThread = new CloneCourseThread(groupId, newCourseName, themeDisplay, startDate, endDate, serviceContext);
+		//CloneCourseThread cloneThread = new CloneCourseThread(groupId, newCourseName, themeDisplay, startDate, endDate, serviceContext);
+		//Thread thread = new Thread(cloneThread);
+		//thread.start();
 		
-		Thread thread = new Thread(cloneThread);
-		
-		thread.start();
+		Message message=new Message();
+		message.put("groupId",groupId);
+		message.put("newCourseName",newCourseName);
+		message.put("themeDisplay",themeDisplay);
+		message.put("startDate",startDate);
+		message.put("endDate",endDate);
+		message.put("serviceContext",serviceContext);
+		MessageBusUtil.sendMessage("liferay/lms/courseClone", message);
 		
 		SessionMessages.add(actionRequest, "courseadmin.clone.confirmation.success");
 
