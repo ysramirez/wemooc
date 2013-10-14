@@ -125,6 +125,6 @@ if(!ownGrade){
 <% } 
    else {%>
 	<aui:button-row>
-		<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupGrades();" type="button">Close</button>
+		<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupGrades();" type="button"><liferay-ui:message key="close" /></button>
 	</aui:button-row>
 <% } %>
