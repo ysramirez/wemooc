@@ -311,7 +311,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	</script>
 	<% } %>
 	
-	<aui:form name="fm" action="<%=setActivity%>"  method="post" enctype="multipart/form-data" cssClass='<%=(result!=null)?"aui-helper-hidden":""%>' >
+	<aui:form name="fm" action="<%=setActivity%>"  method="post" enctype="multipart/form-data" cssClass='<%=(result!=null)?((result.getEndDate()!= null)?"aui-helper-hidden":""):""%>' >
 		<aui:fieldset>
 		<% if(isSetTextoEnr){ %>
 		<aui:input type="hidden" name="text" value=''/>
