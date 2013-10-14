@@ -26,7 +26,7 @@
 	
 	try{
 		if(course != null){
-			name = course.getTitle(Locale.getDefault());
+			name = course.getTitle(themeDisplay.getLocale());
 		}
 	}catch(Exception e){}
 %>

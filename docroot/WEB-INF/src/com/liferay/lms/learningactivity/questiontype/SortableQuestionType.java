@@ -158,7 +158,7 @@ public class SortableQuestionType extends BaseQuestionType {
 								
 			if(feedback){ 
 				//en este caso no existe la pregunta sin contestar
-				//feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+				//feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 			}else{
 				html += "<div class=\"question"  + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">"+
 						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
@@ -176,11 +176,11 @@ public class SortableQuestionType extends BaseQuestionType {
 					questionCorrect = answersSelected.get(i).equals(testAnswers.get(i));
 
 					if("true".equals(showCorrectAnswer))
-						if(questionCorrect) feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.correct");
+						if(questionCorrect) feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"execativity.test.questions.ordenable.correct");
 						else {
 							cssclass="incorrect";
-							feedMessage = LanguageUtil.get(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect") + 						
-									LanguageUtil.format(Locale.getDefault(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswers.indexOf(answersSelected.get(i))+1)});
+							feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"execativity.test.questions.ordenable.incorrect") + 						
+									LanguageUtil.format(themeDisplay.getLocale(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswers.indexOf(answersSelected.get(i))+1)});
 						}
 					
 					answersFeedBack += "<div class=\"answer\">" + answersSelected.get(i).getAnswer() 

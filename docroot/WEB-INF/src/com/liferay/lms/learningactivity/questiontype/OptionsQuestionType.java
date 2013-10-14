@@ -119,7 +119,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			int correctAnswers=0, correctAnswered=0, incorrectAnswered=0;
 			
-			if(feedback) feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+			if(feedback) feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 			
 			for(TestAnswer answer:testAnswers){
 				String correct="", checked="", showCorrectAnswer="false", disabled ="";
@@ -133,12 +133,12 @@ public class OptionsQuestionType extends BaseQuestionType {
 					if(answersSelected.contains(answer)){
 						correctAnswered++;
 						checked="checked='checked'";
-						feedMessage=(!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+answer.getFeedbackCorrect():answer.getFeedbackCorrect();
+						feedMessage=(!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+answer.getFeedbackCorrect():answer.getFeedbackCorrect();
 					}
 				}else if(answersSelected.contains(answer)){
 					incorrectAnswered++;
 					checked="checked='checked'";
-					feedMessage=(!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+answer.getFeedbacknocorrect():answer.getFeedbacknocorrect();
+					feedMessage=(!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+answer.getFeedbacknocorrect():answer.getFeedbacknocorrect();
 				}
 
 				answersFeedBack += "<div class=\"answer " + correct + "\">" +

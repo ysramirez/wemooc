@@ -47,7 +47,7 @@ public class ModuleUpdateResult extends MVCPortlet {
 			
 			//System.out.println("email: "+emailAddress+", moduleId: "+moduleId+", allUsers: "+allUsers);
 			
-			saveStringToFile("ModuleUpdate.txt", "START: "+m.getTitle(Locale.getDefault())+" ("+m.getModuleId()+") "+", allUsers: "+allUsers+", email: "+emailAddress);
+			saveStringToFile("ModuleUpdate.txt", "START: "+m.getTitle(themeDisplay.getLocale())+" ("+m.getModuleId()+") "+", allUsers: "+allUsers+", email: "+emailAddress);
 			
 			
 			if(allUsers!=null && allUsers.equals("true")){
@@ -63,7 +63,7 @@ public class ModuleUpdateResult extends MVCPortlet {
 				}
 			}
 			
-			saveStringToFile("ModuleUpdate.txt", "END  : "+m.getTitle(Locale.getDefault())+" ("+m.getModuleId()+")   cambios: "+changes);
+			saveStringToFile("ModuleUpdate.txt", "END  : "+m.getTitle(themeDisplay.getLocale())+" ("+m.getModuleId()+")   cambios: "+changes);
 
 		} catch (Exception e) {
 			// TODO Auto-generated catch block

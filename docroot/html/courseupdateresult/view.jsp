@@ -35,7 +35,7 @@
 	for(Course course:courses)
 	{
 		%>
-			<aui:option value="<%=course.getCourseId() %>"><%=course.getTitle(Locale.getDefault()) %></aui:option>
+			<aui:option value="<%=course.getCourseId() %>"><%=course.getTitle(themeDisplay.getLocale()) %></aui:option>
 		<% 
 	}
 	%>
