@@ -179,7 +179,7 @@ ActionKeys.UPDATE) %>">
 					 "		}); ";
 %>
 
-<liferay-ui:icon image="bottom" url="#" onClick="<%=downURLJavascript %>"/>
+<liferay-ui:icon image="bottom" message="down" url="#" onClick="<%=downURLJavascript %>"/>
 
 <portlet:actionURL name="upactivity" var="upURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
 <portlet:param name="resId" value="<%=primKey %>" />
@@ -213,7 +213,7 @@ ActionKeys.UPDATE) %>">
 					 "		}); ";
 %>
 
-<liferay-ui:icon image="top" url="#" onClick="<%=upURLJavascript %>"/>
+<liferay-ui:icon image="top" message="up" url="#" onClick="<%=upURLJavascript %>"/>
 
 </c:if>
 
@@ -267,7 +267,7 @@ ActionKeys.PERMISSIONS) %>">
 					 "		}); ";
 %>
 
-<liferay-ui:icon alt="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+<liferay-ui:icon message="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
 
 <!-- Mostrar calificaciones actividad. -->
 
@@ -323,5 +323,5 @@ boolean visibleCalifications = GetterUtil.getBoolean(PortletProps.get("lms.activ
 			"});");
 
 %>
-	<liferay-ui:icon alt="<%=(visibleCalifications)?\"activity.visible\":\"activity.invisible\" %>" message="activity.showcalifications"  image="page" url="#" onClick="<%=showCalificationsPopup.toString() %>"/>
+	<liferay-ui:icon message="activity.showcalifications" image="page" url="#" onClick="<%=showCalificationsPopup.toString() %>"/>
 </c:if>
