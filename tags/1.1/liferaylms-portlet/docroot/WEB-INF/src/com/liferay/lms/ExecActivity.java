@@ -449,7 +449,9 @@ public class ExecActivity extends MVCPortlet
 		else{
 			actId=ParamUtil.getLong(renderRequest, "actId", 0);
 		}
-					
+		
+		renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
+		
 		if(actId==0)// TODO Auto-generated method stub
 		{
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
