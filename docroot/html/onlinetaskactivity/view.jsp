@@ -98,7 +98,7 @@ else
 <script type="text/javascript">
    <!--
 
-    function <portlet:namespace />showPopupGrades(studentId,selfGrade)
+    function <portlet:namespace />showPopupGradesStudent(studentId,selfGrade)
     {
 
 		AUI().use('aui-dialog','liferay-portlet-url', function(A){
@@ -118,7 +118,45 @@ else
 			renderUrl.setParameter('jspPage', '/html/onlinetaskactivity/popups/grades.jsp');
 
 			window.<portlet:namespace />popupGrades = new A.Dialog({
-				id:'<portlet:namespace />showPopupGrades',
+				id:'<portlet:namespace />showPopupGradesStudent',
+	            title: '<liferay-ui:message key="onlineActivity.view.last" />',
+	            centered: true,
+	            modal: true,
+	            width: 600,
+	            height: 350,
+	            after: {   
+		          	close: function(event){ 
+		          		document.getElementById('<portlet:namespace />studentsearch').submit();
+	            	}
+	            }
+	        }).plug(A.Plugin.IO, {
+	            uri: renderUrl.toString()
+	        }).render();
+			window.<portlet:namespace />popupGrades.show();   
+		});
+    }
+    
+    function <portlet:namespace />showPopupGradesTeacher(studentId,selfGrade)
+    {
+
+		AUI().use('aui-dialog','liferay-portlet-url', function(A){
+			var renderUrl = Liferay.PortletURL.createRenderURL();							
+			renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
+			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
+			renderUrl.setParameter('actId', '<%=String.valueOf(activity.getActId()) %>');
+			<%
+			if(isTeacher){
+			%>
+			if(!selfGrade) {
+				renderUrl.setParameter('studentId', studentId);
+			}
+			<%
+			}
+			%>
+			renderUrl.setParameter('jspPage', '/html/onlinetaskactivity/popups/grades.jsp');
+
+			window.<portlet:namespace />popupGrades = new A.Dialog({
+				id:'<portlet:namespace />showPopupGradesTeacher',
 	            title: '<liferay-ui:message key="onlinetaskactivity.set.grades" />',
 	            centered: true,
 	            modal: true,
@@ -269,7 +307,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 					   %><liferay-ui:message key="onlinetaskactivity.student.without.qualification" /><% 
                } %>
 			<p class="see-more">
-				<a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>);"><liferay-ui:message key="onlinetaskactivity.set.grades"/></a>
+				<a href="javascript:<portlet:namespace />showPopupGradesTeacher(<%=Long.toString(user.getUserId()) %>);"><liferay-ui:message key="onlinetaskactivity.set.grades"/></a>
 			</p>
 		</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
@@ -355,7 +393,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 <div class="nota"> 
 
 <% if (result!=null){ %>
-	<h3><a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h3>
+	<h3><a href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h3>
 	<%
 	if(result.getEndDate()!= null){
 		%><h4><liferay-ui:message key="your-result-activity" /><%=arguments[0] %></h4><%
@@ -372,7 +410,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 }else {
 	if(activity.getTries()!=0) {
 %>
-	<h4><liferay-ui:message key="onlinetaskactivity.not.qualificated.activity" /> <a href="javascript:<portlet:namespace />showPopupGrades(<%=Long.toString(user.getUserId()) %>,true);">Ver última.</a></h4>
+	<h4><liferay-ui:message key="onlinetaskactivity.not.qualificated.activity" /> <a href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h4>
 <% 
 	}	
 }%>
