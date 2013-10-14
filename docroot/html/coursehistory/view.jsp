@@ -14,7 +14,6 @@ for(Group groupCourse:groups)
 {
 	
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(groupCourse.getGroupId());
-	CourseLocalServiceUtil.
 	if(course!=null&&course.isClosed())
 	{
 	%>
