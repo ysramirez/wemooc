@@ -306,7 +306,7 @@ public class SurveyResultWrapper implements SurveyResult,
 		return new SurveyResultWrapper((SurveyResult)_surveyResult.clone());
 	}
 
-	public int compareTo(SurveyResult surveyResult) {
+	public int compareTo(com.liferay.lms.model.SurveyResult surveyResult) {
 		return _surveyResult.compareTo(surveyResult);
 	}
 
@@ -315,11 +315,11 @@ public class SurveyResultWrapper implements SurveyResult,
 		return _surveyResult.hashCode();
 	}
 
-	public com.liferay.portal.model.CacheModel<SurveyResult> toCacheModel() {
+	public com.liferay.portal.model.CacheModel<com.liferay.lms.model.SurveyResult> toCacheModel() {
 		return _surveyResult.toCacheModel();
 	}
 
-	public SurveyResult toEscapedModel() {
+	public com.liferay.lms.model.SurveyResult toEscapedModel() {
 		return new SurveyResultWrapper(_surveyResult.toEscapedModel());
 	}
 
