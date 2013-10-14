@@ -462,6 +462,7 @@ Player.ContentPlayer.prototype.$1E = function() {
 			$0.appendChild(this.$5);
 			if (this.$9.isSingleItem()) {
 				this.$5.style.opacity = 0.0;
+				$0.style.display = 'none';
 			}
 		}
 		var $1 = new ControlsCollection.TreeView(this.$5,
