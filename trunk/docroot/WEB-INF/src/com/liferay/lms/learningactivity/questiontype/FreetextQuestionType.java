@@ -103,7 +103,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+			String feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 			String answer=getAnswersSelected(document, questionId);
 	
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());

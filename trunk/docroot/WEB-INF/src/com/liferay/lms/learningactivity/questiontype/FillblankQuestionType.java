@@ -220,7 +220,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 				List<String> sols = getQuestionSols(solution.getAnswer());
 				String[] answers = answer.split(",");
 				if (feedback){
-					feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+					feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
 					int i=0, correctAnswers=0;
 					for(String sol:sols){

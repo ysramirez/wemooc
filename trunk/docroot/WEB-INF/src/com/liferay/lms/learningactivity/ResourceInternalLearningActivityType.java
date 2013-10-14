@@ -109,7 +109,7 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 			FileEntry docfile=DLAppLocalServiceUtil.getFileEntry(docAsset.getClassPK());
 			if(docfile != null){
 				//Creo un directorio propio de la actividad o lo recupero si ya existe.
-				Folder folder = createFoldersForLearningActivity(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), learningActivity.getActId(), learningActivity.getTitle(Locale.getDefault()), serviceContext);
+				Folder folder = createFoldersForLearningActivity(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), learningActivity.getActId(), learningActivity.getTitle(themeDisplay.getLocale()), serviceContext);
 				FileEntry newFile = null;
 				//Recupero el archivo asociado a la actividad si ya existia y lo limpio para crear el nuevo
 				java.util.List<FileEntry> files = DLAppLocalServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), folder.getFolderId());

@@ -123,7 +123,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			//String feedMessage = LanguageUtil.get(Locale.getDefault(),"answer-in-blank") ;
+			//String feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 			List<TestAnswer> answersSelected=getAnswersSelected(document, questionId);
 			List<TestAnswer> tA= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			List<Long>answersSelectedIds = new ArrayList<Long>();
@@ -184,10 +184,10 @@ public class DraganddropQuestionType extends BaseQuestionType {
 				
 				if(feedback){
 					if(answersSelectedIds.get(i) == sols.get(i).getAnswerId()) {
-						feedMessage = (!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbackCorrect():sols.get(i).getFeedbackCorrect();
+						feedMessage = (!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbackCorrect():sols.get(i).getFeedbackCorrect();
 					}
 					else {
-						feedMessage = (!LanguageUtil.get(Locale.getDefault(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbacknocorrect():sols.get(i).getFeedbacknocorrect();
+						feedMessage = (!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbacknocorrect():sols.get(i).getFeedbacknocorrect();
 					}
 					if("true".equals(showCorrectAnswer)) {
 						feedsol = "<div class=\" font_14 color_cuarto negrita\">" + sols.get(i).getAnswer() + "</div>";

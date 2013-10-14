@@ -82,7 +82,7 @@ public class CourseStats extends MVCPortlet {
 			List<Module> tempResults = ModuleLocalServiceUtil.findAllInGroup(group.getGroupId());
 			CSVWriter writer = initCsv(resourceResponse);
 		    ResourceBundle rb =  ResourceBundle.getBundle("content.Language");
-		    rb = ResourceBundle.getBundle("content.Language", Locale.getDefault());
+		    rb = ResourceBundle.getBundle("content.Language", themeDisplay.getLocale());
 		    
 		    //Curso
 		    writer.writeNext(new String[]{group.getName()});
@@ -114,7 +114,7 @@ public class CourseStats extends MVCPortlet {
 		    	String moduloBloqueo = "";
 		    	if(modulo.getPrecedence() != 0) {
 		    		Module modulePredence = ModuleLocalServiceUtil.getModule(modulo.getPrecedence());
-		    		moduloBloqueo=modulePredence.getTitle(Locale.getDefault());
+		    		moduloBloqueo=modulePredence.getTitle(themeDisplay.getLocale());
 		    	}else{
 		    		moduloBloqueo=rb.getString("dependencies.false");
 		    	}
@@ -154,7 +154,7 @@ public class CourseStats extends MVCPortlet {
 			CSVWriter writer = initCsv(resourceResponse);
 			
 			ResourceBundle rb =  ResourceBundle.getBundle("content.Language");
-		    rb = ResourceBundle.getBundle("content.Language", Locale.getDefault());
+		    rb = ResourceBundle.getBundle("content.Language", themeDisplay.getLocale());
 		    
 		    //Curso
 		    writer.writeNext(new String[]{group.getName()});
