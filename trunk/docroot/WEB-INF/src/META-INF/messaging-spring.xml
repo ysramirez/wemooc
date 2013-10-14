@@ -8,6 +8,8 @@
 		class="com.liferay.lms.EvaluationActivity" />
 	<bean id="messageListener.liferay.lms.evaluationAverage_listener"
 		class="com.liferay.lms.EvaluationAvgPortlet" />	
+	<bean id="messageListener.liferay.lms.courseClone_listener"
+		class="com.liferay.lms.CloneCourse" />
 		
 	
 	<!-- Destinations -->
@@ -19,6 +21,11 @@
 	<bean id="destination.liferay.lms.evaluationAverage"
 		class="com.liferay.portal.kernel.messaging.SerialDestination">
 		<property name="name" value="liferay/lms/evaluationAverage" />
+	</bean>
+	
+	<bean id="destination.liferay.lms.courseClone"
+		class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="liferay/lms/courseClone" />
 	</bean>
 	
 	
@@ -37,12 +44,18 @@
 						<ref bean="messageListener.liferay.lms.evaluationAverage_listener" />
 					</list>
 				</entry>
+				<entry key="liferay/lms/courseClone">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.liferay.lms.courseClone_listener" />
+					</list>
+				</entry>
 			</map>
 		</property>
 		<property name="destinations">
 			<list>
 				<ref bean="destination.liferay.lms.evaluationActivity" />
 				<ref bean="destination.liferay.lms.evaluationAverage" />
+				<ref bean="destination.liferay.lms.courseClone" />
 			</list>
 		</property>
 	</bean>
