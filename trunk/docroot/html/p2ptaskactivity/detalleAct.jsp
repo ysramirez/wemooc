@@ -119,19 +119,28 @@ if(actId!=0)
 	</div>
 	<div class="preg_content" id="capa1" style="display:none">
 		<%
-		DLFileEntry dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myp2pActivity.getFileEntryId());
+		int size=0, sizeKb=0; 
+		String title = "";
+		DLFileEntry dlfile = null;
+		try{
+			
+			dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myp2pActivity.getFileEntryId());
+			
+			title = dlfile.getTitle();
+			
+			size = Integer.parseInt(String.valueOf(dlfile.getSize()));
+			sizeKb = size/1024; //Lo paso a Kilobytes
+			
+		}catch(Exception e){}
+		
 		String urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
 		
 		%>
 		<div class="container-textarea">
 			<textarea rows="6" cols="90" readonly="readonly" ><%=myp2pActivity.getDescription() %></textarea>
 		</div>
-		<% 
-			int size = Integer.parseInt(String.valueOf(dlfile.getSize()));
-			int sizeKb = size/1024; //Lo paso a Kilobytes
-		%>
 		<div class="doc_descarga">
-			<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+			<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
 			<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 		</div>
 	</div>
@@ -160,7 +169,18 @@ if(actId!=0)
 						correctionDate = dateFormat.format(myP2PActivity.getDate());
 					}
 					
-					dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
+					size=0; sizeKb=0; title = ""; dlfile = null;
+					try{
+						
+						dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myp2pActivity.getFileEntryId());
+						
+						title = dlfile.getTitle();
+						
+						size = Integer.parseInt(String.valueOf(dlfile.getSize()));
+						sizeKb = size/1024; //Lo paso a Kilobytes
+						
+					}catch(Exception e){}
+
 					urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid(); 
 					
 					%>
@@ -174,14 +194,12 @@ if(actId!=0)
 							}
 							%>
 							<div class="description"><%=descriptionFile %></div>
-							<%
-							size = Integer.parseInt(String.valueOf(dlfile.getSize()));
-							sizeKb = size/1024; //Lo paso a Kilobytes
-							%>
-							<div class="doc_descarga">
-								<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-								<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
-							</div>
+							<%if(dlfile != null){ %>
+								<div class="doc_descarga">
+									<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+									<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+								</div>
+							<%} %>
 							<div class="degradade">
 								<div class="subtitle"><liferay-ui:message key="p2ptask-valoration" /> :</div>
 								<div class="container-textarea">
@@ -234,7 +252,19 @@ if(actId!=0)
 				String correctionText = myP2PActCor.getDescription();
 				if(myP2PActCor.getFileEntryId()!=0)
 				{
-					dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActCor.getFileEntryId());
+
+					size=0; sizeKb=0; title = ""; dlfile = null;
+					try{
+						
+						dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActCor.getFileEntryId());
+						
+						title = dlfile.getTitle();
+						
+						size = Integer.parseInt(String.valueOf(dlfile.getSize()));
+						sizeKb = size/1024; //Lo paso a Kilobytes
+						
+					}catch(Exception e){}
+					
 					urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
 					Date date = myP2PActCor.getDate();
 					correctionDate = dateFormat.format(date);
@@ -268,13 +298,9 @@ if(actId!=0)
 						<div class="container-textarea">
 							<textarea rows="6" cols="90" readonly="readonly" ><%=correctionText %></textarea>
 						</div>
-						<%
-						if(dlfile!=null){
-							size = Integer.parseInt(String.valueOf(dlfile.getSize()));
-							sizeKb = size/1024; //Lo paso a Kilobytes
-						%>
+						<%if(dlfile!=null){%>
 						<div class="doc_descarga">
-							<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+							<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
 							<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 						</div>
 						<%
