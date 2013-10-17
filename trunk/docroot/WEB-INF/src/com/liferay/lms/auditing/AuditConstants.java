@@ -8,4 +8,5 @@ public class AuditConstants {
 	public static final String delete="DELETE";
 	public static final String access="ACCESS";
 	public static final String send="SEND";
+	public static final String correct="CORRECT";
 }
