@@ -99,7 +99,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return coursePersistence.fetchByGroupCreatedId(groupId);
 	}
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
-			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite,ServiceContext serviceContext)
+			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite,ServiceContext serviceContext, long calificationType)
 			throws SystemException, PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long userId=serviceContext.getUserId();
@@ -115,6 +115,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setEndDate(endDate);
 			course.setStatus(WorkflowConstants.STATUS_APPROVED);
 			course.setExpandoBridgeAttributes(serviceContext);
+			course.setCalificationType(calificationType);
 			coursePersistence.update(course, true);
 			resourceLocalService.addResources(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,Course.class.getName(), course.getPrimaryKey(), false,true, true);
 			assetEntryLocalService.updateEntry(userId, course.getGroupId(), Course.class.getName(),
@@ -148,22 +149,22 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
-		ServiceContext serviceContext)
+		ServiceContext serviceContext, long calificationType)
 			throws SystemException, 
 			PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long layoutSetPrototypeId=Long.valueOf(lmsPrefs.getLmsTemplates());
 		return addCourse (title, description,summary,friendlyURL, locale,
 				createDate,startDate,endDate,layoutSetPrototypeId,GroupConstants.TYPE_SITE_PRIVATE,
-				 serviceContext);
+				 serviceContext, calificationType);
 	}
 	public Course addCourse (String title, String description,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
-		ServiceContext serviceContext)
+		ServiceContext serviceContext, long calificationType)
 			throws SystemException, 
 			PortalException {
 		
-				return this.addCourse(title, description, description, friendlyURL, locale, createDate, startDate, endDate, serviceContext);
+				return this.addCourse(title, description, description, friendlyURL, locale, createDate, startDate, endDate, serviceContext, calificationType);
 			}
 	
 	private static User getAdministratorUser(long companyId) throws PortalException, SystemException

@@ -341,6 +341,10 @@ public class LearningActivityResultLocalServiceUtil {
 		return getService().getByActId(actId);
 	}
 
+	public static java.lang.String translateResult(double result, long groupId) {
+		return getService().translateResult(result, groupId);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

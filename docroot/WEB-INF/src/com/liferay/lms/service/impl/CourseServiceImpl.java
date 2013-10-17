@@ -108,7 +108,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			course = CourseLocalServiceUtil.addCourse(
 					name, StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
 					LocaleUtil.getDefault(), now, now, now,Long.parseLong(lspist[0]),GroupConstants.TYPE_SITE_PRIVATE,
-					serviceContext);
+					serviceContext, Long.parseLong("0"));
 			course.setCourseEvalId(1); // EvaluationAvgCourseEval.getTypeId();
 			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
 					serviceContext);

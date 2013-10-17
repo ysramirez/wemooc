@@ -298,6 +298,10 @@ public class CourseResultLocalServiceWrapper implements CourseResultLocalService
 			userId);
 	}
 
+	public java.lang.String translateResult(double result, long groupId) {
+		return _courseResultLocalService.translateResult(result, groupId);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

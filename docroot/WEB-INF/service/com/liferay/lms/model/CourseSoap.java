@@ -51,6 +51,7 @@ public class CourseSoap implements Serializable {
 		soapModel.setCourseExtraData(model.getCourseExtraData());
 		soapModel.setClosed(model.getClosed());
 		soapModel.setMaxusers(model.getMaxusers());
+		soapModel.setCalificationType(model.getCalificationType());
 
 		return soapModel;
 	}
@@ -267,6 +268,14 @@ public class CourseSoap implements Serializable {
 		_maxusers = maxusers;
 	}
 
+	public long getCalificationType() {
+		return _calificationType;
+	}
+
+	public void setCalificationType(long calificationType) {
+		_calificationType = calificationType;
+	}
+
 	private String _uuid;
 	private long _courseId;
 	private long _companyId;
@@ -287,4 +296,5 @@ public class CourseSoap implements Serializable {
 	private String _CourseExtraData;
 	private boolean _closed;
 	private long _maxusers;
+	private long _calificationType;
 }

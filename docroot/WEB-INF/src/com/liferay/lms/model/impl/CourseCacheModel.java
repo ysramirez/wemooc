@@ -34,7 +34,7 @@ import java.util.Date;
 public class CourseCacheModel implements CacheModel<Course>, Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(41);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -76,6 +76,8 @@ public class CourseCacheModel implements CacheModel<Course>, Serializable {
 		sb.append(closed);
 		sb.append(", maxusers=");
 		sb.append(maxusers);
+		sb.append(", calificationType=");
+		sb.append(calificationType);
 		sb.append("}");
 
 		return sb.toString();
@@ -160,6 +162,7 @@ public class CourseCacheModel implements CacheModel<Course>, Serializable {
 
 		courseImpl.setClosed(closed);
 		courseImpl.setMaxusers(maxusers);
+		courseImpl.setCalificationType(calificationType);
 
 		courseImpl.resetOriginalValues();
 
@@ -186,4 +189,5 @@ public class CourseCacheModel implements CacheModel<Course>, Serializable {
 	public String CourseExtraData;
 	public boolean closed;
 	public long maxusers;
+	public long calificationType;
 }

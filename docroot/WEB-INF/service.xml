@@ -288,6 +288,7 @@
         <column name="CourseExtraData" type="String"></column>
         <column name="closed" type="boolean"></column>
         <column name="maxusers" type="long"></column>
+        <column name="calificationType" type="long"></column>
  		<order by="asc">
 			<order-column name="courseId" />
 		</order>

@@ -136,7 +136,7 @@ public class CourseLocalServiceClp implements CourseLocalService {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.lang.String", "java.util.Locale", "java.util.Date",
 				"java.util.Date", "java.util.Date", "long", "int",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.service.ServiceContext", "long"
 			};
 
 		_methodName26 = "addCourse";
@@ -145,7 +145,7 @@ public class CourseLocalServiceClp implements CourseLocalService {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.lang.String", "java.util.Locale", "java.util.Date",
 				"java.util.Date", "java.util.Date",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.service.ServiceContext", "long"
 			};
 
 		_methodName27 = "addCourse";
@@ -153,7 +153,8 @@ public class CourseLocalServiceClp implements CourseLocalService {
 		_methodParameterTypes27 = new String[] {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.util.Locale", "java.util.Date", "java.util.Date",
-				"java.util.Date", "com.liferay.portal.service.ServiceContext"
+				"java.util.Date", "com.liferay.portal.service.ServiceContext",
+				"long"
 			};
 
 		_methodName28 = "setVisible";
@@ -893,7 +894,8 @@ public class CourseLocalServiceClp implements CourseLocalService {
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
 		java.util.Date endDate, long layoutSetPrototypeId, int typesite,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext,
+		long calificationType)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
@@ -922,7 +924,9 @@ public class CourseLocalServiceClp implements CourseLocalService {
 						
 					typesite,
 						
-					ClpSerializer.translateInput(serviceContext)
+					ClpSerializer.translateInput(serviceContext),
+						
+					calificationType
 					});
 		}
 		catch (Throwable t) {
@@ -953,7 +957,8 @@ public class CourseLocalServiceClp implements CourseLocalService {
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
 		java.util.Date endDate,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext,
+		long calificationType)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
@@ -978,7 +983,9 @@ public class CourseLocalServiceClp implements CourseLocalService {
 						
 					ClpSerializer.translateInput(endDate),
 						
-					ClpSerializer.translateInput(serviceContext)
+					ClpSerializer.translateInput(serviceContext),
+						
+					calificationType
 					});
 		}
 		catch (Throwable t) {
@@ -1008,7 +1015,8 @@ public class CourseLocalServiceClp implements CourseLocalService {
 		java.lang.String description, java.lang.String friendlyURL,
 		java.util.Locale locale, java.util.Date createDate,
 		java.util.Date startDate, java.util.Date endDate,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext,
+		long calificationType)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
@@ -1031,7 +1039,9 @@ public class CourseLocalServiceClp implements CourseLocalService {
 						
 					ClpSerializer.translateInput(endDate),
 						
-					ClpSerializer.translateInput(serviceContext)
+					ClpSerializer.translateInput(serviceContext),
+						
+					calificationType
 					});
 		}
 		catch (Throwable t) {

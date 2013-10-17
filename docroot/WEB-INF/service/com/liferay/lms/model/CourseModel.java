@@ -558,6 +558,20 @@ public interface CourseModel extends BaseModel<Course>, WorkflowedModel {
 	public void setMaxusers(long maxusers);
 
 	/**
+	 * Returns the calification type of this course.
+	 *
+	 * @return the calification type of this course
+	 */
+	public long getCalificationType();
+
+	/**
+	 * Sets the calification type of this course.
+	 *
+	 * @param calificationType the calification type of this course
+	 */
+	public void setCalificationType(long calificationType);
+
+	/**
 	 * @deprecated Renamed to {@link #isApproved()}
 	 */
 	public boolean getApproved();

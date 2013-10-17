@@ -284,7 +284,8 @@ public interface CourseLocalService extends BaseLocalService,
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
 		java.util.Date endDate, long layoutSetPrototypeId, int typesite,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext,
+		long calificationType)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -293,7 +294,8 @@ public interface CourseLocalService extends BaseLocalService,
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
 		java.util.Date endDate,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext,
+		long calificationType)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
@@ -301,7 +303,8 @@ public interface CourseLocalService extends BaseLocalService,
 		java.lang.String description, java.lang.String friendlyURL,
 		java.util.Locale locale, java.util.Date createDate,
 		java.util.Date startDate, java.util.Date endDate,
-		com.liferay.portal.service.ServiceContext serviceContext)
+		com.liferay.portal.service.ServiceContext serviceContext,
+		long calificationType)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 

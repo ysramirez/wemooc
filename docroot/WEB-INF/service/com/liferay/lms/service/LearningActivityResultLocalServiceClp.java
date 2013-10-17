@@ -167,6 +167,10 @@ public class LearningActivityResultLocalServiceClp
 		_methodName30 = "getByActId";
 
 		_methodParameterTypes30 = new String[] { "long" };
+
+		_methodName31 = "translateResult";
+
+		_methodParameterTypes31 = new String[] { "double", "long" };
 	}
 
 	public com.liferay.lms.model.LearningActivityResult addLearningActivityResult(
@@ -1067,6 +1071,28 @@ public class LearningActivityResultLocalServiceClp
 		return (java.util.List<com.liferay.lms.model.LearningActivityResult>)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public java.lang.String translateResult(double result, long groupId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName31,
+					_methodParameterTypes31, new Object[] { result, groupId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.lang.String)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableLocalService _invokableLocalService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -1128,4 +1154,6 @@ public class LearningActivityResultLocalServiceClp
 	private String[] _methodParameterTypes29;
 	private String _methodName30;
 	private String[] _methodParameterTypes30;
+	private String _methodName31;
+	private String[] _methodParameterTypes31;
 }

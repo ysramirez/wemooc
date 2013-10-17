@@ -94,6 +94,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		attributes.put("CourseExtraData", getCourseExtraData());
 		attributes.put("closed", getClosed());
 		attributes.put("maxusers", getMaxusers());
+		attributes.put("calificationType", getCalificationType());
 
 		return attributes;
 	}
@@ -218,6 +219,12 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 
 		if (maxusers != null) {
 			setMaxusers(maxusers);
+		}
+
+		Long calificationType = (Long)attributes.get("calificationType");
+
+		if (calificationType != null) {
+			setCalificationType(calificationType);
 		}
 	}
 
@@ -589,6 +596,14 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		_maxusers = maxusers;
 	}
 
+	public long getCalificationType() {
+		return _calificationType;
+	}
+
+	public void setCalificationType(long calificationType) {
+		_calificationType = calificationType;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -724,6 +739,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		clone.setCourseExtraData(getCourseExtraData());
 		clone.setClosed(getClosed());
 		clone.setMaxusers(getMaxusers());
+		clone.setCalificationType(getCalificationType());
 
 		return clone;
 	}
@@ -780,7 +796,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(41);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -822,13 +838,15 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		sb.append(getClosed());
 		sb.append(", maxusers=");
 		sb.append(getMaxusers());
+		sb.append(", calificationType=");
+		sb.append(getCalificationType());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(64);
+		StringBundler sb = new StringBundler(67);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -914,6 +932,10 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 			"<column><column-name>maxusers</column-name><column-value><![CDATA[");
 		sb.append(getMaxusers());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>calificationType</column-name><column-value><![CDATA[");
+		sb.append(getCalificationType());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -944,5 +966,6 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 	private String _CourseExtraData;
 	private boolean _closed;
 	private long _maxusers;
+	private long _calificationType;
 	private BaseModel<?> _courseRemoteModel;
 }

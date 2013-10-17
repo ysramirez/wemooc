@@ -343,6 +343,11 @@ public class LearningActivityResultLocalServiceWrapper
 		return _learningActivityResultLocalService.getByActId(actId);
 	}
 
+	public java.lang.String translateResult(double result, long groupId) {
+		return _learningActivityResultLocalService.translateResult(result,
+			groupId);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

@@ -16,6 +16,8 @@ package com.liferay.lms.service.impl;
 
 import java.util.List;
 
+import com.liferay.lms.learningactivity.calificationtype.CalificationType;
+import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;
 import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
@@ -106,5 +108,20 @@ public class CourseResultLocalServiceImpl
 		return null;
 		
 		//return courseResultPersistence.fetchByuc(userId, courseId);
+	}
+	
+	public String translateResult(double result, long groupId){
+		String translatedResult = "";
+		try {
+			Course curso = courseLocalService.getCourseByGroupCreatedId(groupId);
+			if(curso != null){
+				CalificationType ct = new CalificationTypeRegistry().getCalificationType(curso.getCalificationType());
+				translatedResult = ct.translate(result);
+			}
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return translatedResult;
 	}
 }

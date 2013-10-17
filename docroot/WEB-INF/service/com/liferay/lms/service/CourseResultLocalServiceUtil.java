@@ -304,6 +304,10 @@ public class CourseResultLocalServiceUtil {
 		return getService().getCourseResultByCourseAndUser(courseId, userId);
 	}
 
+	public static java.lang.String translateResult(double result, long groupId) {
+		return getService().translateResult(result, groupId);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

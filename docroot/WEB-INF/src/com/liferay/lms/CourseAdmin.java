@@ -142,6 +142,7 @@ public class CourseAdmin extends MVCPortlet {
 		String description = actionRequest.getParameter("description");
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		long courseTemplateId=ParamUtil.getLong(actionRequest,"courseTemplate",0);
+		long courseCalificationType=ParamUtil.getLong(actionRequest,"calificationType",0);
 		String friendlyURL = ParamUtil.getString(actionRequest, "friendlyURL",
 				"");
 		int startMonth = ParamUtil.getInteger(actionRequest, "startMon");
@@ -230,7 +231,7 @@ public class CourseAdmin extends MVCPortlet {
 			course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
 					title, description, summary, friendlyURL,
 					themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,GroupConstants.TYPE_SITE_PRIVATE,
-					serviceContext);
+					serviceContext, courseCalificationType);
 			if(course != null){
 				long[] groupIds = new long[1];
 				groupIds[0] = course.getGroupCreatedId();
@@ -256,6 +257,7 @@ public class CourseAdmin extends MVCPortlet {
 			course.setDescription( description,themeDisplay.getLocale());
 			course.setStartDate(startDate);
 			course.setEndDate(stopDate);
+			course.setCalificationType(courseCalificationType);
 			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
 					summary, serviceContext);
 		}

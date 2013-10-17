@@ -136,7 +136,7 @@ public class CourseLocalServiceClpInvoker {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.lang.String", "java.util.Locale", "java.util.Date",
 				"java.util.Date", "java.util.Date", "long", "int",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.service.ServiceContext", "long"
 			};
 
 		_methodName139 = "addCourse";
@@ -145,7 +145,7 @@ public class CourseLocalServiceClpInvoker {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.lang.String", "java.util.Locale", "java.util.Date",
 				"java.util.Date", "java.util.Date",
-				"com.liferay.portal.service.ServiceContext"
+				"com.liferay.portal.service.ServiceContext", "long"
 			};
 
 		_methodName140 = "addCourse";
@@ -153,7 +153,8 @@ public class CourseLocalServiceClpInvoker {
 		_methodParameterTypes140 = new String[] {
 				"java.lang.String", "java.lang.String", "java.lang.String",
 				"java.util.Locale", "java.util.Date", "java.util.Date",
-				"java.util.Date", "com.liferay.portal.service.ServiceContext"
+				"java.util.Date", "com.liferay.portal.service.ServiceContext",
+				"long"
 			};
 
 		_methodName145 = "setVisible";
@@ -339,7 +340,8 @@ public class CourseLocalServiceClpInvoker {
 				(java.util.Date)arguments[5], (java.util.Date)arguments[6],
 				(java.util.Date)arguments[7], ((Long)arguments[8]).longValue(),
 				((Integer)arguments[9]).intValue(),
-				(com.liferay.portal.service.ServiceContext)arguments[10]);
+				(com.liferay.portal.service.ServiceContext)arguments[10],
+				((Long)arguments[11]).longValue());
 		}
 
 		if (_methodName139.equals(name) &&
@@ -349,7 +351,8 @@ public class CourseLocalServiceClpInvoker {
 				(java.lang.String)arguments[3], (java.util.Locale)arguments[4],
 				(java.util.Date)arguments[5], (java.util.Date)arguments[6],
 				(java.util.Date)arguments[7],
-				(com.liferay.portal.service.ServiceContext)arguments[8]);
+				(com.liferay.portal.service.ServiceContext)arguments[8],
+				((Long)arguments[9]).longValue());
 		}
 
 		if (_methodName140.equals(name) &&
@@ -358,7 +361,8 @@ public class CourseLocalServiceClpInvoker {
 				(java.lang.String)arguments[1], (java.lang.String)arguments[2],
 				(java.util.Locale)arguments[3], (java.util.Date)arguments[4],
 				(java.util.Date)arguments[5], (java.util.Date)arguments[6],
-				(com.liferay.portal.service.ServiceContext)arguments[7]);
+				(com.liferay.portal.service.ServiceContext)arguments[7],
+				((Long)arguments[8]).longValue());
 		}
 
 		if (_methodName145.equals(name) &&

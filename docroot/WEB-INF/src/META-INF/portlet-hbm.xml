@@ -64,6 +64,7 @@
 		<property name="CourseExtraData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="closed" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="maxusers" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="calificationType" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CourseResultImpl" table="Lms_CourseResult">
 		<id name="crId" type="long">

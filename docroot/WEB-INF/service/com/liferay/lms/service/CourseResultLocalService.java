@@ -265,4 +265,6 @@ public interface CourseResultLocalService extends BaseLocalService,
 	public com.liferay.lms.model.CourseResult getCourseResultByCourseAndUser(
 		long courseId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.lang.String translateResult(double result, long groupId);
 }
