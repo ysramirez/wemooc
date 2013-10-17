@@ -321,8 +321,8 @@ public class FillblankQuestionType extends BaseQuestionType {
 		return html;
 	}
 	
-	public String getHtmlFeedback(Document document,long questionId){
-		return getHtml(document, questionId, true, null);
+	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay){
+		return getHtml(document, questionId, true, themeDisplay);
 	}
 
 	protected String getAnswersSelected(Document document, long questionId) {

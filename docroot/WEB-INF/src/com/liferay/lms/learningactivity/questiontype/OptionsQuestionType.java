@@ -118,7 +118,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 			List<TestAnswer> answersSelected=getAnswersSelected(document, questionId);
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			int correctAnswers=0, correctAnswered=0, incorrectAnswered=0;
-			
+			System.out.println("a: " + themeDisplay);
 			if(feedback) feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 			
 			for(TestAnswer answer:testAnswers){
@@ -168,8 +168,8 @@ public class OptionsQuestionType extends BaseQuestionType {
 		return html;
 	}
 
-	public String getHtmlFeedback(Document document,long questionId){
-		return getHtml(document, questionId, true, null);
+	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay){
+		return getHtml(document, questionId, true, themeDisplay);
 	}
 
 	protected List<TestAnswer> getAnswersSelected(Document document,long questionId){

@@ -298,7 +298,7 @@ public class QuestionTypeClp implements QuestionType {
 		return ((Element)returnObj);
 	}
 	
-	public String getHtmlFeedback(Document document,long questionId){
+	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay){
 		Object returnObj = null;
 
 		try {

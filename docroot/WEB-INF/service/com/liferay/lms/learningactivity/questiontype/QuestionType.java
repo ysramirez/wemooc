@@ -35,7 +35,7 @@ public interface QuestionType
 	public boolean correct(ActionRequest actionRequest, long questionId);
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document);
 	public Element getResults(ActionRequest actionRequest, long questionId);
-	public String getHtmlFeedback(Document document,long questionId);
+	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay);
 	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId, LearningActivity activity) throws PortalException, SystemException;
 	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId, long userId, ServiceContext serviceContext) throws SystemException, PortalException;
 	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException;

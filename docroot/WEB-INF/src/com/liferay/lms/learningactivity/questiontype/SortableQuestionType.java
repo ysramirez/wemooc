@@ -212,9 +212,9 @@ public class SortableQuestionType extends BaseQuestionType {
 		return html;
 	}
 	
-	public String getHtmlFeedback(Document document,long questionId){
+	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay){
 
-		return getHtml(document, questionId, true, null);
+		return getHtml(document, questionId, true, themeDisplay);
 	}
 	
 	protected List<TestAnswer> getAnswerSelected(Document document,long questionId){
