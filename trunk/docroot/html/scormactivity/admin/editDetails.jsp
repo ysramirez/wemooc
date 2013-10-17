@@ -16,6 +16,8 @@
 
 <%
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"resId"));
+	request.setAttribute("activity", learningActivity);
+	
 	long entryId=ParamUtil.getLong(request, "assertId");
 	if(entryId==0){
 		entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "assetEntry"), 0);
@@ -62,3 +64,7 @@
 								getClassTypes(new long[0], themeDisplay.getLocale()).get(Long.valueOf(learningActivity.getTypeId()))%>"></liferay-ui:header>
 <liferay-ui:header title="<%=learningActivity.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 <iframe id="<portlet:namespace/>editor" src="<%=path.toString() %>" frameBorder="0" scrolling="no" width="100%" height="0"></iframe>
+
+<aui:button-row>		
+	<liferay-util:include page="/html/scormactivity/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
+</aui:button-row>
