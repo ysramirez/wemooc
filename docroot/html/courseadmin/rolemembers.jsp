@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LmsPrefs"%>
 <%@page import="com.liferay.portal.util.comparator.UserFirstNameComparator"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.Collections"%>
@@ -39,9 +41,6 @@ else
 %>
 <liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
 
-<liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>" backURL="<%=backURL %>"></liferay-ui:header>
-<h2><%=role.getTitle(themeDisplay.getLocale()) %></h2>
-
 <portlet:renderURL var="adduserURL">
 	<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
 	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
@@ -50,7 +49,7 @@ else
 
 <portlet:renderURL var="importUsersURL"  windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 	<portlet:param name="courseId" value="<%=ParamUtil.getString(renderRequest, \"courseId\") %>" /> 
-	<portlet:param name="roleId" value="<%=ParamUtil.getString(renderRequest, \"roleId\") %>" /> 
+	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" /> 
 	<portlet:param name="jspPage" value="/html/courseadmin/popups/importUsers.jsp" /> 
 </portlet:renderURL>
 
@@ -90,7 +89,7 @@ else
 		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,
 			          																   '<portlet:namespace />courseId':'<%=Long.toString(courseId) %>',
 			          																   '<portlet:namespace />roleId':'<%=Long.toString(roleId) %>',
-			          																   '<portlet:namespace />jspPage':'/html/courseadmin/rolemembers.jsp'});	
+			          																   '<portlet:namespace />jspPage':'/html/courseadmin/rolememberstab.jsp'});	
 	            	}
 	            }
 	        }).plug(A.Plugin.IO, {
@@ -98,6 +97,7 @@ else
 	            parseContent: true
 	        }).render().show();   
 		}); 
+
     }
     
 //-->
@@ -155,11 +155,27 @@ modelVar="user">
 <liferay-ui:user-display userId="<%=user.getUserId() %>"></liferay-ui:user-display>
 </liferay-ui:search-container-column-text>
 <liferay-ui:search-container-column-text>
+
+<%
+	LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
+	String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
+	String tab="";
+	if(roleId==commmanager.getRoleId()){
+		tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
+	}else if(roleId==prefs.getEditorRole()){
+		tab = editorName;
+	}else{
+		tab = teacherName;
+	}
+%>
+
 <liferay-portlet:actionURL name="removeUserRole" var="removeUserRoleURL">
-<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolemembers.jsp"></liferay-portlet:param>
+<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"></liferay-portlet:param>
 <liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
 <liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
 <liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
+<liferay-portlet:param name="tabs1" value="<%=tab %>"></liferay-portlet:param>
 
 </liferay-portlet:actionURL>
 <liferay-ui:icon-delete url="<%=removeUserRoleURL %>" label="delete"></liferay-ui:icon-delete>

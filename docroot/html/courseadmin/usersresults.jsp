@@ -1,5 +1,8 @@
 
 
+<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LmsPrefs"%>
+<%@page import="com.liferay.portal.model.RoleConstants"%>
 <%@page import="com.liferay.portal.util.comparator.UserFirstNameComparator"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.CustomSQLParam"%>
 <%@include file="/init.jsp" %>
@@ -121,11 +124,27 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 <liferay-ui:user-display userId="<%=user.getUserId() %>"></liferay-ui:user-display>
 </liferay-ui:search-container-column-text> 
 <liferay-ui:search-container-column-text>
+
+<%
+	LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+	Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
+	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
+	String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
+	String tab="";
+	if(roleId==commmanager.getRoleId()){
+		tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
+	}else if(roleId==prefs.getEditorRole()){
+		tab = editorName;
+	}else{
+		tab = teacherName;
+	}
+%>
 <liferay-portlet:actionURL name="addUserRole" var="addUserRoleURL">
-<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolemembers.jsp"></liferay-portlet:param>
+<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"></liferay-portlet:param>
 <liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
 <liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
 <liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
+<liferay-portlet:param name="tabs1" value="<%=tab %>"></liferay-portlet:param>
 
 </liferay-portlet:actionURL>
 <a class="newitem2" href="<%=addUserRoleURL %>" ><liferay-ui:message key="assign-member" /></a>
