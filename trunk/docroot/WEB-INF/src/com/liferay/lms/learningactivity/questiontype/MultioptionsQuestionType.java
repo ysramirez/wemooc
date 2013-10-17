@@ -50,9 +50,9 @@ public class MultioptionsQuestionType extends OptionsQuestionType {
 	/**
 	 * Lo mismo que el caso base pero como puede tener varias respuestas correctas se muestra checkboxes en vez de radio buttons.
 	 */
-	public String getHtmlFeedback(Document document,long questionId){
+	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay){
 		super.setInputType("checkbox");
-		return super.getHtmlFeedback(document, questionId);
+		return super.getHtmlFeedback(document, questionId, themeDisplay);
 	}
 	
 	/**

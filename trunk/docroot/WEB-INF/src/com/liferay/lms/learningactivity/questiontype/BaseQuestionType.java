@@ -111,7 +111,7 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	}
 	
 	@Override
-	public String getHtmlFeedback(Document document,long questionId){
+	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay){
 		return "";
 	}
 	
