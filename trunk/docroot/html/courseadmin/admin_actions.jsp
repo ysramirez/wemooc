@@ -53,52 +53,21 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 <%
 }
 %>
-<portlet:renderURL var="teachersURL">
+<portlet:renderURL var="memebersURL">
 <portlet:param name="courseId" value="<%=primKey %>" />
-<portlet:param name="roleId" value="<%=Long.toString(prefs.getTeacherRole()) %>" />
-<portlet:param name="jspPage" value="/html/courseadmin/rolemembers.jsp" />
+<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
 </portlet:renderURL>
 <%
 if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
 {
-	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
 %>
 
-<liferay-ui:icon image="group" message="<%=teacherName %>" url="<%=teachersURL.toString() %>" />
-
-<%
-}
-%>
-<portlet:renderURL var="editorsURL">
-<portlet:param name="courseId" value="<%=primKey %>" />
-<portlet:param name="roleId" value="<%=Long.toString(prefs.getEditorRole()) %>" />
-<portlet:param name="jspPage" value="/html/courseadmin/rolemembers.jsp" />
-</portlet:renderURL>
-<%
-if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
-{
-String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
-%>
-<liferay-ui:icon image="group" message="<%=editorName %>" url="<%=editorsURL.toString() %>" />
-
-<%
-}
-Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
-%>
-<portlet:renderURL var="studentsURL">
-<portlet:param name="courseId" value="<%=primKey %>" />
-<portlet:param name="roleId" value="<%=Long.toString(commmanager.getRoleId()) %>" />
-<portlet:param name="jspPage" value="/html/courseadmin/rolemembers.jsp" />
-</portlet:renderURL>
-<%
-if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS"))
-{
-%>
-<liferay-ui:icon image="group" message="courseadmin.adminactions.students" url="<%=studentsURL.toString() %>" />
+<liferay-ui:icon image="group" message="assign-member" url="<%=memebersURL.toString() %>" />
 
 <%
 }
 %>
+
 <c:if test="<%= permissionChecker.hasPermission(myCourse.getGroupId(), Course.class.getName(), myCourse.getCourseId(), ActionKeys.PERMISSIONS) %>">
 	<liferay-security:permissionsURL
 		modelResource="<%=Course.class.getName() %>"
