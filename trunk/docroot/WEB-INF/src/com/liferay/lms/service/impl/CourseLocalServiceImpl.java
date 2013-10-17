@@ -52,6 +52,8 @@ import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portlet.asset.model.AssetEntry;
+import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
 
 
@@ -305,7 +307,13 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	
 		Course course=CourseLocalServiceUtil.getCourse(courseId);
 		course.setClosed(true);
+		Group courseGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+		courseGroup.setActive(false);
+		GroupLocalServiceUtil.updateGroup(courseGroup);
 		coursePersistence.update(course, true);		
+		AssetEntry courseAsset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
+		courseAsset.setVisible(false);
+		AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
 		return course;
 	}
 	
