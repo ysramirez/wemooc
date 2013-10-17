@@ -31,7 +31,9 @@ if(themeDisplay.isSignedIn())
 			</div>			
 		<%
 		
-	} else {
+	} else 
+	{
+
 		Date now=new Date(System.currentTimeMillis());
 		if((course.getStartDate().before(now)&&course.getEndDate().after(now))&&permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER"))
 		{
