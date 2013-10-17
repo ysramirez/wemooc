@@ -118,7 +118,6 @@ public class OptionsQuestionType extends BaseQuestionType {
 			List<TestAnswer> answersSelected=getAnswersSelected(document, questionId);
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			int correctAnswers=0, correctAnswered=0, incorrectAnswered=0;
-			System.out.println("a: " + themeDisplay);
 			if(feedback) feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 			
 			for(TestAnswer answer:testAnswers){
