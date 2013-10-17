@@ -149,7 +149,7 @@
 					            centered: true,
 					            modal: true,
 					            width: 600,
-					            height: 800,
+					            height: 350,
 					            after: {   
 						          	close: function(event){ 
 						          		document.getElementById('<portlet:namespace />studentsearch').submit();
