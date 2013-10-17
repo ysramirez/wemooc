@@ -45,6 +45,7 @@
 		</field>
 		<field name="closed" type="boolean" />
 		<field name="maxusers" type="long" />
+		<field name="calificationType" type="long" />
 	</model>
 	<model name="com.liferay.lms.model.CourseResult">
 		<field name="crId" type="long" />

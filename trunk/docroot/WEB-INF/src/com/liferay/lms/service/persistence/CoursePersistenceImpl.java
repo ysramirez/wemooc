@@ -701,6 +701,7 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 		courseImpl.setCourseExtraData(course.getCourseExtraData());
 		courseImpl.setClosed(course.isClosed());
 		courseImpl.setMaxusers(course.getMaxusers());
+		courseImpl.setCalificationType(course.getCalificationType());
 
 		return courseImpl;
 	}

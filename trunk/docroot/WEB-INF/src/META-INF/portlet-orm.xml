@@ -69,6 +69,7 @@
 			<basic name="CourseExtraData" />
 			<basic name="closed" />
 			<basic name="maxusers" />
+			<basic name="calificationType" />
 			<transient name="descriptionCurrentLanguageId" />
 			<transient name="descriptionMap" />
 			<transient name="modelAttributes" />

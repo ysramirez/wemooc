@@ -291,4 +291,6 @@ public interface LearningActivityResultLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.lms.model.LearningActivityResult> getByActId(
 		long actId) throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.lang.String translateResult(double result, long groupId);
 }

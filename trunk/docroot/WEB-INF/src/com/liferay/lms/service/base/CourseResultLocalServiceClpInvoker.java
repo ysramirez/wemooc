@@ -139,6 +139,10 @@ public class CourseResultLocalServiceClpInvoker {
 		_methodName127 = "getCourseResultByCourseAndUser";
 
 		_methodParameterTypes127 = new String[] { "long", "long" };
+
+		_methodName128 = "translateResult";
+
+		_methodParameterTypes128 = new String[] { "double", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -280,6 +284,12 @@ public class CourseResultLocalServiceClpInvoker {
 				((Long)arguments[1]).longValue());
 		}
 
+		if (_methodName128.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
+			return CourseResultLocalServiceUtil.translateResult(((Double)arguments[0]).doubleValue(),
+				((Long)arguments[1]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -331,4 +341,6 @@ public class CourseResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes126;
 	private String _methodName127;
 	private String[] _methodParameterTypes127;
+	private String _methodName128;
+	private String[] _methodParameterTypes128;
 }

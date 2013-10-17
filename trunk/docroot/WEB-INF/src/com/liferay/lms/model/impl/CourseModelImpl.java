@@ -91,9 +91,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			{ "CourseEvalId", Types.BIGINT },
 			{ "CourseExtraData", Types.VARCHAR },
 			{ "closed", Types.BOOLEAN },
-			{ "maxusers", Types.BIGINT }
+			{ "maxusers", Types.BIGINT },
+			{ "calificationType", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,groupCreatedId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null,closed BOOLEAN,maxusers LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,groupCreatedId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null,closed BOOLEAN,maxusers LONG,calificationType LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Course";
 	public static final String ORDER_BY_JPQL = " ORDER BY course.courseId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_Course.courseId ASC";
@@ -149,6 +150,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		model.setCourseExtraData(soapModel.getCourseExtraData());
 		model.setClosed(soapModel.getClosed());
 		model.setMaxusers(soapModel.getMaxusers());
+		model.setCalificationType(soapModel.getCalificationType());
 
 		return model;
 	}
@@ -227,6 +229,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		attributes.put("CourseExtraData", getCourseExtraData());
 		attributes.put("closed", getClosed());
 		attributes.put("maxusers", getMaxusers());
+		attributes.put("calificationType", getCalificationType());
 
 		return attributes;
 	}
@@ -351,6 +354,12 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 		if (maxusers != null) {
 			setMaxusers(maxusers);
+		}
+
+		Long calificationType = (Long)attributes.get("calificationType");
+
+		if (calificationType != null) {
+			setCalificationType(calificationType);
 		}
 	}
 
@@ -790,6 +799,14 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		_maxusers = maxusers;
 	}
 
+	public long getCalificationType() {
+		return _calificationType;
+	}
+
+	public void setCalificationType(long calificationType) {
+		_calificationType = calificationType;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -931,6 +948,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		courseImpl.setCourseExtraData(getCourseExtraData());
 		courseImpl.setClosed(getClosed());
 		courseImpl.setMaxusers(getMaxusers());
+		courseImpl.setCalificationType(getCalificationType());
 
 		courseImpl.resetOriginalValues();
 
@@ -1117,12 +1135,14 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 		courseCacheModel.maxusers = getMaxusers();
 
+		courseCacheModel.calificationType = getCalificationType();
+
 		return courseCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(41);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1164,13 +1184,15 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		sb.append(getClosed());
 		sb.append(", maxusers=");
 		sb.append(getMaxusers());
+		sb.append(", calificationType=");
+		sb.append(getCalificationType());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(64);
+		StringBundler sb = new StringBundler(67);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -1256,6 +1278,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			"<column><column-name>maxusers</column-name><column-value><![CDATA[");
 		sb.append(getMaxusers());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>calificationType</column-name><column-value><![CDATA[");
+		sb.append(getCalificationType());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1301,6 +1327,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	private boolean _originalClosed;
 	private boolean _setOriginalClosed;
 	private long _maxusers;
+	private long _calificationType;
 	private long _columnBitmask;
 	private Course _escapedModelProxy;
 }

@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry"%>
+<%@page import="com.liferay.lms.learningactivity.calificationtype.CalificationType"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="java.util.Map"%>
@@ -196,6 +199,24 @@ else
 		}
 		%>
 		</aui:select>
+		<%
+	}
+	
+	List<CalificationType> ctl = new CalificationTypeRegistry().getCalificationTypes();
+	if(ctl.size()>1){
+		%>
+			<aui:select name="calificationType" label="calificationType">
+		<%
+		for(CalificationType ct:ctl){
+			boolean selected = false;
+			if((course == null && PropsUtil.get("lms.calification.default.type").equals(Long.toString(ct.getTypeId()))) || (course != null && ct.getTypeId() == course.getCalificationType()))
+				selected = true;
+			%>
+				<aui:option value="<%=ct.getTypeId() %>"  selected="<%=selected %>"><liferay-ui:message key="<%=ct.getTitle(themeDisplay.getLocale()) %>" /></aui:option>
+			<%
+		}
+		%>
+			</aui:select>
 		<%
 	}
 	

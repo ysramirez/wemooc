@@ -23,6 +23,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.liferay.lms.learningactivity.calificationtype.CalificationType;
+import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;
+import com.liferay.lms.learningactivity.questiontype.QuestionType;
+import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
+import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
@@ -409,5 +414,20 @@ public class LearningActivityResultLocalServiceImpl
 
 		return results;	
 		
+	}
+	
+	public String translateResult(double result, long groupId){
+		String translatedResult = "";
+		try {
+			Course curso = courseLocalService.getCourseByGroupCreatedId(groupId);
+			if(curso != null){
+				CalificationType ct = new CalificationTypeRegistry().getCalificationType(curso.getCalificationType());
+				translatedResult = ct.translate(result);
+			}
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return translatedResult;
 	}
 }
