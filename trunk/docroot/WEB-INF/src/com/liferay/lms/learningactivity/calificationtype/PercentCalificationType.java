@@ -33,7 +33,7 @@ public class PercentCalificationType extends BaseCalificationType {
 	
 	@Override
 	public String translate(double result) {
-		return Long.toString(result);
+		return Double.toString(result);
 	}
 	
 }

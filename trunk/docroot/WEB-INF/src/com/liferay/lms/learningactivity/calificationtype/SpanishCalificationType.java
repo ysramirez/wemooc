@@ -20,7 +20,7 @@ public class SpanishCalificationType extends CeroToTenCalificationType{
 	}
 
 	@Override
-	public String getTitle(double locale) {
+	public String getTitle(Locale locale) {
 		return "spanish_ct.title";
 	}
 
@@ -30,7 +30,7 @@ public class SpanishCalificationType extends CeroToTenCalificationType{
 	}
 
 	@Override
-	public String translate(long result) {
+	public String translate(double result) {
 		double tmpResult = Double.parseDouble(super.translate(result));
 		if(tmpResult < 5)
 			return "spanish_ct.insuficiente";
