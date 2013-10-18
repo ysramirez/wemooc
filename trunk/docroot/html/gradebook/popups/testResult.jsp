@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
 <%@page import="java.util.HashMap"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
@@ -54,37 +56,17 @@ if(actId == 0){
 		
 		LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), userId);
 		
-		///A partir del XML
 		boolean userPassed=false;
 		long oldResult=-1;
-		Map<Long, TestAnswer> resultados=(Map<Long, TestAnswer>)request.getAttribute("resultados");
-		if(resultados==null) {
-			resultados=new HashMap<Long, TestAnswer>();
-			Iterator<Element> nodeItr = SAXReaderUtil.read(larntry.getTryResultData()).getRootElement().elementIterator();
-			while(nodeItr.hasNext()) {
-				Element element = nodeItr.next();
-		         if("question".equals(element.getName())) {
-		        	 Iterator<Element> elementItr = element.elementIterator();
-		        	 while(elementItr.hasNext()) {
-		        		 Element elementElement = elementItr.next();
-		        		 if("answer".equals(elementElement.getName())) {
-		        			 resultados.put(Long.valueOf(element.attributeValue("id")),
-		        			 	TestAnswerLocalServiceUtil.getTestAnswer(Long.valueOf(elementElement.attributeValue("id"))));
-		        		 }
-		        	 }
-		         }
-	
-		    }	
-					
-			userPassed=LearningActivityResultLocalServiceUtil.userPassed(learningActivity.getActId(),userId);
-		} else {
+		if(result != null)
+			userPassed = result.getPassed();
+		else{
 			userPassed=learningActivity.getPasspuntuation()<=larntry.getResult();
 			oldResult=(Long)request.getAttribute("oldResult");
 		%>
 		<jsp:include page="/html/shared/popResult.jsp" />
-		
 		<h2><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
-		<% } %>
+		<%} %>
 		<p><liferay-ui:message key="test-done" /></p>
 		<liferay-util:include page="/html/execactivity/test/timeout.jsp" servletContext="<%=this.getServletContext() %>">
 			<liferay-util:param value="<%=Long.toString(learningActivity.getActId()) %>" name="actId"/>
@@ -129,46 +111,9 @@ if(actId == 0){
 		}
 		
 		for(TestQuestion question:questions){
-			String feedback=LanguageUtil.get(pageContext,"answer-in-blank");
-			TestAnswer answerSelected=null;
-			String cssclass="question incorrect";
-			if(resultados.containsKey(question.getQuestionId())){
-				answerSelected=resultados.get(question.getQuestionId());
-			 	feedback=answerSelected.getFeedbacknocorrect();
-				cssclass="question incorrect";
-				if(answerSelected.isIsCorrect()){
-				 	cssclass="question correct";
-				 	feedback=answerSelected.getFeedbackCorrect();
-				}
-			}
-			%>
-			<div class="<%=cssclass%>">
-				<div class="questiontext"><%=question.getText() %></div>
-				<div class="content_answer">
-			
-			<%
-			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			for(TestAnswer answer:testAnswers)	{
-				String checked="";
-				if(answerSelected!=null && answer.getAnswerId()==answerSelected.getAnswerId())	{
-					checked="checked='checked'";
-				}
-				
-				String correct="";
-				if(answer.isIsCorrect()){
-					correct="font_14 color_cuarto negrita";
-				}
-				%>
-				<div class="answer <%=correct%>">
-					<input type="radio" name="question_<%=question.getQuestionId()%>" <%=checked %> value="<%=answer.getAnswerId() %>"  disabled="disabled"><%=answer.getAnswer() %>
-				</div>
-				<%
-			}
-			%>
-				</div>
-				<div class="questionFeedback"><%=feedback%></div>
-			</div>	
-			<%
+			QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+			qt.setLocale(themeDisplay.getLocale());
+			%><%=qt.getHtmlFeedback(SAXReaderUtil.read(larntry.getTryResultData()), question.getQuestionId(), themeDisplay)%><%
 		}
 		
 		if(tries==0 || userTries < tries ||permissionChecker.hasPermission(learningActivity.getGroupId(),LearningActivity.class.getName(),learningActivity.getActId(), ActionKeys.UPDATE)) {
