@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.model.MembershipRequest"%>
+<%@page import="com.liferay.portal.model.MembershipRequestConstants"%>
+<%@page import="com.liferay.portal.service.MembershipRequestLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@include file="/init.jsp" %>
@@ -10,12 +13,14 @@
 	
 <%
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW))
-{
-if(themeDisplay.isSignedIn())
-{	
-	if(GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),themeDisplay.getScopeGroupId()))
-	{
+
+if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW)){
+	int numberUsers = UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId());
+	
+	if(themeDisplay.isSignedIn())
+	{	
+		if(GroupLocalServiceUtil.hasUserGroup(themeDisplay.getUserId(),themeDisplay.getScopeGroupId()))
+		{
 		%>
 			<portlet:actionURL name="desinscribir"  var="desinscribirURL" windowState="NORMAL"/>
 			<script type="text/javascript">
@@ -31,33 +36,67 @@ if(themeDisplay.isSignedIn())
 			</div>			
 		<%
 		
-	} else 
-	{
+		} else 	{
+			Group groupC = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 
-		Date now=new Date(System.currentTimeMillis());
-		if((course.getStartDate().before(now)&&course.getEndDate().after(now))&&permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER"))
-		{
-		%>
-			<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.noinscrito" /></div>
-			<portlet:actionURL name="inscribir"  var="inscribirURL" windowState="NORMAL"/>
-			<div class="boton_inscibirse ">
-				<a href="<%=inscribirURL %>"><liferay-ui:message key="inscripcion.inscribete" /></a>
-			</div>			
-		<%
+			Date now=new Date(System.currentTimeMillis());
+			if((course.getStartDate().before(now)&&course.getEndDate().after(now))&&permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER")){
+				if(numberUsers<course.getMaxusers()&&groupC.getType()!=GroupConstants.TYPE_SITE_PRIVATE){
+					if(groupC.getType()==GroupConstants.TYPE_SITE_OPEN){
+					%>
+						<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.noinscrito" /></div>
+						<portlet:actionURL name="inscribir"  var="inscribirURL" windowState="NORMAL"/>
+						<div class="boton_inscibirse ">
+							<a href="<%=inscribirURL %>"><liferay-ui:message key="inscripcion.inscribete" /></a>
+						</div>			
+					<%
+					}else if(groupC.getType()==GroupConstants.TYPE_SITE_RESTRICTED){
+						List<MembershipRequest> pending = MembershipRequestLocalServiceUtil.getMembershipRequests(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), MembershipRequestConstants.STATUS_PENDING);
+						
+						if(pending.size()>0){
+							%><div class="mensaje_marcado"><liferay-ui:message key="course.pending" /></div><%
+						}else{
+							List<MembershipRequest> denied = MembershipRequestLocalServiceUtil.getMembershipRequests(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), MembershipRequestConstants.STATUS_DENIED);
+							
+							if(denied.size()>0){
+								%><div class="mensaje_marcado"><liferay-ui:message key="course.denied" /></div><%
+							}else{
+								%>
+								<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.surveillance" /></div>
+								<portlet:actionURL name="member"  var="memberURL" windowState="NORMAL"/>
+								<div class="boton_inscibirse ">
+									<a href="<%=memberURL %>"><liferay-ui:message key="inscripcion.request" /></a>
+								</div>	
+								<%	
+							}
+						}
+					}
+				}else{
+					%>
+					<div class="mensaje_marcado"><liferay-ui:message key="course.full" /></div>
+					<%
+				}
+			}else{
+				if(!permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER")){
+					%><div class="mensaje_marcado"><liferay-ui:message key="inscripcion.permission" /></div><%
+				}else if(course.getStartDate().after(now)){
+					%><div class="mensaje_marcado"><liferay-ui:message key="inscripcion.date" /></div><%
+				}else{
+					%><div class="mensaje_marcado"><liferay-ui:message key="inscripcion.date.pass" /></div><%
+				}
+				
+			}
 		}
+	} else {
+		String urlRedirect= themeDisplay.getURLCurrent();	
+		%>
+		<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.nologado" /></div>
+		<div class="boton_inscibirse ">
+			<a href="/c/portal/login?redirect=<%=urlRedirect%>"><liferay-ui:message key="inscripcion.registrate" /></a>
+		</div>
+		<%	
 	}
-} else {
-	String urlRedirect= themeDisplay.getURLCurrent();	
-	%>
-	<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.nologado" /></div>
-	<div class="boton_inscibirse ">
-		<a href="/c/portal/login?redirect=<%=urlRedirect%>"><liferay-ui:message key="inscripcion.registrate" /></a>
-	</div>
-	<%	
-}
-}
-else
-{
+}else{
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 }
 %>

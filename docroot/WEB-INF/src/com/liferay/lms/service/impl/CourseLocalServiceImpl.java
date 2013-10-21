@@ -21,7 +21,6 @@ import java.util.Locale;
 import java.util.Map;
 
 import com.liferay.lms.model.Course;
-import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
@@ -34,6 +33,10 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -44,7 +47,6 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
-import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -78,6 +80,9 @@ import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
  * @see com.liferay.lms.service.CourseLocalServiceUtil
  */
 public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
+	
+	Log log = LogFactoryUtil.getLog(CourseLocalServiceImpl.class);
+	
 	public java.util.List<Course> getCoursesOfGroup(long groupId) throws SystemException
 	{
 		return coursePersistence.findByGroupId(groupId);
@@ -99,7 +104,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return coursePersistence.fetchByGroupCreatedId(groupId);
 	}
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
-			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite,ServiceContext serviceContext, long calificationType)
+			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite,ServiceContext serviceContext, long calificationType, int maxUsers)
 			throws SystemException, PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long userId=serviceContext.getUserId();
@@ -116,6 +121,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setStatus(WorkflowConstants.STATUS_APPROVED);
 			course.setExpandoBridgeAttributes(serviceContext);
 			course.setCalificationType(calificationType);
+			course.setMaxusers(maxUsers);
 			coursePersistence.update(course, true);
 			resourceLocalService.addResources(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,Course.class.getName(), course.getPrimaryKey(), false,true, true);
 			assetEntryLocalService.updateEntry(userId, course.getGroupId(), Course.class.getName(),
@@ -141,12 +147,15 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(Course.class);
 			indexer.reindex(course);
 		}catch(Exception e){
-			System.out.println("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
+			if(log.isInfoEnabled()){
+				log.info("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
+			}
 		}
 		return course;
 		
 	}
-	
+
+	@Indexable(type=IndexableType.REINDEX)
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
 		ServiceContext serviceContext, long calificationType)
@@ -156,8 +165,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		long layoutSetPrototypeId=Long.valueOf(lmsPrefs.getLmsTemplates());
 		return addCourse (title, description,summary,friendlyURL, locale,
 				createDate,startDate,endDate,layoutSetPrototypeId,GroupConstants.TYPE_SITE_PRIVATE,
-				 serviceContext, calificationType);
+				 serviceContext, calificationType,0);
 	}
+
+	@Indexable(type=IndexableType.REINDEX)
 	public Course addCourse (String title, String description,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,
 		ServiceContext serviceContext, long calificationType)
@@ -270,9 +281,19 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	{
 	    assetEntryLocalService.updateVisible(Course.class.getName(), courseId, visible);
 	}
-	public Course modCourse (Course course,String summary,
+	
+	@Indexable(type=IndexableType.REINDEX)
+	public Course modCourse (Course course,String summary, 
 			ServiceContext serviceContext)
 			throws SystemException, PortalException {
+			int numberUsers = UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId());
+			if(course.getMaxusers()>0&&numberUsers>course.getMaxusers()){
+				if(log.isDebugEnabled()){
+					log.debug("Throws exception max users violated");
+				}
+				throw new PortalException("maxUsers "+numberUsers);
+			}
+		
 			course.setExpandoBridgeAttributes(serviceContext);
 			Locale locale=new Locale(serviceContext.getLanguageId());
 			coursePersistence.update(course, true);
@@ -280,7 +301,16 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			Group theGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 			theGroup.setName(course.getTitle(locale, true));
 			theGroup.setDescription(summary);
+			
+			int type=GroupConstants.TYPE_SITE_OPEN;
+			try{
+				type = Integer.valueOf(serviceContext.getAttribute("type").toString());
+			}catch(NumberFormatException nfe){				
+			}
+			
+			theGroup.setType(type);
 			GroupLocalServiceUtil.updateGroup(theGroup);
+						
 			assetEntryLocalService.updateEntry(
 					userId, course.getGroupId(), Course.class.getName(),
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
@@ -288,13 +318,12 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, course.getTitle(), course.getDescription(locale), summary, null, null, 0, 0,
 					null, false);
-			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
-					Course.class);
 
-			indexer.reindex(course);
 			return course;
 		
 			}
+
+	@Indexable(type=IndexableType.REINDEX)
 	public Course modCourse (Course course, 
 			ServiceContext serviceContext)
 			throws SystemException, PortalException {
@@ -317,7 +346,8 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
 		return course;
 	}
-	
+
+	@Indexable(type=IndexableType.DELETE)
 	public Course deleteCourse (long courseId) throws SystemException,
 	PortalException {
 	this.deleteCourse(CourseLocalServiceUtil.getCourse(courseId));
