@@ -5,8 +5,13 @@ import java.util.Date;
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.ProcessAction;
+import com.liferay.portal.kernel.exception.SystemException;
 
+import com.liferay.lms.model.Course;
+import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -14,7 +19,12 @@ import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Group;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.MembershipRequestLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -22,7 +32,60 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /** Portlet implementation class CommunityInscription */
 public class CommunityInscription extends MVCPortlet {
+	private static Log log = LogFactoryUtil.getLog(CommunityInscription.class);
 
+	@ProcessAction(name = "member")
+	public void member(ActionRequest request, ActionResponse response) throws SystemException{
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+		Group group = null;
+		Course course = null;
+		int numberUsers = 0;
+		try {
+			group = GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
+			course = CourseLocalServiceUtil.getCourseByGroupCreatedId(themeDisplay.getScopeGroupId());
+			numberUsers = UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId());
+		} catch (PortalException e) {
+			if(log.isDebugEnabled()){
+				e.printStackTrace();
+			}
+			
+		} catch (SystemException e) {
+			if(log.isDebugEnabled()){
+				e.printStackTrace();
+			}
+		}
+    	
+    	if(group.getType()!=GroupConstants.TYPE_SITE_RESTRICTED){
+    		if(log.isDebugEnabled()){
+    			log.debug("Site not restricted!");
+    		}
+    		throw new SystemException("Site not restricted!");
+    	}
+    	
+    	if(numberUsers>=course.getMaxusers()){
+    		if(log.isDebugEnabled()){
+    			log.debug("Maxusers!");
+    		}
+    		throw new SystemException("Maxusers!");
+    	}
+    	
+
+		try {
+	    	ServiceContext serviceContext=ServiceContextFactory.getInstance(request);
+	    	MembershipRequestLocalServiceUtil.addMembershipRequest(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), "Enroll petition", serviceContext); 
+		} catch (PortalException e) {
+			if(log.isDebugEnabled()){
+				e.printStackTrace();
+			}
+			
+		}catch (SystemException e) {
+			if(log.isDebugEnabled()){
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	@ProcessAction(name = "inscribir")
 	public void inscribir(ActionRequest request, ActionResponse response) throws Exception{
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -30,6 +93,19 @@ public class CommunityInscription extends MVCPortlet {
 
 		long[] groupId = new long[1];
     	groupId[0] = themeDisplay.getScopeGroupId();	
+    	
+    	Group group = GroupLocalServiceUtil.getGroup(groupId[0]);
+    	Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId[0]);
+    	int numberUsers = UserLocalServiceUtil.getGroupUsersCount(groupId[0]);
+    	if(numberUsers>=course.getMaxusers()){
+    		throw new SystemException("Maxusers!");
+    	}
+    	
+    	if(group.getType()==GroupConstants.TYPE_SITE_PRIVATE){
+    		throw new SystemException("Site restricted!");
+    	}
+    	
+    	
     	
     	long userId = themeDisplay.getUserId();
 		GroupLocalServiceUtil.addUserGroups(userId, groupId);
