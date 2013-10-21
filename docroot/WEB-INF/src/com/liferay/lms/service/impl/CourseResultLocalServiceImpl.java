@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.theme.ThemeDisplay;
 
 /**
  * The implementation of the course result local service.
@@ -110,13 +111,13 @@ public class CourseResultLocalServiceImpl
 		//return courseResultPersistence.fetchByuc(userId, courseId);
 	}
 	
-	public String translateResult(double result, long groupId){
+	public String translateResult(ThemeDisplay themeDisplay, double result, long groupId){
 		String translatedResult = "";
 		try {
 			Course curso = courseLocalService.getCourseByGroupCreatedId(groupId);
 			if(curso != null){
 				CalificationType ct = new CalificationTypeRegistry().getCalificationType(curso.getCalificationType());
-				translatedResult = ct.translate(result);
+				translatedResult = ct.translate(themeDisplay, result);
 			}
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block

@@ -40,12 +40,12 @@
 	</liferay-ui:search-container-results>
 	<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="learningActivity">
 	<%
-				long score=0;
+				String score= "-";
 				String status="not-started";
 				if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(learningActivity.getActId(), usuario.getUserId())){
 					status="started";
 					LearningActivityResult learningActivityResult=LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), usuario.getUserId());
-					score=learningActivityResult.getResult();
+					score=(learningActivityResult!=null)?LearningActivityResultLocalServiceUtil.translateResult(themeDisplay, learningActivityResult.getResult(), learningActivity.getGroupId()):"";
 					if(learningActivityResult.getEndDate()!=null){
 							status="not-passed"	;
 					}

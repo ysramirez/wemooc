@@ -285,6 +285,11 @@ public class TestQuestionLocalServiceWrapper implements TestQuestionLocalService
 		return _testQuestionLocalService.getQuestions(actid);
 	}
 
+	public com.liferay.lms.learningactivity.questiontype.QuestionType initializeQuestionType(
+		long questionType) {
+		return _testQuestionLocalService.initializeQuestionType(questionType);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

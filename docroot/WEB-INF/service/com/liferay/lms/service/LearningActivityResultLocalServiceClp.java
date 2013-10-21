@@ -170,7 +170,9 @@ public class LearningActivityResultLocalServiceClp
 
 		_methodName31 = "translateResult";
 
-		_methodParameterTypes31 = new String[] { "double", "long" };
+		_methodParameterTypes31 = new String[] {
+				"com.liferay.portal.theme.ThemeDisplay", "double", "long"
+			};
 	}
 
 	public com.liferay.lms.model.LearningActivityResult addLearningActivityResult(
@@ -1071,12 +1073,21 @@ public class LearningActivityResultLocalServiceClp
 		return (java.util.List<com.liferay.lms.model.LearningActivityResult>)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public java.lang.String translateResult(double result, long groupId) {
+	public java.lang.String translateResult(
+		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
+		long groupId) {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName31,
-					_methodParameterTypes31, new Object[] { result, groupId });
+					_methodParameterTypes31,
+					new Object[] {
+						ClpSerializer.translateInput(themeDisplay),
+						
+					result,
+						
+					groupId
+					});
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);

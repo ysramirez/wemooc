@@ -3,6 +3,8 @@ package com.liferay.lms.learningactivity.calificationtype;
 import java.text.DecimalFormat;
 import java.util.Locale;
 
+import com.liferay.portal.theme.ThemeDisplay;
+
 public class CeroToTenCalificationType extends BaseCalificationType{
 
 	/**
@@ -31,7 +33,7 @@ public class CeroToTenCalificationType extends BaseCalificationType{
 	}
 
 	@Override
-	public String translate(double result) {
+	public String translate(ThemeDisplay themeDisplay, double result) {
 		DecimalFormat df = new DecimalFormat("##.#");
 		return df.format(result/10);
 	}

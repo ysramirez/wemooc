@@ -73,12 +73,12 @@
 					activities = LiferaylmsUtil.getVisibleActivities(themeDisplay, activities, permissionChecker);
 					if(activities != null){
 					for(LearningActivity learningActivity: activities){
-						long result=0;
+						String result= "-";
 						String status="not-started";
 						if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(learningActivity.getActId(), usuario.getUserId())){
 							status="started";
 							LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), usuario.getUserId());
-							result=learningActivityResult.getResult();
+							result= (learningActivityResult!=null)?LearningActivityResultLocalServiceUtil.translateResult(themeDisplay, learningActivityResult.getResult(), learningActivity.getGroupId()):"";
 							if(learningActivityResult.getEndDate()!=null){
 								status="not-passed"	;
 							}

@@ -90,4 +90,12 @@ public class TestQuestionLocalServiceImpl
 	{
 	 return testQuestionPersistence.findByac(actid);
 	}
+	
+	public QuestionType initializeQuestionType(long questionType){
+		QuestionType qt = null;
+		try {
+			qt = new QuestionTypeRegistry().getQuestionType(questionType);
+		} catch (SystemException e) {}
+		return qt;
+	}
 }

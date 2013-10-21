@@ -142,7 +142,9 @@ public class CourseResultLocalServiceClpInvoker {
 
 		_methodName128 = "translateResult";
 
-		_methodParameterTypes128 = new String[] { "double", "long" };
+		_methodParameterTypes128 = new String[] {
+				"com.liferay.portal.theme.ThemeDisplay", "double", "long"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -286,8 +288,9 @@ public class CourseResultLocalServiceClpInvoker {
 
 		if (_methodName128.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
-			return CourseResultLocalServiceUtil.translateResult(((Double)arguments[0]).doubleValue(),
-				((Long)arguments[1]).longValue());
+			return CourseResultLocalServiceUtil.translateResult((com.liferay.portal.theme.ThemeDisplay)arguments[0],
+				((Double)arguments[1]).doubleValue(),
+				((Long)arguments[2]).longValue());
 		}
 
 		throw new UnsupportedOperationException();

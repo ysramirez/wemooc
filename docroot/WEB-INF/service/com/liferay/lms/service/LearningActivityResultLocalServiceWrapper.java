@@ -343,9 +343,11 @@ public class LearningActivityResultLocalServiceWrapper
 		return _learningActivityResultLocalService.getByActId(actId);
 	}
 
-	public java.lang.String translateResult(double result, long groupId) {
-		return _learningActivityResultLocalService.translateResult(result,
-			groupId);
+	public java.lang.String translateResult(
+		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
+		long groupId) {
+		return _learningActivityResultLocalService.translateResult(themeDisplay,
+			result, groupId);
 	}
 
 	/**

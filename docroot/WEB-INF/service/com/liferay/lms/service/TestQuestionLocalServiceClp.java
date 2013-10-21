@@ -128,6 +128,10 @@ public class TestQuestionLocalServiceClp implements TestQuestionLocalService {
 		_methodName21 = "getQuestions";
 
 		_methodParameterTypes21 = new String[] { "long" };
+
+		_methodName22 = "initializeQuestionType";
+
+		_methodParameterTypes22 = new String[] { "long" };
 	}
 
 	public com.liferay.lms.model.TestQuestion addTestQuestion(
@@ -755,6 +759,29 @@ public class TestQuestionLocalServiceClp implements TestQuestionLocalService {
 		return (java.util.List<com.liferay.lms.model.TestQuestion>)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public com.liferay.lms.learningactivity.questiontype.QuestionType initializeQuestionType(
+		long questionType) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22, new Object[] { questionType });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.lms.learningactivity.questiontype.QuestionType)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableLocalService _invokableLocalService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -798,4 +825,6 @@ public class TestQuestionLocalServiceClp implements TestQuestionLocalService {
 	private String[] _methodParameterTypes20;
 	private String _methodName21;
 	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
 }

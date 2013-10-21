@@ -266,5 +266,7 @@ public interface CourseResultLocalService extends BaseLocalService,
 		long courseId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public java.lang.String translateResult(double result, long groupId);
+	public java.lang.String translateResult(
+		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
+		long groupId);
 }
