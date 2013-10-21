@@ -258,4 +258,7 @@ public interface TestQuestionLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.lms.model.TestQuestion> getQuestions(
 		long actid) throws com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.lms.learningactivity.questiontype.QuestionType initializeQuestionType(
+		long questionType);
 }

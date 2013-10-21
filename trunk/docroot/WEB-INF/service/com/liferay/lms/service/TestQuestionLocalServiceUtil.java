@@ -292,6 +292,11 @@ public class TestQuestionLocalServiceUtil {
 		return getService().getQuestions(actid);
 	}
 
+	public static com.liferay.lms.learningactivity.questiontype.QuestionType initializeQuestionType(
+		long questionType) {
+		return getService().initializeQuestionType(questionType);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

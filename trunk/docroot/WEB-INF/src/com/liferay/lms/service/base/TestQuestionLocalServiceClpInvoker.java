@@ -127,6 +127,10 @@ public class TestQuestionLocalServiceClpInvoker {
 		_methodName126 = "getQuestions";
 
 		_methodParameterTypes126 = new String[] { "long" };
+
+		_methodName127 = "initializeQuestionType";
+
+		_methodParameterTypes127 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -249,6 +253,11 @@ public class TestQuestionLocalServiceClpInvoker {
 			return TestQuestionLocalServiceUtil.getQuestions(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName127.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+			return TestQuestionLocalServiceUtil.initializeQuestionType(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -294,4 +303,6 @@ public class TestQuestionLocalServiceClpInvoker {
 	private String[] _methodParameterTypes125;
 	private String _methodName126;
 	private String[] _methodParameterTypes126;
+	private String _methodName127;
+	private String[] _methodParameterTypes127;
 }

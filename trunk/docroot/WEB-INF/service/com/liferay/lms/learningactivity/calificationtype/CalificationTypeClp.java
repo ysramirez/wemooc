@@ -128,7 +128,7 @@ public class CalificationTypeClp implements CalificationType {
 		return ((String)returnObj);
 	}
 	
-	public String translate(double result){
+	public String translate(ThemeDisplay themeDisplay, double result){
 		Object returnObj = null;
 
 		try {

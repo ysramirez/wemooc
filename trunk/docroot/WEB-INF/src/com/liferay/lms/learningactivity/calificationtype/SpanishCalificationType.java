@@ -2,7 +2,10 @@ package com.liferay.lms.learningactivity.calificationtype;
 
 import java.util.Locale;
 
-public class SpanishCalificationType extends CeroToTenCalificationType{
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+
+public class SpanishCalificationType extends BaseCalificationType{
 
 	/**
 	 * 
@@ -30,19 +33,20 @@ public class SpanishCalificationType extends CeroToTenCalificationType{
 	}
 
 	@Override
-	public String translate(double result) {
-		double tmpResult = Double.parseDouble(super.translate(result));
+	public String translate(ThemeDisplay themeDisplay, double result) {
+		double tmpResult = result/10;
+		String label = "-";
 		if(tmpResult < 5)
-			return "spanish_ct.insuficiente";
+			label = "spanish_ct.insuficiente";
 		else if(tmpResult >= 5 && tmpResult < 6)
-			return "spanish_ct.suficiente";
+			label = "spanish_ct.suficiente";
 		else if(tmpResult >= 6 && tmpResult < 7)
-			return "spanish_ct.bien";
+			label = "spanish_ct.bien";
 		else if(tmpResult >= 7 && tmpResult < 9)
-			return "spanish_ct.notable";
+			label = "spanish_ct.notable";
 		else if(tmpResult >= 9)
-			return "spanish_ct.sobresaliente";
-		return "-";
+			label = "spanish_ct.sobresaliente";
+		return LanguageUtil.get(themeDisplay.getLocale(), label);
 	}
 
 }

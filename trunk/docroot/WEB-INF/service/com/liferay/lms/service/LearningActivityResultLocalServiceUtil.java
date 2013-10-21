@@ -341,8 +341,10 @@ public class LearningActivityResultLocalServiceUtil {
 		return getService().getByActId(actId);
 	}
 
-	public static java.lang.String translateResult(double result, long groupId) {
-		return getService().translateResult(result, groupId);
+	public static java.lang.String translateResult(
+		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
+		long groupId) {
+		return getService().translateResult(themeDisplay, result, groupId);
 	}
 
 	public static void clearService() {

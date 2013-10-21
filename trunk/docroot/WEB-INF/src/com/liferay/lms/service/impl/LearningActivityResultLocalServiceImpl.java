@@ -52,6 +52,7 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 
@@ -416,13 +417,13 @@ public class LearningActivityResultLocalServiceImpl
 		
 	}
 	
-	public String translateResult(double result, long groupId){
+	public String translateResult(ThemeDisplay themeDisplay, double result, long groupId){
 		String translatedResult = "";
 		try {
 			Course curso = courseLocalService.getCourseByGroupCreatedId(groupId);
 			if(curso != null){
 				CalificationType ct = new CalificationTypeRegistry().getCalificationType(curso.getCalificationType());
-				translatedResult = ct.translate(result);
+				translatedResult = ct.translate(themeDisplay, result);
 			}
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block
