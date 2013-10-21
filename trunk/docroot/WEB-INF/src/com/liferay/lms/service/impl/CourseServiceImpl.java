@@ -108,7 +108,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			course = CourseLocalServiceUtil.addCourse(
 					name, StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
 					LocaleUtil.getDefault(), now, now, now,Long.parseLong(lspist[0]),GroupConstants.TYPE_SITE_PRIVATE,
-					serviceContext, Long.parseLong("0"));
+					serviceContext, Long.parseLong("0"),0);
 			course.setCourseEvalId(1); // EvaluationAvgCourseEval.getTypeId();
 			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
 					serviceContext);
@@ -418,7 +418,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		} catch (Exception e) {
 		}		
 	}
-	@JSONWebService
+	/*@JSONWebService
 	public boolean existsCourseName(Long companyId, Long groupId, String groupName) {
 		
 		try {
@@ -431,5 +431,5 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			e.printStackTrace();
 		}
 		return false;
-	}
+	}*/
 }

@@ -1,6 +1,7 @@
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.calificationtype.CalificationType"%>
+<%@page import="java.util.Set"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="java.util.Map"%>
@@ -28,10 +29,15 @@
 <liferay-ui:error key="title-required" message="title-required" />
 <liferay-ui:error key="title-empty" message="title-empty" />
 <liferay-ui:error key="title-repeated" message="title-repeated" />
+<liferay-ui:error key="max-users-violated" message="max-users-violated" />
 	
-	<%if(SessionErrors.contains(renderRequest, "newCourseErrors")) { %>
+	<%
+	
+	String maxUsersError= ParamUtil.getString(request,"maxUsersError");
+	if(SessionErrors.contains(renderRequest, "newCourseErrors")) { %>
 		<div class="portlet-msg-error">
-			<% List<String> errors = (List<String>)SessionErrors.get(renderRequest, "newCourseErrors");
+			<% 
+				List<String> errors = (List<String>)SessionErrors.get(renderRequest, "newCourseErrors");
 			   if(errors.size()==1) {
 				  %><%=errors.get(0) %><%
 			   }	
@@ -42,10 +48,15 @@
 				 	<li><%=error %></li>
 				<% } %>
 				</ul>
-			<% } %>
+			<% }
+			%>
 		</div>
-	<% }%>
+	<% }
 	
+	if((maxUsersError!=null&&!"".equals(maxUsersError))){
+	%>
+		<div class="portlet-msg-error"><%=maxUsersError %></div>
+	<%} %>
 
 
 <%
@@ -95,8 +106,12 @@ int endMin=Integer.parseInt(formatMin.format(today));
 String summary="";
 AssetEntry entry=null;
 boolean visibleencatalogo=false;
+int type = GroupConstants.TYPE_SITE_OPEN;
+long maxUsers = 0;
+Group groupCreated = null;
 if(course!=null)
 {
+	groupCreated = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 	entry=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(),course.getCourseId());
 	visibleencatalogo=entry.getVisible();
 	summary=entry.getSummary();
@@ -112,6 +127,8 @@ if(course!=null)
 	endYear=Integer.parseInt(formatYear.format(course.getEndDate()));
 	endHour=Integer.parseInt(formatHour.format(course.getEndDate()));
 	endMin=Integer.parseInt(formatMin.format(course.getEndDate()));
+	type=course.getStatus(); //TODO
+	maxUsers=course.getMaxusers();
 	%>
 	<aui:model-context bean="<%= course %>" model="<%= Course.class %>" />
 	<%
@@ -132,15 +149,8 @@ else
 	<aui:input name="courseId" type="hidden" value="<%=courseId %>"/>
 	<aui:input name="title" label="title">
 	</aui:input>
-<%
-	String value="";
-		if(courseId!=0){
-		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
-		value=groupsel.getFriendlyURL();
-	}
-%>
 
-	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=value %> </aui:input>
+	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=groupCreated!=null?groupCreated.getFriendlyURL():"" %> </aui:input>
 
 <aui:field-wrapper label="description">
 			<liferay-ui:input-editor name="description" width="100%" />
@@ -153,6 +163,7 @@ else
 	<c:if test="<%= permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),0,publishPermission) %>">
 		<aui:input type="checkbox" name="visible" label="published-in-catalog" value="<%=visibleencatalogo %>" />
 	</c:if>
+	
 	<aui:input type="textarea" cols="100" rows="4" name="summary" label="summary" value="<%=summary %>"/>
 	
 	<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
@@ -225,16 +236,32 @@ else
 	%>
 <liferay-ui:panel-container >
 	<liferay-ui:panel title="lms-inscription-configuration" extended="false">
-	<aui:field-wrapper label="start-inscription-date" cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
-		<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
-				 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
-		<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>"></liferay-ui:input-time>
-	</aui:field-wrapper>
-	<aui:field-wrapper label="end-inscription-date"  cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
-		<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012" dayParam="stopDay" monthParam="stopMon"
-				 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
-		 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time></br>
-	</aui:field-wrapper>
+		<aui:field-wrapper label="start-inscription-date" cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
+			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"  dayParam="startDay" monthParam="startMon"
+					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
+			<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>"></liferay-ui:input-time>
+		</aui:field-wrapper>
+		<aui:field-wrapper label="end-inscription-date"  cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
+			<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012" dayParam="stopDay" monthParam="stopMon"
+					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
+			 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time></br>
+		</aui:field-wrapper>
+		<aui:select name="type" label="registration-type" helpMessage="<%=LanguageUtil.get(pageContext,\"type-method-help\")%>">
+			<c:choose>
+      			<c:when test="<%=groupCreated==null%>">
+					<aui:option value="<%=GroupConstants.TYPE_SITE_OPEN %>" ><liferay-ui:message key="public" /></aui:option>
+					<aui:option value="<%=GroupConstants.TYPE_SITE_PRIVATE %>" ><liferay-ui:message key="private" /></aui:option>
+					<aui:option value="<%=GroupConstants.TYPE_SITE_RESTRICTED %>" ><liferay-ui:message key="restricted" /></aui:option>
+      			</c:when>
+      			<c:otherwise>
+					<aui:option value="<%=GroupConstants.TYPE_SITE_OPEN %>" selected="<%=groupCreated.getType()==GroupConstants.TYPE_SITE_OPEN %>" ><liferay-ui:message key="public" /></aui:option>
+					<aui:option value="<%=GroupConstants.TYPE_SITE_PRIVATE %>" selected="<%=groupCreated.getType()==GroupConstants.TYPE_SITE_PRIVATE %>" ><liferay-ui:message key="private" /></aui:option>
+					<aui:option value="<%=GroupConstants.TYPE_SITE_RESTRICTED %>" selected="<%=groupCreated.getType()==GroupConstants.TYPE_SITE_RESTRICTED %>" ><liferay-ui:message key="restricted" /></aui:option>
+      			</c:otherwise>
+			</c:choose>
+		</aui:select>
+		
+		<aui:input name="maxUsers" label="num-of-users" type="text" value="<%=maxUsers %>" helpMessage="<%=LanguageUtil.get(pageContext,\"max-users-method-help\")%>" />  
 	</liferay-ui:panel>
 	<liferay-ui:panel title="categorization" extended="false">
 	<liferay-ui:custom-attributes-available className="<%= Course.class.getName() %>">

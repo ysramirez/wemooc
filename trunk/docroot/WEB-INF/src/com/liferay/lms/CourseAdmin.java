@@ -36,6 +36,7 @@ import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -52,7 +53,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
@@ -79,6 +79,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  * Portlet implementation class CourseAdmin
  */
 public class CourseAdmin extends MVCPortlet {
+	Log log = LogFactoryUtil.getLog(CourseAdmin.class);
 
 	public static String DOCUMENTLIBRARY_MAINFOLDER = "ResourceUploads";
 	
@@ -116,11 +117,16 @@ public class CourseAdmin extends MVCPortlet {
 			CourseLocalServiceUtil.closeCourse(courseId);
 		}
 	}
-	public void saveCourse(ActionRequest actionRequest,
-			ActionResponse actionResponse) throws Exception {
+	public void saveCourse(ActionRequest actionRequest,	ActionResponse actionResponse) {
 
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-				Course.class.getName(), actionRequest);
+		ServiceContext serviceContext = null;
+		try {
+			serviceContext = ServiceContextFactory.getInstance(Course.class.getName(), actionRequest);
+		} catch (PortalException e1) {
+			
+		} catch (SystemException e1) {
+			
+		}
 
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
 				.getAttribute(WebKeys.THEME_DISPLAY);
@@ -154,6 +160,9 @@ public class CourseAdmin extends MVCPortlet {
 		String summary = ParamUtil.getString(actionRequest, "summary", "");
 		boolean visible = ParamUtil.getBoolean(actionRequest, "visible", false);
 		
+		int type = ParamUtil.getInteger(actionRequest, "type");
+		int maxusers = ParamUtil.getInteger(actionRequest, "maxUsers");
+		
 		long courseEvalId=ParamUtil.getLong(actionRequest, "courseEvalId", 0);
 
 		if (friendlyURL.equals("") && !title.equals("")) {
@@ -163,9 +172,14 @@ public class CourseAdmin extends MVCPortlet {
 		if (startAMPM > 0) {
 			startHour += 12;
 		}
-		Date startDate = PortalUtil.getDate(startMonth, startDay, startYear,
-				startHour, startMinute, user.getTimeZone(),
-				new EntryDisplayDateException());
+		Date startDate = new Date();
+		try {
+			startDate = PortalUtil.getDate(startMonth, startDay, startYear,
+					startHour, startMinute, user.getTimeZone(),
+					new EntryDisplayDateException());
+		} catch (PortalException e1) {
+			e1.printStackTrace();
+		}
 
 		int stopMonth = ParamUtil.getInteger(actionRequest, "stopMon");
 		int stopYear = ParamUtil.getInteger(actionRequest, "stopYear");
@@ -176,9 +190,14 @@ public class CourseAdmin extends MVCPortlet {
 		if (stopAMPM > 0) {
 			stopHour += 12;
 		}
-		Date stopDate = PortalUtil.getDate(stopMonth, stopDay, stopYear,
-				stopHour, stopMinute, user.getTimeZone(),
-				new EntryDisplayDateException());
+		Date stopDate = new Date();
+		try {
+			stopDate = PortalUtil.getDate(stopMonth, stopDay, stopYear,
+					stopHour, stopMinute, user.getTimeZone(),
+					new EntryDisplayDateException());
+		} catch (PortalException e1) {
+			e1.printStackTrace();
+		}
 
 		java.util.Date ahora = new java.util.Date(System.currentTimeMillis());
 		// Validations
@@ -228,38 +247,90 @@ public class CourseAdmin extends MVCPortlet {
 
 		Course course = null;
 		if (courseId == 0) {
-			course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
-					title, description, summary, friendlyURL,
-					themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,GroupConstants.TYPE_SITE_PRIVATE,
-					serviceContext, courseCalificationType);
+			try{
+				course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
+						title, description, summary, friendlyURL,
+						themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,type,
+						serviceContext, courseCalificationType,maxusers);
+			}catch(PortalException pe){
+				if(log.isDebugEnabled())log.debug("Error:"+pe.getMessage());
+				if(pe.getMessage().startsWith("maxUsers ")){					
+					
+					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", ""))));
+					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+					actionResponse.setRenderParameter("jspPage", "/html/courseadmin/editcourse.jsp");
+					return;
+				}else{
+					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+					return;
+				}
+			}catch(SystemException pe){
+				List<String> errors = new ArrayList<String>();
+				errors.add(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", "")));
+				SessionErrors.add(actionRequest, "newCourseErrors", errors);
+				actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+				actionResponse.setRenderParameter("jspPage", "/html/courseadmin/editcourse.jsp");
+				return;
+			}
 			if(course != null){
-				long[] groupIds = new long[1];
-				groupIds[0] = course.getGroupCreatedId();
-				GroupLocalServiceUtil.addUserGroups(user.getUserId(), groupIds);
-				long[] roles = new long[2];
-				LmsPrefs prefs = LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay
-						.getCompanyId());
-				roles[0] = prefs.getEditorRole();
-				roles[1] = prefs.getTeacherRole();
-				UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(),
-						course.getGroupCreatedId(), roles);
-
-				/* activamos el social equity */
-				AssetEntry aEntryCourse = AssetEntryLocalServiceUtil.getEntry(
-						Course.class.getName(), course.getCourseId());
+				try{
+					long[] groupIds = new long[1];
+					groupIds[0] = course.getGroupCreatedId();
+					GroupLocalServiceUtil.addUserGroups(user.getUserId(), groupIds);
+					long[] roles = new long[2];
+					LmsPrefs prefs = LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay
+							.getCompanyId());
+					roles[0] = prefs.getEditorRole();
+					roles[1] = prefs.getTeacherRole();
+					UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(),
+							course.getGroupCreatedId(), roles);
+	
+					/* activamos el social equity */
+					AssetEntry aEntryCourse = AssetEntryLocalServiceUtil.getEntry(
+							Course.class.getName(), course.getCourseId());
+				}catch(Exception e){
+					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+					return;
+				}
 			}
 
 		}
 		// Estamos editando un curso existente.
 		else {
 
-			course = CourseLocalServiceUtil.getCourse(courseId);
-			course.setDescription( description,themeDisplay.getLocale());
-			course.setStartDate(startDate);
-			course.setEndDate(stopDate);
-			course.setCalificationType(courseCalificationType);
-			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
-					summary, serviceContext);
+			try{
+				course = CourseLocalServiceUtil.getCourse(courseId);
+				course.setDescription( description,themeDisplay.getLocale());
+				course.setStartDate(startDate); 
+				course.setEndDate(stopDate);
+				course.setCalificationType(courseCalificationType);
+				course.setMaxusers(maxusers);
+				serviceContext.setAttribute("type", String.valueOf(type));
+				com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
+						summary, serviceContext);
+			}catch(PortalException pe){ 
+				if(pe.getMessage().startsWith("maxUsers ")){ 
+					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", ""))));
+					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+					return;
+				}else{
+					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+					return;
+				}
+			}catch(SystemException se){
+				SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+				actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+				actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+				return;
+			}
 		}
 
 		if(course!= null){
@@ -269,8 +340,14 @@ public class CourseAdmin extends MVCPortlet {
 			if(fileName!=null && !fileName.equals(""))
 			{
 				File file = request.getFile("fileName");
-				//System.out.println(" file: "+file);
-				LayoutSetLocalServiceUtil.updateLogo(course.getGroupId(), true, true, file);
+				try{
+					LayoutSetLocalServiceUtil.updateLogo(course.getGroupId(), true, true, file);
+				}catch(Exception e){
+					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+					return;
+				}
 			}
 
 			boolean oneTitleNotEmpty = false;
@@ -296,29 +373,61 @@ public class CourseAdmin extends MVCPortlet {
 			}
 			course.setCourseEvalId(courseEvalId);
 		
-			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
-					summary, serviceContext);
-			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil
-					.getPermissionCheckerFactory().create(user);
-			if (permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),
-					Course.class.getName(), 0, "PUBLISH")) {
+			try {
+				try{
+					serviceContext.setAttribute("type", String.valueOf(type));
+					CourseLocalServiceUtil.modCourse(course,summary,serviceContext);
+				}catch(PortalException pe){ 
+					if(pe.getMessage().startsWith("maxUsers ")){
+						SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+						actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", ""))));
+						actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+						actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+						return;
+					}else{
+						SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+						actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+						actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+						return;
+					}
+				}catch(SystemException se){
+					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+					return;
+				}
+				
+				PermissionChecker permissionChecker = PermissionCheckerFactoryUtil
+						.getPermissionCheckerFactory().create(user);
 
-				com.liferay.lms.service.CourseLocalServiceUtil.setVisible(
-						course.getCourseId(), visible);
-			}
-			SessionMessages.add(actionRequest, "course-saved-successfully");
-			WindowState windowState = actionRequest.getWindowState();
-			if (redirect != null && !"".equals(redirect)) {
-				if (!windowState.equals(LiferayWindowState.POP_UP)) {
-					actionResponse.sendRedirect(redirect);
-				} else {
-					redirect = PortalUtil.escapeRedirect(redirect);
+				if (permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),
+						Course.class.getName(), 0, "PUBLISH")) {
 
-					if (Validator.isNotNull(redirect)) {
+					com.liferay.lms.service.CourseLocalServiceUtil.setVisible(
+							course.getCourseId(), visible);
+				}
+				
+				SessionMessages.add(actionRequest, "course-saved-successfully");
+				WindowState windowState = actionRequest.getWindowState();
+				if (redirect != null && !"".equals(redirect)) {
+					if (!windowState.equals(LiferayWindowState.POP_UP)) {
 						actionResponse.sendRedirect(redirect);
+					} else {
+						redirect = PortalUtil.escapeRedirect(redirect);
+
+						if (Validator.isNotNull(redirect)) {
+							actionResponse.sendRedirect(redirect);
+						}
 					}
 				}
+				
+			} catch (Exception e) {
+				SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
+				actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+				actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+				return;
 			}
+			
 		}
 
 	}
@@ -398,10 +507,10 @@ public class CourseAdmin extends MVCPortlet {
 				SessionErrors.add(portletRequest, "courseadmin.importuserrole.csv.badFormat");	
 			}
 			else {
-				CSVReader reader = null;
+				CSVReader reader = null; 
 				try {
 					File file = request.getFile("fileName");
-					System.out.println("----------------------------\n  Import users ");
+					System.out.println("----------------------------\n  Import users ::"+roleId);
 					reader = new CSVReader(new InputStreamReader(new FileInputStream(file), "ISO-8859-1"), ';');
 
 					String[] currLine;
