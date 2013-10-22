@@ -120,10 +120,24 @@ message="add"
 url='<%= adduserURL %>'
 />
 <%
+
+	LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
+	String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
+	String tab="";
+	if(roleId==commmanager.getRoleId()){
+		tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
+	}else if(roleId==prefs.getEditorRole()){
+		tab = editorName;
+	}else{
+		tab = teacherName;
+	}
+	
 PortletURL portletURL = renderResponse.createRenderURL();
-portletURL.setParameter("jspPage","/html/courseadmin/rolemembers.jsp");
+portletURL.setParameter("jspPage","/html/courseadmin/rolememberstab.jsp");
 portletURL.setParameter("courseId",Long.toString(courseId));
 portletURL.setParameter("roleId",Long.toString(roleId));
+portletURL.setParameter("tabs1",tab);
 %>
 
 <liferay-ui:search-container emptyResultsMessage="there-are-no-users"
@@ -156,19 +170,6 @@ modelVar="user">
 </liferay-ui:search-container-column-text>
 <liferay-ui:search-container-column-text>
 
-<%
-	LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
-	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
-	String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
-	String tab="";
-	if(roleId==commmanager.getRoleId()){
-		tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
-	}else if(roleId==prefs.getEditorRole()){
-		tab = editorName;
-	}else{
-		tab = teacherName;
-	}
-%>
 
 <liferay-portlet:actionURL name="removeUserRole" var="removeUserRoleURL">
 <liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"></liferay-portlet:param>
