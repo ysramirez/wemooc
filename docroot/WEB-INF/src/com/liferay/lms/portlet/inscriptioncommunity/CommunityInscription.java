@@ -62,9 +62,9 @@ public class CommunityInscription extends MVCPortlet {
     		throw new SystemException("Site not restricted!");
     	}
     	
-    	if(numberUsers>=course.getMaxusers()){
+    	if(course.getMaxusers()>0&&numberUsers>=course.getMaxusers()){
     		if(log.isDebugEnabled()){
-    			log.debug("Maxusers!");
+    			log.debug("Maxusers!"); 
     		}
     		throw new SystemException("Maxusers!");
     	}
@@ -97,7 +97,7 @@ public class CommunityInscription extends MVCPortlet {
     	Group group = GroupLocalServiceUtil.getGroup(groupId[0]);
     	Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId[0]);
     	int numberUsers = UserLocalServiceUtil.getGroupUsersCount(groupId[0]);
-    	if(numberUsers>=course.getMaxusers()){
+    	if(course.getMaxusers()>0&&numberUsers>=course.getMaxusers()){
     		throw new SystemException("Maxusers!");
     	}
     	
