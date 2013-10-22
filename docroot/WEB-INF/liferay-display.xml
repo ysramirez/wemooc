@@ -51,6 +51,6 @@
 		<portlet id="evaluationAvg"></portlet>
 		<portlet id="announcementsdelivery"></portlet>
 		<portlet id="coursehistory"></portlet>
+		<portlet id="inscriptionadmin"></portlet>
 	</category>
-
 </display>
