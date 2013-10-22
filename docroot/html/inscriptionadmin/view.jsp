@@ -7,7 +7,7 @@
 
 <liferay-ui:message key="inscription.petition" />: ${total}  <liferay-ui:message key="inscription.totalUsers" />: ${numberUsers}/${maxUsers}
 <%SimpleDateFormat sdf = new SimpleDateFormat("hh:mm dd/MM/yyyy"); %>
-<liferay-ui:search-container  delta='10' emptyResultsMessage="there-are-no-items" >
+<liferay-ui:search-container  delta='10' >
 	<liferay-ui:search-container-results>
 	<%
 		int containerStart;
