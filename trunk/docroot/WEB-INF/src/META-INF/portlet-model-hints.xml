@@ -17,6 +17,23 @@
 		<field name="actId" type="long" />
 		<field name="date" type="Date" />
 	</model>
+	<model name="com.liferay.lms.model.Competence">
+		<field name="uuid" type="String" />
+		<field name="competenceId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="status" type="int" />
+		<field name="statusByUserId" type="long" />
+		<field name="statusByUserName" type="String" />
+		<field name="statusDate" type="Date" />
+		<field name="title" type="String" localized="true">
+			<hint name="max-length">5000</hint>
+		</field>
+		<field name="description" type="String" localized="true">
+			<hint name="max-length">500000</hint>
+		</field>
+	</model>
 	<model name="com.liferay.lms.model.Course">
 		<field name="uuid" type="String" />
 		<field name="courseId" type="long" />
@@ -46,6 +63,13 @@
 		<field name="closed" type="boolean" />
 		<field name="maxusers" type="long" />
 		<field name="calificationType" type="long" />
+	</model>
+	<model name="com.liferay.lms.model.CourseCompetence">
+		<field name="uuid" type="String" />
+		<field name="CourcompetenceId" type="long" />
+		<field name="courseId" type="long" />
+		<field name="competenceId" type="long" />
+		<field name="condition" type="boolean" />
 	</model>
 	<model name="com.liferay.lms.model.CourseResult">
 		<field name="crId" type="long" />
@@ -226,5 +250,12 @@
 			<hint name="max-length">500000</hint>
 		</field>
 		<field name="questionType" type="long" />
+	</model>
+	<model name="com.liferay.lms.model.UserCompetence">
+		<field name="uuid" type="String" />
+		<field name="usercompId" type="long" />
+		<field name="userId" type="long" />
+		<field name="competenceId" type="long" />
+		<field name="compDate" type="Date" />
 	</model>
 </model-hints>

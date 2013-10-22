@@ -65,6 +65,7 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 		attributes.put("CourseExtraData", getCourseExtraData());
 		attributes.put("closed", getClosed());
 		attributes.put("maxusers", getMaxusers());
+		attributes.put("calificationType", getCalificationType());
 
 		return attributes;
 	}
@@ -188,6 +189,12 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 
 		if (maxusers != null) {
 			setMaxusers(maxusers);
+		}
+
+		Long calificationType = (Long)attributes.get("calificationType");
+
+		if (calificationType != null) {
+			setCalificationType(calificationType);
 		}
 	}
 
@@ -834,6 +841,24 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 	*/
 	public void setMaxusers(long maxusers) {
 		_course.setMaxusers(maxusers);
+	}
+
+	/**
+	* Returns the calification type of this course.
+	*
+	* @return the calification type of this course
+	*/
+	public long getCalificationType() {
+		return _course.getCalificationType();
+	}
+
+	/**
+	* Sets the calification type of this course.
+	*
+	* @param calificationType the calification type of this course
+	*/
+	public void setCalificationType(long calificationType) {
+		_course.setCalificationType(calificationType);
 	}
 
 	/**

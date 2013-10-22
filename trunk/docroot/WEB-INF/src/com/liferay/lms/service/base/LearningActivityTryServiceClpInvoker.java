@@ -23,35 +23,35 @@ import java.util.Arrays;
  */
 public class LearningActivityTryServiceClpInvoker {
 	public LearningActivityTryServiceClpInvoker() {
-		_methodName100 = "getBeanIdentifier";
+		_methodName118 = "getBeanIdentifier";
 
-		_methodParameterTypes100 = new String[] {  };
+		_methodParameterTypes118 = new String[] {  };
 
-		_methodName101 = "setBeanIdentifier";
+		_methodName119 = "setBeanIdentifier";
 
-		_methodParameterTypes101 = new String[] { "java.lang.String" };
+		_methodParameterTypes119 = new String[] { "java.lang.String" };
 
-		_methodName106 = "createLearningActivityTry";
+		_methodName124 = "createLearningActivityTry";
 
-		_methodParameterTypes106 = new String[] { "long", "long" };
+		_methodParameterTypes124 = new String[] { "long", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName100.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes100, parameterTypes)) {
+		if (_methodName118.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes118, parameterTypes)) {
 			return LearningActivityTryServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName101.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes101, parameterTypes)) {
+		if (_methodName119.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes119, parameterTypes)) {
 			LearningActivityTryServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName106.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes106, parameterTypes)) {
+		if (_methodName124.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes124, parameterTypes)) {
 			return LearningActivityTryServiceUtil.createLearningActivityTry(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
@@ -59,10 +59,10 @@ public class LearningActivityTryServiceClpInvoker {
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName100;
-	private String[] _methodParameterTypes100;
-	private String _methodName101;
-	private String[] _methodParameterTypes101;
-	private String _methodName106;
-	private String[] _methodParameterTypes106;
+	private String _methodName118;
+	private String[] _methodParameterTypes118;
+	private String _methodName119;
+	private String[] _methodParameterTypes119;
+	private String _methodName124;
+	private String[] _methodParameterTypes124;
 }

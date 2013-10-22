@@ -4,7 +4,9 @@
 <hibernate-mapping default-lazy="false" auto-import="false">
 	<import class="com.liferay.lms.model.AuditEntry" />
 	<import class="com.liferay.lms.model.CheckP2pMailing" />
+	<import class="com.liferay.lms.model.Competence" />
 	<import class="com.liferay.lms.model.Course" />
+	<import class="com.liferay.lms.model.CourseCompetence" />
 	<import class="com.liferay.lms.model.CourseResult" />
 	<import class="com.liferay.lms.model.LearningActivity" />
 	<import class="com.liferay.lms.model.LearningActivityResult" />
@@ -18,6 +20,7 @@
 	<import class="com.liferay.lms.model.SurveyResult" />
 	<import class="com.liferay.lms.model.TestAnswer" />
 	<import class="com.liferay.lms.model.TestQuestion" />
+	<import class="com.liferay.lms.model.UserCompetence" />
 	<class name="com.liferay.lms.model.impl.AuditEntryImpl" table="Lms_AuditEntry">
 		<cache usage="read-write" />
 		<id name="auditId" type="long">
@@ -39,6 +42,22 @@
 		</id>
 		<property name="actId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="date" type="org.hibernate.type.TimestampType" column="date_" />
+	</class>
+	<class name="com.liferay.lms.model.impl.CompetenceImpl" table="Lms_Competence">
+		<cache usage="read-write" />
+		<id name="competenceId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
+		<property name="companyId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="groupId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="status" type="com.liferay.portal.dao.orm.hibernate.IntegerType" />
+		<property name="statusByUserId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="statusByUserName" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="statusDate" type="org.hibernate.type.TimestampType" />
+		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CourseImpl" table="Lms_Course">
 		<cache usage="read-write" />
@@ -65,6 +84,16 @@
 		<property name="closed" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 		<property name="maxusers" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="calificationType" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.liferay.lms.model.impl.CourseCompetenceImpl" table="Lms_CourseCompetence">
+		<cache usage="read-write" />
+		<id name="CourcompetenceId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
+		<property name="courseId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="competenceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="condition" type="com.liferay.portal.dao.orm.hibernate.BooleanType" column="condition_" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CourseResultImpl" table="Lms_CourseResult">
 		<id name="crId" type="long">
@@ -252,5 +281,15 @@
 		<property name="actId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="text" type="com.liferay.portal.dao.orm.hibernate.StringType" column="text_" />
 		<property name="questionType" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.liferay.lms.model.impl.UserCompetenceImpl" table="Lms_UserCompetence">
+		<cache usage="read-write" />
+		<id name="usercompId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="competenceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="compDate" type="org.hibernate.type.TimestampType" />
 	</class>
 </hibernate-mapping>

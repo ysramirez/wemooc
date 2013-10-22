@@ -120,12 +120,6 @@ public class CourseServiceClp implements CourseService {
 		_methodParameterTypes21 = new String[] {
 				"java.lang.String", "java.lang.String"
 			};
-
-		_methodName22 = "existsCourseName";
-
-		_methodParameterTypes22 = new String[] {
-				"java.lang.Long", "java.lang.Long", "java.lang.String"
-			};
 	}
 
 	public java.lang.String getBeanIdentifier() {
@@ -627,36 +621,6 @@ public class CourseServiceClp implements CourseService {
 		}
 	}
 
-	public boolean existsCourseName(java.lang.Long companyId,
-		java.lang.Long groupId, java.lang.String groupName) {
-		Object returnObj = null;
-
-		try {
-			returnObj = _invokableService.invokeMethod(_methodName22,
-					_methodParameterTypes22,
-					new Object[] {
-						ClpSerializer.translateInput(companyId),
-						
-					ClpSerializer.translateInput(groupId),
-						
-					ClpSerializer.translateInput(groupName)
-					});
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((Boolean)returnObj).booleanValue();
-	}
-
 	private InvokableService _invokableService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -700,6 +664,4 @@ public class CourseServiceClp implements CourseService {
 	private String[] _methodParameterTypes20;
 	private String _methodName21;
 	private String[] _methodParameterTypes21;
-	private String _methodName22;
-	private String[] _methodParameterTypes22;
 }

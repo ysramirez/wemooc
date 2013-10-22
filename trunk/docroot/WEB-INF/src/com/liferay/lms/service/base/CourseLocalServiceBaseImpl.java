@@ -19,6 +19,10 @@ import com.liferay.counter.service.CounterLocalService;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.AuditEntryLocalService;
 import com.liferay.lms.service.CheckP2pMailingLocalService;
+import com.liferay.lms.service.CompetenceLocalService;
+import com.liferay.lms.service.CompetenceService;
+import com.liferay.lms.service.CourseCompetenceLocalService;
+import com.liferay.lms.service.CourseCompetenceService;
 import com.liferay.lms.service.CourseLocalService;
 import com.liferay.lms.service.CourseResultLocalService;
 import com.liferay.lms.service.CourseResultService;
@@ -43,8 +47,12 @@ import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerService;
 import com.liferay.lms.service.TestQuestionLocalService;
 import com.liferay.lms.service.TestQuestionService;
+import com.liferay.lms.service.UserCompetenceLocalService;
+import com.liferay.lms.service.UserCompetenceService;
 import com.liferay.lms.service.persistence.AuditEntryPersistence;
 import com.liferay.lms.service.persistence.CheckP2pMailingPersistence;
+import com.liferay.lms.service.persistence.CompetencePersistence;
+import com.liferay.lms.service.persistence.CourseCompetencePersistence;
 import com.liferay.lms.service.persistence.CoursePersistence;
 import com.liferay.lms.service.persistence.CourseResultPersistence;
 import com.liferay.lms.service.persistence.LearningActivityPersistence;
@@ -59,6 +67,7 @@ import com.liferay.lms.service.persistence.SCORMContentPersistence;
 import com.liferay.lms.service.persistence.SurveyResultPersistence;
 import com.liferay.lms.service.persistence.TestAnswerPersistence;
 import com.liferay.lms.service.persistence.TestQuestionPersistence;
+import com.liferay.lms.service.persistence.UserCompetencePersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
@@ -403,6 +412,62 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the competence local service.
+	 *
+	 * @return the competence local service
+	 */
+	public CompetenceLocalService getCompetenceLocalService() {
+		return competenceLocalService;
+	}
+
+	/**
+	 * Sets the competence local service.
+	 *
+	 * @param competenceLocalService the competence local service
+	 */
+	public void setCompetenceLocalService(
+		CompetenceLocalService competenceLocalService) {
+		this.competenceLocalService = competenceLocalService;
+	}
+
+	/**
+	 * Returns the competence remote service.
+	 *
+	 * @return the competence remote service
+	 */
+	public CompetenceService getCompetenceService() {
+		return competenceService;
+	}
+
+	/**
+	 * Sets the competence remote service.
+	 *
+	 * @param competenceService the competence remote service
+	 */
+	public void setCompetenceService(CompetenceService competenceService) {
+		this.competenceService = competenceService;
+	}
+
+	/**
+	 * Returns the competence persistence.
+	 *
+	 * @return the competence persistence
+	 */
+	public CompetencePersistence getCompetencePersistence() {
+		return competencePersistence;
+	}
+
+	/**
+	 * Sets the competence persistence.
+	 *
+	 * @param competencePersistence the competence persistence
+	 */
+	public void setCompetencePersistence(
+		CompetencePersistence competencePersistence) {
+		this.competencePersistence = competencePersistence;
+	}
+
+	/**
 	 * Returns the course local service.
 	 *
 	 * @return the course local service
@@ -454,6 +519,63 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	 */
 	public void setCoursePersistence(CoursePersistence coursePersistence) {
 		this.coursePersistence = coursePersistence;
+	}
+
+	/**
+	 * Returns the course competence local service.
+	 *
+	 * @return the course competence local service
+	 */
+	public CourseCompetenceLocalService getCourseCompetenceLocalService() {
+		return courseCompetenceLocalService;
+	}
+
+	/**
+	 * Sets the course competence local service.
+	 *
+	 * @param courseCompetenceLocalService the course competence local service
+	 */
+	public void setCourseCompetenceLocalService(
+		CourseCompetenceLocalService courseCompetenceLocalService) {
+		this.courseCompetenceLocalService = courseCompetenceLocalService;
+	}
+
+	/**
+	 * Returns the course competence remote service.
+	 *
+	 * @return the course competence remote service
+	 */
+	public CourseCompetenceService getCourseCompetenceService() {
+		return courseCompetenceService;
+	}
+
+	/**
+	 * Sets the course competence remote service.
+	 *
+	 * @param courseCompetenceService the course competence remote service
+	 */
+	public void setCourseCompetenceService(
+		CourseCompetenceService courseCompetenceService) {
+		this.courseCompetenceService = courseCompetenceService;
+	}
+
+	/**
+	 * Returns the course competence persistence.
+	 *
+	 * @return the course competence persistence
+	 */
+	public CourseCompetencePersistence getCourseCompetencePersistence() {
+		return courseCompetencePersistence;
+	}
+
+	/**
+	 * Sets the course competence persistence.
+	 *
+	 * @param courseCompetencePersistence the course competence persistence
+	 */
+	public void setCourseCompetencePersistence(
+		CourseCompetencePersistence courseCompetencePersistence) {
+		this.courseCompetencePersistence = courseCompetencePersistence;
 	}
 
 	/**
@@ -1113,6 +1235,63 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the user competence local service.
+	 *
+	 * @return the user competence local service
+	 */
+	public UserCompetenceLocalService getUserCompetenceLocalService() {
+		return userCompetenceLocalService;
+	}
+
+	/**
+	 * Sets the user competence local service.
+	 *
+	 * @param userCompetenceLocalService the user competence local service
+	 */
+	public void setUserCompetenceLocalService(
+		UserCompetenceLocalService userCompetenceLocalService) {
+		this.userCompetenceLocalService = userCompetenceLocalService;
+	}
+
+	/**
+	 * Returns the user competence remote service.
+	 *
+	 * @return the user competence remote service
+	 */
+	public UserCompetenceService getUserCompetenceService() {
+		return userCompetenceService;
+	}
+
+	/**
+	 * Sets the user competence remote service.
+	 *
+	 * @param userCompetenceService the user competence remote service
+	 */
+	public void setUserCompetenceService(
+		UserCompetenceService userCompetenceService) {
+		this.userCompetenceService = userCompetenceService;
+	}
+
+	/**
+	 * Returns the user competence persistence.
+	 *
+	 * @return the user competence persistence
+	 */
+	public UserCompetencePersistence getUserCompetencePersistence() {
+		return userCompetencePersistence;
+	}
+
+	/**
+	 * Sets the user competence persistence.
+	 *
+	 * @param userCompetencePersistence the user competence persistence
+	 */
+	public void setUserCompetencePersistence(
+		UserCompetencePersistence userCompetencePersistence) {
+		this.userCompetencePersistence = userCompetencePersistence;
+	}
+
+	/**
 	 * Returns the counter local service.
 	 *
 	 * @return the counter local service
@@ -1401,12 +1580,24 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected CheckP2pMailingLocalService checkP2pMailingLocalService;
 	@BeanReference(type = CheckP2pMailingPersistence.class)
 	protected CheckP2pMailingPersistence checkP2pMailingPersistence;
+	@BeanReference(type = CompetenceLocalService.class)
+	protected CompetenceLocalService competenceLocalService;
+	@BeanReference(type = CompetenceService.class)
+	protected CompetenceService competenceService;
+	@BeanReference(type = CompetencePersistence.class)
+	protected CompetencePersistence competencePersistence;
 	@BeanReference(type = CourseLocalService.class)
 	protected CourseLocalService courseLocalService;
 	@BeanReference(type = CourseService.class)
 	protected CourseService courseService;
 	@BeanReference(type = CoursePersistence.class)
 	protected CoursePersistence coursePersistence;
+	@BeanReference(type = CourseCompetenceLocalService.class)
+	protected CourseCompetenceLocalService courseCompetenceLocalService;
+	@BeanReference(type = CourseCompetenceService.class)
+	protected CourseCompetenceService courseCompetenceService;
+	@BeanReference(type = CourseCompetencePersistence.class)
+	protected CourseCompetencePersistence courseCompetencePersistence;
 	@BeanReference(type = CourseResultLocalService.class)
 	protected CourseResultLocalService courseResultLocalService;
 	@BeanReference(type = CourseResultService.class)
@@ -1477,6 +1668,12 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected TestQuestionService testQuestionService;
 	@BeanReference(type = TestQuestionPersistence.class)
 	protected TestQuestionPersistence testQuestionPersistence;
+	@BeanReference(type = UserCompetenceLocalService.class)
+	protected UserCompetenceLocalService userCompetenceLocalService;
+	@BeanReference(type = UserCompetenceService.class)
+	protected UserCompetenceService userCompetenceService;
+	@BeanReference(type = UserCompetencePersistence.class)
+	protected UserCompetencePersistence userCompetencePersistence;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
 	@BeanReference(type = ResourceLocalService.class)

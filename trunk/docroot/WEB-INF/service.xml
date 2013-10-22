@@ -263,7 +263,45 @@
 			<finder-column name="passed" />
 		</finder>
 	</entity>
-	
+		<entity name="Competence" local-service="true" remote-service="true" uuid="true" json-enabled="false">
+		<!-- Primary key column -->
+		<column name="competenceId" type="long" primary="true" />
+		<!-- Foreign key columns -->
+		<column name="companyId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="status" type="int" />
+		<column name="statusByUserId" type="long" />
+		<column name="statusByUserName" type="String" />
+		<column name="statusDate" type="Date" />	
+		<column name="title" type="String" localized="true"/>
+		<column name="description" type="String" localized="true"/>
+		<finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		</entity>
+			<entity name="UserCompetence" local-service="true" remote-service="true" uuid="true" json-enabled="false">
+				<column name="usercompId" type="long"  primary="true"/>
+				<column name="userId" type="long"  />
+				<column name="competenceId" type="long" />
+				<column name="compDate" type="Date" />
+			<finder name="userId" return-type="Collection">
+			<finder-column name="userId" />
+		</finder>
+		<finder name="competenceId" return-type="Collection">
+			<finder-column name="competenceId" />
+		</finder>
+	    </entity>
+	    	<entity name="CourseCompetence" local-service="true" remote-service="true" uuid="true" json-enabled="false">
+	    		<column name="CourcompetenceId" type="long" primary="true" />
+	    		<column name="courseId" type="long"  />
+				<column name="competenceId" type="long"/>
+				<column name="condition" type="boolean"/>
+				<finder name="courseId" return-type="Collection">
+					<finder-column name="courseId" />
+					<finder-column name="condition" />
+				</finder>
+			</entity>
 	<entity name="Course" local-service="true" remote-service="true" uuid="true" json-enabled="false">
 		<!-- Primary key column -->
 		<column name="courseId" type="long" primary="true" />

@@ -321,13 +321,13 @@ public class CourseLocalServiceUtil {
 		java.util.Date startDate, java.util.Date endDate,
 		long layoutSetPrototypeId, int typesite,
 		com.liferay.portal.service.ServiceContext serviceContext,
-		long calificationType)
+		long calificationType, int maxUsers)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService()
 				   .addCourse(title, description, summary, friendlyURL, locale,
 			createDate, startDate, endDate, layoutSetPrototypeId, typesite,
-			serviceContext, calificationType);
+			serviceContext, calificationType, maxUsers);
 	}
 
 	public static com.liferay.lms.model.Course addCourse(

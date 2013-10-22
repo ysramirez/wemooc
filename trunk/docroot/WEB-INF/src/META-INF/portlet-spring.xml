@@ -5,9 +5,15 @@
 	<bean id="com.liferay.lms.service.persistence.AuditEntryPersistence" class="com.liferay.lms.service.persistence.AuditEntryPersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.CheckP2pMailingLocalService" class="com.liferay.lms.service.impl.CheckP2pMailingLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.CheckP2pMailingPersistence" class="com.liferay.lms.service.persistence.CheckP2pMailingPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.lms.service.CompetenceLocalService" class="com.liferay.lms.service.impl.CompetenceLocalServiceImpl" />
+	<bean id="com.liferay.lms.service.CompetenceService" class="com.liferay.lms.service.impl.CompetenceServiceImpl" />
+	<bean id="com.liferay.lms.service.persistence.CompetencePersistence" class="com.liferay.lms.service.persistence.CompetencePersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.CourseLocalService" class="com.liferay.lms.service.impl.CourseLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.CourseService" class="com.liferay.lms.service.impl.CourseServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.CoursePersistence" class="com.liferay.lms.service.persistence.CoursePersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.lms.service.CourseCompetenceLocalService" class="com.liferay.lms.service.impl.CourseCompetenceLocalServiceImpl" />
+	<bean id="com.liferay.lms.service.CourseCompetenceService" class="com.liferay.lms.service.impl.CourseCompetenceServiceImpl" />
+	<bean id="com.liferay.lms.service.persistence.CourseCompetencePersistence" class="com.liferay.lms.service.persistence.CourseCompetencePersistenceImpl" parent="basePersistence" />
 	<bean id="com.liferay.lms.service.CourseResultLocalService" class="com.liferay.lms.service.impl.CourseResultLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.CourseResultService" class="com.liferay.lms.service.impl.CourseResultServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.CourseResultPersistence" class="com.liferay.lms.service.persistence.CourseResultPersistenceImpl" parent="basePersistence" />
@@ -43,4 +49,7 @@
 	<bean id="com.liferay.lms.service.TestQuestionLocalService" class="com.liferay.lms.service.impl.TestQuestionLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.TestQuestionService" class="com.liferay.lms.service.impl.TestQuestionServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.TestQuestionPersistence" class="com.liferay.lms.service.persistence.TestQuestionPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.lms.service.UserCompetenceLocalService" class="com.liferay.lms.service.impl.UserCompetenceLocalServiceImpl" />
+	<bean id="com.liferay.lms.service.UserCompetenceService" class="com.liferay.lms.service.impl.UserCompetenceServiceImpl" />
+	<bean id="com.liferay.lms.service.persistence.UserCompetencePersistence" class="com.liferay.lms.service.persistence.UserCompetencePersistenceImpl" parent="basePersistence" />
 </beans>

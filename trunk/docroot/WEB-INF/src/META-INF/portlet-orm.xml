@@ -39,6 +39,34 @@
 			<transient name="primaryKeyObj" />
 		</attributes>
 	</mapped-superclass>
+	<mapped-superclass class="com.liferay.lms.model.impl.CompetenceModelImpl">
+		<attributes>
+			<id name="competenceId" />
+			<basic name="uuid">
+				<column name="UUID_" />
+			</basic>
+			<basic name="companyId" />
+			<basic name="groupId" />
+			<basic name="userId" />
+			<basic name="status" />
+			<basic name="statusByUserId" />
+			<basic name="statusByUserName" />
+			<basic name="statusDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="title" />
+			<basic name="description" />
+			<transient name="descriptionCurrentLanguageId" />
+			<transient name="descriptionMap" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="statusByUserUuid" />
+			<transient name="titleCurrentLanguageId" />
+			<transient name="titleMap" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
 	<mapped-superclass class="com.liferay.lms.model.impl.CourseModelImpl">
 		<attributes>
 			<id name="courseId" />
@@ -79,6 +107,22 @@
 			<transient name="titleCurrentLanguageId" />
 			<transient name="titleMap" />
 			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
+	<mapped-superclass class="com.liferay.lms.model.impl.CourseCompetenceModelImpl">
+		<attributes>
+			<id name="CourcompetenceId" />
+			<basic name="uuid">
+				<column name="UUID_" />
+			</basic>
+			<basic name="courseId" />
+			<basic name="competenceId" />
+			<basic name="condition">
+				<column name="CONDITION_" />
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
 		</attributes>
 	</mapped-superclass>
 	<mapped-superclass class="com.liferay.lms.model.impl.CourseResultModelImpl">
@@ -372,6 +416,23 @@
 			<transient name="primaryKeyObj" />
 		</attributes>
 	</mapped-superclass>
+	<mapped-superclass class="com.liferay.lms.model.impl.UserCompetenceModelImpl">
+		<attributes>
+			<id name="usercompId" />
+			<basic name="uuid">
+				<column name="UUID_" />
+			</basic>
+			<basic name="userId" />
+			<basic name="competenceId" />
+			<basic name="compDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
 	<entity class="com.liferay.lms.model.impl.AuditEntryImpl" name="AuditEntry">
 		<table name="Lms_AuditEntry" />
 		<attributes />
@@ -380,8 +441,16 @@
 		<table name="Lms_CheckP2pMailing" />
 		<attributes />
 	</entity>
+	<entity class="com.liferay.lms.model.impl.CompetenceImpl" name="Competence">
+		<table name="Lms_Competence" />
+		<attributes />
+	</entity>
 	<entity class="com.liferay.lms.model.impl.CourseImpl" name="Course">
 		<table name="Lms_Course" />
+		<attributes />
+	</entity>
+	<entity class="com.liferay.lms.model.impl.CourseCompetenceImpl" name="CourseCompetence">
+		<table name="Lms_CourseCompetence" />
 		<attributes />
 	</entity>
 	<entity class="com.liferay.lms.model.impl.CourseResultImpl" name="CourseResult">
@@ -434,6 +503,10 @@
 	</entity>
 	<entity class="com.liferay.lms.model.impl.TestQuestionImpl" name="TestQuestion">
 		<table name="Lms_TestQuestion" />
+		<attributes />
+	</entity>
+	<entity class="com.liferay.lms.model.impl.UserCompetenceImpl" name="UserCompetence">
+		<table name="Lms_UserCompetence" />
 		<attributes />
 	</entity>
 </entity-mappings>

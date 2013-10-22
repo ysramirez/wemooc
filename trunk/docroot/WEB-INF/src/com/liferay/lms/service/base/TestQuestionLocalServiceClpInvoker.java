@@ -104,33 +104,33 @@ public class TestQuestionLocalServiceClpInvoker {
 				"com.liferay.lms.model.TestQuestion", "boolean"
 			};
 
-		_methodName116 = "getBeanIdentifier";
+		_methodName134 = "getBeanIdentifier";
 
-		_methodParameterTypes116 = new String[] {  };
+		_methodParameterTypes134 = new String[] {  };
 
-		_methodName117 = "setBeanIdentifier";
+		_methodName135 = "setBeanIdentifier";
 
-		_methodParameterTypes117 = new String[] { "java.lang.String" };
+		_methodParameterTypes135 = new String[] { "java.lang.String" };
 
-		_methodName122 = "importXML";
+		_methodName140 = "importXML";
 
-		_methodParameterTypes122 = new String[] {
+		_methodParameterTypes140 = new String[] {
 				"long", "com.liferay.portal.kernel.xml.Document"
 			};
 
-		_methodName125 = "addQuestion";
+		_methodName143 = "addQuestion";
 
-		_methodParameterTypes125 = new String[] {
+		_methodParameterTypes143 = new String[] {
 				"long", "java.lang.String", "long"
 			};
 
-		_methodName126 = "getQuestions";
+		_methodName144 = "getQuestions";
 
-		_methodParameterTypes126 = new String[] { "long" };
+		_methodParameterTypes144 = new String[] { "long" };
 
-		_methodName127 = "initializeQuestionType";
+		_methodName145 = "initializeQuestionType";
 
-		_methodParameterTypes127 = new String[] { "long" };
+		_methodParameterTypes145 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -222,39 +222,39 @@ public class TestQuestionLocalServiceClpInvoker {
 				((Boolean)arguments[1]).booleanValue());
 		}
 
-		if (_methodName116.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes116, parameterTypes)) {
+		if (_methodName134.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes134, parameterTypes)) {
 			return TestQuestionLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName117.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes117, parameterTypes)) {
+		if (_methodName135.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes135, parameterTypes)) {
 			TestQuestionLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
 		}
 
-		if (_methodName122.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes122, parameterTypes)) {
+		if (_methodName140.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes140, parameterTypes)) {
 			TestQuestionLocalServiceUtil.importXML(((Long)arguments[0]).longValue(),
 				(com.liferay.portal.kernel.xml.Document)arguments[1]);
 
 			return null;
 		}
 
-		if (_methodName125.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes125, parameterTypes)) {
+		if (_methodName143.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes143, parameterTypes)) {
 			return TestQuestionLocalServiceUtil.addQuestion(((Long)arguments[0]).longValue(),
 				(java.lang.String)arguments[1], ((Long)arguments[2]).longValue());
 		}
 
-		if (_methodName126.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
+		if (_methodName144.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes144, parameterTypes)) {
 			return TestQuestionLocalServiceUtil.getQuestions(((Long)arguments[0]).longValue());
 		}
 
-		if (_methodName127.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+		if (_methodName145.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes145, parameterTypes)) {
 			return TestQuestionLocalServiceUtil.initializeQuestionType(((Long)arguments[0]).longValue());
 		}
 
@@ -293,16 +293,16 @@ public class TestQuestionLocalServiceClpInvoker {
 	private String[] _methodParameterTypes14;
 	private String _methodName15;
 	private String[] _methodParameterTypes15;
-	private String _methodName116;
-	private String[] _methodParameterTypes116;
-	private String _methodName117;
-	private String[] _methodParameterTypes117;
-	private String _methodName122;
-	private String[] _methodParameterTypes122;
-	private String _methodName125;
-	private String[] _methodParameterTypes125;
-	private String _methodName126;
-	private String[] _methodParameterTypes126;
-	private String _methodName127;
-	private String[] _methodParameterTypes127;
+	private String _methodName134;
+	private String[] _methodParameterTypes134;
+	private String _methodName135;
+	private String[] _methodParameterTypes135;
+	private String _methodName140;
+	private String[] _methodParameterTypes140;
+	private String _methodName143;
+	private String[] _methodParameterTypes143;
+	private String _methodName144;
+	private String[] _methodParameterTypes144;
+	private String _methodName145;
+	private String[] _methodParameterTypes145;
 }

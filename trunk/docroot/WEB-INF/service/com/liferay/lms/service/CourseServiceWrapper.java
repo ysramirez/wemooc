@@ -145,11 +145,6 @@ public class CourseServiceWrapper implements CourseService,
 		_courseService.unsetTutor(parentLogin, studentLogin);
 	}
 
-	public boolean existsCourseName(java.lang.Long companyId,
-		java.lang.Long groupId, java.lang.String groupName) {
-		return _courseService.existsCourseName(companyId, groupId, groupName);
-	}
-
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

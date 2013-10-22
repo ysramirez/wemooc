@@ -610,8 +610,12 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 	protected AuditEntryPersistence auditEntryPersistence;
 	@BeanReference(type = CheckP2pMailingPersistence.class)
 	protected CheckP2pMailingPersistence checkP2pMailingPersistence;
+	@BeanReference(type = CompetencePersistence.class)
+	protected CompetencePersistence competencePersistence;
 	@BeanReference(type = CoursePersistence.class)
 	protected CoursePersistence coursePersistence;
+	@BeanReference(type = CourseCompetencePersistence.class)
+	protected CourseCompetencePersistence courseCompetencePersistence;
 	@BeanReference(type = CourseResultPersistence.class)
 	protected CourseResultPersistence courseResultPersistence;
 	@BeanReference(type = LearningActivityPersistence.class)
@@ -638,6 +642,8 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 	protected TestAnswerPersistence testAnswerPersistence;
 	@BeanReference(type = TestQuestionPersistence.class)
 	protected TestQuestionPersistence testQuestionPersistence;
+	@BeanReference(type = UserCompetencePersistence.class)
+	protected UserCompetencePersistence userCompetencePersistence;
 	@BeanReference(type = ResourcePersistence.class)
 	protected ResourcePersistence resourcePersistence;
 	@BeanReference(type = UserPersistence.class)
