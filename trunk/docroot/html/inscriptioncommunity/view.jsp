@@ -41,7 +41,7 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 
 			Date now=new Date(System.currentTimeMillis());
 			if((course.getStartDate().before(now)&&course.getEndDate().after(now))&&permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER")){
-				if(numberUsers<course.getMaxusers()&&groupC.getType()!=GroupConstants.TYPE_SITE_PRIVATE){
+				if((course.getMaxusers()<=0||numberUsers<course.getMaxusers())&&groupC.getType()!=GroupConstants.TYPE_SITE_PRIVATE){
 					if(groupC.getType()==GroupConstants.TYPE_SITE_OPEN){
 					%>
 						<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.noinscrito" /></div>
