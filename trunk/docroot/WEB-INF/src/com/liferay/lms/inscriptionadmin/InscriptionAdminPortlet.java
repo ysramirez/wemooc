@@ -112,9 +112,6 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 	    		SessionErrors.add(request, "course.full"); 
 	    		return;
 	    	}else{
-	    		if(log.isDebugEnabled()){ 
-	    			log.debug("Add");   
-	    		}
 	    		long[] groupIds = new long[1];
 	        	groupIds[0] = msr.getGroupId();
 	    		GroupLocalServiceUtil.addUserGroups(msr.getUserId(),groupIds);
