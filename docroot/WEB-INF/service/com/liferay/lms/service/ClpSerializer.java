@@ -16,7 +16,9 @@ package com.liferay.lms.service;
 
 import com.liferay.lms.model.AuditEntryClp;
 import com.liferay.lms.model.CheckP2pMailingClp;
+import com.liferay.lms.model.CompetenceClp;
 import com.liferay.lms.model.CourseClp;
+import com.liferay.lms.model.CourseCompetenceClp;
 import com.liferay.lms.model.CourseResultClp;
 import com.liferay.lms.model.LearningActivityClp;
 import com.liferay.lms.model.LearningActivityResultClp;
@@ -30,6 +32,7 @@ import com.liferay.lms.model.SCORMContentClp;
 import com.liferay.lms.model.SurveyResultClp;
 import com.liferay.lms.model.TestAnswerClp;
 import com.liferay.lms.model.TestQuestionClp;
+import com.liferay.lms.model.UserCompetenceClp;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -125,8 +128,16 @@ public class ClpSerializer {
 			return translateInputCheckP2pMailing(oldModel);
 		}
 
+		if (oldModelClassName.equals(CompetenceClp.class.getName())) {
+			return translateInputCompetence(oldModel);
+		}
+
 		if (oldModelClassName.equals(CourseClp.class.getName())) {
 			return translateInputCourse(oldModel);
+		}
+
+		if (oldModelClassName.equals(CourseCompetenceClp.class.getName())) {
+			return translateInputCourseCompetence(oldModel);
 		}
 
 		if (oldModelClassName.equals(CourseResultClp.class.getName())) {
@@ -181,6 +192,10 @@ public class ClpSerializer {
 			return translateInputTestQuestion(oldModel);
 		}
 
+		if (oldModelClassName.equals(UserCompetenceClp.class.getName())) {
+			return translateInputUserCompetence(oldModel);
+		}
+
 		return oldModel;
 	}
 
@@ -216,10 +231,30 @@ public class ClpSerializer {
 		return newModel;
 	}
 
+	public static Object translateInputCompetence(BaseModel<?> oldModel) {
+		CompetenceClp oldClpModel = (CompetenceClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getCompetenceRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
+	}
+
 	public static Object translateInputCourse(BaseModel<?> oldModel) {
 		CourseClp oldClpModel = (CourseClp)oldModel;
 
 		BaseModel<?> newModel = oldClpModel.getCourseRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
+	}
+
+	public static Object translateInputCourseCompetence(BaseModel<?> oldModel) {
+		CourseCompetenceClp oldClpModel = (CourseCompetenceClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getCourseCompetenceRemoteModel();
 
 		newModel.setModelAttributes(oldClpModel.getModelAttributes());
 
@@ -359,6 +394,16 @@ public class ClpSerializer {
 		return newModel;
 	}
 
+	public static Object translateInputUserCompetence(BaseModel<?> oldModel) {
+		UserCompetenceClp oldClpModel = (UserCompetenceClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getUserCompetenceRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
+	}
+
 	public static Object translateInput(Object obj) {
 		if (obj instanceof BaseModel<?>) {
 			return translateInput((BaseModel<?>)obj);
@@ -386,8 +431,18 @@ public class ClpSerializer {
 			return translateOutputCheckP2pMailing(oldModel);
 		}
 
+		if (oldModelClassName.equals(
+					"com.liferay.lms.model.impl.CompetenceImpl")) {
+			return translateOutputCompetence(oldModel);
+		}
+
 		if (oldModelClassName.equals("com.liferay.lms.model.impl.CourseImpl")) {
 			return translateOutputCourse(oldModel);
+		}
+
+		if (oldModelClassName.equals(
+					"com.liferay.lms.model.impl.CourseCompetenceImpl")) {
+			return translateOutputCourseCompetence(oldModel);
 		}
 
 		if (oldModelClassName.equals(
@@ -451,6 +506,11 @@ public class ClpSerializer {
 		if (oldModelClassName.equals(
 					"com.liferay.lms.model.impl.TestQuestionImpl")) {
 			return translateOutputTestQuestion(oldModel);
+		}
+
+		if (oldModelClassName.equals(
+					"com.liferay.lms.model.impl.UserCompetenceImpl")) {
+			return translateOutputUserCompetence(oldModel);
 		}
 
 		return oldModel;
@@ -545,8 +605,16 @@ public class ClpSerializer {
 			return new com.liferay.lms.NoSuchCheckP2pMailingException();
 		}
 
+		if (className.equals("com.liferay.lms.NoSuchCompetenceException")) {
+			return new com.liferay.lms.NoSuchCompetenceException();
+		}
+
 		if (className.equals("com.liferay.lms.NoSuchCourseException")) {
 			return new com.liferay.lms.NoSuchCourseException();
+		}
+
+		if (className.equals("com.liferay.lms.NoSuchCourseCompetenceException")) {
+			return new com.liferay.lms.NoSuchCourseCompetenceException();
 		}
 
 		if (className.equals("com.liferay.lms.NoSuchCourseResultException")) {
@@ -604,6 +672,10 @@ public class ClpSerializer {
 			return new com.liferay.lms.NoSuchTestQuestionException();
 		}
 
+		if (className.equals("com.liferay.lms.NoSuchUserCompetenceException")) {
+			return new com.liferay.lms.NoSuchUserCompetenceException();
+		}
+
 		return throwable;
 	}
 
@@ -627,12 +699,32 @@ public class ClpSerializer {
 		return newModel;
 	}
 
+	public static Object translateOutputCompetence(BaseModel<?> oldModel) {
+		CompetenceClp newModel = new CompetenceClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setCompetenceRemoteModel(oldModel);
+
+		return newModel;
+	}
+
 	public static Object translateOutputCourse(BaseModel<?> oldModel) {
 		CourseClp newModel = new CourseClp();
 
 		newModel.setModelAttributes(oldModel.getModelAttributes());
 
 		newModel.setCourseRemoteModel(oldModel);
+
+		return newModel;
+	}
+
+	public static Object translateOutputCourseCompetence(BaseModel<?> oldModel) {
+		CourseCompetenceClp newModel = new CourseCompetenceClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setCourseCompetenceRemoteModel(oldModel);
 
 		return newModel;
 	}
@@ -766,6 +858,16 @@ public class ClpSerializer {
 		newModel.setModelAttributes(oldModel.getModelAttributes());
 
 		newModel.setTestQuestionRemoteModel(oldModel);
+
+		return newModel;
+	}
+
+	public static Object translateOutputUserCompetence(BaseModel<?> oldModel) {
+		UserCompetenceClp newModel = new UserCompetenceClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setUserCompetenceRemoteModel(oldModel);
 
 		return newModel;
 	}

@@ -1,6 +1,14 @@
 Liferay.Service.register("Liferay.Service.Lms", "com.liferay.lms.service", "liferaylms-portlet");
 
 Liferay.Service.registerClass(
+	Liferay.Service.Lms, "Competence",
+	{
+		getCompetencesOfGroup: true,
+		getCountCompetencesOfGroup: true
+	}
+);
+
+Liferay.Service.registerClass(
 	Liferay.Service.Lms, "Course",
 	{
 		getCoursesOfGroup: true,
@@ -21,8 +29,7 @@ Liferay.Service.registerClass(
 		setParent: true,
 		unsetParent: true,
 		setTutor: true,
-		unsetTutor: true,
-		existsCourseName: true
+		unsetTutor: true
 	}
 );
 

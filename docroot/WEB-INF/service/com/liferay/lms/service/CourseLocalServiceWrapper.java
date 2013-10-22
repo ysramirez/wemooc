@@ -311,12 +311,13 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 		java.util.Date createDate, java.util.Date startDate,
 		java.util.Date endDate, long layoutSetPrototypeId, int typesite,
 		com.liferay.portal.service.ServiceContext serviceContext,
-		long calificationType)
+		long calificationType, int maxUsers)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _courseLocalService.addCourse(title, description, summary,
 			friendlyURL, locale, createDate, startDate, endDate,
-			layoutSetPrototypeId, typesite, serviceContext, calificationType);
+			layoutSetPrototypeId, typesite, serviceContext, calificationType,
+			maxUsers);
 	}
 
 	public com.liferay.lms.model.Course addCourse(java.lang.String title,

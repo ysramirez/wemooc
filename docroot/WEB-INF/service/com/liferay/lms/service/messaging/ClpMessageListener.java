@@ -17,6 +17,10 @@ package com.liferay.lms.service.messaging;
 import com.liferay.lms.service.AuditEntryLocalServiceUtil;
 import com.liferay.lms.service.CheckP2pMailingLocalServiceUtil;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.CompetenceLocalServiceUtil;
+import com.liferay.lms.service.CompetenceServiceUtil;
+import com.liferay.lms.service.CourseCompetenceLocalServiceUtil;
+import com.liferay.lms.service.CourseCompetenceServiceUtil;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.CourseResultServiceUtil;
@@ -41,6 +45,8 @@ import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionServiceUtil;
+import com.liferay.lms.service.UserCompetenceLocalServiceUtil;
+import com.liferay.lms.service.UserCompetenceServiceUtil;
 
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
@@ -64,9 +70,15 @@ public class ClpMessageListener extends BaseMessageListener {
 
 			CheckP2pMailingLocalServiceUtil.clearService();
 
+			CompetenceLocalServiceUtil.clearService();
+
+			CompetenceServiceUtil.clearService();
 			CourseLocalServiceUtil.clearService();
 
 			CourseServiceUtil.clearService();
+			CourseCompetenceLocalServiceUtil.clearService();
+
+			CourseCompetenceServiceUtil.clearService();
 			CourseResultLocalServiceUtil.clearService();
 
 			CourseResultServiceUtil.clearService();
@@ -102,6 +114,9 @@ public class ClpMessageListener extends BaseMessageListener {
 			TestQuestionLocalServiceUtil.clearService();
 
 			TestQuestionServiceUtil.clearService();
+			UserCompetenceLocalServiceUtil.clearService();
+
+			UserCompetenceServiceUtil.clearService();
 		}
 	}
 }

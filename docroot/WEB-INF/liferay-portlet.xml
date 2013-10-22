@@ -519,6 +519,19 @@
 		<css-class-wrapper>coursehistory-portlet</css-class-wrapper>
 	</portlet>
 	<portlet>
+		<portlet-name>competencesadmin</portlet-name>
+		<icon>/icon.png</icon>
+		<control-panel-entry-category>content</control-panel-entry-category>
+		<control-panel-entry-weight>17.5</control-panel-entry-weight>
+		<asset-renderer-factory>com.liferay.lms.asset.CompetenceAssetRendererFactory</asset-renderer-factory>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>competencesadmin-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
 		<portlet-name>inscriptionadmin</portlet-name>
 		<icon>/icon.png</icon>
 		<instanceable>false</instanceable>
