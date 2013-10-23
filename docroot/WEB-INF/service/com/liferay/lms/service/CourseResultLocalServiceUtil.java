@@ -304,10 +304,9 @@ public class CourseResultLocalServiceUtil {
 		return getService().getCourseResultByCourseAndUser(courseId, userId);
 	}
 
-	public static java.lang.String translateResult(
-		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
-		long groupId) {
-		return getService().translateResult(themeDisplay, result, groupId);
+	public static java.lang.String translateResult(java.util.Locale locale,
+		double result, long groupId) {
+		return getService().translateResult(locale, result, groupId);
 	}
 
 	public static void clearService() {

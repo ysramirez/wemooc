@@ -9,5 +9,5 @@ public interface CalificationType
 	public String getName();
 	public String getTitle(Locale locale);
 	public String getDescription(Locale locale);
-	public String translate(ThemeDisplay themeDisplay, double result);
+	public String translate(Locale locale, double result);
 }

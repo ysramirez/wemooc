@@ -4,8 +4,6 @@ package com.liferay.lms.learningactivity.calificationtype;
 import java.io.Serializable;
 import java.util.Locale;
 
-import com.liferay.portal.theme.ThemeDisplay;
-
 
 public abstract class BaseCalificationType implements CalificationType, Serializable {
 	
@@ -35,7 +33,7 @@ public abstract class BaseCalificationType implements CalificationType, Serializ
 	}
 	
 	@Override
-	public String translate(ThemeDisplay themeDisplay, double result) {
+	public String translate(Locale locale, double result) {
 		return "";
 	}
 	

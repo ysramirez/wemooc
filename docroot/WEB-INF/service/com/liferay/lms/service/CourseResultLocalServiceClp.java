@@ -144,7 +144,7 @@ public class CourseResultLocalServiceClp implements CourseResultLocalService {
 		_methodName25 = "translateResult";
 
 		_methodParameterTypes25 = new String[] {
-				"com.liferay.portal.theme.ThemeDisplay", "double", "long"
+				"java.util.Locale", "double", "long"
 			};
 	}
 
@@ -837,16 +837,15 @@ public class CourseResultLocalServiceClp implements CourseResultLocalService {
 		return (com.liferay.lms.model.CourseResult)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public java.lang.String translateResult(
-		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
-		long groupId) {
+	public java.lang.String translateResult(java.util.Locale locale,
+		double result, long groupId) {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName25,
 					_methodParameterTypes25,
 					new Object[] {
-						ClpSerializer.translateInput(themeDisplay),
+						ClpSerializer.translateInput(locale),
 						
 					result,
 						

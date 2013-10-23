@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 import com.liferay.lms.learningactivity.calificationtype.CalificationType;
@@ -417,13 +418,13 @@ public class LearningActivityResultLocalServiceImpl
 		
 	}
 	
-	public String translateResult(ThemeDisplay themeDisplay, double result, long groupId){
+	public String translateResult(Locale locale, double result, long groupId){
 		String translatedResult = "";
 		try {
 			Course curso = courseLocalService.getCourseByGroupCreatedId(groupId);
 			if(curso != null){
 				CalificationType ct = new CalificationTypeRegistry().getCalificationType(curso.getCalificationType());
-				translatedResult = ct.translate(themeDisplay, result);
+				translatedResult = ct.translate(locale, result);
 			}
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block

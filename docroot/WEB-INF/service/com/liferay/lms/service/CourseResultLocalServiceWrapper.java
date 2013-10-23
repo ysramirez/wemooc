@@ -298,11 +298,9 @@ public class CourseResultLocalServiceWrapper implements CourseResultLocalService
 			userId);
 	}
 
-	public java.lang.String translateResult(
-		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
-		long groupId) {
-		return _courseResultLocalService.translateResult(themeDisplay, result,
-			groupId);
+	public java.lang.String translateResult(java.util.Locale locale,
+		double result, long groupId) {
+		return _courseResultLocalService.translateResult(locale, result, groupId);
 	}
 
 	/**
