@@ -129,7 +129,17 @@ else
 
 <iframe name="<portlet:namespace />import_frame" src="" id="<portlet:namespace />import_frame" style="display:none;" onload="<portlet:namespace />doImportUsers();" ></iframe>
 
-<liferay-ui:icon-menu align="right" direction="down" extended="<%= false %>"  message="actions" showWhenSingleIcon="<%= false %>">
+
+<liferay-ui:icon-menu align="left" cssClass='lfr-toolbar-button add-button' direction="down" extended="<%= false %>"  message="add" showWhenSingleIcon="<%= false %>">
+	<liferay-ui:icon
+	image="add" cssClass="newitem2"
+	label="<%= true %>"
+	message="add"
+	url='<%= adduserURL %>' 
+	/>
+</liferay-ui:icon-menu>
+
+<liferay-ui:icon-menu align="right" cssClass='bt_importexport' direction="down" extended="<%= false %>"  message="export-import" showWhenSingleIcon="<%= false %>">
 	<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
 	<liferay-ui:icon
 		image="add" cssClass="newitem2"
@@ -137,13 +147,6 @@ else
 		message="courseadmin.importuserrole"
 		url="#"
 		onClick="<%=renderResponse.getNamespace()+\"showPopupImportUsers();\"%>"
-	/>
-
-	<liferay-ui:icon
-	image="add" cssClass="newitem2"
-	label="<%= true %>"
-	message="add"
-	url='<%= adduserURL %>'
 	/>
 </liferay-ui:icon-menu>
 <%
