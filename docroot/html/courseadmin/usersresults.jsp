@@ -33,6 +33,7 @@ public static String addWildcards(String value)
 
 
 <%
+
 long courseId=ParamUtil.getLong(request, "courseId",0);
 long roleId=ParamUtil.getLong(request, "roleId",0);
 Role role=RoleLocalServiceUtil.getRole(roleId);
@@ -42,6 +43,20 @@ String lastName = request.getParameter("lastName");
 String screenName = request.getParameter("screenName");	
 String emailAddress = request.getParameter("emailAddress");
 String andSearchStr = request.getParameter("andSearch");
+
+LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
+String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
+String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
+String tab="";
+if(roleId==commmanager.getRoleId()){
+	tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
+}else if(roleId==prefs.getEditorRole()){
+	tab = editorName;
+}else{
+	tab = teacherName;
+}
+
 
 if (firstName == null) firstName = "";	
 if (lastName == null) lastName = "";
@@ -126,19 +141,9 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 <liferay-ui:search-container-column-text>
 
 <%
-	LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
-	Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
-	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
-	String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
-	String tab="";
-	if(roleId==commmanager.getRoleId()){
-		tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
-	}else if(roleId==prefs.getEditorRole()){
-		tab = editorName;
-	}else{
-		tab = teacherName;
-	}
 %>
+
+
 <liferay-portlet:actionURL name="addUserRole" var="addUserRoleURL">
 <liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"></liferay-portlet:param>
 <liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
@@ -153,10 +158,13 @@ portletURL.setParameter("roleId",Long.toString(roleId));
  	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 	
+<portlet:renderURL var="volverURL">
+	<portlet:param name="courseId" value="<%=Long.toString(courseId) %>" />
+	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" />
+	<portlet:param name="tabs1" value="<%=tab %>" />
+	<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
+</portlet:renderURL>
 
-
-<liferay-portlet:renderURL var="volverURL" windowState="NORMAL">
-</liferay-portlet:renderURL>
 
 <aui:button name="volverButton" value="back" onClick="<%= volverURL %>"></aui:button>
 
