@@ -292,7 +292,6 @@ public interface LearningActivityResultLocalService extends BaseLocalService,
 	public java.util.List<com.liferay.lms.model.LearningActivityResult> getByActId(
 		long actId) throws com.liferay.portal.kernel.exception.SystemException;
 
-	public java.lang.String translateResult(
-		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
-		long groupId);
+	public java.lang.String translateResult(java.util.Locale locale,
+		double result, long groupId);
 }

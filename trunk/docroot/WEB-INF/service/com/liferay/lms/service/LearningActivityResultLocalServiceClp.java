@@ -171,7 +171,7 @@ public class LearningActivityResultLocalServiceClp
 		_methodName31 = "translateResult";
 
 		_methodParameterTypes31 = new String[] {
-				"com.liferay.portal.theme.ThemeDisplay", "double", "long"
+				"java.util.Locale", "double", "long"
 			};
 	}
 
@@ -1073,16 +1073,15 @@ public class LearningActivityResultLocalServiceClp
 		return (java.util.List<com.liferay.lms.model.LearningActivityResult>)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public java.lang.String translateResult(
-		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
-		long groupId) {
+	public java.lang.String translateResult(java.util.Locale locale,
+		double result, long groupId) {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableLocalService.invokeMethod(_methodName31,
 					_methodParameterTypes31,
 					new Object[] {
-						ClpSerializer.translateInput(themeDisplay),
+						ClpSerializer.translateInput(locale),
 						
 					result,
 						

@@ -343,10 +343,9 @@ public class LearningActivityResultLocalServiceWrapper
 		return _learningActivityResultLocalService.getByActId(actId);
 	}
 
-	public java.lang.String translateResult(
-		com.liferay.portal.theme.ThemeDisplay themeDisplay, double result,
-		long groupId) {
-		return _learningActivityResultLocalService.translateResult(themeDisplay,
+	public java.lang.String translateResult(java.util.Locale locale,
+		double result, long groupId) {
+		return _learningActivityResultLocalService.translateResult(locale,
 			result, groupId);
 	}
 

@@ -143,7 +143,7 @@ public class CourseResultLocalServiceClpInvoker {
 		_methodName146 = "translateResult";
 
 		_methodParameterTypes146 = new String[] {
-				"com.liferay.portal.theme.ThemeDisplay", "double", "long"
+				"java.util.Locale", "double", "long"
 			};
 	}
 
@@ -288,7 +288,7 @@ public class CourseResultLocalServiceClpInvoker {
 
 		if (_methodName146.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes146, parameterTypes)) {
-			return CourseResultLocalServiceUtil.translateResult((com.liferay.portal.theme.ThemeDisplay)arguments[0],
+			return CourseResultLocalServiceUtil.translateResult((java.util.Locale)arguments[0],
 				((Double)arguments[1]).doubleValue(),
 				((Long)arguments[2]).longValue());
 		}

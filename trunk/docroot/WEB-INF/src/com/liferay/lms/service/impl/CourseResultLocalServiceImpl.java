@@ -15,6 +15,7 @@
 package com.liferay.lms.service.impl;
 
 import java.util.List;
+import java.util.Locale;
 
 import com.liferay.lms.learningactivity.calificationtype.CalificationType;
 import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;
@@ -111,13 +112,13 @@ public class CourseResultLocalServiceImpl
 		//return courseResultPersistence.fetchByuc(userId, courseId);
 	}
 	
-	public String translateResult(ThemeDisplay themeDisplay, double result, long groupId){
+	public String translateResult(Locale locale, double result, long groupId){
 		String translatedResult = "";
 		try {
 			Course curso = courseLocalService.getCourseByGroupCreatedId(groupId);
 			if(curso != null){
 				CalificationType ct = new CalificationTypeRegistry().getCalificationType(curso.getCalificationType());
-				translatedResult = ct.translate(themeDisplay, result);
+				translatedResult = ct.translate(locale, result);
 			}
 		} catch (SystemException e) {
 			// TODO Auto-generated catch block

@@ -11,6 +11,7 @@ import javax.portlet.PortletResponse;
 import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.lms.learningactivity.calificationtype.CalificationType;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityClp;
 import com.liferay.lms.service.ClpSerializer;
@@ -90,7 +91,8 @@ public class CalificationTypeClp implements CalificationType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getTitle", new Object[] {});
+			Method getTitleMethod = CalificationType.class.getMethod("getTitle", Locale.class); 
+			returnObj = clp.invoke(new MethodHandler(getTitleMethod, locale));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -111,7 +113,8 @@ public class CalificationTypeClp implements CalificationType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getDescription", new Object[] {});
+			Method getDescriptionMethod = CalificationType.class.getMethod("getDescription", Locale.class); 
+			returnObj = clp.invoke(new MethodHandler(getDescriptionMethod, locale));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -128,11 +131,12 @@ public class CalificationTypeClp implements CalificationType {
 		return ((String)returnObj);
 	}
 	
-	public String translate(ThemeDisplay themeDisplay, double result){
+	public String translate(Locale locale, double result){
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("correct", new Object[] {});
+			Method translateMethod = CalificationType.class.getMethod("translate", Locale.class, double.class); 
+			returnObj = clp.invoke(new MethodHandler(translateMethod, locale, result));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);

@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.liferay.lms.learningactivity.LearningActivityTypeClp;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
@@ -36,7 +37,25 @@ public class CalificationTypeRegistry {
 				types.put(typeId,qt);
 				typesList.add(qt);
 			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+				try {
+					String [] context = ((String) key).split("\\.");
+					Class c = Class.forName(type, true, PortletClassLoaderUtil.getClassLoader(context[1]));
+					ClassLoaderProxy clp = new ClassLoaderProxy(c.newInstance(), type, PortletClassLoaderUtil.getClassLoader(context[1]));
+					CalificationTypeClp ctclp = new CalificationTypeClp(clp);
+					long typeId=ctclp.getTypeId();
+					types.put(typeId,ctclp);
+					typesList.add(ctclp);
+				} catch (ClassNotFoundException e1) {
+					e1.printStackTrace();
+				} catch (InstantiationException e1) {
+					e1.printStackTrace();
+				} catch (IllegalAccessException e1) {
+					e1.printStackTrace();
+				} catch (Exception e1) {
+					e1.printStackTrace();
+				} catch (Throwable e1) {
+					e1.printStackTrace();
+				}
 			} catch (InstantiationException e) {
 				e.printStackTrace();
 			} catch (IllegalAccessException e) {
