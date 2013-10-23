@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Enumeration;
@@ -26,6 +27,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import au.com.bytecode.opencsv.CSVReader;
+import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LmsPrefs;
@@ -43,6 +45,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
@@ -56,6 +59,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -503,7 +507,7 @@ public class CourseAdmin extends MVCPortlet {
 			String contentType = request.getContentType("fileName");	
 			System.out.println(" contentType : " + contentType );
 			System.out.println(" fileName : " + fileName );
-			if (!fileName.endsWith(".csv")) {
+			if (!fileName.endsWith(".csv")) { 
 				SessionErrors.add(portletRequest, "courseadmin.importuserrole.csv.badFormat");	
 			}
 			else {
@@ -517,7 +521,8 @@ public class CourseAdmin extends MVCPortlet {
 
 					while ((currLine = reader.readNext()) != null) {
 
-						for(String userIdStr:currLine){
+						if(currLine.length>0){
+							String userIdStr = currLine[0];
 						
 							if (!userIdStr.equals("")){
 	
@@ -575,7 +580,7 @@ public class CourseAdmin extends MVCPortlet {
 		}
 	}
 
-	@Override
+	/*@Override
 	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
 
 		String action = ParamUtil.getString(resourceRequest, "action");
@@ -610,7 +615,7 @@ public class CourseAdmin extends MVCPortlet {
 		} else {
 			super.serveResource(resourceRequest, resourceResponse);
 		}
-	}
+	}*/
 
 	public void importCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 
@@ -716,5 +721,112 @@ public class CourseAdmin extends MVCPortlet {
 		SessionMessages.add(actionRequest, "courseadmin.clone.confirmation.success");
 
 	}
-	
+	public void serveResource(ResourceRequest request, ResourceResponse response)throws PortletException, IOException {
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		String action = ParamUtil.getString(request, "action");
+		if(action.equals("export")){
+			Role commmanager = null;
+			LmsPrefs prefs = null;
+			try {
+				commmanager = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+				prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+			} catch (PortalException e) {
+				if(log.isDebugEnabled()){
+					e.printStackTrace();
+				}
+			} catch (SystemException e) {
+				if(log.isDebugEnabled()){
+					e.printStackTrace();
+				}
+			}
+			
+			
+			long groupId = ParamUtil.getLong(request, "groupId",0);
+			long roleId = ParamUtil.getLong(request, "roleId",0);
+			
+			List<User> users = new ArrayList<User>();
+			
+			if(roleId!=commmanager.getRoleId())
+			{
+				List<UserGroupRole> ugrs = null;
+				try {
+					ugrs = UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(groupId, roleId);
+				} catch (SystemException e) {
+					if(log.isDebugEnabled()){
+						e.printStackTrace();
+					}
+				}
+
+				users=new java.util.ArrayList<User>();
+				
+				if(ugrs!=null){
+					for(UserGroupRole ugr:ugrs)
+					{
+						try {
+							users.add(ugr.getUser());
+						} catch (PortalException e) {
+							if(log.isDebugEnabled()){
+								e.printStackTrace();
+							}
+						} catch (SystemException e) {
+							if(log.isDebugEnabled()){
+								e.printStackTrace();
+							}
+						}
+					}
+				}
+			}else{
+				java.util.List<User> userst = null;
+				try {
+					userst = UserLocalServiceUtil.getGroupUsers(groupId);
+				} catch (SystemException e) {
+					if(log.isDebugEnabled()){
+						e.printStackTrace();
+					}
+				}
+				
+				if(userst!=null){
+					for(User usert:userst){
+						List<UserGroupRole> userGroupRoles = null;
+						try {
+							userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(usert.getUserId(),groupId);
+						} catch (SystemException e) {
+							if(log.isDebugEnabled()){
+								e.printStackTrace();
+							}
+						}
+						boolean remove =false;
+						if(userGroupRoles!=null){
+							for(UserGroupRole ugr:userGroupRoles){
+								if(ugr.getRoleId()==prefs.getEditorRole()||ugr.getRoleId()==prefs.getTeacherRole()){
+									remove = true;
+									break;
+								}
+							}
+							if(!remove){
+								users.add(usert);
+							}
+						}
+					}
+				}
+			}
+			
+			response.setCharacterEncoding("UTF-8");
+			response.setContentType("text/csv;charset=UTF-8");
+			response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=users.csv");
+			
+			CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream()),';');
+			
+			for(User user:users){
+				String[] resultados = {String.valueOf(user.getUserId()),user.getFullName()};
+				writer.writeNext(resultados);
+			}
+
+			writer.flush();
+			writer.close();
+			response.getPortletOutputStream().flush();
+			response.getPortletOutputStream().close();
+		}
+	}
 }

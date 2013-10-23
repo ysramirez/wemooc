@@ -17,6 +17,7 @@
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
 <%
+LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 long courseId=ParamUtil.getLong(request, "courseId",0);
 long roleId=ParamUtil.getLong(request, "roleId",0);
 Course course=CourseLocalServiceUtil.getCourse(courseId);
@@ -24,6 +25,7 @@ long createdGroupId=course.getGroupCreatedId();
 Role role=RoleLocalServiceUtil.getRole(roleId);
 Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
 java.util.List<User> users=new java.util.ArrayList<User>();
+
 if(roleId!=commmanager.getRoleId())
 {
 	java.util.List<UserGroupRole> ugrs=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(createdGroupId, roleId);
@@ -31,12 +33,28 @@ if(roleId!=commmanager.getRoleId())
 users=new java.util.ArrayList<User>();
 for(UserGroupRole ugr:ugrs)
 {
+	
 	users.add(ugr.getUser());
 }
 }
 else
 {
-	users=UserLocalServiceUtil.getGroupUsers(createdGroupId);
+	java.util.List<User> userst=UserLocalServiceUtil.getGroupUsers(createdGroupId);
+	
+	for(User usert:userst)
+	{
+		List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(usert.getUserId(),createdGroupId);
+		boolean remove =false;
+		for(UserGroupRole ugr:userGroupRoles){
+			if(ugr.getRoleId()==prefs.getEditorRole()||ugr.getRoleId()==prefs.getTeacherRole()){
+				remove = true;
+				break;
+			}
+		}
+		if(!remove){
+			users.add(usert);
+		}
+	}
 }
 %>
 <liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
@@ -52,6 +70,13 @@ else
 	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" /> 
 	<portlet:param name="jspPage" value="/html/courseadmin/popups/importUsers.jsp" /> 
 </portlet:renderURL>
+
+<liferay-portlet:resourceURL var="exportURL" >
+	<portlet:param name="action" value="export"/>
+	<portlet:param name="groupId" value="<%=Long.toString(createdGroupId) %>"/>
+	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>"/>
+</liferay-portlet:resourceURL>
+<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
 
 <script type="text/javascript">
 <!--
@@ -121,7 +146,6 @@ url='<%= adduserURL %>'
 />
 <%
 
-	LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
 	String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
 	String tab="";
@@ -141,7 +165,7 @@ portletURL.setParameter("tabs1",tab);
 %>
 
 <liferay-ui:search-container emptyResultsMessage="there-are-no-users"
- delta="10" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
+ delta="2" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
 <liferay-ui:search-container-results>
 <%
 
@@ -156,6 +180,9 @@ Collections.sort(orderedUsers, new Comparator<User>() {
 
 results = ListUtil.subList(orderedUsers, searchContainer.getStart(),
 searchContainer.getEnd());
+if(results.size()<=0){
+	results = ListUtil.subList(orderedUsers,0,searchContainer.getDelta());
+}
 total = users.size();
 pageContext.setAttribute("results", results);
 pageContext.setAttribute("total", total);
@@ -179,7 +206,7 @@ modelVar="user">
 <liferay-portlet:param name="tabs1" value="<%=tab %>"></liferay-portlet:param>
 
 </liferay-portlet:actionURL>
-<liferay-ui:icon-delete url="<%=removeUserRoleURL %>" label="delete"></liferay-ui:icon-delete>
+<liferay-ui:icon-delete url="<%=removeUserRoleURL+\"&cur=\"+searchContainer.getCur() %>" label="delete"></liferay-ui:icon-delete>
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
 <liferay-ui:search-iterator />
