@@ -36,8 +36,7 @@ public class QuestionTypeRegistry {
 				types.put(typeId,qt);
 				typesList.add(qt);
 			} catch (ClassNotFoundException e) {
-				//Añadir como nuevo tipo de pregunta
-				/*try {
+				try {
 					String [] context = ((String) key).split("\\.");
 					Class c = Class.forName(type, true, PortletClassLoaderUtil.getClassLoader(context[1]));
 					ClassLoaderProxy clp = new ClassLoaderProxy(c.newInstance(), type, PortletClassLoaderUtil.getClassLoader(context[1]));
@@ -48,22 +47,18 @@ public class QuestionTypeRegistry {
 				} catch (ClassNotFoundException e1) {
 					e1.printStackTrace();
 				} catch (InstantiationException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (Exception e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				} catch (Throwable e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
-				}*/
+				}
 			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
+				e.printStackTrace();
 			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 	}
