@@ -76,7 +76,6 @@ else
 	<portlet:param name="groupId" value="<%=Long.toString(createdGroupId) %>"/>
 	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>"/>
 </liferay-portlet:resourceURL>
-<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
 
 <script type="text/javascript">
 <!--
@@ -130,20 +129,23 @@ else
 
 <iframe name="<portlet:namespace />import_frame" src="" id="<portlet:namespace />import_frame" style="display:none;" onload="<portlet:namespace />doImportUsers();" ></iframe>
 
-<liferay-ui:icon
+<liferay-ui:icon-menu align="right" direction="down" extended="<%= false %>"  message="actions" showWhenSingleIcon="<%= false %>">
+	<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
+	<liferay-ui:icon
+		image="add" cssClass="newitem2"
+		label="<%= true %>"
+		message="courseadmin.importuserrole"
+		url="#"
+		onClick="<%=renderResponse.getNamespace()+\"showPopupImportUsers();\"%>"
+	/>
+
+	<liferay-ui:icon
 	image="add" cssClass="newitem2"
 	label="<%= true %>"
-	message="courseadmin.importuserrole"
-	url="#"
-	onClick="<%=renderResponse.getNamespace()+\"showPopupImportUsers();\"%>"
-/>
-
-<liferay-ui:icon
-image="add" cssClass="newitem2"
-label="<%= true %>"
-message="add"
-url='<%= adduserURL %>'
-/>
+	message="add"
+	url='<%= adduserURL %>'
+	/>
+</liferay-ui:icon-menu>
 <%
 
 	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
