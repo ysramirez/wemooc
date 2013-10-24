@@ -6,6 +6,7 @@ import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
+import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -58,8 +59,14 @@ public class CommunityInscription extends MVCPortlet {
 		InternetAddress from = new InternetAddress(fromAddress, fromName);
 		
 		String portal = themeDisplay.getCompany().getName();
-		String curso = themeDisplay.getCompany().getGroup().getName();
 		String user = themeDisplay.getUser().getFullName();
+		
+		String curso;
+		try {
+			curso = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId[0]).getTitle(themeDisplay.getLocale());
+		} catch (Exception e) {
+			curso = themeDisplay.getCompany().getGroup().getName();
+		}
 
     	String subject = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.subject", new String[]{curso});
     	String body = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.body", new String[]{curso});	
@@ -70,14 +77,14 @@ public class CommunityInscription extends MVCPortlet {
     	if(body!=null &&!body.equals("")){
 	    	
     		body = createMessage(body, portal, curso, user, fromName ,url,urlcourse);
-    		
+    		/*
 			System.out.println("\n--------- CommunityInscription. Inscription. -------------");
 			System.out.println(" from: "+from);
 			System.out.println(" to: "+to + " "+user);
 			System.out.println(" subject: "+subject);
 			System.out.println(" body: \n"+body);
 			System.out.println("----------------------\n\n");
-	    	    	
+	        */
 			try{
 				MailMessage mailm = new MailMessage(from, to, subject, body, true);
 				MailServiceUtil.sendEmail(mailm);
