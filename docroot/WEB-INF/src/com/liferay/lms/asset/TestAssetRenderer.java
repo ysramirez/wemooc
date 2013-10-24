@@ -147,7 +147,7 @@ public class TestAssetRenderer extends BaseAssetRenderer {
 	// @Override
 	public String getTitle(Locale arg0) {
 		// TODO Auto-generated method stub
-		return getTitle();
+		return _learningactivity.getTitle(arg0);
 	}
 
 	@Override
