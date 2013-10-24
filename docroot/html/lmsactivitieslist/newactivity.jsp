@@ -53,7 +53,7 @@ for(Long key:classTypes.keySet())
 	</liferay-portlet:actionURL>
 	
 	<liferay-util:buffer var="activityMessage">
-	    <%=classTypes.get(key) %>
+	    <%=LanguageUtil.get(themeDisplay.getLocale(), classTypes.get(key)) %>
 	    <span class="activity-help">
 			<liferay-ui:icon-help message="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>"  />
 		</span>
