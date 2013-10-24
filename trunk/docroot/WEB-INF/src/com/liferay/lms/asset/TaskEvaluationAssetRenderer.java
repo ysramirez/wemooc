@@ -107,7 +107,7 @@ public class TaskEvaluationAssetRenderer extends BaseAssetRenderer {
 	}
 
 	public String getTitle(Locale arg0){
-		return getTitle();
+		return getTitle(arg0);
 	}
 	
 	@Override

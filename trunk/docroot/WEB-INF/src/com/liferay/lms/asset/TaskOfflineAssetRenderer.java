@@ -107,7 +107,7 @@ public class TaskOfflineAssetRenderer extends BaseAssetRenderer {
 	}
 
 	public String getTitle(Locale arg0){
-		return getTitle();
+		return _learningactivity.getTitle(arg0);
 	}
 	
 	@Override
