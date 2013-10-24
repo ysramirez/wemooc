@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
 <%@page import="com.liferay.portal.util.PortalUtil"%>
 <%@page import="com.liferay.util.portlet.PortletProps"%>
@@ -231,48 +232,55 @@ ActionKeys.PERMISSIONS) %>">
 			</c:if>
 </c:if>
 
-<portlet:actionURL name="changeVisibility" var="visibiltyURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
-	<portlet:param name="resId" value="<%=primKey %>" />
-</portlet:actionURL>
-
-<%
-	Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
-	boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-	ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
-
-	String visibiltyURLJavascript=
-			"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
-					 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
-					 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
-					 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
-					 "          activitiesListPortlet.placeBefore(placeHolder); "+	
-					 "          activitiesListPortlet.hide(); "+	
-					 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
-					 "		      dataType : 'html', "+
-					 "            on: {  "+
-					 "             		success: function() {  "+
-					 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
-	 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
-	 				 "		                 if(activityNavigatorPortlet!=null) {  "+
-	 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
-	 				 "			             }  "+	
-	 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
-					 "                       portletBody.plug(A.Plugin.ParseContent); "+	
-					 "                       portletBody.setContent(this.get('responseData')); "+
-					 "                       activitiesListPortlet.show(); "+	
-					 "          			 placeHolder.remove(true); "+	
-					 "             }  "+
-					 "            }  "+
-					 "          });  "+	 
-					 "		}); ";
+<% 
+boolean showChangeVisibility = GetterUtil.getBoolean(PortletProps.get("learningactivity.show.hideactivity"),true);
 %>
 
-<liferay-ui:icon message="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+<c:if test="<%=showChangeVisibility %>">
 
+	<portlet:actionURL name="changeVisibility" var="visibiltyURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+		<portlet:param name="resId" value="<%=primKey %>" />
+	</portlet:actionURL>
+	
+	<%
+		Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+		boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+		ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+	
+		String visibiltyURLJavascript=
+				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
+						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
+						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+						 "          activitiesListPortlet.hide(); "+	
+						 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
+						 "		      dataType : 'html', "+
+						 "            on: {  "+
+						 "             		success: function() {  "+
+						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+		 				 "			             }  "+	
+		 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
+						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
+						 "                       portletBody.setContent(this.get('responseData')); "+
+						 "                       activitiesListPortlet.show(); "+	
+						 "          			 placeHolder.remove(true); "+	
+						 "             }  "+
+						 "            }  "+
+						 "          });  "+	 
+						 "		}); ";
+	%>
+	
+	<liferay-ui:icon message="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+</c:if>
 <!-- Mostrar calificaciones actividad. -->
 
+
 <%
-boolean visibleCalifications = GetterUtil.getBoolean(PortletProps.get("lms.activitylist.showcalifications"));
+boolean visibleCalifications = GetterUtil.getBoolean(PortletProps.get("learningactivity.show.califications"),true);
 %>
 <c:if test="<%=visibleCalifications %>">
 	<liferay-portlet:actionURL  name="showCalifications" var="showCalificationsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
