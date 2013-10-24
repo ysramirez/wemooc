@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
@@ -12,6 +15,10 @@
 	
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	dateFormat.setTimeZone(timeZone);
+	
+	PortletURL portletURL = renderResponse.createRenderURL();
+	portletURL.setParameter("jspPage","/html/lmsactivitieslist/califications.jsp");
+	portletURL.setParameter("resId",Long.toString(actId));
 %>
 
 <h2 class="table_title"><%=learnActivity.getTitle(themeDisplay.getLocale()) %></h2>
@@ -20,14 +27,16 @@
 	<portlet:param name="jspPage" value="/html/lmsactivitieslist/califications.jsp"></portlet:param>
 </portlet:renderURL>
 
-<liferay-ui:search-container deltaConfigurable="true" emptyResultsMessage="there-are-no-results" delta="25">
+<liferay-ui:search-container iteratorURL="<%=portletURL%>" deltaConfigurable="true" emptyResultsMessage="there-are-no-results" delta="10">
 
    	<liferay-ui:search-container-results>
 		<%
-			List<LearningActivityResult> learnResults = LearningActivityResultLocalServiceUtil.getByActId(actId);
+			//List<LearningActivityResult> learnResults = LearningActivityResultLocalServiceUtil.getByActId(actId);
+			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class).add(PropertyFactoryUtil.forName("actId").eq(actId));
 
-			pageContext.setAttribute("results", learnResults);
-		    pageContext.setAttribute("total", results.size());
+			pageContext.setAttribute("results", LearningActivityResultLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),searchContainer.getEnd()));
+		    pageContext.setAttribute("total", (int)LearningActivityResultLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityResult.class).add(PropertyFactoryUtil.forName("actId").eq(actId))));
+
 		%>
 	</liferay-ui:search-container-results>
 	
