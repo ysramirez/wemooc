@@ -64,17 +64,20 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 <portlet:actionURL var="editquestionURL" name="editquestion" />
 <aui:form name="qfm" action="<%=editquestionURL %>" method="post">
 
-	<aui:select id="typeId" name="typeId" label="questionType">
 	<%
+		String questionTypeName = "";
+		long typeId = 0;
 		long questionId = question.getQuestionType();
 		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
 		for(QuestionType qt:qtypes){
-	%>
-		<aui:option value="<%=qt.getTypeId() %>" label="<%=qt.getTitle(themeDisplay.getLocale()) %>"  selected="<%= questionId == qt.getTypeId() %>"/>
-	<%	
+			if(questionId == qt.getTypeId()){
+				typeId = qt.getTypeId();
+				questionTypeName = qt.getTitle(themeDisplay.getLocale());
+			}
 		}
 	%>
-	</aui:select>
+	<aui:input type="hidden" id="typeId" name="typeId" value="typeId" />
+	<aui:input type="text" id="typeIdName" name="typeIdName" disabled="<%=true %>" value="<%=questionTypeName %>"/>
 
 	<aui:input name="resId" type="hidden" value="<%=question.getActId() %>"></aui:input>
 	<aui:input name="questionId" type="hidden" value="<%=question.getQuestionId() %>"></aui:input>
