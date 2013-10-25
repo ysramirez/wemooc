@@ -114,6 +114,51 @@ public interface LmsPrefsModel extends BaseModel<LmsPrefs> {
 	 */
 	public void setLmsTemplates(String lmsTemplates);
 
+	/**
+	 * Returns the activities of this lms prefs.
+	 *
+	 * @return the activities of this lms prefs
+	 */
+	@AutoEscape
+	public String getActivities();
+
+	/**
+	 * Sets the activities of this lms prefs.
+	 *
+	 * @param activities the activities of this lms prefs
+	 */
+	public void setActivities(String activities);
+
+	/**
+	 * Returns the courseevals of this lms prefs.
+	 *
+	 * @return the courseevals of this lms prefs
+	 */
+	@AutoEscape
+	public String getCourseevals();
+
+	/**
+	 * Sets the courseevals of this lms prefs.
+	 *
+	 * @param courseevals the courseevals of this lms prefs
+	 */
+	public void setCourseevals(String courseevals);
+
+	/**
+	 * Returns the scoretranslators of this lms prefs.
+	 *
+	 * @return the scoretranslators of this lms prefs
+	 */
+	@AutoEscape
+	public String getScoretranslators();
+
+	/**
+	 * Sets the scoretranslators of this lms prefs.
+	 *
+	 * @param scoretranslators the scoretranslators of this lms prefs
+	 */
+	public void setScoretranslators(String scoretranslators);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);

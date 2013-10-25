@@ -33,6 +33,9 @@ public class LmsPrefsSoap implements Serializable {
 		soapModel.setTeacherRole(model.getTeacherRole());
 		soapModel.setEditorRole(model.getEditorRole());
 		soapModel.setLmsTemplates(model.getLmsTemplates());
+		soapModel.setActivities(model.getActivities());
+		soapModel.setCourseevals(model.getCourseevals());
+		soapModel.setScoretranslators(model.getScoretranslators());
 
 		return soapModel;
 	}
@@ -117,8 +120,35 @@ public class LmsPrefsSoap implements Serializable {
 		_lmsTemplates = lmsTemplates;
 	}
 
+	public String getActivities() {
+		return _activities;
+	}
+
+	public void setActivities(String activities) {
+		_activities = activities;
+	}
+
+	public String getCourseevals() {
+		return _courseevals;
+	}
+
+	public void setCourseevals(String courseevals) {
+		_courseevals = courseevals;
+	}
+
+	public String getScoretranslators() {
+		return _scoretranslators;
+	}
+
+	public void setScoretranslators(String scoretranslators) {
+		_scoretranslators = scoretranslators;
+	}
+
 	private long _companyId;
 	private long _teacherRole;
 	private long _editorRole;
 	private String _lmsTemplates;
+	private String _activities;
+	private String _courseevals;
+	private String _scoretranslators;
 }
