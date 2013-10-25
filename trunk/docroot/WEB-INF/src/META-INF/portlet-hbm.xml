@@ -172,6 +172,9 @@
 		<property name="teacherRole" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="editorRole" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="lmsTemplates" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="activities" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="courseevals" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="scoretranslators" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.ModuleImpl" table="Lms_Module">
 		<cache usage="read-write" />

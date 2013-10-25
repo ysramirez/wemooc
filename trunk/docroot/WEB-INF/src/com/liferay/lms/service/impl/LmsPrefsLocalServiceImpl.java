@@ -16,11 +16,14 @@ package com.liferay.lms.service.impl;
 
 import com.liferay.lms.NoSuchPrefsException;
 import com.liferay.lms.hook.events.StartupAction;
+import com.liferay.lms.learningactivity.LearningActivityType;
+import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.LmsPrefsLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.StringUtil;
 
 /**
  * The implementation of the lms prefs local service.
@@ -63,13 +66,25 @@ public class LmsPrefsLocalServiceImpl extends LmsPrefsLocalServiceBaseImpl
 				lmsPrefs.setEditorRole(stAction.courseEditor.getRoleId());
 				lmsPrefs.setLmsTemplates(Long.toString(stAction.layoutSetPrototype.getLayoutSetPrototypeId()));
 				lmsPrefsPersistence.update(lmsPrefs, true);
-				return lmsPrefs;
 			} catch (Exception e) 
 			{
 				// TODO Auto-generated catch block
 				throw new PortalException(e);
 			}
 			
+		}
+		if(lmsPrefs.getActivities()==null ||lmsPrefs.getActivities().length()==0)
+		{
+			LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+			java.util.List<LearningActivityType> lats=learningActivityTypeRegistry.getLearningActivityTypes();
+			Long[] actids=new Long[lats.size()];
+			for(int i=0;i<actids.length;i++)
+			{
+				actids[i]=lats.get(i).getTypeId();
+				
+			}
+			lmsPrefs.setActivities(StringUtil.merge(actids));
+			lmsPrefsPersistence.update(lmsPrefs, true);
 		}
 		
 		return lmsPrefs;

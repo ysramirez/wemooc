@@ -61,9 +61,12 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 			{ "companyId", Types.BIGINT },
 			{ "teacherRole", Types.BIGINT },
 			{ "editorRole", Types.BIGINT },
-			{ "lmsTemplates", Types.VARCHAR }
+			{ "lmsTemplates", Types.VARCHAR },
+			{ "activities", Types.VARCHAR },
+			{ "courseevals", Types.VARCHAR },
+			{ "scoretranslators", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_LmsPrefs (companyId LONG not null primary key,teacherRole LONG,editorRole LONG,lmsTemplates VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_LmsPrefs (companyId LONG not null primary key,teacherRole LONG,editorRole LONG,lmsTemplates VARCHAR(75) null,activities VARCHAR(75) null,courseevals VARCHAR(75) null,scoretranslators VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_LmsPrefs";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -113,6 +116,9 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 		attributes.put("teacherRole", getTeacherRole());
 		attributes.put("editorRole", getEditorRole());
 		attributes.put("lmsTemplates", getLmsTemplates());
+		attributes.put("activities", getActivities());
+		attributes.put("courseevals", getCourseevals());
+		attributes.put("scoretranslators", getScoretranslators());
 
 		return attributes;
 	}
@@ -141,6 +147,24 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 
 		if (lmsTemplates != null) {
 			setLmsTemplates(lmsTemplates);
+		}
+
+		String activities = (String)attributes.get("activities");
+
+		if (activities != null) {
+			setActivities(activities);
+		}
+
+		String courseevals = (String)attributes.get("courseevals");
+
+		if (courseevals != null) {
+			setCourseevals(courseevals);
+		}
+
+		String scoretranslators = (String)attributes.get("scoretranslators");
+
+		if (scoretranslators != null) {
+			setScoretranslators(scoretranslators);
 		}
 	}
 
@@ -181,6 +205,45 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 		_lmsTemplates = lmsTemplates;
 	}
 
+	public String getActivities() {
+		if (_activities == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _activities;
+		}
+	}
+
+	public void setActivities(String activities) {
+		_activities = activities;
+	}
+
+	public String getCourseevals() {
+		if (_courseevals == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _courseevals;
+		}
+	}
+
+	public void setCourseevals(String courseevals) {
+		_courseevals = courseevals;
+	}
+
+	public String getScoretranslators() {
+		if (_scoretranslators == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _scoretranslators;
+		}
+	}
+
+	public void setScoretranslators(String scoretranslators) {
+		_scoretranslators = scoretranslators;
+	}
+
 	@Override
 	public ExpandoBridge getExpandoBridge() {
 		return ExpandoBridgeFactoryUtil.getExpandoBridge(getCompanyId(),
@@ -213,6 +276,9 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 		lmsPrefsImpl.setTeacherRole(getTeacherRole());
 		lmsPrefsImpl.setEditorRole(getEditorRole());
 		lmsPrefsImpl.setLmsTemplates(getLmsTemplates());
+		lmsPrefsImpl.setActivities(getActivities());
+		lmsPrefsImpl.setCourseevals(getCourseevals());
+		lmsPrefsImpl.setScoretranslators(getScoretranslators());
 
 		lmsPrefsImpl.resetOriginalValues();
 
@@ -285,12 +351,36 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 			lmsPrefsCacheModel.lmsTemplates = null;
 		}
 
+		lmsPrefsCacheModel.activities = getActivities();
+
+		String activities = lmsPrefsCacheModel.activities;
+
+		if ((activities != null) && (activities.length() == 0)) {
+			lmsPrefsCacheModel.activities = null;
+		}
+
+		lmsPrefsCacheModel.courseevals = getCourseevals();
+
+		String courseevals = lmsPrefsCacheModel.courseevals;
+
+		if ((courseevals != null) && (courseevals.length() == 0)) {
+			lmsPrefsCacheModel.courseevals = null;
+		}
+
+		lmsPrefsCacheModel.scoretranslators = getScoretranslators();
+
+		String scoretranslators = lmsPrefsCacheModel.scoretranslators;
+
+		if ((scoretranslators != null) && (scoretranslators.length() == 0)) {
+			lmsPrefsCacheModel.scoretranslators = null;
+		}
+
 		return lmsPrefsCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{companyId=");
 		sb.append(getCompanyId());
@@ -300,13 +390,19 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 		sb.append(getEditorRole());
 		sb.append(", lmsTemplates=");
 		sb.append(getLmsTemplates());
+		sb.append(", activities=");
+		sb.append(getActivities());
+		sb.append(", courseevals=");
+		sb.append(getCourseevals());
+		sb.append(", scoretranslators=");
+		sb.append(getScoretranslators());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.LmsPrefs");
@@ -328,6 +424,18 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 			"<column><column-name>lmsTemplates</column-name><column-value><![CDATA[");
 		sb.append(getLmsTemplates());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>activities</column-name><column-value><![CDATA[");
+		sb.append(getActivities());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>courseevals</column-name><column-value><![CDATA[");
+		sb.append(getCourseevals());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>scoretranslators</column-name><column-value><![CDATA[");
+		sb.append(getScoretranslators());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -342,5 +450,8 @@ public class LmsPrefsModelImpl extends BaseModelImpl<LmsPrefs>
 	private long _teacherRole;
 	private long _editorRole;
 	private String _lmsTemplates;
+	private String _activities;
+	private String _courseevals;
+	private String _scoretranslators;
 	private LmsPrefs _escapedModelProxy;
 }

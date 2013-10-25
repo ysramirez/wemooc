@@ -303,6 +303,9 @@ public class LmsPrefsPersistenceImpl extends BasePersistenceImpl<LmsPrefs>
 		lmsPrefsImpl.setTeacherRole(lmsPrefs.getTeacherRole());
 		lmsPrefsImpl.setEditorRole(lmsPrefs.getEditorRole());
 		lmsPrefsImpl.setLmsTemplates(lmsPrefs.getLmsTemplates());
+		lmsPrefsImpl.setActivities(lmsPrefs.getActivities());
+		lmsPrefsImpl.setCourseevals(lmsPrefs.getCourseevals());
+		lmsPrefsImpl.setScoretranslators(lmsPrefs.getScoretranslators());
 
 		return lmsPrefsImpl;
 	}

@@ -18,10 +18,12 @@ public class LmsConfig extends MVCPortlet {
 	public void changeSettings(ActionRequest request , ActionResponse response) throws Exception
 	{
 		String sitetemplates=StringUtil.merge(request.getParameterMap().get( "lmsTemplatesCheckbox"));
+		String activitytypes=StringUtil.merge(request.getParameterMap().get( "activitiesCheckbox"));
 		ThemeDisplay themeDisplay  =(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
 		
 		LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId());
 		prefs.setLmsTemplates(sitetemplates);
+		prefs.setActivities(activitytypes);
 		LmsPrefsLocalServiceUtil.updateLmsPrefs(prefs);
 
 	}

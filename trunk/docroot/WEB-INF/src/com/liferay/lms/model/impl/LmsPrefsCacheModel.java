@@ -32,7 +32,7 @@ import java.io.Serializable;
 public class LmsPrefsCacheModel implements CacheModel<LmsPrefs>, Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{companyId=");
 		sb.append(companyId);
@@ -42,6 +42,12 @@ public class LmsPrefsCacheModel implements CacheModel<LmsPrefs>, Serializable {
 		sb.append(editorRole);
 		sb.append(", lmsTemplates=");
 		sb.append(lmsTemplates);
+		sb.append(", activities=");
+		sb.append(activities);
+		sb.append(", courseevals=");
+		sb.append(courseevals);
+		sb.append(", scoretranslators=");
+		sb.append(scoretranslators);
 		sb.append("}");
 
 		return sb.toString();
@@ -61,6 +67,27 @@ public class LmsPrefsCacheModel implements CacheModel<LmsPrefs>, Serializable {
 			lmsPrefsImpl.setLmsTemplates(lmsTemplates);
 		}
 
+		if (activities == null) {
+			lmsPrefsImpl.setActivities(StringPool.BLANK);
+		}
+		else {
+			lmsPrefsImpl.setActivities(activities);
+		}
+
+		if (courseevals == null) {
+			lmsPrefsImpl.setCourseevals(StringPool.BLANK);
+		}
+		else {
+			lmsPrefsImpl.setCourseevals(courseevals);
+		}
+
+		if (scoretranslators == null) {
+			lmsPrefsImpl.setScoretranslators(StringPool.BLANK);
+		}
+		else {
+			lmsPrefsImpl.setScoretranslators(scoretranslators);
+		}
+
 		lmsPrefsImpl.resetOriginalValues();
 
 		return lmsPrefsImpl;
@@ -70,4 +97,7 @@ public class LmsPrefsCacheModel implements CacheModel<LmsPrefs>, Serializable {
 	public long teacherRole;
 	public long editorRole;
 	public String lmsTemplates;
+	public String activities;
+	public String courseevals;
+	public String scoretranslators;
 }
