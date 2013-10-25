@@ -1,6 +1,7 @@
 package com.tls.lms.util;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -23,11 +24,14 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 
 public class LiferaylmsUtil {
+	
+	public static final int defaultStartYear = Calendar.getInstance().get(Calendar.YEAR);
+	public static final int defaultEndYear = defaultStartYear + 8;
 
 	public static void setPermission(ThemeDisplay themeDisplay, String classname, Role role, String[] actionIds, long primaryKey) throws Exception{
 		Resource resource =  ResourceLocalServiceUtil.getResource(themeDisplay.getCompanyId(), classname, ResourceConstants.SCOPE_INDIVIDUAL, Long.toString(primaryKey));
 		if(ResourceBlockLocalServiceUtil.isSupported(classname)){
-		   System.out.println("por aqui");
+		   //System.out.println("por aqui");
 			Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
 			roleIdsToActionIds.put(role.getRoleId(), actionIds);
 			ResourceBlockServiceUtil.setIndividualScopePermissions(
