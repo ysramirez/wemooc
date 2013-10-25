@@ -150,6 +150,9 @@
 		<field name="teacherRole" type="long" />
 		<field name="editorRole" type="long" />
 		<field name="lmsTemplates" type="String" />
+		<field name="activities" type="String" />
+		<field name="courseevals" type="String" />
+		<field name="scoretranslators" type="String" />
 	</model>
 	<model name="com.liferay.lms.model.Module">
 		<field name="uuid" type="String" />
