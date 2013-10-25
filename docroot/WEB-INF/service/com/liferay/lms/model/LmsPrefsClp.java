@@ -68,6 +68,9 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 		attributes.put("teacherRole", getTeacherRole());
 		attributes.put("editorRole", getEditorRole());
 		attributes.put("lmsTemplates", getLmsTemplates());
+		attributes.put("activities", getActivities());
+		attributes.put("courseevals", getCourseevals());
+		attributes.put("scoretranslators", getScoretranslators());
 
 		return attributes;
 	}
@@ -96,6 +99,24 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 
 		if (lmsTemplates != null) {
 			setLmsTemplates(lmsTemplates);
+		}
+
+		String activities = (String)attributes.get("activities");
+
+		if (activities != null) {
+			setActivities(activities);
+		}
+
+		String courseevals = (String)attributes.get("courseevals");
+
+		if (courseevals != null) {
+			setCourseevals(courseevals);
+		}
+
+		String scoretranslators = (String)attributes.get("scoretranslators");
+
+		if (scoretranslators != null) {
+			setScoretranslators(scoretranslators);
 		}
 	}
 
@@ -131,6 +152,30 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 		_lmsTemplates = lmsTemplates;
 	}
 
+	public String getActivities() {
+		return _activities;
+	}
+
+	public void setActivities(String activities) {
+		_activities = activities;
+	}
+
+	public String getCourseevals() {
+		return _courseevals;
+	}
+
+	public void setCourseevals(String courseevals) {
+		_courseevals = courseevals;
+	}
+
+	public String getScoretranslators() {
+		return _scoretranslators;
+	}
+
+	public void setScoretranslators(String scoretranslators) {
+		_scoretranslators = scoretranslators;
+	}
+
 	public BaseModel<?> getLmsPrefsRemoteModel() {
 		return _lmsPrefsRemoteModel;
 	}
@@ -162,6 +207,9 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 		clone.setTeacherRole(getTeacherRole());
 		clone.setEditorRole(getEditorRole());
 		clone.setLmsTemplates(getLmsTemplates());
+		clone.setActivities(getActivities());
+		clone.setCourseevals(getCourseevals());
+		clone.setScoretranslators(getScoretranslators());
 
 		return clone;
 	}
@@ -212,7 +260,7 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(9);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{companyId=");
 		sb.append(getCompanyId());
@@ -222,13 +270,19 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 		sb.append(getEditorRole());
 		sb.append(", lmsTemplates=");
 		sb.append(getLmsTemplates());
+		sb.append(", activities=");
+		sb.append(getActivities());
+		sb.append(", courseevals=");
+		sb.append(getCourseevals());
+		sb.append(", scoretranslators=");
+		sb.append(getScoretranslators());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(16);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.LmsPrefs");
@@ -250,6 +304,18 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 			"<column><column-name>lmsTemplates</column-name><column-value><![CDATA[");
 		sb.append(getLmsTemplates());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>activities</column-name><column-value><![CDATA[");
+		sb.append(getActivities());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>courseevals</column-name><column-value><![CDATA[");
+		sb.append(getCourseevals());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>scoretranslators</column-name><column-value><![CDATA[");
+		sb.append(getScoretranslators());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -260,5 +326,8 @@ public class LmsPrefsClp extends BaseModelImpl<LmsPrefs> implements LmsPrefs {
 	private long _teacherRole;
 	private long _editorRole;
 	private String _lmsTemplates;
+	private String _activities;
+	private String _courseevals;
+	private String _scoretranslators;
 	private BaseModel<?> _lmsPrefsRemoteModel;
 }

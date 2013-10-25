@@ -48,6 +48,9 @@ public class LmsPrefsWrapper implements LmsPrefs, ModelWrapper<LmsPrefs> {
 		attributes.put("teacherRole", getTeacherRole());
 		attributes.put("editorRole", getEditorRole());
 		attributes.put("lmsTemplates", getLmsTemplates());
+		attributes.put("activities", getActivities());
+		attributes.put("courseevals", getCourseevals());
+		attributes.put("scoretranslators", getScoretranslators());
 
 		return attributes;
 	}
@@ -75,6 +78,24 @@ public class LmsPrefsWrapper implements LmsPrefs, ModelWrapper<LmsPrefs> {
 
 		if (lmsTemplates != null) {
 			setLmsTemplates(lmsTemplates);
+		}
+
+		String activities = (String)attributes.get("activities");
+
+		if (activities != null) {
+			setActivities(activities);
+		}
+
+		String courseevals = (String)attributes.get("courseevals");
+
+		if (courseevals != null) {
+			setCourseevals(courseevals);
+		}
+
+		String scoretranslators = (String)attributes.get("scoretranslators");
+
+		if (scoretranslators != null) {
+			setScoretranslators(scoretranslators);
 		}
 	}
 
@@ -166,6 +187,60 @@ public class LmsPrefsWrapper implements LmsPrefs, ModelWrapper<LmsPrefs> {
 	*/
 	public void setLmsTemplates(java.lang.String lmsTemplates) {
 		_lmsPrefs.setLmsTemplates(lmsTemplates);
+	}
+
+	/**
+	* Returns the activities of this lms prefs.
+	*
+	* @return the activities of this lms prefs
+	*/
+	public java.lang.String getActivities() {
+		return _lmsPrefs.getActivities();
+	}
+
+	/**
+	* Sets the activities of this lms prefs.
+	*
+	* @param activities the activities of this lms prefs
+	*/
+	public void setActivities(java.lang.String activities) {
+		_lmsPrefs.setActivities(activities);
+	}
+
+	/**
+	* Returns the courseevals of this lms prefs.
+	*
+	* @return the courseevals of this lms prefs
+	*/
+	public java.lang.String getCourseevals() {
+		return _lmsPrefs.getCourseevals();
+	}
+
+	/**
+	* Sets the courseevals of this lms prefs.
+	*
+	* @param courseevals the courseevals of this lms prefs
+	*/
+	public void setCourseevals(java.lang.String courseevals) {
+		_lmsPrefs.setCourseevals(courseevals);
+	}
+
+	/**
+	* Returns the scoretranslators of this lms prefs.
+	*
+	* @return the scoretranslators of this lms prefs
+	*/
+	public java.lang.String getScoretranslators() {
+		return _lmsPrefs.getScoretranslators();
+	}
+
+	/**
+	* Sets the scoretranslators of this lms prefs.
+	*
+	* @param scoretranslators the scoretranslators of this lms prefs
+	*/
+	public void setScoretranslators(java.lang.String scoretranslators) {
+		_lmsPrefs.setScoretranslators(scoretranslators);
 	}
 
 	public boolean isNew() {
