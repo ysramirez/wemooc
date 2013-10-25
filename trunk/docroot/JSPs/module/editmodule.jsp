@@ -1,3 +1,4 @@
+<%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.StringPool"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
@@ -196,7 +197,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	<br />
 
 	<aui:field-wrapper label="start-date">
-		<liferay-ui:input-date  yearRangeEnd="2020" yearRangeStart="2012"
+		<liferay-ui:input-date  yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"
 		 dayParam="startDateDia" dayValue="<%= Integer.valueOf(startDateDia) %>"
 		  monthParam="startDateMes" monthValue="<%= Integer.valueOf(startDateMes)-1 %>"
 		   yearParam="startDateAno" yearValue="<%= Integer.valueOf(startDateAno) %>"  yearNullable="false" 
@@ -205,7 +206,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	</aui:field-wrapper>
 	<liferay-ui:error key="module-startDate-required" message="module-startDate-required" />
 	<aui:field-wrapper label="end-date">
-		<liferay-ui:input-date  yearRangeEnd="2020" yearRangeStart="2012" dayParam="endDateDia" dayValue="<%= Integer.valueOf(endDateDia) %>" monthParam="endDateMes" monthValue="<%= Integer.valueOf(endDateMes)-1 %>" yearParam="endDateAno" yearValue="<%= Integer.valueOf(endDateAno) %>"  yearNullable="false" 
+		<liferay-ui:input-date  yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="endDateDia" dayValue="<%= Integer.valueOf(endDateDia) %>" monthParam="endDateMes" monthValue="<%= Integer.valueOf(endDateMes)-1 %>" yearParam="endDateAno" yearValue="<%= Integer.valueOf(endDateAno) %>"  yearNullable="false" 
 				 dayNullable="false" monthNullable="false" ></liferay-ui:input-date>
 	</aui:field-wrapper>
 	<liferay-ui:error key="module-endDate-required" message="module-endDate-required" />

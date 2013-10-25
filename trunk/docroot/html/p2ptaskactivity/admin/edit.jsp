@@ -1,3 +1,4 @@
+<%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
@@ -166,7 +167,7 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 	
 <aui:field-wrapper label="p2ptaskactivity.edit.dateUpload">
 
-	<liferay-ui:input-date yearRangeEnd="2020" yearRangeStart="2012"
+	<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"
 		yearNullable="false" dayNullable="false" monthNullable="false"
 		dayParam="uploadDay" monthParam="uploadMon" yearParam="uploadYear"
 		yearValue="<%=uploadYear%>" monthValue="<%=uploadMonth%>"
