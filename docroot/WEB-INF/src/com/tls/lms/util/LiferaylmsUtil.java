@@ -25,8 +25,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 public class LiferaylmsUtil {
 	
-	public static final int defaultStartYear = Calendar.getInstance().get(Calendar.YEAR);
-	public static final int defaultEndYear = defaultStartYear + 8;
+	public static final int defaultStartYear = 2012; //porque es necesario mantener los valores antiguos para los cursos antiguos
+	public static final int defaultEndYear = Calendar.getInstance().get(Calendar.YEAR) + 8;
 
 	public static void setPermission(ThemeDisplay themeDisplay, String classname, Role role, String[] actionIds, long primaryKey) throws Exception{
 		Resource resource =  ResourceLocalServiceUtil.getResource(themeDisplay.getCompanyId(), classname, ResourceConstants.SCOPE_INDIVIDUAL, Long.toString(primaryKey));
