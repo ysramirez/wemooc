@@ -63,7 +63,7 @@
 	%>
 	<div id="displayDate">
 		<span class="date">
-			<label class="date-column"><liferay-ui:message key="activityDates.endDate"/></label>
+			<label class="date-column"><liferay-ui:message key="activityDates.startDate"/></label>
 			<label><%=actDisplayDate%></label>
 		</span>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
