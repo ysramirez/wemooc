@@ -1,3 +1,11 @@
+<%@page import="com.liferay.lms.model.CourseResult"%>
+<%@page import="com.liferay.lms.service.CourseResultLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Competence"%>
+<%@page import="com.liferay.lms.service.CompetenceLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.UserCompetence"%>
+<%@page import="com.liferay.lms.model.CourseCompetence"%>
+<%@page import="com.liferay.lms.service.CourseCompetenceLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.UserCompetenceLocalServiceUtil"%>
 <%@page import="com.liferay.portal.model.MembershipRequest"%>
 <%@page import="com.liferay.portal.model.MembershipRequestConstants"%>
 <%@page import="com.liferay.portal.service.MembershipRequestLocalServiceUtil"%>
@@ -13,6 +21,10 @@
 	
 <%
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+
+CourseResult cr = CourseResultLocalServiceUtil.create(course.getCourseId(), themeDisplay.getUserId());
+cr.setPassed(true);
+CourseResultLocalServiceUtil.update(cr);
 
 if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW)){
 	int numberUsers = UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId());
@@ -38,16 +50,42 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 		
 		} else 	{
 			Group groupC = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
-
+			
+			List<CourseCompetence> courseCompetences = CourseCompetenceLocalServiceUtil.findBycourseId(course.getCourseId(), true);
+			
+			boolean pass=true;
+			if(courseCompetences!=null&&courseCompetences.size()>0){
+				%><div><liferay-ui:message key="competences.necessary" />:</div><ul><%
+				for(CourseCompetence courseCompetence : courseCompetences){
+					UserCompetence uc = UserCompetenceLocalServiceUtil.findByUserIdCompetenceId(themeDisplay.getUserId(), courseCompetence.getCompetenceId());
+					if(uc!=null){
+						Competence c =CompetenceLocalServiceUtil.getCompetence(uc.getCompetenceId());
+						if(c!=null){
+							%><li><liferay-ui:icon image="checked"/><%=c.getTitle(themeDisplay.getLocale())%></li><%
+						}
+					}else{
+						pass=false;
+						Competence c =CompetenceLocalServiceUtil.getCompetence(courseCompetence.getCompetenceId());
+						if(c!=null){
+							%><li><liferay-ui:icon image="unchecked"/><%=c.getTitle(themeDisplay.getLocale())%></li><%
+						}
+					}
+				}
+				%></ul><%
+			}
 			Date now=new Date(System.currentTimeMillis());
 			if((course.getStartDate().before(now)&&course.getEndDate().after(now))&&permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"REGISTER")){
 				if((course.getMaxusers()<=0||numberUsers<course.getMaxusers())&&groupC.getType()!=GroupConstants.TYPE_SITE_PRIVATE){
 					if(groupC.getType()==GroupConstants.TYPE_SITE_OPEN){
 					%>
-						<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.noinscrito" /></div>
 						<portlet:actionURL name="inscribir"  var="inscribirURL" windowState="NORMAL"/>
 						<div class="boton_inscibirse ">
-							<a href="<%=inscribirURL %>"><liferay-ui:message key="inscripcion.inscribete" /></a>
+							<%if(pass){ %>
+								<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.noinscrito" /></div>
+								<a href="<%=inscribirURL %>"><liferay-ui:message key="inscripcion.inscribete" /></a>
+							<%}else{ %>
+								<liferay-ui:message key="competence.block" />
+							<%} %>
 						</div>			
 					<%
 					}else if(groupC.getType()==GroupConstants.TYPE_SITE_RESTRICTED){
@@ -65,13 +103,20 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 								<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.surveillance" /></div>
 								<portlet:actionURL name="member"  var="memberURL" windowState="NORMAL"/>
 								<div class="boton_inscibirse ">
-									<a href="<%=memberURL %>"><liferay-ui:message key="inscripcion.request" /></a>
+									<%if(pass){ %>
+										<a href="<%=memberURL %>"><liferay-ui:message key="inscripcion.request" /></a>
+									<%}else{ %>
+										<liferay-ui:message key="competence.block" />
+									<%} %>
 								</div>	
 								<%	
 							}
 						}
 					}
 				}else{
+					if(groupC.getType()==GroupConstants.TYPE_SITE_PRIVATE){
+						renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+					}
 					%>
 					<div class="mensaje_marcado"><liferay-ui:message key="course.full" /></div>
 					<%

@@ -521,6 +521,7 @@
 	<portlet>
 		<portlet-name>competencesadmin</portlet-name>
 		<icon>/icon.png</icon>
+		<indexer-class>com.liferay.lms.indexer.CompetenceIndexer</indexer-class>
 		<control-panel-entry-category>content</control-panel-entry-category>
 		<control-panel-entry-weight>17.5</control-panel-entry-weight>
 		<asset-renderer-factory>com.liferay.lms.asset.CompetenceAssetRendererFactory</asset-renderer-factory>

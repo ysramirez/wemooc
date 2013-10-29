@@ -14,7 +14,11 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.List;
+
+import com.liferay.lms.model.CourseCompetence;
 import com.liferay.lms.service.base.CourseCompetenceLocalServiceBaseImpl;
+import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * The implementation of the course competence local service.
@@ -30,11 +34,18 @@ import com.liferay.lms.service.base.CourseCompetenceLocalServiceBaseImpl;
  * @see com.liferay.lms.service.base.CourseCompetenceLocalServiceBaseImpl
  * @see com.liferay.lms.service.CourseCompetenceLocalServiceUtil
  */
-public class CourseCompetenceLocalServiceImpl
-	extends CourseCompetenceLocalServiceBaseImpl {
+public class CourseCompetenceLocalServiceImpl extends CourseCompetenceLocalServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never reference this interface directly. Always use {@link com.liferay.lms.service.CourseCompetenceLocalServiceUtil} to access the course competence local service.
 	 */
+	
+	public List<CourseCompetence> findBycourseId(long courseId,boolean condition) throws SystemException{
+		return courseCompetencePersistence.findBycourseId(courseId, condition);
+	}
+	
+	public CourseCompetence fetchByCourseCompetenceCondition(long courseId,long competenceId,boolean condition) throws SystemException{
+		return courseCompetencePersistence.fetchByCourseCompetenceCondition(courseId, competenceId, condition);
+	}
 }

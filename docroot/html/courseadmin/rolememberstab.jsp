@@ -42,8 +42,6 @@ if(roleId!=null&&!roleId.equals(0L)){
 	}
 }
 
-int tab = ParamUtil.getInteger(request, "tab",1);
-
 long primKey=ParamUtil.getLong(request, "courseId",0);
 String sPrimKey=ParamUtil.getString(request, "courseId","0");
 

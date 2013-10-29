@@ -113,7 +113,7 @@ public class courseupdateresult extends MVCPortlet {
 								courseResult.setResult(result);
 								courseResult.setPassed(passed);
 								
-								CourseResultLocalServiceUtil.updateCourseResult(courseResult, false);
+								CourseResultLocalServiceUtil.update(courseResult);
 								
 								changes++;
 								

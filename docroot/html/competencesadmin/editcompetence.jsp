@@ -47,7 +47,7 @@ else
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
-	<aui:input name="courseId" type="hidden" value="<%=competenceId %>"/>
+	<aui:input name="competenceId" type="hidden" value="<%=competenceId %>"/>
 	<aui:input name="title" label="title">
 	</aui:input>
 	<aui:field-wrapper label="description">

@@ -17,6 +17,7 @@
 <div class="portlet-toolbar search-form">
 <h1 class="taglib-categorization-filter entry-title">
 <%
+
 java.util.List<Course> courses=null;
 
 long catId=ParamUtil.getLong(request, "categoryId",0);

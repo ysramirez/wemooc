@@ -18,6 +18,7 @@ import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
+import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
@@ -29,8 +30,12 @@ import javax.servlet.http.HttpServletResponse;
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
+import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseCompetence;
+import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LmsPrefs;
+import com.liferay.lms.service.CourseCompetenceLocalServiceUtil;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.portal.LARFileException;
@@ -580,43 +585,6 @@ public class CourseAdmin extends MVCPortlet {
 		}
 	}
 
-	/*@Override
-	public void serveResource(ResourceRequest resourceRequest, ResourceResponse resourceResponse) throws IOException, PortletException {
-
-		String action = ParamUtil.getString(resourceRequest, "action");
-
-		ThemeDisplay themeDisplay = (ThemeDisplay) resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
-
-		if(action.equals("export")){
-
-			try {	
-
-				long groupId = ParamUtil.getLong(resourceRequest, "groupId");
-				String fileName = ParamUtil.getString(resourceRequest, "exportFileName");
-
-				File file = LayoutServiceUtil.exportPortletInfoAsFile(themeDisplay.getLayout().getPlid(), groupId, themeDisplay.getPortletDisplay().getId(), resourceRequest.getParameterMap(), null, null);
-
-				HttpServletRequest request = PortalUtil.getHttpServletRequest(resourceRequest);
-				HttpServletResponse response = PortalUtil.getHttpServletResponse(resourceResponse);
-
-				InputStream is = new FileInputStream(file);
-
-				String contentType = MimeTypesUtil.getContentType(file);
-
-				ServletResponseUtil.sendFile(request, response, fileName, is, contentType);
-
-			}catch(Exception e){
-
-				//System.out.println(" Error: "+e.getMessage());
-				e.printStackTrace();
-
-			}
-
-		} else {
-			super.serveResource(resourceRequest, resourceResponse);
-		}
-	}*/
-
 	public void importCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 
 		try {
@@ -827,6 +795,62 @@ public class CourseAdmin extends MVCPortlet {
 			writer.close();
 			response.getPortletOutputStream().flush();
 			response.getPortletOutputStream().close();
+		}
+	}
+	
+	@ProcessAction(name="activateCompetence")
+	public void activateCompetence(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		Long courseId = ParamUtil.getLong(actionRequest, "courseId");
+		Long competenceId = ParamUtil.getLong(actionRequest, "competenceId");
+		Boolean condition = ParamUtil.getBoolean(actionRequest, "condition");
+		String tab = ParamUtil.getString(actionRequest, "tab");
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		CourseCompetence cc = CourseCompetenceLocalServiceUtil.fetchByCourseCompetenceCondition(courseId, competenceId, condition);
+		
+		if(cc==null){
+			long courseCompetenceId = CounterLocalServiceUtil.increment(CourseCompetence.class.getName());
+			cc = CourseCompetenceLocalServiceUtil.createCourseCompetence(courseCompetenceId);
+			cc.setCourseId(courseId);
+			cc.setCompetenceId(competenceId);
+			cc.setCachedModel(condition);
+			cc.setCondition(condition);
+			CourseCompetenceLocalServiceUtil.updateCourseCompetence(cc);
+		}
+		
+		actionResponse.setRenderParameter("jspPage","/html/courseadmin/competencetab.jsp");
+		actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+		actionResponse.setRenderParameter("competenceId", String.valueOf(competenceId));
+		if(log.isDebugEnabled())log.debug("tab::"+tab);
+		if(tab.equals("1")){
+			actionResponse.setRenderParameter("tabs1", LanguageUtil.get(themeDisplay.getLocale(),"competences.necessary"));
+		}else{
+			actionResponse.setRenderParameter("tabs1", LanguageUtil.get(themeDisplay.getLocale(),"competences.assigned"));
+		}
+	}
+	
+	@ProcessAction(name="deactivateCompetence")
+	public void deactivateCompetence(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		Long courseId = ParamUtil.getLong(actionRequest, "courseId");
+		Long competenceId = ParamUtil.getLong(actionRequest, "competenceId");
+		Boolean condition = ParamUtil.getBoolean(actionRequest, "condition");
+		String tab = ParamUtil.getString(actionRequest, "tab");
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		CourseCompetence cc = CourseCompetenceLocalServiceUtil.fetchByCourseCompetenceCondition(courseId, competenceId, condition);
+
+		if(cc!=null){
+			CourseCompetenceLocalServiceUtil.deleteCourseCompetence(cc.getCourcompetenceId());
+		}
+		
+		actionResponse.setRenderParameter("jspPage","/html/courseadmin/competencetab.jsp");
+		actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+		actionResponse.setRenderParameter("competenceId", String.valueOf(competenceId));
+		
+		if(tab.equals("1")){
+			actionResponse.setRenderParameter("tabs1", LanguageUtil.get(themeDisplay.getLocale(),"competences.necessary"));
+		}else{
+			actionResponse.setRenderParameter("tabs1", LanguageUtil.get(themeDisplay.getLocale(),"competences.assigned"));
 		}
 	}
 }

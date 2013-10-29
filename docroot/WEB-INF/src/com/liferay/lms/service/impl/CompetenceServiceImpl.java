@@ -14,6 +14,12 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 import com.liferay.lms.model.Competence;
 
 import com.liferay.lms.service.base.CompetenceServiceBaseImpl;
@@ -56,5 +62,20 @@ public class CompetenceServiceImpl extends CompetenceServiceBaseImpl {
 		return competencePersistence.filterCountByGroupId(groupId);
 		
 	
+	}
+	
+	public  HashMap<Long,Competence> getCompetencesOfGroups(long[] groups) throws SystemException{
+		HashMap<Long,Competence> competences = new HashMap<Long,Competence>();
+		for(long group : groups){
+			List<Competence> competencest = competencePersistence.filterFindByGroupId(group);
+			
+			if(competencest!=null&&competencest.size()>0){
+				for(Competence competence : competencest){
+					competences.put(competence.getCompetenceId(), competence);
+				}
+			}
+		}
+		
+		return competences;
 	}
 }

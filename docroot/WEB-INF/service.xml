@@ -279,18 +279,22 @@
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
 		</finder>
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
 		</entity>
-			<entity name="UserCompetence" local-service="true" remote-service="true" uuid="true" json-enabled="false">
-				<column name="usercompId" type="long"  primary="true"/>
-				<column name="userId" type="long"  />
-				<column name="competenceId" type="long" />
-				<column name="compDate" type="Date" />
-			<finder name="userId" return-type="Collection">
-			<finder-column name="userId" />
-		</finder>
-		<finder name="competenceId" return-type="Collection">
-			<finder-column name="competenceId" />
-		</finder>
+		<entity name="UserCompetence" local-service="true" remote-service="true" uuid="true" json-enabled="false">
+			<column name="usercompId" type="long"  primary="true"/>
+			<column name="userId" type="long"  />
+			<column name="competenceId" type="long" />
+			<column name="compDate" type="Date" />
+			<finder name="UserId" return-type="Collection">
+				<finder-column name="userId" />
+			</finder>
+			<finder name="UserIdCompetenceId" return-type="UserCompetence">
+				<finder-column name="userId" />
+				<finder-column name="competenceId" />
+			</finder>
 	    </entity>
 	    	<entity name="CourseCompetence" local-service="true" remote-service="true" uuid="true" json-enabled="false">
 	    		<column name="CourcompetenceId" type="long" primary="true" />
@@ -299,6 +303,11 @@
 				<column name="condition" type="boolean"/>
 				<finder name="courseId" return-type="Collection">
 					<finder-column name="courseId" />
+					<finder-column name="condition" />
+				</finder>
+				<finder name="CourseCompetenceCondition" return-type="CourseCompetence" unique="true">
+					<finder-column name="courseId" />
+					<finder-column name="competenceId" />
 					<finder-column name="condition" />
 				</finder>
 			</entity>

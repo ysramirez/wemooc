@@ -14,7 +14,10 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.NoSuchUserCompetenceException;
+import com.liferay.lms.model.UserCompetence;
 import com.liferay.lms.service.base.UserCompetenceLocalServiceBaseImpl;
+import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * The implementation of the user competence local service.
@@ -30,11 +33,15 @@ import com.liferay.lms.service.base.UserCompetenceLocalServiceBaseImpl;
  * @see com.liferay.lms.service.base.UserCompetenceLocalServiceBaseImpl
  * @see com.liferay.lms.service.UserCompetenceLocalServiceUtil
  */
-public class UserCompetenceLocalServiceImpl
-	extends UserCompetenceLocalServiceBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this interface directly. Always use {@link com.liferay.lms.service.UserCompetenceLocalServiceUtil} to access the user competence local service.
-	 */
+public class UserCompetenceLocalServiceImpl	extends UserCompetenceLocalServiceBaseImpl {
+	
+	public UserCompetence findByUserIdCompetenceId(long userId,long competenceId){
+		try {
+			return userCompetencePersistence.findByUserIdCompetenceId(userId, competenceId);
+		} catch (NoSuchUserCompetenceException e) {
+			return null;
+		} catch (SystemException e) {
+			return null;
+		}
+	}
 }
