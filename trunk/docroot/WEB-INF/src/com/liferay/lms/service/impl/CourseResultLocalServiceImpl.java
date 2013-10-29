@@ -14,17 +14,21 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
+import com.liferay.lms.NoSuchUserCompetenceException;
 import com.liferay.lms.learningactivity.calificationtype.CalificationType;
 import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;
 import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseCompetence;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
+import com.liferay.lms.model.UserCompetence;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.base.CourseResultLocalServiceBaseImpl;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
@@ -65,6 +69,7 @@ public class CourseResultLocalServiceImpl
 	{
 		return courseResultPersistence.countByc(courseId, passed);
 	}
+	
 	public CourseResult create(long courseId, long userId) throws SystemException
 	{
 		CourseResult courseResult=courseResultPersistence.create(counterLocalService.increment(CourseResult.class.getName()));
@@ -75,10 +80,34 @@ public class CourseResultLocalServiceImpl
 		courseResultPersistence.update(courseResult, false);
 		return courseResult;
 	}
+	
 	public void update(CourseResult cresult) throws SystemException
 	{
+		if(cresult.getPassed()){
+			List<CourseCompetence> competences = courseCompetencePersistence.findBycourseId(cresult.getCourseId(), false);
+		
+			for(CourseCompetence cc: competences){
+				UserCompetence uc = null;
+				try {
+					uc = userCompetencePersistence.findByUserIdCompetenceId(cresult.getUserId(), cc.getCompetenceId());
+				} catch (NoSuchUserCompetenceException e) {
+					uc = null;
+				}
+				
+				if(uc==null){
+					UserCompetence userCompetence=userCompetencePersistence.create(counterLocalService.increment(UserCompetence.class.getName()));
+					userCompetence.setUserId(cresult.getUserId());
+					userCompetence.setCompetenceId(cc.getCompetenceId());
+					userCompetence.setCompDate(new Date());
+					userCompetencePersistence.update(userCompetence, false);
+				}
+			}
+			
+		}
+		
 		courseResultPersistence.update(cresult, false);
 	}
+	
 	public void update(ModuleResult mresult) throws PortalException, SystemException
 	{
 		Module theModule=moduleLocalService.getModule(mresult.getModuleId());

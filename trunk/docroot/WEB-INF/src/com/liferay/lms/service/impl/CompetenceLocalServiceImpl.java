@@ -14,27 +14,21 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.List;
 import java.util.Locale;
 
 import com.liferay.lms.model.Competence;
-import com.liferay.lms.model.Course;
-import com.liferay.lms.model.LmsPrefs;
-import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.base.CompetenceLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.search.Indexer;
-import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Indexable;
+import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.LayoutSetPrototype;
-import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
 
 /**
  * The implementation of the competence local service.
@@ -51,18 +45,19 @@ import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
  * @see com.liferay.lms.service.CompetenceLocalServiceUtil
  */
 public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
+	private static Log log = LogFactoryUtil.getLog(CompetenceLocalServiceImpl.class);
+	
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
 	 * Never reference this interface directly. Always use {@link com.liferay.lms.service.CompetenceLocalServiceUtil} to access the competence local service.
 	 */
+	@Indexable(type=IndexableType.REINDEX)
 	public Competence addCompetence (String title, String description,ServiceContext serviceContext)
 			throws SystemException, PortalException 
 			{
 		long userId=serviceContext.getUserId();
-		System.out.println(1);
 		Competence competence = competencePersistence.create(counterLocalService.increment(Competence.class.getName()));	
-		System.out.println(2);
 			competence.setCompanyId(serviceContext.getCompanyId());
 			competence.setGroupId(serviceContext.getScopeGroupId());
 			competence.setUserId(userId);
@@ -71,12 +66,10 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			competence.setStatus(WorkflowConstants.STATUS_APPROVED);
 			competence.setExpandoBridgeAttributes(serviceContext);
 			competencePersistence.update(competence, true);
-			System.out.println(3);
 			try
 			{
 			resourceLocalService.addResources(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(),
 					userId,Competence.class.getName(), competence.getPrimaryKey(), false,true, true);
-			System.out.println(4);
 			}
 			catch(Exception e)
 			{
@@ -88,12 +81,28 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 					ContentTypes.TEXT_HTML, competence.getTitle(),
 					competence.getDescription(serviceContext.getLocale()), competence.getDescription(serviceContext.getLocale()),
 					null, null, 0, 0,null, false);
-			System.out.println(5);
 			//creating group
 		return competence;
 		
 		
 	}
+
+	@Indexable(type=IndexableType.REINDEX)
+	public Competence updateCompetence(Competence competence, ServiceContext serviceContext) throws SystemException, PortalException {
+		Competence competenceReturn = competencePersistence.update(competence, true);
+		Locale locale=new Locale(serviceContext.getLanguageId());
+		long userId=serviceContext.getUserId();
+		AssetEntryLocalServiceUtil.updateEntry(
+				userId, competence.getGroupId(), Competence.class.getName(),
+				competence.getCompetenceId(), competence.getUuid(),0, serviceContext.getAssetCategoryIds(),
+				serviceContext.getAssetTagNames(), true, null, null,
+				new java.util.Date(System.currentTimeMillis()), null,
+				ContentTypes.TEXT_HTML, competence.getTitle(), competence.getDescription(locale), competence.getDescription(locale), null, null, 0, 0,
+				null, false);
+		return competenceReturn;
+	}
+
+	@Indexable(type=IndexableType.REINDEX)
 	public Competence modCompetence (Competence competence,
 			ServiceContext serviceContext)
 			throws SystemException, PortalException {
@@ -102,7 +111,7 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			competencePersistence.update(competence, true);
 			long userId=serviceContext.getUserId();
 			AssetEntryLocalServiceUtil.updateEntry(
-					userId, competence.getGroupId(), Course.class.getName(),
+					userId, competence.getGroupId(), Competence.class.getName(),
 					competence.getCompetenceId(), competence.getUuid(),0, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
@@ -110,21 +119,34 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 					null, false);
 			return competence;
 		
-			}
-	@Override
-	public Competence deleteCompetence (long competenceId) throws SystemException,
-	PortalException {
-	return this.deleteCompetence(this.getCompetence(competenceId));
 	}
+	
 	@Override
+	@Indexable(type=IndexableType.DELETE)
+	public Competence deleteCompetence (long competenceId) throws SystemException, PortalException {
+		return this.deleteCompetence(this.getCompetence(competenceId));
+	}
+	
+	@Override
+	@Indexable(type=IndexableType.DELETE)
 	public Competence deleteCompetence (Competence competence) throws SystemException 
 	{
 		try {
 			AssetEntryLocalServiceUtil.deleteEntry(Competence.class.getName(), competence.getPrimaryKey());
+			competencePersistence.remove(competence);
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(log.isDebugEnabled()){
+				e.printStackTrace();
+			}
 		}
 		return competence;
+	}
+	
+	public long countAll() throws SystemException{
+		return competencePersistence.countAll();
+	}
+	
+	public List findByCompanyId(long companyId) throws SystemException{
+		return competencePersistence.findByCompanyId(companyId);
 	}
 }

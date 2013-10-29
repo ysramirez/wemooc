@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.CompetenceServiceUtil"%>
+<%@page import="java.util.Enumeration"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
 <%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LmsPrefs"%>
@@ -9,13 +11,20 @@
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
 <%
-ResultRow row =
-	(ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+ResultRow row = (ResultRow)request.getAttribute(WebKeys.SEARCH_CONTAINER_RESULT_ROW);
+
+
 	 
 Course myCourse = (Course)row.getObject();
 LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 String name = Course.class.getName();
 String primKey = String.valueOf(myCourse.getCourseId());
+
+long count = 0;
+long countGroup = CompetenceServiceUtil.getCountCompetencesOfGroup(myCourse.getGroupCreatedId());
+long countParentGroup = CompetenceServiceUtil.getCountCompetencesOfGroup(myCourse.getGroupId());
+count = countGroup + countParentGroup;
+
 %>
 <liferay-ui:icon-menu>
 <portlet:renderURL var="editURL">
@@ -95,5 +104,15 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class
 	</portlet:renderURL>
 	<liferay-ui:icon image="copy" message="courseadmin.adminactions.clone" url="<%=cloneURL%>" />			
 </c:if>
+
+<c:if test="<%=count>0 && permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)%>">
+	<portlet:renderURL var="competenceURL">
+		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
+		<portlet:param name="courseId" value="<%=String.valueOf(myCourse.getCourseId()) %>" />
+		<portlet:param name="jspPage" value="/html/courseadmin/competencetab.jsp" />
+	</portlet:renderURL>
+	<liferay-ui:icon image="tag" message="competence.label" url="<%=competenceURL %>" />
+</c:if>
+
 
 </liferay-ui:icon-menu>

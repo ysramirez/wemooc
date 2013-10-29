@@ -36,7 +36,6 @@
 	<aui:input type="checkbox" label="inscription-date" name="inscriptionDate" value="<%=preferences.getValue(\"showInscriptionDate\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 <%
 String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
-System.out.println("LM"+StringUtil.merge(lspist));
 		%>
 		<aui:field-wrapper  label="alowed-course-templates" >
 		<%
