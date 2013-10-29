@@ -22,10 +22,6 @@
 <%
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
-CourseResult cr = CourseResultLocalServiceUtil.create(course.getCourseId(), themeDisplay.getUserId());
-cr.setPassed(true);
-CourseResultLocalServiceUtil.update(cr);
-
 if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW)){
 	int numberUsers = UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId());
 	
@@ -100,10 +96,10 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 								%><div class="mensaje_marcado"><liferay-ui:message key="course.denied" /></div><%
 							}else{
 								%>
-								<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.surveillance" /></div>
 								<portlet:actionURL name="member"  var="memberURL" windowState="NORMAL"/>
 								<div class="boton_inscibirse ">
 									<%if(pass){ %>
+										<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.surveillance" /></div>
 										<a href="<%=memberURL %>"><liferay-ui:message key="inscripcion.request" /></a>
 									<%}else{ %>
 										<liferay-ui:message key="competence.block" />
