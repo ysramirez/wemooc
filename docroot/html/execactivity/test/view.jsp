@@ -49,7 +49,7 @@
 			int done =  LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId,userId);
 			LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
 			
-			if(result.getResult() < 100 && !LearningActivityLocalServiceUtil.islocked(actId, userId) && LearningActivityResultLocalServiceUtil.userPassed(actId, userId) && done < act.getTries()){
+			if(result.getResult() < 100 && !LearningActivityLocalServiceUtil.islocked(actId, userId) && LearningActivityResultLocalServiceUtil.userPassed(actId, userId) && (done < act.getTries() || act.getTries() == 0)){
 				improving = true;
 			}
 		}
