@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.sun.corba.se.impl.copyobject.JavaStreamObjectCopierImpl"%>
 <%@page import="java.util.Iterator"%>
@@ -355,18 +356,20 @@
 
 	   	<liferay-ui:search-container-results>
 			<%
-			
-				pageContext.setAttribute("results", LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
+				List<LearningActivity> notTeamActivities = new ArrayList<LearningActivity>(); 
+				notTeamActivities.addAll(LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
 						add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)).
 			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
-			    	    add(PropertyFactoryUtil.forName("typeId").ne(8)),
-			    	searchContainer.getStart(), searchContainer.getEnd()));
-			
-			    pageContext.setAttribute("total",(int)LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
-		    			add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)).
-			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
-			    	    add(PropertyFactoryUtil.forName("typeId").ne(8))
-		    		));			
+			    	    add(PropertyFactoryUtil.forName("typeId").ne(8))));
+				for(LearningActivity la: notTeamActivities)
+				{
+					String team = LearningActivityLocalServiceUtil.getExtraContentValue(la.getActId(),"team");
+					if(!StringPool.BLANK.equals(team)){
+						notTeamActivities.remove(la);
+					}
+				}
+				pageContext.setAttribute("results",ListUtil.subList(notTeamActivities, searchContainer.getStart(), searchContainer.getEnd()));
+			    pageContext.setAttribute("total",notTeamActivities.size());			
 			%>
 		</liferay-ui:search-container-results>
 		

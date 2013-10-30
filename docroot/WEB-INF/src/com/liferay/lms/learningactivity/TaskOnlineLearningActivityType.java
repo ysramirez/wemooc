@@ -75,18 +75,55 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 		
 			String fichero = ParamUtil.getString(uploadRequest, "fichero", StringPool.FALSE);
 			String textoenr = ParamUtil.getString(uploadRequest, "textoenr", StringPool.FALSE);
+			String team = ParamUtil.getString(uploadRequest, "team");
+			long teamId = 0;
+			if(!team.equalsIgnoreCase("0")){
+				teamId = Long.parseLong(team);
+			}
 			
-			Document document = SAXReaderUtil.createDocument();
-			Element rootElement = document.addElement("online");
+			Document document = null;
+			Element rootElement = null;
+			if((learningActivity.getExtracontent()==null)||(learningActivity.getExtracontent().trim().length()==0)){
+				document = SAXReaderUtil.createDocument();
+				rootElement = document.addElement("online");
+			}
+			else
+			{
+				document=SAXReaderUtil.read(learningActivity.getExtracontent());
+				rootElement =document.getRootElement();
+			}
 			
-			Element ficheroXML=SAXReaderUtil.createElement("fichero");
+			Element ficheroXML=rootElement.element("fichero");
+			if(ficheroXML!=null)
+			{
+				ficheroXML.detach();
+				rootElement.remove(ficheroXML);
+			}
+			ficheroXML=SAXReaderUtil.createElement("fichero");
 			ficheroXML.addText(fichero);
 			rootElement.add(ficheroXML);
 			
-			Element textoenrXML=SAXReaderUtil.createElement("textoenr");
+			Element textoenrXML=rootElement.element("textoenr");
+			if(textoenrXML!=null)
+			{
+				textoenrXML.detach();
+				rootElement.remove(textoenrXML);
+			}
+			textoenrXML=SAXReaderUtil.createElement("textoenr");
 			textoenrXML.addText(textoenr);
 			rootElement.add(textoenrXML);
 			
+			Element teamElement=rootElement.element("team");
+			if(teamElement!=null)
+			{
+				teamElement.detach();
+				rootElement.remove(teamElement);
+			}
+			if(teamId!=0){
+				teamElement = SAXReaderUtil.createElement("team");
+				teamElement.setText(Long.toString(teamId));
+				rootElement.add(teamElement);
+			}
 			learningActivity.setExtracontent(document.formattedString());
 		
 	    }

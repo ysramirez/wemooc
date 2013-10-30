@@ -18,6 +18,7 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -96,7 +97,11 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 			throws PortalException, SystemException, DocumentException,IOException {
 		
 		String assetId = ParamUtil.getString(uploadRequest,"assetEntryId","0");
-		
+		String team = ParamUtil.getString(uploadRequest, "team");
+		long teamId = 0;
+		if(!team.equalsIgnoreCase("0")){
+			teamId = Long.parseLong(team);
+		}
 		
 		try{
 			PortletRequest actionRequest = (PortletRequest)uploadRequest.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
@@ -164,6 +169,20 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 		assetEntry = SAXReaderUtil.createElement("assetEntry");
 		assetEntry.setText(assetId);		
 		rootElement.add(assetEntry);	
+		
+		if(!StringPool.BLANK.equals(team)){
+			Element teamElement=rootElement.element("team");
+			if(teamElement!=null)
+			{
+				teamElement.detach();
+				rootElement.remove(teamElement);
+			}
+			if(teamId!=0){
+				teamElement = SAXReaderUtil.createElement("team");
+				teamElement.setText(Long.toString(teamId));
+				rootElement.add(teamElement);
+			}
+		}
 		
 		learningActivity.setExtracontent(document.formattedString());	
 	}

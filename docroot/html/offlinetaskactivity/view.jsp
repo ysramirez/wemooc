@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.service.TeamLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.Team"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.QueryUtil"%>
 <%@page import="com.liferay.portal.service.ResourceBlockLocalServiceUtil"%>
@@ -259,6 +261,11 @@
 																				
 							OrderByComparator obc = new UserFirstNameComparator(true);
 							
+							if(!StringPool.BLANK.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team"))){
+								String teamId = LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team");
+								Team team = TeamLocalServiceUtil.getTeam(Long.parseLong(teamId));
+								params.put("usersTeams", team.getTeamId());
+							}
 							if ((GetterUtil.getInteger(PropsUtil.get(PropsKeys.PERMISSIONS_USER_CHECK_ALGORITHM))==6)&&(!ResourceBlockLocalServiceUtil.isSupported("com.liferay.lms.model"))){		
 								
 								params.put("notTeacher",new CustomSQLParam(OfflineActivity.NOT_TEACHER_SQL,themeDisplay.getScopeGroupId()));

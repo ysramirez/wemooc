@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.service.TeamLocalServiceUtil"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.BaseLearningActivityType"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
@@ -514,7 +515,6 @@ Liferay.provide(
 			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true" />
 		</aui:field-wrapper>
 		
-				
 		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
 			<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
 			<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
@@ -522,6 +522,13 @@ Liferay.provide(
 		</liferay-util:include>
 		
 		<%
+			
+		if(larntype.getTypeId()!=8 && !TeamLocalServiceUtil.getGroupTeams(themeDisplay.getScopeGroupId()).isEmpty()){ %>		
+			<liferay-util:include page="/html/editactivity/comboTeams.jsp" servletContext="<%=getServletContext() %>">
+				<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
+				<liferay-util:param name="teamId" value='<%=(learnact!=null)?LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team"):Long.toString(0) %>' />
+			</liferay-util:include>
+		<%}
 		if(larntype.isFeedbackCorrectConfigurable())
 		{
 			String  feedbacCorrect=larntype.getDefaultFeedbackCorrect();
