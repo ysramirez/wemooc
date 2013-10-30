@@ -208,6 +208,24 @@ public class TestLearningActivityType extends BaseLearningActivityType
 			questionsPerPage.setText(Long.toString(ParamUtil.get(uploadRequest,"questionsPerPage", 0L)));
 			rootElement.add(questionsPerPage);	
 			
+			String team = ParamUtil.getString(uploadRequest, "team");
+			long teamId = 0;
+			if(!team.equalsIgnoreCase("0")){
+				teamId = Long.parseLong(team);
+			}
+			
+			Element teamElement=rootElement.element("team");
+			if(teamElement!=null)
+			{
+				teamElement.detach();
+				rootElement.remove(teamElement);
+			}
+			if(teamId!=0){
+				teamElement = SAXReaderUtil.createElement("team");
+				teamElement.setText(Long.toString(teamId));
+				rootElement.add(teamElement);
+			}
+			
 			learningActivity.setExtracontent(document.formattedString());
 	    }
 	}

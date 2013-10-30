@@ -218,6 +218,22 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 				rootElement.add(dateUpload);	
 				
 			}
+			String team = ParamUtil.getString(uploadRequest, "team");
+			long teamId = 0;
+			if(!team.equalsIgnoreCase("0")){
+				teamId = Long.parseLong(team);
+			}
+			Element teamElement=rootElement.element("team");
+			if(teamElement!=null)
+			{
+				teamElement.detach();
+				rootElement.remove(teamElement);
+			}
+			if(teamId!=0){
+				teamElement = SAXReaderUtil.createElement("team");
+				teamElement.setText(Long.toString(teamId));
+				rootElement.add(teamElement);
+			}
 		
 			learningActivity.setExtracontent(document.formattedString());
 	    }

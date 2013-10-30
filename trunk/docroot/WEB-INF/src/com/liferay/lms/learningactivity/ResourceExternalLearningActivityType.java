@@ -7,7 +7,13 @@ import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.ResourceExternalAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
+import com.liferay.portal.kernel.dao.orm.Criterion;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -87,77 +93,98 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 	public void setExtraContent(UploadRequest uploadRequest,
 			PortletResponse portletResponse, LearningActivity learningActivity)
 			throws PortalException, SystemException, DocumentException,IOException {
-		PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(
-				JavaConstants.JAVAX_PORTLET_REQUEST);
-		String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");
-		String additionalFile = uploadRequest.getFileName("additionalFile");
-		boolean deleteVideo=ParamUtil.getBoolean(uploadRequest, "deleteAdditionalFile",false);
 		
-		if((deleteVideo)||
-		   (!StringPool.BLANK.equals(youtubecode.trim()))||
-		   ((additionalFile!=null)&&(!StringPool.BLANK.equals(additionalFile.trim())))){
-			Document document = null;
-			Element rootElement = null;
-			if((learningActivity.getExtracontent()==null)||(learningActivity.getExtracontent().trim().length()==0)){
-				document = SAXReaderUtil.createDocument();
-				rootElement = document.addElement("multimediaentry");
-			}
-			else
-			{
-				document=SAXReaderUtil.read(learningActivity.getExtracontent());
-				rootElement =document.getRootElement();
-			}
+		 DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
+		  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
+			dq.add(criterion);
 			
-			if(!StringPool.BLANK.equals(youtubecode.trim())){
-				Element video=rootElement.element("video");
-				if(video!=null)
-				{
-					video.detach();
-					rootElement.remove(video);
-				}
-				video = SAXReaderUtil.createElement("video");
-				video.setText(youtubecode);		
-				rootElement.add(video);
+		if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)==0) {
+			PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(
+					JavaConstants.JAVAX_PORTLET_REQUEST);
+			String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");
+			String additionalFile = uploadRequest.getFileName("additionalFile");
+			boolean deleteVideo=ParamUtil.getBoolean(uploadRequest, "deleteAdditionalFile",false);
+			String team = ParamUtil.getString(uploadRequest, "team");
+			long teamId = 0;
+			if(!team.equalsIgnoreCase("0")){
+				teamId = Long.parseLong(team);
 			}
-			
-
 			if((deleteVideo)||
-			   ((additionalFile!=null)&&(!StringPool.BLANK.equals(additionalFile.trim())))){
-
-				Element additionalDocumentElement=rootElement.element("document");
-				if((additionalDocumentElement!=null)&&(additionalDocumentElement.attributeValue("id","").length()!=0))
-				{
-					AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(additionalDocumentElement.attributeValue("id")));
-					FileEntry videofile=DLAppLocalServiceUtil.getFileEntry(videoAsset.getClassPK());
-					DLAppLocalServiceUtil.deleteFileEntry(videofile.getFileEntryId());
-					additionalDocumentElement.detach();
-					rootElement.remove(additionalDocumentElement);
+			   (!StringPool.BLANK.equals(youtubecode.trim()))||
+			   ((additionalFile!=null)&&(!StringPool.BLANK.equals(additionalFile.trim())) || (!StringPool.BLANK.equals(team)) )){
+				Document document = null;
+				Element rootElement = null;
+				if((learningActivity.getExtracontent()==null)||(learningActivity.getExtracontent().trim().length()==0)){
+					document = SAXReaderUtil.createDocument();
+					rootElement = document.addElement("multimediaentry");
 				}
-			}
-			
-			if((additionalFile!=null)&&(!StringPool.BLANK.equals(additionalFile.trim()))){
+				else
+				{
+					document=SAXReaderUtil.read(learningActivity.getExtracontent());
+					rootElement =document.getRootElement();
+				}
 				
-				ThemeDisplay themeDisplay = (ThemeDisplay) portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
-				long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-				long folderId=createDLFolders(themeDisplay.getUserId(),repositoryId, portletRequest);
-				ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), portletRequest);
+				if(!StringPool.BLANK.equals(youtubecode.trim())){
+					Element video=rootElement.element("video");
+					if(video!=null)
+					{
+						video.detach();
+						rootElement.remove(video);
+					}
+					video = SAXReaderUtil.createElement("video");
+					video.setText(youtubecode);		
+					rootElement.add(video);
+				}
 				
-				//Damos permisos al archivo para usuarios de comunidad.
-				serviceContext.setAddGroupPermissions(true);
-
-				FileEntry dlDocument = DLAppLocalServiceUtil.addFileEntry(
-					                      themeDisplay.getUserId(), repositoryId , folderId , additionalFile, uploadRequest.getContentType("additionalFile"), 
-					                      additionalFile, StringPool.BLANK, StringPool.BLANK, uploadRequest.getFile("additionalFile") , serviceContext ) ;
-
-				Element additionalDocumentElement=SAXReaderUtil.createElement("document");
-				additionalDocumentElement.addAttribute("id", Long.toString(AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), dlDocument.getPrimaryKey()).getEntryId()));
-				rootElement.add(additionalDocumentElement);	
+	
+				if((deleteVideo)||
+				   ((additionalFile!=null)&&(!StringPool.BLANK.equals(additionalFile.trim())))){
+	
+					Element additionalDocumentElement=rootElement.element("document");
+					if((additionalDocumentElement!=null)&&(additionalDocumentElement.attributeValue("id","").length()!=0))
+					{
+						AssetEntry videoAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(additionalDocumentElement.attributeValue("id")));
+						FileEntry videofile=DLAppLocalServiceUtil.getFileEntry(videoAsset.getClassPK());
+						DLAppLocalServiceUtil.deleteFileEntry(videofile.getFileEntryId());
+						additionalDocumentElement.detach();
+						rootElement.remove(additionalDocumentElement);
+					}
+				}
+				
+				if((additionalFile!=null)&&(!StringPool.BLANK.equals(additionalFile.trim()))){
+					
+					ThemeDisplay themeDisplay = (ThemeDisplay) portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+					long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+					long folderId=createDLFolders(themeDisplay.getUserId(),repositoryId, portletRequest);
+					ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), portletRequest);
+					
+					//Damos permisos al archivo para usuarios de comunidad.
+					serviceContext.setAddGroupPermissions(true);
+	
+					FileEntry dlDocument = DLAppLocalServiceUtil.addFileEntry(
+						                      themeDisplay.getUserId(), repositoryId , folderId , additionalFile, uploadRequest.getContentType("additionalFile"), 
+						                      additionalFile, StringPool.BLANK, StringPool.BLANK, uploadRequest.getFile("additionalFile") , serviceContext ) ;
+	
+					Element additionalDocumentElement=SAXReaderUtil.createElement("document");
+					additionalDocumentElement.addAttribute("id", Long.toString(AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), dlDocument.getPrimaryKey()).getEntryId()));
+					rootElement.add(additionalDocumentElement);	
+				}
+				if(!StringPool.BLANK.equals(team)){
+					Element teamElement=rootElement.element("team");
+					if(teamElement!=null)
+					{
+						teamElement.detach();
+						rootElement.remove(teamElement);
+					}
+					if(teamId!=0){
+						teamElement = SAXReaderUtil.createElement("team");
+						teamElement.setText(Long.toString(teamId));
+						rootElement.add(teamElement);
+					}
+				}
+				learningActivity.setExtracontent(document.formattedString());	
 			}
-			
-			
-			learningActivity.setExtracontent(document.formattedString());	
 		}
-		
 	}
 	
 	private long createDLFolders(Long userId,Long repositoryId,PortletRequest portletRequest) throws PortalException, SystemException{

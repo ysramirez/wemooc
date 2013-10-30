@@ -20,6 +20,10 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil" %>
+<%@page import="com.liferay.portal.service.TeamLocalServiceUtil" %>
+<%@page import="com.liferay.portal.model.Team" %>
+<%@page import="com.liferay.portal.NoSuchTeamException" %>
 <%
 
 LearningActivity myActivity = activity;
@@ -242,11 +246,22 @@ boolean showChangeVisibility = GetterUtil.getBoolean(PortletProps.get("learninga
 		<portlet:param name="resId" value="<%=primKey %>" />
 	</portlet:actionURL>
 	
-	<%
-		Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
-		boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-		ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
-	
+	<%	try{
+			String team = LearningActivityLocalServiceUtil.getExtraContentValue(Long.parseLong(primKey),"team");
+			long teamId=0;
+			boolean visible = false;
+			if(StringPool.BLANK.equals(team)){
+				Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+				visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+				ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+			}else{
+				teamId = Long.parseLong(team);
+				Team t = TeamLocalServiceUtil.getTeam(teamId);
+				Role siteMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+				visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+			}
+			
 		String visibiltyURLJavascript=
 				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
 						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
@@ -272,9 +287,11 @@ boolean showChangeVisibility = GetterUtil.getBoolean(PortletProps.get("learninga
 						 "            }  "+
 						 "          });  "+	 
 						 "		}); ";
+	
 	%>
 	
 	<liferay-ui:icon message="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+	<%}catch(NoSuchTeamException nsge){} %>
 </c:if>
 <!-- Mostrar calificaciones actividad. -->
 

@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -83,7 +84,7 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 			PortletResponse portletResponse, LearningActivity learningActivity)
 			throws PortalException, SystemException, DocumentException,
 			IOException {
-
+		
 		Document document = null;
 		Element rootElement = null;
 		if ((learningActivity.getExtracontent() == null)
@@ -129,7 +130,24 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		uuid.setText(scorm != null ? scorm.getUuid() : "");
 		
 		rootElement.add(uuid);
-
+		
+		String team = ParamUtil.getString(uploadRequest, "team");
+		long teamId = 0;
+		if(!team.equalsIgnoreCase("0")){
+			teamId = Long.parseLong(team);
+		}
+		Element teamElement=rootElement.element("team");
+		if(teamElement!=null)
+		{
+			teamElement.detach();
+			rootElement.remove(teamElement);
+		}
+		if(teamId!=0){
+			teamElement = SAXReaderUtil.createElement("team");
+			teamElement.setText(Long.toString(teamId));
+			rootElement.add(teamElement);
+		}
+		
 		learningActivity.setExtracontent(document.formattedString());
 	}
 	
