@@ -31,11 +31,6 @@ LearningActivity myActivity = activity;
 String name = LearningActivity.class.getName();
 String primKey = String.valueOf(myActivity.getActId());
 %>
-
-<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
-ActionKeys.UPDATE)||permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
-		ActionKeys.DELETE)||permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
-				ActionKeys.PERMISSIONS)%>">
 				
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE) %>">
 	<liferay-portlet:actionURL  name="editactivityoptions" var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
@@ -221,20 +216,34 @@ ActionKeys.UPDATE) %>">
 <liferay-ui:icon image="top" message="up" url="#" onClick="<%=upURLJavascript %>"/>
 
 </c:if>
-
-<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
+		<c:choose>
+			<c:when test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
 ActionKeys.PERMISSIONS) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=LearningActivity.class.getName() %>"
 					modelResourceDescription="<%= myActivity.getTitle(themeDisplay.getLocale()) %>"
+					resourcePrimKey="<%= String.valueOf(myActivity.getActId())%>"
+					redirect="<%=redirectURL %>"
+					var="permissionsURL"
+				/>
+				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
+			</c:when>
+			<c:otherwise>
+				<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(),myActivity.getActId(),
+			\"SOFT_PERMISSIONS\") %>">
+				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
+				<liferay-security:permissionsURL
+					modelResource="<%=LearningActivity.class.getName() %>"
+					modelResourceDescription="<%= myActivity.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW+\",CORRECT\" %>"
 					resourcePrimKey="<%= String.valueOf(myActivity.getActId()) %>"
 					redirect="<%=redirectURL %>"
 					var="permissionsURL"
 				/>
-				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			
-			</c:if>
-</c:if>
+				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
+				</c:if>
+			</c:otherwise>
+		</c:choose>
 
 <% 
 boolean showChangeVisibility = GetterUtil.getBoolean(PortletProps.get("learningactivity.show.hideactivity"),true);

@@ -31,7 +31,6 @@ public class LiferaylmsUtil {
 	public static void setPermission(ThemeDisplay themeDisplay, String classname, Role role, String[] actionIds, long primaryKey) throws Exception{
 		Resource resource =  ResourceLocalServiceUtil.getResource(themeDisplay.getCompanyId(), classname, ResourceConstants.SCOPE_INDIVIDUAL, Long.toString(primaryKey));
 		if(ResourceBlockLocalServiceUtil.isSupported(classname)){
-		   //System.out.println("por aqui");
 			Map<Long, String[]> roleIdsToActionIds = new HashMap<Long, String[]>();
 			roleIdsToActionIds.put(role.getRoleId(), actionIds);
 			ResourceBlockServiceUtil.setIndividualScopePermissions(

@@ -242,12 +242,11 @@ Liferay.provide(
 							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
 					<%
 					}
-				
-
 				if (actionEditing
 					&& (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.UPDATE)
 						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.DELETE) 
-						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.PERMISSIONS))) {
+						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.PERMISSIONS)
+						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"SOFT_PERMISSIONS"))) {
 				%>
 				<div class="iconsedit"><%@ include file="/html/lmsactivitieslist/admin_actions.jspf" %></div>
 				

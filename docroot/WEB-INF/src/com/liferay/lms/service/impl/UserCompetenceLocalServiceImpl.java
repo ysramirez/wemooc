@@ -14,6 +14,8 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.List;
+
 import com.liferay.lms.NoSuchUserCompetenceException;
 import com.liferay.lms.model.UserCompetence;
 import com.liferay.lms.service.base.UserCompetenceLocalServiceBaseImpl;
@@ -42,6 +44,30 @@ public class UserCompetenceLocalServiceImpl	extends UserCompetenceLocalServiceBa
 			return null;
 		} catch (SystemException e) {
 			return null;
+		}
+	}
+	
+	public List<UserCompetence> findBuUserId(long userId){
+		try {
+			return userCompetencePersistence.findByUserId(userId);
+		} catch (SystemException e) {
+			return null;
+		}
+	}
+
+	public List<UserCompetence> findBuUserId(long userId,int start,int end){
+		try {
+			return userCompetencePersistence.findByUserId(userId,start,end);
+		} catch (SystemException e) {
+			return null;
+		}
+	}
+
+	public int  countByUserId(long userId){
+		try {
+			return userCompetencePersistence.countByUserId(userId);
+		} catch (SystemException e) {
+			return 0;
 		}
 	}
 }
