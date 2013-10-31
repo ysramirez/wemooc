@@ -127,13 +127,14 @@
 		<supports>
 			<action-key>ADD_COURSE</action-key>
 			<action-key>PERMISSIONS</action-key>
+			<action-key>SOFT_PERMISSIONS</action-key>
 		</supports>
 		<site-member-defaults/>
 		<guest-defaults/>
 		<guest-unsupported>
 			<action-key>ADD_COURSE</action-key>
 			<action-key>PERMISSIONS</action-key>
-	
+			<action-key>SOFT_PERMISSIONS</action-key>
 		</guest-unsupported>
 	</model-resource>
 	<model-resource>
@@ -161,7 +162,6 @@
 				<action-key>ADVANCED</action-key>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
-				<action-key>SOFT_PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>VIEW</action-key>
 				<action-key>CORRECT</action-key>
@@ -177,7 +177,6 @@
 			<guest-unsupported>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
-				<action-key>SOFT_PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>CORRECT</action-key>
 			</guest-unsupported>
@@ -193,7 +192,6 @@
 		<supports>
 			<action-key>DELETE</action-key>
 			<action-key>PERMISSIONS</action-key>
-			<action-key>SOFT_PERMISSIONS</action-key>
 			<action-key>UPDATE</action-key>
 			<action-key>VIEW</action-key>
 			<action-key>ADD_LACT</action-key>
@@ -210,7 +208,6 @@
 		<guest-unsupported>
 			<action-key>UPDATE</action-key>
 			<action-key>PERMISSIONS</action-key>
-			<action-key>SOFT_PERMISSIONS</action-key>
 			<action-key>ADD_DISCUSSION</action-key>				
 			<action-key>UPDATE_DISCUSSION</action-key>
             <action-key>DELETE_DISCUSSION</action-key>
@@ -236,6 +233,7 @@
 			<supports>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
+				<action-key>SOFT_PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>VIEW</action-key>
 				<action-key>PUBLISH</action-key>
@@ -253,6 +251,7 @@
 			<guest-unsupported>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
+				<action-key>SOFT_PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>REGISTER</action-key>
 				<action-key>ASSIGN_MEMBERS</action-key>

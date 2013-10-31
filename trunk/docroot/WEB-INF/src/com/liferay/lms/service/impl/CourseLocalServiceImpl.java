@@ -20,6 +20,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.ClpSerializer;
@@ -151,6 +153,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 				log.info("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
 			}
 		}
+		
+		//auditing
+		AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), userId, AuditConstants.ADD, null);
 		return course;
 		
 	}
@@ -163,9 +168,13 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long layoutSetPrototypeId=Long.valueOf(lmsPrefs.getLmsTemplates());
-		return addCourse (title, description,summary,friendlyURL, locale,
+		Course course = addCourse (title, description,summary,friendlyURL, locale,
 				createDate,startDate,endDate,layoutSetPrototypeId,GroupConstants.TYPE_SITE_PRIVATE,
 				 serviceContext, calificationType,0);
+
+		//auditing
+		AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+		return course;
 	}
 
 	@Indexable(type=IndexableType.REINDEX)
@@ -175,7 +184,12 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			throws SystemException, 
 			PortalException {
 		
-				return this.addCourse(title, description, description, friendlyURL, locale, createDate, startDate, endDate, serviceContext, calificationType);
+				Course course = this.addCourse(title, description, description, friendlyURL, locale, createDate, startDate, endDate, serviceContext, calificationType);
+				
+				//auditing
+				AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+				
+				return course;
 			}
 	
 	private static User getAdministratorUser(long companyId) throws PortalException, SystemException
@@ -319,6 +333,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					ContentTypes.TEXT_HTML, course.getTitle(), course.getDescription(locale), summary, null, null, 0, 0,
 					null, false);
 
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 			return course;
 		
 			}
@@ -328,10 +346,15 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			ServiceContext serviceContext)
 			throws SystemException, PortalException {
 			course.setExpandoBridgeAttributes(serviceContext);
-		
-			return this.modCourse(course, "", serviceContext);
-		
+			
+			course = this.modCourse(course, "", serviceContext);
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
+			return course;
 			}
+	
 	public Course closeCourse(long courseId) throws SystemException,
 	PortalException {
 	
@@ -344,6 +367,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		AssetEntry courseAsset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
 		courseAsset.setVisible(false);
 		AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
+		
 		return course;
 	}
 
