@@ -31,9 +31,10 @@ import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseCompetence;
-import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseCompetenceLocalServiceUtil;
 import com.liferay.lms.service.CourseLocalServiceUtil;
@@ -51,12 +52,10 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
-import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -107,6 +106,10 @@ public class CourseAdmin extends MVCPortlet {
 		User user = themeDisplay.getUser();
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		if (courseId > 0) {
+
+			//auditing
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Course.class.getName(), courseId, serviceContext.getUserId(), AuditConstants.CLOSE, null);
+			
 			CourseLocalServiceUtil.deleteCourse(courseId);
 		}
 	}
@@ -123,6 +126,10 @@ public class CourseAdmin extends MVCPortlet {
 		User user = themeDisplay.getUser();
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		if (courseId > 0) {
+
+			//auditing
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Course.class.getName(), courseId, serviceContext.getUserId(), AuditConstants.CLOSE, null);
+			
 			CourseLocalServiceUtil.closeCourse(courseId);
 		}
 	}
@@ -840,6 +847,9 @@ public class CourseAdmin extends MVCPortlet {
 		CourseCompetence cc = CourseCompetenceLocalServiceUtil.fetchByCourseCompetenceCondition(courseId, competenceId, condition);
 
 		if(cc!=null){
+
+			//auditing
+			AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), Course.class.getName(), courseId, themeDisplay.getUserId(), AuditConstants.CLOSE, null);
 			CourseCompetenceLocalServiceUtil.deleteCourseCompetence(cc.getCourcompetenceId());
 		}
 		

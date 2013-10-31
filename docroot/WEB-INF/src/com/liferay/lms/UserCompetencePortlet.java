@@ -55,16 +55,13 @@ public class UserCompetencePortlet extends MVCPortlet {
 		}
 		
 		try{
-			if(log.isDebugEnabled())log.debug("deltaact"+renderRequest.getParameter("deltaact"));
 			if(renderRequest.getParameter("deltaact")!=null){
-				if(log.isDebugEnabled())log.debug("deltaact"+renderRequest.getParameter("deltaact"));
 				delta = Integer.valueOf(renderRequest.getParameter("deltaact"));
 			}
 		}catch(NumberFormatException nfe){
 			if(log.isDebugEnabled())nfe.printStackTrace();
 		}
 		
-		if(log.isDebugEnabled())log.debug("page:"+page+" delta:"+delta+"  --  "+(page*delta)+"::"+((page*delta)+delta));
 		
 		List<UserCompetence> ucs = UserCompetenceLocalServiceUtil.findBuUserId(themeDisplay.getUserId(),page*delta,(page*delta)+delta);
 		int totale = UserCompetenceLocalServiceUtil.countByUserId(themeDisplay.getUserId());
