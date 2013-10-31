@@ -261,9 +261,9 @@ String primKey = String.valueOf(theModule.getPrimaryKey());
 	<%
 	}
 	%>
-<c:if test="<%= permissionChecker.hasPermission(groupId, Module.class.getName(),primKey,
-ActionKeys.PERMISSIONS) %>">
-
+		<c:choose>
+			<c:when test="<%= permissionChecker.hasPermission(groupId, Module.class.getName(),primKey,
+					ActionKeys.PERMISSIONS) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=Module.class.getName() %>"
@@ -272,7 +272,23 @@ ActionKeys.PERMISSIONS) %>">
 					redirect="<%=redirectURL %>"
 					var="permissionsURL"
 				/>
-				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />			
-			</c:if>
+				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
+			</c:when>
+			<c:otherwise>
+				<c:if test="<%= permissionChecker.hasPermission(groupId, Module.class.getName(),primKey,
+			\"SOFT_PERMISSIONS\") %>">
+				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
+				<liferay-security:permissionsURL
+					modelResource="<%=Module.class.getName() %>"
+					modelResourceDescription="<%= theModule.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW+\",ADD_DISCUSSION\" %>"
+					resourcePrimKey="<%= String.valueOf(primKey) %>"
+					redirect="<%=redirectURL %>"
+					var="permissionsURL"
+				/>
+				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
+				</c:if>
+			</c:otherwise>
+			
+		</c:choose>
 
 

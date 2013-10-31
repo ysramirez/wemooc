@@ -55,5 +55,6 @@
 	</category>
 	<category name="category.sample">
 		<portlet id="competencesadmin"></portlet>
+		<portlet id="usercompetence"></portlet>
 	</category>
 </display>
