@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
@@ -39,10 +40,10 @@
 		CourseResult result = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(), themeDisplay.getUserId());
 
 		
-		Object  [] arguments=null;
+		Long  [] arguments=null;
 		
 		if(result!=null){	
-			arguments =  new Object[]{result.getResult()};
+			arguments =  new Long[]{result.getResult()};
 		}
 					
 			boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");
@@ -316,21 +317,22 @@
 	if(!isTeacher){ 
 	if (result!=null){ %>
 	<h2><liferay-ui:message key="evaluationAvg.result.title" /></h2>
-	<p><liferay-ui:message key="evaluationAvg.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
+	<p><liferay-ui:message key="evaluationAvg.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? LearningActivityResultLocalServiceUtil.translateResult(locale, arguments[0], themeDisplay.getScopeGroupId()):"" %></span></p>
 	<%
+	String resultadoNecesario = LearningActivityResultLocalServiceUtil.translateResult(locale, passPuntuation, themeDisplay.getScopeGroupId());
 	if(result.isPassed()){
 	%>
-		<p class="nota_superado"><liferay-ui:message key="evaluationAvg.result.pass"  arguments="<%=new Object[]{result.getResult()} %>"  /></p>
+		<p class="nota_superado"><liferay-ui:message key="evaluationAvg.result.pass"/></p>
 	<%
 	}else{
 
 		if(needPassPuntuation) {
 	%>	
-		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.passPuntuation"  arguments="<%=new Object[]{result.getResult(),passPuntuation} %>" /></p>
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.passPuntuation"  arguments="<%=new String[]{resultadoNecesario} %>" /></p>
 	<% 
 		}else {
 	%>
-		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.notPassPuntuation"   arguments="<%=new Object[]{result.getResult()} %>"  /></p>	
+		<p class="nota_nosuperado"><liferay-ui:message key="evaluationAvg.result.notpass.notPassPuntuation" /></p>	
 	<%
 		}
 	}

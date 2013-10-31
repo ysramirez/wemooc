@@ -39,10 +39,10 @@ if(actId==0){
 		String passedStudentMessageKey="evaluationtaskactivity.student.passed";
 		String failedStudentMessageKey="evaluationtaskactivity.student.failed";
 		LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, themeDisplay.getUserId());
-		Object  [] arguments=null;
+		Long  [] arguments=null;
 		
 		if(result!=null)	
-			arguments =  new Object[]{result.getResult()};
+			arguments =  new Long[]{result.getResult()};
 		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");
 %>
 			<div class="evaluationAvg view">
@@ -343,11 +343,13 @@ if(actId==0){
 			if(!isTeacher){ 
 				if (result!=null){ %>
 					<h2 class="description-title"><liferay-ui:message key="evaluationtaskactivity.result.title" /></h2>
-					<p><liferay-ui:message key="evaluationtaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? arguments[0]+"%":"" %></span></p>
-					<%if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){%>
-						<p class="nota_superado"><liferay-ui:message key="evaluationtaskactivity.result.pass" arguments="<%=new Object[]{result.getResult(),learningActivity.getPasspuntuation()} %>" /></p>
+					<p><liferay-ui:message key="evaluationtaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? LearningActivityResultLocalServiceUtil.translateResult(locale, arguments[0], themeDisplay.getScopeGroupId()):"" %></span></p>
+					<% 
+					String resultadoNecesario = LearningActivityResultLocalServiceUtil.translateResult(locale, learningActivity.getPasspuntuation(), themeDisplay.getScopeGroupId());
+					if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){%>
+						<p class="nota_superado"><liferay-ui:message key="evaluationtaskactivity.result.pass" arguments="<%=new String[]{resultadoNecesario} %>" /></p>
 					<%}else{%>
-						<p class="nota_nosuperado"><liferay-ui:message key="evaluationtaskactivity.result.notpass.passPuntuation"  arguments="<%=new Object[]{result.getResult(),learningActivity.getPasspuntuation()} %>" /></p>
+						<p class="nota_nosuperado"><liferay-ui:message key="evaluationtaskactivity.result.notpass.passPuntuation"  arguments="<%=new String[]{resultadoNecesario} %>" /></p>
 					<%}
 					if (!result.getComments().trim().equals("")){ %>
 						<p><liferay-ui:message key="evaluationtaskactivity.result.teachercoment" /> 
