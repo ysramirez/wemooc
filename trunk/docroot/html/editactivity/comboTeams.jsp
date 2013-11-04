@@ -26,7 +26,7 @@ long tries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq);
 
 	List<Team> teams=TeamLocalServiceUtil.getGroupTeams(themeDisplay.getScopeGroupId());
 %>
-			<aui:option value="0" selected="<%=(teamId==0)%>" ><%=LanguageUtil.get(pageContext,"none")%></aui:option>
+			<aui:option value="0" selected="<%=(teamId==0)%>" ><%=LanguageUtil.get(pageContext,"none-team")%></aui:option>
 <%
 	for(Team team : teams)
 	{
