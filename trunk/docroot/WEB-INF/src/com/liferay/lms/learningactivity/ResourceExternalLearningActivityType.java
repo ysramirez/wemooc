@@ -104,7 +104,7 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 			String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");
 			String additionalFile = uploadRequest.getFileName("additionalFile");
 			boolean deleteVideo=ParamUtil.getBoolean(uploadRequest, "deleteAdditionalFile",false);
-			String team = ParamUtil.getString(uploadRequest, "team");
+			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;
 			if(!team.equalsIgnoreCase("0")&&!team.isEmpty()){
 				teamId = Long.parseLong(team);

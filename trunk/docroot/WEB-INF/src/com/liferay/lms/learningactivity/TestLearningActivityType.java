@@ -208,7 +208,7 @@ public class TestLearningActivityType extends BaseLearningActivityType
 			questionsPerPage.setText(Long.toString(ParamUtil.get(uploadRequest,"questionsPerPage", 0L)));
 			rootElement.add(questionsPerPage);	
 			
-			String team = ParamUtil.getString(uploadRequest, "team");
+			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;
 			if(!team.equalsIgnoreCase("0")){
 				teamId = Long.parseLong(team);

@@ -64,7 +64,7 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 		
 	    if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)==0) {
 		
-			String team = ParamUtil.getString(uploadRequest, "team");
+			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;
 			if(!team.equalsIgnoreCase("0")){
 				teamId = Long.parseLong(team);
