@@ -279,12 +279,12 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=Module.class.getName() %>"
-					modelResourceDescription="<%= theModule.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW+\",ADD_DISCUSSION\" %>"
+					modelResourceDescription="<%= theModule.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW %>"
 					resourcePrimKey="<%= String.valueOf(primKey) %>"
 					redirect="<%=redirectURL %>"
 					var="permissionsURL"
 				/>
-				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
+				<liferay-ui:icon image="permissions" message="permissionsbasics" url="<%=permissionsURL %>" />	
 				</c:if>
 			</c:otherwise>
 			
