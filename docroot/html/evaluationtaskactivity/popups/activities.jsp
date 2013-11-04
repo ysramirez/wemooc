@@ -356,20 +356,20 @@
 
 	   	<liferay-ui:search-container-results>
 			<%
-				List<LearningActivity> notTeamActivities = new ArrayList<LearningActivity>(); 
-				notTeamActivities.addAll(LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
+				List<LearningActivity> notTeamActivities = LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
 						add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)).
 			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
-			    	    add(PropertyFactoryUtil.forName("typeId").ne(8))));
+			    	    add(PropertyFactoryUtil.forName("typeId").ne(8)));
+				List<LearningActivity> lactivities = new ArrayList<LearningActivity>();
 				for(LearningActivity la: notTeamActivities)
 				{
 					String team = LearningActivityLocalServiceUtil.getExtraContentValue(la.getActId(),"team");
-					if(!StringPool.BLANK.equals(team)){
-						notTeamActivities.remove(la);
+					if(StringPool.BLANK.equals(team)){
+						lactivities.add(la);
 					}
 				}
-				pageContext.setAttribute("results",ListUtil.subList(notTeamActivities, searchContainer.getStart(), searchContainer.getEnd()));
-			    pageContext.setAttribute("total",notTeamActivities.size());			
+				pageContext.setAttribute("results",ListUtil.subList(lactivities, searchContainer.getStart(), searchContainer.getEnd()));
+			    pageContext.setAttribute("total",lactivities.size());			
 			%>
 		</liferay-ui:search-container-results>
 		
