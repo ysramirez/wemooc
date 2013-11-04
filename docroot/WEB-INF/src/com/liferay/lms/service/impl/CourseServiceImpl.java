@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
@@ -117,6 +119,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			CourseLocalServiceUtil.updateCourse(course);
 			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
 			assetEntry.setGroupId(guestId);
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+			
 			AssetEntryLocalServiceUtil.updateAssetEntry(assetEntry);
 		} catch (NestableException e) {
 		}
@@ -149,8 +155,13 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
 			}
+			
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER).getRoleId());
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 		} catch (NestableException e) {
 		} 
 	}
@@ -167,6 +178,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			}
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 		} catch (NestableException e) {
 		} 	
 	}
@@ -183,6 +198,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			}
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 		} catch (NestableException e) {
 		}
 	}
@@ -195,6 +214,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
 			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			GroupLocalServiceUtil.unsetUserGroups(user.getUserId(),new long[] { course.getGroupCreatedId() });
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 		} catch (NestableException e) {
 		}
 	}
@@ -208,6 +231,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 		} catch (NestableException e) {
 		}
 	}
@@ -221,6 +248,10 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 		} catch (NestableException e) {
 		} 
 	}

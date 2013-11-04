@@ -26,6 +26,8 @@ import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.SurveyResult;
@@ -410,6 +412,12 @@ public class SurveyActivity extends MVCPortlet {
 				LearningActivity activity;
 				try {
 					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+
+					//auditing
+					ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+					AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+							activity.getActId(), themeDisplay.getUserId(), AuditConstants.VIEW, null);
+					
 					long typeId=activity.getTypeId();
 					
 					if(typeId==4)
@@ -447,7 +455,7 @@ public class SurveyActivity extends MVCPortlet {
 
 				//Crear la cabecera con las preguntas.
 				List<TestQuestion> questionsTitle = TestQuestionLocalServiceUtil.getQuestions(actId);
-				//Añadimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
+				//Aï¿½adimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
 				int numExtraCols = 3;
 				String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
 
@@ -465,7 +473,7 @@ public class SurveyActivity extends MVCPortlet {
 				}
 				writer.writeNext(cabeceras);
 
-				//Partiremos del usuario para crear el csv para que sea más facil ver los intentos.
+				//Partiremos del usuario para crear el csv para que sea mï¿½s facil ver los intentos.
 				List<User> users = LearningActivityTryLocalServiceUtil.getUsersByLearningActivity(actId);
 
 				for(User user:users){
@@ -540,10 +548,10 @@ public class SurveyActivity extends MVCPortlet {
 
 		String res = "";
 
-		//Jsoup elimina todas la etiquetas html del string que se le pasa, devolviendo únicamente el texto plano.
+		//Jsoup elimina todas la etiquetas html del string que se le pasa, devolviendo ï¿½nicamente el texto plano.
 		res = Jsoup.parse(str).text();
 
-		//Si el texto es muy largo, lo recortamos para que sea más legible.
+		//Si el texto es muy largo, lo recortamos para que sea mï¿½s legible.
 		if(res.length() > 50){
 			res = res.substring(0, 50);
 		}

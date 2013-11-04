@@ -21,6 +21,8 @@ import org.jsoup.Jsoup;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
 import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
@@ -359,7 +361,7 @@ public class ExecActivity extends MVCPortlet
 		long answerId = ParamUtil.getLong(actionRequest, "answerId");
 		
 		//Inicialmente tiene que ser ParamUtil.getString(actionRequest, "answer"), que es lo que tienene todas las actividades, pero el FCKEditor necesita que cada editor 
-		//tenga un nombre único, y las test de ordenar usan FCKEditor por lo que, temporalmente dejamos la comprobación de ambos campos hasta que todo se pase a FCKEditor.
+		//tenga un nombre ï¿½nico, y las test de ordenar usan FCKEditor por lo que, temporalmente dejamos la comprobaciï¿½n de ambos campos hasta que todo se pase a FCKEditor.
 		String answer = ParamUtil.getString(actionRequest, "answer_"+answerId);
 		if("".equals(answer)) answer = ParamUtil.getString(actionRequest, "answer");
 		
@@ -460,6 +462,12 @@ public class ExecActivity extends MVCPortlet
 		{
 				LearningActivity activity;
 				try {
+
+					//auditing
+					ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+					AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+							actId, themeDisplay.getUserId(), AuditConstants.VIEW, null);
+					
 					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 					long typeId=activity.getTypeId();
 					

@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Locale;
 
 import com.liferay.lms.P2PSendMailAsignation;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.P2pActivity;
@@ -44,6 +46,8 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
@@ -77,6 +81,12 @@ public class P2pActivityCorrectionsLocalServiceImpl
 			List<P2pActivityCorrections> p2pList = p2pActivityCorrectionsPersistence.findByP2pActivityIdAndUserId(p2pActivityId, userId);
 			if(!p2pList.isEmpty())
 			{
+
+				//auditing
+				ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+						p2pActivityId, serviceContext.getUserId(), AuditConstants.GET, null);
+				
 				return p2pList.get(0);
 			}else{
 				return null;
@@ -112,6 +122,12 @@ public class P2pActivityCorrectionsLocalServiceImpl
 	public List<P2pActivityCorrections> findByP2pActivityId(Long p2pActivityId){
 		
 		try{
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+					p2pActivityId, serviceContext.getUserId(), AuditConstants.GET, null);
+			
 			return p2pActivityCorrectionsPersistence.findByP2pActivityId(p2pActivityId);
 		}
 		catch(Exception e){
@@ -126,6 +142,12 @@ public class P2pActivityCorrectionsLocalServiceImpl
 			Long userId){
 		
 		try{
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+					actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			
 			return p2pActivityCorrectionsPersistence.findByActIdAndUserId(actId, userId);
 		}
 		catch(Exception e){
@@ -159,7 +181,13 @@ public class P2pActivityCorrectionsLocalServiceImpl
 			p2pActCor.setNew(true);
 			p2pActCor.setP2pActivityCorrectionsId(p2pActCorId);
 			
-			return p2pActivityCorrectionsPersistence.update(p2pActCor, false);
+			P2pActivityCorrections pac = p2pActivityCorrectionsPersistence.update(p2pActCor, false);
+			
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivityCorrections.class.getName(), 
+					p2pActCorId, serviceContext.getUserId(), AuditConstants.ADD, null);
+			
+			return pac;
 		}
 		catch(Exception e){
 			if (_log.isErrorEnabled()) { 
@@ -197,6 +225,10 @@ public class P2pActivityCorrectionsLocalServiceImpl
 				p2p.setDescription(null);
 				p2p.setP2pActivityId(p2pActId);
 				p2pActivityCorrectionsPersistence.update(p2p, true);
+				
+				ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivityCorrections.class.getName(), 
+						p2pActivityCorrectionsId, serviceContext.getUserId(), AuditConstants.ADD, null);
 
 				//Incrementamos el contador de correcciones que ha realizado.
 				try {
@@ -230,6 +262,11 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 			p2p.setDescription(null);
 			p2p.setP2pActivityId(activity.getP2pActivityId());
 			p2pActivityCorrectionsPersistence.update(p2p, true);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivityCorrections.class.getName(), 
+					p2pActivityCorrectionsId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
 
 			//Incrementamos el contador de correcciones que se ha asignado para corregir.
 			activity.setCountCorrections(activity.getCountCorrections()+1);

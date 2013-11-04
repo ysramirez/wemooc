@@ -14,6 +14,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityServiceUtil;
@@ -201,6 +203,9 @@ public class ResourceInternalActivity extends MVCPortlet {
 	larn.setDescription( description,themeDisplay.getLocale());
 	//LearningActivityServiceUtil.modLearningActivity(larn, serviceContext);
 	LearningActivityServiceUtil.modLearningActivity(larn);
+	//auditing
+	AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), themeDisplay.getUserId(), AuditConstants.UPDATE, null);
+	
 	SessionMessages.add(actionRequest, "activity-saved-successfully");
 	actionResponse.setRenderParameter("jspPage", jspPage);
 	actionResponse.setRenderParameter("actId", Long.toString(actId));
@@ -219,6 +224,12 @@ else
 		LearningActivity activity;
 		try {
 			activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest, "actId", 0));
+			
+			//auditing
+			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+			AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+					activity.getActId(), themeDisplay.getUserId(), AuditConstants.VIEW, null);
+			
 			long typeId=activity.getTypeId();
 			
 			if(typeId==7)

@@ -18,6 +18,8 @@ import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.TaskEvaluationLearningActivityType;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
@@ -545,6 +547,12 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 				LearningActivity activity;
 				try {
 					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+
+					//auditing
+					ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+					AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+							actId, themeDisplay.getUserId(), AuditConstants.VIEW, null);
+					
 					long typeId=activity.getTypeId();
 					
 					if(typeId==8)

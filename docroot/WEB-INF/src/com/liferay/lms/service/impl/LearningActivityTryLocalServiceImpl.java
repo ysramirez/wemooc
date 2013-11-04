@@ -18,6 +18,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
@@ -39,6 +41,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
@@ -79,6 +82,10 @@ public class LearningActivityTryLocalServiceImpl
 		for(LearningActivityTry userTry:userTries)
 		{
 			this.deleteLearningActivityTry(userTry.getLatId());
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
+					actId, serviceContext.getUserId(), AuditConstants.DELETE, null);
 		}
 		if(learningActivityResultLocalService.existsLearningActivityResult(actId, userId))
 		{
@@ -132,6 +139,11 @@ public class LearningActivityTryLocalServiceImpl
 		larnt.setStartDate(new java.util.Date(System.currentTimeMillis()));
 		learningActivityTryPersistence.update(larnt, true);
 		LearningActivityResultLocalServiceUtil.update(larnt);
+
+		//auditing
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
+				actId, serviceContext.getUserId(), AuditConstants.ADD, null);
+		
 		return larnt;
 	}
 	

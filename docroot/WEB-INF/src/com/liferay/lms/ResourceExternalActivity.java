@@ -17,7 +17,10 @@ import javax.portlet.PortletResponse;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -39,6 +42,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -112,7 +116,11 @@ public class ResourceExternalActivity extends MVCPortlet {
 		larn.setExtracontent(document.formattedString());
 		larn.setDescription( description,themeDisplay.getLocale());
 		//LearningActivityServiceUtil.modLearningActivity(larn, serviceContext);
+
 		LearningActivityServiceUtil.modLearningActivity(larn);
+		//auditing
+		AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), themeDisplay.getUserId(), AuditConstants.UPDATE, null);
+		
 		SessionMessages.add(actionRequest, "activity-saved-successfully");
 		actionResponse.setRenderParameter("jspPage", jspPage);
 		actionResponse.setRenderParameter("actionEditingDetails", "true");	
@@ -143,6 +151,12 @@ public class ResourceExternalActivity extends MVCPortlet {
 		{
 			LearningActivity activity;
 			try {
+
+				//auditing
+				ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+				AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+						actId, themeDisplay.getUserId(), AuditConstants.VIEW, null);
+				
 				activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 				long typeId=activity.getTypeId();
 

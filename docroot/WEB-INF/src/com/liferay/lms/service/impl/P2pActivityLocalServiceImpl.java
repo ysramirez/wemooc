@@ -20,6 +20,8 @@ import java.util.GregorianCalendar;
 import java.util.List;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.service.ClpSerializer;
@@ -39,6 +41,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
@@ -69,6 +73,10 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 
 			if(!myp2ps.isEmpty()){
 				for(P2pActivity myActivity : myp2ps){
+					//auditing
+					ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+					AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+							myActivity.getActId(), serviceContext.getUserId(), AuditConstants.GET, null);
 					return myActivity;
 				}
 			}
@@ -103,7 +111,14 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 	public List<P2pActivity> findByActId(long actId)
 			throws SystemException {
 		try{
-			return p2pActivityPersistence.findByActId(actId);
+			List<P2pActivity> pas = p2pActivityPersistence.findByActId(actId);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+					actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			
+			return pas;
 		}
 		catch(Exception e){
 			if (_log.isErrorEnabled()) { 
@@ -139,6 +154,11 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 			dq.addOrder(createOrder);
 
 			List<P2pActivity> modulesp=(List<P2pActivity>)P2pActivityLocalServiceUtil.dynamicQuery(dq);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+					actId, serviceContext.getUserId(), AuditConstants.GET, null);
 			
 			return modulesp;
 			
@@ -248,6 +268,11 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		
 		//Si no es null ni esta vacia, la asignamos para devolver, sino devolveremos vacia.
 		if(activities!=null && !activities.isEmpty()){
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+					actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			
 			res = activities;
 		}
 				
@@ -349,6 +374,11 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 			fileobj.setFileEntryId(newp2pAct.getFileEntryId());
 			fileobj.setUserId(newp2pAct.getUserId());
 
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+					fileobj.getActId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+
 			return p2pActivityPersistence.update(fileobj, false);
 		}
 		catch(Exception e){
@@ -363,7 +393,14 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 	public P2pActivity updateP2pActivity(P2pActivity newp2pAct)
 			throws SystemException {
 		try{
-			return p2pActivityPersistence.update(newp2pAct, false);
+			P2pActivity p2pActivity = p2pActivityPersistence.update(newp2pAct, false);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+					p2pActivity.getActId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
+			return p2pActivity;
 		}
 		catch(Exception e){
 			if (_log.isErrorEnabled()) { 

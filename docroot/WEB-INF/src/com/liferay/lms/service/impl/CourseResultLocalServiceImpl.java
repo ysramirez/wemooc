@@ -37,7 +37,6 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.theme.ThemeDisplay;
 
 /**
  * The implementation of the course result local service.
@@ -72,12 +71,14 @@ public class CourseResultLocalServiceImpl
 	
 	public CourseResult create(long courseId, long userId) throws SystemException
 	{
+
 		CourseResult courseResult=courseResultPersistence.create(counterLocalService.increment(CourseResult.class.getName()));
 		courseResult.setUserId(userId);
 		courseResult.setCourseId(courseId);
 		courseResult.setResult(0);
 		courseResult.setPassed(false);
 		courseResultPersistence.update(courseResult, false);
+
 		return courseResult;
 	}
 	

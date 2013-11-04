@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.ClpSerializer;
@@ -103,6 +105,10 @@ public class LearningActivityLocalServiceImpl
 		retorno.setPriority(learningActivity.getPriority());
 		retorno.setWeightinmodule(learningActivity.getWeightinmodule());
 		learningActivityPersistence.update(retorno, true);
+		
+		//auditing
+		AuditingLogFactory.audit(retorno.getCompanyId(), retorno.getGroupId(), LearningActivity.class.getName(), retorno.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
+		
 		return retorno;
 	}
 	public LearningActivity addLearningActivity (String title, String description, 
@@ -174,6 +180,10 @@ public class LearningActivityLocalServiceImpl
 					0, StringPool.BLANK, 0);
 		} catch (Exception e) {e.printStackTrace();}
 			
+
+		//auditing
+		AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
+				
 		return larn;
 	
 	}
@@ -220,6 +230,10 @@ public class LearningActivityLocalServiceImpl
 			catch(Exception e)
 			{
 			}
+
+			//auditing
+			AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 			return larn;
 			}
 	public LearningActivity modLearningActivity (LearningActivity larn, 
@@ -240,6 +254,10 @@ public class LearningActivityLocalServiceImpl
 					larn.getUserId(), larn.getGroupId(),
 					LearningActivity.class.getName(), larn.getActId(),
 					1, StringPool.BLANK, 0);
+
+			//auditing
+			AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 			return larn;
 		
 			}

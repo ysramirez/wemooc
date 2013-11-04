@@ -19,7 +19,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.Module;
@@ -39,6 +42,8 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.persistence.GroupUtil;
 
@@ -164,6 +169,12 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 
 			}
 			moduleResultPersistence.update(moduleResult, true);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), ModuleResult.class.getName(), 
+					moduleResult.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			
 			courseResultLocalService.update(moduleResult);
 		}
 	}
@@ -294,6 +305,11 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 				
 				//Actualizar el resultado del curso.
 				courseResultLocalService.update(moduleResult);
+
+				//auditing
+				ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), CourseResult.class.getName(), 
+						moduleResult.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 				
 				return true;
 			}else if(moduleResult.getResult() > result){
