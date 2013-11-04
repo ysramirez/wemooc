@@ -218,7 +218,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 				rootElement.add(dateUpload);	
 				
 			}
-			String team = ParamUtil.getString(uploadRequest, "team");
+			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;
 			if(!team.equalsIgnoreCase("0")){
 				teamId = Long.parseLong(team);

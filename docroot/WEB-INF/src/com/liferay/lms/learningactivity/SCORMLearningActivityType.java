@@ -131,7 +131,7 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		
 		rootElement.add(uuid);
 		
-		String team = ParamUtil.getString(uploadRequest, "team");
+		String team = ParamUtil.getString(uploadRequest, "team","0");
 		long teamId = 0;
 		if(!team.equalsIgnoreCase("0")){
 			teamId = Long.parseLong(team);

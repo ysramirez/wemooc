@@ -97,7 +97,7 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 			throws PortalException, SystemException, DocumentException,IOException {
 		
 		String assetId = ParamUtil.getString(uploadRequest,"assetEntryId","0");
-		String team = ParamUtil.getString(uploadRequest, "team");
+		String team = ParamUtil.getString(uploadRequest, "team","0");
 		long teamId = 0;
 		if(!team.equalsIgnoreCase("0")){
 			teamId = Long.parseLong(team);

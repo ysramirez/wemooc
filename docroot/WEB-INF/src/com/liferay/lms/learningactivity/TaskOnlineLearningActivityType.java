@@ -75,7 +75,7 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 		
 			String fichero = ParamUtil.getString(uploadRequest, "fichero", StringPool.FALSE);
 			String textoenr = ParamUtil.getString(uploadRequest, "textoenr", StringPool.FALSE);
-			String team = ParamUtil.getString(uploadRequest, "team");
+			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;
 			if(!team.equalsIgnoreCase("0")){
 				teamId = Long.parseLong(team);
