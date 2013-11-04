@@ -278,13 +278,39 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 				<c:if test="<%= permissionChecker.hasPermission(coursetmp.getGroupId(), Course.class.getName(),coursetmp.getCourseId(),\"SOFT_PERMISSIONS\") %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
+					windowState="<%=LiferayWindowState.EXCLUSIVE.toString() %>"
 					modelResource="<%=Module.class.getName() %>"
 					modelResourceDescription="<%= theModule.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW %>"
 					resourcePrimKey="<%= String.valueOf(primKey) %>"
 					redirect="<%=redirectURL %>"
 					var="permissionsURL"
 				/>
-				<liferay-ui:icon image="permissions" message="permissionsbasics" url="<%=permissionsURL %>" />	
+				<script type="text/javascript">
+					function showPopupUsers()
+				    {
+						AUI().use('aui-dialog', function(A){
+							new A.Dialog({
+								id:'showPopupSoftPermissions',
+					            title: '<liferay-ui:message key="permissions" />',
+					            modal: true,
+					            centered: true,
+					            resizable: true,
+					            width: 650,
+					            height: 650,
+					            destroyOnClose: true,
+					            after: {   
+						          	close: function(event){ 
+					            	}
+					            }
+					        }).plug(A.Plugin.IO, {
+					            uri: '<%=permissionsURL %>',
+					            parseContent: true
+					        }).render().show();   
+						}); 
+	
+				    }
+				</script>
+				<liferay-ui:icon image="permissions" message="permissionsbasics" url="javascript:showPopupUsers()" />	
 				</c:if>
 			</c:otherwise>
 			
