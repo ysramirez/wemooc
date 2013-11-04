@@ -108,5 +108,20 @@ public class CompetenceServiceSoap {
 		}
 	}
 
+	public static java.util.HashMap<java.lang.Long, com.liferay.lms.model.Competence> getCompetencesOfGroups(
+		long[] groups) throws RemoteException {
+		try {
+			java.util.HashMap<java.lang.Long, com.liferay.lms.model.Competence> returnValue =
+				CompetenceServiceUtil.getCompetencesOfGroups(groups);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(CompetenceServiceSoap.class);
 }

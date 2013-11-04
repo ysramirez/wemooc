@@ -111,6 +111,10 @@ public class UserCompetenceLocalServiceClpInvoker {
 		_methodName135 = "setBeanIdentifier";
 
 		_methodParameterTypes135 = new String[] { "java.lang.String" };
+
+		_methodName140 = "findByUserIdCompetenceId";
+
+		_methodParameterTypes140 = new String[] { "long", "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -214,6 +218,12 @@ public class UserCompetenceLocalServiceClpInvoker {
 			return null;
 		}
 
+		if (_methodName140.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes140, parameterTypes)) {
+			return UserCompetenceLocalServiceUtil.findByUserIdCompetenceId(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -253,4 +263,6 @@ public class UserCompetenceLocalServiceClpInvoker {
 	private String[] _methodParameterTypes134;
 	private String _methodName135;
 	private String[] _methodParameterTypes135;
+	private String _methodName140;
+	private String[] _methodParameterTypes140;
 }

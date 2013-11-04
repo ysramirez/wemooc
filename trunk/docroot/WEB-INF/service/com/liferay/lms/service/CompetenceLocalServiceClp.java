@@ -120,12 +120,27 @@ public class CompetenceLocalServiceClp implements CompetenceLocalService {
 				"com.liferay.portal.service.ServiceContext"
 			};
 
-		_methodName21 = "modCompetence";
+		_methodName21 = "updateCompetence";
 
 		_methodParameterTypes21 = new String[] {
 				"com.liferay.lms.model.Competence",
 				"com.liferay.portal.service.ServiceContext"
 			};
+
+		_methodName22 = "modCompetence";
+
+		_methodParameterTypes22 = new String[] {
+				"com.liferay.lms.model.Competence",
+				"com.liferay.portal.service.ServiceContext"
+			};
+
+		_methodName23 = "countAll";
+
+		_methodParameterTypes23 = new String[] {  };
+
+		_methodName24 = "findByCompanyId";
+
+		_methodParameterTypes24 = new String[] { "long" };
 	}
 
 	public com.liferay.lms.model.Competence addCompetence(
@@ -725,7 +740,7 @@ public class CompetenceLocalServiceClp implements CompetenceLocalService {
 		return (com.liferay.lms.model.Competence)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public com.liferay.lms.model.Competence modCompetence(
+	public com.liferay.lms.model.Competence updateCompetence(
 		com.liferay.lms.model.Competence competence,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -762,6 +777,99 @@ public class CompetenceLocalServiceClp implements CompetenceLocalService {
 		}
 
 		return (com.liferay.lms.model.Competence)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public com.liferay.lms.model.Competence modCompetence(
+		com.liferay.lms.model.Competence competence,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22,
+					new Object[] {
+						ClpSerializer.translateInput(competence),
+						
+					ClpSerializer.translateInput(serviceContext)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.lms.model.Competence)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public long countAll()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName23,
+					_methodParameterTypes23, new Object[] {  });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Long)returnObj).longValue();
+	}
+
+	public java.util.List findByCompanyId(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName24,
+					_methodParameterTypes24, new Object[] { companyId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List)ClpSerializer.translateOutput(returnObj);
 	}
 
 	private InvokableLocalService _invokableLocalService;
@@ -807,4 +915,10 @@ public class CompetenceLocalServiceClp implements CompetenceLocalService {
 	private String[] _methodParameterTypes20;
 	private String _methodName21;
 	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
+	private String _methodName23;
+	private String[] _methodParameterTypes23;
+	private String _methodName24;
+	private String[] _methodParameterTypes24;
 }

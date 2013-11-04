@@ -102,7 +102,7 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_USERID = new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceModelImpl.FINDER_CACHE_ENABLED,
 			UserCompetenceImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
-			"findByuserId",
+			"findByUserId",
 			new String[] {
 				Long.class.getName(),
 				
@@ -113,35 +113,25 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 		new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceModelImpl.FINDER_CACHE_ENABLED,
 			UserCompetenceImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByuserId",
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByUserId",
 			new String[] { Long.class.getName() },
 			UserCompetenceModelImpl.USERID_COLUMN_BITMASK);
 	public static final FinderPath FINDER_PATH_COUNT_BY_USERID = new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceModelImpl.FINDER_CACHE_ENABLED, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByuserId",
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUserId",
 			new String[] { Long.class.getName() });
-	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPETENCEID =
-		new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
+	public static final FinderPath FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID = new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceModelImpl.FINDER_CACHE_ENABLED,
-			UserCompetenceImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
-			"findBycompetenceId",
-			new String[] {
-				Long.class.getName(),
-				
-			"java.lang.Integer", "java.lang.Integer",
-				"com.liferay.portal.kernel.util.OrderByComparator"
-			});
-	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPETENCEID =
-		new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
-			UserCompetenceModelImpl.FINDER_CACHE_ENABLED,
-			UserCompetenceImpl.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findBycompetenceId",
-			new String[] { Long.class.getName() },
+			UserCompetenceImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByUserIdCompetenceId",
+			new String[] { Long.class.getName(), Long.class.getName() },
+			UserCompetenceModelImpl.USERID_COLUMN_BITMASK |
 			UserCompetenceModelImpl.COMPETENCEID_COLUMN_BITMASK);
-	public static final FinderPath FINDER_PATH_COUNT_BY_COMPETENCEID = new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
+	public static final FinderPath FINDER_PATH_COUNT_BY_USERIDCOMPETENCEID = new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceModelImpl.FINDER_CACHE_ENABLED, Long.class,
-			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countBycompetenceId",
-			new String[] { Long.class.getName() });
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByUserIdCompetenceId",
+			new String[] { Long.class.getName(), Long.class.getName() });
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_ALL = new FinderPath(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceModelImpl.FINDER_CACHE_ENABLED,
 			UserCompetenceImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -163,6 +153,12 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 		EntityCacheUtil.putResult(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceImpl.class, userCompetence.getPrimaryKey(),
 			userCompetence);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+			new Object[] {
+				Long.valueOf(userCompetence.getUserId()),
+				Long.valueOf(userCompetence.getCompetenceId())
+			}, userCompetence);
 
 		userCompetence.resetOriginalValues();
 	}
@@ -219,6 +215,8 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		clearUniqueFindersCache(userCompetence);
 	}
 
 	@Override
@@ -229,7 +227,17 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 		for (UserCompetence userCompetence : userCompetences) {
 			EntityCacheUtil.removeResult(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 				UserCompetenceImpl.class, userCompetence.getPrimaryKey());
+
+			clearUniqueFindersCache(userCompetence);
 		}
+	}
+
+	protected void clearUniqueFindersCache(UserCompetence userCompetence) {
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+			new Object[] {
+				Long.valueOf(userCompetence.getUserId()),
+				Long.valueOf(userCompetence.getCompetenceId())
+			});
 	}
 
 	/**
@@ -403,32 +411,40 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_USERID,
 					args);
 			}
-
-			if ((userCompetenceModelImpl.getColumnBitmask() &
-					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPETENCEID.getColumnBitmask()) != 0) {
-				Object[] args = new Object[] {
-						Long.valueOf(userCompetenceModelImpl.getOriginalCompetenceId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPETENCEID,
-					args);
-				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPETENCEID,
-					args);
-
-				args = new Object[] {
-						Long.valueOf(userCompetenceModelImpl.getCompetenceId())
-					};
-
-				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COMPETENCEID,
-					args);
-				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPETENCEID,
-					args);
-			}
 		}
 
 		EntityCacheUtil.putResult(UserCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			UserCompetenceImpl.class, userCompetence.getPrimaryKey(),
 			userCompetence);
+
+		if (isNew) {
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+				new Object[] {
+					Long.valueOf(userCompetence.getUserId()),
+					Long.valueOf(userCompetence.getCompetenceId())
+				}, userCompetence);
+		}
+		else {
+			if ((userCompetenceModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(userCompetenceModelImpl.getOriginalUserId()),
+						Long.valueOf(userCompetenceModelImpl.getOriginalCompetenceId())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_USERIDCOMPETENCEID,
+					args);
+
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+					args);
+
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+					new Object[] {
+						Long.valueOf(userCompetence.getUserId()),
+						Long.valueOf(userCompetence.getCompetenceId())
+					}, userCompetence);
+			}
+		}
 
 		return userCompetence;
 	}
@@ -955,9 +971,9 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @return the matching user competences
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<UserCompetence> findByuserId(long userId)
+	public List<UserCompetence> findByUserId(long userId)
 		throws SystemException {
-		return findByuserId(userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
+		return findByUserId(userId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 	}
 
 	/**
@@ -973,9 +989,9 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @return the range of matching user competences
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<UserCompetence> findByuserId(long userId, int start, int end)
+	public List<UserCompetence> findByUserId(long userId, int start, int end)
 		throws SystemException {
-		return findByuserId(userId, start, end, null);
+		return findByUserId(userId, start, end, null);
 	}
 
 	/**
@@ -992,7 +1008,7 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @return the ordered range of matching user competences
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<UserCompetence> findByuserId(long userId, int start, int end,
+	public List<UserCompetence> findByUserId(long userId, int start, int end,
 		OrderByComparator orderByComparator) throws SystemException {
 		FinderPath finderPath = null;
 		Object[] finderArgs = null;
@@ -1085,10 +1101,10 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public UserCompetence findByuserId_First(long userId,
+	public UserCompetence findByUserId_First(long userId,
 		OrderByComparator orderByComparator)
 		throws NoSuchUserCompetenceException, SystemException {
-		UserCompetence userCompetence = fetchByuserId_First(userId,
+		UserCompetence userCompetence = fetchByUserId_First(userId,
 				orderByComparator);
 
 		if (userCompetence != null) {
@@ -1115,9 +1131,9 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @return the first matching user competence, or <code>null</code> if a matching user competence could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public UserCompetence fetchByuserId_First(long userId,
+	public UserCompetence fetchByUserId_First(long userId,
 		OrderByComparator orderByComparator) throws SystemException {
-		List<UserCompetence> list = findByuserId(userId, 0, 1, orderByComparator);
+		List<UserCompetence> list = findByUserId(userId, 0, 1, orderByComparator);
 
 		if (!list.isEmpty()) {
 			return list.get(0);
@@ -1135,10 +1151,10 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public UserCompetence findByuserId_Last(long userId,
+	public UserCompetence findByUserId_Last(long userId,
 		OrderByComparator orderByComparator)
 		throws NoSuchUserCompetenceException, SystemException {
-		UserCompetence userCompetence = fetchByuserId_Last(userId,
+		UserCompetence userCompetence = fetchByUserId_Last(userId,
 				orderByComparator);
 
 		if (userCompetence != null) {
@@ -1165,11 +1181,11 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @return the last matching user competence, or <code>null</code> if a matching user competence could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public UserCompetence fetchByuserId_Last(long userId,
+	public UserCompetence fetchByUserId_Last(long userId,
 		OrderByComparator orderByComparator) throws SystemException {
-		int count = countByuserId(userId);
+		int count = countByUserId(userId);
 
-		List<UserCompetence> list = findByuserId(userId, count - 1, count,
+		List<UserCompetence> list = findByUserId(userId, count - 1, count,
 				orderByComparator);
 
 		if (!list.isEmpty()) {
@@ -1189,7 +1205,7 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @throws com.liferay.lms.NoSuchUserCompetenceException if a user competence with the primary key could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public UserCompetence[] findByuserId_PrevAndNext(long usercompId,
+	public UserCompetence[] findByUserId_PrevAndNext(long usercompId,
 		long userId, OrderByComparator orderByComparator)
 		throws NoSuchUserCompetenceException, SystemException {
 		UserCompetence userCompetence = findByPrimaryKey(usercompId);
@@ -1201,12 +1217,12 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 
 			UserCompetence[] array = new UserCompetenceImpl[3];
 
-			array[0] = getByuserId_PrevAndNext(session, userCompetence, userId,
+			array[0] = getByUserId_PrevAndNext(session, userCompetence, userId,
 					orderByComparator, true);
 
 			array[1] = userCompetence;
 
-			array[2] = getByuserId_PrevAndNext(session, userCompetence, userId,
+			array[2] = getByUserId_PrevAndNext(session, userCompetence, userId,
 					orderByComparator, false);
 
 			return array;
@@ -1219,7 +1235,7 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 		}
 	}
 
-	protected UserCompetence getByuserId_PrevAndNext(Session session,
+	protected UserCompetence getByUserId_PrevAndNext(Session session,
 		UserCompetence userCompetence, long userId,
 		OrderByComparator orderByComparator, boolean previous) {
 		StringBundler query = null;
@@ -1322,102 +1338,93 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	}
 
 	/**
-	 * Returns all the user competences where competenceId = &#63;.
+	 * Returns the user competence where userId = &#63; and competenceId = &#63; or throws a {@link com.liferay.lms.NoSuchUserCompetenceException} if it could not be found.
 	 *
+	 * @param userId the user ID
 	 * @param competenceId the competence ID
-	 * @return the matching user competences
+	 * @return the matching user competence
+	 * @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<UserCompetence> findBycompetenceId(long competenceId)
-		throws SystemException {
-		return findBycompetenceId(competenceId, QueryUtil.ALL_POS,
-			QueryUtil.ALL_POS, null);
+	public UserCompetence findByUserIdCompetenceId(long userId,
+		long competenceId)
+		throws NoSuchUserCompetenceException, SystemException {
+		UserCompetence userCompetence = fetchByUserIdCompetenceId(userId,
+				competenceId);
+
+		if (userCompetence == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("userId=");
+			msg.append(userId);
+
+			msg.append(", competenceId=");
+			msg.append(competenceId);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchUserCompetenceException(msg.toString());
+		}
+
+		return userCompetence;
 	}
 
 	/**
-	 * Returns a range of all the user competences where competenceId = &#63;.
+	 * Returns the user competence where userId = &#63; and competenceId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
-	 * </p>
-	 *
+	 * @param userId the user ID
 	 * @param competenceId the competence ID
-	 * @param start the lower bound of the range of user competences
-	 * @param end the upper bound of the range of user competences (not inclusive)
-	 * @return the range of matching user competences
+	 * @return the matching user competence, or <code>null</code> if a matching user competence could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<UserCompetence> findBycompetenceId(long competenceId,
-		int start, int end) throws SystemException {
-		return findBycompetenceId(competenceId, start, end, null);
+	public UserCompetence fetchByUserIdCompetenceId(long userId,
+		long competenceId) throws SystemException {
+		return fetchByUserIdCompetenceId(userId, competenceId, true);
 	}
 
 	/**
-	 * Returns an ordered range of all the user competences where competenceId = &#63;.
+	 * Returns the user competence where userId = &#63; and competenceId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
 	 *
-	 * <p>
-	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
-	 * </p>
-	 *
+	 * @param userId the user ID
 	 * @param competenceId the competence ID
-	 * @param start the lower bound of the range of user competences
-	 * @param end the upper bound of the range of user competences (not inclusive)
-	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	 * @return the ordered range of matching user competences
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching user competence, or <code>null</code> if a matching user competence could not be found
 	 * @throws SystemException if a system exception occurred
 	 */
-	public List<UserCompetence> findBycompetenceId(long competenceId,
-		int start, int end, OrderByComparator orderByComparator)
-		throws SystemException {
-		FinderPath finderPath = null;
-		Object[] finderArgs = null;
+	public UserCompetence fetchByUserIdCompetenceId(long userId,
+		long competenceId, boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { userId, competenceId };
 
-		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
-				(orderByComparator == null)) {
-			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_COMPETENCEID;
-			finderArgs = new Object[] { competenceId };
-		}
-		else {
-			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_COMPETENCEID;
-			finderArgs = new Object[] {
-					competenceId,
-					
-					start, end, orderByComparator
-				};
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+					finderArgs, this);
 		}
 
-		List<UserCompetence> list = (List<UserCompetence>)FinderCacheUtil.getResult(finderPath,
-				finderArgs, this);
+		if (result instanceof UserCompetence) {
+			UserCompetence userCompetence = (UserCompetence)result;
 
-		if ((list != null) && !list.isEmpty()) {
-			for (UserCompetence userCompetence : list) {
-				if ((competenceId != userCompetence.getCompetenceId())) {
-					list = null;
-
-					break;
-				}
+			if ((userId != userCompetence.getUserId()) ||
+					(competenceId != userCompetence.getCompetenceId())) {
+				result = null;
 			}
 		}
 
-		if (list == null) {
-			StringBundler query = null;
-
-			if (orderByComparator != null) {
-				query = new StringBundler(3 +
-						(orderByComparator.getOrderByFields().length * 3));
-			}
-			else {
-				query = new StringBundler(2);
-			}
+		if (result == null) {
+			StringBundler query = new StringBundler(3);
 
 			query.append(_SQL_SELECT_USERCOMPETENCE_WHERE);
 
-			query.append(_FINDER_COLUMN_COMPETENCEID_COMPETENCEID_2);
+			query.append(_FINDER_COLUMN_USERIDCOMPETENCEID_USERID_2);
 
-			if (orderByComparator != null) {
-				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
-					orderByComparator);
-			}
+			query.append(_FINDER_COLUMN_USERIDCOMPETENCEID_COMPETENCEID_2);
 
 			String sql = query.toString();
 
@@ -1430,274 +1437,53 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 
 				QueryPos qPos = QueryPos.getInstance(q);
 
+				qPos.add(userId);
+
 				qPos.add(competenceId);
 
-				list = (List<UserCompetence>)QueryUtil.list(q, getDialect(),
-						start, end);
+				List<UserCompetence> list = q.list();
+
+				result = list;
+
+				UserCompetence userCompetence = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+						finderArgs, list);
+				}
+				else {
+					userCompetence = list.get(0);
+
+					cacheResult(userCompetence);
+
+					if ((userCompetence.getUserId() != userId) ||
+							(userCompetence.getCompetenceId() != competenceId)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+							finderArgs, userCompetence);
+					}
+				}
+
+				return userCompetence;
 			}
 			catch (Exception e) {
 				throw processException(e);
 			}
 			finally {
-				if (list == null) {
-					FinderCacheUtil.removeResult(finderPath, finderArgs);
-				}
-				else {
-					cacheResult(list);
-
-					FinderCacheUtil.putResult(finderPath, finderArgs, list);
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_USERIDCOMPETENCEID,
+						finderArgs);
 				}
 
 				closeSession(session);
 			}
 		}
-
-		return list;
-	}
-
-	/**
-	 * Returns the first user competence in the ordered set where competenceId = &#63;.
-	 *
-	 * @param competenceId the competence ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching user competence
-	 * @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserCompetence findBycompetenceId_First(long competenceId,
-		OrderByComparator orderByComparator)
-		throws NoSuchUserCompetenceException, SystemException {
-		UserCompetence userCompetence = fetchBycompetenceId_First(competenceId,
-				orderByComparator);
-
-		if (userCompetence != null) {
-			return userCompetence;
-		}
-
-		StringBundler msg = new StringBundler(4);
-
-		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		msg.append("competenceId=");
-		msg.append(competenceId);
-
-		msg.append(StringPool.CLOSE_CURLY_BRACE);
-
-		throw new NoSuchUserCompetenceException(msg.toString());
-	}
-
-	/**
-	 * Returns the first user competence in the ordered set where competenceId = &#63;.
-	 *
-	 * @param competenceId the competence ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the first matching user competence, or <code>null</code> if a matching user competence could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserCompetence fetchBycompetenceId_First(long competenceId,
-		OrderByComparator orderByComparator) throws SystemException {
-		List<UserCompetence> list = findBycompetenceId(competenceId, 0, 1,
-				orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the last user competence in the ordered set where competenceId = &#63;.
-	 *
-	 * @param competenceId the competence ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching user competence
-	 * @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserCompetence findBycompetenceId_Last(long competenceId,
-		OrderByComparator orderByComparator)
-		throws NoSuchUserCompetenceException, SystemException {
-		UserCompetence userCompetence = fetchBycompetenceId_Last(competenceId,
-				orderByComparator);
-
-		if (userCompetence != null) {
-			return userCompetence;
-		}
-
-		StringBundler msg = new StringBundler(4);
-
-		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
-
-		msg.append("competenceId=");
-		msg.append(competenceId);
-
-		msg.append(StringPool.CLOSE_CURLY_BRACE);
-
-		throw new NoSuchUserCompetenceException(msg.toString());
-	}
-
-	/**
-	 * Returns the last user competence in the ordered set where competenceId = &#63;.
-	 *
-	 * @param competenceId the competence ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the last matching user competence, or <code>null</code> if a matching user competence could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserCompetence fetchBycompetenceId_Last(long competenceId,
-		OrderByComparator orderByComparator) throws SystemException {
-		int count = countBycompetenceId(competenceId);
-
-		List<UserCompetence> list = findBycompetenceId(competenceId, count - 1,
-				count, orderByComparator);
-
-		if (!list.isEmpty()) {
-			return list.get(0);
-		}
-
-		return null;
-	}
-
-	/**
-	 * Returns the user competences before and after the current user competence in the ordered set where competenceId = &#63;.
-	 *
-	 * @param usercompId the primary key of the current user competence
-	 * @param competenceId the competence ID
-	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	 * @return the previous, current, and next user competence
-	 * @throws com.liferay.lms.NoSuchUserCompetenceException if a user competence with the primary key could not be found
-	 * @throws SystemException if a system exception occurred
-	 */
-	public UserCompetence[] findBycompetenceId_PrevAndNext(long usercompId,
-		long competenceId, OrderByComparator orderByComparator)
-		throws NoSuchUserCompetenceException, SystemException {
-		UserCompetence userCompetence = findByPrimaryKey(usercompId);
-
-		Session session = null;
-
-		try {
-			session = openSession();
-
-			UserCompetence[] array = new UserCompetenceImpl[3];
-
-			array[0] = getBycompetenceId_PrevAndNext(session, userCompetence,
-					competenceId, orderByComparator, true);
-
-			array[1] = userCompetence;
-
-			array[2] = getBycompetenceId_PrevAndNext(session, userCompetence,
-					competenceId, orderByComparator, false);
-
-			return array;
-		}
-		catch (Exception e) {
-			throw processException(e);
-		}
-		finally {
-			closeSession(session);
-		}
-	}
-
-	protected UserCompetence getBycompetenceId_PrevAndNext(Session session,
-		UserCompetence userCompetence, long competenceId,
-		OrderByComparator orderByComparator, boolean previous) {
-		StringBundler query = null;
-
-		if (orderByComparator != null) {
-			query = new StringBundler(6 +
-					(orderByComparator.getOrderByFields().length * 6));
-		}
 		else {
-			query = new StringBundler(3);
-		}
-
-		query.append(_SQL_SELECT_USERCOMPETENCE_WHERE);
-
-		query.append(_FINDER_COLUMN_COMPETENCEID_COMPETENCEID_2);
-
-		if (orderByComparator != null) {
-			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
-
-			if (orderByConditionFields.length > 0) {
-				query.append(WHERE_AND);
+			if (result instanceof List<?>) {
+				return null;
 			}
-
-			for (int i = 0; i < orderByConditionFields.length; i++) {
-				query.append(_ORDER_BY_ENTITY_ALIAS);
-				query.append(orderByConditionFields[i]);
-
-				if ((i + 1) < orderByConditionFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(WHERE_GREATER_THAN_HAS_NEXT);
-					}
-					else {
-						query.append(WHERE_LESSER_THAN_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(WHERE_GREATER_THAN);
-					}
-					else {
-						query.append(WHERE_LESSER_THAN);
-					}
-				}
+			else {
+				return (UserCompetence)result;
 			}
-
-			query.append(ORDER_BY_CLAUSE);
-
-			String[] orderByFields = orderByComparator.getOrderByFields();
-
-			for (int i = 0; i < orderByFields.length; i++) {
-				query.append(_ORDER_BY_ENTITY_ALIAS);
-				query.append(orderByFields[i]);
-
-				if ((i + 1) < orderByFields.length) {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(ORDER_BY_ASC_HAS_NEXT);
-					}
-					else {
-						query.append(ORDER_BY_DESC_HAS_NEXT);
-					}
-				}
-				else {
-					if (orderByComparator.isAscending() ^ previous) {
-						query.append(ORDER_BY_ASC);
-					}
-					else {
-						query.append(ORDER_BY_DESC);
-					}
-				}
-			}
-		}
-
-		String sql = query.toString();
-
-		Query q = session.createQuery(sql);
-
-		q.setFirstResult(0);
-		q.setMaxResults(2);
-
-		QueryPos qPos = QueryPos.getInstance(q);
-
-		qPos.add(competenceId);
-
-		if (orderByComparator != null) {
-			Object[] values = orderByComparator.getOrderByConditionValues(userCompetence);
-
-			for (Object value : values) {
-				qPos.add(value);
-			}
-		}
-
-		List<UserCompetence> list = q.list();
-
-		if (list.size() == 2) {
-			return list.get(1);
-		}
-		else {
-			return null;
 		}
 	}
 
@@ -1834,23 +1620,27 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @param userId the user ID
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void removeByuserId(long userId) throws SystemException {
-		for (UserCompetence userCompetence : findByuserId(userId)) {
+	public void removeByUserId(long userId) throws SystemException {
+		for (UserCompetence userCompetence : findByUserId(userId)) {
 			remove(userCompetence);
 		}
 	}
 
 	/**
-	 * Removes all the user competences where competenceId = &#63; from the database.
+	 * Removes the user competence where userId = &#63; and competenceId = &#63; from the database.
 	 *
+	 * @param userId the user ID
 	 * @param competenceId the competence ID
+	 * @return the user competence that was removed
 	 * @throws SystemException if a system exception occurred
 	 */
-	public void removeBycompetenceId(long competenceId)
-		throws SystemException {
-		for (UserCompetence userCompetence : findBycompetenceId(competenceId)) {
-			remove(userCompetence);
-		}
+	public UserCompetence removeByUserIdCompetenceId(long userId,
+		long competenceId)
+		throws NoSuchUserCompetenceException, SystemException {
+		UserCompetence userCompetence = findByUserIdCompetenceId(userId,
+				competenceId);
+
+		return remove(userCompetence);
 	}
 
 	/**
@@ -1936,7 +1726,7 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	 * @return the number of matching user competences
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int countByuserId(long userId) throws SystemException {
+	public int countByUserId(long userId) throws SystemException {
 		Object[] finderArgs = new Object[] { userId };
 
 		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_USERID,
@@ -1983,24 +1773,28 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	}
 
 	/**
-	 * Returns the number of user competences where competenceId = &#63;.
+	 * Returns the number of user competences where userId = &#63; and competenceId = &#63;.
 	 *
+	 * @param userId the user ID
 	 * @param competenceId the competence ID
 	 * @return the number of matching user competences
 	 * @throws SystemException if a system exception occurred
 	 */
-	public int countBycompetenceId(long competenceId) throws SystemException {
-		Object[] finderArgs = new Object[] { competenceId };
+	public int countByUserIdCompetenceId(long userId, long competenceId)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { userId, competenceId };
 
-		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_COMPETENCEID,
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_USERIDCOMPETENCEID,
 				finderArgs, this);
 
 		if (count == null) {
-			StringBundler query = new StringBundler(2);
+			StringBundler query = new StringBundler(3);
 
 			query.append(_SQL_COUNT_USERCOMPETENCE_WHERE);
 
-			query.append(_FINDER_COLUMN_COMPETENCEID_COMPETENCEID_2);
+			query.append(_FINDER_COLUMN_USERIDCOMPETENCEID_USERID_2);
+
+			query.append(_FINDER_COLUMN_USERIDCOMPETENCEID_COMPETENCEID_2);
 
 			String sql = query.toString();
 
@@ -2012,6 +1806,8 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 				Query q = session.createQuery(sql);
 
 				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(userId);
 
 				qPos.add(competenceId);
 
@@ -2025,7 +1821,7 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 					count = Long.valueOf(0);
 				}
 
-				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_COMPETENCEID,
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_USERIDCOMPETENCEID,
 					finderArgs, count);
 
 				closeSession(session);
@@ -2154,7 +1950,9 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 	private static final String _FINDER_COLUMN_UUID_UUID_2 = "userCompetence.uuid = ?";
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(userCompetence.uuid IS NULL OR userCompetence.uuid = ?)";
 	private static final String _FINDER_COLUMN_USERID_USERID_2 = "userCompetence.userId = ?";
-	private static final String _FINDER_COLUMN_COMPETENCEID_COMPETENCEID_2 = "userCompetence.competenceId = ?";
+	private static final String _FINDER_COLUMN_USERIDCOMPETENCEID_USERID_2 = "userCompetence.userId = ? AND ";
+	private static final String _FINDER_COLUMN_USERIDCOMPETENCEID_COMPETENCEID_2 =
+		"userCompetence.competenceId = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "userCompetence.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No UserCompetence exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No UserCompetence exists with the key {";

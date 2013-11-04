@@ -331,9 +331,9 @@ public class UserCompetenceUtil {
 	* @return the matching user competences
 	* @throws SystemException if a system exception occurred
 	*/
-	public static java.util.List<com.liferay.lms.model.UserCompetence> findByuserId(
+	public static java.util.List<com.liferay.lms.model.UserCompetence> findByUserId(
 		long userId) throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findByuserId(userId);
+		return getPersistence().findByUserId(userId);
 	}
 
 	/**
@@ -349,10 +349,10 @@ public class UserCompetenceUtil {
 	* @return the range of matching user competences
 	* @throws SystemException if a system exception occurred
 	*/
-	public static java.util.List<com.liferay.lms.model.UserCompetence> findByuserId(
+	public static java.util.List<com.liferay.lms.model.UserCompetence> findByUserId(
 		long userId, int start, int end)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findByuserId(userId, start, end);
+		return getPersistence().findByUserId(userId, start, end);
 	}
 
 	/**
@@ -369,12 +369,12 @@ public class UserCompetenceUtil {
 	* @return the ordered range of matching user competences
 	* @throws SystemException if a system exception occurred
 	*/
-	public static java.util.List<com.liferay.lms.model.UserCompetence> findByuserId(
+	public static java.util.List<com.liferay.lms.model.UserCompetence> findByUserId(
 		long userId, int start, int end,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence()
-				   .findByuserId(userId, start, end, orderByComparator);
+				   .findByUserId(userId, start, end, orderByComparator);
 	}
 
 	/**
@@ -386,12 +386,12 @@ public class UserCompetenceUtil {
 	* @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.liferay.lms.model.UserCompetence findByuserId_First(
+	public static com.liferay.lms.model.UserCompetence findByUserId_First(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.lms.NoSuchUserCompetenceException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findByuserId_First(userId, orderByComparator);
+		return getPersistence().findByUserId_First(userId, orderByComparator);
 	}
 
 	/**
@@ -402,11 +402,11 @@ public class UserCompetenceUtil {
 	* @return the first matching user competence, or <code>null</code> if a matching user competence could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.liferay.lms.model.UserCompetence fetchByuserId_First(
+	public static com.liferay.lms.model.UserCompetence fetchByUserId_First(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().fetchByuserId_First(userId, orderByComparator);
+		return getPersistence().fetchByUserId_First(userId, orderByComparator);
 	}
 
 	/**
@@ -418,12 +418,12 @@ public class UserCompetenceUtil {
 	* @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.liferay.lms.model.UserCompetence findByuserId_Last(
+	public static com.liferay.lms.model.UserCompetence findByUserId_Last(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.lms.NoSuchUserCompetenceException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findByuserId_Last(userId, orderByComparator);
+		return getPersistence().findByUserId_Last(userId, orderByComparator);
 	}
 
 	/**
@@ -434,11 +434,11 @@ public class UserCompetenceUtil {
 	* @return the last matching user competence, or <code>null</code> if a matching user competence could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.liferay.lms.model.UserCompetence fetchByuserId_Last(
+	public static com.liferay.lms.model.UserCompetence fetchByUserId_Last(
 		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().fetchByuserId_Last(userId, orderByComparator);
+		return getPersistence().fetchByUserId_Last(userId, orderByComparator);
 	}
 
 	/**
@@ -451,157 +451,61 @@ public class UserCompetenceUtil {
 	* @throws com.liferay.lms.NoSuchUserCompetenceException if a user competence with the primary key could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.liferay.lms.model.UserCompetence[] findByuserId_PrevAndNext(
+	public static com.liferay.lms.model.UserCompetence[] findByUserId_PrevAndNext(
 		long usercompId, long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.lms.NoSuchUserCompetenceException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence()
-				   .findByuserId_PrevAndNext(usercompId, userId,
+				   .findByUserId_PrevAndNext(usercompId, userId,
 			orderByComparator);
 	}
 
 	/**
-	* Returns all the user competences where competenceId = &#63;.
+	* Returns the user competence where userId = &#63; and competenceId = &#63; or throws a {@link com.liferay.lms.NoSuchUserCompetenceException} if it could not be found.
 	*
+	* @param userId the user ID
 	* @param competenceId the competence ID
-	* @return the matching user competences
-	* @throws SystemException if a system exception occurred
-	*/
-	public static java.util.List<com.liferay.lms.model.UserCompetence> findBycompetenceId(
-		long competenceId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findBycompetenceId(competenceId);
-	}
-
-	/**
-	* Returns a range of all the user competences where competenceId = &#63;.
-	*
-	* <p>
-	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
-	* </p>
-	*
-	* @param competenceId the competence ID
-	* @param start the lower bound of the range of user competences
-	* @param end the upper bound of the range of user competences (not inclusive)
-	* @return the range of matching user competences
-	* @throws SystemException if a system exception occurred
-	*/
-	public static java.util.List<com.liferay.lms.model.UserCompetence> findBycompetenceId(
-		long competenceId, int start, int end)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().findBycompetenceId(competenceId, start, end);
-	}
-
-	/**
-	* Returns an ordered range of all the user competences where competenceId = &#63;.
-	*
-	* <p>
-	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
-	* </p>
-	*
-	* @param competenceId the competence ID
-	* @param start the lower bound of the range of user competences
-	* @param end the upper bound of the range of user competences (not inclusive)
-	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
-	* @return the ordered range of matching user competences
-	* @throws SystemException if a system exception occurred
-	*/
-	public static java.util.List<com.liferay.lms.model.UserCompetence> findBycompetenceId(
-		long competenceId, int start, int end,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence()
-				   .findBycompetenceId(competenceId, start, end,
-			orderByComparator);
-	}
-
-	/**
-	* Returns the first user competence in the ordered set where competenceId = &#63;.
-	*
-	* @param competenceId the competence ID
-	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	* @return the first matching user competence
+	* @return the matching user competence
 	* @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.liferay.lms.model.UserCompetence findBycompetenceId_First(
-		long competenceId,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+	public static com.liferay.lms.model.UserCompetence findByUserIdCompetenceId(
+		long userId, long competenceId)
 		throws com.liferay.lms.NoSuchUserCompetenceException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence()
-				   .findBycompetenceId_First(competenceId, orderByComparator);
+		return getPersistence().findByUserIdCompetenceId(userId, competenceId);
 	}
 
 	/**
-	* Returns the first user competence in the ordered set where competenceId = &#63;.
+	* Returns the user competence where userId = &#63; and competenceId = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
 	*
+	* @param userId the user ID
 	* @param competenceId the competence ID
-	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	* @return the first matching user competence, or <code>null</code> if a matching user competence could not be found
+	* @return the matching user competence, or <code>null</code> if a matching user competence could not be found
 	* @throws SystemException if a system exception occurred
 	*/
-	public static com.liferay.lms.model.UserCompetence fetchBycompetenceId_First(
-		long competenceId,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+	public static com.liferay.lms.model.UserCompetence fetchByUserIdCompetenceId(
+		long userId, long competenceId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByUserIdCompetenceId(userId, competenceId);
+	}
+
+	/**
+	* Returns the user competence where userId = &#63; and competenceId = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param userId the user ID
+	* @param competenceId the competence ID
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching user competence, or <code>null</code> if a matching user competence could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.UserCompetence fetchByUserIdCompetenceId(
+		long userId, long competenceId, boolean retrieveFromCache)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence()
-				   .fetchBycompetenceId_First(competenceId, orderByComparator);
-	}
-
-	/**
-	* Returns the last user competence in the ordered set where competenceId = &#63;.
-	*
-	* @param competenceId the competence ID
-	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	* @return the last matching user competence
-	* @throws com.liferay.lms.NoSuchUserCompetenceException if a matching user competence could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.lms.model.UserCompetence findBycompetenceId_Last(
-		long competenceId,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.lms.NoSuchUserCompetenceException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence()
-				   .findBycompetenceId_Last(competenceId, orderByComparator);
-	}
-
-	/**
-	* Returns the last user competence in the ordered set where competenceId = &#63;.
-	*
-	* @param competenceId the competence ID
-	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	* @return the last matching user competence, or <code>null</code> if a matching user competence could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.lms.model.UserCompetence fetchBycompetenceId_Last(
-		long competenceId,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence()
-				   .fetchBycompetenceId_Last(competenceId, orderByComparator);
-	}
-
-	/**
-	* Returns the user competences before and after the current user competence in the ordered set where competenceId = &#63;.
-	*
-	* @param usercompId the primary key of the current user competence
-	* @param competenceId the competence ID
-	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
-	* @return the previous, current, and next user competence
-	* @throws com.liferay.lms.NoSuchUserCompetenceException if a user competence with the primary key could not be found
-	* @throws SystemException if a system exception occurred
-	*/
-	public static com.liferay.lms.model.UserCompetence[] findBycompetenceId_PrevAndNext(
-		long usercompId, long competenceId,
-		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
-		throws com.liferay.lms.NoSuchUserCompetenceException,
-			com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence()
-				   .findBycompetenceId_PrevAndNext(usercompId, competenceId,
-			orderByComparator);
+				   .fetchByUserIdCompetenceId(userId, competenceId,
+			retrieveFromCache);
 	}
 
 	/**
@@ -670,20 +574,24 @@ public class UserCompetenceUtil {
 	* @param userId the user ID
 	* @throws SystemException if a system exception occurred
 	*/
-	public static void removeByuserId(long userId)
+	public static void removeByUserId(long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		getPersistence().removeByuserId(userId);
+		getPersistence().removeByUserId(userId);
 	}
 
 	/**
-	* Removes all the user competences where competenceId = &#63; from the database.
+	* Removes the user competence where userId = &#63; and competenceId = &#63; from the database.
 	*
+	* @param userId the user ID
 	* @param competenceId the competence ID
+	* @return the user competence that was removed
 	* @throws SystemException if a system exception occurred
 	*/
-	public static void removeBycompetenceId(long competenceId)
-		throws com.liferay.portal.kernel.exception.SystemException {
-		getPersistence().removeBycompetenceId(competenceId);
+	public static com.liferay.lms.model.UserCompetence removeByUserIdCompetenceId(
+		long userId, long competenceId)
+		throws com.liferay.lms.NoSuchUserCompetenceException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().removeByUserIdCompetenceId(userId, competenceId);
 	}
 
 	/**
@@ -715,21 +623,22 @@ public class UserCompetenceUtil {
 	* @return the number of matching user competences
 	* @throws SystemException if a system exception occurred
 	*/
-	public static int countByuserId(long userId)
+	public static int countByUserId(long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().countByuserId(userId);
+		return getPersistence().countByUserId(userId);
 	}
 
 	/**
-	* Returns the number of user competences where competenceId = &#63;.
+	* Returns the number of user competences where userId = &#63; and competenceId = &#63;.
 	*
+	* @param userId the user ID
 	* @param competenceId the competence ID
 	* @return the number of matching user competences
 	* @throws SystemException if a system exception occurred
 	*/
-	public static int countBycompetenceId(long competenceId)
+	public static int countByUserIdCompetenceId(long userId, long competenceId)
 		throws com.liferay.portal.kernel.exception.SystemException {
-		return getPersistence().countBycompetenceId(competenceId);
+		return getPersistence().countByUserIdCompetenceId(userId, competenceId);
 	}
 
 	/**

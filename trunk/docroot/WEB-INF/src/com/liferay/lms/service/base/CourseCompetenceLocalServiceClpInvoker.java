@@ -111,6 +111,14 @@ public class CourseCompetenceLocalServiceClpInvoker {
 		_methodName135 = "setBeanIdentifier";
 
 		_methodParameterTypes135 = new String[] { "java.lang.String" };
+
+		_methodName140 = "findBycourseId";
+
+		_methodParameterTypes140 = new String[] { "long", "boolean" };
+
+		_methodName141 = "fetchByCourseCompetenceCondition";
+
+		_methodParameterTypes141 = new String[] { "long", "long", "boolean" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -214,6 +222,19 @@ public class CourseCompetenceLocalServiceClpInvoker {
 			return null;
 		}
 
+		if (_methodName140.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes140, parameterTypes)) {
+			return CourseCompetenceLocalServiceUtil.findBycourseId(((Long)arguments[0]).longValue(),
+				((Boolean)arguments[1]).booleanValue());
+		}
+
+		if (_methodName141.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes141, parameterTypes)) {
+			return CourseCompetenceLocalServiceUtil.fetchByCourseCompetenceCondition(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				((Boolean)arguments[2]).booleanValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -253,4 +274,8 @@ public class CourseCompetenceLocalServiceClpInvoker {
 	private String[] _methodParameterTypes134;
 	private String _methodName135;
 	private String[] _methodParameterTypes135;
+	private String _methodName140;
+	private String[] _methodParameterTypes140;
+	private String _methodName141;
+	private String[] _methodParameterTypes141;
 }

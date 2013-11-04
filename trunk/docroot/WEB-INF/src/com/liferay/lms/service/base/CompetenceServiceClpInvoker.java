@@ -42,6 +42,10 @@ public class CompetenceServiceClpInvoker {
 		_methodName126 = "getCountCompetencesOfGroup";
 
 		_methodParameterTypes126 = new String[] { "long" };
+
+		_methodName127 = "getCompetencesOfGroups";
+
+		_methodParameterTypes127 = new String[] { "long[][]" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -75,6 +79,11 @@ public class CompetenceServiceClpInvoker {
 			return CompetenceServiceUtil.getCountCompetencesOfGroup(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName127.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+			return CompetenceServiceUtil.getCompetencesOfGroups((long[])arguments[0]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -88,4 +97,6 @@ public class CompetenceServiceClpInvoker {
 	private String[] _methodParameterTypes125;
 	private String _methodName126;
 	private String[] _methodParameterTypes126;
+	private String _methodName127;
+	private String[] _methodParameterTypes127;
 }

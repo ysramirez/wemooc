@@ -72,6 +72,12 @@ public class CompetenceServiceWrapper implements CompetenceService,
 		return _competenceService.getCountCompetencesOfGroup(groupId);
 	}
 
+	public java.util.HashMap<java.lang.Long, com.liferay.lms.model.Competence> getCompetencesOfGroups(
+		long[] groups)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _competenceService.getCompetencesOfGroups(groups);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

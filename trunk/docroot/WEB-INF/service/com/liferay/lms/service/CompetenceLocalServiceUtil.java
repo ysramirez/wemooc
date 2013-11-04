@@ -297,12 +297,30 @@ public class CompetenceLocalServiceUtil {
 		return getService().addCompetence(title, description, serviceContext);
 	}
 
+	public static com.liferay.lms.model.Competence updateCompetence(
+		com.liferay.lms.model.Competence competence,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().updateCompetence(competence, serviceContext);
+	}
+
 	public static com.liferay.lms.model.Competence modCompetence(
 		com.liferay.lms.model.Competence competence,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().modCompetence(competence, serviceContext);
+	}
+
+	public static long countAll()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().countAll();
+	}
+
+	public static java.util.List findByCompanyId(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findByCompanyId(companyId);
 	}
 
 	public static void clearService() {

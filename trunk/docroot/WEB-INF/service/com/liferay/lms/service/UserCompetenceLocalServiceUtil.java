@@ -273,6 +273,11 @@ public class UserCompetenceLocalServiceUtil {
 		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
+	public static com.liferay.lms.model.UserCompetence findByUserIdCompetenceId(
+		long userId, long competenceId) {
+		return getService().findByUserIdCompetenceId(userId, competenceId);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

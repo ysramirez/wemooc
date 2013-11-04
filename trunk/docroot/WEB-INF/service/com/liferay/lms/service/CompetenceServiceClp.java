@@ -42,6 +42,10 @@ public class CompetenceServiceClp implements CompetenceService {
 		_methodName5 = "getCountCompetencesOfGroup";
 
 		_methodParameterTypes5 = new String[] { "long" };
+
+		_methodName6 = "getCompetencesOfGroups";
+
+		_methodParameterTypes6 = new String[] { "long[][]" };
 	}
 
 	public java.lang.String getBeanIdentifier() {
@@ -174,6 +178,35 @@ public class CompetenceServiceClp implements CompetenceService {
 		return ((Integer)returnObj).intValue();
 	}
 
+	public java.util.HashMap<java.lang.Long, com.liferay.lms.model.Competence> getCompetencesOfGroups(
+		long[] groups)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName6,
+					_methodParameterTypes6,
+					new Object[] { ClpSerializer.translateInput(groups) });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.HashMap<java.lang.Long, com.liferay.lms.model.Competence>)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableService _invokableService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -185,4 +218,6 @@ public class CompetenceServiceClp implements CompetenceService {
 	private String[] _methodParameterTypes4;
 	private String _methodName5;
 	private String[] _methodParameterTypes5;
+	private String _methodName6;
+	private String[] _methodParameterTypes6;
 }

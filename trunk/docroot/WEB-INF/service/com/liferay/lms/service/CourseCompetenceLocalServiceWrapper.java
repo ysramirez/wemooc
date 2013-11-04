@@ -271,6 +271,19 @@ public class CourseCompetenceLocalServiceWrapper
 			arguments);
 	}
 
+	public java.util.List<com.liferay.lms.model.CourseCompetence> findBycourseId(
+		long courseId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _courseCompetenceLocalService.findBycourseId(courseId, condition);
+	}
+
+	public com.liferay.lms.model.CourseCompetence fetchByCourseCompetenceCondition(
+		long courseId, long competenceId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _courseCompetenceLocalService.fetchByCourseCompetenceCondition(courseId,
+			competenceId, condition);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */
