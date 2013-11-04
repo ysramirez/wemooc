@@ -222,7 +222,7 @@ ActionKeys.UPDATE) %>">
 <liferay-ui:icon image="top" message="up" url="#" onClick="<%=upURLJavascript %>"/>
 
 </c:if>
-		<c:choose>
+	<c:choose>
 			<c:when test="<%= permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),ActionKeys.PERMISSIONS) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
@@ -239,12 +239,12 @@ ActionKeys.UPDATE) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=LearningActivity.class.getName() %>"
-					modelResourceDescription="<%= myActivity.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW+\",CORRECT\" %>"
+					modelResourceDescription="<%= myActivity.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW %>"
 					resourcePrimKey="<%= String.valueOf(myActivity.getActId()) %>"
 					redirect="<%=redirectURL %>"
 					var="permissionsURL"
 				/>
-				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
+				<liferay-ui:icon image="permissions" message="permissionsbasics" url="<%=permissionsURL %>" />	
 				</c:if>
 			</c:otherwise>
 		</c:choose>
