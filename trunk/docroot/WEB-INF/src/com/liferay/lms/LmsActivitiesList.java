@@ -25,10 +25,13 @@ import javax.portlet.WindowState;
 import javax.xml.namespace.QName;
 
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.events.ThemeIdEvent;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.model.P2pActivityCorrections;
@@ -70,6 +73,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -437,6 +441,11 @@ public class LmsActivitiesList extends MVCPortlet {
 			learningActivityType.deleteResources(actionRequest, actionResponse, larn);
 			
 			LearningActivityServiceUtil.deleteLearningactivity(actId);
+
+			//auditing
+			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+			AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), actId, themeDisplay.getUserId(), AuditConstants.DELETE, null);
+			
 			if(actId==renderActId) {
 				actionResponse.removePublicRenderParameter("actId");				
 			}
@@ -581,8 +590,13 @@ public class LmsActivitiesList extends MVCPortlet {
 		throws PortalException, SystemException, Exception {
 
 		long actId = ParamUtil.getInteger(actionRequest, "actId");
-		LearningActivity learnact = com.liferay.lms.service.LearningActivityServiceUtil.getLearningActivity(actId);
 		LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
+		
+		//auditing
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+				actId, themeDisplay.getUserId(), AuditConstants.GET, null);
+		
 		if (laf != null) {
 			AssetRenderer assetRenderer = laf.getAssetRenderer(actId, 0);
 			String urlEdit = assetRenderer.getURLViewInContext((LiferayPortletRequest) actionRequest, (LiferayPortletResponse) actionResponse, "").toString();

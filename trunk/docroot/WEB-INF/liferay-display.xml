@@ -53,8 +53,6 @@
 		<portlet id="coursehistory"></portlet>
 		<portlet id="inscriptionadmin"></portlet>
 		<portlet id="generalstats"></portlet>
-	</category>
-	<category name="category.sample">
 		<portlet id="competencesadmin"></portlet>
 		<portlet id="usercompetence"></portlet>
 	</category>

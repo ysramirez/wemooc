@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.calificationtype.CalificationType;
 import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
@@ -53,6 +55,8 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -124,6 +128,12 @@ public class LearningActivityResultLocalServiceImpl
 		{
 			ModuleResultLocalServiceUtil.update(learningActivityResult);
 		}
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+				learningActivityResult.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		
 		return learningActivityResult;
 		
 	}
@@ -332,6 +342,11 @@ public class LearningActivityResultLocalServiceImpl
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
 			
 		}
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+				learningActivity.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 		
 		return this.getByActIdAndUserId(learningActivityTry.getActId(), userId);
 	}

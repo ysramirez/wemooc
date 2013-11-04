@@ -1,6 +1,5 @@
 package com.liferay.lms.auditing;
 
-import com.liferay.lms.service.impl.CourseLocalServiceImpl;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -8,7 +7,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 
 public class AuditingLogFactory 
 {
-	static Log log = LogFactoryUtil.getLog(CourseLocalServiceImpl.class);
+	static Log log = LogFactoryUtil.getLog(AuditingLogFactory.class);
 	
 	static AuditingLog auditLog;
 	public static AuditingLog getAuditLog() throws ClassNotFoundException, InstantiationException, IllegalAccessException
@@ -30,6 +29,7 @@ public class AuditingLogFactory
 			long userId, String action, String extraData)
 			throws SystemException {
 		try{
+			if(log.isDebugEnabled())log.debug("audit:"+className+"::"+classPK);
 			getAuditLog().audit(companyId, groupId, className, classPK, userId, action, extraData);
 		}catch(ClassNotFoundException cnfe){
 			if(log.isDebugEnabled())cnfe.printStackTrace();

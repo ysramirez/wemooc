@@ -3,6 +3,8 @@ package com.liferay.lms.learningactivity.courseeval;
 import java.io.IOException;
 import java.util.List;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.Module;
@@ -33,6 +35,9 @@ public class CompleteModulesCourseEval implements CourseEval {
 		if(courseResult==null)
 		{
 			courseResult=CourseResultLocalServiceUtil.create(course.getCourseId(), mresult.getUserId());
+
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), CourseResult.class.getName(), courseResult.getPrimaryKey(), mresult.getUserId(), AuditConstants.CREATE, null);
 		}
 		if(mresult.isPassed())
 		{

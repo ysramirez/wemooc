@@ -14,6 +14,8 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.base.LearningActivityResultServiceBaseImpl;
@@ -22,6 +24,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 
 /**
  * The implementation of the learning activity result remote service.
@@ -74,12 +78,26 @@ public class LearningActivityResultServiceImpl
 	public LearningActivityResult update(long latId, long result, String tryResultData) throws PortalException, SystemException
 	{
 		User user=this.getUser();
-		return learningActivityResultLocalService.update(latId, result, tryResultData, user.getUserId());
+		LearningActivityResult lar = learningActivityResultLocalService.update(latId, result, tryResultData, user.getUserId());
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+				latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		
+		return lar;
 	}
 	@JSONWebService
 	public LearningActivityResult update(long latId, String tryResultData) throws PortalException, SystemException
 	{
 		User user=this.getUser();
-		return learningActivityResultLocalService.update(latId, tryResultData, user.getUserId());
+		LearningActivityResult lar = learningActivityResultLocalService.update(latId, tryResultData, user.getUserId());
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+				latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		
+		return lar;
 	}
 }

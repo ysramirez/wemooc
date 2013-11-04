@@ -106,7 +106,7 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 			boolean deleteVideo=ParamUtil.getBoolean(uploadRequest, "deleteAdditionalFile",false);
 			String team = ParamUtil.getString(uploadRequest, "team");
 			long teamId = 0;
-			if(!team.equalsIgnoreCase("0")){
+			if(!team.equalsIgnoreCase("0")&&!team.isEmpty()){
 				teamId = Long.parseLong(team);
 			}
 			if((deleteVideo)||

@@ -19,6 +19,8 @@ import java.util.Date;
 import java.util.List;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.Module;
@@ -46,6 +48,8 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
@@ -172,6 +176,11 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			previusModule.setOrdern(priority);
 			modulePersistence.update(theModule, true);
 			modulePersistence.update(previusModule, true);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
+					moduleId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
 		}
 		
 	}
@@ -187,6 +196,11 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			nextModule.setOrdern(priority);
 			modulePersistence.update(theModule, true);
 			modulePersistence.update(nextModule, true);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
+					moduleId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
 		}
 		
 	}
@@ -210,7 +224,15 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			// TODO Auto-generated catch block
 			throw new SystemException(e);
 		}
-	    return ModuleUtil.update(fileobj, false);
+
+	    Module module = ModuleUtil.update(fileobj, false);
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
+				validmodule.getModuleId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+	    
+	    return module;
 	}
 	
 	public Module addModule(Long companyId, Long courseId, Long userId, 
@@ -235,7 +257,15 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			// TODO Auto-generated catch block
 			throw new SystemException(e);
 		}
-	    return ModuleUtil.update(fileobj, false);
+		
+	    Module module = ModuleUtil.update(fileobj, false);
+	    
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
+				fileobj.getModuleId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+		
+		return module;
 	}
 
 	public void remove(Module fileobj) throws SystemException {
@@ -250,6 +280,11 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			throw new SystemException(e);
 		}
 		modulePersistence.remove(fileobj);
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
+				fileobj.getModuleId(), serviceContext.getUserId(), AuditConstants.DELETE, null);
 	}
 
 	@Override
@@ -267,14 +302,28 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			// TODO Auto-generated catch block
 			throw new SystemException(e);
 		}
-		return super.updateModule(module);
+		module = super.updateModule(module);
+		
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
+				module.getModuleId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		
+		return module;
 	}
 
 	@Override
 	public Module updateModule(Module module, boolean merge)
 			throws SystemException {
 		// TODO Auto-generated method stub
-		return super.updateModule(module, merge);
+		module = super.updateModule(module, merge);
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
+				module.getModuleId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		
+		return module;
 	}
 	public boolean isUserPassed(long moduleId,long userId) throws SystemException
 	{

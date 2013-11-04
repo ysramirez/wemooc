@@ -12,4 +12,6 @@ public class AuditConstants {
 	public static final String CORRECT="CORRECT";
 	public static final String ADD="ADD";
 	public static final String CLOSE="CLOSE";
+	public static final String REGISTER="REGISTER";
+	public static final String UNREGISTER="UNREGISTER";
 }

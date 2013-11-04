@@ -14,6 +14,9 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.base.LearningActivityServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -23,6 +26,7 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 
 /**
  * The implementation of the learning activity remote service.
@@ -63,6 +67,11 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 				ActionKeys.DELETE))
 		{
 			learningActivityLocalService.deleteLearningactivity(lernact);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.DELETE, null);
+			
 		}
 	}
 	public void deleteLearningactivity (long actId) throws SystemException,
@@ -72,6 +81,10 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 				ActionKeys.DELETE))
 		{
 			learningActivityLocalService.deleteLearningactivity(lernact);
+
+			//auditing
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.DELETE, null);
 		}
 	}
 	@JSONWebService
@@ -95,7 +108,12 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			PortalException {
 		if( getPermissionChecker().hasPermission(serviceContext.getScopeGroupId(),  LearningActivity.class.getName(),0,ActionKeys.ADD_ENTRY))
 		{
-			return learningActivityLocalService.addLearningActivity(title, description, createDate, startDate, endDate, typeId, tries, passpuntuation,moduleId, "",  null, null, serviceContext);
+			LearningActivity lernact = learningActivityLocalService.addLearningActivity(title, description, createDate, startDate, endDate, typeId, tries, passpuntuation,moduleId, "",  null, null, serviceContext);
+
+			//auditing
+			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
+			
+			return lernact;
 		}
 		else
 		{
@@ -108,7 +126,11 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 		if( getPermissionChecker().hasPermission(lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(),
 				ActionKeys.UPDATE))
 		{
-		return learningActivityLocalService.modLearningActivity(lernact, serviceContext);
+			lernact =  learningActivityLocalService.modLearningActivity(lernact, serviceContext);
+			//auditing
+			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		
+			return lernact;
 		}
 		else
 		{
@@ -134,7 +156,12 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 		if( getPermissionChecker().hasPermission(serviceContext.getScopeGroupId(), LearningActivity.class.getName(), actId,
 				ActionKeys.UPDATE))
 		{
-	  return learningActivityLocalService.modLearningActivity(actId, title, description, createDate, startDate, endDate, typeId, tries,passpuntuation, moduleId,  "",  null, null, serviceContext);
+			LearningActivity lernact = learningActivityLocalService.modLearningActivity(actId, title, description, createDate, startDate, endDate, typeId, tries,passpuntuation, moduleId,  "",  null, null, serviceContext);
+			
+			//auditing
+			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		
+			return lernact;
 		}
 		else
 		{

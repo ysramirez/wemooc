@@ -12,7 +12,10 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -119,6 +122,11 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 				msr.setStatusId(MembershipRequestConstants.STATUS_APPROVED);
 				msr.setReplyDate(new Date());
 				MembershipRequestLocalServiceUtil.updateMembershipRequest(msr);
+				
+				//auditing
+				ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+				AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
+						course.getCourseId(), themeDisplay.getUserId(), AuditConstants.REGISTER, null);
 	    	}
 		} catch (NumberFormatException e) {
 			if(log.isDebugEnabled()){

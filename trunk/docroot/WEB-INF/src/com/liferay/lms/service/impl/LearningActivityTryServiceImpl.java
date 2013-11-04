@@ -14,12 +14,16 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.base.LearningActivityTryServiceBaseImpl;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 
 /**
  * The implementation of the learning activity try remote service.
@@ -55,6 +59,12 @@ public class LearningActivityTryServiceImpl
 		java.util.Date today=new java.util.Date(System.currentTimeMillis());
 		lat.setStartDate(today);
 		learningActivityTryPersistence.update(lat, true);
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
+				actId, serviceContext.getUserId(), AuditConstants.ADD, null);
+		
 		return lat;
 	}
 }
