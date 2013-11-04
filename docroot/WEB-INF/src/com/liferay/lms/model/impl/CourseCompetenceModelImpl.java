@@ -81,9 +81,10 @@ public class CourseCompetenceModelImpl extends BaseModelImpl<CourseCompetence>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.CourseCompetence"),
 			true);
-	public static long CONDITION_COLUMN_BITMASK = 1L;
-	public static long COURSEID_COLUMN_BITMASK = 2L;
-	public static long UUID_COLUMN_BITMASK = 4L;
+	public static long COMPETENCEID_COLUMN_BITMASK = 1L;
+	public static long CONDITION_COLUMN_BITMASK = 2L;
+	public static long COURSEID_COLUMN_BITMASK = 4L;
+	public static long UUID_COLUMN_BITMASK = 8L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -258,7 +259,19 @@ public class CourseCompetenceModelImpl extends BaseModelImpl<CourseCompetence>
 	}
 
 	public void setCompetenceId(long competenceId) {
+		_columnBitmask |= COMPETENCEID_COLUMN_BITMASK;
+
+		if (!_setOriginalCompetenceId) {
+			_setOriginalCompetenceId = true;
+
+			_originalCompetenceId = _competenceId;
+		}
+
 		_competenceId = competenceId;
+	}
+
+	public long getOriginalCompetenceId() {
+		return _originalCompetenceId;
 	}
 
 	public boolean getCondition() {
@@ -382,6 +395,10 @@ public class CourseCompetenceModelImpl extends BaseModelImpl<CourseCompetence>
 
 		courseCompetenceModelImpl._setOriginalCourseId = false;
 
+		courseCompetenceModelImpl._originalCompetenceId = courseCompetenceModelImpl._competenceId;
+
+		courseCompetenceModelImpl._setOriginalCompetenceId = false;
+
 		courseCompetenceModelImpl._originalCondition = courseCompetenceModelImpl._condition;
 
 		courseCompetenceModelImpl._setOriginalCondition = false;
@@ -475,6 +492,8 @@ public class CourseCompetenceModelImpl extends BaseModelImpl<CourseCompetence>
 	private long _originalCourseId;
 	private boolean _setOriginalCourseId;
 	private long _competenceId;
+	private long _originalCompetenceId;
+	private boolean _setOriginalCompetenceId;
 	private boolean _condition;
 	private boolean _originalCondition;
 	private boolean _setOriginalCondition;

@@ -79,6 +79,12 @@ public class CompetenceServiceUtil {
 		return getService().getCountCompetencesOfGroup(groupId);
 	}
 
+	public static java.util.HashMap<java.lang.Long, com.liferay.lms.model.Competence> getCompetencesOfGroups(
+		long[] groups)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getCompetencesOfGroups(groups);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

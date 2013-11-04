@@ -77,4 +77,9 @@ public interface CompetenceService extends BaseService, InvokableService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public int getCountCompetencesOfGroup(long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.HashMap<java.lang.Long, com.liferay.lms.model.Competence> getCompetencesOfGroups(
+		long[] groups)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

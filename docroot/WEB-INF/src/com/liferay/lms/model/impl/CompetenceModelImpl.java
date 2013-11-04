@@ -98,8 +98,9 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.column.bitmask.enabled.com.liferay.lms.model.Competence"),
 			true);
-	public static long GROUPID_COLUMN_BITMASK = 1L;
-	public static long UUID_COLUMN_BITMASK = 2L;
+	public static long COMPANYID_COLUMN_BITMASK = 1L;
+	public static long GROUPID_COLUMN_BITMASK = 2L;
+	public static long UUID_COLUMN_BITMASK = 4L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -301,7 +302,19 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 	}
 
 	public void setCompanyId(long companyId) {
+		_columnBitmask |= COMPANYID_COLUMN_BITMASK;
+
+		if (!_setOriginalCompanyId) {
+			_setOriginalCompanyId = true;
+
+			_originalCompanyId = _companyId;
+		}
+
 		_companyId = companyId;
+	}
+
+	public long getOriginalCompanyId() {
+		return _originalCompanyId;
 	}
 
 	public long getGroupId() {
@@ -755,6 +768,10 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 
 		competenceModelImpl._originalUuid = competenceModelImpl._uuid;
 
+		competenceModelImpl._originalCompanyId = competenceModelImpl._companyId;
+
+		competenceModelImpl._setOriginalCompanyId = false;
+
 		competenceModelImpl._originalGroupId = competenceModelImpl._groupId;
 
 		competenceModelImpl._setOriginalGroupId = false;
@@ -918,6 +935,8 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 	private String _originalUuid;
 	private long _competenceId;
 	private long _companyId;
+	private long _originalCompanyId;
+	private boolean _setOriginalCompanyId;
 	private long _groupId;
 	private long _originalGroupId;
 	private boolean _setOriginalGroupId;

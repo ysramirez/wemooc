@@ -246,4 +246,7 @@ public interface UserCompetenceLocalService extends BaseLocalService,
 	public java.lang.Object invokeMethod(java.lang.String name,
 		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
 		throws java.lang.Throwable;
+
+	public com.liferay.lms.model.UserCompetence findByUserIdCompetenceId(
+		long userId, long competenceId);
 }

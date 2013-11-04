@@ -1883,6 +1883,40 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<portlet>
+		<portlet-name>generalstats</portlet-name>
+		<display-name>General Stats</display-name>
+		<portlet-class>com.liferay.lms.GeneralStats</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/generalstats/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>General Stats</title>
+			<short-title>General Stats</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		      <supported-public-render-parameter>categoryId</supported-public-render-parameter>
+               <supported-public-render-parameter>categoryIds</supported-public-render-parameter>
+  
+	</portlet>
 	<event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
     </event-definition>

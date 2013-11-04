@@ -264,9 +264,21 @@ public interface CompetenceLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.lms.model.Competence updateCompetence(
+		com.liferay.lms.model.Competence competence,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.lms.model.Competence modCompetence(
 		com.liferay.lms.model.Competence competence,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	public long countAll()
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.util.List findByCompanyId(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

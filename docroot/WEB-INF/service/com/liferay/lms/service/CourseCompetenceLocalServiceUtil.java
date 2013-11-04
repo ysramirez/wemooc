@@ -273,6 +273,20 @@ public class CourseCompetenceLocalServiceUtil {
 		return getService().invokeMethod(name, parameterTypes, arguments);
 	}
 
+	public static java.util.List<com.liferay.lms.model.CourseCompetence> findBycourseId(
+		long courseId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findBycourseId(courseId, condition);
+	}
+
+	public static com.liferay.lms.model.CourseCompetence fetchByCourseCompetenceCondition(
+		long courseId, long competenceId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .fetchByCourseCompetenceCondition(courseId, competenceId,
+			condition);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

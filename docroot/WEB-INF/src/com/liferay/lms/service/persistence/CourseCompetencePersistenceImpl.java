@@ -121,6 +121,27 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 			CourseCompetenceModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countBycourseId",
 			new String[] { Long.class.getName(), Boolean.class.getName() });
+	public static final FinderPath FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION =
+		new FinderPath(CourseCompetenceModelImpl.ENTITY_CACHE_ENABLED,
+			CourseCompetenceModelImpl.FINDER_CACHE_ENABLED,
+			CourseCompetenceImpl.class, FINDER_CLASS_NAME_ENTITY,
+			"fetchByCourseCompetenceCondition",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName()
+			},
+			CourseCompetenceModelImpl.COURSEID_COLUMN_BITMASK |
+			CourseCompetenceModelImpl.COMPETENCEID_COLUMN_BITMASK |
+			CourseCompetenceModelImpl.CONDITION_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_COURSECOMPETENCECONDITION =
+		new FinderPath(CourseCompetenceModelImpl.ENTITY_CACHE_ENABLED,
+			CourseCompetenceModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION,
+			"countByCourseCompetenceCondition",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				Boolean.class.getName()
+			});
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_ALL = new FinderPath(CourseCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			CourseCompetenceModelImpl.FINDER_CACHE_ENABLED,
 			CourseCompetenceImpl.class, FINDER_CLASS_NAME_LIST_WITH_PAGINATION,
@@ -142,6 +163,13 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 		EntityCacheUtil.putResult(CourseCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			CourseCompetenceImpl.class, courseCompetence.getPrimaryKey(),
 			courseCompetence);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+			new Object[] {
+				Long.valueOf(courseCompetence.getCourseId()),
+				Long.valueOf(courseCompetence.getCompetenceId()),
+				Boolean.valueOf(courseCompetence.getCondition())
+			}, courseCompetence);
 
 		courseCompetence.resetOriginalValues();
 	}
@@ -199,6 +227,8 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITH_PAGINATION);
 		FinderCacheUtil.clearCache(FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION);
+
+		clearUniqueFindersCache(courseCompetence);
 	}
 
 	@Override
@@ -209,7 +239,18 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 		for (CourseCompetence courseCompetence : courseCompetences) {
 			EntityCacheUtil.removeResult(CourseCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 				CourseCompetenceImpl.class, courseCompetence.getPrimaryKey());
+
+			clearUniqueFindersCache(courseCompetence);
 		}
+	}
+
+	protected void clearUniqueFindersCache(CourseCompetence courseCompetence) {
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+			new Object[] {
+				Long.valueOf(courseCompetence.getCourseId()),
+				Long.valueOf(courseCompetence.getCompetenceId()),
+				Boolean.valueOf(courseCompetence.getCondition())
+			});
 	}
 
 	/**
@@ -390,6 +431,38 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 		EntityCacheUtil.putResult(CourseCompetenceModelImpl.ENTITY_CACHE_ENABLED,
 			CourseCompetenceImpl.class, courseCompetence.getPrimaryKey(),
 			courseCompetence);
+
+		if (isNew) {
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+				new Object[] {
+					Long.valueOf(courseCompetence.getCourseId()),
+					Long.valueOf(courseCompetence.getCompetenceId()),
+					Boolean.valueOf(courseCompetence.getCondition())
+				}, courseCompetence);
+		}
+		else {
+			if ((courseCompetenceModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(courseCompetenceModelImpl.getOriginalCourseId()),
+						Long.valueOf(courseCompetenceModelImpl.getOriginalCompetenceId()),
+						Boolean.valueOf(courseCompetenceModelImpl.getOriginalCondition())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_COURSECOMPETENCECONDITION,
+					args);
+
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+					args);
+
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+					new Object[] {
+						Long.valueOf(courseCompetence.getCourseId()),
+						Long.valueOf(courseCompetence.getCompetenceId()),
+						Boolean.valueOf(courseCompetence.getCondition())
+					}, courseCompetence);
+			}
+		}
 
 		return courseCompetence;
 	}
@@ -1318,6 +1391,170 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 	}
 
 	/**
+	 * Returns the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; or throws a {@link com.liferay.lms.NoSuchCourseCompetenceException} if it could not be found.
+	 *
+	 * @param courseId the course ID
+	 * @param competenceId the competence ID
+	 * @param condition the condition
+	 * @return the matching course competence
+	 * @throws com.liferay.lms.NoSuchCourseCompetenceException if a matching course competence could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public CourseCompetence findByCourseCompetenceCondition(long courseId,
+		long competenceId, boolean condition)
+		throws NoSuchCourseCompetenceException, SystemException {
+		CourseCompetence courseCompetence = fetchByCourseCompetenceCondition(courseId,
+				competenceId, condition);
+
+		if (courseCompetence == null) {
+			StringBundler msg = new StringBundler(8);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("courseId=");
+			msg.append(courseId);
+
+			msg.append(", competenceId=");
+			msg.append(competenceId);
+
+			msg.append(", condition=");
+			msg.append(condition);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchCourseCompetenceException(msg.toString());
+		}
+
+		return courseCompetence;
+	}
+
+	/**
+	 * Returns the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param courseId the course ID
+	 * @param competenceId the competence ID
+	 * @param condition the condition
+	 * @return the matching course competence, or <code>null</code> if a matching course competence could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public CourseCompetence fetchByCourseCompetenceCondition(long courseId,
+		long competenceId, boolean condition) throws SystemException {
+		return fetchByCourseCompetenceCondition(courseId, competenceId,
+			condition, true);
+	}
+
+	/**
+	 * Returns the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param courseId the course ID
+	 * @param competenceId the competence ID
+	 * @param condition the condition
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching course competence, or <code>null</code> if a matching course competence could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public CourseCompetence fetchByCourseCompetenceCondition(long courseId,
+		long competenceId, boolean condition, boolean retrieveFromCache)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { courseId, competenceId, condition };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+					finderArgs, this);
+		}
+
+		if (result instanceof CourseCompetence) {
+			CourseCompetence courseCompetence = (CourseCompetence)result;
+
+			if ((courseId != courseCompetence.getCourseId()) ||
+					(competenceId != courseCompetence.getCompetenceId()) ||
+					(condition != courseCompetence.getCondition())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_SELECT_COURSECOMPETENCE_WHERE);
+
+			query.append(_FINDER_COLUMN_COURSECOMPETENCECONDITION_COURSEID_2);
+
+			query.append(_FINDER_COLUMN_COURSECOMPETENCECONDITION_COMPETENCEID_2);
+
+			query.append(_FINDER_COLUMN_COURSECOMPETENCECONDITION_CONDITION_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(courseId);
+
+				qPos.add(competenceId);
+
+				qPos.add(condition);
+
+				List<CourseCompetence> list = q.list();
+
+				result = list;
+
+				CourseCompetence courseCompetence = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+						finderArgs, list);
+				}
+				else {
+					courseCompetence = list.get(0);
+
+					cacheResult(courseCompetence);
+
+					if ((courseCompetence.getCourseId() != courseId) ||
+							(courseCompetence.getCompetenceId() != competenceId) ||
+							(courseCompetence.getCondition() != condition)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+							finderArgs, courseCompetence);
+					}
+				}
+
+				return courseCompetence;
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_COURSECOMPETENCECONDITION,
+						finderArgs);
+				}
+
+				closeSession(session);
+			}
+		}
+		else {
+			if (result instanceof List<?>) {
+				return null;
+			}
+			else {
+				return (CourseCompetence)result;
+			}
+		}
+	}
+
+	/**
 	 * Returns all the course competences.
 	 *
 	 * @return the course competences
@@ -1460,6 +1697,24 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 	}
 
 	/**
+	 * Removes the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; from the database.
+	 *
+	 * @param courseId the course ID
+	 * @param competenceId the competence ID
+	 * @param condition the condition
+	 * @return the course competence that was removed
+	 * @throws SystemException if a system exception occurred
+	 */
+	public CourseCompetence removeByCourseCompetenceCondition(long courseId,
+		long competenceId, boolean condition)
+		throws NoSuchCourseCompetenceException, SystemException {
+		CourseCompetence courseCompetence = findByCourseCompetenceCondition(courseId,
+				competenceId, condition);
+
+		return remove(courseCompetence);
+	}
+
+	/**
 	 * Removes all the course competences from the database.
 	 *
 	 * @throws SystemException if a system exception occurred
@@ -1595,6 +1850,70 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 	}
 
 	/**
+	 * Returns the number of course competences where courseId = &#63; and competenceId = &#63; and condition = &#63;.
+	 *
+	 * @param courseId the course ID
+	 * @param competenceId the competence ID
+	 * @param condition the condition
+	 * @return the number of matching course competences
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByCourseCompetenceCondition(long courseId,
+		long competenceId, boolean condition) throws SystemException {
+		Object[] finderArgs = new Object[] { courseId, competenceId, condition };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_COURSECOMPETENCECONDITION,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_COUNT_COURSECOMPETENCE_WHERE);
+
+			query.append(_FINDER_COLUMN_COURSECOMPETENCECONDITION_COURSEID_2);
+
+			query.append(_FINDER_COLUMN_COURSECOMPETENCECONDITION_COMPETENCEID_2);
+
+			query.append(_FINDER_COLUMN_COURSECOMPETENCECONDITION_CONDITION_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(courseId);
+
+				qPos.add(competenceId);
+
+				qPos.add(condition);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_COURSECOMPETENCECONDITION,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
 	 * Returns the number of course competences.
 	 *
 	 * @return the number of course competences
@@ -1714,6 +2033,12 @@ public class CourseCompetencePersistenceImpl extends BasePersistenceImpl<CourseC
 	private static final String _FINDER_COLUMN_UUID_UUID_3 = "(courseCompetence.uuid IS NULL OR courseCompetence.uuid = ?)";
 	private static final String _FINDER_COLUMN_COURSEID_COURSEID_2 = "courseCompetence.courseId = ? AND ";
 	private static final String _FINDER_COLUMN_COURSEID_CONDITION_2 = "courseCompetence.condition = ?";
+	private static final String _FINDER_COLUMN_COURSECOMPETENCECONDITION_COURSEID_2 =
+		"courseCompetence.courseId = ? AND ";
+	private static final String _FINDER_COLUMN_COURSECOMPETENCECONDITION_COMPETENCEID_2 =
+		"courseCompetence.competenceId = ? AND ";
+	private static final String _FINDER_COLUMN_COURSECOMPETENCECONDITION_CONDITION_2 =
+		"courseCompetence.condition = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "courseCompetence.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No CourseCompetence exists with the primary key ";
 	private static final String _NO_SUCH_ENTITY_WITH_KEY = "No CourseCompetence exists with the key {";

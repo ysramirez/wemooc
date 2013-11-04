@@ -246,4 +246,13 @@ public interface CourseCompetenceLocalService extends BaseLocalService,
 	public java.lang.Object invokeMethod(java.lang.String name,
 		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
 		throws java.lang.Throwable;
+
+	public java.util.List<com.liferay.lms.model.CourseCompetence> findBycourseId(
+		long courseId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public com.liferay.lms.model.CourseCompetence fetchByCourseCompetenceCondition(
+		long courseId, long competenceId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

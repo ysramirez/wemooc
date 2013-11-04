@@ -4,7 +4,8 @@ Liferay.Service.registerClass(
 	Liferay.Service.Lms, "Competence",
 	{
 		getCompetencesOfGroup: true,
-		getCountCompetencesOfGroup: true
+		getCountCompetencesOfGroup: true,
+		getCompetencesOfGroups: true
 	}
 );
 

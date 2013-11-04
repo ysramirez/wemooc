@@ -270,6 +270,12 @@ public class UserCompetenceLocalServiceWrapper
 			arguments);
 	}
 
+	public com.liferay.lms.model.UserCompetence findByUserIdCompetenceId(
+		long userId, long competenceId) {
+		return _userCompetenceLocalService.findByUserIdCompetenceId(userId,
+			competenceId);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

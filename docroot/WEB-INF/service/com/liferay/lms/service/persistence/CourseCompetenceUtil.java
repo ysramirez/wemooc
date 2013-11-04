@@ -479,6 +479,61 @@ public class CourseCompetenceUtil {
 	}
 
 	/**
+	* Returns the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; or throws a {@link com.liferay.lms.NoSuchCourseCompetenceException} if it could not be found.
+	*
+	* @param courseId the course ID
+	* @param competenceId the competence ID
+	* @param condition the condition
+	* @return the matching course competence
+	* @throws com.liferay.lms.NoSuchCourseCompetenceException if a matching course competence could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.CourseCompetence findByCourseCompetenceCondition(
+		long courseId, long competenceId, boolean condition)
+		throws com.liferay.lms.NoSuchCourseCompetenceException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findByCourseCompetenceCondition(courseId, competenceId,
+			condition);
+	}
+
+	/**
+	* Returns the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param courseId the course ID
+	* @param competenceId the competence ID
+	* @param condition the condition
+	* @return the matching course competence, or <code>null</code> if a matching course competence could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.CourseCompetence fetchByCourseCompetenceCondition(
+		long courseId, long competenceId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .fetchByCourseCompetenceCondition(courseId, competenceId,
+			condition);
+	}
+
+	/**
+	* Returns the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param courseId the course ID
+	* @param competenceId the competence ID
+	* @param condition the condition
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching course competence, or <code>null</code> if a matching course competence could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.CourseCompetence fetchByCourseCompetenceCondition(
+		long courseId, long competenceId, boolean condition,
+		boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .fetchByCourseCompetenceCondition(courseId, competenceId,
+			condition, retrieveFromCache);
+	}
+
+	/**
 	* Returns all the course competences.
 	*
 	* @return the course competences
@@ -551,6 +606,24 @@ public class CourseCompetenceUtil {
 	}
 
 	/**
+	* Removes the course competence where courseId = &#63; and competenceId = &#63; and condition = &#63; from the database.
+	*
+	* @param courseId the course ID
+	* @param competenceId the competence ID
+	* @param condition the condition
+	* @return the course competence that was removed
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.CourseCompetence removeByCourseCompetenceCondition(
+		long courseId, long competenceId, boolean condition)
+		throws com.liferay.lms.NoSuchCourseCompetenceException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .removeByCourseCompetenceCondition(courseId, competenceId,
+			condition);
+	}
+
+	/**
 	* Removes all the course competences from the database.
 	*
 	* @throws SystemException if a system exception occurred
@@ -583,6 +656,23 @@ public class CourseCompetenceUtil {
 	public static int countBycourseId(long courseId, boolean condition)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence().countBycourseId(courseId, condition);
+	}
+
+	/**
+	* Returns the number of course competences where courseId = &#63; and competenceId = &#63; and condition = &#63;.
+	*
+	* @param courseId the course ID
+	* @param competenceId the competence ID
+	* @param condition the condition
+	* @return the number of matching course competences
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByCourseCompetenceCondition(long courseId,
+		long competenceId, boolean condition)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .countByCourseCompetenceCondition(courseId, competenceId,
+			condition);
 	}
 
 	/**

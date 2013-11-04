@@ -290,12 +290,31 @@ public class CompetenceLocalServiceWrapper implements CompetenceLocalService,
 			serviceContext);
 	}
 
+	public com.liferay.lms.model.Competence updateCompetence(
+		com.liferay.lms.model.Competence competence,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _competenceLocalService.updateCompetence(competence,
+			serviceContext);
+	}
+
 	public com.liferay.lms.model.Competence modCompetence(
 		com.liferay.lms.model.Competence competence,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _competenceLocalService.modCompetence(competence, serviceContext);
+	}
+
+	public long countAll()
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _competenceLocalService.countAll();
+	}
+
+	public java.util.List findByCompanyId(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _competenceLocalService.findByCompanyId(companyId);
 	}
 
 	/**
