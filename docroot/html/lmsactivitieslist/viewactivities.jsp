@@ -48,6 +48,7 @@ if(actId!=0) {
 	currentLeaningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 }
 
+Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(themeDisplay.getScopeGroupId());
 LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 
 java.util.List<LearningActivity> activities = null;
@@ -245,8 +246,8 @@ Liferay.provide(
 				if (actionEditing
 					&& (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.UPDATE)
 						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.DELETE) 
-						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.PERMISSIONS)
-						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"SOFT_PERMISSIONS"))) {
+						|| permissionChecker.hasPermission(coursetmp.getGroupId(),Course.class.getName(),coursetmp.getCourseId(),ActionKeys.PERMISSIONS)
+						|| permissionChecker.hasPermission(coursetmp.getGroupId(),Course.class.getName(),coursetmp.getCourseId(),"SOFT_PERMISSIONS"))) {
 				%>
 				<div class="iconsedit"><%@ include file="/html/lmsactivitieslist/admin_actions.jspf" %></div>
 				

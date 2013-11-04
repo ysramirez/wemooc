@@ -1,4 +1,7 @@
 
+<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.GetterUtil"%>
 <%@page import="com.liferay.portal.util.PortalUtil"%>
@@ -27,6 +30,9 @@
 <%
 
 LearningActivity myActivity = activity;
+
+Module module = ModuleLocalServiceUtil.getModule(myActivity.getModuleId());
+Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(module.getGroupId());
 
 String name = LearningActivity.class.getName();
 String primKey = String.valueOf(myActivity.getActId());
@@ -217,8 +223,7 @@ ActionKeys.UPDATE) %>">
 
 </c:if>
 		<c:choose>
-			<c:when test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
-ActionKeys.PERMISSIONS) %>">
+			<c:when test="<%= permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),ActionKeys.PERMISSIONS) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=LearningActivity.class.getName() %>"
@@ -230,8 +235,7 @@ ActionKeys.PERMISSIONS) %>">
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
 			</c:when>
 			<c:otherwise>
-				<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(),myActivity.getActId(),
-			\"SOFT_PERMISSIONS\") %>">
+				<c:if test="<%= permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),\"SOFT_PERMISSIONS\") %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=LearningActivity.class.getName() %>"
@@ -272,12 +276,12 @@ boolean showChangeVisibility = GetterUtil.getBoolean(PortletProps.get("learninga
 			}
 			
 		String visibiltyURLJavascript=
-				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+ 
-						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+ 
+				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+
 						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
 						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
 						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
-						 "          activitiesListPortlet.hide(); "+	
+						 "          activitiesListPortlet.hide(); "+
 						 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
 						 "		      dataType : 'html', "+
 						 "            on: {  "+
@@ -286,9 +290,9 @@ boolean showChangeVisibility = GetterUtil.getBoolean(PortletProps.get("learninga
 		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
 		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
-		 				 "			             }  "+	
+		 				 "			             }  "+
 		 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
-						 "                       portletBody.plug(A.Plugin.ParseContent); "+	
+						 "                       portletBody.plug(A.Plugin.ParseContent); "+
 						 "                       portletBody.setContent(this.get('responseData')); "+
 						 "                       activitiesListPortlet.show(); "+	
 						 "          			 placeHolder.remove(true); "+	
