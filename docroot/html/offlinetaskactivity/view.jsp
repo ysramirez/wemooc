@@ -63,14 +63,7 @@
 				<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 										
 				<% if(isTeacher){ %>
-				
-				<liferay-portlet:resourceURL var="exportURL" >
-					<portlet:param name="action" value="export"/>
-					<portlet:param name="resId" value="<%=String.valueOf(activity.getActId()) %>"/>
-				</liferay-portlet:resourceURL>
-				<liferay-ui:icon image="export" label="<%= true %>" message="offlinetaskactivity.csv.export" method="get" url="<%=exportURL%>" />
-	
-							
+									
 				<portlet:renderURL var="viewUrlPopImportGrades" windowState="<%= LiferayWindowState.POP_UP.toString() %>">   
 					<portlet:param name="actId" value="<%=String.valueOf(activity.getActId()) %>" />      
 		            <portlet:param name="jspPage" value="/html/offlinetaskactivity/popups/importGrades.jsp" />           
@@ -194,7 +187,24 @@
 				    //-->
 				</script>
 
-				<liferay-ui:icon image="add" cssClass="newitem2" label="<%= true %>" message="offlinetaskactivity.import.grades" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'/>
+				<div class="container-toolbar" >
+					
+					<liferay-ui:icon-menu cssClass='bt_importexport' direction="down" extended="<%= false %>" message="export-import" showWhenSingleIcon="<%= true %>">
+					
+						<div>
+							<liferay-portlet:resourceURL var="exportURL" >
+								<portlet:param name="action" value="export"/>
+								<portlet:param name="resId" value="<%=String.valueOf(activity.getActId()) %>"/>
+							</liferay-portlet:resourceURL>
+							<liferay-ui:icon image="export" label="<%= true %>" message="offlinetaskactivity.csv.export" method="get" url="<%=exportURL%>" />
+						</div>
+						<div>
+							<liferay-ui:icon image="add" label="<%= true %>" message="offlinetaskactivity.import.grades" url='<%="javascript:"+renderResponse.getNamespace() + "showPopupImportGrades();" %>'/>
+						</div>
+					</liferay-ui:icon-menu>
+
+				</div>
+				
 				<% } %>
 				<h3><liferay-ui:message key="offlinetaskactivity.description" /> </h3>
 				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
