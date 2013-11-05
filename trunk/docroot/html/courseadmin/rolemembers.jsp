@@ -129,26 +129,22 @@ else
 
 <iframe name="<portlet:namespace />import_frame" src="" id="<portlet:namespace />import_frame" style="display:none;" onload="<portlet:namespace />doImportUsers();" ></iframe>
 
+<div class="container-toolbar" >
+	<liferay-ui:icon-menu align="left" cssClass='lfr-toolbar-button add-button' direction="down" extended="<%= false %>"  message="add" showWhenSingleIcon="<%= false %>">
+		<div class="bt_newuser">
+			<liferay-ui:icon label="<%= true %>" message="add" url='<%= adduserURL %>'/>
+		</div>
+	</liferay-ui:icon-menu>
 
-<liferay-ui:icon-menu align="left" cssClass='lfr-toolbar-button add-button' direction="down" extended="<%= false %>"  message="add" showWhenSingleIcon="<%= false %>">
-	<liferay-ui:icon
-	image="add" cssClass="newitem2"
-	label="<%= true %>"
-	message="add"
-	url='<%= adduserURL %>' 
-	/>
-</liferay-ui:icon-menu>
-
-<liferay-ui:icon-menu align="right" cssClass='bt_importexport' direction="down" extended="<%= false %>"  message="export-import" showWhenSingleIcon="<%= false %>">
-	<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
-	<liferay-ui:icon
-		image="add" cssClass="newitem2"
-		label="<%= true %>"
-		message="courseadmin.importuserrole"
-		url="#"
-		onClick="<%=renderResponse.getNamespace()+\"showPopupImportUsers();\"%>"
-	/>
-</liferay-ui:icon-menu>
+	<liferay-ui:icon-menu align="right" cssClass='bt_importexport' direction="down" extended="<%= false %>"  message="export-import" showWhenSingleIcon="<%= false %>">
+		<div>
+			<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
+		</div>
+		<div>
+			<liferay-ui:icon image="add" label="<%= true %>" message="courseadmin.importuserrole" url="#" onClick="<%=renderResponse.getNamespace()+\"showPopupImportUsers();\"%>"/>
+		</div>
+	</liferay-ui:icon-menu>
+</div>
 <%
 
 	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
