@@ -124,13 +124,13 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 					rootElement =document.getRootElement();
 				}
 				
+				Element video=rootElement.element("video");
+				if(video!=null)
+				{
+					video.detach();
+					rootElement.remove(video);
+				}
 				if(!StringPool.BLANK.equals(youtubecode.trim())){
-					Element video=rootElement.element("video");
-					if(video!=null)
-					{
-						video.detach();
-						rootElement.remove(video);
-					}
 					video = SAXReaderUtil.createElement("video");
 					video.setText(youtubecode);		
 					rootElement.add(video);
