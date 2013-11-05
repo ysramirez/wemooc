@@ -276,41 +276,36 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 			</c:when>
 			<c:otherwise>
 				<c:if test="<%= permissionChecker.hasPermission(coursetmp.getGroupId(), Course.class.getName(),coursetmp.getCourseId(),\"SOFT_PERMISSIONS\") %>">
-				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
-				<liferay-security:permissionsURL
-					windowState="<%=LiferayWindowState.EXCLUSIVE.toString() %>"
-					modelResource="<%=Module.class.getName() %>"
-					modelResourceDescription="<%= theModule.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW %>"
-					resourcePrimKey="<%= String.valueOf(primKey) %>"
-					redirect="<%=redirectURL %>"
-					var="permissionsURL"
-				/>
-				<script type="text/javascript">
-					function showPopupUsers()
-				    {
-						AUI().use('aui-dialog', function(A){
-							new A.Dialog({
-								id:'showPopupSoftPermissions',
-					            title: '<liferay-ui:message key="permissions" />',
-					            modal: true,
-					            centered: true,
-					            resizable: true,
-					            width: 650,
-					            height: 650,
-					            destroyOnClose: true,
-					            after: {   
-						          	close: function(event){ 
-					            	}
-					            }
-					        }).plug(A.Plugin.IO, {
-					            uri: '<%=permissionsURL %>',
-					            parseContent: true
-					        }).render().show();   
-						}); 
+					<liferay-security:permissionsURL
+						windowState="<%=LiferayWindowState.POP_UP.toString() %>"
+						modelResource="<%=Module.class.getName() %>"
+						modelResourceDescription="<%= theModule.getTitle(themeDisplay.getLocale())+\"----\"+ActionKeys.VIEW %>"
+						resourcePrimKey="<%= String.valueOf(primKey) %>"
+						var="permissionsURL"
+					/>
 	
-				    }
-				</script>
-				<liferay-ui:icon image="permissions" message="permissionsbasics" url="javascript:showPopupUsers()" />	
+					<script type="text/javascript">
+						function showPopupUsers()
+					    {
+							permissionPopUp = Liferay.Util.openWindow(
+									{
+										dialog: {
+											centered: true,
+											cssClass: 'portlet-asset-categories-admin-dialog permissions-change',
+											width: 700
+										},
+										id: '<portlet:namespace />Permissions',
+										title: '<liferay-ui:message key="permissions" />',
+										uri: '<%= permissionsURL %>'
+									}
+								);
+	
+							permissionPopUp.show();
+							permissionPopUp.centered();
+		
+					    }
+					</script>
+					<liferay-ui:icon image="permissions" message="permissionsbasics" url="javascript:showPopupUsers()" />	
 				</c:if>
 			</c:otherwise>
 			
