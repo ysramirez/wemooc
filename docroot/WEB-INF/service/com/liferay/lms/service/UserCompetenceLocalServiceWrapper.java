@@ -276,6 +276,20 @@ public class UserCompetenceLocalServiceWrapper
 			competenceId);
 	}
 
+	public java.util.List<com.liferay.lms.model.UserCompetence> findBuUserId(
+		long userId) {
+		return _userCompetenceLocalService.findBuUserId(userId);
+	}
+
+	public java.util.List<com.liferay.lms.model.UserCompetence> findBuUserId(
+		long userId, int start, int end) {
+		return _userCompetenceLocalService.findBuUserId(userId, start, end);
+	}
+
+	public int countByUserId(long userId) {
+		return _userCompetenceLocalService.countByUserId(userId);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

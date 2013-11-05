@@ -116,6 +116,18 @@ public class UserCompetenceLocalServiceClp implements UserCompetenceLocalService
 		_methodName19 = "findByUserIdCompetenceId";
 
 		_methodParameterTypes19 = new String[] { "long", "long" };
+
+		_methodName20 = "findBuUserId";
+
+		_methodParameterTypes20 = new String[] { "long" };
+
+		_methodName21 = "findBuUserId";
+
+		_methodParameterTypes21 = new String[] { "long", "int", "int" };
+
+		_methodName22 = "countByUserId";
+
+		_methodParameterTypes22 = new String[] { "long" };
 	}
 
 	public com.liferay.lms.model.UserCompetence addUserCompetence(
@@ -672,6 +684,74 @@ public class UserCompetenceLocalServiceClp implements UserCompetenceLocalService
 		return (com.liferay.lms.model.UserCompetence)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public java.util.List<com.liferay.lms.model.UserCompetence> findBuUserId(
+		long userId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName20,
+					_methodParameterTypes20, new Object[] { userId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.lms.model.UserCompetence>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public java.util.List<com.liferay.lms.model.UserCompetence> findBuUserId(
+		long userId, int start, int end) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName21,
+					_methodParameterTypes21, new Object[] { userId, start, end });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.lms.model.UserCompetence>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public int countByUserId(long userId) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22, new Object[] { userId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Integer)returnObj).intValue();
+	}
+
 	private InvokableLocalService _invokableLocalService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -711,4 +791,10 @@ public class UserCompetenceLocalServiceClp implements UserCompetenceLocalService
 	private String[] _methodParameterTypes17;
 	private String _methodName19;
 	private String[] _methodParameterTypes19;
+	private String _methodName20;
+	private String[] _methodParameterTypes20;
+	private String _methodName21;
+	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
 }
