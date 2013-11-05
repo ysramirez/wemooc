@@ -34,7 +34,7 @@ if(themeDisplay.isSignedIn() &&   course!=null && permissionChecker.hasPermissio
 	subject="<%= course.getTitle() %>" 
 	userId="<%= course.getUserId() %>" /> 
 
-</div>
+
 
 <% 
 }
