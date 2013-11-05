@@ -278,6 +278,20 @@ public class UserCompetenceLocalServiceUtil {
 		return getService().findByUserIdCompetenceId(userId, competenceId);
 	}
 
+	public static java.util.List<com.liferay.lms.model.UserCompetence> findBuUserId(
+		long userId) {
+		return getService().findBuUserId(userId);
+	}
+
+	public static java.util.List<com.liferay.lms.model.UserCompetence> findBuUserId(
+		long userId, int start, int end) {
+		return getService().findBuUserId(userId, start, end);
+	}
+
+	public static int countByUserId(long userId) {
+		return getService().countByUserId(userId);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}
