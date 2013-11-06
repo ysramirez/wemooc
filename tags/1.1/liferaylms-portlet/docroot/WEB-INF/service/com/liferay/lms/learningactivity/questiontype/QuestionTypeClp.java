@@ -1,16 +1,11 @@
 package com.liferay.lms.learningactivity.questiontype;
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.Locale;
-import java.util.Map;
 
 import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletResponse;
-import javax.portlet.PortletURL;
-import javax.servlet.http.HttpServletRequest;
 
+import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityClp;
 import com.liferay.lms.service.ClpSerializer;
@@ -18,17 +13,12 @@ import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
-import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class QuestionTypeClp implements QuestionType {
 
@@ -45,7 +35,25 @@ public class QuestionTypeClp implements QuestionType {
 	}
 	
 	public void setLocale(Locale locale){
-		//?
+		try {
+			ClassLoader classLoader = clp.getClassLoader();
+			Class questionTypeClass = Class.forName(QuestionType.class.getName(),true, classLoader);
+			
+			Method method = questionTypeClass.getMethod("setLocale", Locale.class); 
+			clp.invoke(new MethodHandler(method, locale));
+			
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
 	}
 	
 	public long getTypeId(){
@@ -94,7 +102,8 @@ public class QuestionTypeClp implements QuestionType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getTitle", new Object[] {});
+			Method method = QuestionType.class.getMethod("getTitle", Locale.class); 
+			returnObj = clp.invoke(new MethodHandler(method, locale));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -115,7 +124,8 @@ public class QuestionTypeClp implements QuestionType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getDescription", new Object[] {});
+			Method method = QuestionType.class.getMethod("getDescription", Locale.class); 
+			returnObj = clp.invoke(new MethodHandler(method, locale));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -136,7 +146,8 @@ public class QuestionTypeClp implements QuestionType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getAnswerEditingAdvise", new Object[] {});
+			Method method = QuestionType.class.getMethod("getAnswerEditingAdvise", Locale.class); 
+			returnObj = clp.invoke(new MethodHandler(method, locale));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -196,34 +207,12 @@ public class QuestionTypeClp implements QuestionType {
 	}
 	
 	public void delete(long questionId) throws PortalException, SystemException{
-		/*try {
-			ClassLoader classLoader = clp.getClassLoader();
-			Class questionTypeClass = Class.forName(QuestionType.class.getName(),true, classLoader);
-			
-			Method deleteResourcesMethod = questionTypeClass.getMethod("delete");    
-			Object questionObj = translateQuestion(learningActivity);
-			clp.invoke(new MethodHandler(deleteResourcesMethod, actionRequest, actionResponse, learningActivityObj));
-			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
-			learningActivity.setModelAttributes((Map<String, Object>) classLoaderProxy.invoke("getModelAttributes", new Object[]{}));
+		try {			
+			Method method = QuestionType.class.getMethod("delete", long.class);
+			clp.invoke(new MethodHandler(method, questionId));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
-			
-			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
-				throw (com.liferay.portal.kernel.exception.PortalException)t;
-			}
-			
-			if (t instanceof IOException) {
-				throw (IOException)t;
-			}
-			
-			if (t instanceof DocumentException) {
-				throw (DocumentException)t;
-			}
-			
-			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
-				throw (com.liferay.portal.kernel.exception.SystemException)t;
-			}
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
@@ -232,14 +221,15 @@ public class QuestionTypeClp implements QuestionType {
 				throw new RuntimeException(t.getClass().getName() +
 					" is not a valid exception");
 			}
-		}*/
+		}
 	}
 	
 	public boolean correct(ActionRequest actionRequest, long questionId){
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("correct", new Object[] {});
+			Method method = QuestionType.class.getMethod("correct", ActionRequest.class, long.class);
+			returnObj = clp.invoke(new MethodHandler(method, actionRequest, questionId));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -260,7 +250,8 @@ public class QuestionTypeClp implements QuestionType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getHtmlView", new Object[] {});
+			Method method = QuestionType.class.getMethod("getHtmlView", long.class, ThemeDisplay.class, Document.class);
+			returnObj = clp.invoke(new MethodHandler(method, questionId, themeDisplay, document));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -281,7 +272,8 @@ public class QuestionTypeClp implements QuestionType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getResults", new Object[] {});
+			Method method = QuestionType.class.getMethod("getResults", ActionRequest.class, long.class);
+			returnObj = clp.invoke(new MethodHandler(method, actionRequest, questionId));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -302,7 +294,8 @@ public class QuestionTypeClp implements QuestionType {
 		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("getHtmlFeedback", new Object[] {});
+			Method method = QuestionType.class.getMethod("getHtmlFeedback", Document.class, long.class);
+			returnObj = clp.invoke(new MethodHandler(method, document, questionId));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -320,10 +313,15 @@ public class QuestionTypeClp implements QuestionType {
 	}
 	
 	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId, LearningActivity activity) throws PortalException, SystemException{
-		Object returnObj = null;
 
 		try {
-			returnObj = clp.invoke("exportQuestion", new Object[] {});
+			ClassLoader classLoader = clp.getClassLoader();
+			Class laTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
+			Class laClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
+			Object learningActivityObj = translateLearningActivity(activity);
+			
+			Method method = laTypeClass.getMethod("exportQuestionAnswers", PortletDataContext.class, Element.class, long.class, laClass);
+			clp.invoke(new MethodHandler(method, context, root, questionId, learningActivityObj));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -340,10 +338,12 @@ public class QuestionTypeClp implements QuestionType {
 	}
 	
 	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId, long userId, ServiceContext serviceContext) throws SystemException, PortalException{
-		Object returnObj = null;
-
 		try {
-			returnObj = clp.invoke("importQuestion", new Object[] {});
+			ClassLoader classLoader = clp.getClassLoader();
+			Class laTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
+			
+			Method method = laTypeClass.getMethod("importQuestionAnswers", PortletDataContext.class, Element.class, long.class, long.class, ServiceContext.class);
+			clp.invoke(new MethodHandler(method, context, entryElement, questionId, userId, serviceContext));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -359,11 +359,15 @@ public class QuestionTypeClp implements QuestionType {
 
 	}
 	
-	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
-		Object returnObj = null;
+	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService) throws SystemException, PortalException {
 
 		try {
-			returnObj = clp.invoke("importMoodle", new Object[] {});
+			
+			ClassLoader classLoader = clp.getClassLoader();
+			Class testAnswerLocalServiceClass = Class.forName(TestAnswerLocalService.class.getName(), true, classLoader);
+						
+			Method method = QuestionType.class.getMethod("importMoodle", long.class, Element.class, testAnswerLocalServiceClass);
+			clp.invoke(new MethodHandler(method, actId, question, testAnswerLocalService));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -378,4 +382,30 @@ public class QuestionTypeClp implements QuestionType {
 		}
 	}
 
+	private Object translateLearningActivity(LearningActivity larn) {
+		Object larnObj = null;
+		try {
+			larnObj = Class.forName(LearningActivityClp.class.getName(), true, clp.getClassLoader()).newInstance();
+			
+			ClassLoaderProxy clp2 = new ClassLoaderProxy(larnObj, LearningActivityClp.class.getName(), clp.getClassLoader());
+			clp2.invoke("setModelAttributes", new Object[] {larn.getModelAttributes()});
+		} catch(ClassNotFoundException e) {
+			e.printStackTrace();
+		} catch (InstantiationException e) {
+			e.printStackTrace();
+		} catch (IllegalAccessException e) {
+			e.printStackTrace();
+		} catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+		return larnObj;
+	}
 }
