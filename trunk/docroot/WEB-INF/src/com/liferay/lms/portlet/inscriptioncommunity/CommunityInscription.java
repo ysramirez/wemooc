@@ -8,6 +8,8 @@ import javax.portlet.ActionResponse;
 import javax.portlet.ProcessAction;
 import com.liferay.portal.kernel.exception.SystemException;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.mail.service.MailServiceUtil;
@@ -109,6 +111,11 @@ public class CommunityInscription extends MVCPortlet {
     	
     	long userId = themeDisplay.getUserId();
 		GroupLocalServiceUtil.addUserGroups(userId, groupId);
+
+		//auditing
+		AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
+				course.getCourseId(), themeDisplay.getUserId(), AuditConstants.REGISTER, null);
+		
 		// Informamos que se ha inscrito.
 		Date hoy = new Date();
 		String userName = ""+userId;
@@ -195,6 +202,12 @@ public class CommunityInscription extends MVCPortlet {
     	groupId[0] = themeDisplay.getScopeGroupId();						
 		long userId = themeDisplay.getUserId();
 		GroupLocalServiceUtil.unsetUserGroups(userId, groupId);
+
+		//auditing
+    	Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId[0]);
+		AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
+				course.getCourseId(), themeDisplay.getUserId(), AuditConstants.UNREGISTER, null);
+		
 		// Informamos de que lo ha dejado.
 		Date hoy = new Date();
 		String userName = ""+userId;
