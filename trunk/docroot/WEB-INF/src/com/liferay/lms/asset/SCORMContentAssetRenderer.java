@@ -7,6 +7,8 @@ import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.script.Invocable;
+import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.SCORMContent;
@@ -29,7 +31,7 @@ import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 
-public class SCORMContentAssetRenderer extends BaseAssetRenderer {
+public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invocable {
 
 	private SCORMContent _scorm;
 	AssetEntry assetEntry;
@@ -175,6 +177,44 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer {
 				throws PortalException, SystemException {
 
 				return permissionChecker.hasPermission(_scorm.getGroupId(), SCORMContent.class.getName(), _scorm.getScormId(),ActionKeys.VIEW);
+			}
+			
+			String getUrl(HttpServletRequest request){
+				return PortalUtil.getPortalURL(request)+"/"+ClpSerializer.getServletContextName()+"/scormzip/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/"+_scorm.getUuid()+".zip?ciphered="+(_scorm.getCiphered() ? "1" : "0");
+			}
+			
+			String getFileUrl(HttpServletRequest request, String path) {
+				return PortalUtil.getPortalURL(request)+"/"+ClpSerializer.getServletContextName()+"/scorm/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/"+path;
+			}
+
+			@Override
+			public Object invokeMethod(Object thiz, String name, Object... args)
+					throws ScriptException, NoSuchMethodException {
+				throw new NoSuchMethodException();
+			}
+
+			@Override
+			public Object invokeFunction(String name, Object... args)
+					throws ScriptException, NoSuchMethodException {
+				if(("getUrl".equals(name))&&(args.length==1)&&(args[0] instanceof HttpServletRequest)) {
+					return getUrl((HttpServletRequest) args[0]);
+				}
+				
+				if(("getFileUrl".equals(name))&&(args.length==2)&&(args[0] instanceof HttpServletRequest)&&(args[1] instanceof String)) {
+					return getFileUrl((HttpServletRequest) args[0], (String) args[1]);
+				}
+				
+				throw new NoSuchMethodException(name);
+			}
+
+			@Override
+			public <T> T getInterface(Class<T> clasz) {
+				return null;
+			}
+
+			@Override
+			public <T> T getInterface(Object thiz, Class<T> clasz) {
+				return null;
 			}
 			
 			/*

@@ -49,12 +49,7 @@
 	boolean improving = false;
 	LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
 	if (result != null) {
-		int done =  LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId,userId);
-		LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
-		if (result.getResult() < 100
-		   && !LearningActivityLocalServiceUtil.islocked(actId, userId)
-		   && LearningActivityResultLocalServiceUtil.userPassed(actId, userId)
-		   && done < act.getTries()){
+		if (!LearningActivityLocalServiceUtil.islocked(actId, userId)) {
 			improving = true;
 		}
 	}
@@ -100,9 +95,8 @@
 			</p>
 			
 			<% 
-		}
-		if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
-		|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
+		} 
+		if (permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
 		|| permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"ACCESSLOCK")
 	    || improving )
 		{
@@ -189,8 +183,8 @@
 					'<portlet:namespace />abrirActividad',
 					function(e) {
 						var A = AUI();
-						if (e != null && window.ventana != null && !window.ventana.closed) {
-							window.ventana.close();
+						if (e != null && window.<portlet:namespace />ventana != null && !window.<portlet:namespace />ventana.closed) {
+							window.<portlet:namespace />ventana.close();
 						}
 						window.messageHandler = A.one(window).on('message', 
 							function(event) {
@@ -204,10 +198,10 @@
 								}
 							}
 						);
-						window.ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
-						if (window.ventana != null) {
-							window.ventana.location = '<%= scormwindow %>';
-							_checkPopupBlocker(window.ventana);
+						window.<portlet:namespace />ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
+						if (window.<portlet:namespace />ventana != null) {
+							window.<portlet:namespace />ventana.location = '<%= scormwindow %>';
+							_checkPopupBlocker(window.<portlet:namespace />ventana);
 						} else {
 							A.one('p.activity-message').setStyle('display', 'block');
 							A.one('span.newitem2').setStyle('display', 'block');
@@ -249,7 +243,6 @@ else {
 	Object[] arguments = new Object[] { result.getResult() };
 	Object[] arg = new Object[] { activity.getPasspuntuation() };
 %>
-<h2><%=activity.getTitle(themeDisplay.getLocale())%></h2>
 <p>
 	<liferay-ui:message key="activity-done" />
 </p>
