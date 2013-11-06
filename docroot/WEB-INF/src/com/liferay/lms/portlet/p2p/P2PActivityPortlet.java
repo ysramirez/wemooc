@@ -21,6 +21,8 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
 import com.liferay.lms.moduleUpload;
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
@@ -683,6 +685,12 @@ public class P2PActivityPortlet extends MVCPortlet {
 			LearningActivity activity;
 			try {
 				activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest, "actId", 0));
+				
+				//auditing
+				ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+				AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+						activity.getActId(), themeDisplay.getUserId(), AuditConstants.GET, null);
+				
 				long typeId=activity.getTypeId();
 				
 				if(typeId==3)
