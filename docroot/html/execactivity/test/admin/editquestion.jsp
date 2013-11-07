@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.StringPool"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.lms.service.TestQuestionLocalServiceUtil"%>
@@ -71,17 +72,15 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 
 	<%
 		String questionTypeName = "";
-		long typeId = 0;
-		long questionId = question.getQuestionType();
+		long typeId = question.getQuestionType();
 		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
 		for(QuestionType qt:qtypes){
-			if(questionId == qt.getTypeId()){
-				typeId = qt.getTypeId();
+			if(typeId == qt.getTypeId()){
 				questionTypeName = qt.getTitle(themeDisplay.getLocale());
 			}
 		}
 	%>
-	<aui:input type="hidden" id="typeId" name="typeId" value="typeId" />
+	<aui:input type="hidden" id="typeId" name="typeId" value="<%=typeId%>" />
 	<aui:input type="text" id="typeIdName" name="typeIdName" disabled="<%=true %>" value="<%=questionTypeName %>" />
 
 	<aui:input name="resId" type="hidden" value="<%=question.getActId() %>"></aui:input>
@@ -105,23 +104,25 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	//-->
 	</script>
     
-	<aui:field-wrapper label="execativity.editquestions.editquestion.enunciation">
-		<liferay-ui:input-editor name="text" width="80%" onChangeMethod="onChangeText" />
-		<script type="text/javascript">
-	        function <portlet:namespace />initEditor() { 
-	            return "<%=JavaScriptUtil.markupToStringLiteral(question.getText())%>";
-	        }
-	    </script>
-	</aui:field-wrapper>
-	
-	<div id="<portlet:namespace />textError" class="<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.editquestion.error.test.required"))?
+	<aui:field-wrapper label="">
+		<div id="<portlet:namespace />textError" class="<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.editquestion.error.test.required"))?
    														"portlet-msg-error":StringPool.BLANK %>">
-   	<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.editquestion.error.test.required"))?
-   			LanguageUtil.get(pageContext,"execativity.editquestions.editquestion.error.test.required"):StringPool.BLANK %>
-	</div>
-
-	<aui:button-row>
-		<aui:button type="submit" />
-		<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
-	</aui:button-row>
+	   	<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.editquestion.error.test.required"))?
+	   			LanguageUtil.get(pageContext,"execativity.editquestions.editquestion.error.test.required"):StringPool.BLANK %>
+		</div>
+		<liferay-ui:panel id="<%=\"question_\"+question.getQuestionId() %>" title="execativity.editquestions.editquestion.enunciation" collapsible="true" extended="true" defaultState="collapsed">
+			<aui:field-wrapper label="">
+				<liferay-ui:input-editor name="text" width="80%" onChangeMethod="onChangeText" />
+				<script type="text/javascript">
+			        function <portlet:namespace />initEditor() { 
+			            return "<%=JavaScriptUtil.markupToStringLiteral(question.getText())%>";
+			        }
+			    </script>
+		    </aui:field-wrapper>
+		    <aui:button-row>
+				<aui:button type="submit" />
+				<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
+			</aui:button-row>
+	    </liferay-ui:panel>
+	</aui:field-wrapper>
 </aui:form>

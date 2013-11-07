@@ -69,69 +69,62 @@ function inicializar(totalAnswer){
 <div id="solution">
 	<liferay-ui:success key="answer-added-successfully" message="answer-added-successfully" />
 	<%
-	if(!"".equals(advise)){
-	%>
-		<liferay-ui:message key="<%=advise %>"/>
-	<%
-	}
 	if(totalAnswer>0){
+		List<TestAnswer> testAnswers = TestAnswerLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(TestAnswer.class).
+				add(PropertyFactoryUtil.forName("questionId").eq(question.getQuestionId())));
+		for(TestAnswer testanswer:testAnswers){
 	%>
-		<liferay-ui:search-container emptyResultsMessage="" delta="10" >
-			<liferay-ui:search-container-results>
-	<%
-				pageContext.setAttribute("results", TestAnswerLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(TestAnswer.class).
-								add(PropertyFactoryUtil.forName("questionId").eq(question.getQuestionId())), searchContainer.getStart(), searchContainer.getEnd()));
-				pageContext.setAttribute("total", totalAnswer);
-	%>
-			</liferay-ui:search-container-results>
-			<liferay-ui:search-container-row className="com.liferay.lms.model.TestAnswer" keyProperty="answerId" modelVar="testanswer">
-				<liferay-ui:search-container-column-text>
-					<script type="text/javascript">
-					//<!--
-					AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
-					
-						window.<portlet:namespace />validateAnswer<%=testanswer.getAnswerId() %> = new A.FormValidator({
-							boundingBox: '#<portlet:namespace />afm_<%=testanswer.getAnswerId() %>',
-							validateOnBlur: true,
-							validateOnInput: true,
-							selectText: true,
-							showMessages: false,
-							containerErrorClass: '',
-							errorClass: '',
-							rules: {
-					            <portlet:namespace />answer: {
-						    		required: true
-						        }
-							},
-					        fieldStrings: {
-					            <portlet:namespace />answer: {
-						    		required: '<liferay-ui:message key="answer-test-required" />'
-						        }
-						    },
-							on: {		
-					            errorField: function(event) {
-					            	var instance = this;
-									var field = event.validator.field;
-									var divError = A.one('#'+field.get('name')+'Error_<%=Long.toString(testanswer.getAnswerId()) %>');
-									if(divError) {
-										divError.addClass('portlet-msg-error');
-										divError.setContent(instance.getFieldErrorMessage(field,event.validator.errors[0]));
-									}
-					            },		
-					            validField: function(event) {
-									var divError = A.one('#'+event.validator.field.get('name')+'Error_<%=Long.toString(testanswer.getAnswerId()) %>');
-									if(divError) {
-										divError.removeClass('portlet-msg-error');
-										divError.setContent('');
-									}
-					            }
-							}
-						});
-			
+			<liferay-ui:panel id="<%=\"testAnswer_\"+testanswer.getAnswerId() %>" title="answer" collapsible="true" extended="true" defaultState="collapsed">
+				<script type="text/javascript">
+				//<!--
+				AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
+				
+					window.<portlet:namespace />validateAnswer<%=testanswer.getAnswerId() %> = new A.FormValidator({
+						boundingBox: '#<portlet:namespace />afm_<%=testanswer.getAnswerId() %>',
+						validateOnBlur: true,
+						validateOnInput: true,
+						selectText: true,
+						showMessages: false,
+						containerErrorClass: '',
+						errorClass: '',
+						rules: {
+				            <portlet:namespace />answer: {
+					    		required: true
+					        }
+						},
+				        fieldStrings: {
+				            <portlet:namespace />answer: {
+					    		required: '<liferay-ui:message key="answer-test-required" />'
+					        }
+					    },
+						on: {		
+				            errorField: function(event) {
+				            	var instance = this;
+								var field = event.validator.field;
+								var divError = A.one('#'+field.get('name')+'Error_<%=Long.toString(testanswer.getAnswerId()) %>');
+								if(divError) {
+									divError.addClass('portlet-msg-error');
+									divError.setContent(instance.getFieldErrorMessage(field,event.validator.errors[0]));
+								}
+				            },		
+				            validField: function(event) {
+								var divError = A.one('#'+event.validator.field.get('name')+'Error_<%=Long.toString(testanswer.getAnswerId()) %>');
+								if(divError) {
+									divError.removeClass('portlet-msg-error');
+									divError.setContent('');
+								}
+				            }
+						}
 					});
-					
-					//-->
-					</script>
+		
+				});
+				
+				//-->
+				</script>
+				<% if(!"".equals(advise)){ 	%>
+					<liferay-ui:message key="<%=advise %>"/>
+				<% 	} %>
+				<div id="leftSideAnswer">
 					<portlet:actionURL var="editanswerURL" name="editanswer" />
 					<aui:form name="<%=\"afm_\"+testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 						<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
@@ -144,7 +137,7 @@ function inicializar(totalAnswer){
 						        ['node']
 						    );
 						</script>
-						<aui:field-wrapper label="answer">
+						<aui:field-wrapper label="">
 							<liferay-ui:input-editor name="<%=\"answer_\"+testanswer.getAnswerId() %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_\"+testanswer.getAnswerId() %>" initMethod="<%=\"initEditorAnswer\"+testanswer.getAnswerId() %>" />
 							<script type="text/javascript">
 						        function <portlet:namespace />initEditorAnswer<%=testanswer.getAnswerId() %>() { 
@@ -162,8 +155,8 @@ function inicializar(totalAnswer){
 						<aui:input  name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>"></aui:input>
 						<aui:button type="submit" value="modify"></aui:button>
 					</aui:form>
-				</liferay-ui:search-container-column-text>
-				<liferay-ui:search-container-column-text align="right">
+				</div>
+				<div id="rightSideAnswer">
 					<liferay-ui:icon-menu align="right">
 						<portlet:actionURL name="deleteanswer" var="deleteURL">
 							<portlet:param name="answerId" value="<%=String.valueOf(testanswer.getPrimaryKey()) %>" />
@@ -173,13 +166,14 @@ function inicializar(totalAnswer){
 						</portlet:actionURL>
 						<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
 					</liferay-ui:icon-menu>
-				</liferay-ui:search-container-column-text>
-			</liferay-ui:search-container-row>
-			<liferay-ui:search-iterator />
-		</liferay-ui:search-container>
+				</div>
+			</liferay-ui:panel>
 	<%
+		}
 	}else{
-	%>
+		if(!"".equals(advise)){ 	%>
+				<liferay-ui:message key="<%=advise %>"/>
+			<% 	} %>
 		<portlet:actionURL var="addanswerURL" name="addanswer" />
 		<aui:form name="afm" action="<%=addanswerURL%>" method="post">
 			
@@ -193,7 +187,7 @@ function inicializar(totalAnswer){
 			</script>
 		
 			<aui:field-wrapper label="answer">
-				<liferay-ui:input-editor name="answer" width="80%" onChangeMethod="onChangeTextNewAnswer" initMethod="initEditorNew" />
+				<liferay-ui:input-editor name="answer" width="80%" onChangeMethod="onChangeTextNewAnswer" initMethod="initEditorNewAnswer" />
 				<script type="text/javascript">
 			        function <portlet:namespace />initEditorNewAnswer() { 
 			            return "<%=JavaScriptUtil.markupToStringLiteral("")%>";
