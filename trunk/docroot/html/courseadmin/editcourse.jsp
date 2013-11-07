@@ -235,7 +235,7 @@ else
 	boolean showInscriptionDate = GetterUtil.getBoolean(renderRequest.getPreferences().getValues("showInscriptionDate", new String[]{StringPool.TRUE})[0],true);
 
 	%>
-<liferay-ui:panel-container extended="false"   persistState="true">
+<liferay-ui:panel-container extended="false"  persistState="false">
 	<liferay-ui:panel title="lms-inscription-configuration" collapsible="true" defaultState="closed">
 		<aui:field-wrapper label="start-inscription-date" cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
 			<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon"

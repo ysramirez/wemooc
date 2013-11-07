@@ -362,6 +362,179 @@ Liferay.provide(
 	    			LanguageUtil.get(pageContext,"title-required"):StringPool.BLANK %>
 	    </div>
 	    
+	       <script type="text/javascript">
+		<!--
+			Liferay.provide(
+		        window,
+		        '<portlet:namespace />onChangeDescription',
+		        function(val) {
+		        	var A = AUI();
+					A.one('#<portlet:namespace />description').set('value',val);
+					if(window.<portlet:namespace />validateActivity){
+						window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
+					}
+		        },
+		        ['node']
+		    );
+		    
+		//-->
+		</script>
+	    
+		<aui:field-wrapper label="description">
+			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
+			<script type="text/javascript">
+		        function <portlet:namespace />initEditor() 
+		        { 
+		            return "<%= UnicodeFormatter.toString(description) %>"; 
+		        }
+		    </script>
+		</aui:field-wrapper>
+		<div id="<portlet:namespace />descriptionError" class="<%=(SessionErrors.contains(renderRequest, "description-required"))?
+	    														"portlet-msg-error":StringPool.BLANK %>">
+	    	<%=(SessionErrors.contains(renderRequest, "description-required"))?
+	    			LanguageUtil.get(pageContext,"description-required"):StringPool.BLANK %>
+	    </div>
+	    
+	    <%
+			boolean optional=false;
+			boolean mandatory = true;
+			if(learnact!=null)
+			{
+				request.setAttribute("activity", learnact);
+				request.setAttribute("activityId", learnact.getActId());
+				optional=(learnact.getWeightinmodule()==0);
+				mandatory = (learnact.getWeightinmodule() != 0);
+			}
+		%>
+		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
+			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" inlineField="true" />
+			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true" />
+		</aui:field-wrapper>
+	 <liferay-ui:panel-container extended="false" persistState="false">
+	 <%
+	 String defaultState="open";
+	 if(actId>0)
+	 {
+		 defaultState="closed";
+	 }
+	 %>
+	 		<liferay-ui:panel title="activity-specifics" collapsible="true" defaultState="<%=defaultState %>">
+	  
+		<%
+		if(larntype.isTriesConfigurable())
+		{
+			long tries=larntype.getDefaultTries();
+			if(learnact!=null)
+			{
+				tries=learnact.getTries();
+			}
+		%>
+		
+		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>">
+		</aui:input><%--liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help--%>
+  		<div id="<portlet:namespace />triesError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.tries.required"))||
+														      (SessionErrors.contains(renderRequest, "editActivity.tries.number"))||
+														      (SessionErrors.contains(renderRequest, "editActivity.tries.range")))?
+   														      "portlet-msg-error":StringPool.BLANK %>">
+   			<%=(SessionErrors.contains(renderRequest, "editActivity.tries.required"))?
+   			    	LanguageUtil.get(pageContext,"editActivity.tries.required"):
+ 			   (SessionErrors.contains(renderRequest, "editActivity.tries.number"))?
+ 		    		LanguageUtil.get(pageContext,"editActivity.tries.number"):
+ 			   (SessionErrors.contains(renderRequest, "editActivity.tries.range"))?
+ 		    		LanguageUtil.get(pageContext,"editActivity.tries.range"):StringPool.BLANK %>
+	    </div>
+		<%
+		}
+		else
+		{
+			%>
+			<aui:input type="hidden" name="tries" value="<%=larntype.getDefaultTries() %>" />
+			<% 
+		}
+		if(larntype.isScoreConfigurable())
+		{
+			long score=larntype.getDefaultScore();
+			if(learnact!=null)
+			{
+				score=learnact.getPasspuntuation();
+			}
+		%>
+		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
+		</aui:input>
+  		<div id="<portlet:namespace />passpuntuationError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))||
+																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))||
+																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range")))?
+	    														      "portlet-msg-error":StringPool.BLANK %>">
+	    	<%=(SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))?
+	    			LanguageUtil.get(pageContext,"editActivity.passpuntuation.required"):
+   			   (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))?
+   		    		LanguageUtil.get(pageContext,"editActivity.passpuntuation.number"):
+   			   (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range"))?
+   		    		LanguageUtil.get(pageContext,"editActivity.passpuntuation.range"):StringPool.BLANK %>
+	    </div>
+		<%
+		}
+		else
+		{
+			%>
+			<aui:input type="hidden" name="passpuntuation" value="<%=larntype.getDefaultScore() %>" />
+			<% 
+		}
+		%>
+		
+		
+		
+	
+		<%
+		if(larntype.isFeedbackCorrectConfigurable())
+		{
+			String  feedbacCorrect=larntype.getDefaultFeedbackCorrect();
+			if(learnact!=null)
+			{
+				feedbacCorrect=learnact.getFeedbackCorrect();
+			}
+		%>	
+		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" ></aui:input>	
+		<%
+		}
+		else
+		{
+			%>
+			<aui:input type="hidden" name="feedbackCorrect" value="<%=larntype.getDefaultFeedbackCorrect() %>" />
+			<% 
+		}
+		if(larntype.isFeedbackNoCorrectConfigurable())
+		{
+			String  feedbacNoCorrect=larntype.getDefaultFeedbackCorrect();
+			if(learnact!=null)
+			{
+				feedbacNoCorrect=learnact.getFeedbackCorrect();
+			}
+		%>
+		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" ></aui:input>	
+		<%
+		}
+		else
+		{
+			%>
+			<aui:input type="hidden" name="feedbackNoCorrect" value="<%=larntype.getDefaultFeedbackNoCorrect() %>" />
+			<% 
+		}
+		
+		%>
+
+		
+		<% if(larntype.getExpecificContentPage()!=null) { %>
+			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>" portletId="<%= larntype.getPortletId() %>">
+				<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
+				<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
+			</liferay-util:include>	
+		<% } %>
+
+</liferay-ui:panel>
+	 
+	 <liferay-ui:panel title="activity-constraints" collapsible="true" defaultState="closed">
+	   
 	    <script type="text/javascript">
 
 
@@ -436,86 +609,7 @@ Liferay.provide(
 				<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"></liferay-ui:input-time></br>
 			</aui:field-wrapper>
 		</div>
-		
-		<%
-		if(larntype.isTriesConfigurable())
-		{
-			long tries=larntype.getDefaultTries();
-			if(learnact!=null)
-			{
-				tries=learnact.getTries();
-			}
-		%>
-		
-		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>">
-		</aui:input><%--liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help--%>
-  		<div id="<portlet:namespace />triesError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.tries.required"))||
-														      (SessionErrors.contains(renderRequest, "editActivity.tries.number"))||
-														      (SessionErrors.contains(renderRequest, "editActivity.tries.range")))?
-   														      "portlet-msg-error":StringPool.BLANK %>">
-   			<%=(SessionErrors.contains(renderRequest, "editActivity.tries.required"))?
-   			    	LanguageUtil.get(pageContext,"editActivity.tries.required"):
- 			   (SessionErrors.contains(renderRequest, "editActivity.tries.number"))?
- 		    		LanguageUtil.get(pageContext,"editActivity.tries.number"):
- 			   (SessionErrors.contains(renderRequest, "editActivity.tries.range"))?
- 		    		LanguageUtil.get(pageContext,"editActivity.tries.range"):StringPool.BLANK %>
-	    </div>
-		<%
-		}
-		else
-		{
-			%>
-			<aui:input type="hidden" name="tries" value="<%=larntype.getDefaultTries() %>" />
-			<% 
-		}
-		if(larntype.isScoreConfigurable())
-		{
-			long score=larntype.getDefaultScore();
-			if(learnact!=null)
-			{
-				score=learnact.getPasspuntuation();
-			}
-		%>
-		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
-		</aui:input>
-  		<div id="<portlet:namespace />passpuntuationError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))||
-																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))||
-																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range")))?
-	    														      "portlet-msg-error":StringPool.BLANK %>">
-	    	<%=(SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))?
-	    			LanguageUtil.get(pageContext,"editActivity.passpuntuation.required"):
-   			   (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))?
-   		    		LanguageUtil.get(pageContext,"editActivity.passpuntuation.number"):
-   			   (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range"))?
-   		    		LanguageUtil.get(pageContext,"editActivity.passpuntuation.range"):StringPool.BLANK %>
-	    </div>
-		<%
-		}
-		else
-		{
-			%>
-			<aui:input type="hidden" name="passpuntuation" value="<%=larntype.getDefaultScore() %>" />
-			<% 
-		}
-		%>
-		
-		<%
-			boolean optional=false;
-			boolean mandatory = true;
-			if(learnact!=null)
-			{
-				request.setAttribute("activity", learnact);
-				request.setAttribute("activityId", learnact.getActId());
-				optional=(learnact.getWeightinmodule()==0);
-				mandatory = (learnact.getWeightinmodule() != 0);
-			}
-		%>
-		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
-			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" inlineField="true" />
-			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true" />
-		</aui:field-wrapper>
-		
-		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
+			<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
 			<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
 			<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
 			<liferay-util:param name="precedence" value="<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>" />
@@ -529,89 +623,13 @@ Liferay.provide(
 				<liferay-util:param name="teamId" value='<%=(learnact!=null)?LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team"):Long.toString(0) %>' />
 			</liferay-util:include>
 		<%}
-		if(larntype.isFeedbackCorrectConfigurable())
-		{
-			String  feedbacCorrect=larntype.getDefaultFeedbackCorrect();
-			if(learnact!=null)
-			{
-				feedbacCorrect=learnact.getFeedbackCorrect();
-			}
-		%>	
-		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" ></aui:input>	
-		<%
-		}
-		else
-		{
-			%>
-			<aui:input type="hidden" name="feedbackCorrect" value="<%=larntype.getDefaultFeedbackCorrect() %>" />
-			<% 
-		}
-		if(larntype.isFeedbackNoCorrectConfigurable())
-		{
-			String  feedbacNoCorrect=larntype.getDefaultFeedbackCorrect();
-			if(learnact!=null)
-			{
-				feedbacNoCorrect=learnact.getFeedbackCorrect();
-			}
 		%>
-		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" ></aui:input>	
-		<%
-		}
-		else
-		{
-			%>
-			<aui:input type="hidden" name="feedbackNoCorrect" value="<%=larntype.getDefaultFeedbackNoCorrect() %>" />
-			<% 
-		}
-		
-		%>
-
-		
-		<% if(larntype.getExpecificContentPage()!=null) { %>
-			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>" portletId="<%= larntype.getPortletId() %>">
-				<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
-				<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
-			</liferay-util:include>	
-		<% } %>
-
-
-	    <script type="text/javascript">
-		<!--
-			Liferay.provide(
-		        window,
-		        '<portlet:namespace />onChangeDescription',
-		        function(val) {
-		        	var A = AUI();
-					A.one('#<portlet:namespace />description').set('value',val);
-					if(window.<portlet:namespace />validateActivity){
-						window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
-					}
-		        },
-		        ['node']
-		    );
-		    
-		//-->
-		</script>
-	    
-		<aui:field-wrapper label="description">
-			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
-			<script type="text/javascript">
-		        function <portlet:namespace />initEditor() 
-		        { 
-		            return "<%= UnicodeFormatter.toString(description) %>"; 
-		        }
-		    </script>
-		</aui:field-wrapper>
-		<div id="<portlet:namespace />descriptionError" class="<%=(SessionErrors.contains(renderRequest, "description-required"))?
-	    														"portlet-msg-error":StringPool.BLANK %>">
-	    	<%=(SessionErrors.contains(renderRequest, "description-required"))?
-	    			LanguageUtil.get(pageContext,"description-required"):StringPool.BLANK %>
-	    </div>
-
+		</liferay-ui:panel>
+	<liferay-ui:panel title="categorization" collapsible="true" defaultState="closed">
 		<aui:input name="tags" type="assetTags" />
-		
 		<aui:input name="categories" type="assetCategories" />
-		
+		</liferay-ui:panel>
+		</liferay-ui:panel-container>
 	</aui:fieldset>
 	
 	<aui:button-row>
