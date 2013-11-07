@@ -66,19 +66,16 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 
 	<%
 		String questionTypeName = "";
-		long typeId = 0;
-		long questionId = question.getQuestionType();
+		long typeId = question.getQuestionType();
 		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
 		for(QuestionType qt:qtypes){
-			if(questionId == qt.getTypeId()){
-				typeId = qt.getTypeId();
+			if(typeId == qt.getTypeId()){
 				questionTypeName = qt.getTitle(themeDisplay.getLocale());
 			}
 		}
 	%>
-	<aui:input type="hidden" id="typeId" name="typeId" value="typeId" />
-	<aui:input type="text" id="typeIdName" name="typeIdName" disabled="<%=true %>" value="<%=questionTypeName %>"/>
-
+	<aui:input type="hidden" id="typeId" name="typeId" value="<%=typeId%>" />
+	<aui:input type="text" id="typeIdName" name="typeIdName" disabled="<%=true %>" value="<%=questionTypeName %>" />
 	<aui:input name="resId" type="hidden" value="<%=question.getActId() %>"></aui:input>
 	<aui:input name="questionId" type="hidden" value="<%=question.getQuestionId() %>"></aui:input>
 	

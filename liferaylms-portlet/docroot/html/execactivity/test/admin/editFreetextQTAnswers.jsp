@@ -193,7 +193,7 @@ function inicializar(totalAnswer){
 			</script>
 		
 			<aui:field-wrapper label="answer">
-				<liferay-ui:input-editor name="answer" width="80%" onChangeMethod="onChangeTextNewAnswer" initMethod="initEditorNew" />
+				<liferay-ui:input-editor name="answer" width="80%" onChangeMethod="onChangeTextNewAnswer" initMethod="initEditorNewAnswer" />
 				<script type="text/javascript">
 			        function <portlet:namespace />initEditorNewAnswer() { 
 			            return "<%=JavaScriptUtil.markupToStringLiteral("")%>";
