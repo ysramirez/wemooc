@@ -15,6 +15,8 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.service.base.UserCompetenceServiceBaseImpl;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the user competence remote service.
@@ -30,6 +32,7 @@ import com.liferay.lms.service.base.UserCompetenceServiceBaseImpl;
  * @see com.liferay.lms.service.base.UserCompetenceServiceBaseImpl
  * @see com.liferay.lms.service.UserCompetenceServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class UserCompetenceServiceImpl extends UserCompetenceServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:

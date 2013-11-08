@@ -24,6 +24,8 @@ import com.liferay.lms.model.Competence;
 
 import com.liferay.lms.service.base.CompetenceServiceBaseImpl;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the competence remote service.
@@ -39,6 +41,7 @@ import com.liferay.portal.kernel.exception.SystemException;
  * @see com.liferay.lms.service.base.CompetenceServiceBaseImpl
  * @see com.liferay.lms.service.CompetenceServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class CompetenceServiceImpl extends CompetenceServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
