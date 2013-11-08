@@ -189,7 +189,7 @@
 
 				<div class="container-toolbar" >
 					
-					<liferay-ui:icon-menu cssClass='bt_importexport' direction="down" extended="<%= false %>" message="export-import" showWhenSingleIcon="<%= true %>">
+					<liferay-ui:icon-menu cssClass='bt_importexport' direction="down" extended="<%= false %>" message="offlinetaskactivity.csv.export.import" showWhenSingleIcon="<%= true %>">
 					
 						<div>
 							<liferay-portlet:resourceURL var="exportURL" >
