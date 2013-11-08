@@ -51,7 +51,7 @@ String primKey = String.valueOf(myActivity.getActId());
 			"	new A.Dialog( "+
 			"		{ "+
 			"    		id: 'editlesson', "+ 
-			"			title: '"+LanguageUtil.get(pageContext,"activity.edition")+"', "+
+			"			title: '"+LanguageUtil.get(pageContext,"activity.edition")+" "+ LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getName())  +"', "+
 		    "			destroyOnClose: true, "+
 		    "			width: 750, "+
 		    "			modal:true, "+
