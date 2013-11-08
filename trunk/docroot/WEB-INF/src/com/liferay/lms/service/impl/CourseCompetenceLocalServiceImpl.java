@@ -19,6 +19,8 @@ import java.util.List;
 import com.liferay.lms.model.CourseCompetence;
 import com.liferay.lms.service.base.CourseCompetenceLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the course competence local service.
@@ -34,6 +36,7 @@ import com.liferay.portal.kernel.exception.SystemException;
  * @see com.liferay.lms.service.base.CourseCompetenceLocalServiceBaseImpl
  * @see com.liferay.lms.service.CourseCompetenceLocalServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class CourseCompetenceLocalServiceImpl extends CourseCompetenceLocalServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
