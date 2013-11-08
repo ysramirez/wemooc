@@ -85,7 +85,7 @@ int endYear=Integer.parseInt(formatYear.format(today))+1;
 int endHour=Integer.parseInt(formatHour.format(today));
 int endMin=Integer.parseInt(formatMin.format(today));
 %>
-<liferay-ui:header title="<%=typeName%>"></liferay-ui:header>
+
 <%
 if(learnact!=null)
 {
@@ -115,7 +115,7 @@ if(learnact!=null)
 		<portlet:param name="backURL" value="<%=backURL%>" />
 	</portlet:actionURL>
 
-	<liferay-ui:header title="<%=learnact.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
+	
 	
 <div class="acticons">
 	<%
