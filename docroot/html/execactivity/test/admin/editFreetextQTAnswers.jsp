@@ -128,24 +128,12 @@ function inicializar(totalAnswer){
 					<portlet:actionURL var="editanswerURL" name="editanswer" />
 					<aui:form name="<%=\"afm_\"+testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 						<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
-						
-						<script type="text/javascript">
-							Liferay.provide(window, '<portlet:namespace />onChangeTextAnswer_<%=testanswer.getAnswerId() %>', function(val) {
-						        	var A = AUI();
-									A.one('#<portlet:namespace />answer_<%=testanswer.getAnswerId() %>').set('value',val);
-						        },
-						        ['node']
-						    );
-						</script>
 						<aui:field-wrapper label="">
-							<liferay-ui:input-editor name="<%=\"answer_\"+testanswer.getAnswerId() %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_\"+testanswer.getAnswerId() %>" initMethod="<%=\"initEditorAnswer\"+testanswer.getAnswerId() %>" />
-							<script type="text/javascript">
-						        function <portlet:namespace />initEditorAnswer<%=testanswer.getAnswerId() %>() { 
-						            return "<%=JavaScriptUtil.markupToStringLiteral(testanswer.getAnswer())%>";
-						        }
-						    </script>
+							<div class="container-textarea">
+								<%String name="answer_"+testanswer.getAnswerId(); %>
+								<textarea rows="10" cols="88" name="<%=name%>"><%=testanswer.getAnswer()%></textarea>
+							</div>
 						</aui:field-wrapper>
-						
 						<div id="<portlet:namespace />answerError_<%=Long.toString(testanswer.getAnswerId()) %>" class="<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
 						   														"portlet-msg-error":StringPool.BLANK %>">
 						   	<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
@@ -177,22 +165,10 @@ function inicializar(totalAnswer){
 		<portlet:actionURL var="addanswerURL" name="addanswer" />
 		<aui:form name="afm" action="<%=addanswerURL%>" method="post">
 			
-			<script type="text/javascript">
-				Liferay.provide(window, '<portlet:namespace />onChangeTextNewAnswer', function(val) {
-			        	var A = AUI();
-						A.one('#<portlet:namespace />answer').set('value',val);
-			        },
-			        ['node']
-			    );
-			</script>
-		
 			<aui:field-wrapper label="answer">
-				<liferay-ui:input-editor name="answer" width="80%" onChangeMethod="onChangeTextNewAnswer" initMethod="initEditorNewAnswer" />
-				<script type="text/javascript">
-			        function <portlet:namespace />initEditorNewAnswer() { 
-			            return "<%=JavaScriptUtil.markupToStringLiteral("")%>";
-			        }
-			    </script>
+				<div class="container-textarea">
+					<textarea rows="10" cols="88" name="answer"></textarea>
+				</div>
 			</aui:field-wrapper>
 			
 			<div id="<portlet:namespace />answerError" class="<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?"portlet-msg-error":StringPool.BLANK %>">
