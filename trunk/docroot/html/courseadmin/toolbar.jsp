@@ -38,7 +38,7 @@ long createdGroupId=course.getGroupCreatedId();
 		<liferay-ui:icon 
 			image="export" 
 			label="<%= true %>" 
-			message="execativity.editquestions.exportcsv" 
+			message="courseadmin.exportuser.csv"
 			method="get" 
 			url="<%=exportURL%>" />
 	</div>
