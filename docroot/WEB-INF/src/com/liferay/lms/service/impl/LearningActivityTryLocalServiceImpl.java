@@ -82,10 +82,19 @@ public class LearningActivityTryLocalServiceImpl
 		for(LearningActivityTry userTry:userTries)
 		{
 			this.deleteLearningActivityTry(userTry.getLatId());
+			
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
+			if(serviceContext!=null){
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
 					actId, serviceContext.getUserId(), AuditConstants.DELETE, null);
+			}else{
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(actId);
+				if(la!=null){
+					AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), LearningActivityTry.class.getName(), 
+						actId, la.getUserId(), AuditConstants.DELETE, null);
+				}
+			}
 		}
 		if(learningActivityResultLocalService.existsLearningActivityResult(actId, userId))
 		{

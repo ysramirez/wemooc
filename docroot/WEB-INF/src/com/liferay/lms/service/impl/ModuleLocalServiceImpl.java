@@ -178,9 +178,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			modulePersistence.update(previusModule, true);
 
 			//auditing
-			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
-					moduleId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(theModule.getCompanyId(), theModule.getGroupId(), Module.class.getName(), 
+					moduleId, theModule.getUserId(), AuditConstants.UPDATE, null);
 		}
 		
 	}
@@ -198,9 +197,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			modulePersistence.update(nextModule, true);
 
 			//auditing
-			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
-					moduleId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(theModule.getCompanyId(), theModule.getGroupId(), Module.class.getName(), 
+					moduleId, theModule.getUserId(), AuditConstants.UPDATE, null);
 		}
 		
 	}
@@ -228,9 +226,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 	    Module module = ModuleUtil.update(fileobj, false);
 
 		//auditing
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
-				validmodule.getModuleId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+		AuditingLogFactory.audit(module.getCompanyId(), module.getGroupId(), Module.class.getName(), 
+				validmodule.getModuleId(), module.getUserId(), AuditConstants.ADD, null);
 	    
 	    return module;
 	}
@@ -261,9 +258,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 	    Module module = ModuleUtil.update(fileobj, false);
 	    
 		//auditing
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
-				fileobj.getModuleId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+		AuditingLogFactory.audit(module.getCompanyId(), module.getGroupId(), Module.class.getName(), 
+				fileobj.getModuleId(), module.getUserId(), AuditConstants.ADD, null);
 		
 		return module;
 	}
@@ -282,9 +278,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 		modulePersistence.remove(fileobj);
 
 		//auditing
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
-				fileobj.getModuleId(), serviceContext.getUserId(), AuditConstants.DELETE, null);
+		AuditingLogFactory.audit(fileobj.getCompanyId(), fileobj.getGroupId(), Module.class.getName(), 
+				fileobj.getModuleId(), fileobj.getUserId(), AuditConstants.DELETE, null);
 	}
 
 	@Override
@@ -305,9 +300,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 		module = super.updateModule(module);
 		
 		//auditing
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
-				module.getModuleId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		AuditingLogFactory.audit(module.getCompanyId(), module.getGroupId(), Module.class.getName(), 
+				module.getModuleId(), module.getUserId(), AuditConstants.UPDATE, null);
 		
 		return module;
 	}
@@ -319,9 +313,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 		module = super.updateModule(module, merge);
 
 		//auditing
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Module.class.getName(), 
-				module.getModuleId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		AuditingLogFactory.audit(module.getCompanyId(), module.getGroupId(), Module.class.getName(), 
+				module.getModuleId(), module.getUserId(), AuditConstants.UPDATE, null);
 		
 		return module;
 	}

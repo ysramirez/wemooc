@@ -62,8 +62,16 @@ public class LearningActivityTryServiceImpl
 
 		//auditing
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
+		if(serviceContext!=null){
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
 				actId, serviceContext.getUserId(), AuditConstants.ADD, null);
+		}else{
+			LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(actId);
+			if(la!=null){
+				AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), LearningActivityTry.class.getName(), 
+						actId, la.getUserId(), AuditConstants.ADD, null);
+			}
+		}
 		
 		return lat;
 	}

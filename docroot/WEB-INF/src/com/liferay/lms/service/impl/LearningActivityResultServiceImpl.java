@@ -16,6 +16,7 @@ package com.liferay.lms.service.impl;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.base.LearningActivityResultServiceBaseImpl;
@@ -82,8 +83,18 @@ public class LearningActivityResultServiceImpl
 
 		//auditing
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+		if(serviceContext!=null){
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
 				latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		}else{
+			if(lar!=null){
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(lar.getActId());
+				if(la!=null){
+					AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+							latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+				}
+			}
+		}
 		
 		return lar;
 	}
@@ -95,8 +106,18 @@ public class LearningActivityResultServiceImpl
 
 		//auditing
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+		if(serviceContext!=null){
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
 				latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		}else{
+			if(lar!=null){
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(lar.getActId());
+				if(la!=null){
+					AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+							latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+				}
+			}
+		}
 		
 		return lar;
 	}

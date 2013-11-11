@@ -69,8 +69,9 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			learningActivityLocalService.deleteLearningactivity(lernact);
 
 			//auditing
-			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.DELETE, null);
+			if(lernact!=null){
+				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.DELETE, null);
+			}
 			
 		}
 	}
@@ -83,8 +84,9 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			learningActivityLocalService.deleteLearningactivity(lernact);
 
 			//auditing
-			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.DELETE, null);
+			if(lernact!=null){
+				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.DELETE, null);
+			}
 		}
 	}
 	@JSONWebService
@@ -111,7 +113,9 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			LearningActivity lernact = learningActivityLocalService.addLearningActivity(title, description, createDate, startDate, endDate, typeId, tries, passpuntuation,moduleId, "",  null, null, serviceContext);
 
 			//auditing
-			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
+			if(lernact!=null){
+				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.ADD, null);
+			}
 			
 			return lernact;
 		}
@@ -127,8 +131,11 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 				ActionKeys.UPDATE))
 		{
 			lernact =  learningActivityLocalService.modLearningActivity(lernact, serviceContext);
+			
 			//auditing
-			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			if(lernact!=null){
+				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.UPDATE, null);
+			}
 		
 			return lernact;
 		}
@@ -159,7 +166,9 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			LearningActivity lernact = learningActivityLocalService.modLearningActivity(actId, title, description, createDate, startDate, endDate, typeId, tries,passpuntuation, moduleId,  "",  null, null, serviceContext);
 			
 			//auditing
-			AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			if(lernact!=null){
+				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			}
 		
 			return lernact;
 		}

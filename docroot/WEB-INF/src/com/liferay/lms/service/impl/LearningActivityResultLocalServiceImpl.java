@@ -28,8 +28,6 @@ import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.calificationtype.CalificationType;
 import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;
-import com.liferay.lms.learningactivity.questiontype.QuestionType;
-import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
@@ -131,8 +129,16 @@ public class LearningActivityResultLocalServiceImpl
 
 		//auditing
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
-				learningActivityResult.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		if(serviceContext!=null){
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+				learningActivityResult.getPrimaryKey(), learningActivityTry.getUserId(), AuditConstants.UPDATE, null);
+		}else{
+			LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(actId);
+			if(la!=null){
+				AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), LearningActivityResult.class.getName(), 
+						learningActivityResult.getPrimaryKey(), learningActivityTry.getUserId(), AuditConstants.UPDATE, null);
+			}
+		}
 		
 		return learningActivityResult;
 		
@@ -344,9 +350,10 @@ public class LearningActivityResultLocalServiceImpl
 		}
 
 		//auditing
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
-				learningActivity.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		if(learningActivity!=null){
+			AuditingLogFactory.audit(learningActivity.getCompanyId(), learningActivity.getGroupId(), LearningActivityResult.class.getName(), 
+					learningActivity.getPrimaryKey(), learningActivity.getUserId(), AuditConstants.UPDATE, null);
+		}
 		
 		return this.getByActIdAndUserId(learningActivityTry.getActId(), userId);
 	}
