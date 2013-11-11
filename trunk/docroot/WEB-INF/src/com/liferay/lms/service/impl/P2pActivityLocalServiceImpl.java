@@ -24,6 +24,7 @@ import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.P2pActivity;
+import com.liferay.lms.model.P2pActivityCorrections;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
@@ -75,9 +76,16 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 				for(P2pActivity myActivity : myp2ps){
 					//auditing
 					ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-					AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
-							myActivity.getActId(), serviceContext.getUserId(), AuditConstants.GET, null);
-					return myActivity;
+					if(serviceContext!=null){
+						AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+								myActivity.getActId(), serviceContext.getUserId(), AuditConstants.GET, null);
+					}else{
+						LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(actId);
+						if(la!=null){
+							AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), P2pActivity.class.getName(), 
+									myActivity.getActId(), la.getUserId(), AuditConstants.GET, null);
+						}
+					}
 				}
 			}
 			return null;
@@ -115,8 +123,16 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
-					actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			if(serviceContext!=null){
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+						actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			}else{
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(actId);
+				if(la!=null){
+					AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), P2pActivity.class.getName(), 
+							actId, la.getUserId(), AuditConstants.GET, null);
+				}
+			}
 			
 			return pas;
 		}
@@ -157,8 +173,16 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
-					actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			if(serviceContext!=null){
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+						actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			}else{
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(actId);
+				if(la!=null){
+					AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), P2pActivity.class.getName(), 
+							actId, la.getUserId(), AuditConstants.GET, null);
+				}
+			}
 			
 			return modulesp;
 			
@@ -270,8 +294,16 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		if(activities!=null && !activities.isEmpty()){
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
-					actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			if(serviceContext!=null){
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+						actId, serviceContext.getUserId(), AuditConstants.GET, null);
+			}else{
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(actId);
+				if(la!=null){
+					AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), P2pActivity.class.getName(), 
+							actId, la.getUserId(), AuditConstants.GET, null);
+				}
+			}
 			
 			res = activities;
 		}
@@ -376,8 +408,16 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
-					fileobj.getActId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+			if(serviceContext!=null){
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+						newp2pAct.getActId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+			}else{
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(newp2pAct.getActId());
+				if(la!=null){
+					AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), P2pActivityCorrections.class.getName(), 
+							newp2pAct.getActId(), la.getUserId(), AuditConstants.ADD, null);
+				}
+			}
 
 			return p2pActivityPersistence.update(fileobj, false);
 		}
@@ -397,8 +437,16 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
-					p2pActivity.getActId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			if(serviceContext!=null){
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), P2pActivity.class.getName(), 
+						newp2pAct.getActId(), serviceContext.getUserId(), AuditConstants.ADD, null);
+			}else{
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(newp2pAct.getActId());
+				if(la!=null){
+					AuditingLogFactory.audit(la.getCompanyId(), la.getGroupId(), P2pActivityCorrections.class.getName(), 
+							newp2pAct.getActId(), la.getUserId(), AuditConstants.ADD, null);
+				}
+			}
 			
 			return p2pActivity;
 		}

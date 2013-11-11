@@ -172,8 +172,19 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), ModuleResult.class.getName(), 
+			if(serviceContext!=null){
+				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), ModuleResult.class.getName(), 
 					moduleResult.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			}else{
+				if(moduleResult!=null){
+					Module module = modulePersistence.fetchByPrimaryKey(moduleResult.getModuleId());
+					if(module!=null){
+						AuditingLogFactory.audit(module.getCompanyId(), module.getGroupId(), ModuleResult.class.getName(), 
+								moduleResult.getPrimaryKey(), module.getUserId(), AuditConstants.UPDATE, null);
+					}
+				}
+				
+			}
 			
 			courseResultLocalService.update(moduleResult);
 		}
@@ -308,8 +319,15 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 
 				//auditing
 				ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-				AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), CourseResult.class.getName(), 
+				if(serviceContext!=null){
+					AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), ModuleResult.class.getName(), 
 						moduleResult.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+				}else{
+					if(c!=null){
+						AuditingLogFactory.audit(c.getCompanyId(), c.getGroupId(), ModuleResult.class.getName(), 
+								moduleResult.getPrimaryKey(), c.getUserId(), AuditConstants.UPDATE, null);
+					}
+				}
 				
 				return true;
 			}else if(moduleResult.getResult() > result){
