@@ -184,6 +184,7 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invo
 			}
 			
 			String getFileUrl(HttpServletRequest request, String path) {
+				request = ServiceContextThreadLocal.getServiceContext().getRequest();
 				return PortalUtil.getPortalURL(request)+"/"+ClpSerializer.getServletContextName()+"/scorm/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/"+path;
 			}
 
@@ -200,7 +201,7 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invo
 					return getUrl((HttpServletRequest) args[0]);
 				}
 				
-				if(("getFileUrl".equals(name))&&(args.length==2)&&(args[0] instanceof HttpServletRequest)&&(args[1] instanceof String)) {
+				if(("getFileUrl".equals(name))&&(args.length==2)&&(args[0] == null || args[0] instanceof HttpServletRequest)&&(args[1] instanceof String)) {
 					return getFileUrl((HttpServletRequest) args[0], (String) args[1]);
 				}
 				

@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
 <%@page import="com.liferay.portlet.expando.model.ExpandoTableConstants"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
@@ -14,14 +17,21 @@ Group university=GroupLocalServiceUtil.getGroup(course.getGroupId());
 %>
 <div class="courselogodiv">
 <%
-if(generatedGroup.getPublicLayoutSet().getLogo())
-				{
-					long logoId = generatedGroup.getPublicLayoutSet().getLogoId();
-					%>
-					<img class="courselogo" src="/image/layout_set_logo?img_id=<%=logoId%>">
-					
-					<%
-				}
+if (Validator.isNotNull(course.getIcon())) {
+	long logoId = course.getIcon();
+	FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(logoId);
+	%>
+	<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK) %>">
+	
+	<%
+} else if(generatedGroup.getPublicLayoutSet().getLogo())
+{
+	long logoId = generatedGroup.getPublicLayoutSet().getLogoId();
+	%>
+	<img class="courselogo" src="/image/layout_set_logo?img_id=<%=logoId%>">
+	
+	<%
+}
 %>
 </div>
 <div class="description"><%=asset.getSummary() %></div>

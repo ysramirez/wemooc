@@ -1,3 +1,4 @@
+<%@page import="java.util.Properties"%>
 <%@page import="com.liferay.portlet.PortletURLUtil"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
 <%@page import="com.liferay.portal.theme.PortletDisplay"%>
@@ -24,8 +25,14 @@ if(course!=null)
 {
 	searchGroupId=course.getGroupId();
 }
-String assetTypes=PropsUtil.get("lms.internalresource.assettypes");
-String[] allowedAssetTypes=assetTypes.split(",");
+//String assetTypes=PropsUtil.get("lms.internalresource.assettypes");
+//String[] allowedAssetTypes=assetTypes.split(",");
+
+Properties props = PropsUtil.getProperties("lms.internalresource.assettypes", true);
+List<String> allowedAssetTypes = new ArrayList<String>();
+for (Object key:props.keySet()) {
+	allowedAssetTypes.addAll(ListUtil.toList(props.get(key).toString().split(",")));
+}
 
 %>
 <liferay-ui:icon-menu message="add">

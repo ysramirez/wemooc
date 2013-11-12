@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry"%>
@@ -82,7 +85,8 @@ else
 }	
 
 
-String description="";
+String description=ParamUtil.get(request, "description", "");
+String icon = ParamUtil.get(request, "icon", "0");
 SimpleDateFormat formatDay = new SimpleDateFormat("dd");
 formatDay.setTimeZone(timeZone);
 SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
@@ -94,16 +98,16 @@ formatHour.setTimeZone(timeZone);
 SimpleDateFormat formatMin = new SimpleDateFormat("mm");
 formatMin.setTimeZone(timeZone);
 Date today=new Date(System.currentTimeMillis());
-int startDay=Integer.parseInt(formatDay.format(today));
-int startMonth=Integer.parseInt(formatMonth.format(today))-1;
-int startYear=Integer.parseInt(formatYear.format(today));
-int startHour=Integer.parseInt(formatHour.format(today));
-int startMin=Integer.parseInt(formatMin.format(today));
-int endDay=Integer.parseInt(formatDay.format(today));
-int endMonth=Integer.parseInt(formatMonth.format(today))-1;
-int endYear=Integer.parseInt(formatYear.format(today))+1;
-int endHour=Integer.parseInt(formatHour.format(today));
-int endMin=Integer.parseInt(formatMin.format(today));
+int startDay=ParamUtil.getInteger(request, "startDay", Integer.parseInt(formatDay.format(today)));
+int startMonth=ParamUtil.getInteger(request, "startMonth", Integer.parseInt(formatMonth.format(today))-1);
+int startYear=ParamUtil.getInteger(request, "startYear", Integer.parseInt(formatYear.format(today)));
+int startHour=ParamUtil.getInteger(request, "startHour", Integer.parseInt(formatHour.format(today)));
+int startMin=ParamUtil.getInteger(request, "startMin", Integer.parseInt(formatMin.format(today)));
+int endDay=ParamUtil.getInteger(request, "stopDay", Integer.parseInt(formatDay.format(today)));
+int endMonth=ParamUtil.getInteger(request, "stopMonth", Integer.parseInt(formatMonth.format(today))-1);
+int endYear=ParamUtil.getInteger(request, "stopYear", Integer.parseInt(formatYear.format(today))+1);
+int endHour=ParamUtil.getInteger(request, "stopHour", Integer.parseInt(formatHour.format(today)));
+int endMin=ParamUtil.getInteger(request, "stopMin", Integer.parseInt(formatMin.format(today)));
 String summary="";
 AssetEntry entry=null;
 boolean visibleencatalogo=false;
@@ -118,6 +122,7 @@ if(course!=null)
 	summary=entry.getSummary();
 	courseId=course.getCourseId();
 	description=course.getDescription(themeDisplay.getLocale());
+	icon = course.getIcon()+"";
 	startDay=Integer.parseInt(formatDay.format(course.getStartDate()));
 	startMonth=Integer.parseInt(formatMonth.format(course.getStartDate()))-1;
 	startYear=Integer.parseInt(formatYear.format(course.getStartDate()));
@@ -142,7 +147,7 @@ else
 }
 %>
 
-<aui:form name="fm" action="<%=savecourseURL%>"  method="post" >
+<aui:form name="fm" action="<%=savecourseURL%>"  method="post" enctype="multipart/form-data">
 
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
@@ -160,10 +165,58 @@ else
         function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
     </script>
 		</aui:field-wrapper>
+	
 		
 	<c:if test="<%= permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),0,publishPermission) %>">
 		<aui:input type="checkbox" name="visible" label="published-in-catalog" value="<%=visibleencatalogo %>" />
 	</c:if>
+	
+	<% boolean requiredCourseIcon = GetterUtil.getBoolean(PropsUtil.get("lms.course.icon.required"), false); %>
+	<aui:input type="hidden" name="icon" >
+		<% if (requiredCourseIcon) { %>
+			<aui:validator errorMessage="course-icon-required" name="customRequiredCourseIcon1">(function(val, fieldNode, ruleValue) {return (AUI().one('#<portlet:namespace/>fileName').val() != 0 || val != null);})()</aui:validator>
+		<% } %>
+	</aui:input> 
+	<liferay-ui:error key="error-file-size" message="error-file-size" />
+	<script type="text/javascript">
+	Liferay.provide(
+		window,
+		'<portlet:namespace/>toggleInputLogo',
+		function() {
+			var A = AUI();
+			var discardCheckbox = A.one('#<portlet:namespace/>discardLogoCheckbox');
+			var fileInput = A.one('#<portlet:namespace/>fileName');
+			var iconCourse = A.one('#<portlet:namespace/>icon_course');
+			if (discardCheckbox.attr('checked')) {
+				fileInput.val('');
+				fileInput.hide();
+				iconCourse.hide();
+			} else {
+				fileInput.show();
+				iconCourse.show();
+			}
+		},
+		['node']
+	);
+	</script>
+	<aui:field-wrapper label="icon">
+		<% if (course != null && course.getIcon() != 0 && !requiredCourseIcon) { %>
+				<aui:input type="checkbox" name="discardLogo" label="discard-course-icon" onClick='<%= renderResponse.getNamespace()+"toggleInputLogo()" %>'/>
+			<% } %>
+		<aui:input  inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" >
+				<aui:validator name="acceptFiles">'jpg, jpeg, png, gif'</aui:validator>
+				<% if (requiredCourseIcon) { %>
+					<aui:validator errorMessage="course-icon-required" name="customRequiredCourseIcon1">(function(val, fieldNode, ruleValue) {return (AUI().one('#<portlet:namespace/>icon').val() || val != null);})()</aui:validator>
+				<% } %>
+			</aui:input>
+		<%	if(course != null && course.getIcon() != 0) {
+			FileEntry image_=DLAppLocalServiceUtil.getFileEntry(course.getIcon());	%> 
+			<img id="<portlet:namespace/>icon_course" style="height: 50px;" alt="" class="ico_course" src="<%= DLUtil.getPreviewURL(image_, image_.getFileVersion(), themeDisplay, StringPool.BLANK) %>"/>
+			
+		<%} %>
+	</aui:field-wrapper>
+	<liferay-ui:error key="course-icon-required" message="course-icon-required" />
+	<liferay-ui:error key="error_number_format" message="error_number_format" />
 	
 	<aui:input type="textarea" cols="100" rows="4" name="summary" label="summary" value="<%=summary %>"/>
 	

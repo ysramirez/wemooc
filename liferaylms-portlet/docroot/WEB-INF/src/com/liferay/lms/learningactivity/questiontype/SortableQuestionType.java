@@ -149,9 +149,8 @@ public class SortableQuestionType extends BaseQuestionType {
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 
-			List<TestAnswer> answersSelected=new ArrayList<TestAnswer>();
-			if(feedback) answersSelected=getAnswerSelected(document, questionId);
-
+			List<TestAnswer> answersSelected = getAnswerSelected(document, questionId);
+			
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			List<TestAnswer> tmp = ListUtil.copy(testAnswers);
 			boolean questionCorrect = false;
@@ -163,7 +162,11 @@ public class SortableQuestionType extends BaseQuestionType {
 				html += "<div class=\"question"  + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">"+
 						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 						"<div class=\"questiontext\">" + question.getText() + "</div>";
-				Collections.shuffle(tmp);
+				if (answersSelected.isEmpty()) {
+					Collections.shuffle(tmp);
+				} else {
+					tmp = answersSelected;
+				}
 				html += "<div class=\"question_sortable\"><ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
 			}
 			String value="";
@@ -172,17 +175,25 @@ public class SortableQuestionType extends BaseQuestionType {
 				String showCorrectAnswer="false", correct = "";
 				if(feedback) {
 					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
-					if("true".equals(showCorrectAnswer)) correct="font_14 color_cuarto negrita";
+					if("true".equals(showCorrectAnswer)) {
+						correct="font_14 color_cuarto negrita";
+					}
 					questionCorrect = answersSelected.get(i).equals(testAnswers.get(i));
 
-					if("true".equals(showCorrectAnswer))
-						if(questionCorrect) feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"execativity.test.questions.ordenable.correct");
+					if("true".equals(showCorrectAnswer)) {
+						if(questionCorrect) {
+							feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"execativity.test.questions.ordenable.correct");
+						}
 						else {
 							cssclass="incorrect";
 							feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"execativity.test.questions.ordenable.incorrect") + 						
 									LanguageUtil.format(themeDisplay.getLocale(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswers.indexOf(answersSelected.get(i))+1)});
 						}
-					
+					} else {
+						if(!questionCorrect) {
+							cssclass="incorrect";
+						}
+					}
 					answersFeedBack += "<div class=\"answer\">" + answersSelected.get(i).getAnswer() 
 							+ "<div class=\"message  " + correct + " "+ cssclass +"\">"+feedMessage+"</div> </div>";
 			
@@ -219,27 +230,29 @@ public class SortableQuestionType extends BaseQuestionType {
 	
 	protected List<TestAnswer> getAnswerSelected(Document document,long questionId){
 		List<TestAnswer> answerSelected = new ArrayList<TestAnswer>();
-		Iterator<Element> nodeItr = document.getRootElement().elementIterator();
-		while(nodeItr.hasNext()) {
-			Element element = nodeItr.next();
-	         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
-	        	 Iterator<Element> elementItr = element.elementIterator();
-	        	 while(elementItr.hasNext()) {
-	        		 Element elementElement = elementItr.next();
-	        		 if("answer".equals(elementElement.getName())) {
-	        			 try {
-							answerSelected.add(TestAnswerLocalServiceUtil.getTestAnswer(Long.valueOf(elementElement.attributeValue("id"))));
-						} catch (NumberFormatException e) {
-							e.printStackTrace();
-						} catch (PortalException e) {
-							e.printStackTrace();
-						} catch (SystemException e) {
-							e.printStackTrace();
-						}
-	        		 }
-	        	 }
-	         }
-	    }	
+		if (document != null) {
+			Iterator<Element> nodeItr = document.getRootElement().elementIterator();
+			while(nodeItr.hasNext()) {
+				Element element = nodeItr.next();
+		         if("question".equals(element.getName()) && questionId == Long.valueOf(element.attributeValue("id"))){
+		        	 Iterator<Element> elementItr = element.elementIterator();
+		        	 while(elementItr.hasNext()) {
+		        		 Element elementElement = elementItr.next();
+		        		 if("answer".equals(elementElement.getName())) {
+		        			 try {
+								answerSelected.add(TestAnswerLocalServiceUtil.getTestAnswer(Long.valueOf(elementElement.attributeValue("id"))));
+							} catch (NumberFormatException e) {
+								e.printStackTrace();
+							} catch (PortalException e) {
+								e.printStackTrace();
+							} catch (SystemException e) {
+								e.printStackTrace();
+							}
+		        		 }
+		        	 }
+		         }
+		    }
+		}
 		return answerSelected;
 	}
 	

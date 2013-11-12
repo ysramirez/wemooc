@@ -177,7 +177,9 @@ public class CloneCourse implements MessageListener {
 		Group newGroup = GroupLocalServiceUtil.getGroup(newCourse.getGroupCreatedId());
 		serviceContext.setScopeGroupId(newCourse.getGroupCreatedId());
 		
-
+		newCourse.setIcon(course.getIcon());
+		newCourse = CourseLocalServiceUtil.modCourse(newCourse, serviceContext);
+		
 		newCourse.setUserId(themeDisplay.getUserId());
 
 		System.out.println("-----------------------\n  From course: "+  group.getName());
@@ -636,7 +638,7 @@ public class CloneCourse implements MessageListener {
         } catch (Exception ex){
 
         	long repositoryId = DLFolderConstants.getDataRepositoryId(groupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-        	//mountPoint -> Si es carpeta raíz.
+        	//mountPoint -> Si es carpeta raï¿½z.
         	mainFolder = DLFolderLocalServiceUtil.addFolder(userId, groupId, repositoryId, true, 0, "ResourceUploads", "ResourceUploads", serviceContext);
         }
   
