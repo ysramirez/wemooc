@@ -79,8 +79,9 @@ for(String className:allowedAssetTypes)
 <aui:field-wrapper label="categories" helpMessage="resourceInternalActivity.categories.helpmessage">
 	<%@ include file="/html/resourceInternalActivity/admin/catselector.jspf" %>
 </aui:field-wrapper>
-
-<aui:button type="submit" value="search" />
+<aui:button-row>
+	<aui:button type="submit" value="search" />
+</aui:button-row>
 </aui:form>
 <%!
 public PortletURL getAddPortletURL(long groupId,LiferayPortletRequest liferayPortletRequest, LiferayPortletResponse liferayPortletResponse, String className) throws Exception {
