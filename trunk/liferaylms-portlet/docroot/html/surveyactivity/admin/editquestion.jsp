@@ -258,7 +258,9 @@ int totalAnswer=(int)TestAnswerLocalServiceUtil.dynamicQueryCount( DynamicQueryF
 				   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 				</div>
 				<aui:column>
-					<aui:button type="submit" value="modify"></aui:button>
+					<aui:button-row>
+						<aui:button type="submit" value="modify"></aui:button>
+					</aui:button-row>
 				</aui:column>
 			</aui:form>
 		</liferay-ui:search-container-column-text>
