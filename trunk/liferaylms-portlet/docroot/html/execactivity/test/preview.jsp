@@ -79,7 +79,9 @@
 				if (questions.size()>0){
 %>
 					<aui:form class="buttons_container" name="formulario" action="<%=correctURL %>" method="POST">
-						<aui:button class="floatr" type="submit" value="<%=LanguageUtil.get(pageContext,\"execativity.test.try.start\")%>" />
+						<aui:button-row>
+							<aui:button class="floatr" type="submit" value="<%=LanguageUtil.get(pageContext,\"execativity.test.try.start\")%>" />
+						</aui:button-row>
 					</aui:form>
 <% 
 				}else{
