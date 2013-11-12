@@ -120,7 +120,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 			    </script>
 		    </aui:field-wrapper>
 		    <aui:button-row>
-				<aui:button type="submit" />
+				<aui:button  type="submit" />
 				<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
 			</aui:button-row>
 	    </liferay-ui:panel>

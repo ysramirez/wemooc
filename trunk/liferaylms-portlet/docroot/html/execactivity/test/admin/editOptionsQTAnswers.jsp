@@ -57,7 +57,9 @@
 			<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
 			<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedback"></aui:input>
 			<aui:input  type="checkbox" name="correct" label="correct"></aui:input>
-			<aui:button type="submit" value="add-more-answers" ></aui:button>
+			<aui:button-row>
+				<aui:button type="submit" value="add-more-answers" ></aui:button>
+			</aui:button-row>
 		</aui:form>
 	</div>
 	
@@ -160,7 +162,9 @@
 								
 								<aui:input  name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
 								<aui:input type="checkbox" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
-								<aui:button type="submit" value="modify"></aui:button>
+								<aui:button-row>
+									<aui:button type="submit" value="modify"></aui:button>
+								</aui:button-row>
 							</aui:form>
 						</div>
 						<div id="rightSideAnswer">

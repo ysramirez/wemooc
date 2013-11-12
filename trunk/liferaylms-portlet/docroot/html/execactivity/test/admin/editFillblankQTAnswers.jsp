@@ -113,7 +113,9 @@
 						</div>
 						<aui:input  name="feedbackCorrect" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
 						<aui:input  name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>"></aui:input>
-						<aui:button type="submit" value="modify"></aui:button>
+						<aui:button-row>
+							<aui:button type="submit" value="modify"></aui:button>
+						</aui:button-row>
 					</aui:form>
 				</div>
 				<div id="rightSideAnswer">
@@ -179,7 +181,9 @@
 			<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedbackCorrect"></aui:input>
 			<aui:input cssClass="input-comment" name="feedbackNoCorrect" label="feedbackNoCorrect"></aui:input>
 			<aui:input  type="hidden" name="correct" value="true"/>
-			<aui:button type="submit" />
+			<aui:button-row>
+				<aui:button type="submit" />
+			</aui:button-row>
 		</aui:form>
 	</div>
 	<%
