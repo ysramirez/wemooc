@@ -6,7 +6,7 @@
 String abstractLength = renderRequest.getPreferences().getValue("abstractLength", "200");
 
 Course course=(Course)request.getAttribute("course");
-String summary = course.getDescription();
+String summary = course.getDescription(themeDisplay.getLocale());
 
 summary = StringUtil.shorten(summary, Integer.valueOf(abstractLength), "...");
 
