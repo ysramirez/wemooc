@@ -57,6 +57,6 @@ if (request.getRemoteUser() != null) {
 </liferay-ui:search-container>
 <aui:button-row>
 	<aui:button type="submit" value="modify"/>
-</aui:button-row
+</aui:button-row>
 </aui:form>
 <%}%>
