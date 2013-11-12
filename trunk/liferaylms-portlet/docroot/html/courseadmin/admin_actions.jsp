@@ -30,6 +30,7 @@ count = countGroup + countParentGroup;
 <portlet:renderURL var="editURL">
 <portlet:param name="courseId" value="<%=primKey %>" />
 <portlet:param name="jspPage" value="/html/courseadmin/editcourse.jsp" />
+<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
 </portlet:renderURL>
 <%
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE))
@@ -42,6 +43,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 %>
 <portlet:actionURL name="closeCourse" var="closeURL">
 <portlet:param name="courseId" value="<%= primKey %>" />
+<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
 </portlet:actionURL>
 <%
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)&& ! myCourse.isClosed())

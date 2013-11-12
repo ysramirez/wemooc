@@ -13,6 +13,7 @@
 <%@ include file="/init.jsp" %>
 <portlet:renderURL var="newactivityURL">
 <portlet:param name="jspPage" value="/html/courseadmin/editcourse.jsp"></portlet:param>
+<portlet:param name="redirect" value="<%= currentURL %>"></portlet:param>
 </portlet:renderURL>
 <div class="portlet-toolbar search-form">
 <h1 class="taglib-categorization-filter entry-title">
