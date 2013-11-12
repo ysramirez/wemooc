@@ -32,9 +32,7 @@ if(themeDisplay.isSignedIn() &&   course!=null && permissionChecker.hasPermissio
 	ratingsEnabled="false" 
 	redirect="<%= currentURL %>"
 	subject="<%= course.getTitle() %>" 
-	userId="<%= course.getUserId() %>" /> 
-
-</div>
+	userId="<%= course.getUserId() %>" />
 
 <% 
 }

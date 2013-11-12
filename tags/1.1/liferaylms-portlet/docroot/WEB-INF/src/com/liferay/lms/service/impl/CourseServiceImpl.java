@@ -30,10 +30,12 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.RoleConstants;
@@ -48,6 +50,8 @@ import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.social.model.SocialRelationConstants;
 import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
 
@@ -431,5 +435,36 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			e.printStackTrace();
 		}
 		return false;
+	}
+	
+	@JSONWebService
+	public String getLogoUrl(Long courseId) {
+		Course course = null;
+		Group generatedGroup = null;
+		try {
+			course = courseLocalService.getCourse(courseId);
+			generatedGroup = GroupLocalServiceUtil.fetchGroup(course.getGroupCreatedId());
+		} catch (SystemException e) {
+			return "";
+		} catch (PortalException e) {
+			return "";
+		}
+		if (Validator.isNotNull(course.getIcon())) {
+			try {
+				FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(course.getIcon());
+				
+				return DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK);
+			} catch (SystemException e) {
+				return "";
+			} catch (PortalException e) {
+				return "";
+			}
+
+		} else if(generatedGroup.getPublicLayoutSet().getLogo())
+		{
+			long logoId = generatedGroup.getPublicLayoutSet().getLogoId();
+			return "/image/layout_set_logo?img_id="+logoId;
+		}
+		return "";
 	}
 }

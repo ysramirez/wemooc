@@ -22,7 +22,8 @@ Liferay.Service.registerClass(
 		unsetParent: true,
 		setTutor: true,
 		unsetTutor: true,
-		existsCourseName: true
+		existsCourseName: true,
+		getLogoUrl: true
 	}
 );
 
