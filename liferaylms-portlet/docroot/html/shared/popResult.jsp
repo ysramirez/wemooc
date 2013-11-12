@@ -43,7 +43,9 @@ if(learnResult.getPassed())
 </div>
 <%--div class="negrita color_principal"><liferay-ui:message key="shared-guess-badget" /></div--%>
 <!-- <a class="button">Ver revisi&oacute;n</a>-->
-<aui:button name="cancelButton" type="button" value="acept" onclick="$('#activityResult').dialog('close')"/>
+<aui:button-row>
+	<aui:button name="cancelButton" type="button" value="acept" onclick="$('#activityResult').dialog('close')"/>
+</aui:button-row>
 </div>
 <script type="text/javascript">
 <!--
@@ -66,7 +68,9 @@ else
 <h1><%=title %></h1>
 <div id="actfeedback"><%=actFeedback %></div>
 <!--  <a class="button">Ver revisi&oacute;n</a>-->
-<aui:button name="cancelButton" type="button" value="acept" onclick="$('#activityResult').dialog('close')"/>
+<aui:button-row>
+	<aui:button name="cancelButton" type="button" value="acept" onclick="$('#activityResult').dialog('close')"/>
+</aui:button-row>
 </div>
 <script type="text/javascript">
 <!--
