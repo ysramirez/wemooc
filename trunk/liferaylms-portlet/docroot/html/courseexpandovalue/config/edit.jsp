@@ -13,7 +13,7 @@ if (Validator.isNotNull(portletResource)) {
 </liferay-portlet:actionURL>
 <form name="<portlet:namespace />fm" action="<%=updateConfURL%>" method="post">
 <aui:input  label="expandoColumn" name="expandoColumn" value="<%=expandoColumn %>"></aui:input>
-<aui:button-row>
+	<aui:button-row>
 		<aui:button type="submit" />
 	</aui:button-row>
 </form>
