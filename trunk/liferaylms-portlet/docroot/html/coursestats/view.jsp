@@ -16,10 +16,12 @@ Course curso = CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScop
 long finalizados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(), true);
 long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(), false) + finalizados;
 %>
+
 <liferay-portlet:resourceURL var="exportURL" >
 	<portlet:param name="action" value="export"/>
 	<portlet:param name="courseId" value="<%=Long.toString(curso.getCourseId()) %>"/>
 </liferay-portlet:resourceURL>
+
 <liferay-ui:icon cssClass='bt_importexport' label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
 <div class="registered"><liferay-ui:message key="coursestats.hay" /> <%=registered %> <liferay-ui:message key="coursestats.inscription.users" /></div>
 
