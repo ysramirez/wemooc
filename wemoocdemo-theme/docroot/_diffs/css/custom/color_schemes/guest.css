@@ -1,0 +1,69 @@
+body.guest{background:#f9f9f9 url(/wemoocdemo-theme/images/custom/color_schemes/guest/bg_body.png) 0 -39px repeat-x;}
+body.guest.dockbar-ready{background:#f9f9f9 url(/wemoocdemo-theme/images/custom/color_schemes/guest/bg_body.png) 0 -9px repeat-x;}
+.guest #content{background-color:#fff;}
+body.guest.portal-popup{
+	background:none #fff; 
+}
+.guest #navigation_table_column2{float:left;}
+
+.guest .title_arrow .portlet-title{margin-bottom:0;background:url("/wemoocdemo-theme/images/custom/icons/arrow_right.png") no-repeat scroll 0% 50% transparent;}
+.guest .title_arrow .portlet-title .portlet-title-text{padding-left:25px;}
+.npalogin{color:#000;}
+.npalogin .aui-field-input-text{font:300 1.2727em Nunito, Tahoma, Verdana;padding:2px 4px;}
+
+.npalogin .userregister-portlet{color:#000;}
+.npalogin .userregister-portlet h2{display:none;}
+.npalogin .userregister-portlet label{font-size:1.2727em;color:#00b5cc}
+.npalogin .userregister-portlet .capaTexto{font-size:1.2727em;padding-bottom:10px;}
+.npalogin .userregister-portlet #contenedorCachat label{color:#000;}
+.npalogin .userregister-portlet .condiciio{padding:5px 0;}
+.npalogin .userregister-portlet .condiciio input{margin-right:5px;vertical-align:top;}
+.npalogin .userregister-portlet .condiciio span{font-size:1.2727em;}
+.npalogin .userregister-portlet .registroBotonGuardar{text-align:center;}
+.npalogin .userregister-portlet .registroBotonCancelar{display:none;}
+
+.npalogin .portlet-title{border:0 none}
+.npalogin .portlet-title .portlet-title-text{font-size:16px;font-weight:600;}
+.npalogin .portlet-login{color:#000;background:#f0f0f0;width:100%;height:auto;}
+.npalogin .portlet-login .portlet-body{padding:10px;}
+.npalogin .portlet-login .portlet-topper{background:transparent;}
+.npalogin .portlet-login .portlet{background:#f0f0f0 url("/wemoocdemo-theme/images/custom/color_schemes/guest/comun/bg_login.png") no-repeat right top;}
+.npalogin .portlet-login .aui-button-holder{text-align:right;}
+.npalogin .portlet-login label{float:left;width:140px;padding-right:10px;text-align:right;font-size:1.4em;color:#00b5cc;}
+.npalogin .portlet-login .aui-field-input-text{width:175px;}
+.npalogin .portlet-login .aui-field-choice{clear:both;overflow:hidden;text-align:right;}
+.npalogin .portlet-login .aui-field-choice label{float:none;width:auto}
+.npalogin .portlet-login .aui-field-choice .aui-field-input-choice{vertical-align:top;float:none;}
+
+.npalogin #npacolumn-2{width:548px;border-right:#d6d6d6 solid 1px;}
+.npalogin #npacolumn-3{width:380px;padding-left:20px;margin-top:0;}
+
+.npalogin .portlet-login input[type="submit"],.npalogin .portlet-login input[type="button"],.npalogin .portlet-login input[type="reset"],.npalogin .portlet-login  button{
+	background: #00b5cc url(/wemoocdemo-theme/images/custom/bg_buttom3.jpg);
+	border:#96e1ea solid 1px;
+}
+.npalogin input[type="submit"],.npalogin input[type="button"],.npalogin input[type="reset"],.npalogin  button{
+	font-size:1.2727em;
+}
+
+.npalogin .portlet-login .navigation{border-top:0 none;background:transparent;clear:both;overflow:hidden;font-size:1.4em;text-align:right;}
+.npalogin .portlet-login a{color:#00b1b0;}
+.npalogin .portlet-login a:hover{color:#aac9c8;}
+
+.npalogin .nuevoRegistroForm label.aui-field-label{font:600 1.4em Nunito, Tahoma, Verdana;color:#00b5cc;padding-bottom:5px;}
+.npalogin .nuevoRegistroForm input.aui-field-input-text{width:250px;font:300 1.4em Nunito, Tahoma, Verdana;padding:3px 20px;}
+
+.npalogin .portlet-login .navigation ul.lfr-component{float:right;}
+
+.npalogin .nuevoRegistroForm .privacidad a{padding:5px 20px 5px 0;font:300 1.4em Nunito, Tahoma, Verdana;background: url("/wemoocdemo-theme/images/custom/arrow_right_a.png") no-repeat 100% 50%;}
+.npalogin .nuevoRegistroForm .condiciones a{padding:5px 20px 5px 0;font:300 1.4em Nunito, Tahoma, Verdana;background: url("/wemoocdemo-theme/images/custom/arrow_right_a.png") no-repeat 100% 50%;}
+
+/* Login captcha */
+.taglib-captcha{clear:both;overflow:hidden;text-align:right;}
+.taglib-captcha .captcha{display:inline-block;}
+.taglib-captcha .lfr-table{float:right;}
+.taglib-captcha .lfr-table td{font-size:1.4em;font-weight:600;color:#00b5cc;}
+.taglib-captcha .lfr-table td input{font:300 1em Nunito, Tahoma, Verdana;padding:2px 4px;width:175px;}
+.npalogin .portlet-login a.taglib-icon span.taglib-text{text-decoration:none;}
+.taglib-icon .taglib-text{text-decoration:none;font:600 16px Nunito, Arial;}
+/* */
