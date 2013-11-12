@@ -692,8 +692,6 @@ font-size:1.1em;
 }
 .aui-panel .aui-button-holder .aui-button{background:transparent none;}
 .aui-state-default, .aui-state-active, .aui-state-hover {background:none;background-image:none;border:0px;color: #000000;}
-.aui-icon {background-image:url(/wemoocdemo-theme/images/custom/icon_sprite.gif)}
-
 
 .aui-button-input-submit, .submit{
     padding:3px 15px 4px 15px;	
