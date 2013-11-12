@@ -41,8 +41,9 @@
 	%>
 
 	</aui:select>
-	
-	<aui:button type="submit" name="acept"></aui:button>
+	<aui:button-row>
+		<aui:button type="submit" name="acept"></aui:button>
+	</aui:button-row>
 
 </aui:form>
 
