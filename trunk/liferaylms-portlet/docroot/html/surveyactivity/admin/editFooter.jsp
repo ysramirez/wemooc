@@ -39,7 +39,9 @@
 	    
 	//-->
 	</script>
-	<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
+	<aui:button-row>
+		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
+	</aui:button-row>
 <%
 	}
 %>
