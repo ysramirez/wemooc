@@ -124,7 +124,9 @@
 						if(questions.size() > 0)
 						{
 						%>
+						<aui:button-row>
 						<aui:button type="submit"  onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event);" %>' ></aui:button>
+						</aui:button-row>
 						<%}%>
 						</aui:form>
 						<%
