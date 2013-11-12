@@ -32,7 +32,9 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),LearningActivi
 		<h4><liferay-ui:message key="portaladmin.multimedia.updateextracontent" /></h4>
 		<aui:form action="<%=updateExtraContentMultimediaActivitiesURL %>" method="POST" name="form_mail">
 			<aui:input name="updateBD" label="portaladmin.multimedia.updatebd" type="checkbox"></aui:input>
-			<aui:button type="submit" value="send" label="portaladmin.multimedia.updatebd" class="submit" ></aui:button>
+			<aui:button-row>
+				<aui:button type="submit" value="send" label="portaladmin.multimedia.updatebd" class="submit" ></aui:button>
+			</aui:button-row>
 		</aui:form>
 	</div>
 	
@@ -41,7 +43,9 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),LearningActivi
 		<h4><liferay-ui:message key="portaladmin.scorm.updateextracontent" /></h4>
 		<aui:form action="<%=updateExtraContentScormActivitiesURL %>" method="POST" name="form_mail">
 			<aui:input name="updateBD" label="portaladmin.multimedia.updatebd" type="checkbox"></aui:input>
-			<aui:button type="submit" value="send" label="portaladmin.multimedia.updatebd" class="submit" ></aui:button>
+			<aui:button-row>
+				<aui:button type="submit" value="send" label="portaladmin.multimedia.updatebd" class="submit" ></aui:button>
+			</aui:button-row>
 		</aui:form>
 	</div>
 	
@@ -50,7 +54,9 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),LearningActivi
 		<h4><liferay-ui:message key="portaladmin.multimedia.deleteRepeatedModuleResult" /></h4>
 		<aui:form action="<%=deleteRepeatedModuleResultURL %>" method="POST" name="form_mail">
 			<aui:input name="updateBD" label="portaladmin.multimedia.updatebd" type="checkbox"></aui:input>
-			<aui:button type="submit" value="update" class="submit" ></aui:button>
+			<aui:button-row>
+				<aui:button type="submit" value="update" class="submit" ></aui:button>
+			</aui:button-row>
 		</aui:form>
 		<div>
 			<a onClick="openLogs('/custom_logs/deleteRepeatedModuleResult.txt')" style="Cursor:pointer;">deleteRepeatedModuleResult.txt</a>
