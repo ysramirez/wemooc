@@ -102,6 +102,9 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','
 			else if(html5Event.data.name=='closeActivity'){
 				A.DialogManager.closeByChild('#editlesson');
 			}
+			else if(html5Event.data.name=='setTitleActivity'){
+				A.DialogManager.findByChild('#editlesson').set('title',html5Event.data.title);
+			}
 			else if((html5Event.data.name=='resizeWidthActivity')&&(!!html5Event.data.width)){
 				var editLessonDiv = A.one('#editlesson');
 				if((editLessonDiv!=null)&&(editLessonDiv.one('iframe.aui-resizeiframe-monitored-height')!=null)) {

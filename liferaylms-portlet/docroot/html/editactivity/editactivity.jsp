@@ -163,6 +163,27 @@ if(learnact!=null)
 <!--
 
 AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'widget-locale', function(A) {
+	
+	if ((!!window.postMessage)&&(window.parent != window)) {
+		if (!window.location.origin){
+			window.location.origin = window.location.protocol+"//"+window.location.host;
+		}
+		
+		if(AUI().UA.ie==0) {
+			parent.postMessage({name:'setTitleActivity',
+				                moduleId:<%=Long.toString(moduleId)%>,
+				                actId:<%=Long.toString(actId)%>,
+				                title:'<%=LanguageUtil.get(pageContext, actId==0?"activity.creation":"activity.edition")+" "+ 
+				                	LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(typeId).getName())%>'}, window.location.origin);
+		}
+		else {
+			parent.postMessage(JSON.stringify({name:'setTitleActivity',
+                							   moduleId:<%=Long.toString(moduleId)%>,
+                							   actId:<%=Long.toString(actId)%>,
+                							   title:'<%=LanguageUtil.get(pageContext,actId==0?"activity.creation":"activity.edition")+" "+ 
+                							   		LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(typeId).getName())%>'}), window.location.origin);
+		}
+	}
 
 	try{
 		<% if(larntype.hasEditDetails()){ %>
