@@ -334,5 +334,7 @@ if(actId!=0)
 <%
 String urlback = "self.location = '"+back+"';";
 %>
-<aui:button cssClass="floatl" value="back" type="button" onClick="<%=urlback %>" style="margin-top:10px" />
+<aui:button-row>
+	<aui:button cssClass="floatl" value="back" type="button" onClick="<%=urlback %>" style="margin-top:10px" />
+</aui:button-row>
 	
