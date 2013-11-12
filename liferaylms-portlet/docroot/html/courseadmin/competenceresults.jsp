@@ -66,7 +66,9 @@ if(tabs1.equals("1")){
 					
 			<aui:column>	
 				<aui:input label="any-term" name="any-term" size="20" value="" />
-				<aui:button name="searchUsers" value="search" type="submit" />
+				<aui:button-row>
+					<aui:button name="searchUsers" value="search" type="submit" />
+				</aui:button-row>
 			</aui:column>
 		
 	</aui:fieldset>
