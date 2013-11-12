@@ -449,18 +449,16 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		} catch (Exception e) {
 		}		
 	}
-	/*@JSONWebService
+	@JSONWebService
 	public boolean existsCourseName(Long companyId, Long groupId, String groupName) {
 		
 		try {
 			return CourseLocalServiceUtil.existsCourseName(companyId, groupId, groupName);
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (SystemException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return false;
-	}*/
+	}
 }
