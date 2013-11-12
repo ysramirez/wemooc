@@ -18,5 +18,7 @@ if (!themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGrou
 	</liferay-portlet:renderURL>
 	
 	<% String redirect="self.location='"+changeEditingMode.toString()+"'"; %>
-	<aui:button type="submit"  value="<%=text %>" onClick="<%=redirect %>"/>
+	<aui:button-row>
+		<aui:button type="submit"  value="<%=text %>" onClick="<%=redirect %>"/>
+	</aui:button-row>
 <%}%>
