@@ -12,9 +12,7 @@
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
 %>
-<liferay-ui:header title="<%=AssetRendererFactoryRegistryUtil.
-								getAssetRendererFactoryByClassName(LearningActivity.class.getName()).
-								getClassTypes(new long[0], themeDisplay.getLocale()).get(Long.valueOf(learningActivity.getTypeId()))%>"></liferay-ui:header>
+
 <liferay-ui:header title="<%=learningActivity.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 <%
 	}
