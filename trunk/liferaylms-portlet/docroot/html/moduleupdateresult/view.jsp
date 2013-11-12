@@ -86,8 +86,9 @@
 		
 		<aui:input name="email"></aui:input>
 		<aui:input name="allusers" label="moduleupdateresult.allusers" type="checkbox" value="<%=false %>"></aui:input>
-		
-		<aui:button type="submit" name="acept"></aui:button>
+		<aui:button-row>
+			<aui:button type="submit" name="acept"></aui:button>
+		</aui:button-row>
 	
 	</aui:form>
 	<div>
