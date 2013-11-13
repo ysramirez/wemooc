@@ -63,6 +63,7 @@ public class LtiCallBackService extends HttpServlet{
 		doGet(request, response);
 	}
 		
+	//TODO OAuth is not verified 
 	public void doGet(HttpServletRequest request,HttpServletResponse response)throws ServletException, IOException {	
 		try{
 
