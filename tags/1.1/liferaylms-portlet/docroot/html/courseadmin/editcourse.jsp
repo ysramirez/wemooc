@@ -185,7 +185,7 @@ else
 		['node']
 	);
 	</script>
-	<aui:field-wrapper label="icon" cssClass="wrapper-icon-course">
+	<aui:field-wrapper label="image" cssClass="wrapper-icon-course">
 		<% if (course != null && course.getIcon() != 0 && !requiredCourseIcon) { %>
 				<aui:input type="checkbox" name="discardLogo" label="discard-course-icon" onClick='<%= renderResponse.getNamespace()+"toggleInputLogo()" %>'/>
 			<% } %>
