@@ -36,7 +36,7 @@ public class CourseAdminConfigurationAction implements ConfigurationAction {
 				actionRequest, ParamUtil.getString(actionRequest, "portletResource")); 
 		
 		portletPreferences.setValue("showInscriptionDate",Boolean.toString(ParamUtil.getBoolean(actionRequest, "inscriptionDate",true)));
-	    System.out.println("S:"+StringUtil.merge(actionRequest.getParameterMap().get( "courseTemplates")));
+		portletPreferences.setValue("categories",Boolean.toString(ParamUtil.getBoolean(actionRequest, "categories",true)));
 		portletPreferences.setValue("courseTemplates",	StringUtil.merge(actionRequest.getParameterMap().get( "courseTemplates")));
 		
 		

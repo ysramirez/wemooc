@@ -57,6 +57,7 @@ String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyI
 		</aui:field-wrapper>
 		<%
 		%>
+	<aui:input type="checkbox" label="available-categories" name="categories" value="<%=preferences.getValue(\"categories\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 	<aui:button-row>
 		<aui:button type="submit" value="save" />
 	</aui:button-row>
