@@ -21,6 +21,7 @@ import java.util.List;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
@@ -56,6 +57,9 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.social.model.SocialRelationConstants;
 import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
+import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
+import com.liferay.lms.learningactivity.calificationtype.CalificationType;
+import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;;
 
 /**
  * The implementation of the course remote service.
@@ -494,5 +498,47 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			return "/image/layout_set_logo?img_id="+logoId;
 		}
 		return "";
+	}
+	
+	@JSONWebService
+	public String getCalificationType(long courseId){
+		if(courseId != 0){
+			Course course;
+			try {
+				course = CourseLocalServiceUtil.getCourse(courseId);
+				CalificationTypeRegistry ctr  = new CalificationTypeRegistry();
+				CalificationType ct = ctr.getCalificationType(course.getCalificationType());
+				return ct.getName();
+			} catch (PortalException e) {
+				return "the courseId is invalid";
+			} catch (SystemException e) {
+				return "the courseId is invalid";
+			}
+			
+		}else
+		{
+			return "the courseId is invalid";
+		}
+	}
+	
+	@JSONWebService
+	public String getCourseCorrectionMethod(long courseId){
+		if(courseId != 0){
+			Course course;
+			try {
+				course = CourseLocalServiceUtil.getCourse(courseId);
+				CourseEvalRegistry cer = new CourseEvalRegistry(); 
+				CourseEval cev = cer.getCourseEval(course.getCourseEvalId());
+				return cev.getName();
+			} catch (PortalException e) {
+				return "the courseId is invalid";
+			} catch (SystemException e) {
+				return "the courseId is invalid";
+			}
+			
+		}else
+		{
+			return "the courseId is invalid";
+		}
 	}
 }
