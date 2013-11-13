@@ -121,14 +121,7 @@ public class CourseAdmin extends MVCPortlet {
 			ActionResponse actionResponse) throws Exception {
 
 		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
-		ServiceContext serviceContext = null;
-		try {
-			serviceContext = ServiceContextFactory.getInstance(Course.class.getName(), uploadRequest);
-		} catch (PortalException e1) {
-			
-		} catch (SystemException e1) {
-			
-		}
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(Course.class.getName(), uploadRequest);
 
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
 				.getAttribute(WebKeys.THEME_DISPLAY);
@@ -154,7 +147,6 @@ public class CourseAdmin extends MVCPortlet {
 		String fileName = uploadRequest.getFileName("fileName");
 		long courseId = ParamUtil.getLong(uploadRequest, "courseId", 0);
 		long courseTemplateId=ParamUtil.getLong(uploadRequest,"courseTemplate",0);
-		long courseCalificationType=ParamUtil.getLong(uploadRequest,"calificationType",0);
 		String friendlyURL = ParamUtil.getString(uploadRequest, "friendlyURL",
 				"");
 		int startMonth = ParamUtil.getInteger(uploadRequest, "startMon");
@@ -166,9 +158,6 @@ public class CourseAdmin extends MVCPortlet {
 		String summary = ParamUtil.getString(uploadRequest, "summary", "");
 		boolean visible = ParamUtil.getBoolean(uploadRequest, "visible", false);
 		
-		int type = ParamUtil.getInteger(uploadRequest, "type");
-		int maxusers = ParamUtil.getInteger(uploadRequest, "maxUsers");
-		
 		long courseEvalId=ParamUtil.getLong(uploadRequest, "courseEvalId", 0);
 
 		if (friendlyURL.equals("") && !title.equals("")) {
@@ -178,14 +167,9 @@ public class CourseAdmin extends MVCPortlet {
 		if (startAMPM > 0) {
 			startHour += 12;
 		}
-		Date startDate = new Date();
-		try {
-			startDate = PortalUtil.getDate(startMonth, startDay, startYear,
+		Date startDate = PortalUtil.getDate(startMonth, startDay, startYear,
 					startHour, startMinute, user.getTimeZone(),
 					new EntryDisplayDateException());
-		} catch (PortalException e1) {
-			e1.printStackTrace();
-		}
 
 		int stopMonth = ParamUtil.getInteger(uploadRequest, "stopMon");
 		int stopYear = ParamUtil.getInteger(uploadRequest, "stopYear");
@@ -220,8 +204,6 @@ public class CourseAdmin extends MVCPortlet {
 		}
 		if (noTitle) {
 			SessionErrors.add(actionRequest, "title-required");
-			actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
-			actionResponse.setRenderParameter("redirect", redirect);
 			actionResponse.setRenderParameter("jspPage",
 					"/html/courseadmin/editcourse.jsp");
 			return;
@@ -232,8 +214,6 @@ public class CourseAdmin extends MVCPortlet {
 		if (requiredCourseIcon) {
 			if (Validator.isNull(icon) && Validator.isNull(fileName)) {
 				SessionErrors.add(actionRequest, "course-icon-required");
-				actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
-				actionResponse.setRenderParameter("redirect", redirect);
 				actionResponse.setRenderParameter("jspPage",
 						"/html/courseadmin/editcourse.jsp");
 				return;
@@ -243,8 +223,6 @@ public class CourseAdmin extends MVCPortlet {
 		//File size validation
 		if (Validator.isNotNull(fileName) && !validateFileSize(uploadRequest.getFile("fileName"))){
 			SessionErrors.add(actionRequest, "error-file-size");
-			actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
-			actionResponse.setRenderParameter("redirect", redirect);
 			actionResponse.setRenderParameter("jspPage",
 					"/html/courseadmin/editcourse.jsp");
 			return;
@@ -307,7 +285,6 @@ public class CourseAdmin extends MVCPortlet {
 			course.setDescription( description,themeDisplay.getLocale());
 			course.setStartDate(startDate); 
 			course.setEndDate(stopDate);
-			serviceContext.setAttribute("type", String.valueOf(type));
 			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
 					summary, serviceContext);
 		}
