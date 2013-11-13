@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
@@ -498,47 +499,5 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			return "/image/layout_set_logo?img_id="+logoId;
 		}
 		return "";
-	}
-	
-	@JSONWebService
-	public String getCalificationType(long courseId){
-		if(courseId != 0){
-			Course course;
-			try {
-				course = CourseLocalServiceUtil.getCourse(courseId);
-				CalificationTypeRegistry ctr  = new CalificationTypeRegistry();
-				CalificationType ct = ctr.getCalificationType(course.getCalificationType());
-				return ct.getName();
-			} catch (PortalException e) {
-				return "the courseId is invalid";
-			} catch (SystemException e) {
-				return "the courseId is invalid";
-			}
-			
-		}else
-		{
-			return "the courseId is invalid";
-		}
-	}
-	
-	@JSONWebService
-	public String getCourseCorrectionMethod(long courseId){
-		if(courseId != 0){
-			Course course;
-			try {
-				course = CourseLocalServiceUtil.getCourse(courseId);
-				CourseEvalRegistry cer = new CourseEvalRegistry(); 
-				CourseEval cev = cer.getCourseEval(course.getCourseEvalId());
-				return cev.getName();
-			} catch (PortalException e) {
-				return "the courseId is invalid";
-			} catch (SystemException e) {
-				return "the courseId is invalid";
-			}
-			
-		}else
-		{
-			return "the courseId is invalid";
-		}
 	}
 }
