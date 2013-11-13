@@ -199,19 +199,21 @@ else
 		['node']
 	);
 	</script>
-	<aui:field-wrapper label="icon">
+	<aui:field-wrapper label="icon" cssClass="wrapper-icon-course">
 		<% if (course != null && course.getIcon() != 0 && !requiredCourseIcon) { %>
 				<aui:input type="checkbox" name="discardLogo" label="discard-course-icon" onClick='<%= renderResponse.getNamespace()+"toggleInputLogo()" %>'/>
 			<% } %>
-		<aui:input  inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" >
+			<aui:input name="fileName" label="" id="fileName" type="file" value="" >
 				<aui:validator name="acceptFiles">'jpg, jpeg, png, gif'</aui:validator>
 				<% if (requiredCourseIcon) { %>
 					<aui:validator errorMessage="course-icon-required" name="customRequiredCourseIcon1">(function(val, fieldNode, ruleValue) {return (AUI().one('#<portlet:namespace/>icon').val() || val != null);})()</aui:validator>
 				<% } %>
 			</aui:input>
 		<%	if(course != null && course.getIcon() != 0) {
-			FileEntry image_=DLAppLocalServiceUtil.getFileEntry(course.getIcon());	%> 
-			<img id="<portlet:namespace/>icon_course" style="height: 50px;" alt="" class="ico_course" src="<%= DLUtil.getPreviewURL(image_, image_.getFileVersion(), themeDisplay, StringPool.BLANK) %>"/>
+			FileEntry image_=DLAppLocalServiceUtil.getFileEntry(course.getIcon());	%>
+			<div class="container_ico_course">
+				<img id="<portlet:namespace/>icon_course" alt="" class="ico_course" src="<%= DLUtil.getPreviewURL(image_, image_.getFileVersion(), themeDisplay, StringPool.BLANK) %>"/>
+			</div>
 			
 		<%} %>
 	</aui:field-wrapper>
