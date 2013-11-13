@@ -1,3 +1,17 @@
+<%@page import="java.util.Enumeration"%>
+<%@page import="com.liferay.portal.kernel.search.ParseException"%>
+<%@page import="com.liferay.portal.kernel.search.BooleanClauseFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.search.BooleanClauseOccur"%>
+<%@page import="com.liferay.portal.kernel.search.BooleanClause"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="com.liferay.portal.kernel.search.Field"%>
+<%@page import="com.liferay.portal.kernel.search.Document"%>
+<%@page import="com.liferay.portal.kernel.search.Hits"%>
+<%@page import="com.liferay.portal.kernel.search.IndexerRegistryUtil"%>
+<%@page import="com.liferay.portal.kernel.search.Indexer"%>
+<%@page import="com.liferay.portal.kernel.search.BooleanQueryFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.search.BooleanQuery"%>
+<%@page import="com.liferay.portal.kernel.search.SearchContext"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.Collections"%>
 <%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
@@ -19,34 +33,93 @@
 <h1 class="taglib-categorization-filter entry-title">
 <%
 
+String search = ParamUtil.getString(request, "search","");
+String freetext = ParamUtil.getString(request, "freetext","");
+long catId=ParamUtil.getLong(request, "categoryId",0);
+
+Enumeration<String> pnames =request.getParameterNames();
+ArrayList<String> tparams = new ArrayList<String>();
+ArrayList<Long> assetCategoryIds = new ArrayList<Long>();
+
+while(pnames.hasMoreElements()){
+	String name = pnames.nextElement();
+	if(name.length()>16&&name.substring(0,16).equals("assetCategoryIds")){
+		tparams.add(name);
+		String value = request.getParameter(name);
+		String[] values = value.split(",");
+		for(String valuet : values){
+			try{
+				assetCategoryIds.add(Long.parseLong(valuet));
+			}catch(Exception e){
+			}
+		}
+		
+	}
+}
+
+
+boolean scategories = GetterUtil.getBoolean(renderRequest.getPreferences().getValues("categories", new String[]{StringPool.TRUE})[0],true);
+
+HashMap<Long,Document> lucenes = new HashMap<Long,Document>();
+if(!freetext.isEmpty() && !search.isEmpty()){
+	SearchContext scon=new SearchContext();
+	if(catId>0){
+		try{
+			BooleanQuery booleanQueryCategoryId = BooleanQueryFactoryUtil.create(scon);
+			booleanQueryCategoryId.addTerm("assetCategoryIds", catId);
+			BooleanClause booleanClauseCategoryId = BooleanClauseFactoryUtil.create(scon,booleanQueryCategoryId, BooleanClauseOccur.MUST.getName());
+			BooleanClause[] clauses = {booleanClauseCategoryId};
+			scon.setBooleanClauses(clauses);
+		}catch(ParseException pe){
+			pe.printStackTrace();
+		}
+	}
+	scon.setCompanyId(themeDisplay.getCompanyId());
+	scon.setKeywords(freetext+"*");
+	
+	Indexer indexer=IndexerRegistryUtil.getIndexer(Course.class);
+	Hits hits=indexer.search(scon);
+	Document[] docs=hits.getDocs();
+	for(Document doc : docs){
+		lucenes.put(Long.parseLong(doc.get(Field.ENTRY_CLASS_PK)), doc);
+	}
+}
+
 java.util.List<Course> courses=null;
 
-long catId=ParamUtil.getLong(request, "categoryId",0);
 AssetCategory category=null;
 long[] catIds=ParamUtil.getLongValues(request, "categoryIds");
-for(long cat:catIds)
-{
-	if(cat!=0)
+if((catIds==null||catIds.length<=0)&&(assetCategoryIds!=null&&assetCategoryIds.size()>0)){
+	catIds = new long[assetCategoryIds.size()];
+	for(int i=0;i<assetCategoryIds.size();i++){
+		catIds[i] = assetCategoryIds.get(i);
+	}
+}
+if(assetCategoryIds==null||assetCategoryIds.size()<=0){
+	for(long cat:catIds)
 	{
-	AssetCategory categ=AssetCategoryLocalServiceUtil.getAssetCategory(cat);
-	
-		String cats=StringUtil.merge(ArrayUtil.remove(catIds, cat));
-	    if(cats==null || cats.equals(""))
-	    {
-	    	cats="0";
-	    }
-	%>
-	<liferay-portlet:renderURL var="choseCatURL" >
-		<liferay-portlet:param name="jspPage" value="/html/courseadmin/view.jsp"/>
-		<liferay-portlet:param name="categoryIds" value="<%=cats %>"/>
-		</liferay-portlet:renderURL>
-	<span class="asset-entry">
-	<%=categ.getTitle(locale) %>
-	<a href="<%= choseCatURL %>" title="<liferay-ui:message key="remove" />">
-				<span class="aui-icon aui-icon-close aui-textboxlistentry-close"></span>
-			</a>
-	</span>
-	<%
+		if(cat!=0)
+		{
+		AssetCategory categ=AssetCategoryLocalServiceUtil.getAssetCategory(cat);
+		
+			String cats=StringUtil.merge(ArrayUtil.remove(catIds, cat));
+		    if(cats==null || cats.equals(""))
+		    {
+		    	cats="0";
+		    }
+		%>
+		<liferay-portlet:renderURL var="choseCatURL" >
+			<liferay-portlet:param name="jspPage" value="/html/courseadmin/view.jsp"/>
+			<liferay-portlet:param name="categoryIds" value="<%=cats %>"/>
+			</liferay-portlet:renderURL>
+		<span class="asset-entry">
+		<%=categ.getTitle(locale) %>
+		<a href="<%= choseCatURL %>" title="<liferay-ui:message key="remove" />">
+					<span class="aui-icon aui-icon-close aui-textboxlistentry-close"></span>
+				</a>
+		</span>
+		<%
+		}
 	}
 }
 %>
@@ -63,9 +136,8 @@ if(catIds!=null&&catIds.length>0)
 {
 	catIds=ArrayUtil.remove(catIds, 0l);
 }
-if(catIds!=null&&catIds.length>0)
+if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty())
 {
-
 	java.util.List<AssetEntry> entries=new java.util.ArrayList<AssetEntry>();
 	AssetEntryQuery entryQuery=new AssetEntryQuery();
 	long[] groupIds={themeDisplay.getScopeGroupId()};
@@ -79,9 +151,17 @@ if(catIds!=null&&catIds.length>0)
 	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
 	entryQuery.setVisible(false);
 	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
-	for(AssetEntry entry:entries)
-	{
-		courses.add(CourseLocalServiceUtil.getCourse(entry.getClassPK()));
+	if(!freetext.isEmpty()){
+		for(AssetEntry entry:entries)
+		{
+			if(lucenes.get(entry.getClassPK())!=null){
+				courses.add(CourseLocalServiceUtil.getCourse(entry.getClassPK()));
+			}
+		}
+	}else{
+		for(AssetEntry entry:entries){
+			courses.add(CourseLocalServiceUtil.getCourse(entry.getClassPK()));
+		}
 	}
 }
 else
@@ -100,6 +180,29 @@ courses=finalCourses;
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.coursemodel",themeDisplay.getScopeGroupId(),"ADD_COURSE"))
 {
 %>
+
+<portlet:renderURL var="searchURL">
+	<portlet:param name="jspPage" value="/html/courseadmin/view.jsp"></portlet:param>
+</portlet:renderURL>
+
+<div>
+	<aui:form action="${searchURL}" method="post" name="search">
+		<aui:fieldset cssClass="checkBoxes">
+			<aui:column columnWidth="15">
+				<aui:input inlineField="false" name="search" type="hidden" value="search" />
+				<aui:input inlineField="false" name="freetext" type="text" value="" />
+				<aui:button type="submit" value="search"></aui:button>
+			</aui:column>
+			<c:if test="<%=scategories %>">
+				<aui:column columnWidth="85">
+					<liferay-ui:asset-categories-selector className="<%= Course.class.getName() %>" />
+				</aui:column>
+			</c:if>
+			<aui:column columnWidth="10">
+			</aui:column>
+		</aui:fieldset>
+	</aui:form>
+</div>
 <div class="newitem2">
 <liferay-ui:icon
 image="add"
@@ -111,12 +214,21 @@ url='<%= newactivityURL %>'
 
 </div>
 
+
 <%
 }
+
+PortletURL portletURL = renderResponse.createRenderURL();
+portletURL.setParameter("jspPage","/html/courseadmin/view.jsp");
+portletURL.setParameter("freetext",freetext);
+for(String param : tparams){
+	portletURL.setParameter(param,request.getParameter(param));
+}
+portletURL.setParameter("search","search");
 %>
 <liferay-ui:success key="courseadmin.clone.confirmation.success" message="courseadmin.clone.confirmation.success" />
 <liferay-ui:error ></liferay-ui:error>
-<liferay-ui:search-container emptyResultsMessage="there-are-no-courses" delta="10">
+<liferay-ui:search-container iteratorURL="<%=portletURL %>" emptyResultsMessage="there-are-no-courses" delta="10">
 	<liferay-ui:search-container-results>
 	<%
 	
