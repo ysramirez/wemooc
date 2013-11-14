@@ -34,13 +34,6 @@
 	<portlet:param name="jspPage" value="/html/execactivity/test/admin/newquestion.jsp"></portlet:param>
 	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
 </portlet:renderURL>
-
-<liferay-ui:icon 
-image="add" cssClass="newitem2"
-label="<%= true %>"
-message="execativity.editquestions.newquestion"
-url='<%= newquestionURL %>'
-/>
 <script type="text/javascript">
 <!--
 AUI().ready(function(A) {
@@ -49,25 +42,34 @@ AUI().ready(function(A) {
 });
 //-->
 </script>
-
-<portlet:renderURL var="importquestionsURL">
-	<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
-	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
-	<portlet:param name="jspPage" value="/html/execactivity/test/admin/importquestions.jsp"></portlet:param>
-</portlet:renderURL>
-<liferay-ui:icon
-image="add"
-label="<%= true %>"
-message="execativity.editquestions.importquestions"
-url='<%= importquestionsURL %>'
-/>
-
-<liferay-portlet:resourceURL var="exportURL" >
-	<portlet:param name="action" value="export"/>
-	<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
-</liferay-portlet:resourceURL>
-<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
-
+<div class="container-toolbar">
+	<div class="bt_new">
+		<liferay-ui:icon 
+		label="<%= true %>"
+		message="execativity.editquestions.newquestion"
+		url='<%= newquestionURL %>'
+		/>
+	</div>
+	<liferay-ui:icon-menu align="right" direction="down" extended="false" showWhenSingleIcon="false" cssClass='bt_importexport' message="import-export" showArrow="true">
+		<portlet:renderURL var="importquestionsURL">
+			<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
+			<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
+			<portlet:param name="jspPage" value="/html/execactivity/test/admin/importquestions.jsp"></portlet:param>
+		</portlet:renderURL>
+		<liferay-ui:icon
+		image="add"
+		label="<%= true %>"
+		message="execativity.editquestions.importquestions"
+		url='<%= importquestionsURL %>'
+		/>
+		
+		<liferay-portlet:resourceURL var="exportURL" >
+			<portlet:param name="action" value="export"/>
+			<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
+		</liferay-portlet:resourceURL>
+		<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
+	</liferay-ui:icon-menu>
+</div>
 <%
 	PortletURL editQuestionsURL = renderResponse.createRenderURL();
 	editQuestionsURL.setParameter("jspPage","/html/execactivity/test/admin/editquestions.jsp");

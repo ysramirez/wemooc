@@ -13,18 +13,18 @@ String primKey = String.valueOf(question.getQuestionId());
 String actId = String.valueOf(question.getActId());
 QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 %>
-
-<portlet:renderURL var="editURL">
-	<portlet:param name="jspPage" value="<%=qt.getURLEdit() %>"></portlet:param>
-	<portlet:param name="advise" value="<%=qt.getAnswerEditingAdvise(themeDisplay.getLocale()) %>"></portlet:param>
-	<portlet:param name="questionId" value="<%=primKey %>" />
-	<portlet:param name="resId" value="<%= actId %>" />
-	<portlet:param name="actionEditingDetails" value="<%= StringPool.TRUE %>" />	
-</portlet:renderURL>
-<liferay-ui:icon image="edit" message="edit" url="<%=editURL.toString() %>" />
-<portlet:actionURL name="deletequestion" var="deleteURL">
-	<portlet:param name="questionId" value="<%= primKey %>" />
-	<portlet:param name="resId" value="<%= actId %>" />
-</portlet:actionURL>
-<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
-
+<liferay-ui:icon-menu showArrow="true" align="right" showWhenSingleIcon="false">
+	<portlet:renderURL var="editURL">
+		<portlet:param name="jspPage" value="<%=qt.getURLEdit() %>"></portlet:param>
+		<portlet:param name="advise" value="<%=qt.getAnswerEditingAdvise(themeDisplay.getLocale()) %>"></portlet:param>
+		<portlet:param name="questionId" value="<%=primKey %>" />
+		<portlet:param name="resId" value="<%= actId %>" />
+		<portlet:param name="actionEditingDetails" value="<%= StringPool.TRUE %>" />	
+	</portlet:renderURL>
+	<liferay-ui:icon image="edit" message="edit" url="<%=editURL.toString() %>" />
+	<portlet:actionURL name="deletequestion" var="deleteURL">
+		<portlet:param name="questionId" value="<%= primKey %>" />
+		<portlet:param name="resId" value="<%= actId %>" />
+	</portlet:actionURL>
+	<liferay-ui:icon-delete url="<%=deleteURL.toString() %>" />
+</liferay-ui:icon-menu>
