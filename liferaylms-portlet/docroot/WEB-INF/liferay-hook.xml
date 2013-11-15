@@ -18,5 +18,9 @@
 	<language-properties>
 		content/Language_pt.properties
 	</language-properties>
+	<language-properties>content/Language_eu.properties</language-properties>
+	<language-properties>content/Language_gl.properties</language-properties>
+	<language-properties>content/Language_ca.properties</language-properties>
+	<language-properties>content/Language_de.properties</language-properties>
 	<custom-jsp-dir>/custom_jsps</custom-jsp-dir>
 </hook>
