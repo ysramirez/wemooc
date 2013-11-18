@@ -1,6 +1,5 @@
 package com.liferay.lms;
 
-import java.io.UnsupportedEncodingException;
 import java.util.Locale;
 
 import javax.mail.internet.InternetAddress;
@@ -27,8 +26,8 @@ public class P2PSendMailAsignation {
 			
 			String body = bodyTitle +"\n\n"+ bodyMessage +"\n\n"+ bodyEnd +"\n\n"+ portal+"\n";
 			
-			String fromName = "noreply";
-			String fromAddress ="noreply@miriadax.net";
+			String fromName=PrefsPropsUtil.getString(companyId,PropsKeys.ADMIN_EMAIL_FROM_NAME);
+			String fromAddress=PrefsPropsUtil.getString(companyId,PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
 						
 			InternetAddress from = new InternetAddress(fromAddress, fromName);
 			
