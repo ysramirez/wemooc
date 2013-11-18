@@ -20,7 +20,6 @@
 		<meta property="og:title" content="$page_group.getName()" />
 	#end
 	<meta property="og:type" content="website" />
-	<link rel="stylesheet" type="text/css" href="$css_folder/custom/skins/tango/skin.css" />
 	<script type="text/javascript" src="$javascript_folder/custom/jquery.min.js" charset="utf-8"></script>
 	<script type="text/javascript" src="$javascript_folder/custom/jquery-ui.min.js" charset="utf-8"></script>
 	$theme.include($top_head_include)
