@@ -159,7 +159,6 @@
 		</portlet-ref>
 		<permissions>
 			<supports>
-				<action-key>ADVANCED</action-key>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
