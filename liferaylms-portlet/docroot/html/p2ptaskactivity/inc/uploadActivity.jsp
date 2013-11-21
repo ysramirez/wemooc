@@ -228,7 +228,7 @@ Liferay.provide(
 		p2pActivityId = myP2PActivity.getP2pActivityId();
 		%>
 		<div class="container-textarea">
-			<textarea rows="6" cols="90" readonly="readonly" ><%=textCorrection %></textarea>
+			<textarea rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(textCorrection) %></textarea>
 		</div>
 		<% 
 			int size = Integer.parseInt(String.valueOf(dlfile.getSize()));
