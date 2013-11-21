@@ -416,7 +416,7 @@ if(!p2pActList.isEmpty()){
 							
 							%>
 							<div class="description">
-								<%=descriptionFile %>
+								<%=HtmlUtil.escape(descriptionFile) %>
 							</div>
 							<%
 							int size = Integer.parseInt(String.valueOf(dlfile.getSize()));
@@ -490,7 +490,7 @@ if(!p2pActList.isEmpty()){
 							descriptionFile = myP2PActivity.getDescription();
 						}
 						%>
-						<div class="description"><%=descriptionFile %></div>
+						<div class="description"><%=HtmlUtil.escape(descriptionFile) %></div>
 						<%
 						int size = Integer.parseInt(String.valueOf(dlfile.getSize()));
 						int sizeKb = size/1024; //Lo paso a Kilobytes

@@ -115,7 +115,7 @@ if(!p2pActCorList.isEmpty()){
 							</div>
 						</c:if>
 						<div class="container-textarea">
-							<textarea rows="6" cols="90" readonly="readonly" ><%=correctionText %></textarea>
+							<textarea rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(correctionText) %></textarea>
 						</div>
 						<%
 						if(dlfile!=null){
