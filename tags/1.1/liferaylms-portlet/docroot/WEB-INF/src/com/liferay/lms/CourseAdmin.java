@@ -711,6 +711,7 @@ public class CourseAdmin extends MVCPortlet {
 		ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFolder.class.getName(), request);
 		//Damos permisos al archivo para usuarios de comunidad.
 		serviceContext.setAddGroupPermissions(true);
+		serviceContext.setAddGuestPermissions(true);
 	    //Create main folder if not exist
 	    if(!igMainFolderFound) {
 	    	Folder newImageMainFolder=DLAppLocalServiceUtil.addFolder(userId, repositoryId, 0, IMAGEGALLERY_MAINFOLDER, IMAGEGALLERY_MAINFOLDER_DESCRIPTION, serviceContext);

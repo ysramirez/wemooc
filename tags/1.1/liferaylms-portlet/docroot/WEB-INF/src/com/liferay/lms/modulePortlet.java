@@ -712,8 +712,9 @@ public static String SEPARATOR = "_";
 							
 				//Subimos el Archivo en la Document Library
 				ServiceContext serviceContextImg= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
-				//Damos permisos al archivo para usuarios de comunidad.
+				//Damos permisos al archivo para usuarios de comunidad y de guest.
 				serviceContextImg.setAddGroupPermissions(true);
+				serviceContextImg.setAddGuestPermissions(true);
 				FileEntry image = DLAppLocalServiceUtil.addFileEntry(
 					                      themeDisplay.getUserId(), repositoryId , igFolderId , fileName, contentType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContextImg ) ;
 						
@@ -784,6 +785,7 @@ public static String SEPARATOR = "_";
 		ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFolder.class.getName(), request);
 		//Damos permisos al archivo para usuarios de comunidad.
 		serviceContext.setAddGroupPermissions(true);
+		serviceContext.setAddGuestPermissions(true);
 	    
 	    //Create main folder if not exist
 	    if(!igMainFolderFound) {
