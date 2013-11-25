@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import com.liferay.lms.model.Course;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -95,7 +96,7 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 			public String getViewInContextMessage() {
 				// TODO Auto-generated method stub
 				
-				return "Ver ficha del curso";
+				return "show-detail-course";
 			}
 			@Override
 			public boolean hasEditPermission(PermissionChecker permissionChecker)
