@@ -95,7 +95,7 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 			public String getViewInContextMessage() {
 				// TODO Auto-generated method stub
 				
-				return "Ver ficha del curso";
+				return "show-detail-course";
 			}
 			@Override
 			public boolean hasEditPermission(PermissionChecker permissionChecker)
