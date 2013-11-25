@@ -515,13 +515,13 @@ Liferay.provide(
 				feedbacCorrect=learnact.getFeedbackCorrect();
 			}
 		%>	
-		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" ></aui:input>	
+		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" helpMessage="feedbackCorrect.helpMessage"></aui:input>	
 		<%
 		}
 		else
 		{
 			%>
-			<aui:input type="hidden" name="feedbackCorrect" value="<%=larntype.getDefaultFeedbackCorrect() %>" />
+			<aui:input type="hidden" name="feedbackCorrect" value="<%=larntype.getDefaultFeedbackCorrect() %>" helpMessage="feedbackCorrect.helpMessage"/>
 			<% 
 		}
 		if(larntype.isFeedbackNoCorrectConfigurable())
@@ -532,13 +532,13 @@ Liferay.provide(
 				feedbacNoCorrect=learnact.getFeedbackCorrect();
 			}
 		%>
-		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" ></aui:input>	
+		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage"></aui:input>	
 		<%
 		}
 		else
 		{
 			%>
-			<aui:input type="hidden" name="feedbackNoCorrect" value="<%=larntype.getDefaultFeedbackNoCorrect() %>" />
+			<aui:input type="hidden" name="feedbackNoCorrect" value="<%=larntype.getDefaultFeedbackNoCorrect() %>" helpMessage="feedbackNoCorrect.helpMessage"/>
 			<% 
 		}
 		
