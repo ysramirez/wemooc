@@ -1,11 +1,13 @@
 package com.tls.liferaylms.mail.message;
 
 import java.util.Date;
+import java.util.Locale;
 
 import javax.mail.internet.InternetAddress;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
@@ -83,9 +85,13 @@ public class LmsMailMessageListener implements MessageListener {
 			
 			body = createMessage(body, portal, community, sender.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 
+			String calculatedBody = LanguageUtil.get(Locale.getDefault(),"mail.header");
+			calculatedBody += createMessage(body, portal, community, sender.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+			calculatedBody += LanguageUtil.get(Locale.getDefault(),"mail.footer");
+			
 			subject = createMessage(subject, portal, community, sender.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 			
-			MailMessage mailm = new MailMessage(from, to, subject, body, true);
+			MailMessage mailm = new MailMessage(from, to, subject, calculatedBody, true);
 			MailServiceUtil.sendEmail(mailm);
 		} 
 		else if(toMail != null && userName != null && !toMail.contains("all")){

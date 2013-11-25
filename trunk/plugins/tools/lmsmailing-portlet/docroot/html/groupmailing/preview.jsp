@@ -45,7 +45,7 @@ function showConfirm(){
 			<p><%=template.getBody() %></p>
 		</div>
 		
-		<div class="check_testing" style="display:none;" >
+		<div class="check_testing" >
 			<aui:input name="testing" label="send-test" type="checkbox"></aui:input><liferay-portlet:icon-help><%=LanguageUtil.get(pageContext,"groupmailing.messages.test.help")%></liferay-portlet:icon-help>
 		</div>
 		
