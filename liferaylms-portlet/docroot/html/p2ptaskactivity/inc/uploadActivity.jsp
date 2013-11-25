@@ -35,8 +35,8 @@ Date date = new Date();
 if(!dateUpload.equals("")){
 	
 	Date now = new Date();
-	SimpleDateFormat dateFormatZone = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+	SimpleDateFormat dateFormatZone = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	dateFormat.setTimeZone(themeDisplay.getTimeZone());
 	
 	date = dateFormat.parse(dateUpload);

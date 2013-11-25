@@ -67,7 +67,7 @@
 
 		if (!dateUpload.equals("")) {
 
-			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			dateFormat.setTimeZone(timeZone);
 
 			Date date = dateFormat.parse(dateUpload);
