@@ -1,6 +1,5 @@
 package com.liferay.lms;
 
-import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -27,10 +26,20 @@ import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.Portlet;
+import com.liferay.portal.model.PortletItem;
+import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
+import com.liferay.portal.service.PortletItemLocalServiceUtil;
+import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.journal.model.JournalContentSearch;
+import com.liferay.portlet.journal.service.JournalContentSearchLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -345,6 +354,112 @@ public class PortalAdmin extends MVCPortlet {
 		String updateBD = ParamUtil.getString(request, "updateBD", "");
 		
 		deleteRepeatedModuleResult(updateBD.equals("true"));
+	}
+	
+	public void changePortletName (ActionRequest request, ActionResponse response) throws Exception {
+		
+		try {
+			
+			boolean updateBD = ParamUtil.getBoolean(request, "updateBD", false);
+			String oldPortletName = ParamUtil.getString(request, "before", "");
+			String newPortletName = ParamUtil.getString(request, "after", "");
+			
+			//String oldPortletName = "p2ptaskactivity_WAR_liferaylmsportlet";
+			//String newPortletName = "courseadmin_WAR_liferaylmsportlet";
+			
+			System.out.println("OLD Portlet ID: "+oldPortletName);
+			Portlet portletOld = PortletLocalServiceUtil.getPortletById(oldPortletName);
+			
+			System.out.println("NEW Portlet ID: "+newPortletName);
+			Portlet portletNew = PortletLocalServiceUtil.getPortletById(newPortletName);
+			
+			
+			
+			//journalcontentsearch 
+			System.out.println("\n journalcontentsearch");
+			System.out.println("----------------------------------------");
+			
+			List<JournalContentSearch> journals = JournalContentSearchLocalServiceUtil.getArticleContentSearches();
+			for(JournalContentSearch journal:journals){
+				
+				if(journal.getPortletId().compareTo(oldPortletName) == 0){
+					System.out.println("  *  JournalContentSearch: " + journal.getPortletId());
+					System.out.println("    - Change: " + journal.getPortletId());
+					
+					if(updateBD){
+						journal.setPortletId(newPortletName);
+						JournalContentSearchLocalServiceUtil.updateJournalContentSearch(journal);
+					}
+				}
+			}
+			
+			//portletitem 
+			System.out.println("\n portletitem");
+			System.out.println("----------------------------------------");
+			
+			List<PortletItem> portletItems = PortletItemLocalServiceUtil.getPortletItems(0, PortletItemLocalServiceUtil.getPortletItemsCount());
+			for(PortletItem item:portletItems){
+				
+				if(item.getPortletId().compareTo(oldPortletName) == 0){
+					System.out.println("  *  JournalContentSearch: " + item.getPortletId());
+					System.out.println("    - Change: " + item.getPortletId());
+					
+					if(updateBD){
+						item.setPortletId(newPortletName);
+						PortletItemLocalServiceUtil.updatePortletItem(item);
+					}
+				}
+			}
+			
+			//portletpreferences 
+			System.out.println("\n portletpreferences");
+			System.out.println("----------------------------------------");
+			
+			List<PortletPreferences> pPreferences = PortletPreferencesLocalServiceUtil.getPortletPreferences();
+			for(PortletPreferences prefs:pPreferences){
+				
+				if(prefs.getPortletId().compareTo(oldPortletName) == 0){
+					System.out.println("  *  PortletPreferences: " + prefs.getPortletPreferencesId());
+					System.out.println("    - Change: " + prefs.getPortletId());
+					
+					if(updateBD){
+						prefs.setPortletId(newPortletName);
+						PortletPreferencesLocalServiceUtil.updatePortletPreferences(prefs);
+					}
+				}
+			}
+			
+			//repository
+			System.out.println("\n repository");
+			System.out.println("----------------------------------------");
+			
+			List<Layout> layouts = LayoutLocalServiceUtil.getLayouts(0, LayoutLocalServiceUtil.getLayoutsCount());
+			for(Layout layout:layouts){
+				
+				if(layout.getTypeSettings().contains(oldPortletName)){
+					System.out.println("  * Layout: " + layout.getName(Locale.getDefault()));
+					System.out.println("    - Change: " + layout.getGroup().getFriendlyURL() + layout.getFriendlyURL());
+					
+					if(updateBD){
+						layout.setTypeSettings(layout.getTypeSettings().replace(oldPortletName, newPortletName));
+						LayoutLocalServiceUtil.updateLayout(layout);
+					}
+				}
+			}
+			
+			System.out.println("");
+			
+			//Borrar el nombre viejo.
+			if(updateBD){
+				portletOld.setPortletId(portletOld.getPortletId()+"_old");
+				PortletLocalServiceUtil.updatePortlet(portletOld);
+			}
+			
+			
+		} catch (Exception e) {
+			System.out.println("ERROR: "+e.getMessage());
+		}
+		
 	}
 	
 }
