@@ -144,7 +144,7 @@ portletURL.setParameter("moduleId", String.valueOf(moduleId));
 	<liferay-ui:search-container-column-text cssClass="number-column" name="coursestats.modulestats.pass.mark"><%=df.format(activity.getPasspuntuation()) %></liferay-ui:search-container-column-text>	
 	<liferay-ui:search-container-column-text cssClass="number-column"  name="coursestats.modulestats.trials.numbers"><%=numberFormat.format(activity.getTries()) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=LanguageUtil.get(pageContext, "dependencies."+String.valueOf(hasPrecedence)) %></liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=classTypes.get((long)activity.getTypeId()) %></liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text name="coursestats.modulestats.type"><%=LanguageUtil.get(pageContext,classTypes.get((long)activity.getTypeId())) %></liferay-ui:search-container-column-text>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.obligatory"><%=activity.getWeightinmodule() == 1 ? "Si":"No" %></liferay-ui:search-container-column-text>
 	<% //if (activity.getTypeId()!=8 && activity.getTypeId()!=9 && activity.getTypeId()!=7){ %>
 	<%// liferay-ui:search-container-column-jsp name=" " align="right" path="/html/coursestats/viewextras.jsp" /%>
