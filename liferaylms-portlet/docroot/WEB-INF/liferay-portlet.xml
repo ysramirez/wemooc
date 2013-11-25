@@ -10,6 +10,7 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/tree.js</footer-portlet-javascript>
 		<css-class-wrapper>lmsactivitieslist-portlet</css-class-wrapper>
 	</portlet>
 
@@ -31,6 +32,7 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/tree.js</footer-portlet-javascript>
 		<css-class-wrapper>gradebook-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -136,6 +138,7 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/tree.js</footer-portlet-javascript>
 		<css-class-wrapper>p2ptaskactivity-portlet</css-class-wrapper>
 	</portlet>
 	
@@ -173,6 +176,7 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
+		<footer-portlet-javascript>/js/tree.js</footer-portlet-javascript>
 		<css-class-wrapper>mycourses-portlet</css-class-wrapper>
 	</portlet>
 	
