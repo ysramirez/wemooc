@@ -204,7 +204,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 				
 				Date uploadDate = PortalUtil.getDate(uploadMonth, uploadDay, uploadYear, uploadHour, uploadMinute, (Class<? extends PortalException>)null);
 	
-				SimpleDateFormat formatUploadDate = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+				SimpleDateFormat formatUploadDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 				formatUploadDate.setTimeZone(themeDisplay.getTimeZone());
 					
 				Element dateUpload=rootElement.element("dateupload");

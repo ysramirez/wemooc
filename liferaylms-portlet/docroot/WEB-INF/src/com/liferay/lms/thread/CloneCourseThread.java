@@ -320,7 +320,7 @@ public class CloneCourseThread extends Thread {
 		}
 		System.out.println(" ENDS!");
 		
-		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd kk:mm:ss");
+		SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		dateFormat.setTimeZone(themeDisplay.getTimeZone());
 		
 		String[] args = {newCourse.getTitle(themeDisplay.getLocale()), dateFormat.format(startDate), dateFormat.format(endDate)};
