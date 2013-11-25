@@ -26,7 +26,7 @@ Module theModule=ModuleLocalServiceUtil.getModule(moduleId);
 <liferay-ui:icon cssClass='bt_importexport' label="<%= true %>" message="coursestats.csv.export" method="get" url="<%=exportURL%>" />
 <portlet:renderURL var="cancelURL" />
 
-<liferay-ui:header backLabel="back" title="<%=theModule.getTitle(themeDisplay.getLocale())%>" backURL="<%=cancelURL.toString() %>"></liferay-ui:header>
+<liferay-ui:header backLabel="coursestats.modulestats.back" title="<%=theModule.getTitle(themeDisplay.getLocale())%>" backURL="<%=cancelURL.toString() %>"></liferay-ui:header>
 	
 <div class="registered"><liferay-ui:message key="coursestats.modulestats.inscritos" arguments="<%=new Object[]{registered} %>"></liferay-ui:message>.</div>
 <% 
