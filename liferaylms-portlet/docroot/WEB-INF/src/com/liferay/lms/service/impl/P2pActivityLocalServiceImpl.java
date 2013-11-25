@@ -72,6 +72,8 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 		try{
 			List<P2pActivity> myp2ps = p2pActivityPersistence.findByActIdAndUserId(actId, userId);
 
+			
+			
 			if(!myp2ps.isEmpty()){
 				for(P2pActivity myActivity : myp2ps){
 					//auditing
@@ -86,6 +88,8 @@ public class P2pActivityLocalServiceImpl extends P2pActivityLocalServiceBaseImpl
 									myActivity.getActId(), la.getUserId(), AuditConstants.GET, null);
 						}
 					}
+					
+					return myActivity;
 				}
 			}
 			return null;
