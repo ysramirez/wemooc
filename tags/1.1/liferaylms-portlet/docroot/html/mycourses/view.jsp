@@ -8,45 +8,6 @@
 
 <%@ include file="/init.jsp"%>
 
-<script type="text/javascript">
-<!--
-
-	AUI().ready('event','node','anim',function(A) {
-	
-		A.all('span.ico-desplegable').each(function(span){
-			var parentNode=span.get('parentNode');
-			var wrapper = A.Node.create('<div style="overflow: hidden;" ></div>');
-			wrapper.append(parentNode.one('div.collapsable').replace(wrapper));
-			parentNode.one('div.collapsable').setStyle('display','block');
-			var height=wrapper.height();
-			wrapper.height(0);
-			var open = new A.Anim({node: wrapper, to: {height:  height},
-			     easing: A.Easing.easeOut});
-     		var close = new A.Anim({node: wrapper, to: {height:  -100},
-			     easing: A.Easing.easeIn});
-			span.on('click',function(){
-				
-				if(parentNode.hasClass('option-less')) {
-					parentNode.removeClass("option-less");
-					parentNode.addClass("option-more");
-					close.run();
-				}
-				else {
-					parentNode.removeClass("option-more");
-					parentNode.addClass("option-less");
-					
-open.run();
-				
-				}
-	
-			})
-		});
-
-	});
-
-//-->
-</script>
-
 <%
 
 java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(themeDisplay.getUserId());
