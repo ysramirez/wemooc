@@ -155,13 +155,14 @@ window.<portlet:namespace />validate_execactivity={
 
 
 	<aui:input type="text" size="3" name="random" label="execActivity.options.random" value="<%=(random>0)?Long.toString(random):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
-		ignoreRequestValue="true"></aui:input>
+		ignoreRequestValue="true" helpMessage="execActivity.options.random.helpMessage"></aui:input>
 	<div id="<portlet:namespace />randomError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" ignoreRequestValue="true"></aui:input>
+	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" ignoreRequestValue="true"
+	helpMessage="execActivity.options.questionsPerPage.helpMessage"></aui:input>
 	<div id="<portlet:namespace />questionsPerPageError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.questionsPerPage"):StringPool.BLANK %>
@@ -169,7 +170,7 @@ window.<portlet:namespace />validate_execactivity={
 	
 	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"execActivity.options.password.help\")%>"></aui:input>
  
- 	<aui:field-wrapper label="execActivity.options.timestamp">
+ 	<aui:field-wrapper label="execActivity.options.timestamp" helpMessage="execActivity.options.timestamp.helpMessage">
 	<%
 	NumberFormat timeNumberFormat = NumberFormat.getInstance(locale);
 	timeNumberFormat.setMinimumIntegerDigits(2);
@@ -204,9 +205,9 @@ window.<portlet:namespace />validate_execactivity={
 	</aui:field-wrapper>
 	
 	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
-		ignoreRequestValue="true"></aui:input>
+		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrect.helpMessage"></aui:input>
 		
 	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
-		ignoreRequestValue="true"></aui:input>
+		ignoreRequestValue="true" helpMessage="exectactivity.edit.improve.helpMessage"></aui:input>
 
 
