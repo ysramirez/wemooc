@@ -288,7 +288,7 @@
     	</ul>
 
 		<aui:button-row>
-			<aui:button type="submit" value="send" label="Enviar" class="submit"></aui:button>
+			<aui:button type="submit" value="send" label="send" class="submit"></aui:button>
 			<aui:button onClick="<%=returnURL.toString() %>" type="cancel" ></aui:button>
 		</aui:button-row>
 	</aui:form>

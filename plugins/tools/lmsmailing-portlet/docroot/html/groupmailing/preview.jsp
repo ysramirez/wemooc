@@ -51,7 +51,7 @@ function showConfirm(){
 		
 		<aui:input name="template" label="send-test" type="hidden" value="<%=idTemplate %>"></aui:input>
 		<aui:button-row>
-			<aui:button type="submit" value="send" label="Enviar" class="submit"></aui:button>
+			<aui:button type="submit" value="send" label="send" class="submit"></aui:button>
 			<aui:button onClick="<%=returnURL.toString() %>" type="cancel" ></aui:button>
 		</aui:button-row>
 	</aui:form>
