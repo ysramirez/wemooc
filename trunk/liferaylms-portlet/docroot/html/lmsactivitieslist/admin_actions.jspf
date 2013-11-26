@@ -223,7 +223,8 @@ ActionKeys.UPDATE) %>">
 
 </c:if>
 	<c:choose>
-			<c:when test="<%= permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),ActionKeys.PERMISSIONS) %>">
+			<c:when test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),ActionKeys.PERMISSIONS)
+				&& !permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),\"SOFT_PERMISSIONS\") %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=LearningActivity.class.getName() %>"
@@ -235,7 +236,8 @@ ActionKeys.UPDATE) %>">
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
 			</c:when>
 			<c:otherwise>
-				<c:if test="<%= permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),\"SOFT_PERMISSIONS\") %>">
+				<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),ActionKeys.PERMISSIONS) &&
+					permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),\"SOFT_PERMISSIONS\") %>">
 					<liferay-security:permissionsURL
 						windowState="<%=LiferayWindowState.POP_UP.toString() %>"
 						modelResource="<%=LearningActivity.class.getName() %>"

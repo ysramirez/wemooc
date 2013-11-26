@@ -127,14 +127,12 @@
 		<supports>
 			<action-key>ADD_COURSE</action-key>
 			<action-key>PERMISSIONS</action-key>
-			<action-key>SOFT_PERMISSIONS</action-key>
 		</supports>
 		<site-member-defaults/>
 		<guest-defaults/>
 		<guest-unsupported>
 			<action-key>ADD_COURSE</action-key>
 			<action-key>PERMISSIONS</action-key>
-			<action-key>SOFT_PERMISSIONS</action-key>
 		</guest-unsupported>
 	</model-resource>
 	<model-resource>
@@ -145,11 +143,13 @@
 		<supports>
 			<action-key>ADD_ACTIVITY</action-key>
 			<action-key>PERMISSIONS</action-key>
+			<action-key>SOFT_PERMISSIONS</action-key>
 		</supports>
 		<site-member-defaults/>
 		<guest-defaults/>
 		<guest-unsupported>
 			<action-key>ADD_ACTIVITY</action-key>
+			<action-key>SOFT_PERMISSIONS</action-key>
 		</guest-unsupported>
 	</model-resource>
 	<model-resource>
@@ -164,9 +164,10 @@
 				<action-key>UPDATE</action-key>
 				<action-key>VIEW</action-key>
 				<action-key>CORRECT</action-key>
-				<action-key>ADD_DISCUSSION</action-key>				
+				<action-key>ADD_DISCUSSION</action-key>
 				<action-key>UPDATE_DISCUSSION</action-key>
             	<action-key>DELETE_DISCUSSION</action-key>
+				<action-key>SOFT_PERMISSIONS</action-key>
 			</supports>
 			<site-member-defaults>
 				<action-key>VIEW</action-key>
@@ -178,6 +179,7 @@
 				<action-key>PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>CORRECT</action-key>
+				<action-key>SOFT_PERMISSIONS</action-key>
 			</guest-unsupported>
 		</permissions>
 	</model-resource>
@@ -232,7 +234,6 @@
 			<supports>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
-				<action-key>SOFT_PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>VIEW</action-key>
 				<action-key>PUBLISH</action-key>
@@ -250,7 +251,6 @@
 			<guest-unsupported>
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
-				<action-key>SOFT_PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
 				<action-key>REGISTER</action-key>
 				<action-key>ASSIGN_MEMBERS</action-key>

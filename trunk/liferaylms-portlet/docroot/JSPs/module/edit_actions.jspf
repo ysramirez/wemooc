@@ -262,8 +262,20 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 	<%
 	}
 	%>
+			<c:if test="<%=permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),ActionKeys.PERMISSIONS) %>">
+				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
+				<liferay-security:permissionsURL
+					modelResource="<%=Module.class.getName() %>"
+					modelResourceDescription="<%= theModule.getTitle(themeDisplay.getLocale()) %>"
+					resourcePrimKey="<%= String.valueOf(primKey) %>"
+					redirect="<%=redirectURL %>"
+					var="permissionsURL"
+				/>
+				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
+			</c:if>
+		<%--
 		<c:choose>
-			<c:when test="<%=permissionChecker.hasPermission(coursetmp.getGroupId(), Course.class.getName(),coursetmp.getCourseId(),ActionKeys.PERMISSIONS) %>">
+			<c:when test="<%=permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),ActionKeys.PERMISSIONS) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=Module.class.getName() %>"
@@ -275,7 +287,7 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
 			</c:when>
 			<c:otherwise>
-				<c:if test="<%= permissionChecker.hasPermission(coursetmp.getGroupId(), Course.class.getName(),coursetmp.getCourseId(),\"SOFT_PERMISSIONS\") %>">
+				<c:if test="<%= permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),\"SOFT_PERMISSIONS\") %>">
 					<liferay-security:permissionsURL
 						windowState="<%=LiferayWindowState.POP_UP.toString() %>"
 						modelResource="<%=Module.class.getName() %>"
@@ -310,5 +322,5 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 			</c:otherwise>
 			
 		</c:choose>
-
+ 		--%>
 
