@@ -59,7 +59,7 @@
 			}
 			titleAct="\""+titleAct+"\"";
 	%>
-			<liferay-ui:message key="module-finissed-greetings" arguments="<%=new Object[]{titleAct} %>" />
+			<liferay-ui:message key="module-finissed-greetings-simple" />
 		</div>		
 	<%
 	}
