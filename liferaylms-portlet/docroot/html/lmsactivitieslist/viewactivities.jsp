@@ -209,9 +209,23 @@ Liferay.provide(
 							|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") 
 							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing))
 					{
+						LearningActivityAssetRendererFactory laf = null;
+						try{
+							laf = new LearningActivityAssetRendererFactory();
+						}catch(Exception e){}
 						
-						LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
-						AssetRenderer assetRenderer = laf.getAssetRenderer(activity.getActId());
+						if(laf==null||activity==null)
+							continue;
+						
+						AssetRenderer assetRenderer = null;
+						
+						try{
+							assetRenderer = laf.getAssetRenderer(activity.getActId());
+						}catch(Exception e){}
+						
+						if(assetRenderer==null)
+							continue;
+						
 						String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "");	
 						Portlet view1URLPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(view1URL, "p_p_id",false));
 						
@@ -246,8 +260,8 @@ Liferay.provide(
 				if (actionEditing
 					&& (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.UPDATE)
 						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.DELETE) 
-						|| permissionChecker.hasPermission(coursetmp.getGroupId(),Course.class.getName(),coursetmp.getCourseId(),ActionKeys.PERMISSIONS)
-						|| permissionChecker.hasPermission(coursetmp.getGroupId(),Course.class.getName(),coursetmp.getCourseId(),"SOFT_PERMISSIONS"))) {
+						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.PERMISSIONS)
+						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"SOFT_PERMISSIONS"))) {
 				%>
 				<div class="iconsedit"><%@ include file="/html/lmsactivitieslist/admin_actions.jspf" %></div>
 				

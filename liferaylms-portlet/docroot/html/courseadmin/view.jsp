@@ -41,6 +41,7 @@ Enumeration<String> pnames =request.getParameterNames();
 ArrayList<String> tparams = new ArrayList<String>();
 ArrayList<Long> assetCategoryIds = new ArrayList<Long>();
 
+
 while(pnames.hasMoreElements()){
 	String name = pnames.nextElement();
 	if(name.length()>16&&name.substring(0,16).equals("assetCategoryIds")){
@@ -57,11 +58,29 @@ while(pnames.hasMoreElements()){
 	}
 }
 
+if(ParamUtil.getString(request, "search").equals("search")){
+	portletSession.setAttribute("freetext", freetext);
+	portletSession.setAttribute("assetCategoryIds", assetCategoryIds);
+}else{
+	try{
+		String freetextTemp = (String)portletSession.getAttribute("freetext");
+		if(freetextTemp!=null){
+			freetext = freetextTemp;
+		}
+	}catch(Exception e){}
+	try{
+		ArrayList<Long> assetCategoryIdsTemp = (ArrayList<Long>)portletSession.getAttribute("assetCategoryIds");
+		if(assetCategoryIdsTemp!=null){
+			assetCategoryIds = assetCategoryIdsTemp;
+		}
+	}catch(Exception e){}
+}
+
 
 boolean scategories = GetterUtil.getBoolean(renderRequest.getPreferences().getValues("categories", new String[]{StringPool.TRUE})[0],true);
 
 HashMap<Long,Document> lucenes = new HashMap<Long,Document>();
-if(!freetext.isEmpty() && !search.isEmpty()){
+if(!freetext.isEmpty()){
 	SearchContext scon=new SearchContext();
 	if(catId>0){
 		try{
@@ -86,9 +105,16 @@ if(!freetext.isEmpty() && !search.isEmpty()){
 }
 
 java.util.List<Course> courses=null;
-
 AssetCategory category=null;
 long[] catIds=ParamUtil.getLongValues(request, "categoryIds");
+
+StringBuffer sb = new StringBuffer();
+for(long cateId : assetCategoryIds){
+	sb.append(cateId);
+	sb.append(",");
+}
+String catIdsText = sb.toString();
+
 if((catIds==null||catIds.length<=0)&&(assetCategoryIds!=null&&assetCategoryIds.size()>0)){
 	catIds = new long[assetCategoryIds.size()];
 	for(int i=0;i<assetCategoryIds.size();i++){
@@ -190,12 +216,12 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 		<aui:fieldset cssClass="checkBoxes">
 			<aui:column columnWidth="15">
 				<aui:input inlineField="false" name="search" type="hidden" value="search" />
-				<aui:input inlineField="false" name="freetext" type="text" value="" />
+				<aui:input inlineField="false" name="freetext" type="text" value="<%=freetext %>" />
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:column>
 			<c:if test="<%=scategories %>">
 				<aui:column columnWidth="85">
-					<liferay-ui:asset-categories-selector className="<%= Course.class.getName() %>" />
+					<liferay-ui:asset-categories-selector className="<%= Course.class.getName() %>" curCategoryIds="<%=catIdsText %>" />
 				</aui:column>
 			</c:if>
 			<aui:column columnWidth="10">
