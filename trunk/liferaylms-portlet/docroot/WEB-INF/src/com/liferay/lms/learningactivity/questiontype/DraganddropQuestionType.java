@@ -184,13 +184,18 @@ public class DraganddropQuestionType extends BaseQuestionType {
 				
 				if(feedback){
 					if(answersSelectedIds.get(i) == sols.get(i).getAnswerId()) {
-						feedMessage = (!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbackCorrect():sols.get(i).getFeedbackCorrect();
+						//feedMessage = (!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<div class=\"questionFeedback\">"+sols.get(i).getFeedbackCorrect()+"</div>":"<div class=\"questionFeedback\">"+sols.get(i).getFeedbackCorrect()+"</div>";
+						feedMessage = "<div class=\"questionFeedback\">"+sols.get(i).getFeedbackCorrect()+"</div>";
 					}
 					else {
-						feedMessage = (!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<br/>"+sols.get(i).getFeedbacknocorrect():sols.get(i).getFeedbacknocorrect();
+						//feedMessage = (!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<div class=\"questionFeedback\">"+sols.get(i).getFeedbacknocorrect()+"</div>":"<div class=\"questionFeedback\">"+sols.get(i).getFeedbacknocorrect()+"</div>";
+						feedMessage = "<div class=\"questionFeedback\">"+sols.get(i).getFeedbacknocorrect()+"</div>";
 					}
 					if("true".equals(showCorrectAnswer)) {
 						feedsol = "<div class=\" font_14 color_cuarto negrita\">" + sols.get(i).getAnswer() + "</div>";
+					}
+					if (!"<div class=\"questionFeedback\"></div>".equals(feedMessage)) {
+						feedsol += feedMessage;
 					}
 				}
 				
@@ -206,9 +211,10 @@ public class DraganddropQuestionType extends BaseQuestionType {
 
 			if(feedback) {
 				html += "<div class=\"content_answer\">" + leftCol + rightCol + "</div>";
-				if (!"".equals(feedMessage)) {
-					html += "<div class=\"questionFeedback\">" + feedMessage + "</div>";
-				}
+//				if (!"".equals(feedMessage)) {
+//					//html += "<div class=\"questionFeedback\">" + feedMessage + "</div>";
+//					html += feedMessage;
+//				}
 			}
 			else html += leftCol + rightCol;
 			html+=	"</div>";
