@@ -55,5 +55,6 @@
 		<portlet id="generalstats"></portlet>
 		<portlet id="competencesadmin"></portlet>
 		<portlet id="usercompetence"></portlet>
+		<portlet id="about"></portlet>
 	</category>
 </display>
