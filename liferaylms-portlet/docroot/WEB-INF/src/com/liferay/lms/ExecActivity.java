@@ -369,6 +369,7 @@ public class ExecActivity extends MVCPortlet
 		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
 		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect", "");
 		TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(answerId);
+		if("".equals(feedbackNoCorrect)) feedbackNoCorrect = feedbackCorrect;
 		
 		if(Validator.isNull(answer)) 
 			SessionErrors.add(actionRequest, "answer-test-required_"+answerId);
