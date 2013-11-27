@@ -1,3 +1,7 @@
+<%@page import="com.liferay.lms.model.LearningActivityTry"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.exception.NestableException"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
@@ -202,6 +206,20 @@ function <portlet:namespace />back() {
 <%
 
 
+	boolean disabled = false;
+	boolean isOmniadmin = false;
+	
+	try{
+		isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
+		disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
+	}catch(Exception e){
+		
+	}
+	
+	if(isOmniadmin ){
+		disabled = false;
+	}
+
 %>
 
 <aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>">
@@ -211,10 +229,12 @@ function <portlet:namespace />back() {
 	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50">
 		<aui:validator name="required"></aui:validator>
 	</aui:input>
-	<button type="button" id="<portlet:namespace/>searchEntry" onclick="<portlet:namespace/>search();" >
-	    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
-	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
-	</button>
+	<c:if test="<%=!disabled %>" >
+		<button type="button" id="<portlet:namespace/>searchEntry" onclick="<portlet:namespace/>search();" >
+		    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
+		    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
+		</button>
+	</c:if>
 </aui:field-wrapper>
 <aui:field-wrapper name="activity.edit.openwindow.options">
 	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />

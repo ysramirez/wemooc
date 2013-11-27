@@ -19,6 +19,10 @@
 	boolean fichero = false;
 	boolean textoenr = false;
 	boolean existTries = false;
+	boolean disabled = false;
+	boolean isOmniadmin = false;
+	
+	
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
 		if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
@@ -28,13 +32,20 @@
 				
 		}
 		
+		try{
+			isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
+			disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
+		}catch(Exception e){
+			
+		}
 		
-	    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
-	  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
-		dq.add(criterion);
-	    existTries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0;
+		if(isOmniadmin ){
+			disabled = false;
+		}
+		
+		
 	}
 %>
 <p><liferay-ui:message key="onlinetaskactivity.permitStudents"/></p>
-<aui:input type="checkbox" name="fichero" label="onlinetaskactivity.save.file" checked="<%=fichero %>" disabled='<%=existTries %>' inlineField="true"></aui:input>
-<aui:input type="checkbox" name="textoenr" label="onlinetaskactivity.richTech" checked="<%=textoenr %>" disabled='<%=existTries %>' inlineField="true"></aui:input>
+<aui:input type="checkbox" name="fichero" label="onlinetaskactivity.save.file" checked="<%=fichero %>" disabled='<%=disabled %>' inlineField="true"></aui:input>
+<aui:input type="checkbox" name="textoenr" label="onlinetaskactivity.richTech" checked="<%=textoenr %>" disabled='<%=disabled %>' inlineField="true"></aui:input>

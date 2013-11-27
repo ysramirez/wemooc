@@ -1,4 +1,10 @@
 
+<%@page import="com.liferay.lms.model.LearningActivityTry"%>
+<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.lms.model.P2pActivity"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.lms.service.P2pActivityLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.lms.model.Course"%>
@@ -16,13 +22,16 @@
 	boolean showCorrectAnswer= false;
 	boolean improve=false;
 	boolean newOrCourseEditor=true;
+	boolean disabled = false;
+	boolean isOmniadmin = false;
 	
 	if(request.getAttribute("activity")!=null) {
-		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
-		String randomString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random");
-		random = Long.parseLong(Validator.isNumber(randomString) ? randomString : "0");
-		String questionsPerPageString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"questionsPerPage");
-		questionsPerPage = Long.parseLong(Validator.isNumber(questionsPerPageString) ? questionsPerPageString : "0");
+		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
+		
+		if(!LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random").equals("")){
+			random = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random"));		
+		}
+		
 		password = HtmlUtil.unescape(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"password")).trim();
 		
 		long timestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"timeStamp"));		
@@ -38,9 +47,23 @@
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 		
+		
+		isOmniadmin = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
+		disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
+		
+		//Si es omniadmin, NO bloqueamos por que se entregasen tareas.
+		if(isOmniadmin ){
+			disabled = false;
+		}
+		
 	}
 	
-	boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
+	boolean notModuleEditable = false;
+	try{
+		notModuleEditable = (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
+	}catch(Exception e){
+		
+	}
 
 %>
 
@@ -154,21 +177,21 @@ window.<portlet:namespace />validate_execactivity={
 </script>
 
 
-	<aui:input type="text" size="3" name="random" label="execActivity.options.random" value="<%=(random>0)?Long.toString(random):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+	<aui:input type="text" size="3" name="random" label="execActivity.options.random" value="<%=(random>0)?Long.toString(random):StringPool.BLANK %>" disabled="<%=disabled || (notModuleEditable&&(!newOrCourseEditor))%>" 
 		ignoreRequestValue="true" helpMessage="execActivity.options.random.helpMessage"></aui:input>
 	<div id="<portlet:namespace />randomError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" ignoreRequestValue="true"
+	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=disabled || (notModuleEditable&&(!newOrCourseEditor))%>" ignoreRequestValue="true"
 	helpMessage="execActivity.options.questionsPerPage.helpMessage"></aui:input>
 	<div id="<portlet:namespace />questionsPerPageError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.questionsPerPage"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"execActivity.options.password.help\")%>"></aui:input>
+	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"execActivity.options.password.help\")%>" disabled="<%=disabled %>"></aui:input>
  
  	<aui:field-wrapper label="execActivity.options.timestamp" helpMessage="execActivity.options.timestamp.helpMessage">
 	<%
