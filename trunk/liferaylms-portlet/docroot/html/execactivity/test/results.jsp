@@ -51,11 +51,11 @@
 		}else {
 			userPassed=learningActivity.getPasspuntuation()<=larntry.getResult();
 			//Cuando estamos mejorando la nota no mostramos el popup.
-			if(oldResult <= 0){
+			//if(oldResult <= 0){
 %>
 				<jsp:include page="/html/shared/popResult.jsp" />
 <%
-			}
+			//}
 %>
 			<h2><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
 <% 
