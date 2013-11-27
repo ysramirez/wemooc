@@ -1,3 +1,7 @@
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivityTry"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.portal.service.TeamLocalServiceUtil"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.BaseLearningActivityType"%>
@@ -472,6 +476,7 @@ Liferay.provide(
 			<aui:input type="hidden" name="tries" value="<%=larntype.getDefaultTries() %>" />
 			<% 
 		}
+				
 		if(larntype.isScoreConfigurable())
 		{
 			long score=larntype.getDefaultScore();
@@ -479,8 +484,21 @@ Liferay.provide(
 			{
 				score=learnact.getPasspuntuation();
 			}
+			boolean disabled = false;
+			boolean isOmniadmin = false;
+			
+			try{
+				isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learnact.getGroupId(), LearningActivity.class.getName(),learnact.getActId(),"UPDATE_ACTIVE");
+				disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learnact.getActId()))) != 0;
+			}catch(Exception e){
+				
+			}
+			
+			if(isOmniadmin ){
+				disabled = false;
+			}
 		%>
-		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
+		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" disabled="<%=disabled %>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
 		</aui:input>
   		<div id="<portlet:namespace />passpuntuationError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))||
 																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))||

@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
@@ -23,6 +25,7 @@
 	boolean disabled=false;
 	boolean newOrCourseEditor=true;
 	boolean fileOptional = false;
+	boolean isOmniadmin = false;
 	
 	String dateUpload = "";
 
@@ -47,8 +50,10 @@
 	
 	long numEvaluaciones = TaskP2PLearningActivityType.DEFAULT_VALIDATION_NUMBER;
 	
+	LearningActivity learningActivity= null;
+	
 	if(request.getAttribute("activity")!=null) {
-		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
+		learningActivity = (LearningActivity)request.getAttribute("activity");	
 		anonimous = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"anonimous"));
 		result = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"result"));
 		
@@ -89,13 +94,30 @@
 
 		}
 		
-		disabled=P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
+		//disabled=P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 	}
 	
 	boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
+	
+	if(learningActivity!=null){
+		if(!(notModuleEditable&&(!newOrCourseEditor))){
+			try{
+				isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
+				disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
+			}catch(Exception e){
+			
+			}
+		}
+		
+		if(isOmniadmin ){
+			disabled = false;
+		}
+	}else{
+		disabled = false;
+	}
 
 %>
 
@@ -158,12 +180,12 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 </script>
 
 
-<aui:input type="checkbox" name="anonimous" label="p2ptaskactivity.edit.anonimous" checked="<%=anonimous %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+<aui:input type="checkbox" name="anonimous" label="p2ptaskactivity.edit.anonimous" checked="<%=anonimous %>" disabled="<%=disabled%>" 
 	ignoreRequestValue="true"></aui:input>
-<aui:input type="checkbox" name="result" label="test.result" checked="<%=result %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))||disabled %>" 
+<aui:input type="checkbox" name="result" label="test.result" checked="<%=result %>" disabled="<%=disabled %>" 
 	ignoreRequestValue="true"></aui:input>
 	
-<aui:input type="checkbox" name="fileoptional" label="p2ptaskactivity.edit.fileoptional" checked="<%=fileOptional%>" disabled="<%=(notModuleEditable && (!newOrCourseEditor)) || disabled%>" ignoreRequestValue="true" />	
+<aui:input type="checkbox" name="fileoptional" label="p2ptaskactivity.edit.fileoptional" checked="<%=fileOptional%>" disabled="<%=disabled%>" ignoreRequestValue="true" />	
 	
 <aui:field-wrapper label="p2ptaskactivity.edit.dateUpload">
 
