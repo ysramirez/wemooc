@@ -30,7 +30,7 @@
 	<script type="text/javascript">
 		<!--
 			AUI().ready(function(A) {
-				alert('No se pueden borrar módulos con actividades');
+				alert('<%=LanguageUtil.get(pageContext," module.delete.module.with.activity")%>');
 			});
 		//-->
 	</script>
