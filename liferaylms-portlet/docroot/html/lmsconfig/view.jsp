@@ -37,8 +37,7 @@ if(prefs!=null)
 <aui:field-wrapper label="site-templates">
 <%
 
-
-for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypes(0, 1000000))
+for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.search(themeDisplay.getCompanyId(),true,0, 1000000,null))
 {
 	boolean checked=false;
 	String writechecked="false";
