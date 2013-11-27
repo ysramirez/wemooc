@@ -547,10 +547,17 @@ public class ExecActivity extends MVCPortlet
 			        		//Obtenemos las respuestas que hay introducido.
 			        		for(Element question:rootElement.elements("question")){
 			        			
-				    			for(Element answerElement:question.elements("answer")){
-				        			//Guardamos el id de la respuesta para posteriormente obtener su texto.
-				        			answersIds.add(Long.valueOf(answerElement.attributeValue("id")));
-				    			}
+			        			TestQuestion q = TestQuestionLocalServiceUtil.getTestQuestion(Long.valueOf(question.attributeValue("id")));	        		
+			        			
+			        			if(q.getQuestionType() == 0){
+			        			
+					    			for(Element answerElement:question.elements("answer")){
+					        			//Guardamos el id de la respuesta para posteriormente obtener su texto.
+					    				if(Validator.isNumber(answerElement.attributeValue("id"))){
+					    					answersIds.add(Long.valueOf(answerElement.attributeValue("id")));
+					    				}
+					    			}
+			        			}
 	
 			        		}
 			        		
