@@ -27,7 +27,7 @@
 	}
 
 %>
-<h2 class="description-title"><%=LanguageUtil.get(pageContext,"about")%></h2>
-<span class="label"><%= LanguageUtil.get(pageContext,"build-date")	+": "+ date.toString() %></span>
-<span class="label"><%= LanguageUtil.get(pageContext,"build-number")+": "+ prop.getProperty("build.number","") %></span>
-<span class="label"><%= LanguageUtil.get(pageContext,"auto-upgrade")+": "+ prop.getProperty("build.auto.upgrade","") %></span>
+<h2 class="description-title"><%=LanguageUtil.get(pageContext,"about")%></span></h2>
+<div><span class="label"><%= LanguageUtil.get(pageContext,"build-date")%>: </span><%= date.toString() %></div>
+<div><span class="label"><%= LanguageUtil.get(pageContext,"build-number")%>: </span><%= prop.getProperty("build.number","") %></div>
+<div><span class="label"><%= LanguageUtil.get(pageContext,"auto-upgrade")%>: </span><%= prop.getProperty("build.auto.upgrade","") %></div>
