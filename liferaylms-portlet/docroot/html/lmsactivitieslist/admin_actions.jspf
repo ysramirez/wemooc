@@ -247,7 +247,7 @@ ActionKeys.UPDATE) %>">
 					/>
 	
 					<script type="text/javascript">
-						function showPopupUsers()
+						function showPopupUsers<%= String.valueOf(myActivity.getActId()) %>()
 					    {
 							permissionPopUp = Liferay.Util.openWindow(
 									{
@@ -267,7 +267,7 @@ ActionKeys.UPDATE) %>">
 		
 					    }
 					</script>
-					<liferay-ui:icon image="permissions" message="permissionsbasics" url="javascript:showPopupUsers()" />
+					<liferay-ui:icon image="permissions" message="permissionsbasics" url='<%="javascript:showPopupUsers"+String.valueOf(myActivity.getActId())+"()" %>' />
 				</c:if>
 			</c:otherwise>
 		</c:choose>
