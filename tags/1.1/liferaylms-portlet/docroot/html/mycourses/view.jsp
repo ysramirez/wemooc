@@ -1,4 +1,7 @@
 
+<%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.ModuleResultLocalServiceUtil"%>
@@ -28,7 +31,14 @@ for(Group groupCourse:groups)
 		%>
 		<div class="course option-more">
 		<%
-		if(groupCourse.getPublicLayoutSet().getLogo())
+		if (Validator.isNotNull(course.getIcon())) {
+			long logoId = course.getIcon();
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(logoId);
+			%>
+			<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK) %>">
+			
+			<%
+		} else if(groupCourse.getPublicLayoutSet().getLogo())
 		{
 			long logoId = groupCourse.getPublicLayoutSet().getLogoId();
 			%>
