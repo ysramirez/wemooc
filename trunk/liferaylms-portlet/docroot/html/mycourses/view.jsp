@@ -35,8 +35,10 @@ for(Group groupCourse:groups)
 			long logoId = course.getIcon();
 			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(logoId);
 			%>
-			<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK) %>">
-			
+			<a href="/web/<%=groupsel.getFriendlyURL()%>" class="course-title">
+				<img src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK) %>">
+				<%=course.getTitle(themeDisplay.getLocale()) %>
+			</a>
 			<%
 		} else if(groupCourse.getPublicLayoutSet().getLogo())
 		{
