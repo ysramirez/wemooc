@@ -1,3 +1,11 @@
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.portal.model.ClassName"%>
+<%@page import="com.liferay.portal.service.ClassNameLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PortalClassLoaderUtil"%>
+<%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="java.util.Enumeration"%>
 <%@page import="com.liferay.portal.kernel.search.ParseException"%>
 <%@page import="com.liferay.portal.kernel.search.BooleanClauseFactoryUtil"%>
@@ -35,6 +43,8 @@
 
 String search = ParamUtil.getString(request, "search","");
 String freetext = ParamUtil.getString(request, "freetext","");
+Integer state = ParamUtil.getInteger(request, "state",WorkflowConstants.STATUS_ANY);
+
 long catId=ParamUtil.getLong(request, "categoryId",0);
 
 Enumeration<String> pnames =request.getParameterNames();
@@ -60,6 +70,7 @@ while(pnames.hasMoreElements()){
 
 if(ParamUtil.getString(request, "search").equals("search")){
 	portletSession.setAttribute("freetext", freetext);
+	portletSession.setAttribute("state", state);
 	portletSession.setAttribute("assetCategoryIds", assetCategoryIds);
 }else{
 	try{
@@ -72,6 +83,12 @@ if(ParamUtil.getString(request, "search").equals("search")){
 		ArrayList<Long> assetCategoryIdsTemp = (ArrayList<Long>)portletSession.getAttribute("assetCategoryIds");
 		if(assetCategoryIdsTemp!=null){
 			assetCategoryIds = assetCategoryIdsTemp;
+		}
+	}catch(Exception e){}
+	try{
+		Integer stateTemp = (Integer)portletSession.getAttribute("state");
+		if(stateTemp!=null){
+			state = stateTemp;
 		}
 	}catch(Exception e){}
 }
@@ -162,9 +179,9 @@ if(catIds!=null&&catIds.length>0)
 {
 	catIds=ArrayUtil.remove(catIds, 0l);
 }
-if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty())
+if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowConstants.STATUS_ANY)
 {
-	java.util.List<AssetEntry> entries=new java.util.ArrayList<AssetEntry>();
+	List<AssetEntry> entries=new ArrayList<AssetEntry>();
 	AssetEntryQuery entryQuery=new AssetEntryQuery();
 	long[] groupIds={themeDisplay.getScopeGroupId()};
 	entryQuery.setAllCategoryIds(catIds);
@@ -173,20 +190,59 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty())
 	entryQuery.setEnablePermissions(true);
 	entryQuery.setExcludeZeroViewCount(false);
 	entryQuery.setVisible(true);
-	courses=new ArrayList<Course>();
 	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
 	entryQuery.setVisible(false);
 	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
+
+	/*ClassName cn = ClassNameLocalServiceUtil.getClassName(Course.class.getName());
+
+	DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(AssetEntry.class, PortalClassLoaderUtil.getClassLoader());
+	dynamicQuery.add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId()));
+	dynamicQuery.add(PropertyFactoryUtil.forName("classNameId").eq(cn.getClassNameId()));
+	entries.addAll(AssetEntryLocalServiceUtil.dynamicQuery(dynamicQuery));*/
+	//entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
+	
+	System.out.println("Entries:"+entries.size());
+
+	courses=new ArrayList<Course>();
 	if(!freetext.isEmpty()){
 		for(AssetEntry entry:entries)
 		{
 			if(lucenes.get(entry.getClassPK())!=null){
-				courses.add(CourseLocalServiceUtil.getCourse(entry.getClassPK()));
+				Course course = CourseLocalServiceUtil.getCourse(entry.getClassPK());
+				
+				if(state!=WorkflowConstants.STATUS_ANY){
+					if(state==WorkflowConstants.STATUS_APPROVED){
+						if(!course.getClosed())
+							courses.add(course);
+					}
+					else if(state==WorkflowConstants.STATUS_INACTIVE){
+						if(course.getClosed())
+							courses.add(course);
+					}
+				}else{
+					System.out.println("Add!");
+					courses.add(course);
+				}
 			}
 		}
 	}else{
 		for(AssetEntry entry:entries){
-			courses.add(CourseLocalServiceUtil.getCourse(entry.getClassPK()));
+			Course course = CourseLocalServiceUtil.getCourse(entry.getClassPK());
+			
+			if(state!=WorkflowConstants.STATUS_ANY){
+				if(state==WorkflowConstants.STATUS_APPROVED){
+					if(!course.getClosed())
+						courses.add(course);
+				}
+				else if(state==WorkflowConstants.STATUS_INACTIVE){
+					if(course.getClosed())
+						courses.add(course);
+				}
+			}else{
+				System.out.println("Add!");
+				courses.add(course);
+			}
 		}
 	}
 }
@@ -197,10 +253,10 @@ else
 java.util.List<Course> finalCourses=new ArrayList<Course>();
 for(Course course:courses)
 {
-	if(!course.isClosed())
-	{
+	/*if(!course.isClosed())
+	{*/
 		finalCourses.add(course);
-	}
+	/*}*/
 }
 courses=finalCourses;
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.coursemodel",themeDisplay.getScopeGroupId(),"ADD_COURSE"))
@@ -214,13 +270,17 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 		<aui:form action="${searchURL}" method="post" name="search">
 			<aui:fieldset cssClass="checkBoxes">
 				<aui:input name="search" type="hidden" value="search" />
-				<aui:input inlineField="true" name="freetext" type="text" value="" />
+				<aui:input inlineField="true" name="freetext" type="text" value="<%=freetext %>" />
+				<aui:select name="state">
+					<aui:option label="any-status" selected="<%= (state == WorkflowConstants.STATUS_ANY) %>" value="<%= WorkflowConstants.STATUS_ANY %>" />
+					<aui:option label="active" selected="<%= (state == WorkflowConstants.STATUS_APPROVED) %>" value="<%= WorkflowConstants.STATUS_APPROVED %>" />
+					<aui:option label="inactive" selected="<%= (state == WorkflowConstants.STATUS_INACTIVE) %>" value="<%= WorkflowConstants.STATUS_INACTIVE %>" />
+				</aui:select>
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:fieldset>
 			<c:if test="<%=scategories%>">
 				<aui:fieldset cssClass="checkBoxes">
-					<liferay-ui:asset-categories-selector
-						className="<%=Course.class.getName()%>" />
+					<liferay-ui:asset-categories-selector  className="<%= Course.class.getName() %>" curCategoryIds="<%=catIdsText %>" />
 				</aui:fieldset>
 			</c:if>
 		</aui:form>
