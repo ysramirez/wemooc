@@ -15,7 +15,11 @@
 		<field name="companyId" type="long" />
 		<field name="groupId" type="long" />
 		<field name="userId" type="long" />
-		<field name="subject" type="String" />
-		<field name="body" type="String" />
+		<field name="subject" type="String" >
+			<hint name="max-length">120</hint>
+		</field>
+		<field name="body" type="String">
+			<hint name="max-length">3000</hint>
+		</field>
 	</model>
 </model-hints>
