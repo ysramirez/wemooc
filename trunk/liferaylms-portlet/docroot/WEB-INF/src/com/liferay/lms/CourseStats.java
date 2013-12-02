@@ -85,23 +85,25 @@ public class CourseStats extends MVCPortlet {
 		    rb = ResourceBundle.getBundle("content.Language", themeDisplay.getLocale());
 		    
 		    //Curso
-		    writer.writeNext(new String[]{group.getName()});
+		    writer.writeNext(new String[]{course.getTitle(themeDisplay.getLocale())});
 		    
 		    //Inscritos
 		    Object args[] = {registered};
-		    writer.writeNext(new String[]{MessageFormat.format(rb.getString("coursestats.modulestats.inscritos"),registered)});
+		    writer.writeNext(new String[]{LanguageUtil.format(themeDisplay.getLocale(), "coursestats.modulestats.inscritos", args)});
 		    
 		    //Iniciaron/finalizaron
-		    writer.writeNext(new String[]{rb.getString("coursestats.start.course") + iniciados + rb.getString("coursestats.end.course") + finalizados});
+		    writer.writeNext(new String[]{LanguageUtil.get(themeDisplay.getLocale(), "coursestats.start.course") + iniciados + LanguageUtil.get(themeDisplay.getLocale(),"coursestats.end.course") + finalizados});
 		    
 		    int numCols = 6;
 		    String[] cabeceras = new String[numCols];
-		    cabeceras[0]=rb.getString("coursestats.module");
-		    cabeceras[1]=rb.getString("coursestats.modulestats.stardate");
-		    cabeceras[2]=rb.getString("coursestats.modulestats.enddate");
-		    cabeceras[3]=rb.getString("coursestats.start.student");
-		    cabeceras[4]=rb.getString("coursestats.end.student");
-		    cabeceras[5]=rb.getString("coursestats.modulestats.dependencies");
+		    
+		    cabeceras[0]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.module");
+		    cabeceras[1]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.modulestats.stardate");
+		    cabeceras[2]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.modulestats.enddate");
+		    cabeceras[3]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.start.student");
+		    cabeceras[4]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.end.student");
+		    cabeceras[5]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.modulestats.dependencies");
+		    
 		    writer.writeNext(cabeceras);
 
 	    	java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("dd/MM/yyyy");
