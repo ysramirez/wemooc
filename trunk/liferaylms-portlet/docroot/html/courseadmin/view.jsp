@@ -210,26 +210,22 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 <portlet:renderURL var="searchURL">
 	<portlet:param name="jspPage" value="/html/courseadmin/view.jsp"></portlet:param>
 </portlet:renderURL>
-
-<div>
-	<aui:form action="${searchURL}" method="post" name="search">
-		<aui:fieldset cssClass="checkBoxes">
-			<aui:column columnWidth="15">
-				<aui:input inlineField="false" name="search" type="hidden" value="search" />
-				<aui:input inlineField="false" name="freetext" type="text" value="<%=freetext %>" />
+	<div class="admin-course-search-form">
+		<aui:form action="${searchURL}" method="post" name="search">
+			<aui:fieldset cssClass="checkBoxes">
+				<aui:input name="search" type="hidden" value="search" />
+				<aui:input inlineField="true" name="freetext" type="text" value="" />
 				<aui:button type="submit" value="search"></aui:button>
-			</aui:column>
-			<c:if test="<%=scategories %>">
-				<aui:column columnWidth="85">
-					<liferay-ui:asset-categories-selector className="<%= Course.class.getName() %>" curCategoryIds="<%=catIdsText %>" />
-				</aui:column>
+			</aui:fieldset>
+			<c:if test="<%=scategories%>">
+				<aui:fieldset cssClass="checkBoxes">
+					<liferay-ui:asset-categories-selector
+						className="<%=Course.class.getName()%>" />
+				</aui:fieldset>
 			</c:if>
-			<aui:column columnWidth="10">
-			</aui:column>
-		</aui:fieldset>
-	</aui:form>
-</div>
-<div class="newitem2">
+		</aui:form>
+	</div>
+	<div class="newitem2">
 <liferay-ui:icon
 image="add"
 label="<%= true %>"
