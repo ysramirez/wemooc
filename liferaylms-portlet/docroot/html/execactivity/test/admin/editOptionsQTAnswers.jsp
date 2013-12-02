@@ -133,7 +133,7 @@
 						<% if(!"".equals(advise)){ 	%>
 							<liferay-ui:message key="<%=advise %>"/>
 						<% 	} %>
-						<div id="leftSideAnswer">
+						<div class="leftSideAnswer">
 							<portlet:actionURL var="editanswerURL" name="editanswer" />
 							<aui:form name="<%=\"afm_\"+testanswer.getAnswerId() %>" action="<%=editanswerURL %>" method="post">
 								<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
@@ -167,7 +167,7 @@
 								</aui:button-row>
 							</aui:form>
 						</div>
-						<div id="rightSideAnswer">
+						<div class="rightSideAnswer">
 							<liferay-ui:icon-menu align="right">
 								<portlet:actionURL name="deleteanswer" var="deleteURL">
 									<portlet:param name="answerId" value="<%=String.valueOf(testanswer.getPrimaryKey()) %>" />
