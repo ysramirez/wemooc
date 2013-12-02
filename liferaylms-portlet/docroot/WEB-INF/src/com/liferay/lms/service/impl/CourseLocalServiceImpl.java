@@ -371,6 +371,24 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return course;
 	}
 
+	public Course openCourse(long courseId) throws SystemException,
+	PortalException {
+	
+		Course course=CourseLocalServiceUtil.getCourse(courseId);
+		if(course.getClosed()){
+			course.setClosed(false);
+			Group courseGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+			courseGroup.setActive(true);
+			GroupLocalServiceUtil.updateGroup(courseGroup);
+			coursePersistence.update(course, true);	
+			AssetEntry courseAsset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
+			courseAsset.setVisible(true);
+			AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
+		}	
+		
+		return course;
+	}
+
 	@Indexable(type=IndexableType.DELETE)
 	public Course deleteCourse (long courseId) throws SystemException,
 	PortalException {

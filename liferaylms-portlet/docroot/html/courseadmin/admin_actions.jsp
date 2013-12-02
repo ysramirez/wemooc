@@ -49,10 +49,16 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)&& ! myCourse.isClosed())
 {
 %>
-<liferay-ui:icon image="close" message="close" url="<%=closeURL.toString() %>" />
+	<liferay-ui:icon image="close" message="close" url="<%=closeURL.toString() %>" />
 <%
-}
+}else if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)&& myCourse.isClosed()){
 %>
+	<portlet:actionURL name="openCourse" var="openURL">
+		<portlet:param name="courseId" value="<%= primKey %>" />
+		<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
+	</portlet:actionURL>
+	<liferay-ui:icon image="key" message="open-course" url="<%=openURL.toString() %>" />
+<%} %>
 <portlet:actionURL name="deleteCourse" var="deleteURL">
 <portlet:param name="courseId" value="<%= primKey %>" />
 </portlet:actionURL>
