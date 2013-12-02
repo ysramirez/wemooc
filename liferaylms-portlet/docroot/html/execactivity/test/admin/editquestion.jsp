@@ -110,7 +110,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	   	<%=(SessionErrors.contains(renderRequest, "execativity.editquestions.editquestion.error.test.required"))?
 	   			LanguageUtil.get(pageContext,"execativity.editquestions.editquestion.error.test.required"):StringPool.BLANK %>
 		</div>
-		<liferay-ui:panel id="<%=\"question_\"+question.getQuestionId() %>" title="execativity.editquestions.editquestion.enunciation" collapsible="true" extended="true" defaultState="collapsed">
+		<liferay-ui:panel id="<%=\"question_\"+question.getQuestionId() %>" title="execativity.editquestions.editquestion.enunciation" collapsible="true" extended="false" defaultState="collapsed">
 			<aui:field-wrapper label="">
 				<liferay-ui:input-editor name="text" width="80%" onChangeMethod="onChangeText" />
 				<script type="text/javascript">

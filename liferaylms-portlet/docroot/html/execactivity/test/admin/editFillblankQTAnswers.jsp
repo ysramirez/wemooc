@@ -30,7 +30,7 @@
 				add(PropertyFactoryUtil.forName("questionId").eq(question.getQuestionId())));
 		for(TestAnswer testanswer:testAnswers){
 	%>
-			<liferay-ui:panel id="<%=\"testAnswer_\"+testanswer.getAnswerId() %>" title="answer" collapsible="true" extended="true" defaultState="collapsed">
+			<liferay-ui:panel id="<%=\"testAnswer_\"+testanswer.getAnswerId() %>" title="answer" collapsible="true" extended="false" defaultState="collapsed">
 				<script type="text/javascript">
 				//<!--
 				AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {

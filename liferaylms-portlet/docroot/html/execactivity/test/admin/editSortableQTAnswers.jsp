@@ -97,7 +97,7 @@ if(totalAnswer>0){
 				<% String titleAnswer = HtmlUtil.extractText(testanswer.getAnswer());
 						if(titleAnswer.length() > 50) titleAnswer = titleAnswer.substring(0, 50) + " ...";
 						i++;%>
-					<liferay-ui:panel id="<%=\"testAnswer_\"+testanswer.getAnswerId() %>" title="<%=i+\": \"+titleAnswer %>" collapsible="true" extended="true" defaultState="collapsed">
+					<liferay-ui:panel id="<%=\"testAnswer_\"+testanswer.getAnswerId() %>" title="<%=i+\": \"+titleAnswer %>" collapsible="true" extended="false" defaultState="collapsed">
 						<script type="text/javascript">
 						//<!--
 						AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
