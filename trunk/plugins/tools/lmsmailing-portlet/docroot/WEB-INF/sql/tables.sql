@@ -13,6 +13,6 @@ create table lmsmail_MailTemplate (
 	companyId LONG,
 	groupId LONG,
 	userId LONG,
-	subject VARCHAR(75) null,
-	body VARCHAR(75) null
+	subject VARCHAR(120) null,
+	body VARCHAR(3000) null
 );
