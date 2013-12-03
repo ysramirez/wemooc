@@ -269,7 +269,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 			<aui:fieldset cssClass="checkBoxes">
 				<aui:input name="search" type="hidden" value="search" />
 				<aui:input inlineField="true" name="freetext" type="text" value="<%=freetext %>" />
-				<aui:select name="state">
+				<aui:select inlineField="true" name="state">
 					<aui:option label="any-status" selected="<%= (state == WorkflowConstants.STATUS_ANY) %>" value="<%= WorkflowConstants.STATUS_ANY %>" />
 					<aui:option label="active" selected="<%= (state == WorkflowConstants.STATUS_APPROVED) %>" value="<%= WorkflowConstants.STATUS_APPROVED %>" />
 					<aui:option label="inactive" selected="<%= (state == WorkflowConstants.STATUS_INACTIVE) %>" value="<%= WorkflowConstants.STATUS_INACTIVE %>" />
