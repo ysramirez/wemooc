@@ -333,7 +333,7 @@ boolean allCorrected = true;
 
 //Obtenemos todas las correcciones que tiene asignado el usuario.
 //List<P2pActivityCorrections> p2pActList = P2pActivityCorrectionsLocalServiceUtil.findByActIdIdAndUserId(actId, userId);
-List<P2pActivityCorrections> p2pActList = P2pActivityCorrectionsLocalServiceUtil.findByActIdAndUserIdOrderByDate(actId, userId);
+List<P2pActivityCorrections> p2pActList = P2pActivityCorrectionsLocalServiceUtil.findByActIdAndUserIdOrderById(actId, userId);
 
 int contaValidations = 0;
 

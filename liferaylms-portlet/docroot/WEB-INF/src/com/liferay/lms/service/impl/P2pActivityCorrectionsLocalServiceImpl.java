@@ -191,6 +191,18 @@ public class P2pActivityCorrectionsLocalServiceImpl
 		return activities;
 
 	}
+	public List<P2pActivityCorrections> findByActIdAndUserIdOrderById(Long actId, Long userId) throws SystemException{
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader");
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(P2pActivityCorrections.class, classLoader)
+				.add(PropertyFactoryUtil.forName("actId").eq(actId))
+				.add(PropertyFactoryUtil.forName("userId").eq(userId))
+				.addOrder(OrderFactoryUtil.getOrderFactory().desc("p2pActivityCorrectionsId"));
+	
+		List<P2pActivityCorrections> activities = (List<P2pActivityCorrections>)p2pActivityCorrectionsPersistence.findWithDynamicQuery(consulta);
+
+		return activities;
+
+	}
 	
 	public P2pActivityCorrections addorUpdateP2pActivityCorrections(P2pActivityCorrections p2pActCor){
 		

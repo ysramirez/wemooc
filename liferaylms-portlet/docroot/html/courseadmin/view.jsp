@@ -43,7 +43,7 @@
 
 String search = ParamUtil.getString(request, "search","");
 String freetext = ParamUtil.getString(request, "freetext","");
-Integer state = ParamUtil.getInteger(request, "state",WorkflowConstants.STATUS_ANY);
+Integer state = ParamUtil.getInteger(request, "state",WorkflowConstants.STATUS_APPROVED);
 
 long catId=ParamUtil.getLong(request, "categoryId",0);
 
@@ -207,7 +207,12 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 		for(AssetEntry entry:entries)
 		{
 			if(lucenes.get(entry.getClassPK())!=null){
-				Course course = CourseLocalServiceUtil.getCourse(entry.getClassPK());
+				Course course = null;
+				try{
+					course = CourseLocalServiceUtil.getCourse(entry.getClassPK());
+				}catch(Exception e){
+					continue;
+				}
 				
 				if(state!=WorkflowConstants.STATUS_ANY){
 					if(state==WorkflowConstants.STATUS_APPROVED){
@@ -226,7 +231,12 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 		}
 	}else{
 		for(AssetEntry entry:entries){
-			Course course = CourseLocalServiceUtil.getCourse(entry.getClassPK());
+			Course course = null;
+			try{
+				course = CourseLocalServiceUtil.getCourse(entry.getClassPK());
+			}catch(Exception e){
+				continue;
+			}
 			
 			if(state!=WorkflowConstants.STATUS_ANY){
 				if(state==WorkflowConstants.STATUS_APPROVED){
@@ -277,9 +287,11 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:fieldset>
 			<c:if test="<%=scategories%>">
-				<aui:fieldset cssClass="checkBoxes">
-					<liferay-ui:asset-categories-selector  className="<%= Course.class.getName() %>" curCategoryIds="<%=catIdsText %>" />
-				</aui:fieldset>
+				<liferay-ui:panel title="categorization" collapsible="true" defaultState="<%=catIds.length>0?\"open\":\"closed\" %>">
+					<aui:fieldset cssClass="checkBoxes">
+						<liferay-ui:asset-categories-selector  className="<%= Course.class.getName() %>" curCategoryIds="<%=catIdsText %>" />
+					</aui:fieldset>
+				</liferay-ui:panel>
 			</c:if>
 		</aui:form>
 	</div>
@@ -335,7 +347,14 @@ portletURL.setParameter("search","search");
 		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 	%>
 		<liferay-ui:search-container-column-text>
-		<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+		<c:choose>
+			<c:when test="<%= !course.isClosed() %>">
+				<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+			</c:when>
+			<c:otherwise>
+				<span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span>
+			</c:otherwise>
+		</c:choose>
 		
 		</liferay-ui:search-container-column-text>
 		
