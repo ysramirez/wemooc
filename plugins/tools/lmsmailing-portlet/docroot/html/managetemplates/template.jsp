@@ -25,7 +25,10 @@
 	<liferay-portlet:actionURL name="saveTemplate" var="saveTemplateURL">
 	</liferay-portlet:actionURL>
 	<aui:form name="fm" action="<%=saveTemplateURL %>" method="POST">
-		<aui:input name="subject" label="subject" value="<%=subject %>"></aui:input>
+		<aui:input name="subject" label="subject" value="<%=subject %>"  size="120">
+			<aui:validator name="maxLength">120</aui:validator>
+			<aui:validator name="required"></aui:validator>
+		</aui:input>
 		<aui:input id="editing" name="editing" type="hidden" value="<%=editing %>"></aui:input>
 		<aui:input id="idTemplate" name="idTemplate" type="hidden" value="<%=templateId %>"></aui:input>
 		<aui:field-wrapper label="message">

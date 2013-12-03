@@ -256,7 +256,10 @@
 		<aui:input type="hidden" name="to" id="to" value="" />
 	
 		<div class="mail_subject" >
-			<aui:input name="subject" title="groupmailing.messages.subject"></aui:input>
+			<aui:input name="subject" title="groupmailing.messages.subject" size="120">
+				<aui:validator name="maxLength">120</aui:validator>
+				<aui:validator name="required"></aui:validator>
+			</aui:input>
 		</div>
 		
 		<div class="mail_content" >
