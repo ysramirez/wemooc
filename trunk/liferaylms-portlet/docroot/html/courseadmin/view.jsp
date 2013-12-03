@@ -201,8 +201,6 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 	dynamicQuery.add(PropertyFactoryUtil.forName("classNameId").eq(cn.getClassNameId()));
 	entries.addAll(AssetEntryLocalServiceUtil.dynamicQuery(dynamicQuery));*/
 	//entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
-	
-	System.out.println("Entries:"+entries.size());
 
 	courses=new ArrayList<Course>();
 	if(!freetext.isEmpty()){
