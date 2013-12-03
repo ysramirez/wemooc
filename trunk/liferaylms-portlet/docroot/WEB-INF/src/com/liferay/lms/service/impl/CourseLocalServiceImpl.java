@@ -81,7 +81,7 @@ import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
  * @see com.liferay.lms.service.base.CourseLocalServiceBaseImpl
  * @see com.liferay.lms.service.CourseLocalServiceUtil
  */
-public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
+public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl { 
 	
 	Log log = LogFactoryUtil.getLog(CourseLocalServiceImpl.class);
 	
