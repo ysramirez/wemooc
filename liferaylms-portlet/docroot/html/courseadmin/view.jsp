@@ -280,9 +280,9 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay
 				<aui:input name="search" type="hidden" value="search" />
 				<aui:input inlineField="true" name="freetext" type="text" value="<%=freetext %>" />
 				<aui:select inlineField="true" name="state">
-					<aui:option label="any-status" selected="<%= (state == WorkflowConstants.STATUS_ANY) %>" value="<%= WorkflowConstants.STATUS_ANY %>" />
 					<aui:option label="active" selected="<%= (state == WorkflowConstants.STATUS_APPROVED) %>" value="<%= WorkflowConstants.STATUS_APPROVED %>" />
 					<aui:option label="inactive" selected="<%= (state == WorkflowConstants.STATUS_INACTIVE) %>" value="<%= WorkflowConstants.STATUS_INACTIVE %>" />
+					<aui:option label="any-status" selected="<%= (state == WorkflowConstants.STATUS_ANY) %>" value="<%= WorkflowConstants.STATUS_ANY %>" />
 				</aui:select>
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:fieldset>
@@ -313,6 +313,15 @@ url='<%= newactivityURL %>'
 PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("jspPage","/html/courseadmin/view.jsp");
 portletURL.setParameter("freetext",freetext);
+portletURL.setParameter("state",String.valueOf(state));
+
+pnames =request.getParameterNames();
+while(pnames.hasMoreElements()){
+	String name = pnames.nextElement();
+	if(name.length()>16&&name.substring(0,16).equals("assetCategoryIds")){
+		portletURL.setParameter(name,request.getParameter(name));
+	}
+}
 for(String param : tparams){
 	portletURL.setParameter(param,request.getParameter(param));
 }
