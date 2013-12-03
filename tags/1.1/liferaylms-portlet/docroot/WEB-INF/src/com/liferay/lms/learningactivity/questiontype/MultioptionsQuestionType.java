@@ -1,13 +1,20 @@
 package com.liferay.lms.learningactivity.questiontype;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
+import javax.portlet.ActionRequest;
+
+import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.TestAnswerLocalService;
+import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -37,6 +44,11 @@ public class MultioptionsQuestionType extends OptionsQuestionType {
 
 	public String getDescription(Locale locale) {
 		return LanguageUtil.get(locale, "multioptions.description");
+	}
+	
+	
+	protected boolean isQuestionCorrect(int correctAnswers, int correctAnswered, int incorrectAnswered){
+		return correctAnswers==correctAnswered && incorrectAnswered==0;
 	}
 	
 	/**

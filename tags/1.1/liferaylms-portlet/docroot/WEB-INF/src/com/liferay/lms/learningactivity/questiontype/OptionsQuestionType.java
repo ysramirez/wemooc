@@ -74,8 +74,12 @@ public class OptionsQuestionType extends BaseQuestionType {
 			}else if(arrayAnswersId.contains(answer.getAnswerId())) incorrectAnswered++;
 		}
 
-		if(correctAnswers==correctAnswered && incorrectAnswered==0)	return true;
+		if(isQuestionCorrect(correctAnswers, correctAnswered, incorrectAnswered))return true;
 		else return false;
+	}
+	
+	protected boolean isQuestionCorrect(int correctAnswers, int correctAnswered, int incorrectAnswered){
+		return correctAnswered>0 && incorrectAnswered==0;
 	}
 
 	protected boolean isCorrect(TestAnswer testAnswer){
@@ -147,7 +151,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 			}
 
 			if(feedback){
-				if(correctAnswers==correctAnswered && incorrectAnswered==0)	cssclass=" correct";
+				if(isQuestionCorrect(correctAnswers, correctAnswered, incorrectAnswered))	cssclass=" correct";
 				else cssclass=" incorrect";
 				
 				answersFeedBack = "<div class=\"content_answer\">" + answersFeedBack + "</div>";
