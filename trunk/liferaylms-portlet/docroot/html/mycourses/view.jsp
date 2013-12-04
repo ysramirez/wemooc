@@ -14,7 +14,8 @@
 <%
 
 java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(themeDisplay.getUserId());
-	
+
+int courses = 0;
 for(Group groupCourse:groups)
 {
 	
@@ -119,8 +120,14 @@ for(Group groupCourse:groups)
 			</div>
 		</div>
 <%
+		courses++;
 		}
 	}
 }
+
+if(courses==0){
+	%><liferay-ui:message key="there-are-no-courses" /><%
+}
+
 %>
 	
