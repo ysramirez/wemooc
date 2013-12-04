@@ -5,6 +5,7 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.UnsupportedEncodingException;
+import java.lang.reflect.Method;
 import java.net.URLDecoder;
 import java.security.Key;
 import java.security.MessageDigest;
@@ -23,8 +24,12 @@ import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.SCORMContentLocalServiceUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
+import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.User;
@@ -80,11 +85,13 @@ public class SCORMZipFileServerServlet extends HttpServlet {
 				String userId = null;
 				String companyId = null;
 				Cookie[] cookies = ((HttpServletRequest) request).getCookies();
-				for (Cookie c : cookies) {
-					if ("COMPANY_ID".equals(c.getName())) {
-						companyId = c.getValue();
-					} else if ("ID".equals(c.getName())) {
-						userId = hexStringToStringByAscii(c.getValue());
+				if (Validator.isNotNull(cookies)) {
+					for (Cookie c : cookies) {
+						if ("COMPANY_ID".equals(c.getName())) {
+							companyId = c.getValue();
+						} else if ("ID".equals(c.getName())) {
+							userId = hexStringToStringByAscii(c.getValue());
+						}
 					}
 				}
 
@@ -228,6 +235,26 @@ public class SCORMZipFileServerServlet extends HttpServlet {
 	}
 	
 	private String getPassword(User user) throws SystemException, NoSuchAlgorithmException {
+		String strategy = null;
+		if ((strategy = PropsUtil.get("lms.user.encryption.strategy")) != null) {
+			String [] params = strategy.split(";");
+			if (params.length == 2) {
+				try {
+					Class c = Class.forName(params[1], true, PortletClassLoaderUtil.getClassLoader(params[0]));
+					ClassLoaderProxy clp = new ClassLoaderProxy(c.newInstance(), params[1], PortletClassLoaderUtil.getClassLoader(params[0]));
+					Method method = c.getMethod("getKey", User.class);
+					String key = (String) clp.invoke(new MethodHandler(method, user));
+					return key;
+				} catch (ClassNotFoundException e) {
+				} catch (InstantiationException e) {
+				} catch (IllegalAccessException e) {
+				} catch (SecurityException e) {
+				} catch (NoSuchMethodException e) {
+				} catch (Throwable e) {
+				}
+				
+			}
+		}
 		return md5Sum(user.getUserUuid().replace("-", "").getBytes());
 	}
 	

@@ -74,11 +74,13 @@ public class SCORMFileServerServlet extends HttpServlet {
 				String userId = null;
 				String companyId = null;
 				Cookie[] cookies = ((HttpServletRequest) request).getCookies();
-				for (Cookie c : cookies) {
-					if ("COMPANY_ID".equals(c.getName())) {
-						companyId = c.getValue();
-					} else if ("ID".equals(c.getName())) {
-						userId = hexStringToStringByAscii(c.getValue());
+				if (Validator.isNotNull(cookies)) {
+					for (Cookie c : cookies) {
+						if ("COMPANY_ID".equals(c.getName())) {
+							companyId = c.getValue();
+						} else if ("ID".equals(c.getName())) {
+							userId = hexStringToStringByAscii(c.getValue());
+						}
 					}
 				}
 
