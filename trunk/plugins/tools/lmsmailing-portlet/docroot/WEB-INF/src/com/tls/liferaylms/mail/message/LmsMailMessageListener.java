@@ -95,22 +95,25 @@ public class LmsMailMessageListener implements MessageListener {
 			MailServiceUtil.sendEmail(mailm);
 		} 
 		else if(toMail != null && userName != null && !toMail.contains("all")){
-			InternetAddress to = new InternetAddress(toMail, userName);
 			
-			String calculatedBody = createMessage(body, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
-
-			String calculatedsubject = createMessage(subject, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
-			
-			// System.out.println("\n----------------------");
-			// System.out.println(" from: "+from);
-			// System.out.println(" to: "+toMail + " "+userName);
-			// System.out.println(" subject: "+subject);
-			// System.out.println(" body: \n"+body);
-			// System.out.println("----------------------");
-
-			
-			MailMessage mailm = new MailMessage(from, to, calculatedsubject, calculatedBody ,true);
-			MailServiceUtil.sendEmail(mailm);
+			if(UserLocalServiceUtil.getUserById(userId).isActive()){
+				InternetAddress to = new InternetAddress(toMail, userName);
+				
+				String calculatedBody = createMessage(body, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+	
+				String calculatedsubject = createMessage(subject, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+				
+				// System.out.println("\n----------------------");
+				// System.out.println(" from: "+from);
+				// System.out.println(" to: "+toMail + " "+userName);
+				// System.out.println(" subject: "+subject);
+				// System.out.println(" body: \n"+body);
+				// System.out.println("----------------------");
+	
+				
+				MailMessage mailm = new MailMessage(from, to, calculatedsubject, calculatedBody ,true);
+				MailServiceUtil.sendEmail(mailm);
+			}
 		}
 		else if(toMail.contains("all")){
 			
@@ -121,36 +124,39 @@ public class LmsMailMessageListener implements MessageListener {
 			
 			for (User user : users) {
 				
-				if(nUsers > 0 && sendMails == nUsers ){
-					try {
-						System.out.println(" Delay " + millis +" milliseconds. Users: "+nUsers);
-					    Thread.sleep(millis);
-					} catch(InterruptedException ex) {
-					    Thread.currentThread().interrupt();
+				if(user.isActive()){
+				
+					if(nUsers > 0 && sendMails == nUsers ){
+						try {
+							System.out.println(" Delay " + millis +" milliseconds. Users: "+nUsers);
+						    Thread.sleep(millis);
+						} catch(InterruptedException ex) {
+						    Thread.currentThread().interrupt();
+						}
+						
+						sendMails = 0;
+						
 					}
 					
-					sendMails = 0;
+					InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
 					
+					String calculatedBody = createMessage(body, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+	
+					String calculatedsubject = createMessage(subject, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+					
+	//					System.out.println("----------------------");
+	//					System.out.println(" from: "+from);
+	//				System.out.println(" to: "+to + " "+user.getFullName());
+	//					System.out.println(" subject: "+subject);
+	//					System.out.println(" body: \n"+body);
+	//					System.out.println("----------------------");
+	
+					
+					MailMessage mailm = new MailMessage(from, to, calculatedsubject, calculatedBody ,true);
+					MailServiceUtil.sendEmail(mailm);
+					
+					sendMails++;
 				}
-				
-				InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
-				
-				String calculatedBody = createMessage(body, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
-
-				String calculatedsubject = createMessage(subject, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
-				
-//					System.out.println("----------------------");
-//					System.out.println(" from: "+from);
-					System.out.println(" to: "+to + " "+user.getFullName());
-//					System.out.println(" subject: "+subject);
-//					System.out.println(" body: \n"+body);
-//					System.out.println("----------------------");
-
-				
-				MailMessage mailm = new MailMessage(from, to, calculatedsubject, calculatedBody ,true);
-				MailServiceUtil.sendEmail(mailm);
-				
-				sendMails++;
 			}
 		}
 		

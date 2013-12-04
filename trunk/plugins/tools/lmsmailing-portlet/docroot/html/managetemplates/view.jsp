@@ -6,14 +6,8 @@
 
 <div class="managetemplates">
 
-	
-	<div class="newitem">
-		<span class="newitem2">
-			
-		</span>
-	</div>
-
 	<liferay-ui:icon-menu showWhenSingleIcon="<%=true %>">
+	
 		<portlet:renderURL var="newTemplateURL">
 			<portlet:param name="jspPage" value="/html/managetemplates/template.jsp"></portlet:param>
 		</portlet:renderURL>
