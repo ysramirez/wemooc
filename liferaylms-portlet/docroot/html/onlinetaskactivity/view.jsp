@@ -80,8 +80,8 @@ else
 %>
 
 <h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-<h3><liferay-ui:message key="onlinetaskactivity.description" />  </h3>
-<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
+<h3><liferay-ui:message key="description" /></h3>
+<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
 <liferay-portlet:renderURL var="returnurl">
 <liferay-portlet:param name="jspPage" value="/html/onlineactivity/view.jsp" />	
 </liferay-portlet:renderURL>
