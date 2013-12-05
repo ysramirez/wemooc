@@ -206,8 +206,8 @@
 				</div>
 				
 				<% } %>
-				<h3><liferay-ui:message key="offlinetaskactivity.description" /> </h3>
-				<p><%=activity.getDescription(themeDisplay.getLocale()) %></p>
+				<h3><liferay-ui:message key="description" /></h3>
+				<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
 				
 				
 				<% if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){ 
