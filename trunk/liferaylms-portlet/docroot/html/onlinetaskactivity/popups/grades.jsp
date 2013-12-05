@@ -93,9 +93,11 @@ if(renderRequest.getParameter("studentId")!=null){%>
 <% } 
  if(urlFile!=null) {
 %>
-	<liferay-ui:message key="onlinetaskactivity.grades.attach"/>
-	<liferay-ui:icon image="export" label="<%= true %>" message='<%=titleFile+"&nbsp;("+ sizeKbFile +"Kb)&nbsp;"%>' method="get"/>
-	<aui:a class="see-more" href="<%=urlFile%>"><liferay-ui:message key="onlinetaskactivity.grades.download"/></aui:a>
+	<p class="label"><liferay-ui:message key="onlinetaskactivity.grades.attach"/></p>
+	<div class="doc_descarga">
+		<span><%=titleFile+"&nbsp;("+ sizeKbFile +"Kb)&nbsp;"%></span>
+		<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="onlinetaskactivity.grades.download"/></a>
+	</div>
 <% } 
 
 if(!ownGrade){
