@@ -121,4 +121,27 @@ public class LearningActivityResultServiceImpl
 		
 		return lar;
 	}
+	@JSONWebService
+	public LearningActivityResult update(long latId, String tryResultData, String imsmanifest) throws PortalException, SystemException
+	{
+		User user=this.getUser();
+		LearningActivityResult lar = learningActivityResultLocalService.update(latId, tryResultData, imsmanifest, user.getUserId());
+
+		//auditing
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		if(serviceContext!=null){
+			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+				latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+		}else{
+			if(lar!=null){
+				LearningActivity la = learningActivityPersistence.fetchByPrimaryKey(lar.getActId());
+				if(la!=null){
+					AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityResult.class.getName(), 
+							latId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+				}
+			}
+		}
+		
+		return lar;
+	}
 }

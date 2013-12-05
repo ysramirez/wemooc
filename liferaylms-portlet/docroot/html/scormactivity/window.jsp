@@ -40,59 +40,33 @@ if(entryId != 0) {
 <liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>"></liferay-util:include>
 <script type="text/javascript">
 
-		if (window.opener) {
-			window.onbeforeunload = function() {
-				if (document.getElementById("contentIFrame").style.display == 'none') {
-					return null;
-				}
-				return '<liferay-ui:message key="activity.beforeclose"></liferay-ui:message>'; 
-			};
-		}
-		
-        var <portlet:namespace />update_scorm = function(e) {
+	var update_scorm = function(e) {
         	
-			var scormpool = localStorage['scormpool'];
-			
-			var serviceParameterTypes = [
-	      		'long',
-	      		'java.lang.String'
-	      	];
-						 		
-	      	Liferay.Service.Lms.LearningActivityResult.update(
-	      		{
-	      			latId: <%= learningTry.getLatId() %>,
-	      			tryResultData: scormpool,
-	      			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
-	      		},
-	      		function(message) {
-	                 var exception = message.exception;
-	
-	                 if (!exception) {
-	                     // Process Success - A LearningActivityResult returned
-	                     if (window.opener) {
-	                    	 if ((!!window.opener.postMessage)) {
-                    			if (!window.location.origin){
-                    				var nada = '';
-                    				window.location.origin = window.location.protocol+"/"+nada+"/"+window.location.host;
-                    			}
-                    			window.opener.postMessage({name: 'update_scorm', passed: message.passed}, window.location.origin);
-                    		}
-	                    	 window.close();
-	                     } else {
-	                    	 if (message.passed) {
-	                    		 window.location.reload(true);
-	                    	 }
-	                     }
-	                 }
-	                 else {
-	                     // Process Exception
-	                	 window.location.reload(true);
-	                 }
-	             }
-	      	);
-        }
-        var update_scorm = <portlet:namespace />update_scorm;
-	
+		var scormpool = localStorage['scormpool'];
+		
+		var serviceParameterTypes = [
+	     	'long',
+	    	'java.lang.String',
+	    	'java.lang.String'
+	    ];
+					 		
+	    var message = Liferay.Service.Lms.LearningActivityResult.update(
+	    	{
+	   			latId: <%= learningTry.getLatId() %>,
+	   			tryResultData: scormpool,
+	   			imsmanifest: Run.$1.xml,
+	   			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
+	    	}
+	    );
+	      	
+	    var exception = message.exception;	
+	            
+		if (!exception) {
+			// Process Success - A LearningActivityResult returned
+		} else {
+			// Process Exception
+		}
+	};
 </script>
 
 <% } %>

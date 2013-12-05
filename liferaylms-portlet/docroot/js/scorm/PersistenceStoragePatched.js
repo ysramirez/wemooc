@@ -1,11 +1,12 @@
 Type.createNamespace('Player');
 
+
 SCORM_1_2.API_LIB.prototype.$27 = function($p0) {
 	var $0 = false;
+	if (this.$1F.getDataTreeValue('cmi.core.exit') == null || this.$1F.getDataTreeValue('cmi.core.exit') == '') {
+		this.$1F.setDataTreeValue('cmi.core.exit', 'suspend', false);
+	}
 	if ($p0) {
-		if (this.$1F.getDataTreeValue('cmi.core.exit') == null || this.$1F.getDataTreeValue('cmi.core.exit') == '') {
-			this.$1F.setDataTreeValue('cmi.core.exit', 'suspend', false);
-		}
 		if (this.$1F.getDataTreeValue('cmi.core.exit') === 'suspend') {
 			$0 = true;
 			this.$1F.setDataTreeValue('cmi.core.entry', 'resume', false);
@@ -70,6 +71,48 @@ SCORM_1_2.API_LIB.prototype.$27 = function($p0) {
 	}
 };
 
+
+SCORM_1_3.API_1484_11_LIB.prototype.Initialize = function(param) {
+	this.$30 = '0';
+	this.$2F = '';
+	if (isNullOrUndefined(param)) {
+		param = '';
+	}
+	if (param === '') {
+		if ((!this.$2D) && (!this.$2E)) {
+			this.$2D = true;
+			this.$30 = '0';
+			if (this.$2C.getSequencing() != null) {
+				this.$2C.getSequencing().status.activityProgressStatus = true;
+			}
+			this.$2C.setDataTreeValue('cmi.learner_id',
+					(typeof themeDisplay != 'undefined' ? themeDisplay.getUserId() : ''),
+					'');
+			this.$2C.setDataTreeValue('cmi.learner_name',
+					(typeof themeDisplay != 'undefined' ? themeDisplay.getUserName() : ''),
+					'');
+			this.$2C.setDataTreeValue('cmi.session_time',
+					(this.$2A['cmi.session_time'])['defaultvalue'], false);
+			this.$31 = new Date().getTime();
+			API_BASE.LOG.displayMessage('Initialize with param: \'' + param
+					+ '\'', this.$30, this.$32(this.$30));
+			return 'true';
+		} else {
+			if (this.$2D) {
+				this.$30 = '103';
+			} else {
+				this.$30 = '104';
+			}
+		}
+	} else {
+		this.$30 = '201';
+		this.$2F = 'The parameter passed into the Initialize() API method shall be an empty characterstring (\'\').';
+	}
+	API_BASE.LOG.displayMessage('Initialize with param: \'' + param + '\'',
+			this.$30, this.$32(this.$30));
+	return 'false';
+};
+
 SCORM_1_2.API_LIB.prototype.LMSInitialize = function(param) {
 	this.$23 = '0';
 	this.$22 = false;
@@ -80,6 +123,12 @@ SCORM_1_2.API_LIB.prototype.LMSInitialize = function(param) {
 		if (!this.$21) {
 			this.$21 = true;
 			this.$23 = '0';
+			this.$1F.setDataTreeValue('cmi.core.student_id',
+					(typeof themeDisplay != 'undefined' ? themeDisplay.getUserId() : ''),
+					'');
+			this.$1F.setDataTreeValue('cmi.core.student_name',
+					(typeof themeDisplay != 'undefined' ? themeDisplay.getUserName() : ''),
+					'');
 			this.$1F.setDataTreeValue('cmi.core.session_time',
 					(this.$1E['cmi.core.session_time'])['defaultvalue'],
 					false);
@@ -544,11 +593,12 @@ Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
 			this.$C = null;
 			this.$B = null;
 			this.$D = null;
-			if (typeof update_scorm != 'undefined') {
-				update_scorm(null);
-			}
+			
 			this.hidePlayer(!this.$1);
 			document.getElementById('open-close-scorm-menu').style.display = 'none';
+			if (window.opener) {
+				window.close();
+			}
 			if (this.$1) {
 				API_BASE.LOG.displayMessage('End Session!', '0', null);
 			}
@@ -579,6 +629,9 @@ Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
 			if (this.$17 != null) {
 				this.$17.saveItemCMI(this.$C.getIdentifier(), this.$C
 						.getDataTree());
+				if (typeof update_scorm != 'undefined') {
+					update_scorm(null);
+				}
 			}
 		}
 	} else if ($p1.get_eventType() === 0) {
@@ -601,6 +654,9 @@ Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
 										: null,
 								($0.savedSuspendedActivity != null) ? $0
 										.getClonedGlobalObjectives() : null);
+			}
+			if (typeof update_scorm != 'undefined') {
+				update_scorm(null);
 			}
 		}
 	} else if ($p1.get_eventType() === 2) {

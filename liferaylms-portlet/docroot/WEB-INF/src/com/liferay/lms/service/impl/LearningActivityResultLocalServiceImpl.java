@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.script.Invocable;
+import javax.script.ScriptException;
+
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.calificationtype.CalificationType;
@@ -56,6 +59,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 
@@ -167,8 +171,8 @@ public class LearningActivityResultLocalServiceImpl
 		
 		LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(learningActivityTry.getActId());
 		String assetEntryId = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivityTry.getActId(), "assetEntry");
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getAssetEntry(Long.valueOf(assetEntryId));		
-		
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getAssetEntry(Long.valueOf(assetEntryId));
+				
 		List<String> manifestItems = new ArrayList<String>();
 		Map<String, String> recursos = new HashMap<String, String>();
 		
@@ -206,10 +210,8 @@ public class LearningActivityResultLocalServiceImpl
 				}
 			}
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -346,6 +348,200 @@ public class LearningActivityResultLocalServiceImpl
 			}
 			
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+			
+		}
+
+		//auditing
+		if(learningActivity!=null){
+			AuditingLogFactory.audit(learningActivity.getCompanyId(), learningActivity.getGroupId(), LearningActivityResult.class.getName(), 
+					learningActivity.getPrimaryKey(), learningActivity.getUserId(), AuditConstants.UPDATE, null);
+		}
+		
+		return this.getByActIdAndUserId(learningActivityTry.getActId(), userId);
+	}
+	public LearningActivityResult update(long latId, String tryResultData, String imsmanifest, long userId) throws SystemException, PortalException {
+		LearningActivityTry learningActivityTry = learningActivityTryLocalService.getLearningActivityTry(latId);
+		if (userId != learningActivityTry.getUserId()) {
+			throw new PortalException();
+		}
+		
+		LearningActivity learningActivity = learningActivityLocalService.getLearningActivity(learningActivityTry.getActId());
+				
+		List<String> manifestItems = new ArrayList<String>();
+		Map<String, String> recursos = new HashMap<String, String>();
+		
+		Map<String, String> manifestResources = new HashMap<String, String>();
+		
+		try {
+			if (Validator.isNotNull(imsmanifest)) {
+				Document imsdocument = SAXReaderUtil.read(imsmanifest);
+				List<Element> resources = new ArrayList<Element>();
+				resources = imsdocument.getRootElement().element("resources").elements("resource");
+				for(Element resource : resources) {
+					String identifier = resource.attributeValue("identifier");
+					String type = resource.attributeValue("scormType");
+					String type2 = resource.attributeValue("scormtype");
+					manifestResources.put(identifier, type != null ? type : type2);
+				}
+				
+				List<Element> items = new ArrayList<Element>();
+				items.addAll(imsdocument.getRootElement().element("organizations").elements("organization").get(0).elements("item"));
+				for (int i = 0; i < items.size(); i++) {
+					Element item = items.get(i);
+					String identifier = item.attributeValue("identifier");
+					String identifierref = item.attributeValue("identifierref");
+					manifestItems.add(identifier);
+					recursos.put(identifier, identifierref);
+					items.addAll(item.elements("item"));
+				}
+			}
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		Long master_score = new Integer(learningActivity.getPasspuntuation()).longValue();
+		
+		JSONObject scorm = JSONFactoryUtil.createJSONObject();
+		scorm = JSONFactoryUtil.createJSONObject(tryResultData);
+		
+		JSONObject organizations = scorm.getJSONObject("organizations");
+		JSONArray organizationNames = organizations.names();
+		JSONObject organization = organizations.getJSONObject(organizationNames.getString(0));
+		
+		JSONObject cmis = organization.getJSONObject("cmi");
+		JSONArray cmiNames = cmis.names();
+		
+		List<String> completion_statuses = new ArrayList<String>();
+		List<Long> scores = new ArrayList<Long>();
+		
+		String total_completion_status = "not attempted";
+		Double total_score = 0.0;
+		
+		for (int i = 0; i < cmiNames.length(); i++) {
+			JSONObject cmi = cmis.getJSONObject(cmiNames.getString(0));
+			String typeCmi = manifestResources.get(recursos.get(cmiNames.getString(i)));
+			
+			String completion_status = null;
+			String success_status = null;
+			Long max_score = null;
+			Long min_score = null;
+			Long raw_score = null;
+			Long scaled_score = null;
+			String suspend_data = cmi.getJSONObject("cmi.suspend_data").getString("value");
+			
+			if (cmi.getJSONObject("cmi.core.lesson_status") != null) { // 1.2
+				String lesson_status = cmi.getJSONObject("cmi.core.lesson_status").getString("value");
+				//"passed", "completed", "failed", "incomplete", "browsed", "not attempted"
+				if ("passed".equals(lesson_status)) {
+					success_status = "passed";
+					completion_status = "completed";
+				} else if ("failed".equals(lesson_status)) {
+					success_status = "failed";
+					completion_status = "completed";
+				} else if ("completed".equals(lesson_status)) { 
+					success_status = "unknown"; // or passed
+					completion_status = "completed";
+				} else if ("browsed".equals(lesson_status)) {
+					success_status = "passed";
+					completion_status = "completed";
+				} else if ("incomplete".equals(lesson_status)) {
+					success_status = "unknown";
+					completion_status = "incomplete";
+				} else if ("not attempted".equals(lesson_status)) {
+					success_status = "unknown";
+					completion_status = "not attempted";
+					if (suspend_data.contains("1")) {
+						completion_status = "completed";
+						if (suspend_data.contains("0")) {
+							completion_status = "incomplete";
+						}
+						tryResultData.replaceAll("\"not attempted\"", "\""+completion_status+"\"");
+					}
+				}
+				max_score = cmi.getJSONObject("cmi.core.score.max").getLong("value", 100L);
+				min_score = cmi.getJSONObject("cmi.core.score.min").getLong("value", 0L);
+				raw_score = cmi.getJSONObject("cmi.core.score.raw").getLong("value", "completed".equals(completion_status) || "asset".equals(typeCmi) ? 100L : 0L);
+				scaled_score = new Long(Math.round((raw_score * 100L) / (max_score - min_score)));
+			} else { // 1.3
+				//"completed", "incomplete", "not attempted", "unknown"
+				completion_status = cmi.getJSONObject("cmi.completion_status").getString("value");
+				//"passed", "failed", "unknown"
+				success_status = cmi.getJSONObject("cmi.success_status").getString("value");
+				max_score = cmi.getJSONObject("cmi.score.max").getLong("value", 100L);
+				min_score = cmi.getJSONObject("cmi.score.min").getLong("value", 0L);
+				raw_score = cmi.getJSONObject("cmi.score.raw").getLong("value", "completed".equals(completion_status) || "asset".equals(typeCmi) ? 100L : 0L);
+				scaled_score = cmi.getJSONObject("cmi.score.scaled").getLong("value", Math.round((raw_score * 100L) / (max_score - min_score)));
+			}
+			completion_statuses.add(completion_status);
+			scores.add(scaled_score);
+		}
+		
+		if (manifestItems.size() <= 1) {
+			if (completion_statuses.size() == 1) {
+				total_completion_status = completion_statuses.get(0);
+			}
+		} else {
+			if (completion_statuses.size() < manifestItems.size()) {
+				if (completion_statuses.size() <= 1) {
+					total_completion_status = completion_statuses.get(0).equals("completed") ? "incomplete" : completion_statuses.get(0);
+				} else {
+					total_completion_status = "incomplete";
+				}
+			} else if (completion_statuses.size() == manifestItems.size()) {
+				for (int i = 0; i < completion_statuses.size(); i++) {
+					total_score += scores.get(i);
+					if ("incomplete".equals(completion_statuses.get(i))) {
+						total_completion_status = "incomplete";
+						break;
+					}
+					if ("completed".equals(completion_statuses.get(i))) {
+						if ("not attempted".equals(total_completion_status)) {
+							total_completion_status = "completed";
+						}
+						if ("unknown".equals(total_completion_status)) {
+							total_completion_status = "incomplete";
+							break;
+						}
+					}
+					if ("not attempted".equals(completion_statuses.get(i))) {
+						if ("completed".equals(total_completion_status)) {
+							total_completion_status = "incomplete";
+							break;
+						}
+						if ("unknown".equals(total_completion_status)) {
+							total_completion_status = "unknown";
+						}
+					}
+					if ("unknown".equals(completion_statuses.get(i))) {
+						if ("completed".equals(total_completion_status)) {
+							total_completion_status = "incomplete";
+							break;
+						}
+						if ("unknown".equals(total_completion_status) || "not attempted".equals(total_completion_status)) {
+							total_completion_status = "unknown";
+						}
+					}
+				}
+			}
+		}
+		
+		for (int i = 0; i < scores.size(); i++) {
+			total_score += scores.get(i);
+		}
+		total_score = total_score / (manifestItems.size() > 0 ? manifestItems.size() : 1);
+		
+		if ("incomplete".equals(total_completion_status) || "completed".equals(total_completion_status)) {
+			learningActivityTry.setTryResultData(tryResultData);
+			learningActivityTry.setResult(Math.round(total_score));
+			
+			if (Math.round(total_score) > master_score) {
+				Date endDate = new Date(System.currentTimeMillis());
+				learningActivityTry.setEndDate(endDate);
+			}
+			
+			learningActivityTryLocalService.updateLearningActivityTry(learningActivityTry);
 			
 		}
 

@@ -186,18 +186,6 @@
 						if (e != null && window.<portlet:namespace />ventana != null && !window.<portlet:namespace />ventana.closed) {
 							window.<portlet:namespace />ventana.close();
 						}
-						window.messageHandler = A.one(window).on('message', 
-							function(event) {
-								var html5Event = event._event;
-								if (html5Event.data.name == 'update_scorm') {
-									if (html5Event.data.passed) {
-										Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
-									} else {
-										
-									}
-								}
-							}
-						);
 						window.<portlet:namespace />ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
 						if (window.<portlet:namespace />ventana != null) {
 							window.<portlet:namespace />ventana.location = '<%= scormwindow %>';
