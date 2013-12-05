@@ -31,7 +31,8 @@
 		<div class="surveyactivity stadistics">
 		
 			<h2><%=LearningActivityLocalServiceUtil.getLearningActivity(actId).getTitle(themeDisplay.getLocale()) %></h2>
-			<p><%=LearningActivityLocalServiceUtil.getLearningActivity(actId).getDescription(themeDisplay.getLocale()) %></p>
+			<h3><liferay-ui:message key="description" /></h3>
+			<div class="description"><%=LearningActivityLocalServiceUtil.getLearningActivity(actId).getDescription(themeDisplay.getLocale()) %></div>
 		
 			<portlet:renderURL var="backToQuestionsURL">
 				<portlet:param name="jspPage" value="/html/surveyactivity/view.jsp"></portlet:param>
