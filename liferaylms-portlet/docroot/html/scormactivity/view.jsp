@@ -69,8 +69,8 @@
 %>
 
 <h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale())%></h2>
-<h3><liferay-ui:message key="description" /> </h3>
-<p><%=activity.getDescription(themeDisplay.getLocale())%></p>
+<h3><liferay-ui:message key="description" /></h3>
+<div class="description"><%=activity.getDescription(themeDisplay.getLocale())%></div>
 
 <%
 	if((!LearningActivityLocalServiceUtil.islocked(actId,userId)
