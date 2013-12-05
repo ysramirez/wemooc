@@ -30,8 +30,9 @@ if(renderRequest.getParameter("actId")!=null){
 	LearningActivity learningActivity=LearningActivityLocalServiceUtil.getLearningActivity(actId);	
 	User owner = UserLocalServiceUtil.getUser(studentId);
 	%><h2><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
-	<p class="sub-title"><liferay-ui:message key="description" /></p>
-	<div class="description"><%=learningActivity.getDescription(themeDisplay.getLocale()) %></div><%
+	<h3><liferay-ui:message key="description" /></h3>
+	<div class="description"><%=learningActivity.getDescription(themeDisplay.getLocale()) %></div>
+	<%
 	if(renderRequest.getParameter("studentId")!=null){
 		%><p class="sub-title"><liferay-ui:message key="p2ptask-done-by" /> <%=owner.getFullName()%></p><%
 		ownGrade=false;
