@@ -9,7 +9,7 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 {
 %>
 
-<p><%=HtmlUtil.unescape(course.getDescription(themeDisplay.getLocale())) %></p>
+	<div class="description"><%=HtmlUtil.unescape(course.getDescription(themeDisplay.getLocale())) %></div>
 <%}
 else
 {
