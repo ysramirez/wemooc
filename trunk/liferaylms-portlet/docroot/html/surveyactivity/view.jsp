@@ -40,6 +40,7 @@
           
 			<div class="surveyactivity view">
 				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+				<h3><liferay-ui:message key="description" /></h3>
 				<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
 				
 				<%if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE)){ %>
