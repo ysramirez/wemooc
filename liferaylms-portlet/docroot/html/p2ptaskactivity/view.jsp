@@ -83,10 +83,8 @@ else
 	{
 		%>
 		<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-		<p class="sub-title"><liferay-ui:message key="p2ptask-explicacion" /></p>
-		<div class="description">
-			<%=activity.getDescription(themeDisplay.getLocale()) %>
-		</div>
+		<h3><liferay-ui:message key="description" /></h3>
+		<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
 		<%
 		Long userId = themeDisplay.getUserId();
 		P2pActivity myp2pActivity = P2pActivityLocalServiceUtil.findByActIdAndUserId(actId, userId);
