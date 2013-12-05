@@ -47,8 +47,8 @@ if(actId==0){
 %>
 			<div class="evaluationAvg view">
 				<h2 class="description-title"><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
-				<h3><liferay-ui:message key="description" /> </h3>
-				<p><%=learningActivity.getDescription(themeDisplay.getLocale()) %></p>
+				<h3><liferay-ui:message key="description" /></h3>
+				<div class="description"><%=learningActivity.getDescription(themeDisplay.getLocale()) %></div>
 			<%if(isTeacher){ 
 				boolean hasFiredDate=false;
 				boolean hasPublishDate=false;
