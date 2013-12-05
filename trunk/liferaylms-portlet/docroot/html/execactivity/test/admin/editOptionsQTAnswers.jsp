@@ -41,7 +41,7 @@
 			    );
 			</script>
 			<% if(!"".equals(advise)){ 	%>
-				<liferay-ui:message key="<%=advise %>"/>
+				<p><liferay-ui:message key="<%=advise %>"/></p>
 			<% 	} %>
 			<aui:field-wrapper label="">
 				<liferay-ui:input-editor name="answer" width="80%" onChangeMethod="onChangeTextNewAnswer" initMethod="initEditorNewAnswer" />
