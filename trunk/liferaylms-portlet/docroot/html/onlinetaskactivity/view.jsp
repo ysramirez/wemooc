@@ -362,17 +362,17 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<aui:fieldset>
 		<% if(isSetTextoEnr){ %>
 		<aui:input type="hidden" name="text" value=''/>
-		<aui:field-wrapper label="" >
+		<aui:field-wrapper label="text" >
 			<div id="<portlet:namespace/>DescripcionRichTxt" ></div>
 		</aui:field-wrapper>	
 		<% } 
 		   else { %>
-		<aui:field-wrapper >
+		<aui:field-wrapper label="text" >
 			<aui:input type="textarea" cols="100" rows="5" name="text" label="" value=''/>
 		</aui:field-wrapper>
 		<% }
 		   if(isSetFichero){ %>
-		<aui:field-wrapper label="onlinetaskactivity.file" >
+		<aui:field-wrapper label="courseadmin.importuserrole.file" >
    		<aui:input inlineLabel="left" inlineField="true"
 			  	name="fileName" label="" id="fileName" type="file" value="" />
 		</aui:field-wrapper>
