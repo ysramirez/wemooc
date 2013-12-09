@@ -70,33 +70,6 @@ public class CheckPage {
 			}
 		}
 		
-		List<WebElement> allImages = driver.findElements(By.tagName("img"));
-		for (WebElement image : allImages) {
-			HttpResponse response;
-			HttpHost proxy = new HttpHost("10.102.225.76",3128);
-	        DefaultHttpClient httpclient = new DefaultHttpClient();
-	        httpclient.getParams().setParameter(ConnRoutePNames.DEFAULT_PROXY,proxy);
-	        
-	        String imagetest = image.getAttribute("src");
-	        if(!imagetest.isEmpty()&&!images.contains(image.getAttribute("src"))){
-	        	try {
-			        
-					//if(log.isInfoEnabled())log.info("Checkimage::"+imagetest);
-					response = httpclient.execute(new HttpGet(imagetest));
-				    if (response.getStatusLine().getStatusCode() != 200){
-				    	if(log.isErrorEnabled())log.error("ImageError::"+response.getStatusLine().getStatusCode()+"::"+imagetest);
-				    }
-				    images.add(image.getAttribute("src"));
-				    
-				} catch (ClientProtocolException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	        }
-			
-		}
-		
 		if(log.isInfoEnabled())log.info("------------------------------------------------------------------------------------------------------------");
 		
 	}

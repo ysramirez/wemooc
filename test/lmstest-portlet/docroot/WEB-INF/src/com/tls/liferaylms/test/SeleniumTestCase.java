@@ -1,5 +1,7 @@
 package com.tls.liferaylms.test;
 
+import java.util.List;
+
 import org.junit.After;
 import org.junit.Before;
 import org.openqa.selenium.Alert;
@@ -51,6 +53,14 @@ public class SeleniumTestCase {
 	public WebElement getElement(WebElement we,By by){
 		try {
 			return we.findElement(by);
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+	
+	public List<WebElement> getElements(WebElement we,By by){
+		try {
+			return we.findElements(by);
 		} catch (NoSuchElementException e) {
 			return null;
 		}

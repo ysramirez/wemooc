@@ -20,15 +20,20 @@ public class Z_DeleteTestPage extends SeleniumTestCase {
 
 	  @Test
 	  public void testDeletePage() throws Exception {
+		  try{
 			if(getLog().isInfoEnabled())getLog().info("init");
 			Login login = new Login(driver, Context.getUser(), Context.getPass(), Context.getBaseUrl());
 			boolean loged = login.isLogin();
 			assertTrue("Error not logued",loged);
 			if (loged) {
+				GetPage.getPage(driver, "", Context.getTestPage());
+				Sleep.sleep(1000);
+				
 				if(getLog().isInfoEnabled())getLog().info("Delete page...");
 				WebElement menu = getElement(By.id("_145_manageContent"));
 				assertNotNull("Not Admin Menu", menu);
 
+				menu.click();
 				menu.click();
 				WebElement managePage = getElement(By.id("_145_manageContentContainer"));
 				assertNotNull("Not manage page Menu", managePage);
@@ -51,7 +56,9 @@ public class Z_DeleteTestPage extends SeleniumTestCase {
 				GetPage.getPage(driver, baseUrl, "/test");
 				assertNotEquals("Errors in page",0,CheckPage.checkForErrors(driver));
 			}
-			
+		  }catch(Exception e){
+			  e.printStackTrace();
+		  }
 			
 			
 			if(getLog().isInfoEnabled())getLog().info("end ok");
