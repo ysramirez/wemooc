@@ -18,17 +18,17 @@ public class GetPage {
 		if(source.length()>0){
 			if(source.substring(0, 1).equals("/")){
 				if(path.length()>0){
-					if(path.substring(source.length()-1, source.length()).equals("/")){
-						page = path.substring(0, source.length()-1)+source;
+					if(path.substring(path.length()-1, path.length()).equals("/")){
+						page = path.substring(0, path.length()-1)+source;
 					}
 				}
 			}else{
 				page = path+source;
 			}
 		}else{
-			page = path;
+			page = source;
 		}
-		Context.setPage(source);
+		Context.setPage(page);
 		driver.get(page);
 		String current = driver.getCurrentUrl();
 

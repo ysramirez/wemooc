@@ -33,7 +33,7 @@ public class Login {
 			if(singin!=null) {
 				singin.click();
 			}else{
-				GetPage.getPage(driver,path,"/web/guest/home?p_p_id=58&p_p_lifecycle=0&p_p_state=maximized&p_p_mode=view&saveLastPath=0&_58_struts_action=%2Flogin%2Flogin");
+				GetPage.getPage(driver,path,"/c/portal/login");
 			}
 			Sleep.sleep(1000);
 			WebElement login = getElement(By.id("_58_login"));
