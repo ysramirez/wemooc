@@ -45,7 +45,7 @@ function <portlet:namespace />onload(source) {
 	});
 }
 
-AUI().ready('event','liferay-portlet-url',function(A) {
+AUI().ready('domready','event','liferay-portlet-url',function(A) {
 	
 	A.one(window).on('message', 
 		function(event){
@@ -58,8 +58,27 @@ AUI().ready('event','liferay-portlet-url',function(A) {
 			document.getElementById('<portlet:namespace/>container').src=renderUrl.toString();
 
 	});
-
+	initializeKeepAlive();
 });
+
+Liferay.provide(
+	window,
+	'initializeKeepAlive',
+	function() {
+		var A = AUI();
+	    A.setInterval(function() {sessionKeepAlive();}, Liferay.Session._getWarningTime() - 60000);
+	},
+	['node']
+);
+
+Liferay.provide(
+    window,
+    'sessionKeepAlive',
+    function() {
+        Liferay.Session.extend();
+    },
+    ['liferay-session']
+);
 
 //-->
 </script>
