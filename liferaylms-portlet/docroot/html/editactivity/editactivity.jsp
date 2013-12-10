@@ -437,12 +437,16 @@ Liferay.provide(
 		</aui:field-wrapper>
 	 <liferay-ui:panel-container extended="false" persistState="false">
 	 <%
-	 String defaultState="open";
-	 if(actId>0)
-	 {
-		 defaultState="closed";
-	 }
-	 %>
+	 boolean showSpecificPanel = larntype.isTriesConfigurable() || larntype.isScoreConfigurable() || larntype.isFeedbackCorrectConfigurable() || 
+	 								larntype.isFeedbackNoCorrectConfigurable() || larntype.getExpecificContentPage()!=null;
+	 if(showSpecificPanel){
+	 
+		 String defaultState="open";
+		 if(actId>0)
+		 {
+			 defaultState="closed";
+		 }
+	 	%>
 	 		<liferay-ui:panel title="activity-specifics" collapsible="true" defaultState="<%=defaultState %>">
 	  
 		<%
@@ -569,8 +573,8 @@ Liferay.provide(
 				<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
 			</liferay-util:include>	
 		<% } %>
-
-</liferay-ui:panel>
+	</liferay-ui:panel>
+<%} %>
 	 
 	 <liferay-ui:panel title="activity-constraints" collapsible="true" defaultState="closed">
 	   
