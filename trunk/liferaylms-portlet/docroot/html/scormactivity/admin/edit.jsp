@@ -107,11 +107,11 @@ function <portlet:namespace />search() {
 		var backbutton = A.one('#<portlet:namespace/>backButton').one('span').clone();
 		backbutton.setAttribute('id','<portlet:namespace/>backbutton');
 		A.one('.portlet-body').prepend(backbutton);
+		A.one('.taglib-header').scrollIntoView();
 		var iframe = A.Node.create('<iframe id="<portlet:namespace/>finder" src="javascript:false;" onload="<portlet:namespace />load(this)" frameBorder="0" scrolling="no" width="'+A.getBody().width()+'" height="0"></iframe>');
 		A.one('.portlet-body').append(iframe);
 		A.all('.acticons').each(function(icon){ icon.hide(); });
 		A.one('#<portlet:namespace/>fm').hide();
-
 		window.messageHandler = A.one(window).on('message', 
 				function(event){
 					var html5Event=event._event;
