@@ -105,7 +105,7 @@ long iniciados = CourseResultLocalServiceUtil.countByCourseId(curso.getCourseId(
 	%>
 	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=modulePredence.getTitle(themeDisplay.getLocale()) %></liferay-ui:search-container-column-text>
 	<%}else{ %>
-	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies">No</liferay-ui:search-container-column-text>
+	<liferay-ui:search-container-column-text name="coursestats.modulestats.dependencies"><%=LanguageUtil.get(locale, "no")%></liferay-ui:search-container-column-text>
 	<%} %>
 	
 	</liferay-ui:search-container-row>
