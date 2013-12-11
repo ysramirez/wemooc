@@ -1,5 +1,6 @@
 
-
+<%@page import="java.util.StringTokenizer"%>
+<%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@include file="/init.jsp"%>
 
 <%@page import="com.liferay.portal.model.LayoutSetPrototype"%>
@@ -14,6 +15,23 @@
 </portlet:renderURL>
 
 <%
+/* Sacamos de portal-ext.properties las páginas que no se desean listar */
+String hideLayouts = PrefsPropsUtil.getString("hidden.layouts");
+List<String> hiddenLayouts = new ArrayList<String>();
+if(hideLayouts != null && !hideLayouts.isEmpty()){
+	
+	StringTokenizer st = new StringTokenizer(hideLayouts, ",");
+	while(st.hasMoreElements()){
+		
+		hiddenLayouts.add(st.nextToken());
+	}
+	
+}else{
+	
+	/* Al menos tiene que ocultar esta página */
+	hiddenLayouts.add("/reto");
+}
+
 String layoutidr=ParamUtil.getString(request, "layoutid","");
 if(layoutidr.length()>0)
 {
@@ -40,13 +58,14 @@ else
 %>
 		<table width="100%" cellspacing="2">
 		<tbody>
+			<tr><td></td></tr>
 <%
 
 	
 		for(int i=1;i<(loslayouts.size()-1);i++) // Evitamos la primera, que no es optativa, y la última que es la del tutor y la que contiene este portlet de administración 
 		{
 			Layout ellayout=loslayouts.get(i);	
-			if(!ellayout.getFriendlyURL().equals("/reto"))
+			if(!hiddenLayouts.contains(ellayout.getFriendlyURL()))
 			{
 							
 	%>
