@@ -53,7 +53,7 @@ public class Z_DeleteTestPage extends SeleniumTestCase {
 				Alert confirm =driver.switchTo().alert();
 				confirm.accept();
 				
-				GetPage.getPage(driver, baseUrl, "/test");
+				GetPage.getPage(driver, "", Context.getTestPage());
 				assertNotEquals("Errors in page",0,CheckPage.checkForErrors(driver));
 			}
 		  }catch(Exception e){

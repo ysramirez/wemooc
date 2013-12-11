@@ -20,11 +20,9 @@ public class Aa_LoginTest extends SeleniumTestCase {
 
 		if (login.isLogin()) {
 			if(log.isInfoEnabled())log.info("isLogin::true");
-			assertTrue("Error logout",login.logout());
 		}else{
 			assertTrue("Error login",login.login());
 			assertTrue("Error validate login",login.isLogin());
-			assertTrue("Error logout",login.logout());
 		}
 	}
 }
