@@ -57,7 +57,7 @@ for(Group groupCourse:groups)
 		<% }
 				
 		%>
-			 <span class="challenges"><%=passed %>/<%= modulescount%><liferay-ui:message key="finished.modules" /></span><span class="ico-desplegable"></span>
+			 <span class="challenges"><%=passed %>/<%= modulescount%><span class="ch-text"><liferay-ui:message key="finished.modules" /></span></span><span class="ico-desplegable"></span>
 			<div class="collapsable"  style="display:none;">
 				<table class="moduleList">
 		<%
