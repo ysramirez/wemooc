@@ -14,19 +14,24 @@ public class GetPage {
 	public static void getPage(WebDriver driver,String path,String source){
 		Date date = new Date();
 
+		if(log.isDebugEnabled())log.debug(path+"-"+source);
 		String page = null;
 		if(source.length()>0){
 			if(source.substring(0, 1).equals("/")){
 				if(path.length()>0){
 					if(path.substring(path.length()-1, path.length()).equals("/")){
 						page = path.substring(0, path.length()-1)+source;
+					}else{
+						page = path+source;
 					}
+				}else{
+					page = path+source;
 				}
 			}else{
 				page = path+source;
 			}
 		}else{
-			page = source;
+			page = path;
 		}
 		Context.setPage(page);
 		driver.get(page);
