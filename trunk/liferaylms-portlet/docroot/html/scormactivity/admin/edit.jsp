@@ -82,8 +82,6 @@ if(learningActivity!=null){  %>
 				"} "+
 		        "})(this);";	
 	%>
-	<liferay-ui:icon id="editResource" image="edit" message="<%=new LearningActivityTypeRegistry().getLearningActivityType(typeId).getMesageEditDetails()%>" 
-					 label="true" url="<%=editResourceURL%>"  onClick="<%=editResourceClick %>" />
 </liferay-util:buffer>
 <% 
 	editResourceUnicode = UnicodeFormatter.toString(editResource);
