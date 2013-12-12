@@ -14,7 +14,6 @@
 <%
 	long actId=ParamUtil.getLong(request,"actId",0);
 	String criteria = ParamUtil.getString(request,"criteria","");
-	String cur = ParamUtil.getString(request,"cur","");
 	PortletURL portletURL = renderResponse.createRenderURL();
 	portletURL.setParameter("jspPage","/html/p2ptaskactivity/revisions.jsp");
 	portletURL.setParameter("criteria", criteria);
@@ -64,9 +63,6 @@
 			<portlet:param name="jspPage" value="/html/p2ptaskactivity/detalleAct.jsp" />
 			<portlet:param name="actId" value="<%=String.valueOf(actId) %>" />
 			<portlet:param name="userId" value="<%=String.valueOf(user.getUserId()) %>" />
-			<portlet:param name="criteria" value="<%=criteria %>" />
-			<portlet:param name="cur" value="<%=cur%>" />
-			
 		</portlet:renderURL>
 		
 		<%
@@ -91,10 +87,21 @@
 			String urlResume = "self.location = '"+verDetalle+"';";
 			String nameButton =LanguageUtil.get(pageContext, "p2ptask-see-task"); 
 		%>
-		<liferay-ui:search-container-column-button href="<%=urlResume %>"  name="<%=nameButton %>" />
+			<liferay-ui:search-container-column-button href="<%=urlResume %>"  name="<%=nameButton %>" />
+		<%} else{%>
+			<liferay-ui:search-container-column-text value="" />
 		<%} %>
 		</liferay-ui:search-container-row>
 	 	<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
-
+<portlet:renderURL var="back">
+	<portlet:param name="jspPage" value="/html/p2ptaskactivity/view.jsp" />
+	<portlet:param name="actId" value="<%=String.valueOf(actId) %>" />
+</portlet:renderURL>
+<%
+String urlback = "self.location = '"+back+"';";
+%>
+<aui:button-row>
+	<aui:button cssClass="floatl" value="back" type="button" onClick="<%=urlback %>" style="margin-top:10px" />
+</aui:button-row>
 </div>

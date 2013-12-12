@@ -56,8 +56,6 @@
 <%
 long actId=ParamUtil.getLong(request,"actId",0);
 long userId=ParamUtil.getLong(request,"userId",0);
-String criteria = ParamUtil.getString(request,"criteria","");
-String cur = ParamUtil.getString(request,"cur","");
 
 if(actId!=0)
 {
@@ -326,8 +324,6 @@ if(actId!=0)
 <portlet:renderURL var="back">
 	<portlet:param name="jspPage" value="/html/p2ptaskactivity/revisions.jsp" />
 	<portlet:param name="actId" value="<%=String.valueOf(actId) %>" />
-	<portlet:param name="criteria" value="<%=criteria %>" />
-	<portlet:param name="cur" value="<%=cur %>" />
 </portlet:renderURL>
 <%
 String urlback = "self.location = '"+back+"';";
