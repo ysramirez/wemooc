@@ -17,6 +17,7 @@ import com.tls.liferaylms.test.util.GetPage;
 import com.tls.liferaylms.test.util.InstancePortlet;
 import com.tls.liferaylms.test.util.Login;
 import com.tls.liferaylms.test.util.Sleep;
+import com.tls.liferaylms.test.util.TestProperties;
 
 public class Ba_AdminCourse extends SeleniumTestCase {
 
@@ -44,13 +45,13 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						WebElement title = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_title_es_ES"));
 						assertNotNull("Not title find!", title);
 						Date date = new Date();
-						title.sendKeys("Test "+date.getTime());
+						title.sendKeys(TestProperties.get("course-name")+" "+date.getTime());
 						WebElement inputVisible = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_visibleCheckbox"));
 						assertNotNull("Not visible find!", title);
 						inputVisible.click();
 						WebElement summary = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_summary"));
 						assertNotNull("Not summary", title);
-						summary.sendKeys("Test "+date.getTime());
+						summary.sendKeys(TestProperties.get("course-name")+" "+date.getTime());
 						
 						if (driver instanceof JavascriptExecutor) {
 						    ((JavascriptExecutor)driver).executeScript("javascript:CKEDITOR.instances['_courseadmin_WAR_liferaylmsportlet_description'].setData('<p>Test "+date.getTime()+"</p>');");
@@ -81,7 +82,7 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						List<WebElement> as = getElements(searchLayout, By.tagName("a"));
 						WebElement course = null;
 						for(WebElement a : as){
-							if(a.getText().equals("Test "+date.getTime())){
+							if(a.getText().equals(TestProperties.get("course-name")+" "+date.getTime())){
 								course = a;
 								break;
 							}
@@ -91,11 +92,14 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						
 						Context.setCoursePage(course.getAttribute("href"));
 						Context.setCourseId(String.valueOf(date.getTime()));
-						Context.setCourseName("Test "+date.getTime());
+						Context.setCourseName(TestProperties.get("course-name")+" "+date.getTime());
 						
 						if(getLog().isInfoEnabled())getLog().info("Course URL::"+Context.getCoursePage());
 						
 						course.click();
+						
+						Sleep.sleep(1000);
+						
 						assertTrue("Check course not good! ",CheckCourse.checkCourse(driver,driver.getCurrentUrl()));
 						
 						
