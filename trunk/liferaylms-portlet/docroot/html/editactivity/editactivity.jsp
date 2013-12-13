@@ -295,6 +295,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
             }
 		}
 	});
+	A.one('#<portlet:namespace/>resModuleId').scrollIntoView();
 });
 
 
@@ -345,7 +346,7 @@ Liferay.provide(
 //-->
 </script>
 
-		<aui:select label="module" name="resModuleId" onChange="<%=renderResponse.getNamespace()+\"reloadComboActivities(this.options[this.selectedIndex].value);\" %>">
+		<aui:select id="resModuleId" label="module" name="resModuleId" onChange="<%=renderResponse.getNamespace()+\"reloadComboActivities(this.options[this.selectedIndex].value);\" %>">
 	<%
 	java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 	for(Module theModule:modules)
