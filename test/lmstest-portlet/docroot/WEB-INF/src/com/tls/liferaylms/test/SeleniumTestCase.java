@@ -66,6 +66,14 @@ public class SeleniumTestCase {
 		}
 	}
 
+	public List<WebElement> getElements(By by){
+		try {
+			return driver.findElements(by);
+		} catch (NoSuchElementException e) {
+			return null;
+		}
+	}
+
 	private boolean isAlertPresent() {
 		try {
 			driver.switchTo().alert();
