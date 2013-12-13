@@ -22,7 +22,7 @@ function <portlet:namespace />search() {
 		A.one('.portlet-body').append(iframe);
 		A.all('.acticons').each(function(icon){ icon.hide(); });
 		A.one('#<portlet:namespace/>fm').hide();
-		A.one('.taglib-header').scrollIntoView();
+		//A.one('.taglib-header').scrollIntoView();
 
 		window.messageHandler = A.one(window).on('message', 
 				function(event){
