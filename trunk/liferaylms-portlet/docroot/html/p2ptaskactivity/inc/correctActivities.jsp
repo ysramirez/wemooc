@@ -425,7 +425,7 @@ if(!p2pActList.isEmpty()){
 							%>
 							<div class="doc_descarga">
 								<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeMb%> Kb)&nbsp;</span>
-								<a href="<%=urlFile%>" class="verMas" target='<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>'><liferay-ui:message key="p2ptask-donwload" /></a>
+								<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 							</div>
 							
 							<div class="container-textarea">
@@ -498,7 +498,7 @@ if(!p2pActList.isEmpty()){
 						%>
 						<div class="doc_descarga">
 							<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-							<a href="<%=urlFile%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
+							<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 						</div>
 						<div class="degradade">
 							<div class="subtitle"><liferay-ui:message key="p2ptask-your-valoration" /> :</div>
@@ -514,7 +514,7 @@ if(!p2pActList.isEmpty()){
 							%>
 							<div class="doc_descarga">
 								<span><%=dlfileCor.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-								<a href="<%=urlFileCor%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
+								<a href="<%=urlFileCor%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 							</div>
 							<%} %>
 						</div>

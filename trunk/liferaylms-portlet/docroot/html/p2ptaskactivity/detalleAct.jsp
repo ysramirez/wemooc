@@ -138,7 +138,7 @@ if(actId!=0)
 		</div>
 		<div class="doc_descarga">
 			<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-			<a href="<%=urlFile%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
+			<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 		</div>
 	</div>
 	<div class="preg_content" id="capa2" style="display:none">
@@ -194,7 +194,7 @@ if(actId!=0)
 							<%if(dlfile != null){ %>
 								<div class="doc_descarga">
 									<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-									<a href="<%=urlFile%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
+									<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 								</div>
 							<%} %>
 							<div class="degradade">
@@ -211,7 +211,7 @@ if(actId!=0)
 								%>
 								<div class="doc_descarga">
 									<span><%=dlfileCor.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-									<a href="<%=urlFileCor%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
+									<a href="<%=urlFileCor%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 								</div>
 								<%} %>
 							</div>
@@ -298,7 +298,7 @@ if(actId!=0)
 						<%if(dlfile!=null){%>
 						<div class="doc_descarga">
 							<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-							<a href="<%=urlFile%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
+							<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 						</div>
 						<%
 						}

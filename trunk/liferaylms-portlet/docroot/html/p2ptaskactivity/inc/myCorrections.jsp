@@ -125,7 +125,7 @@ if(!p2pActCorList.isEmpty()){
 						%>
 						<div class="doc_descarga">
 							<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-							<a href="<%=urlFile%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
+							<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 						</div>
 						
 						<%
