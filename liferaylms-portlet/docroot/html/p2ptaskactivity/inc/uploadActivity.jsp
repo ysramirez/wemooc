@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.servlet.BrowserSnifferUtil"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="org.apache.commons.lang.StringEscapeUtils"%>
@@ -236,7 +237,7 @@ Liferay.provide(
 		%>
 		<div class="doc_descarga">
 			<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-			<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+			<a href="<%=urlFile%>" class="verMas" target="<%= BrowserSnifferUtil.isMobile(request) ? "_self" : "_blank" %>"><liferay-ui:message key="p2ptask-donwload" /></a>
 		</div>
 		<%
 	} 
