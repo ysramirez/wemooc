@@ -164,7 +164,7 @@ function inicializar(totalAnswer){
 		}
 	}else{
 		if(!"".equals(advise)){ 	%>
-				<liferay-ui:message key="<%=advise %>"/>
+				<p><liferay-ui:message key="<%=advise %>"/></p>
 			<% 	} %>
 		<portlet:actionURL var="addanswerURL" name="addanswer" />
 		<aui:form name="afm" action="<%=addanswerURL%>" method="post">

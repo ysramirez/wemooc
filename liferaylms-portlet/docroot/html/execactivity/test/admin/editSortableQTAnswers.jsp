@@ -147,7 +147,7 @@ if(totalAnswer>0){
 						<%
 							if(!"".equals(advise)){
 						%>
-							<liferay-ui:message key="<%=advise %>"/>
+							<p><liferay-ui:message key="<%=advise %>"/></p>
 						<%
 							}
 						%>
