@@ -149,7 +149,7 @@
 		<%
 		if(!"".equals(advise)){
 		%>
-			<liferay-ui:message key="<%=advise %>"/>
+			<p><liferay-ui:message key="<%=advise %>"/></p>
 		<%
 		}
 		%>

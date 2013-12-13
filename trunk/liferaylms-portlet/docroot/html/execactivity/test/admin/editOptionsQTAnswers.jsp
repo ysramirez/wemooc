@@ -131,7 +131,7 @@
 						//-->
 						</script>
 						<% if(!"".equals(advise)){ 	%>
-							<liferay-ui:message key="<%=advise %>"/>
+							<p><liferay-ui:message key="<%=advise %>"/></p>
 						<% 	} %>
 						<div class="leftSideAnswer">
 							<portlet:actionURL var="editanswerURL" name="editanswer" />
