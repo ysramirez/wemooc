@@ -491,6 +491,8 @@ public class P2PActivityPortlet extends MVCPortlet {
 		//Si en las p2p NO tenemos nota en la correccion.
 		else {
 			// Sólo se aprueba la actividad (sin nota) si estan todas las valoraciones asignadas corregidas. 
+			correctionCompleted = P2pActivityCorrectionsLocalServiceUtil.areAllCorrectionsDoneByUserInP2PActivity(actId, p2pActivityFromCorrectorUser.getUserId());
+			
 			//Si las que ha corregido son las que tiene que corregir.
 			if(correctionCompleted){
 				newValueResult = 100;
