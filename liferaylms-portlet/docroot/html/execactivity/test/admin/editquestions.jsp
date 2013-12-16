@@ -38,7 +38,7 @@
 <!--
 AUI().ready(function(A) {
 	A.one('.newitem2 a').focus();
-
+	A.one("#<portlet:namespace/>TabsBack").scrollIntoView();
 });
 //-->
 </script>

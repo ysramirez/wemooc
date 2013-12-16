@@ -106,6 +106,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
             }
 		}
 	});
+	A.one("#<portlet:namespace/>backbutton").scrollIntoView();
 });
 
 //-->

@@ -6,7 +6,7 @@
 <% 
 	if(request.getAttribute("backUrl")!=null) {
 %>
-<liferay-ui:icon image="back" message="back" url="<%=(String)request.getAttribute(\"backUrl\") %>" label="true"  />
+<liferay-ui:icon id="backbutton" image="back" message="back" url="<%=(String)request.getAttribute(\"backUrl\") %>" label="true"  />
 <%
 	}
 	if(request.getAttribute("activity")!=null) {
