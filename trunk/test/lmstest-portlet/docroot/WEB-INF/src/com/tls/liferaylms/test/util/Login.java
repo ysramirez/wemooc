@@ -110,7 +110,7 @@ public class Login {
 					if(imgs.size()>1){
 						imgs.get(0).click();
 					}
-					Sleep.sleep(1000);
+					Sleep.sleep(3000);
 					
 					WebElement passLink = driver.findElement(By.id("_2_passwordLink"));
 					passLink.click();

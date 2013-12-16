@@ -17,7 +17,11 @@ public class CheckCourse {
 			WebElement configMenu = portlet.findElement(By.className("portlet-title-default"));
 			
 			configMenu.click();
-			configMenu.click();
+			try{
+				configMenu.click();
+			}catch(Exception e){}
+			
+			Sleep.sleep(2000);
 			
 			WebElement configBut1 = driver.findElement(By.id("_changeEditingMode_WAR_liferaylmsportlet_hjzj_menuButton"));
 			configBut1.click();

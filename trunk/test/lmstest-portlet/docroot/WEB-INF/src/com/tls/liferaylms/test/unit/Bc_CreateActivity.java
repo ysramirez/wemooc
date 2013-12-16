@@ -4,27 +4,19 @@ import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertEquals;
 
-import java.awt.AWTException;
-import java.awt.Robot;
 import java.awt.datatransfer.StringSelection;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.util.List;
-import java.util.logging.Level;
 
 import org.junit.Test;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.remote.LocalFileDetector;
-import org.openqa.selenium.remote.RemoteWebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
-import com.liferay.portal.security.pwd.Toolkit;
 import com.tls.liferaylms.test.SeleniumTestCase;
 import com.tls.liferaylms.test.util.CheckPage;
 import com.tls.liferaylms.test.util.Context;
@@ -166,11 +158,15 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 							prop = "act.eval";
 							break;
 						case 8:
-							prop = "act.eval";
+							prop = "act.scorm";
 							break;
 					}
 					titleAct.sendKeys(TestProperties.get(prop)+" "+Context.getCourseId());
 					sendCkEditorJS(driver,prop);
+					
+					if(i==8){
+						assertTrue("Error creating SCORM to SCORM activity",createScorm());
+					}
 					
 					form = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_fm"));
 					assertNotNull("Not form activity found", form);
@@ -187,7 +183,14 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					
 					List<WebElement> asActive = getElements(liActive, By.tagName("a"));
 					assertEquals("Not Edit portlet found", 1,asActive.size());
+					
+					//Put activity in context
+					String idenfier = asActive.get(0).getText();					
+					
 					asActive.get(0).click();
+
+					Context.getActivities().put(idenfier, driver.getCurrentUrl());
+					
 					
 					assertEquals("Errors in activity"+param, 0, CheckPage.check(driver));
 					
@@ -203,6 +206,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					if(getLog().isInfoEnabled())getLog().info("Enlaces::"+asActive.size());
 
 					asActive.get(1).click();
+					Sleep.sleep(2000);
 
 					switch(i){
 						case 0:
@@ -290,7 +294,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 	
 	private boolean createTest(){
 		driver.switchTo().frame(0);
-		
+
 		//Ordenable
 		WebElement botonera = getElement(By.className("acticons"));
 		assertNotNull("Not found botonera", botonera);
@@ -386,7 +390,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 			
 			form.submit();
 			
-			Sleep.sleep(1000);
+			Sleep.sleep(2000);
 		}
 		
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
@@ -518,7 +522,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 			
 			form.submit();
 			
-			Sleep.sleep(1000);
+			Sleep.sleep(2000);
 		}
 
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
@@ -562,7 +566,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 			
 			form.submit();
 			
-			Sleep.sleep(1000);
+			Sleep.sleep(2000);
 		}
 
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
@@ -609,62 +613,54 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		driver.switchTo().defaultContent();
 		driver.switchTo().frame(0);
 
-		File f = new File("resources"+File.separator+"encuesta.csv");
-
-		//SEE http://b.imf.cc/blog/2013/01/01/several-resolutions-to-upload-file-in-selenium-webdriver-or-server/
-		
-		//FFile blank
+		//File f = new File("resources"+File.separator+"encuesta.csv");
+		File f = new File("docroot"+File.separator+"WEB-INF"+File.separator+"classes"+File.separator+"resources"+File.separator+"encuesta.csv");
 		WebElement upload = getElement(By.id("_surveyactivity_WAR_liferaylmsportlet_fileName"));
-		//String path = f.getAbsolutePath().replaceAll("\\\\", "//");
-		//upload.sendKeys(f.getAbsolutePath());
-		//upload.click();
-		//native key strokes for CTRL, V and ENTER keys
-		
-		setClipboardData("f.getAbsolutePath()");
-		
-		/*Actions builder = new Actions(driver);
-	    Action myAction = builder.click(upload).release().build();
-	    myAction.perform();
-		
-		try {
-			Robot robot = new Robot();
-			robot.keyPress(KeyEvent.VK_ENTER);
-			robot.keyRelease(KeyEvent.VK_ENTER);
-			robot.keyPress(KeyEvent.VK_CONTROL);
-			robot.keyPress(KeyEvent.VK_V);
-			robot.keyRelease(KeyEvent.VK_V);
-			robot.keyRelease(KeyEvent.VK_CONTROL);
-			robot.keyPress(KeyEvent.VK_ENTER);
-			robot.keyRelease(KeyEvent.VK_ENTER);
-		} catch (AWTException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}*/
-		//Insecure
-		//String script = "document.getElementById('_surveyactivity_WAR_liferaylmsportlet_fileName').value='" + f.getAbsolutePath() + "';";
-		//((JavascriptExecutor)driver).executeScript(script);
-		
-		
-		/*WebElement upload = getElement(By.id("_surveyactivity_WAR_liferaylmsportlet_fileName"));
-		LocalFileDetector detector = new LocalFileDetector();
-		String path = f.getAbsolutePath().replaceAll("C:\\\\", "C://");
-		if(getLog().isInfoEnabled())getLog().info("pathFile::"+path);
-		File fa = detector.getLocalFile(f.getAbsolutePath());
-		((RemoteWebElement)upload).setFileDetector(detector);
-		upload.sendKeys(fa.getAbsolutePath());
-		upload.click();*/
-		
+		upload.sendKeys(f.getAbsolutePath());
 		
 		WebElement submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
-
-		Sleep.sleep(24000);
+		
 		//Doubleclick
 		try{
 			submit.click();
 		}catch(Exception e){}
 
-		Sleep.sleep(24000);
+		Sleep.sleep(2000);
+		
+		return true;
+	}
+	
+	private boolean createScorm(){
+		WebElement scromSearch= getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_searchEntry"));
+		assertNotNull("Not scorm button search found", scromSearch);
+		scromSearch.click();
+
+		Sleep.sleep(1000);
+		
+		driver.switchTo().defaultContent();
+		driver.switchTo().frame(0);
+		
+		driver.switchTo().frame(driver.findElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_finder")));
+
+		System.out.println("--------------------------------------------------------------------------------");
+		System.out.println(driver.getPageSource());
+		System.out.println("--------------------------------------------------------------------------------");
+
+		WebElement submit = getElement(By.className("aui-button-input-submit"));
+		assertNotNull("Not submit found", submit);
+		submit.click();
+		
+		WebElement scorm = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_assetEntriesSearchContainer_col-2_row-1"));
+		if(scorm!=null){
+			WebElement a = getElement(scorm,By.tagName("a"));
+			a.click();
+		}else{
+			if(getLog().isInfoEnabled())getLog().info("Error no SCORM found");
+		}
+
+		driver.switchTo().defaultContent();
+		driver.switchTo().frame(0);
 		
 		return true;
 	}
