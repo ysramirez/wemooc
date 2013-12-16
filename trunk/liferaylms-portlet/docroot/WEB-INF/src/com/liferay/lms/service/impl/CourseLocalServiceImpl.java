@@ -318,7 +318,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			
 			int type=GroupConstants.TYPE_SITE_OPEN;
 			try{
-				type = Integer.valueOf(serviceContext.getAttribute("type").toString());
+				if (serviceContext.getAttribute("type") != null) {
+					type = Integer.valueOf(serviceContext.getAttribute("type").toString());
+				}
 			}catch(NumberFormatException nfe){				
 			}
 			
