@@ -46,6 +46,6 @@
 		
 	}
 %>
-<p><liferay-ui:message key="onlinetaskactivity.permitStudents"/></p>
+<p><span class="label"><liferay-ui:message key="onlinetaskactivity.permitStudents"/></span></p>
 <aui:input type="checkbox" name="fichero" label="onlinetaskactivity.save.file" checked="<%=fichero %>" disabled='<%=disabled %>' inlineField="true"></aui:input>
 <aui:input type="checkbox" name="textoenr" label="onlinetaskactivity.richTech" checked="<%=textoenr %>" disabled='<%=disabled %>' inlineField="true"></aui:input>
