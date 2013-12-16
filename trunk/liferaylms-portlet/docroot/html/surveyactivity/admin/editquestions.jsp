@@ -45,6 +45,7 @@ url='<%= newquestionURL %>'
 <!--
 AUI().ready(function(A) {
 	A.one('.newitem2 a').focus();
+	A.one("#<portlet:namespace/>backbutton").scrollIntoView();
 
 });
 //-->
