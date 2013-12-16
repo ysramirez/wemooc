@@ -168,6 +168,32 @@ public class Bb_CheckUsers extends SeleniumTestCase {
 					}
 
 					GetPage.getPage(driver, "", Context.getTestPage());
+					Sleep.sleep(2000);
+					
+					menuButton = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_coursesSearchContainer_1_menuButton"));
+					assertNotNull("Course Admin not Find menuButton", menuButton);
+					menuButton.click();
+					Sleep.sleep(1000);
+	
+					courseMembers = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_coursesSearchContainer_1_menu_courseadmin.adminactions.permissions"));
+					assertNotNull("Course Admin not Find memebers Button", courseMembers);
+					courseMembers.click();
+					Sleep.sleep(2000);
+					
+					WebElement input = getElement(By.id("user_ACTION_ACCESS"));
+					assertNotNull("No input found for permissions", input);
+					input.click();
+					
+					WebElement submit = getElement(By.className("aui-button-input-submit"));
+					assertNotNull("Not submit found", submit);
+
+					try{
+						submit.click();
+						submit.click();
+					}catch(Exception e){}
+					
+
+					GetPage.getPage(driver, "", Context.getTestPage());
 					
 					form = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_fm"));
 					

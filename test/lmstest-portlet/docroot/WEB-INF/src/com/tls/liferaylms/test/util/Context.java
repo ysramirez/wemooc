@@ -1,5 +1,7 @@
 package com.tls.liferaylms.test.util;
 
+import java.util.HashMap;
+
 public class Context {
 	private static String baseUrl = "";
 	private static String user = "";
@@ -16,6 +18,7 @@ public class Context {
 	private static String teacherUser = "";
 	private static String teacherName = "";
 	private static String teacherPass = "";
+	private static HashMap<String, String> activities = new HashMap<String, String>();
 		
 	public static String getBaseUrl() {
 		return baseUrl;
@@ -135,6 +138,14 @@ public class Context {
 
 	public static void setTeacherPass(String teacherPass) {
 		Context.teacherPass = teacherPass;
+	}
+
+	public static HashMap<String, String> getActivities() {
+		return activities;
+	}
+
+	public static void setActivities(HashMap<String, String> activities) {
+		Context.activities = activities;
 	}
 	
 }
