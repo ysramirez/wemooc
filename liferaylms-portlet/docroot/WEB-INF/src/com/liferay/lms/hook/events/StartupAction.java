@@ -21,8 +21,7 @@ import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.model.Group;
-import com.liferay.portal.model.LayoutSet;
+import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.ResourceAction;
 import com.liferay.portal.model.ResourceConstants;
@@ -36,8 +35,15 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
-
 import com.liferay.portlet.blogs.model.BlogsEntry;
+import com.liferay.portlet.expando.DuplicateColumnNameException;
+import com.liferay.portlet.expando.DuplicateTableNameException;
+import com.liferay.portlet.expando.model.ExpandoColumn;
+import com.liferay.portlet.expando.model.ExpandoColumnConstants;
+import com.liferay.portlet.expando.model.ExpandoTable;
+import com.liferay.portlet.expando.model.ExpandoTableConstants;
+import com.liferay.portlet.expando.service.ExpandoColumnLocalServiceUtil;
+import com.liferay.portlet.expando.service.ExpandoTableLocalServiceUtil;
 import com.liferay.portlet.messageboards.model.MBCategory;
 
 public class StartupAction extends SimpleAction {
@@ -78,6 +84,16 @@ public class StartupAction extends SimpleAction {
 			createDefaultPreferences(companyId);
 		}
 		
+		ExpandoTable table = getExpandoTable(companyId, Class.class.getName(),
+				ExpandoTableConstants.DEFAULT_TABLE_NAME);
+		if (table != null) {
+				createExpandoColumn(table, "abreviatura", ExpandoColumnConstants.STRING,
+							ExpandoColumnConstants.INDEX_TYPE_TEXT, 
+							ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, "", true);
+				createExpandoColumn(table, "sync", ExpandoColumnConstants.BOOLEAN,
+						ExpandoColumnConstants.INDEX_TYPE_TEXT, null, false, false);
+		}
+		
 	}
 
 	public LmsPrefs createDefaultPreferences(long companyId) 
@@ -101,9 +117,6 @@ public class StartupAction extends SimpleAction {
 		layoutSetPrototype =
 			LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(
 				defaultUserId, companyId, nameMap, "course", true,true,new ServiceContext());
-		LayoutSet layoutSet = layoutSetPrototype.getLayoutSet();
-		ServiceContext serviceContext=new ServiceContext();
-		Group group = layoutSet.getGroup();
 		InputStream larStream=this.getClass().getClassLoader().getResourceAsStream("/course.lar");
 		
 		LayoutLocalServiceUtil.importLayouts(defaultUserId,layoutSetPrototype.getGroup().getGroupId() , 
@@ -171,7 +184,6 @@ titleMap.put(
 			"Course creator.");
 		courseCreator= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseCreator"
 				,titleMap, descriptionMap, RoleConstants.TYPE_SITE);
-		long courseCreatorId=courseCreator.getRoleId();
 		java.util.List<ResourceAction> actions= ResourceActionLocalServiceUtil.getResourceActions(Course.class.getName());
 		setRolePermissions(courseCreator,Course.class.getName(),actions);
 		actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.coursemodel");
@@ -242,6 +254,119 @@ titleMap.put(
 					actionIds);
 			}
 		
+	}
+	
+	/**
+	 * Creates an Expando column in the table specified and update its
+	 * indexType.
+	 * 
+	 * @param table
+	 *            ExpandoTable to create the column/field in
+	 * @param fieldName
+	 *            The name of the field/column to add
+	 * @param type
+	 *            The type of the field. See ExpandoColumnConstants class for
+	 *            values.
+	 * @param indexType
+	 *            The index type as defined in ExpandoColumnConstants.
+	 */
+	private void createExpandoColumn(ExpandoTable table, String fieldName, int type, 
+			int indexType, String displayType, Object defaultData, Boolean visibility) {
+		// logger.info("Attempting to create Expando field " + fieldName +
+		// " for class " + table.getClassName());
+
+		ExpandoColumn column = null;
+		try {
+			column = ExpandoColumnLocalServiceUtil.addColumn(
+					table.getTableId(), fieldName, type, defaultData);
+		} catch (DuplicateColumnNameException duplicateColumnNameException) {
+			// Column already exists so retrieve it
+			// logger.info("Column already exists trying to retrieve it");
+
+			try {
+				column = ExpandoColumnLocalServiceUtil.getColumn(
+						table.getTableId(), fieldName);
+				column = ExpandoColumnLocalServiceUtil.updateColumn(
+						column.getColumnId(), fieldName, type, defaultData);
+			} catch (SystemException ex) {
+				// logger.error("Exception while retrieving the column and unable to update",
+				// ex);
+			} catch (PortalException e) {
+				//e.printStackTrace();
+			}
+		} catch (PortalException ex) {
+			// logger.error("Exception while creating the column", ex);
+		} catch (SystemException e) {
+			e.printStackTrace();
+		} finally {
+			// Finally if we managed to get the column we will set its index
+			// type
+			if (column != null) {
+				try {
+					UnicodeProperties properties = new UnicodeProperties();
+					properties.put(ExpandoColumnConstants.INDEX_TYPE,
+							String.valueOf(indexType));
+					if (displayType != null) {
+						properties.put(ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, 
+								displayType);
+					}
+					if (!visibility) {
+						properties.put(ExpandoColumnConstants.PROPERTY_HIDDEN, 
+								"true");
+					}
+					column.setTypeSettingsProperties(properties);
+					ExpandoColumnLocalServiceUtil.updateExpandoColumn(column);
+					// logger.info("Property updated to " + indexType);
+				} catch (SystemException ex) {
+					// logger.info("System Exception unable to store properties",
+					// ex);
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Create the expando table given the Company ID, class and table name. If
+	 * the table already exists it gets it. If the table name is null the
+	 * default table name is used.
+	 * 
+	 * @param companyId
+	 *            Company Id for the portal instance
+	 * @param className
+	 *            Class to attach the expando attribute to
+	 * @param tableName
+	 *            Table name for the expando attribute.
+	 * @return The created or retreived table. If something goes wrong null is
+	 *         returned.
+	 */
+	private ExpandoTable getExpandoTable(long companyId, String className,
+			String tableName) {
+		if (tableName == null) {
+			tableName = ExpandoTableConstants.DEFAULT_TABLE_NAME;
+		}
+		ExpandoTable table = null;
+
+		try {
+			table = ExpandoTableLocalServiceUtil.addTable(companyId, className,
+					tableName);
+		} catch (DuplicateTableNameException duplicateTableNameException) {
+			try {
+				table = ExpandoTableLocalServiceUtil.getTable(companyId,
+						className, tableName);
+			} catch (PortalException ex) {
+				// If we're here something is really wrong and table will be
+				// null
+				// logger.error("Exception when getting table", ex);
+			} catch (SystemException ex) {
+				ex.printStackTrace();
+			}
+		} catch (PortalException ex) {
+			// If we're here something is really wrong and table will be null
+			// logger.error("Exception when creating table", ex);
+		} catch (SystemException ex) {
+			ex.printStackTrace();
+		}
+		return table;
 	}
 
 }

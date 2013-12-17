@@ -153,10 +153,17 @@ else
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="courseId" type="hidden" value="<%=courseId %>"/>
-	<aui:input name="title" label="title">
-	</aui:input>
-
+	<aui:input name="title" label="title"/>
 	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=groupCreated!=null?groupCreated.getFriendlyURL():"" %> </aui:input>
+	
+	<%
+	boolean abreviationVisibility = ("true".equals(PropsUtil.get("lms.course.abbreviation")))?true:false;
+	if(abreviationVisibility){
+	%>
+		<liferay-ui:custom-attribute classPK="<%= course.getCourseId() %>" name="abreviatura" className="<%= Course.class.getName() %>" editable="true" label="true"/>
+	<%
+	}
+	%>
 
 <aui:field-wrapper label="description">
 			<liferay-ui:input-editor name="description" width="100%" />
