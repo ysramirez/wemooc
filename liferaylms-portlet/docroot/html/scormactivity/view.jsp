@@ -64,7 +64,7 @@
 		if( typeId==9
 		&& (!LearningActivityLocalServiceUtil.islocked(actId,userId)
 		|| permissionChecker.hasPermission( activity.getGroupId(),LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
-		|| permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+		|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
 		{
 %>
 
@@ -75,7 +75,7 @@
 <%
 	if((!LearningActivityLocalServiceUtil.islocked(actId,userId)
 	|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
-	|| permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ACCESSLOCK")))
+	|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
 		{		
 		if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 		{
@@ -97,7 +97,7 @@
 			<% 
 		} 
 		if (permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
-		|| permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"ACCESSLOCK")
+		|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")
 	    || improving )
 		{
 
