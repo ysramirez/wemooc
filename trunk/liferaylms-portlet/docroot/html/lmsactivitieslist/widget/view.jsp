@@ -49,14 +49,66 @@ AUI().ready('domready','event','liferay-portlet-url',function(A) {
 	
 	A.one(window).on('message', 
 		function(event){
-			var activity=event._event.data;
-			var renderUrl = Liferay.PortletURL.createRenderURL();							
+			var activity=event._event.data,
+				iframeContainer = A.one('#<portlet:namespace/>container'),
+				renderUrl = Liferay.PortletURL.createRenderURL(),
+				interval;							
 			renderUrl.setWindowState('<%=LiferayWindowState.POP_UP.toString()%>');
 			renderUrl.setPortletId(window.<portlet:namespace />portletIds[activity.typeId]);
 			renderUrl.setParameter('actId',activity.actId);
 			renderUrl.setParameter('moduleId',activity.moduleId);
-			document.getElementById('<portlet:namespace/>container').src=renderUrl.toString();
-
+			if((!!window.cordova || !!window.PhoneGap || !!window.phonegap) 
+					&& /^file:\/{3}[^\/]/i.test(window.location.href) 
+					&& /ios|iphone|ipod|ipad|android/i.test(navigator.userAgent)) {
+				iframeContainer.on('load', 
+					function(event){
+						if(!!interval){
+							A.clearInterval(interval);
+							delete interval;
+						}
+						interval = A.setInterval(function(){ 
+							iframeContainer.get('contentDocument').
+								all('A[target=\'_blank\']').
+									each( function( anchor ) {
+										var href = anchor.get('href');
+										anchor.setAttrs({
+											target: '_self',
+											href: '#'
+										});
+										anchor.on('click', 
+											function(event){
+												window.requestFileSystem(
+													LocalFileSystem.PERSISTENT, 0, 
+													function onFileSystemSuccess(fileSystem) {
+														fileSystem.root.getFile(
+															"dummy.html", {create: true, exclusive: false}, 
+																function gotFileEntry(fileEntry){
+																	var sPath = fileEntry.fullPath.replace("dummy.html","");
+																	var fileTransfer = new FileTransfer();
+																	fileEntry.remove();
+																		fileTransfer.download(
+																			href,
+																			sPath + (href.replace(/^.*[\\\/]/,'')),
+																			function(theFile) {
+																				console.log("download complete: " + theFile.toURI());
+																				window.open(encodeURI(theFile.fullPath),"_blank","location=no,enableViewportScale=yes");
+																			},
+																			function(error) {
+																				console.log("download error source " + error.source);
+																				console.log("download error target " + error.target);
+																				console.log("upload error code: " + error.code);
+																			}
+																		);
+																}, 
+																fail);
+												}, 
+												fail);
+										});
+								});
+						}, 100);
+					});
+			}
+			iframeContainer.set('src',renderUrl.toString());
 	});
 	initializeKeepAlive();
 });
