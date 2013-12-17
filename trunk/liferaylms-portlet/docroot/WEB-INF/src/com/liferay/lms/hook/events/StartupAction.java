@@ -84,7 +84,7 @@ public class StartupAction extends SimpleAction {
 			createDefaultPreferences(companyId);
 		}
 		
-		ExpandoTable table = getExpandoTable(companyId, Class.class.getName(),
+		ExpandoTable table = getExpandoTable(companyId, Course.class.getName(),
 				ExpandoTableConstants.DEFAULT_TABLE_NAME);
 		if (table != null) {
 				createExpandoColumn(table, "abreviatura", ExpandoColumnConstants.STRING,
