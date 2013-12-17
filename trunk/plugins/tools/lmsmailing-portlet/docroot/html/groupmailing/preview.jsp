@@ -11,17 +11,20 @@
 		MailTemplate template = MailTemplateLocalServiceUtil.getMailTemplate(idTemplate);
 %>
 
-<script>
-function showConfirm(){
-	var r = confirm("<%=LanguageUtil.get(pageContext,"groupmailing.messages.confirm.popup")%>");
-	if (r == true){
-			alert("<%=LanguageUtil.get(pageContext,"groupmailing.messages.confirm.popup.acept")%>");
-	}else{
-			alert("<%=LanguageUtil.get(pageContext,"groupmailing.messages.confirm.popup.cancel")%>");
-		}
-	return r;
-}
-</script>
+<aui:script>
+	function showConfirm(){
+		AUI().use(function(A) {
+			var r = confirm("<%=LanguageUtil.get(pageContext,"groupmailing.messages.confirm.popup")%>");
+			if (r == true){
+					alert("<%=LanguageUtil.get(pageContext,"groupmailing.messages.confirm.popup.acept")%>");
+					A.one('#<portlet:namespace/>form_mail').submit();
+			}else{
+					alert("<%=LanguageUtil.get(pageContext,"groupmailing.messages.confirm.popup.cancel")%>");
+				}
+			return r;
+		});
+	}
+</aui:script>
 
 <div class="groupmailing">
 	<liferay-portlet:actionURL name="sendMails" var="sendMailsURL">
@@ -35,7 +38,7 @@ function showConfirm(){
 		<%=LanguageUtil.get(pageContext,"groupmailing.messages.confirm")%>
 	</div>
 	
-	<aui:form action="<%=sendMailsURL %>" method="POST" name="form_mail"  onSubmit="showConfirm()">
+	<aui:form action="<%=sendMailsURL %>" method="POST" name="form_mail" id="form_mail" >
 	
 		<h2><%=LanguageUtil.get(pageContext,"groupmailing.messages.subject")%></h2>
 		<div class="mail_subject" ><%=template.getSubject() %></div>
@@ -51,7 +54,7 @@ function showConfirm(){
 		
 		<aui:input name="template" label="send-test" type="hidden" value="<%=idTemplate %>"></aui:input>
 		<aui:button-row>
-			<aui:button type="submit" value="send" label="send" class="submit"></aui:button>
+			<aui:button type="button" value="send" label="send" class="submit" onClick="javascript:showConfirm()" ></aui:button>
 			<aui:button onClick="<%=returnURL.toString() %>" type="cancel" ></aui:button>
 		</aui:button-row>
 	</aui:form>
