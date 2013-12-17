@@ -74,12 +74,17 @@ public class ModuleUpdateResult extends MVCPortlet {
 	}
 	
 	public static void saveStringToFile(String fileName, String text){
-
+		/*
 		StringBuffer sb = new StringBuffer(PropsUtil.get("default.liferay.home"));
 		sb.append(File.separator);
 		sb.append("tomcat-6.0.29");
 		sb.append(File.separator);
 		sb.append("webapps");
+		sb.append(File.separator);
+		sb.append("custom_logs"); //Directorio para los ficheros.
+		*/
+		
+		StringBuffer sb = new StringBuffer(PropsUtil.get("auto.deploy.tomcat.dest.dir"));
 		sb.append(File.separator);
 		sb.append("custom_logs"); //Directorio para los ficheros.
 		

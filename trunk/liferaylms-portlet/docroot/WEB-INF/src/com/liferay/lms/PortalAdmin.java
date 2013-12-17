@@ -73,7 +73,7 @@ public class PortalAdmin extends MVCPortlet {
 			conta++;
 			
 			System.out.println(" :: P2P Update (numero: "+conta+"):: getUserId: "+p2pActivity.getUserId()+", P2pActivityId: "+p2pActivity.getP2pActivityId());
-			//traza += p2pActivity.getP2pActivityId()+", ";
+			traza += p2pActivity.getP2pActivityId()+", ";
 
 			P2PActivityPortlet.updateResultP2PActivity(p2pActivity.getP2pActivityId(), p2pActivity.getUserId());
 			
