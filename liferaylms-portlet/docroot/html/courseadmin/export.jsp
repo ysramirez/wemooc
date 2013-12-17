@@ -33,7 +33,7 @@
 
 
 <liferay-portlet:resourceURL var="exportURL" >
-	<portlet:param name="action" value="export"/>
+	<portlet:param name="action" value="exportCourse"/>
 	<portlet:param name="groupId" value="<%=groupId %>"/>
 </liferay-portlet:resourceURL>
 

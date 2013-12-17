@@ -72,7 +72,7 @@ public class PortalAdmin extends MVCPortlet {
 		for(P2pActivity p2pActivity: p2pActivityList){
 			conta++;
 			
-			//System.out.println(" :: P2P Update (numero: "+conta+"):: getUserId: "+p2pActivity.getUserId()+", P2pActivityId: "+p2pActivity.getP2pActivityId());
+			System.out.println(" :: P2P Update (numero: "+conta+"):: getUserId: "+p2pActivity.getUserId()+", P2pActivityId: "+p2pActivity.getP2pActivityId());
 			//traza += p2pActivity.getP2pActivityId()+", ";
 
 			P2PActivityPortlet.updateResultP2PActivity(p2pActivity.getP2pActivityId(), p2pActivity.getUserId());
@@ -86,7 +86,12 @@ public class PortalAdmin extends MVCPortlet {
 		System.out.println(" ##  UPDATED  ## "+conta);
 		System.out.println("------------------------------------------------");
 		
-		ModuleUpdateResult.saveStringToFile("updateResultP2PActivities.txt", traza+"\nUPDATED: "+conta);
+		try {
+			ModuleUpdateResult.saveStringToFile("updateResultP2PActivities.txt", traza+"\nUPDATED: "+conta);
+		} catch (Exception e) {
+			System.out.println("");
+			//e.printStackTrace();
+		}
 	}
 	
 	
