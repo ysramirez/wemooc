@@ -90,8 +90,6 @@ public class StartupAction extends SimpleAction {
 				createExpandoColumn(table, "abreviatura", ExpandoColumnConstants.STRING,
 							ExpandoColumnConstants.INDEX_TYPE_TEXT, 
 							ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, "", true);
-				createExpandoColumn(table, "sync", ExpandoColumnConstants.BOOLEAN,
-						ExpandoColumnConstants.INDEX_TYPE_TEXT, null, false, false);
 		}
 		
 	}
