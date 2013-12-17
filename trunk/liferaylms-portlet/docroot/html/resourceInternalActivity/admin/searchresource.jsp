@@ -35,33 +35,7 @@ for (Object key:props.keySet()) {
 }
 
 %>
-<liferay-ui:icon-menu message="add">
-<%
-for(String assetType:allowedAssetTypes)
-{
-	PortletURL pURL=getAddPortletURL(course.getGroupId(), liferayPortletRequest, liferayPortletResponse, assetType);
-	if(pURL!=null) {
-		AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(assetType);
-		String addPortletURLString=pURL.toString();
-		Group theGroup = GroupLocalServiceUtil.getGroup(course.getGroupId());
-		addPortletURLString = HttpUtil.addParameter(addPortletURLString, "doAsGroupId", course.getGroupId());
-		addPortletURLString = HttpUtil.addParameter(addPortletURLString, "refererPlid", plid);
-		addPortletURLString = HttpUtil.addParameter(addPortletURLString, "layoutUuid", layout.getUuid());
-		String taglibEditURL = "javascript:Liferay.Util.openWindow({dialog: {width: 960}, id: '" +
-		liferayPortletResponse.getNamespace() + "editAsset', title: '" + ResourceActionsUtil.getModelResource(locale, assetType) +
-		"', uri:'" + HtmlUtil.escapeURL(addPortletURLString) + "'});";
-		
-		%>
-		<liferay-ui:icon
-					message="<%= HtmlUtil.escape(assetType) %>"
-					src="<%= assetRendererFactory.getIconPath(renderRequest) %>"
-					url="<%= addPortletURLString %>"
-				/>
-		<%
-	}
-}
-%>
-</liferay-ui:icon-menu>
+
 <liferay-portlet:renderURL var="selectResource">
 	<liferay-portlet:param name="jspPage" value="/html/resourceInternalActivity/admin/searchresults.jsp"/>
 </liferay-portlet:renderURL>
