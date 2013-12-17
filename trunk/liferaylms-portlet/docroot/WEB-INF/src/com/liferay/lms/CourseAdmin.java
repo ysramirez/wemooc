@@ -29,8 +29,6 @@ import javax.portlet.WindowState;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.hsqldb.lib.Iterator;
-
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
@@ -58,11 +56,13 @@ import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -78,7 +78,6 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
-import com.liferay.portal.service.LayoutSetLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
@@ -91,7 +90,6 @@ import com.liferay.portlet.asset.AssetCategoryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
@@ -832,7 +830,34 @@ public class CourseAdmin extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		
 		String action = ParamUtil.getString(request, "action");
-		if(action.equals("export")){
+		
+		if(action.equals("exportCourse")){
+			
+			try {	
+
+				long groupId = ParamUtil.getLong(request, "groupId");
+				String fileName = ParamUtil.getString(request, "exportFileName");
+
+				File file = LayoutServiceUtil.exportPortletInfoAsFile(themeDisplay.getLayout().getPlid(), groupId, themeDisplay.getPortletDisplay().getId(), request.getParameterMap(), null, null);
+
+				HttpServletRequest httpRequest = PortalUtil.getHttpServletRequest(request);
+				HttpServletResponse httpResponse = PortalUtil.getHttpServletResponse(response);
+
+				InputStream is = new FileInputStream(file);
+
+				String contentType = MimeTypesUtil.getContentType(file);
+
+				ServletResponseUtil.sendFile(httpRequest, httpResponse, fileName, is, contentType);
+
+			}catch(Exception e){
+
+				//System.out.println(" Error: "+e.getMessage());
+				e.printStackTrace();
+
+			}
+
+		} 
+		else if(action.equals("export")){
 			Role commmanager = null;
 			LmsPrefs prefs = null;
 			try {
