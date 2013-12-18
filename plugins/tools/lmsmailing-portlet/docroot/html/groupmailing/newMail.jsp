@@ -278,6 +278,7 @@
 				
 		<div class="check_testing" >
 			<aui:input name="testing" label="send-test" type="checkbox"></aui:input>
+			<p><%=LanguageUtil.get(pageContext,"groupmailing.messages.test.help")%></p>
 		</div>
 
     	<p><%=LanguageUtil.get(pageContext,"groupmailing.messages.explain")%></p>
