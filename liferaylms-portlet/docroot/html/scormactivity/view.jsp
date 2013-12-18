@@ -46,14 +46,8 @@
 	String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
 
 	//Obtener si puede hacer un intento de mejorar el resultado.
-	boolean improving = false;
+	boolean improving = true;
 	LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
-	if (result != null) {
-		if (!LearningActivityLocalServiceUtil.islocked(actId, userId)) {
-			improving = true;
-		}
-	}
-
 
 	if (actId==0) {
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
@@ -225,26 +219,6 @@
 		}
 	}
 }
-//Si no ha pasado el test, ni tiene mas intentos.
-else {
-	//LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
-	Object[] arguments = new Object[] { result.getResult() };
-	Object[] arg = new Object[] { activity.getPasspuntuation() };
-%>
-<p>
-	<liferay-ui:message key="activity-done" />
-</p>
-<p>
-	<liferay-ui:message key="activity.your-result" arguments="<%=arguments%>" />
-</p>
-<p class="color_tercero negrita">
-	<liferay-ui:message key="activity.your-result-dont-pass" arguments="<%=arg%>" />
-</p>
-<p>
-	<liferay-ui:message key="activity.your-result-no-more-tries" />
-</p>
-<%
-	}
 
 			}
 		}
