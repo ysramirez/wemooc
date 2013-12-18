@@ -283,8 +283,6 @@ if(actId==0){
 										});">
 											<liferay-ui:message key="evaluationtaskactivity.recalculate"/>
 										</a> <liferay-ui:icon-help message="evaluationtaskactivity.recalculate.help" />
-									</p>
-								    <p class="see-more">
 								    	<portlet:renderURL var="popupGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 									   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
 									   		<portlet:param name="jspPage" value="/html/evaluationtaskactivity/popups/grades.jsp"/>
