@@ -49,7 +49,8 @@
 		</div>
 		
 		<div class="check_testing" >
-			<aui:input name="testing" label="send-test" type="checkbox"></aui:input><liferay-portlet:icon-help><%=LanguageUtil.get(pageContext,"groupmailing.messages.test.help")%></liferay-portlet:icon-help>
+			<aui:input name="testing" label="send-test" type="checkbox"></aui:input>
+			<p><%=LanguageUtil.get(pageContext,"groupmailing.messages.test.help")%></p>
 		</div>
 		
 		<aui:input name="template" label="send-test" type="hidden" value="<%=idTemplate %>"></aui:input>
