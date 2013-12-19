@@ -243,11 +243,17 @@ if(actId==0){
 						<% 
 							LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, user.getUserId());
 							if(learningActivityResult!=null) {	   
+								%>
+								<div class="floatl">
+								<%
 								if(learningActivityResult.getPassed()){
 									%><liferay-ui:message key="<%=passedStudentMessageKey %>"  arguments="<%=new Object[]{learningActivityResult.getResult(),learningActivity.getPasspuntuation()} %>" /><%
 								}else {
 									%><liferay-ui:message key="<%=failedStudentMessageKey %>"  arguments="<%=new Object[]{learningActivityResult.getResult(),learningActivity.getPasspuntuation()} %>" /><%
 								}
+								%>
+								</div>
+								<%
 								if(!hasPublishDate) {%>
 									<portlet:actionURL name="reCalculate" var="reCalculateURL">
 								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
@@ -269,7 +275,9 @@ if(actId==0){
 								        	
 										</aui:button-row>
 							       </div>
-						            <p class="see-more">
+							       <div class="floatr">
+						           		<p class="see-more">
+										<liferay-ui:icon-help message="evaluationtaskactivity.recalculate.help" />
 										<a onClick="AUI().use('aui-dialog', function(A) {
 										   	var dialog1 = new A.Dialog({
 										   		id: '<portlet:namespace />recalculatePopup_<%=Long.toString(user.getUserId()) %>',
@@ -282,11 +290,14 @@ if(actId==0){
 											}).render().show();
 										});">
 											<liferay-ui:message key="evaluationtaskactivity.recalculate"/>
-										</a> <liferay-ui:icon-help message="evaluationtaskactivity.recalculate.help" />
+										</a>
 								    	<portlet:renderURL var="popupGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 									   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
 									   		<portlet:param name="jspPage" value="/html/evaluationtaskactivity/popups/grades.jsp"/>
 									   	</portlet:renderURL>
+									   	</p>
+										<p class="see-more">
+										<liferay-ui:icon-help message="evaluationtaskactivity.set.grades.help" />
 										<a onClick="<%="AUI().use('aui-dialog', function(A){ "+
 											        "	new A.Dialog({ "+
 											        "		id:'"+renderResponse.getNamespace()+"showPopupGrades', "+
@@ -304,8 +315,9 @@ if(actId==0){
 											        "     }).render().show(); "+   
 											        "}); " %>">
 											<liferay-ui:message key="evaluationtaskactivity.set.grades"/>
-										</a> <liferay-ui:icon-help message="evaluationtaskactivity.set.grades.help" />
+										</a>
 									</p>
+									</div>
 								<%}else if(hasPublishDate && (!learningActivityResult.getComments().trim().equals(""))){%>
 									<p class="see-more">
 										<a onClick="AUI().use('aui-dialog', function(A) {
