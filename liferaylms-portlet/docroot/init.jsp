@@ -1,3 +1,6 @@
+<%@page import="java.io.IOException"%>
+<%@page import="java.io.FileNotFoundException"%>
+<%@page import="java.util.Properties"%>
 <%@ taglib uri="http://java.sun.com/portlet_2_0" prefix="portlet" %>
 
 <%@ taglib uri="http://liferay.com/tld/aui" prefix="aui" %>
@@ -61,6 +64,24 @@
 <%@ page import="javax.portlet.PortletURL" %>
 <%@ page import="javax.portlet.WindowState" %>
 
+<%
+Properties pp = new Properties();
+long bNum = 0, miliseconds = 0;
+Date c = new Date();
+try {
+	ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+	pp.load(classLoader.getResourceAsStream("service.properties"));
+	bNum = Long.valueOf(pp.getProperty("build.number",""));
+	miliseconds = Long.valueOf(pp.getProperty("build.date",""));
+	c = new Date(miliseconds);
+} catch (FileNotFoundException e) {
+	e.printStackTrace();
+} catch (IOException e) {
+	e.printStackTrace();
+}
+%>
+<!-- <%="vd-"+bNum+"-"+c.toString() %>-->
+
 <portlet:defineObjects />
 
 <liferay-theme:defineObjects />
@@ -87,4 +108,5 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 NumberFormat percentFormat = NumberFormat.getPercentInstance(locale);
+
 %>
