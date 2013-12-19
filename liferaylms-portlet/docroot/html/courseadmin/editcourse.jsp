@@ -170,11 +170,13 @@ else
 	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=groupCreated!=null?groupCreated.getFriendlyURL():"" %> </aui:input>
 	
 	<%
-	boolean abreviationVisibility = ("true".equals(PropsUtil.get("lms.course.abbreviation")))?true:false;
-	if(abreviationVisibility){
+	if(course!=null){
+		boolean abreviationVisibility = ("true".equals(PropsUtil.get("lms.course.abbreviation")))?true:false;
+		if(abreviationVisibility){
 	%>
-		<liferay-ui:custom-attribute classPK="<%= course.getCourseId() %>" name="abreviatura" className="<%= Course.class.getName() %>" editable="true" label="true"/>
+			<liferay-ui:custom-attribute classPK="<%= course.getCourseId() %>" name="abreviatura" className="<%= Course.class.getName() %>" editable="true" label="true"/>
 	<%
+		}
 	}
 	%>
 
@@ -360,10 +362,6 @@ else
 		<aui:input name="maxUsers" label="num-of-users" type="text" value="<%=maxUsers %>" helpMessage="<%=LanguageUtil.get(pageContext,\"max-users-method-help\")%>" />  
 	</liferay-ui:panel>
 	<liferay-ui:panel title="categorization" collapsible="true" defaultState="closed">
-	<liferay-ui:custom-attributes-available className="<%= Course.class.getName() %>">
-		<liferay-ui:custom-attribute-list 
-			className="<%=com.liferay.lms.model.Course.class.getName()%>" classPK="<%=courseId %>" editable="true" label="true"></liferay-ui:custom-attribute-list>
-	</liferay-ui:custom-attributes-available>
 	<aui:input name="tags" type="assetTags" />
 	<aui:input name="categories" type="assetCategories" />
 	</liferay-ui:panel>
