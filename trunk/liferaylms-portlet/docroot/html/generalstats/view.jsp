@@ -1,3 +1,7 @@
+<%@page import="java.text.DecimalFormat"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.ModuleServiceUtil"%>
+<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.CourseResultLocalServiceUtil"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.Collections"%>
@@ -34,7 +38,9 @@
 <%@page import="com.liferay.lms.service.CourseServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@ include file="/init.jsp" %>
-
+<%	
+DecimalFormat df = new DecimalFormat("#.#");
+ %>
 <div class="portlet-toolbar search-form">
 <%@ include file="/html/courseadmin/coursesearchform.jsp" %>
 <liferay-ui:success key="courseadmin.clone.confirmation.success" message="courseadmin.clone.confirmation.success" />
@@ -66,7 +72,14 @@
 		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 		long registered=UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId(),0);
 		long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
+		double avgResult=0;
+		if(finalizados>0)
+		{
+			avgResult=CourseResultLocalServiceUtil.avgResult(course.getCourseId());
+		}
+		long activitiesCount=LearningActivityLocalServiceUtil.countLearningActivitiesOfGroup(course.getGroupCreatedId());
 		long iniciados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados;
+		long modulesCount=ModuleLocalServiceUtil.countByGroupId(course.getGroupCreatedId());
 	%>
 		<liferay-ui:search-container-column-text name="title">
 		<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
@@ -76,12 +89,23 @@
 		<%=registered %>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text  valign="right" name="coursestats.start.course">
-		<%=finalizados %>
-		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text  valign="right" name="coursestats.end.course">
 		<%=iniciados %>
 		</liferay-ui:search-container-column-text>
-		
+		<liferay-ui:search-container-column-text  valign="right" name="coursestats.end.course">
+		<%=finalizados %>
+		</liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text  valign="right" name="closed">
+		<%=course.getClosed() %>
+		</liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text  valign="right" name="coursestats.averagegrade">
+		<%=df.format(avgResult) %>
+		</liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text  valign="right" name="coursestats.modulecounter">
+		<%=modulesCount %>
+		</liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text  valign="right" name="coursestats.activitiescounter">
+		<%=activitiesCount %>
+		</liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
 	
 	<liferay-ui:search-iterator  />
