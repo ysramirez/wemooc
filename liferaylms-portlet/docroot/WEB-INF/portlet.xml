@@ -1900,6 +1900,8 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+	    <resource-bundle>content/generalstats/Language</resource-bundle>
+	
 		<portlet-info>
 			<title>General Stats</title>
 			<short-title>General Stats</short-title>
