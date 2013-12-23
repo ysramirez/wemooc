@@ -54,16 +54,18 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 				%><div><liferay-ui:message key="competences.necessary" />:</div><ul><%
 				for(CourseCompetence courseCompetence : courseCompetences){
 					UserCompetence uc = UserCompetenceLocalServiceUtil.findByUserIdCompetenceId(themeDisplay.getUserId(), courseCompetence.getCompetenceId());
-					if(uc!=null){
-						Competence c =CompetenceLocalServiceUtil.getCompetence(uc.getCompetenceId());
-						if(c!=null){
-							%><li><liferay-ui:icon image="checked"/><%=c.getTitle(themeDisplay.getLocale())%></li><%
+					if(uc!=null)
+					{
+						Competence compet =CompetenceLocalServiceUtil.getCompetence(uc.getCompetenceId());
+						if(c!=null)
+						{
+							%><li><liferay-ui:icon image="checked"/><%=compet.getTitle(themeDisplay.getLocale())%></li><%
 						}
 					}else{
 						pass=false;
-						Competence c =CompetenceLocalServiceUtil.getCompetence(courseCompetence.getCompetenceId());
+						Competence compet =CompetenceLocalServiceUtil.getCompetence(courseCompetence.getCompetenceId());
 						if(c!=null){
-							%><li><liferay-ui:icon image="unchecked"/><%=c.getTitle(themeDisplay.getLocale())%></li><%
+							%><li><liferay-ui:icon image="unchecked"/><%=compet.getTitle(themeDisplay.getLocale())%></li><%
 						}
 					}
 				}
