@@ -65,31 +65,25 @@ public class StartupAction extends SimpleAction {
 		}
 	}
 
-	public void doRun(long companyId) throws Exception 
-	{
+	public void doRun(long companyId) throws Exception {
 		LmsPrefs lmsPrefs=null;
 		
-		try
-		{
-		lmsPrefs=LmsPrefsLocalServiceUtil.getLmsPrefs(companyId);
+		try{
+			lmsPrefs=LmsPrefsLocalServiceUtil.getLmsPrefs(companyId);
 		}
-		catch(NoSuchPrefsException e)
-		{
+		catch(NoSuchPrefsException e){
 			lmsPrefs=null;
 		}
-		if(lmsPrefs==null)
-		{
+		if(lmsPrefs==null){
 			createDefaultRoles(companyId);
 			createDefaultSiteTemplate(companyId);
 			createDefaultPreferences(companyId);
 		}
 		
-		ExpandoTable table = getExpandoTable(companyId, Course.class.getName(),
-				ExpandoTableConstants.DEFAULT_TABLE_NAME);
+		ExpandoTable table = getExpandoTable(companyId, Course.class.getName(), ExpandoTableConstants.DEFAULT_TABLE_NAME);
 		if (table != null) {
 				createExpandoColumn(table, "abreviatura", ExpandoColumnConstants.STRING,
-							ExpandoColumnConstants.INDEX_TYPE_TEXT, 
-							ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, "", true);
+							ExpandoColumnConstants.INDEX_TYPE_TEXT, ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, "", true);
 		}
 		
 	}
@@ -106,20 +100,19 @@ public class StartupAction extends SimpleAction {
 
 	public void createDefaultSiteTemplate(long companyId) throws PortalException, SystemException 
 	{
-		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
-		Map<Locale, String> nameMap = new HashMap<Locale, String>();
-		
-		nameMap.put(
-			LocaleUtil.getDefault(),
-			"course");
-		layoutSetPrototype =
-			LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(
-				defaultUserId, companyId, nameMap, "course", true,true,new ServiceContext());
-		InputStream larStream=this.getClass().getClassLoader().getResourceAsStream("/course.lar");
-		
-		LayoutLocalServiceUtil.importLayouts(defaultUserId,layoutSetPrototype.getGroup().getGroupId() , 
-				layoutSetPrototype.getLayoutSet().isPrivateLayout(),
-				getLayoutSetPrototypeParameters(), larStream);
+		boolean exists = false;
+		for(LayoutSetPrototype lay:LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypes(0, LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypesCount())){
+			if("course".equals(lay.getName())) exists=true;
+		}
+		if(!exists){
+			long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
+			Map<Locale, String> nameMap = new HashMap<Locale, String>();
+			nameMap.put(LocaleUtil.getDefault(), "course");
+			layoutSetPrototype = LayoutSetPrototypeLocalServiceUtil.addLayoutSetPrototype(defaultUserId, companyId, nameMap, "course", true,true,new ServiceContext());
+			InputStream larStream=this.getClass().getClassLoader().getResourceAsStream("/course.lar");
+			LayoutLocalServiceUtil.importLayouts(defaultUserId,layoutSetPrototype.getGroup().getGroupId() , 
+					layoutSetPrototype.getLayoutSet().isPrivateLayout(), getLayoutSetPrototypeParameters(), larStream);
+		}
 		
 	}
 	private static Map<String, String[]> getLayoutSetPrototypeParameters() 
@@ -171,86 +164,65 @@ public class StartupAction extends SimpleAction {
 		long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
 		int scope = ResourceConstants.SCOPE_GROUP_TEMPLATE;
 		Map<Locale, String> descriptionMap = new HashMap<Locale, String>();
+		Map<Locale, String> titleMap = new HashMap<Locale, String>();
+		java.util.List<ResourceAction> actions=null;
 		
-		descriptionMap.put(
-			LocaleUtil.getDefault(),
-			"Course creator, can create courses in a community.");
-Map<Locale, String> titleMap = new HashMap<Locale, String>();
-		
-titleMap.put(
-			LocaleUtil.getDefault(),
-			"Course creator.");
-		courseCreator= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseCreator"
-				,titleMap, descriptionMap, RoleConstants.TYPE_SITE);
-		java.util.List<ResourceAction> actions= ResourceActionLocalServiceUtil.getResourceActions(Course.class.getName());
-		setRolePermissions(courseCreator,Course.class.getName(),actions);
-		actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.coursemodel");
-		setRolePermissions(courseCreator,"com.liferay.lms.coursemodel",actions);
-descriptionMap = new HashMap<Locale, String>();
-		
-titleMap = new HashMap<Locale, String>();
-
-titleMap.put(
-			LocaleUtil.getDefault(),
-			"Course Editor.");
-		descriptionMap.put(
-			LocaleUtil.getDefault(),
-			"Editors can Edit a course.");
-		courseEditor= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseEditor",titleMap, descriptionMap, RoleConstants.TYPE_SITE);
-		actions= ResourceActionLocalServiceUtil.getResourceActions(Module.class.getName());
-		setRolePermissions(courseEditor,Module.class.getName(),actions);
-		actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.model");
-		setRolePermissions(courseEditor,"com.liferay.lms.model",actions);
-		actions= ResourceActionLocalServiceUtil.getResourceActions(LearningActivity.class.getName());
-		setRolePermissions(courseEditor,LearningActivity.class.getName(),actions);
-		titleMap = new HashMap<Locale, String>();
-
-		titleMap.put(
-					LocaleUtil.getDefault(),
-					"Course Teacher.");
-		descriptionMap = new HashMap<Locale, String>();
-		descriptionMap.put(
-				LocaleUtil.getDefault(),
-				"Teachers.");
-		courseTeacher= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseTeacher", titleMap, descriptionMap, RoleConstants.TYPE_SITE);
-		actions= ResourceActionLocalServiceUtil.getResourceActions(BlogsEntry.class.getName());
-		for(ResourceAction raction:actions)
-		{
-			ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,BlogsEntry.class.getName(),scope, Long.toString(companyId),courseTeacher.getRoleId(),raction.getActionId());
-			
+		Role courseCreator = RoleLocalServiceUtil.fetchRole(companyId, "courseCreator");
+		if(courseCreator == null){
+			descriptionMap.put(LocaleUtil.getDefault(), "Course creator, can create courses in a community.");
+			titleMap.put(LocaleUtil.getDefault(), "Course creator.");
+			courseCreator= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseCreator" ,titleMap, descriptionMap, RoleConstants.TYPE_SITE);
+			actions= ResourceActionLocalServiceUtil.getResourceActions(Course.class.getName());
+			setRolePermissions(courseCreator,Course.class.getName(),actions);
+			actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.coursemodel");
+			setRolePermissions(courseCreator,"com.liferay.lms.coursemodel",actions);
 		}
-		actions= ResourceActionLocalServiceUtil.getResourceActions(MBCategory.class.getName());
-		for(ResourceAction raction:actions)
-		{
-			ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,MBCategory.class.getName(),scope, Long.toString(companyId),courseTeacher.getRoleId(),raction.getActionId());
-			
+
+		Role courseEditor = RoleLocalServiceUtil.fetchRole(companyId, "courseEditor");
+		if(courseEditor == null){
+			descriptionMap = new HashMap<Locale, String>();
+			titleMap = new HashMap<Locale, String>();
+			titleMap.put(LocaleUtil.getDefault(), "Profesor");
+			descriptionMap.put(LocaleUtil.getDefault(), "Editors can Edit a course.");
+			courseEditor= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseEditor",titleMap, descriptionMap, RoleConstants.TYPE_SITE);
+			actions= ResourceActionLocalServiceUtil.getResourceActions(Module.class.getName());
+			setRolePermissions(courseEditor,Module.class.getName(),actions);
+			actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.model");
+			setRolePermissions(courseEditor,"com.liferay.lms.model",actions);
+			actions= ResourceActionLocalServiceUtil.getResourceActions(LearningActivity.class.getName());
+			setRolePermissions(courseEditor,LearningActivity.class.getName(),actions);
 		}
-		ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,LearningActivity.class.getName(),scope, Long.toString(companyId),courseTeacher.getRoleId(),"CORRECT");
+		
+		Role courseTeacher = RoleLocalServiceUtil.fetchRole(companyId, "courseTeacher");
+		if(courseTeacher == null){
+			descriptionMap = new HashMap<Locale, String>();
+			titleMap = new HashMap<Locale, String>();
+			titleMap.put(LocaleUtil.getDefault(),"Profesor sustituto");
+			descriptionMap.put(LocaleUtil.getDefault(), "Teachers.");
+			courseTeacher= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseTeacher", titleMap, descriptionMap, RoleConstants.TYPE_SITE);
+			actions= ResourceActionLocalServiceUtil.getResourceActions(BlogsEntry.class.getName());
+			for(ResourceAction raction:actions)
+				ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,BlogsEntry.class.getName(),scope, Long.toString(companyId),courseTeacher.getRoleId(),raction.getActionId());
+			actions= ResourceActionLocalServiceUtil.getResourceActions(MBCategory.class.getName());
+			for(ResourceAction raction:actions)
+				ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,MBCategory.class.getName(),scope, Long.toString(companyId),courseTeacher.getRoleId(),raction.getActionId());
+			ResourcePermissionLocalServiceUtil.addResourcePermission(companyId,LearningActivity.class.getName(),scope, Long.toString(companyId),courseTeacher.getRoleId(),"CORRECT");
+		}
 
 	}
-	private static void setRolePermissions(
-			Role role, String name, java.util.List<ResourceAction>actions)
-		throws PortalException, SystemException 
-		
-		{
+	private static void setRolePermissions(Role role, String name, java.util.List<ResourceAction>actions) throws PortalException, SystemException {
 		String[] actionIds=new String[actions.size()];
 		int counter=0;
-		for(ResourceAction raction:actions)
-		{
+		
+		for(ResourceAction raction:actions){
 			actionIds[counter]=raction.getActionId();
 			counter++;
 		}
-			if (ResourceBlockLocalServiceUtil.isSupported(name)) {
-				ResourceBlockLocalServiceUtil.setCompanyScopePermissions(
-					role.getCompanyId(), name, role.getRoleId(),
-					Arrays.asList(actionIds));
-			}
-			else {
-				ResourcePermissionLocalServiceUtil.setResourcePermissions(
-					role.getCompanyId(), name, ResourceConstants.SCOPE_COMPANY,
-					String.valueOf(role.getCompanyId()), role.getRoleId(),
-					actionIds);
-			}
+		
+		if (ResourceBlockLocalServiceUtil.isSupported(name)) 
+			ResourceBlockLocalServiceUtil.setCompanyScopePermissions(role.getCompanyId(), name, role.getRoleId(),Arrays.asList(actionIds));
+		else 
+			ResourcePermissionLocalServiceUtil.setResourcePermissions(role.getCompanyId(), name, ResourceConstants.SCOPE_COMPANY, String.valueOf(role.getCompanyId()), role.getRoleId(), actionIds);
 		
 	}
 	
@@ -268,24 +240,20 @@ titleMap.put(
 	 * @param indexType
 	 *            The index type as defined in ExpandoColumnConstants.
 	 */
-	private void createExpandoColumn(ExpandoTable table, String fieldName, int type, 
-			int indexType, String displayType, Object defaultData, Boolean visibility) {
+	private void createExpandoColumn(ExpandoTable table, String fieldName, int type, int indexType, String displayType, Object defaultData, Boolean visibility) {
 		// logger.info("Attempting to create Expando field " + fieldName +
 		// " for class " + table.getClassName());
 
 		ExpandoColumn column = null;
 		try {
-			column = ExpandoColumnLocalServiceUtil.addColumn(
-					table.getTableId(), fieldName, type, defaultData);
+			column = ExpandoColumnLocalServiceUtil.addColumn(table.getTableId(), fieldName, type, defaultData);
 		} catch (DuplicateColumnNameException duplicateColumnNameException) {
 			// Column already exists so retrieve it
 			// logger.info("Column already exists trying to retrieve it");
 
 			try {
-				column = ExpandoColumnLocalServiceUtil.getColumn(
-						table.getTableId(), fieldName);
-				column = ExpandoColumnLocalServiceUtil.updateColumn(
-						column.getColumnId(), fieldName, type, defaultData);
+				column = ExpandoColumnLocalServiceUtil.getColumn(table.getTableId(), fieldName);
+				column = ExpandoColumnLocalServiceUtil.updateColumn(column.getColumnId(), fieldName, type, defaultData);
 			} catch (SystemException ex) {
 				// logger.error("Exception while retrieving the column and unable to update",
 				// ex);
@@ -302,16 +270,11 @@ titleMap.put(
 			if (column != null) {
 				try {
 					UnicodeProperties properties = new UnicodeProperties();
-					properties.put(ExpandoColumnConstants.INDEX_TYPE,
-							String.valueOf(indexType));
-					if (displayType != null) {
-						properties.put(ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, 
-								displayType);
-					}
-					if (!visibility) {
-						properties.put(ExpandoColumnConstants.PROPERTY_HIDDEN, 
-								"true");
-					}
+					properties.put(ExpandoColumnConstants.INDEX_TYPE, String.valueOf(indexType));
+					if (displayType != null) 
+						properties.put(ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, displayType);
+					if (!visibility) 
+						properties.put(ExpandoColumnConstants.PROPERTY_HIDDEN, "true");
 					column.setTypeSettingsProperties(properties);
 					ExpandoColumnLocalServiceUtil.updateExpandoColumn(column);
 					// logger.info("Property updated to " + indexType);
@@ -337,20 +300,15 @@ titleMap.put(
 	 * @return The created or retreived table. If something goes wrong null is
 	 *         returned.
 	 */
-	private ExpandoTable getExpandoTable(long companyId, String className,
-			String tableName) {
-		if (tableName == null) {
-			tableName = ExpandoTableConstants.DEFAULT_TABLE_NAME;
-		}
+	private ExpandoTable getExpandoTable(long companyId, String className, String tableName) {
+		if (tableName == null) tableName = ExpandoTableConstants.DEFAULT_TABLE_NAME;
 		ExpandoTable table = null;
 
 		try {
-			table = ExpandoTableLocalServiceUtil.addTable(companyId, className,
-					tableName);
+			table = ExpandoTableLocalServiceUtil.addTable(companyId, className,	tableName);
 		} catch (DuplicateTableNameException duplicateTableNameException) {
 			try {
-				table = ExpandoTableLocalServiceUtil.getTable(companyId,
-						className, tableName);
+				table = ExpandoTableLocalServiceUtil.getTable(companyId, className, tableName);
 			} catch (PortalException ex) {
 				// If we're here something is really wrong and table will be
 				// null
