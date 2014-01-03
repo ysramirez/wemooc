@@ -57,14 +57,14 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 					if(uc!=null)
 					{
 						Competence compet =CompetenceLocalServiceUtil.getCompetence(uc.getCompetenceId());
-						if(c!=null)
+						if(compet!=null)
 						{
 							%><li><liferay-ui:icon image="checked"/><%=compet.getTitle(themeDisplay.getLocale())%></li><%
 						}
 					}else{
 						pass=false;
 						Competence compet =CompetenceLocalServiceUtil.getCompetence(courseCompetence.getCompetenceId());
-						if(c!=null){
+						if(compet!=null){
 							%><li><liferay-ui:icon image="unchecked"/><%=compet.getTitle(themeDisplay.getLocale())%></li><%
 						}
 					}
