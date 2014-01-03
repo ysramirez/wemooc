@@ -52,8 +52,10 @@ public class CheckPage {
 		errors = driver.findElements(By.className("portlet-msg-error"));
 		if(errors!=null && errors.size()>0){
 			for(WebElement we : errors){
-				if(!we.getText().isEmpty())
+				if(!we.getText().isEmpty()){
 					if(log.isErrorEnabled())log.error("Error::"+we.getText());
+					errorNum++;
+				}
 			}
 		}
 		

@@ -15,6 +15,33 @@ public class Context {
 	private static String studentUser = "";
 	private static String studentName = "";
 	private static String studentPass = "";
+	private static String studentUser2 = "";
+	private static String studentName2 = "";
+	private static String studentPass2 = "";
+	public static String getStudentUser2() {
+		return studentUser2;
+	}
+
+	public static void setStudentUser2(String studentUser2) {
+		Context.studentUser2 = studentUser2;
+	}
+
+	public static String getStudentName2() {
+		return studentName2;
+	}
+
+	public static void setStudentName2(String studentName2) {
+		Context.studentName2 = studentName2;
+	}
+
+	public static String getStudentPass2() {
+		return studentPass2;
+	}
+
+	public static void setStudentPass2(String studentPass2) {
+		Context.studentPass2 = studentPass2;
+	}
+
 	private static String teacherUser = "";
 	private static String teacherName = "";
 	private static String teacherPass = "";

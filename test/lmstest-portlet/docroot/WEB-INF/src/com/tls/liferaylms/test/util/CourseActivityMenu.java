@@ -1,0 +1,83 @@
+package com.tls.liferaylms.test.util;
+
+import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+
+public class CourseActivityMenu {
+	
+	public static WebElement findElementActivityMenu(WebDriver driver,String param){
+		WebElement desplegable = null;
+		
+		try{
+			desplegable = driver.findElement(By.className("lms-desplegable"));
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		List<WebElement> lisc = null;
+
+		try{
+			lisc = desplegable.findElements(By.tagName("li"));
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		WebElement liActive = null;
+		for(WebElement li :lisc){
+			String msg = li.getText();
+			if(param.length()<msg.length()&&param.equals(msg.substring(0, param.length()))){
+				liActive = li;
+				break;
+			}
+		}
+		
+		return liActive;
+	}
+	
+	public static WebElement findElementActivityMenuTotal(WebDriver driver,String param){
+		WebElement desplegable = null;
+		
+		try{
+			desplegable = driver.findElement(By.className("lms-desplegable"));
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		List<WebElement> lisc = null;
+
+		try{
+			lisc = desplegable.findElements(By.tagName("li"));
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		WebElement liActive = null;
+		for(WebElement li :lisc){
+			String msg = li.getText();
+			if(param.equals(msg)){
+				liActive = li;
+				break;
+			}
+		}
+
+		WebElement a = null;
+		if(liActive!=null){
+			try{
+				a = liActive.findElement(By.tagName("a"));
+			}catch(Exception e){
+				e.printStackTrace();
+				return null;
+			}
+		}
+		return a;
+	}
+}
