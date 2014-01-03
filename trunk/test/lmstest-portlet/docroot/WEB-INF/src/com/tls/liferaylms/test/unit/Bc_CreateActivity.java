@@ -20,6 +20,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import com.tls.liferaylms.test.SeleniumTestCase;
 import com.tls.liferaylms.test.util.CheckPage;
 import com.tls.liferaylms.test.util.Context;
+import com.tls.liferaylms.test.util.CourseActivityMenu;
 import com.tls.liferaylms.test.util.GetPage;
 import com.tls.liferaylms.test.util.Login;
 import com.tls.liferaylms.test.util.Sleep;
@@ -178,7 +179,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					
 					//Chequeamos el estado de la actividad
 					String param = TestProperties.get(prop);					
-					WebElement liActive = findElementActivityMenu(param);
+					WebElement liActive = CourseActivityMenu.findElementActivityMenu(driver,param);
 					assertNotNull("Not found activity created", liActive);
 					
 					List<WebElement> asActive = getElements(liActive, By.tagName("a"));
@@ -187,18 +188,18 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					//Put activity in context
 					String idenfier = asActive.get(0).getText();					
 					
-					asActive.get(0).click();
+					//asActive.get(0).click();
 
 					Context.getActivities().put(idenfier, driver.getCurrentUrl());
 					
 					
-					assertEquals("Errors in activity"+param, 0, CheckPage.check(driver));
+					//assertEquals("Errors in activity"+param, 0, CheckPage.check(driver));
 					
 					
 					//Editamos la actividad
 					changeEditMode();
 					
-					liActive = findElementActivityMenu(param);
+					liActive =  CourseActivityMenu.findElementActivityMenu(driver,param);
 					assertNotNull("Not found activity created", liActive);
 
 					asActive = getElements(liActive, By.tagName("a"));
@@ -224,10 +225,6 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 						
 				}
 				
-				
-				
-				
-				Sleep.sleep(30000);
 			}catch(Exception e){
 				e.printStackTrace();
 			}
@@ -243,7 +240,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		inputs.get(0).click();
 	}
 	
-	private WebElement findElementActivityMenu(String param){
+	/*private WebElement findElementActivityMenu(String param){
 		WebElement desplegable = getElement(By.className("lms-desplegable"));
 		assertNotNull("Not found lms-desplegable", desplegable);
 		
@@ -260,7 +257,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		}
 		
 		return liActive;
-	}
+	}*/
 	
 	private void sendCkEditorJS(WebDriver driver,String prop){
 		if (driver instanceof JavascriptExecutor) {
@@ -318,7 +315,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		assertNotNull("Not found select typeId", typeId);
 		
 		Select select = new Select(typeId);
-		select.selectByIndex(5);
+		select.selectByValue("5");
 		
 		sendCkEditorJSId(driver,TestProperties.get("act.test.5"),"_execactivity_WAR_liferaylmsportlet_text");
 		
@@ -346,6 +343,9 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		WebElement breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
 		assertNotNull("Not breturn found", breturn);
 		breturn.click();
+		try{
+			breturn.click();
+		}catch(Exception e){}
 
 		Sleep.sleep(1000);
 		//Arrastrar
@@ -363,7 +363,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		assertNotNull("Not found select typeId", typeId);
 		
 		select = new Select(typeId);
-		select.selectByIndex(4);
+		select.selectByValue("4");
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.4"),"_execactivity_WAR_liferaylmsportlet_text");
 		
@@ -411,29 +411,42 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		assertNotNull("Not found select typeId", typeId);
 		
 		select = new Select(typeId);
-		select.selectByIndex(3);
+		select.selectByValue("3");
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.3"),"_execactivity_WAR_liferaylmsportlet_text");
 
 		submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
 		//Doubleclick
+		submit.click();
+		try{
+			submit.click();
+		}catch(Exception e){}
+
+		Sleep.sleep(1000);
+
+		WebElement newitem = getElement(By.className("newitem2"));
+		assertNotNull("Not found submit for answer", newitem);
+		WebElement a = getElement(newitem,By.tagName("a"));
+		assertNotNull("Not found a for answer", a);
+		a.click();
+		
+		sendCkEditorJSId(driver,TestProperties.get("act.test.3.text"),"_execactivity_WAR_liferaylmsportlet_answer");
+
+		Sleep.sleep(3000);
+		
+		WebElement mainAdd = getElement(By.id("addNewQuestion"));
+		
+		submit = getElement(mainAdd, By.className("aui-button-input-submit"));
+		assertNotNull("Not submit found", submit);
+		//Doubleclick
+		
 		try{
 			submit.click();
 			submit.click();
 		}catch(Exception e){}
 
 		Sleep.sleep(1000);
-
-		//TMP
-		/*executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
-		
-		sendCkEditorJSId(driver,TestProperties.get("act.test.3.text"),"_execactivity_WAR_liferaylmsportlet_answer");
-		WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
-		assertNotNull("Not form submit response", form);
-
-		form.submit();
-		Sleep.sleep(1000);*/
 		
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
 		assertNotNull("Not breturn found", breturn);
@@ -453,7 +466,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		assertNotNull("Not found select typeId", typeId);
 		
 		select = new Select(typeId);
-		select.selectByIndex(2);
+		select.selectByValue("2");
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.2"),"_execactivity_WAR_liferaylmsportlet_text");
 
@@ -465,13 +478,41 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 			submit.click();
 		}catch(Exception e){}
 
+		Sleep.sleep(2000);
+
+		//This line not work 
+		//executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
+
+		//WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
+		//assertNotNull("Not form submit response", form);
+		//form.submit();
+		
+		WebElement include = getElement(By.id("includeSolution"));
+		assertNotNull("Not found inclide for free text", include);
+		include.click();
+
 		Sleep.sleep(1000);
+		
+		WebElement tac =getElement(By.className("container-textarea"));
+		assertNotNull("Not found textarea container", tac);
+		
+		WebElement ta =getElement(tac,By.tagName("textarea"));
+		assertNotNull("Not found textarea container", ta);
+		
+		ta.clear();
+		ta.sendKeys(TestProperties.get("act.test.3.answer"));
+		
 
-		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
-
-		WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
-		assertNotNull("Not form submit response", form);
-		form.submit();
+		WebElement solution = getElement(By.id("solution"));
+		
+		submit = getElement(solution,By.className("aui-button-input-submit"));
+		assertNotNull("Not submit found", submit);
+		//Doubleclick
+		try{
+			submit.click();
+			submit.click();
+		}catch(Exception e){}
+		
 		Sleep.sleep(1000);
 
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
@@ -492,7 +533,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		assertNotNull("Not found select typeId", typeId);
 
 		select = new Select(typeId);
-		select.selectByIndex(1);
+		select.selectByValue("1");
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.1"),"_execactivity_WAR_liferaylmsportlet_text");
 
@@ -517,7 +558,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("_execactivity_WAR_liferaylmsportlet_correctCheckbox")));
 				check.click();
 			}
-			form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
+			WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
 			assertNotNull("Not form submit response", form);
 			
 			form.submit();
@@ -543,7 +584,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		assertNotNull("Not found select typeId", typeId);
 
 		select = new Select(typeId);
-		select.selectByIndex(0);
+		select.selectByValue("0");
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.0"),"_execactivity_WAR_liferaylmsportlet_text");
 
@@ -561,8 +602,13 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 
 		for(int i=0;i<10;i++){
 			sendCkEditorJSId(driver,TestProperties.get("act.test.0.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer");
-			form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
+			WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
 			assertNotNull("Not form submit response", form);
+			
+			if(i==0){
+				WebElement check = getElement(By.id("_execactivity_WAR_liferaylmsportlet_correctCheckbox"));
+				check.click();
+			}
 			
 			form.submit();
 			

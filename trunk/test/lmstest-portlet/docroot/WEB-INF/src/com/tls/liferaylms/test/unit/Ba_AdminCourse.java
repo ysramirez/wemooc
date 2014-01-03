@@ -101,8 +101,7 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						Sleep.sleep(1000);
 						
 						assertTrue("Check course not good! ",CheckCourse.checkCourse(driver,driver.getCurrentUrl()));
-						
-						
+												
 						
 						GetPage.getPage(driver, "", Context.getTestPage());
 						

@@ -13,15 +13,31 @@ public class CheckCourse {
 		try{
 			GetPage.getPage(driver, url, "/reto");
 			
+			Sleep.sleep(3000);
+			
 			WebElement portlet = driver.findElement(By.id("p_p_id_changeEditingMode_WAR_liferaylmsportlet_"));
 			WebElement configMenu = portlet.findElement(By.className("portlet-title-default"));
 			
-			configMenu.click();
 			try{
 				configMenu.click();
-			}catch(Exception e){}
+				try{
+					configMenu.click();
+				}catch(Exception e){}
+			}catch(Exception e){
+				WebElement menuEdit = driver.findElement(By.id("_145_toggleControls"));
+				WebElement a = menuEdit.findElement(By.tagName("a"));
+				a.click();
+				a.click();
+				configMenu.click();
+				try{
+					configMenu.click();
+				}catch(Exception e1){}
+			}
 			
-			Sleep.sleep(2000);
+			Sleep.sleep(1000);
+			
+			WebElement config = driver.findElement(By.id("_changeEditingMode_WAR_liferaylmsportlet_hjzj_menu"));
+			config.click();
 			
 			WebElement configBut1 = driver.findElement(By.id("_changeEditingMode_WAR_liferaylmsportlet_hjzj_menuButton"));
 			configBut1.click();
@@ -35,9 +51,14 @@ public class CheckCourse {
 	
 			WebElement action = driver.findElement(By.id("courseteacher_ACTION_VIEW"));
 			action.click();
+
+			action = driver.findElement(By.id("site-member_ACTION_VIEW"));
+			action.click();
 			
 			WebElement submit = driver.findElement(By.className("aui-button-input-submit"));
 			submit.click();
+ 
+			GetPage.getPage(driver, url, "/reto");
 			
 			CheckPage.check(driver);
 			return true;
