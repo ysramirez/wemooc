@@ -61,8 +61,6 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						assertNotNull("formSearch not Find", butForm1);
 						butForm1.click();
 						
-						WebElement form = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_fm"));
-						
 						WebElement freetext = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_freetext"));
 						assertNotNull("Freetext not Find", freetext);
 						freetext.sendKeys(String.valueOf(date.getTime()));

@@ -27,7 +27,9 @@ public class CheckCourse {
 				WebElement menuEdit = driver.findElement(By.id("_145_toggleControls"));
 				WebElement a = menuEdit.findElement(By.tagName("a"));
 				a.click();
-				a.click();
+				if(!configMenu.isDisplayed()){
+					a.click();
+				}
 				configMenu.click();
 				try{
 					configMenu.click();

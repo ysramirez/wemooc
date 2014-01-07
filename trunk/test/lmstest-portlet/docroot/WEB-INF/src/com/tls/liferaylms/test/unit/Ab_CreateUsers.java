@@ -26,7 +26,10 @@ public class Ab_CreateUsers extends SeleniumTestCase {
 			boolean loged = login.isLogin();
 			assertTrue("Error not logued",loged);
 			if (loged) {
-				GetPage.getPage(driver, Context.getBaseUrl(), "/group/control_panel");
+				validateUser(Context.getStudentUser(), Context.getStudentName(), Context.getStudentPass());
+				validateUser(Context.getStudentUser2(), Context.getStudentName2(), Context.getStudentPass2());
+				validateUser(Context.getTeacherUser(), Context.getTeacherName(), Context.getTeacherPass());
+				/*GetPage.getPage(driver, Context.getBaseUrl(), "/group/control_panel");
 				
 				WebElement users = getElement(By.id("_160_portlet_125"));
 				assertNotNull("Not Menu users", users);
@@ -80,11 +83,43 @@ public class Ab_CreateUsers extends SeleniumTestCase {
 				if(info!=null){
 					if(getLog().isInfoEnabled())getLog().info("Creating user...");
 					createUser(Context.getTeacherUser(), Context.getTeacherName(), Context.getTeacherPass());
-				}
+				}*/
 				
 			}
 		}catch(Exception e){
 			e.printStackTrace();
+		}
+	}
+	
+	private void validateUser(String email,String name,String pass){
+		GetPage.getPage(driver, Context.getBaseUrl(), "/group/control_panel");
+		
+		WebElement users = getElement(By.id("_160_portlet_125"));
+		assertNotNull("Not Menu users", users);
+		users.click();
+
+		Sleep.sleep(2000);
+		WebElement usersText = getElement(By.id("_125_keywords"));
+		assertNotNull("Not usersText", usersText);
+		
+		usersText.sendKeys(email);
+		usersText.sendKeys(Keys.RETURN);
+		
+		Sleep.sleep(2000);
+
+		if(getLog().isInfoEnabled())getLog().info("Check users...");
+		WebElement search = getElement(By.id("usersAdminUsersPanel"));
+		assertNotNull("Not search results", search);
+		
+		List<WebElement> tres = getElements(search, By.tagName("tr"));
+		
+		if(getLog().isInfoEnabled())getLog().info("Size:"+tres.size());
+		if(tres.size()<=3){
+			WebElement msgInfo = getElement(search,By.className("portlet-msg-info"));
+			if(msgInfo!=null){
+				if(getLog().isInfoEnabled())getLog().info("Creating user...");
+				createUser(email, name, pass);
+			}
 		}
 	}
 	
