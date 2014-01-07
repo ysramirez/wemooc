@@ -44,10 +44,11 @@ public class Login {
 			if(login==null){
 				return false;
 			}else{
-				login.sendKeys(Keys.END);
+				/*login.sendKeys(Keys.END);
 				for(int i=0;i<40;i++){
 					login.sendKeys(Keys.BACK_SPACE);
-				}
+				}*/
+				login.clear();
 				login.sendKeys(user);
 				driver.findElement(By.id("_58_password")).sendKeys(pass);
 				driver.findElement(By.id("_58_fm")).submit();

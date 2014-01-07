@@ -124,7 +124,7 @@ public class Bb_CheckUsers extends SeleniumTestCase {
 
 					Sleep.sleep(2000);
 
-					//Add Student in course
+					//Add Students in course
 					tab = getElement(By.className("aui-tabview-list"));
 					assertNotNull("Course Users tab not found", tab);
 					lis = getElements(tab,By.tagName("li")); 
@@ -138,7 +138,10 @@ public class Bb_CheckUsers extends SeleniumTestCase {
 
 						Sleep.sleep(1000);
 						
-						WebElement btNewUser = getElement(By.className("bt_newuser"));
+						addUser(Context.getStudentUser());
+						addUser(Context.getStudentUser2());
+						
+						/*WebElement btNewUser = getElement(By.className("bt_newuser"));
 						assertNotNull("User Course Button menu not find", btNewUser);
 						WebElement aAddUser = getElement(btNewUser,By.tagName("a")); 
 						assertNotNull("User Course Button not find", aAddUser);
@@ -163,7 +166,7 @@ public class Bb_CheckUsers extends SeleniumTestCase {
 						assertNotNull("No users in te result",las);
 						assertEquals("Many users in te result",1, las.size());
 
-						las.get(0).click();
+						las.get(0).click();*/
 						
 					}
 
@@ -221,5 +224,37 @@ public class Bb_CheckUsers extends SeleniumTestCase {
 				
 			}
 			if(getLog().isInfoEnabled())getLog().info("End");
+	  }
+	  
+	  private void addUser(String email){
+			WebElement btNewUser = getElement(By.className("bt_newuser"));
+			assertNotNull("User Course Button menu not find", btNewUser);
+			WebElement aAddUser = getElement(btNewUser,By.tagName("a")); 
+			assertNotNull("User Course Button not find", aAddUser);
+			aAddUser.click();
+
+			Sleep.sleep(2000);
+			
+			WebElement emailAddress = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_emailAddress"));
+			assertNotNull("User Course emailAddress not find", emailAddress);
+			emailAddress.clear();
+			emailAddress.sendKeys(email);
+			
+			WebElement button = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_searchUsers"));
+			assertNotNull("User search course button not find", button);
+			button.click();
+			
+			Sleep.sleep(1000);
+
+			WebElement container = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_usersSearchContainerSearchContainer"));
+			assertNotNull("User Course search container not find", container);
+
+			List<WebElement> las = getElements(container,By.className("newitem2"));
+			assertNotNull("No users in te result",las);
+			assertEquals("Many users in te result",1, las.size());
+
+			las.get(0).click();
+
+			Sleep.sleep(2000);
 	  }
 }

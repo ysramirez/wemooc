@@ -54,13 +54,18 @@ public class InstancePortlet {
 				return false;
 			
 			for(WebElement ele : elements){
-				if(ele.getAttribute("title").toLowerCase().equals(text)){
+				if(ele.getAttribute("title").toLowerCase().equals(text.toLowerCase())){
 					WebElement a = getElement(ele,By.tagName("a"));
 					if(log.isInfoEnabled())log.info("a::"+a);
 					if(a==null)
 						return false;
 					
 					a.click();
+					try{
+						a.click();
+					}catch(Exception e){
+						
+					}
 				}
 			}
 			

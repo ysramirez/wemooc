@@ -25,6 +25,9 @@ public class Main {
 		Context.setStudentName(TestProperties.get("student-name")); //student
 		Context.setStudentPass(TestProperties.get("student-pass")); //student
 		Context.setStudentUser(TestProperties.get("student-email")); //student@liferay.com
+		Context.setStudentName2(TestProperties.get("student2-name")); //student2
+		Context.setStudentPass2(TestProperties.get("student2-pass")); //student2
+		Context.setStudentUser2(TestProperties.get("student2-email")); //student2@liferay.com
 		Context.setTeacherName(TestProperties.get("teacher-name")); //teacher
 		Context.setTeacherPass(TestProperties.get("teacher-pass")); //teacher
 		Context.setTeacherUser(TestProperties.get("teacher-email")); //teacher@liferay.com

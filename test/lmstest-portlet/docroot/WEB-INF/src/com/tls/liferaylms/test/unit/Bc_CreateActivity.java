@@ -167,6 +167,12 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					
 					if(i==8){
 						assertTrue("Error creating SCORM to SCORM activity",createScorm());
+					}else if(i==2){
+						WebElement numVal = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_numValidaciones"));
+						numVal.clear();
+						numVal.sendKeys("1");
+						
+						Sleep.sleep(200000000);
 					}
 					
 					form = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_fm"));
@@ -239,25 +245,6 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		assertEquals("Not Edit portlet found", 1,inputs.size());
 		inputs.get(0).click();
 	}
-	
-	/*private WebElement findElementActivityMenu(String param){
-		WebElement desplegable = getElement(By.className("lms-desplegable"));
-		assertNotNull("Not found lms-desplegable", desplegable);
-		
-		List<WebElement> lisc = getElements(desplegable,By.tagName("li"));
-		assertNotNull("Not found li on lms-desplegable", lisc);
-		
-		WebElement liActive = null;
-		for(WebElement li :lisc){
-			String msg = li.getText();
-			if(param.length()<msg.length()&&param.equals(msg.substring(0, param.length()))){
-				liActive = li;
-				break;
-			}
-		}
-		
-		return liActive;
-	}*/
 	
 	private void sendCkEditorJS(WebDriver driver,String prop){
 		if (driver instanceof JavascriptExecutor) {
