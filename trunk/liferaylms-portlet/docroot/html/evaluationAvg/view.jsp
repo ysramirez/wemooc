@@ -102,15 +102,25 @@
 						\"			id:'\"+renderResponse.getNamespace()+\"showPopupEvaluations', \"+
 						\"          title: ' \"+LanguageUtil.get(pageContext,(courseEvalModel.has(\"evaluations\"))?\"evaluationAvg.evaluations\":\"evaluationAvg.evaluations.define\") +\"', \"+
 						\"          modal: true, \"+
-						\"          xy:A.one('#p_p_id\"+renderResponse.getNamespace()+\"').getXY (), \"+
-						\"    		height: 550, \"+
 						\"    		width: 900, \"+
-						\"            resizable: true, \"+
-						\"            after: {    \"+
-						\"	          	close: function(event){  \"+
+						\"          destroyOnClose: true, \"+
+						\"          after: {    \"+
+						\"		        render: function(event){  \"+
+						\"			        var instance = this; \"+	
+						\"			        instance.getStdModNode(A.WidgetStdMod.BODY).addClass('\"+
+					   							((Portlet)request.getAttribute(WebKeys.RENDER_PORTLET)).getCssClassWrapper()+\"'); \"+
+						\"		        }, \"+
+						\"				contentUpdate: function(event){ \"+
+						\"					var instance = this; \"+	
+						\"					instance.centered(); \"+
+						\"					if(instance.get('y')<0){ \"+
+						\"						instance.set('y',0); \"+
+						\"					} \"+			
+						\"				}, \"+	
+						\"	          	destroy: function(event){  \"+
 						\"	          		Liferay.Portlet.refresh(A.one('#p_p_id\"+renderResponse.getNamespace()+\"'),{'p_t_lifecycle':0,'\"+renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY +\"':'\"+StringPool.TRUE +\"'}); \"+	
 						\"            	} \"+
-						\"            } \"+
+						\"          } \"+
 						\"        }).plug(A.Plugin.IO, { \"+
 						\"            uri: '\"+viewEvaluationsURL +\"', \"+
 						\"            parseContent: true \"+
