@@ -239,7 +239,7 @@ if(resultString.equals("true")){
 	        '<portlet:namespace />closeFormP2pSaved',
 	        function() {
 				var A = AUI();
-				A.DialogManager.closeByChild('#<portlet:namespace />showp2psaved');
+				A.DialogManager.closeByChild('#<portlet:namespace />showp2pSaved');
 	        },
 	        ['aui-dialog']
 	    );
@@ -300,7 +300,7 @@ if(resultString.equals("true")){
 	</div>
 	<div class="buttons">
 	<%if(correctionsCompleted.equals("true")){ %>
-		<input type="button" class="button " id="<portlet:namespace />completed" value="<liferay-ui:message key="close" />" onclick="<portlet:namespace />closeModal();" />
+		<input type="button" class="button " id="<portlet:namespace />completed" value="<liferay-ui:message key="close" />" onclick=" <portlet:namespace />closeModal();" />
 	<%}else{ %>
 		<input type="button" class="button simplemodal-close" id="buttonClose" value="<liferay-ui:message key="close" />" onclick="<portlet:namespace />closeFormP2pSaved()" />
 	<%} %>
@@ -559,7 +559,7 @@ if(p2pActList.isEmpty()){
 <%
 if(correctionsSaved.equals("true")){
 	correctionsSaved="false";
-	request.setAttribute("correctionsSaved", correctionsSaved);
+	request.setAttribute("correctionSaved", correctionsSaved);
 	%><script><portlet:namespace />openSaved();</script><%
 }
 
