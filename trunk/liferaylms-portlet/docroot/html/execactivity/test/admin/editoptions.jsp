@@ -23,7 +23,9 @@
 	boolean improve=false;
 	boolean newOrCourseEditor=true;
 	boolean disabled = false;
-	boolean isOmniadmin = false;
+	
+	//Permiso de editar los campos del extra content.
+	boolean edit = false;
 	
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
@@ -42,27 +44,28 @@
 		showCorrectAnswer = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"showCorrectAnswer"));
 		improve = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"));	
 		
-		//disabled=LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 		
+		//NUEVOS PERMISOS
+		//Permisos por el rol del usuario
+		boolean isUserAdmin = themeDisplay.getPermissionChecker().isOmniadmin();
+		boolean canUpdate = permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
 		
-		isOmniadmin = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-		disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
+		boolean userPermission = isUserAdmin || canUpdate;
 		
-		//Si es omniadmin, NO bloqueamos por que se entregasen tareas.
-		if(isOmniadmin ){
-			disabled = false;
+		//Permisos por el estado de la actividad
+		boolean courseStarted = ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date());
+		boolean activityDone = false;
+		if(learningActivity != null){
+			activityDone = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
 		}
 		
-	}
-	
-	boolean notModuleEditable = false;
-	try{
-		notModuleEditable = (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
-	}catch(Exception e){
+		boolean actStarted = courseStarted || activityDone;
 		
+		//Permiso para editar los campos de la actividad
+		edit = userPermission || !actStarted;
 	}
 
 %>
@@ -177,28 +180,29 @@ window.<portlet:namespace />validate_execactivity={
 </script>
 
 
-	<aui:input type="text" size="3" name="random" label="execActivity.options.random" value="<%=(random>0)?Long.toString(random):StringPool.BLANK %>" disabled="<%=disabled || (notModuleEditable&&(!newOrCourseEditor))%>" 
+	<aui:input type="text" size="3" name="random" label="execActivity.options.random" value="<%=(random>0)?Long.toString(random):StringPool.BLANK %>" disabled="<%=!edit %>" 
 		ignoreRequestValue="true" helpMessage="execActivity.options.random.helpMessage"></aui:input>
 	<div id="<portlet:namespace />randomError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.random"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=disabled || (notModuleEditable&&(!newOrCourseEditor))%>" ignoreRequestValue="true"
+	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=!edit %>" ignoreRequestValue="true"
 	helpMessage="execActivity.options.questionsPerPage.helpMessage"></aui:input>
 	<div id="<portlet:namespace />questionsPerPageError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.questionsPerPage"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"execActivity.options.password.help\")%>" disabled="<%=disabled %>"></aui:input>
+	<aui:input type="text" name="password" label="execActivity.options.password" value='<%=password %>' ignoreRequestValue="true" 
+	helpMessage="<%=LanguageUtil.get(pageContext,\"execActivity.options.password.help\")%>" disabled="<%=!edit %>"></aui:input>
  
  	<aui:field-wrapper label="execActivity.options.timestamp" helpMessage="execActivity.options.timestamp.helpMessage">
 	<%
 	NumberFormat timeNumberFormat = NumberFormat.getInstance(locale);
 	timeNumberFormat.setMinimumIntegerDigits(2);
 	%>
-		<select name="<portlet:namespace />hourDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> >
+		<select name="<portlet:namespace />hourDuration" <% if(!edit){ %> disabled="disabled" <% } %> >
 			<%
 			for (int i = 0; i < 24; i++) {
 			%>
@@ -207,7 +211,7 @@ window.<portlet:namespace />validate_execactivity={
 			}
 			%>
 		</select>
-		<select name="<portlet:namespace />minuteDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> >
+		<select name="<portlet:namespace />minuteDuration" <% if(!edit){ %> disabled="disabled" <% } %> >
 			<%
 			for (int i = 0; i < 60; i++) {
 			%>
@@ -216,7 +220,7 @@ window.<portlet:namespace />validate_execactivity={
 			}
 			%>
 		</select>	
-		<select name="<portlet:namespace />secondDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> > 
+		<select name="<portlet:namespace />secondDuration" <% if(!edit){ %> disabled="disabled" <% } %> > 
 			<%
 			for (int i = 0; i < 60; i++) {
 			%>
@@ -227,10 +231,10 @@ window.<portlet:namespace />validate_execactivity={
 		</select>			
 	</aui:field-wrapper>
 	
-	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" disabled="<%=!edit %>" 
 		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrect.helpMessage"></aui:input>
 		
-	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
 		ignoreRequestValue="true" helpMessage="exectactivity.edit.improve.helpMessage"></aui:input>
 
 
