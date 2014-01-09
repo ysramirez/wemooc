@@ -131,7 +131,8 @@ public class TestLearningActivityType extends BaseLearningActivityType
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		Module module = ModuleLocalServiceUtil.getModule(learningActivity.getModuleId());
 				
-	    if((!module.getStartDate().before(new Date()))||(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR")))
+	    if((!module.getStartDate().before(new Date()))||(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR"))
+	    		|| themeDisplay.getPermissionChecker().hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE"))
 	    {
 			Document document = null;
 			Element rootElement = null;
