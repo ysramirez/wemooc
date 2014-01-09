@@ -137,14 +137,14 @@ public class LearningActivityResultLocalServiceImpl
 		return update(learningActivityTry);
 	}
 	public LearningActivityResult update(long latId, String tryResultData, long userId) throws SystemException, PortalException {
-		LearningActivityTry learningActivityTry = LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
+		LearningActivityTry learningActivityTry = learningActivityTryLocalService.getLearningActivityTry(latId);
 		if (userId != learningActivityTry.getUserId()) {
 			throw new PortalException();
 		}
 		
-		LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(learningActivityTry.getActId());
-		String assetEntryId = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivityTry.getActId(), "assetEntry");
-		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getAssetEntry(Long.valueOf(assetEntryId));		
+		LearningActivity learningActivity = learningActivityLocalService.getLearningActivity(learningActivityTry.getActId());
+		String assetEntryId = learningActivityLocalService.getExtraContentValue(learningActivityTry.getActId(), "assetEntry");
+		AssetEntry assetEntry = AssetEntryLocalServiceUtil.getAssetEntry(Long.valueOf(assetEntryId));
 		
 		List<String> manifestItems = new ArrayList<String>();
 		Map<String, String> recursos = new HashMap<String, String>();
@@ -183,10 +183,7 @@ public class LearningActivityResultLocalServiceImpl
 				}
 			}
 		} catch (DocumentException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
@@ -203,9 +200,11 @@ public class LearningActivityResultLocalServiceImpl
 		JSONArray cmiNames = cmis.names();
 		
 		List<String> completion_statuses = new ArrayList<String>();
+		List<String> success_statuses = new ArrayList<String>();
 		List<Long> scores = new ArrayList<Long>();
 		
 		String total_completion_status = "not attempted";
+		String total_lesson_status = "unknown";
 		Double total_score = 0.0;
 		
 		for (int i = 0; i < cmiNames.length(); i++) {
@@ -214,10 +213,12 @@ public class LearningActivityResultLocalServiceImpl
 			
 			String completion_status = null;
 			String success_status = null;
-			Long max_score = null;
-			Long min_score = null;
-			Long raw_score = null;
-			Long scaled_score = null;
+			Double max_score = null;
+			Double min_score = null;
+			Double raw_score = null;
+			Double scaled_score = null;
+			Long scaled_score_long = null;
+			String suspend_data = cmi.getJSONObject("cmi.suspend_data").getString("value");
 			
 			if (cmi.getJSONObject("cmi.core.lesson_status") != null) { // 1.2
 				String lesson_status = cmi.getJSONObject("cmi.core.lesson_status").getString("value");
@@ -240,30 +241,72 @@ public class LearningActivityResultLocalServiceImpl
 				} else if ("not attempted".equals(lesson_status)) {
 					success_status = "unknown";
 					completion_status = "not attempted";
+					if (suspend_data.contains("1")) {
+						completion_status = "completed";
+						if (suspend_data.contains("0")) {
+							completion_status = "incomplete";
+						}
+						tryResultData.replaceAll("\"not attempted\"", "\""+completion_status+"\"");
+					}
 				}
-				max_score = cmi.getJSONObject("cmi.core.score.max").getLong("value", 100L);
-				min_score = cmi.getJSONObject("cmi.core.score.min").getLong("value", 0L);
-				raw_score = cmi.getJSONObject("cmi.core.score.raw").getLong("value", "completed".equals(completion_status) || "asset".equals(typeCmi) ? 100L : 0L);
-				scaled_score = new Long(Math.round((raw_score * 100L) / (max_score - min_score)));
+				max_score = cmi.getJSONObject("cmi.core.score.max").getDouble("value", 100);
+				min_score = cmi.getJSONObject("cmi.core.score.min").getDouble("value", 0);
+				raw_score = cmi.getJSONObject("cmi.core.score.raw").getDouble("value", "asset".equals(typeCmi) ? 100 : 0);
+				scaled_score = new Double(Math.round((raw_score * 100) / (max_score - min_score)));
+				scaled_score_long = Math.round(scaled_score);
 			} else { // 1.3
 				//"completed", "incomplete", "not attempted", "unknown"
 				completion_status = cmi.getJSONObject("cmi.completion_status").getString("value");
 				//"passed", "failed", "unknown"
 				success_status = cmi.getJSONObject("cmi.success_status").getString("value");
-				max_score = cmi.getJSONObject("cmi.score.max").getLong("value", 100L);
-				min_score = cmi.getJSONObject("cmi.score.min").getLong("value", 0L);
-				raw_score = cmi.getJSONObject("cmi.score.raw").getLong("value", "completed".equals(completion_status) || "asset".equals(typeCmi) ? 100L : 0L);
-				scaled_score = cmi.getJSONObject("cmi.score.scaled").getLong("value", Math.round((raw_score * 100L) / (max_score - min_score)));
+				max_score = cmi.getJSONObject("cmi.score.max").getDouble("value", 100);
+				min_score = cmi.getJSONObject("cmi.score.min").getDouble("value", 0);
+				raw_score = cmi.getJSONObject("cmi.score.raw").getDouble("value", "asset".equals(typeCmi) ? 100 : 0);
+				scaled_score = new Double(Math.round((raw_score * 100) / (max_score - min_score)));
+				scaled_score = cmi.getJSONObject("cmi.score.scaled").getDouble("value", -1) != -1 ? (cmi.getJSONObject("cmi.score.scaled").getDouble("value") * (max_score - min_score) + min_score) : scaled_score;
+				scaled_score_long = Math.round(scaled_score);
 			}
 			completion_statuses.add(completion_status);
-			scores.add(scaled_score);
+			success_statuses.add(success_status);
+			scores.add(scaled_score_long);
 		}
 		
 		if (manifestItems.size() <= 1) {
 			if (completion_statuses.size() == 1) {
 				total_completion_status = completion_statuses.get(0);
 			}
+			if (success_statuses.size() == 1) {
+				total_lesson_status = success_statuses.get(0);
+			}
 		} else {
+			if (success_statuses.size() < manifestItems.size()) {
+				total_lesson_status = "unknown";
+			} else if (success_statuses.size() == manifestItems.size()) {
+				for (int i = 0; i < success_statuses.size(); i++) {
+					if ("unknown".equals(success_statuses.get(i))) {
+						total_lesson_status = "unknown";
+						break;
+					}
+					if ("passed".equals(success_statuses.get(i))) {
+						if ("passed".equals(total_lesson_status)) {
+							total_lesson_status = "passed";
+						}
+						if ("failed".equals(total_lesson_status)) {
+							total_lesson_status = "unknown";
+							break;
+						}
+					}
+					if ("failed".equals(success_statuses.get(i))) {
+						if ("passed".equals(total_lesson_status)) {
+							total_lesson_status = "unknown";
+							break;
+						}
+						if ("failed".equals(total_lesson_status)) {
+							total_lesson_status = "failed";
+						}
+					}
+				}
+			}
 			if (completion_statuses.size() < manifestItems.size()) {
 				if (completion_statuses.size() <= 1) {
 					total_completion_status = completion_statuses.get(0).equals("completed") ? "incomplete" : completion_statuses.get(0);
@@ -317,12 +360,25 @@ public class LearningActivityResultLocalServiceImpl
 			learningActivityTry.setTryResultData(tryResultData);
 			learningActivityTry.setResult(Math.round(total_score));
 			
-			if (Math.round(total_score) >= master_score) {
+			if (Math.round(total_score) > master_score || "passed".equals(total_lesson_status)) {
 				Date endDate = new Date(System.currentTimeMillis());
 				learningActivityTry.setEndDate(endDate);
 			}
 			
-			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+			learningActivityTryLocalService.updateLearningActivityTry(learningActivityTry);
+			
+			// If SCO says that the activity has been passed, then the learning activity result has to be marked as passed
+			if ("passed".equals(total_lesson_status)) {
+				LearningActivityResult laresult = learningActivityResultLocalService.getByActIdAndUserId(learningActivityTry.getActId(), userId);
+				if (!laresult.getPassed()) {
+					laresult.setPassed(true);
+					learningActivityResultLocalService.updateLearningActivityResult(laresult);
+					if(laresult.getPassed())
+					{
+						moduleResultLocalService.update(laresult);
+					}
+				}
+			}
 			
 		}
 		
