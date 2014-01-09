@@ -26,6 +26,9 @@ import com.tls.liferaylms.test.util.Login;
 import com.tls.liferaylms.test.util.Sleep;
 import com.tls.liferaylms.test.util.TestProperties;
 
+/**
+ * @author Diego Renedo Delgado
+ */
 public class Bc_CreateActivity extends SeleniumTestCase {
 
 	@Test
@@ -171,8 +174,6 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 						WebElement numVal = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_numValidaciones"));
 						numVal.clear();
 						numVal.sendKeys("1");
-						
-						Sleep.sleep(200000000);
 					}
 					
 					form = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_fm"));
@@ -209,7 +210,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					assertNotNull("Not found activity created", liActive);
 
 					asActive = getElements(liActive, By.tagName("a"));
-					assertEquals("Not Edit portlet found", 5,asActive.size());
+					assertEquals("Not Edit portlet found", 6,asActive.size());
 					if(getLog().isInfoEnabled())getLog().info("Enlaces::"+asActive.size());
 
 					asActive.get(1).click();

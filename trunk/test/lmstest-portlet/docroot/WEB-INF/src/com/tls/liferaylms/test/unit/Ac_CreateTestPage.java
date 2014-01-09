@@ -19,6 +19,9 @@ import com.tls.liferaylms.test.util.GetPage;
 import com.tls.liferaylms.test.util.Login;
 import com.tls.liferaylms.test.util.Sleep;
 
+/**
+ * @author Diego Renedo Delgado
+ */
 public class Ac_CreateTestPage extends SeleniumTestCase {
 
 	@Test

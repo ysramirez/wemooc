@@ -15,9 +15,12 @@ import com.tls.liferaylms.test.util.TestProperties;
 /**
  * @author Diego Renedo Delgado
  */
-public class TestCourse {
+public class TestActivityResults {
 	private static Log log = LogFactory.getLog(TestCourse.class);
 
+	/**
+	 * @param args
+	 */
 	public static void main(String[] args) {
 		Context.setBaseUrl(TestProperties.get("server")); //"http://localhost:8080/"
 		Context.setUser(TestProperties.get("user")); //"test@liferay.com"
@@ -47,12 +50,11 @@ public class TestCourse {
 		activities.put("Eval 1389253374742","");
 		activities.put("SCORM 1389253374742","");
 		Context.setActivities(activities);
-		
-		
+
 		Class classInstance = null;
 		
 		try {
-			classInstance = Class.forName("com.tls.liferaylms.test.unit.Bd_CheckActivity");
+			classInstance = Class.forName("com.tls.liferaylms.test.unit.Be_CheckResults");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -69,4 +71,5 @@ public class TestCourse {
 			}
 		}
 	}
+
 }

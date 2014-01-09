@@ -24,9 +24,7 @@ public class SeleniumTestCase {
 	@Before
 	public void setUp() throws Exception {
 		driver = SeleniumDriverUtil.getDriver();
-		baseUrl = Context.getBaseUrl();
-		
-		
+		baseUrl = Context.getBaseUrl();	
 	}
 
 	@After
@@ -74,7 +72,7 @@ public class SeleniumTestCase {
 		}
 	}
 
-	private boolean isAlertPresent() {
+	public boolean isAlertPresent() {
 		try {
 			driver.switchTo().alert();
 			return true;
@@ -83,7 +81,7 @@ public class SeleniumTestCase {
 		}
 	}
 
-	private String closeAlertAndGetItsText() {
+	public String closeAlertAndGetItsText() {
 		try {
 			Alert alert = driver.switchTo().alert();
 			String alertText = alert.getText();

@@ -2,10 +2,13 @@ package com.tls.liferaylms.test.util;
 
 import java.util.List;
 
+import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.NoAlertPresentException;
 import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.internal.seleniumemulation.IsAlertPresent;
 
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -80,9 +83,43 @@ public class InstancePortlet {
 		}
 	}
 	
-	/*public static boolean destroyInstance(WebDriver driver, String text, String identifier){
+
+	
+	public static boolean destroyInstance(WebDriver driver, String id){
+		WebElement portlet = getElement(driver, By.id(id));
+		if(portlet!=null){
+			WebElement but = getElement(portlet,By.className("portlet-close"));
+			if(but!=null){
+				WebElement a = getElement(but,By.tagName("a"));
+				if(a!=null){
+					a.click();
+					Sleep.sleep(1000);
+					System.out.println("sdagsdgsag");
+					if(isAlertPresent(driver)){
+						try{
+							System.out.println("sdagsdgsag");
+							Alert confirm =driver.switchTo().alert();
+							confirm.accept();
+						}catch(Exception e){}
+					}
+					System.out.println("sdagsdgsag");
+					portlet = getElement(driver, By.id(id));
+					System.out.println(portlet);
+					if(portlet!=null){
+						a.click();
+					}
+					return true;
+				}else{
+					return false;
+				}
+			}else{
+				return false;
+			}
+		}else{
+			return false;
+		}
 		
-	}*/
+	}
 	
 	public static boolean isInstance(WebDriver driver, String text, String identifier){
 		WebElement portlet = null;
@@ -119,6 +156,15 @@ public class InstancePortlet {
 			return we.findElements(by);
 		} catch (NoSuchElementException e) {
 			return null;
+		}
+	}
+	
+	public static boolean isAlertPresent(WebDriver driver) {
+		try {
+			driver.switchTo().alert();
+			return true;
+		} catch (NoAlertPresentException e) {
+			return false;
 		}
 	}
 }
