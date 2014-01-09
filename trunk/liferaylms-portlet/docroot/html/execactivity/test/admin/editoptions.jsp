@@ -137,7 +137,7 @@ window.<portlet:namespace />validate_execactivity={
 
 <% if(!newOrCourseEditor){ %>
 	AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet-url', function(A) {
-		A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />hourDuration]').set('value',3);
+
 		A.one('#<portlet:namespace />resModuleId').on('change', function (e) {
 			var renderUrl = Liferay.PortletURL.createRenderURL();							
 				renderUrl.setWindowState('<%=LiferayWindowState.EXCLUSIVE.toString()%>');
