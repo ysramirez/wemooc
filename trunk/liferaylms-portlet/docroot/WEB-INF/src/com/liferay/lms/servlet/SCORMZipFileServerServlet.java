@@ -78,7 +78,9 @@ public class SCORMZipFileServerServlet extends HttpServlet {
 		String uri;
 		
 		
+		
 		try {
+			boolean ignoreCipheredFlag = GetterUtil.getBoolean(PropsUtil.get("lms.scorm.ignoreciphered"), false);
 			User user = PortalUtil.getUser(request);
 			
 			if (user == null) {
@@ -163,45 +165,45 @@ public class SCORMZipFileServerServlet extends HttpServlet {
 				
 			}
 			if (allowed) {
-
-				
 				File archivo = new File(patharchivo);
 
 				// Si el archivo existe y no es un directorio se sirve. Si no,
 				// no se hace nada.
-				if (archivo.exists() && archivo.isFile()) {
-
-					// El content type siempre antes del printwriter
-					mime_type = MimeTypesUtil.getContentType(archivo);
-
-					response.setContentType(mime_type);
-					response.addHeader("Content-Type", mime_type);
-					
+				if (archivo.exists() && archivo.isFile()) {					
 					java.io.OutputStream out = response.getOutputStream();
-
-					FileInputStream fis = new FileInputStream(patharchivo);
 					
-					if (scormContent.isCiphered()) {
-						BufferedInputStream is = new BufferedInputStream(fis);
-						BufferedOutputStream os = new BufferedOutputStream(out);
-						AESUtil.encrypt(is, os, getPassword(user));
+					BufferedInputStream is = new BufferedInputStream(new FileInputStream(patharchivo));
+					BufferedOutputStream os = new BufferedOutputStream(out);
+					
+					if (!ignoreCipheredFlag && scormContent.isCiphered()) {
+						mime_type = "application/octet-stream";
+						String keyToUse = getPassword(user);
+						int keyLength = keyToUse.length();
+						long cipherLen = (archivo.length()/keyLength + 1) * keyLength;
+						response.setContentType(mime_type);
+						response.addHeader("Content-Type", mime_type);
+						response.addHeader("Content-Length", String.valueOf(cipherLen));
+						AESUtil.encrypt(is, os, keyToUse);
 					} else {
+						mime_type = "application/zip";
+						response.addHeader("Content-Type", mime_type);
+						response.setContentType(mime_type);
+						response.addHeader("Content-Length", String.valueOf(archivo.length()));
 						byte[] buffer = new byte[512];
 						int i = 0;
 	
-						while (fis.available() > 0) {
-							i = fis.read(buffer);
+						while ((i = is.read(buffer)) > 0) {
 							if (i == 512) {
-								out.write(buffer);
+								os.write(buffer);
 							} else {
-								out.write(buffer, 0, i);
+								os.write(buffer, 0, i);
 							}
 						}
 	
-						out.flush();
-						out.close();
+						os.flush();
+						os.close();
 					}
-					fis.close();
+					is.close();
 				} else {
 					response.sendError(HttpServletResponse.SC_NOT_FOUND);
 				}
