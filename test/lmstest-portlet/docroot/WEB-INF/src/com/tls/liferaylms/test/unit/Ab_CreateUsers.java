@@ -16,6 +16,9 @@ import com.tls.liferaylms.test.util.GetPage;
 import com.tls.liferaylms.test.util.Login;
 import com.tls.liferaylms.test.util.Sleep;
 
+/**
+ * @author Diego Renedo Delgado
+ */
 public class Ab_CreateUsers extends SeleniumTestCase {
 	
 	@Test
@@ -29,61 +32,6 @@ public class Ab_CreateUsers extends SeleniumTestCase {
 				validateUser(Context.getStudentUser(), Context.getStudentName(), Context.getStudentPass());
 				validateUser(Context.getStudentUser2(), Context.getStudentName2(), Context.getStudentPass2());
 				validateUser(Context.getTeacherUser(), Context.getTeacherName(), Context.getTeacherPass());
-				/*GetPage.getPage(driver, Context.getBaseUrl(), "/group/control_panel");
-				
-				WebElement users = getElement(By.id("_160_portlet_125"));
-				assertNotNull("Not Menu users", users);
-				users.click();
-
-				Sleep.sleep(2000);
-				WebElement usersText = getElement(By.id("_125_keywords"));
-				assertNotNull("Not usersText", usersText);
-				
-				usersText.sendKeys(Context.getStudentUser());
-				usersText.sendKeys(Keys.RETURN);
-				
-				Sleep.sleep(2000);
-
-				if(getLog().isInfoEnabled())getLog().info("Check users...");
-				WebElement search = getElement(By.id("usersAdminUsersPanel"));
-				assertNotNull("Not search results", search);
-				
-				List<WebElement> tres = getElements(search, By.tagName("tr"));
-				
-				if(tres.size()<3){
-					if(getLog().isInfoEnabled())getLog().info("Creating user...");
-					createUser(Context.getStudentUser(), Context.getStudentName(), Context.getStudentPass());
-				}
-				
-				GetPage.getPage(driver, Context.getBaseUrl(), "/group/control_panel");
-				
-				users = getElement(By.id("_160_portlet_125"));
-				assertNotNull("Not Menu users", users);
-				users.click();
-
-				Sleep.sleep(2000);
-				usersText = getElement(By.id("_125_keywords"));
-				assertNotNull("Not usersText", usersText);
-				
-				usersText.sendKeys(Context.getTeacherUser());
-				usersText.sendKeys(Keys.RETURN);
-				
-				Sleep.sleep(2000);
-
-				if(getLog().isInfoEnabled())getLog().info("Check users...");
-				search = getElement(By.id("usersAdminUsersPanel"));
-				assertNotNull("Not search results", search);
-				
-				
-				WebElement info = getElement(search, By.className("portlet-msg-info"));
-				
-				//tres = getElements(search, By.tagName("tr"));
-				//if(getLog().isInfoEnabled())getLog().info("tres::"+tres.size());
-				
-				if(info!=null){
-					if(getLog().isInfoEnabled())getLog().info("Creating user...");
-					createUser(Context.getTeacherUser(), Context.getTeacherName(), Context.getTeacherPass());
-				}*/
 				
 			}
 		}catch(Exception e){

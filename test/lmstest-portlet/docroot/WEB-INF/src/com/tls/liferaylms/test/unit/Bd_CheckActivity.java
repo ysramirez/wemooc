@@ -29,7 +29,9 @@ import com.tls.liferaylms.test.util.Login;
 import com.tls.liferaylms.test.util.Sleep;
 import com.tls.liferaylms.test.util.TestProperties;
 
-
+/**
+ * @author Diego Renedo Delgado
+ */
 public class Bd_CheckActivity extends SeleniumTestCase {
 	  String test = TestProperties.get("act.test");
 	  String ext = TestProperties.get("act.ext");
@@ -43,8 +45,21 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 	  public void checkActivities() throws Exception {
 		  if(getLog().isInfoEnabled())getLog().info("init");
 		  GetPage.getPage(driver, "", Context.getTestPage());
+		  
+		  Login login = new Login(driver, Context.getUser(), Context.getPass(), Context.getBaseUrl());
 
-		  Login login = new Login(driver, Context.getStudentUser2(), Context.getStudentPass2(), Context.getBaseUrl());
+		  if(login.isLogin())
+			  login.logout();
+
+		  boolean testLogin = login.login();
+		  assertTrue("Error not logued test",testLogin);
+
+		  if(testLogin){
+			  configureP2P();
+		  }
+		  
+
+		  login = new Login(driver, Context.getStudentUser2(), Context.getStudentPass2(), Context.getBaseUrl());
 
 		  if(login.isLogin())
 			  login.logout();
@@ -85,12 +100,13 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 		  if(login.isLogin())
 			  login.logout();
 
-		  boolean testLogin = login.login();
+		  testLogin = login.login();
 
 		  if(testLogin){
 			  testActivities();
 		  }
 
+		  //Login login = new Login(driver, Context.getStudentUser(), Context.getStudentPass(), Context.getBaseUrl());
 		  login = new Login(driver, Context.getStudentUser(), Context.getStudentPass(), Context.getBaseUrl());
 
 		  if(login.isLogin())
@@ -99,10 +115,23 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 		  //boolean studentLogin = login.login();
 		  studentLogin = login.login();
 
-		  if(testLogin){
+		  if(studentLogin){
 			  fillP2PActivity();
 		  }
 
+		  //Login login = new Login(driver, Context.getStudentUser2(), Context.getStudentPass2(), Context.getBaseUrl());
+		  login = new Login(driver, Context.getStudentUser2(), Context.getStudentPass2(), Context.getBaseUrl());
+
+		  if(login.isLogin())
+			  login.logout();
+		  
+		  //boolean studentLogin = login.login();
+		  studentLogin = login.login();
+
+		  if(studentLogin){
+			  fillP2PActivity();
+		  }
+		  
 		  if(getLog().isInfoEnabled())getLog().info("end!");
 	  }
 
@@ -113,23 +142,134 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 			  for(String id : Context.getActivities().keySet()){
 				  if(getLog().isInfoEnabled())getLog().info("Check activity::"+id);
 				  
-				  WebElement a = CourseActivityMenu.findElementActivityMenuTotal(driver,id);
-				  assertNotNull("Not activity found:"+id, a);
-
-				  if(getLog().isInfoEnabled())getLog().info("Click!");
-				  //double click
-				  a.click();
-				  try{
-					  a.click();
-				  }catch(Exception e){}
+				  
 
 				  assertEquals("Errors in activity "+id, 0, CheckPage.check(driver));
 
 				  if(id.length()>p2p.length()&&id.substring(0, p2p.length()).equals(p2p)){
-					  Sleep.sleep(2000000);
+					  WebElement a = CourseActivityMenu.findElementActivityMenuTotal(driver,id);
+					  assertNotNull("Not activity found:"+id, a);
+
+					  if(getLog().isInfoEnabled())getLog().info("Click!");
+					  //double click
+					  a.click();
+					  try{
+						  a.click();
+					  }catch(Exception e){}
+
+					  WebElement portlet = getElement(By.id("p_p_id_p2ptaskactivity_WAR_liferaylmsportlet_"));
+					  assertNotNull("Not P2P portlet found", portlet);
+					  					  
+					  WebElement optionless = getElement(portlet, By.className("option-more"));
+					  
+					  if(getLog().isInfoEnabled())getLog().info("HTML::"+portlet.getAttribute("innerHTML"));
+					  
+					  
+					  assertNotNull("Not P2P activity found", optionless);
+					  WebElement labelcol = getElement(portlet, By.className("label-col"));
+					  assertNotNull("Not P2P activity span for click found", labelcol);
+					  
+					  optionless.click();
+					  labelcol.click();
+					  
+					  Sleep.sleep(4000);
+					  
+					  WebElement textarea = getElement(optionless,By.tagName("textarea"));
+					  assertNotNull("No textarea activity found", textarea);
+					  textarea.clear();
+					  textarea.sendKeys(TestProperties.get("act.test.3.answer"));
+
+					  WebElement fileName = getElement(optionless,By.id("_p2ptaskactivity_WAR_liferaylmsportlet_fileName"));
+					  assertNotNull("No file activity found", fileName);
+					  File f = new File("docroot"+File.separator+"WEB-INF"+File.separator+"classes"+File.separator+"resources"+File.separator+"encuesta.csv");
+					  fileName.sendKeys(f.getAbsolutePath());
+
+					  WebElement resultuser = getElement(optionless,By.id("_p2ptaskactivity_WAR_liferaylmsportlet_resultuser"));
+					  assertNotNull("No result activity found", resultuser);
+					  resultuser.sendKeys("70");
+					  
+
+					  WebElement button = getElement(optionless,By.className("button"));
+					  assertNotNull("No button activity found", button);
+					  button.click();
+					  
+					  WebElement correc = getElement(By.id("_p2ptaskactivity_WAR_liferaylmsportlet_showp2pconfrmCorrec"));
+					  assertNotNull("No window activity found", button);
+					  
+					  WebElement submitCorrec = getElement(correc,By.id("submitCorrec"));
+					  assertNotNull("No submit in window activity found", submitCorrec);
+					  submitCorrec.click();
+					  
+					  WebElement completed = getElement(By.id("_p2ptaskactivity_WAR_liferaylmsportlet_completed"));
+					  assertNotNull("Response in P2P not correct", completed);
+					  completed.click();
+					  
+					  Sleep.sleep(1000);
+					  
+					  WebElement buttonClose = getElement(By.id("buttonClose"));
+					  assertNotNull("Response in P2P not correct", buttonClose);
+					  buttonClose.click();
+					  
+					  WebElement result =getElement(By.className("color_tercero"));
+					  assertNotNull("Not result for P2P found", result);
+					  String text = result.getText();
+					  assertEquals("Result not expected", "85", text.substring(text.length()-2, text.length()));
 				  }
 			  }
 			  
+		  }catch(Exception e){
+			  e.printStackTrace();
+		  }
+	  }
+	  
+	  private void configureP2P(){
+
+		  try{
+			  GetPage.getPage(driver, Context.getCoursePage(),"/reto");
+			  changeEditMode();
+			  
+			  Sleep.sleep(2000);
+			  for(String id : Context.getActivities().keySet()){
+				  if(id.length()>p2p.length()&&id.substring(0, p2p.length()).equals(p2p)){
+					  WebElement a = CourseActivityMenu.findElementActivityMenuEdit(driver,id);
+					  assertNotNull("Edit link for P2P not found", a);
+					  
+					  a.click();
+					  Sleep.sleep(2000);
+						
+					  driver.switchTo().frame(0);
+					  
+					  openColapsables();
+					  
+					  WebElement numVal = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_numValidaciones"));
+					  assertNotNull("Not value found for P2P Activity", a);
+					  numVal.clear();
+					  numVal.sendKeys("1");
+
+					  WebElement checkbox = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_resultCheckbox"));
+					  assertNotNull("Not result input found for P2P Activity", checkbox);
+					  checkbox.click();
+
+					  WebElement anon = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_anonimousCheckbox"));
+					  assertNotNull("Not anon input found for P2P Activity", anon);
+					  anon.click();
+					  
+					  WebElement submit = getElement(By.className("aui-button-input-submit"));
+					  assertNotNull("Not submit found", submit);
+					  //Doubleclick
+					  try{
+						  submit.click();
+						  submit.click();
+					  }catch(Exception e){}
+	
+					  Sleep.sleep(2000);
+	
+					  numVal = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_numValidaciones"));
+					  assertEquals("Not valid P2P Num Validation","1", numVal.getAttribute("value"));
+					  
+					  GetPage.getPage(driver, Context.getCoursePage(),"/reto");
+				  }
+			  }
 		  }catch(Exception e){
 			  e.printStackTrace();
 		  }
@@ -142,13 +282,18 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 			  InstancePortlet.createInstance(driver, "Administraci\u00f3n de portal", "portlet_portaladmin_WAR_liferaylmsportlet");
 			  
 			  WebElement portaladmin = getElement(By.id("portlet_portaladmin_WAR_liferaylmsportlet"));
-			  assertNotNull("Not portaladmin portlet found:", portaladmin);
+			  assertNotNull("Not portaladmin portlet found", portaladmin);
 			  WebElement actions = getElement(portaladmin,By.className("actions"));
-			  assertNotNull("Not actions portaladmin portlet found:", actions);
+			  assertNotNull("Not actions portaladmin portlet found", actions);
 			  WebElement p2pAct = getElement(actions,By.className("taglib-icon"));
 			  p2pAct.click();
 			  
 			  Sleep.sleep(2000);
+			  
+			  boolean destroy = InstancePortlet.destroyInstance(driver, "portlet_portaladmin_WAR_liferaylmsportlet");
+
+			  assertEquals("Portlet not destroy",true, destroy);
+			  
 			  
 		  }catch(Exception e){
 			  e.printStackTrace();
@@ -642,4 +787,42 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 		  WebElement submit = driver.findElement(By.className("aui-button-input-submit"));
 		  submit.click();
 	  }
+
+	  private void changeEditMode(){
+		  WebElement editPortlet = getElement(By.id("p_p_id_changeEditingMode_WAR_liferaylmsportlet_"));
+		  assertNotNull("Not Edit portlet found", editPortlet);
+			
+		  List<WebElement> inputs = getElements(editPortlet,By.tagName("input"));
+		  assertEquals("Not Edit portlet found", 1,inputs.size());
+		  inputs.get(0).click();
+	  }
+	  
+	  private void openColapsables(){
+			List<WebElement> pcontainer = getElements(By.className("lfr-panel-titlebar"));
+			assertNotNull("Not found pcontainer", pcontainer);
+			
+			for(WebElement we : pcontainer){
+				if(getLog().isInfoEnabled())getLog().info("Click::"+we.getText());
+				try{
+					we.click();
+				}catch(Exception e){}
+				List<WebElement> spans = getElements(we,By.tagName("span"));
+				if(spans!=null){
+					for(WebElement span : spans){
+						try{
+							span.click();
+						}catch(Exception e){}
+					}
+				}
+				List<WebElement> divs = getElements(we,By.tagName("div"));
+				if(spans!=null){
+					for(WebElement div : divs){
+						try{
+							div.click();
+						}catch(Exception e){}
+					}
+				}
+				Sleep.sleep(1000);
+			}
+		}
 }

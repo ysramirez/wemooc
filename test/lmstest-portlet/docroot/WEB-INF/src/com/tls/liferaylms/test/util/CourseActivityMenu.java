@@ -80,4 +80,48 @@ public class CourseActivityMenu {
 		}
 		return a;
 	}
+	public static WebElement findElementActivityMenuEdit(WebDriver driver,String param){
+		WebElement desplegable = null;
+		
+		try{
+			desplegable = driver.findElement(By.className("lms-desplegable"));
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		List<WebElement> lisc = null;
+
+		try{
+			lisc = desplegable.findElements(By.tagName("li"));
+		}catch(Exception e){
+			e.printStackTrace();
+			return null;
+		}
+		
+		WebElement liActive = null;
+		for(WebElement li :lisc){
+			String msg = li.getText();
+			if(param.equals(msg)){
+				liActive = li;
+				break;
+			}
+		}
+
+		List<WebElement> as = null;
+		if(liActive!=null){
+			try{
+				as = liActive.findElements(By.tagName("a"));
+			}catch(Exception e){
+				e.printStackTrace();
+				return null;
+			}
+		}
+		
+		if(as!=null&&as.size()>2){
+			return as.get(1);
+		}else{
+			return null;
+		}
+	}
 }

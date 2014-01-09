@@ -19,6 +19,9 @@ import com.tls.liferaylms.test.util.Login;
 import com.tls.liferaylms.test.util.Sleep;
 import com.tls.liferaylms.test.util.TestProperties;
 
+/**
+ * @author Diego Renedo Delgado
+ */
 public class Ba_AdminCourse extends SeleniumTestCase {
 
   @Test
@@ -117,23 +120,4 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 		if(getLog().isInfoEnabled())getLog().info("end ok");
   }
 
-  
-
-  private boolean isElementPresent(By by) {
-    try {
-      driver.findElement(by);
-      return true;
-    } catch (NoSuchElementException e) {
-      return false;
-    }
-  }
-
-  private boolean isAlertPresent() {
-    try {
-      driver.switchTo().alert();
-      return true;
-    } catch (NoAlertPresentException e) {
-      return false;
-    }
-  }
 }
