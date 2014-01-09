@@ -13,6 +13,7 @@ import java.util.zip.ZipFile;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.WindowState;
 
 import org.apache.commons.io.FileUtils;
 
@@ -24,13 +25,13 @@ import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
-
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -152,9 +153,17 @@ public class SCORMAdmin extends MVCPortlet
 			SCORMContentLocalServiceUtil.updateSCORMContent(scorm, serviceContext);
 		}
 		AssetEntryUtil.clearCache();
-		if(redirect!=null && !"".equals(redirect))
-		{
-			response.sendRedirect(redirect);
+		WindowState windowState = actRequest.getWindowState();
+		if (redirect != null && !"".equals(redirect)) {
+			if (!windowState.equals(LiferayWindowState.POP_UP)) {
+				response.sendRedirect(redirect);
+			} else {
+				redirect = PortalUtil.escapeRedirect(redirect);
+
+				if (Validator.isNotNull(redirect)) {
+					response.sendRedirect(redirect);
+				}
+			}
 		}
 		
 	}
