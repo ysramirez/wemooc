@@ -190,13 +190,6 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invo
 				request = ServiceContextThreadLocal.getServiceContext().getRequest();
 				return PortalUtil.getPortalURL(request)+"/"+ClpSerializer.getServletContextName()+"/scorm/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/"+path;
 			}
-			
-			String getSize() {
-				String dirScormZip=SCORMContentLocalServiceUtil.getDirScormzipPath(_scorm);
-				File dirZip=new File(dirScormZip);
-				File scormFileZip=new File(dirZip.getAbsolutePath()+"/"+_scorm.getUuid()+".zip");
-				return String.valueOf(scormFileZip.length());
-			}
 
 			@Override
 			public Object invokeMethod(Object thiz, String name, Object... args)
@@ -213,9 +206,6 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invo
 				
 				if(("getFileUrl".equals(name))&&(args.length==2)&&(args[0] == null || args[0] instanceof HttpServletRequest)&&(args[1] instanceof String)) {
 					return getFileUrl((HttpServletRequest) args[0], (String) args[1]);
-				}
-				if(("getSize".equals(name))&&(args.length==0)) {
-					return getSize();
 				}
 				
 				throw new NoSuchMethodException(name);
