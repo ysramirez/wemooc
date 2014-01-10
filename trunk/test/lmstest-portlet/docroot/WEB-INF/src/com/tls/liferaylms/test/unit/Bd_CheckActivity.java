@@ -40,6 +40,7 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 	  String pres = TestProperties.get("act.pres");
 	  String scorm = TestProperties.get("act.scorm");
 	  String desa = TestProperties.get("act.desa");
+	  String eval = TestProperties.get("act.eval");
 
 	  @Test
 	  public void checkActivities() throws Exception {
@@ -132,7 +133,122 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 			  fillP2PActivity();
 		  }
 		  
+		  //Login login = new Login(driver, Context.getTeacherUser(), Context.getTeacherPass(), Context.getBaseUrl());
+		  login = new Login(driver, Context.getTeacherUser(), Context.getTeacherPass(), Context.getBaseUrl());
+
+		  if(login.isLogin())
+			  login.logout();
+
+		  //boolean teacherLogin = login.login();
+		  teacherLogin = login.login();
+		  
+		  if(teacherLogin){
+			  teacherEval();
+		  }
+		  
 		  if(getLog().isInfoEnabled())getLog().info("end!");
+	  }
+	  
+	  private void teacherEval(){
+		  try{
+			  GetPage.getPage(driver, Context.getCoursePage(),"/reto");
+
+			  for(String id : Context.getActivities().keySet()){
+
+				  if(id.length()>eval.length()&&id.substring(0, eval.length()).equals(eval)){
+					  WebElement a = CourseActivityMenu.findElementActivityMenuTotal(driver,id);
+					  assertNotNull("Not activity found:"+id, a);
+					  
+					  if(getLog().isInfoEnabled())getLog().info("Click!");
+					  //double click
+					  a.click();
+					  try{
+						  a.click();
+					  }catch(Exception e){}
+
+					  String url = driver.getCurrentUrl();
+					  
+					  WebElement evaluation = getElement(By.id("p_p_id_evaluationtaskactivity_WAR_liferaylmsportlet_"));
+					  assertNotNull("Portlet evaluation not found", evaluation);
+					  WebElement conta = getElement(evaluation, By.className("newitem2"));
+					  assertNotNull("Container for new item button not found", conta);
+					  WebElement newitem = getElement(conta, By.tagName("a"));
+					  assertNotNull("link for new item button not found", conta);
+					  newitem.click();
+					  
+					  Sleep.sleep(1000);
+					  
+					  WebElement popup = getElement(By.id("_evaluationtaskactivity_WAR_liferaylmsportlet_showPopupActivities"));
+					  assertNotNull("Popup for config Eval not found", popup);
+					  
+					  List<WebElement> inputText = getElements(popup,By.className("aui-field-input-text"));
+					  assertEquals("Number of inputs not match",5, inputText.size());
+					  for(WebElement input: inputText){
+						  input.clear();
+						  input.sendKeys("20");
+					  }
+
+					  ((JavascriptExecutor)driver).executeScript("_evaluationtaskactivity_WAR_liferaylmsportlet_doSaveActivities();");
+					  
+					  Sleep.sleep(1000);
+
+					  ((JavascriptExecutor)driver).executeScript("_evaluationtaskactivity_WAR_liferaylmsportlet_doClosePopupActivities();");
+					  
+					  driver.get(url);
+					  System.out.println("URL:"+url);
+					  
+					  evaluation = getElement(By.id("p_p_id_evaluationtaskactivity_WAR_liferaylmsportlet_"));
+					  assertNotNull("Portlet evaluation not found", evaluation);
+					  
+					  WebElement butcontainer = getElement(evaluation, By.className("evaluationAvg"));
+					  assertNotNull("Container for new item button not found", butcontainer);
+					  
+					  WebElement button = getElement(butcontainer,By.tagName("button"));
+					  assertNotNull("calculate button not found", button);
+					  
+					  button.click();
+					  try{
+						  button.click();
+					  }catch(Exception e){}
+					  
+					  WebElement submit = getElement(By.id("_evaluationtaskactivity_WAR_liferaylmsportlet_calculate"));
+					  assertNotNull("No submit button found", submit);
+
+					  submit.click();
+					  try{
+						  submit.click();
+					  }catch(Exception e){}
+					  
+					  Sleep.sleep(1000);
+					  
+					  List<WebElement> results = getElements(By.className("floatl"));
+					  assertEquals("Number of results not match",2, results.size());
+					  
+					  assertEquals("Number of result for student not match",97, results.get(0).getText());
+					  assertEquals("Number of result for student2 not match",77, results.get(1).getText());
+					  
+					  butcontainer = getElement(evaluation, By.className("evaluationAvg"));
+					  assertNotNull("Container for new item button not found", butcontainer);
+					  
+					  button = getElement(butcontainer,By.tagName("button"));
+					  assertNotNull("calculate button not found", button);
+					  
+					  button.click();
+					  try{
+						  button.click();
+					  }catch(Exception e){}
+					  
+					  WebElement publish = getElement(By.id("_evaluationtaskactivity_WAR_liferaylmsportlet_publish"));
+					  publish.click();
+					  try{
+						  publish.click();
+					  }catch(Exception e){}
+				  }
+			  }
+			  
+		  }catch(Exception e){
+			  e.printStackTrace();
+		  }
 	  }
 
 	  private void fillP2PActivity(){

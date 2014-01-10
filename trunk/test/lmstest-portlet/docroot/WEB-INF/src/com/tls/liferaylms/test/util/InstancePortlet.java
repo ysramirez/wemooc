@@ -94,17 +94,13 @@ public class InstancePortlet {
 				if(a!=null){
 					a.click();
 					Sleep.sleep(1000);
-					System.out.println("sdagsdgsag");
 					if(isAlertPresent(driver)){
 						try{
-							System.out.println("sdagsdgsag");
 							Alert confirm =driver.switchTo().alert();
 							confirm.accept();
 						}catch(Exception e){}
 					}
-					System.out.println("sdagsdgsag");
 					portlet = getElement(driver, By.id(id));
-					System.out.println(portlet);
 					if(portlet!=null){
 						a.click();
 					}

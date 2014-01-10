@@ -12,11 +12,8 @@ import org.junit.runner.notification.Failure;
 import com.tls.liferaylms.test.util.Context;
 import com.tls.liferaylms.test.util.TestProperties;
 
-/**
- * @author Diego Renedo Delgado
- */
-public class TestActivityResults {
-	private static Log log = LogFactory.getLog(TestActivityResults.class);
+public class TestActivityRestrictions {
+	private static Log log = LogFactory.getLog(TestActivityRestrictions.class);
 
 	/**
 	 * @param args
@@ -54,7 +51,7 @@ public class TestActivityResults {
 		Class classInstance = null;
 		
 		try {
-			classInstance = Class.forName("com.tls.liferaylms.test.unit.Be_CheckResults");
+			classInstance = Class.forName("com.tls.liferaylms.test.unit.Bf_CheckActivityRestrictions");
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
@@ -71,5 +68,4 @@ public class TestActivityResults {
 			}
 		}
 	}
-
 }
