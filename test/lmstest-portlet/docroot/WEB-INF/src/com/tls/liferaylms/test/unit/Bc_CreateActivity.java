@@ -677,10 +677,6 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		
 		driver.switchTo().frame(driver.findElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_finder")));
 
-		System.out.println("--------------------------------------------------------------------------------");
-		System.out.println(driver.getPageSource());
-		System.out.println("--------------------------------------------------------------------------------");
-
 		WebElement submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
 		submit.click();

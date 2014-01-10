@@ -33,19 +33,19 @@ public class TestCourse {
 		Context.setTeacherUser(TestProperties.get("teacher-email")); //teacher@liferay.com
 		
 		
-		Context.setCoursePage("http://localhost:8080/web//test-1389253374742");
+		Context.setCoursePage("http://localhost:8080/web//test-1389338531756");
 		Context.setTestPage("http://localhost:8080/web/guest/test");
 
 		HashMap<String, String> activities = new HashMap<String, String>();
-		activities.put("Actividad de test 1389253374742","");
-		activities.put("Actividad r externo 1389253374742","");
-		activities.put("P2P 1389253374742","");
-		activities.put("Encuesta 1389253374742","");
-		activities.put("T Present 1389253374742","");
-		activities.put("Act desa 1389253374742","");
-		activities.put("R media 1389253374742","");
-		activities.put("Eval 1389253374742","");
-		activities.put("SCORM 1389253374742","");
+		activities.put("Actividad de test 1389338531756","");
+		activities.put("Actividad r externo 1389338531756","");
+		activities.put("P2P 1389338531756","");
+		activities.put("Encuesta 1389338531756","");
+		activities.put("T Present 1389338531756","");
+		activities.put("Act desa 1389338531756","");
+		activities.put("R media 1389338531756","");
+		activities.put("Eval 1389338531756","");
+		activities.put("SCORM 1389338531756","");
 		Context.setActivities(activities);
 		
 		
