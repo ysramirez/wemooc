@@ -197,17 +197,17 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 		
 	}
 	
-	var enabledStart = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>startdate-enabledCheckbox').checked;
+	var enabledStart = document.getElementById('<%=renderResponse.getNamespace() %>startdate-enabledCheckbox').checked;
 	if(enabledStart){
-		A.all("#startDate").one("#container-calendar-icon").show();
-		A.all("#startDate").one("#startDateSpan").removeClass('hide-calendar');
-	}else  A.all("#startDate").one("#container-calendar-icon").hide();
+		A.all("#startDate").one(".aui-datepicker-button-wrapper").show();
+		A.all("#startDate").one("#startDateSpan").removeClass('aui-helper-hidden');
+	}else  A.all("#startDate").one(".aui-datepicker-button-wrapper").hide();
 
-	var enabledEnd = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>stopdate-enabledCheckbox').checked; 
+	var enabledEnd = document.getElementById('<%=renderResponse.getNamespace() %>stopdate-enabledCheckbox').checked; 
 	if(enabledEnd){
-		A.all("#endDate").one("#container-calendar-icon").show();
-		A.all("#endDate").one("#endDateSpan").removeClass('hide-calendar');
-	}else A.all("#endDate").one("#container-calendar-icon").hide();
+		A.all("#endDate").one(".aui-datepicker-button-wrapper").show();
+		A.all("#endDate").one("#endDateSpan").removeClass('aui-helper-hidden');
+	}else A.all("#endDate").one(".aui-datepicker-button-wrapper").hide();
 
 	var rules = {			
 			<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
@@ -585,8 +585,8 @@ Liferay.provide(
 		    
 		    function setStarDateState(){
 		    	AUI().use('node',function(A) {
-			    	var enabled = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>startdate-enabledCheckbox').checked; 
-
+			    	var enabled = document.getElementById('<%=renderResponse.getNamespace() %>startdate-enabledCheckbox').checked; 
+					console.log('enabled: '+enabled);
 		    		var selector = 'form[name="<%=renderResponse.getNamespace() %>fm"]';
 		    		
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startDay"]').set('disabled', !enabled);
@@ -597,11 +597,11 @@ Liferay.provide(
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startHour"]').set('disabled', !enabled);
 		    		
 		    		if(enabled) {
-		    			A.all("#startDate").one("#container-calendar-icon").show();
-		    			A.all("#startDate").one("#startDateSpan").removeClass('hide-calendar');
+		    			A.all("#startDate").one(".aui-datepicker-button-wrapper").show();
+		    			A.all("#startDate").one("#startDateSpan").removeClass('aui-helper-hidden');
 		    		}else {
-		    			A.all("#startDate").one("#container-calendar-icon").hide();
-		    			A.all("#startDate").one("#startDateSpan").addClass('hide-calendar');
+		    			A.all("#startDate").one(".aui-datepicker-button-wrapper").hide();
+		    			A.all("#startDate").one("#startDateSpan").addClass('aui-helper-hidden');
 		    		}
 
 		    	});
@@ -609,7 +609,7 @@ Liferay.provide(
 		    
 		    function setStopDateState(){
 		    	AUI().use('node',function(A) {
-			    	var enabled = document.getElementById('<%=renderResponse.getNamespace()+renderResponse.getNamespace() %>stopdate-enabledCheckbox').checked; 
+			    	var enabled = document.getElementById('<%=renderResponse.getNamespace() %>stopdate-enabledCheckbox').checked; 
 
 		    		var selector = 'form[name="<%=renderResponse.getNamespace() %>fm"]';
 		    		
@@ -621,11 +621,11 @@ Liferay.provide(
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>stopHour"]').set('disabled', !enabled);
 		    		
 		    		if(enabled) {
-		    			A.all("#endDate").one("#container-calendar-icon").show();
-		    			A.all("#endDate").one("#endDateSpan").removeClass('hide-calendar');
+		    			A.all("#endDate").one(".aui-datepicker-button-wrapper").show();
+		    			A.all("#endDate").one("#endDateSpan").removeClass('aui-helper-hidden');
 		    		}else {
-		    			A.all("#endDate").one("#container-calendar-icon").hide();
-		    			A.all("#endDate").one("#endDateSpan").addClass('hide-calendar');
+		    			A.all("#endDate").one(".aui-datepicker-button-wrapper").hide();
+		    			A.all("#endDate").one("#endDateSpan").addClass('aui-helper-hidden');
 		    		}
 
 		    	});
@@ -634,23 +634,23 @@ Liferay.provide(
 	    </script>
 		<div id="startDate">
 			<aui:field-wrapper label="start-date">
-				<aui:input id="<%=renderResponse.getNamespace()+\"startdate-enabled\" %>" name="startdate-enabled" checked="<%=learnact != null && learnact.getStartdate() != null  %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
-				<span id="startDateSpan" class="hide-calendar">
+				<aui:input id="startdate-enabled" name="startdate-enabled" checked="<%=learnact != null && learnact.getStartdate() != null  %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
+				<div id="startDateSpan" class="aui-helper-hidden">
 					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"
 					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
-				</span>
-				<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"></liferay-ui:input-time>
+					 <liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"></liferay-ui:input-time>
+				</div>
 			</aui:field-wrapper>
 		</div>
 		
 		<div id="endDate">
 			<aui:field-wrapper label="end-date">
-				<aui:input id="<%=renderResponse.getNamespace()+\"stopdate-enabled\" %>" name="stopdate-enabled" checked="<%=learnact != null && learnact.getEnddate()!= null  %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
-				<span id="endDateSpan" class="hide-calendar">
+				<aui:input id="stopdate-enabled" name="stopdate-enabled" checked="<%=learnact != null && learnact.getEnddate()!= null  %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
+				<div id="endDateSpan" class="aui-helper-hidden">
 					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="stopDay" monthParam="stopMon" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"
 					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
-				</span>
-				<liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"></liferay-ui:input-time></br>
+					 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"></liferay-ui:input-time></br>
+				</div>
 			</aui:field-wrapper>
 		</div>
 			<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
