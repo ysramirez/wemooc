@@ -5,4 +5,7 @@
 	<category name="category.sample">
 		<portlet id="ActivityManager" />
 	</category>
+	<category name="LMS">
+		<portlet id="activitymanager"></portlet>
+	</category>
 </display>
