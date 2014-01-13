@@ -100,7 +100,7 @@ public class Login {
 				}
 				
 			}catch(NoSuchElementException nsee){
-				nsee.printStackTrace();
+				//nsee.printStackTrace();
 			}
 
 			try{
