@@ -5,10 +5,22 @@
 	<portlet>
 		<portlet-name>ActivityManager</portlet-name>
 		<icon>/icon.png</icon>
+		<control-panel-entry-category>content</control-panel-entry-category>
+		<control-panel-entry-weight>10</control-panel-entry-weight>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>ActivityManager-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>activitymanager</portlet-name>
+		<icon>/icon.png</icon>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>activitymanager-portlet</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
