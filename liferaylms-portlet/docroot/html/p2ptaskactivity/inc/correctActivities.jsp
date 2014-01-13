@@ -440,7 +440,7 @@ if(!p2pActList.isEmpty()){
 	
 							<c:if test="<%=myP2PActivity.getFileEntryId() != 0 %>">
 								<div class="doc_descarga">
-									<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+									<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
 									<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 								</div>
 							</c:if>
@@ -482,8 +482,30 @@ if(!p2pActList.isEmpty()){
 				String description = myP2PActiCor.getDescription();
 				String textButton = "p2ptask-correction";
 	
-				DLFileEntry dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
-				String urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid(); 
+				DLFileEntry dlfile = null;
+				String urlFile = "";
+				int size = 0;
+				int sizeKb = 0;
+				String title = "";
+				String descriptionFile = "";
+				
+				if(myP2PActivity.getFileEntryId() != 0)
+				{
+				
+					try{
+						dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
+						urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid(); 
+						size = Integer.parseInt(String.valueOf(dlfile.getSize()));
+						sizeKb = size/1024; //Lo paso a Kilobytes
+						title = dlfile.getTitle();
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+					
+					if(myP2PActivity.getDescription() != null){
+						descriptionFile = myP2PActivity.getDescription();
+					}
+				}
 	
 				%>
 	
@@ -502,38 +524,44 @@ if(!p2pActList.isEmpty()){
 						</span>
 					</span>
 					<div class="collapsable">
-						<%
-						String descriptionFile = "";
-						if(myP2PActivity.getDescription()!=null){
-							descriptionFile = myP2PActivity.getDescription();
-						}
-						%>
-						<div class="description"><%=HtmlUtil.escape(descriptionFile).replaceAll("(\r\n|\n)", "<br />") %></div>
-						<%
-						int size = Integer.parseInt(String.valueOf(dlfile.getSize()));
-						int sizeKb = size/1024; //Lo paso a Kilobytes
-						%>
-						<div class="doc_descarga">
-							<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-							<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+
+						<div class="description">
+							<%=HtmlUtil.escape(descriptionFile).replaceAll("(\r\n|\n)", "<br />") %>
 						</div>
+
+						<c:if test="<%=myP2PActivity.getFileEntryId() != 0 %>">
+							<div class="doc_descarga">
+								<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+								<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+							</div>
+						</c:if>
 						<div class="degradade">
 							<div class="subtitle"><liferay-ui:message key="p2ptask-your-valoration" /> :</div>
 							<div class="container-textarea">
 								<textarea rows="6" cols="80" name="<portlet:namespace />description" readonly="readonly"><%=description %></textarea>
 							</div>
 							<%
+
 							if(myP2PActiCor.getFileEntryId()!=0){
-								DLFileEntry dlfileCor = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActiCor.getFileEntryId());
-								String urlFileCor = themeDisplay.getPortalURL()+"/documents/"+dlfileCor.getGroupId()+"/"+dlfileCor.getUuid();
-								size = Integer.parseInt(String.valueOf(dlfileCor.getSize()));
-								sizeKb = size/1024; //Lo paso a Kilobytes
-							%>
-							<div class="doc_descarga">
-								<span><%=dlfileCor.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-								<a href="<%=urlFileCor%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
-							</div>
-							<%} %>
+								
+								DLFileEntry dlfileCor = null;
+								try{
+									dlfileCor = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActiCor.getFileEntryId());
+								}catch(Exception e){
+									//e.printStackTrace();
+								}
+								
+								if(dlfileCor != null){
+									String urlFileCor = themeDisplay.getPortalURL()+"/documents/"+dlfileCor.getGroupId()+"/"+dlfileCor.getUuid();
+									size = Integer.parseInt(String.valueOf(dlfileCor.getSize()));
+									sizeKb = size/1024; //Lo paso a Kilobytes
+								%>
+								<div class="doc_descarga">
+									<span><%=dlfileCor.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+									<a href="<%=urlFileCor%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+								</div>
+							<%	}
+							}%>
 						</div>
 					<c:if test="<%=result %>">
 							<div class="color_tercero font_13"><liferay-ui:message key="p2ptask.correction.activity" />: <%=myP2PActiCor.getResult() %></div>

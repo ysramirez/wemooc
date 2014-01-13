@@ -20,6 +20,7 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import com.liferay.lms.ModuleUpdateResult;
 import com.liferay.lms.moduleUpload;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
@@ -508,15 +509,38 @@ public class P2PActivityPortlet extends MVCPortlet {
 	}
 	
 	private static void saveLearningActivityResult(long actId, long userId, long value) throws SystemException, PortalException{
+		
+		try {
+			
 
-		LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-		LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
-		
-		learningActivityResult.setResult(value);
-		learningActivityResult.setPassed(value >= learningActivity.getPasspuntuation());
-		learningActivityResult.setEndDate(new java.util.Date(System.currentTimeMillis()));
-		
-		LearningActivityResultLocalServiceUtil.updateLearningActivityResult(learningActivityResult);
+			//Actualizamos el try, que a su vez actualiza el result
+			LearningActivityTry  learningActivityTry =  LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId);
+			
+			if(learningActivityTry != null){
+				learningActivityTry.setEndDate(new Date());
+				learningActivityTry.setResult(value);
+				LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+			}
+
+			LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			
+			//Actualizamos el result, ya que puede bajar la nota, y en el Impl no se baja la nota nunca.
+			LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+			
+			learningActivityResult.setResult(value);
+			learningActivityResult.setPassed(value >= learningActivity.getPasspuntuation());
+			learningActivityResult.setEndDate(new java.util.Date(System.currentTimeMillis()));
+			
+			LearningActivityResultLocalServiceUtil.updateLearningActivityResult(learningActivityResult);
+			
+			//Generar consultas update
+			//ModuleUpdateResult.saveStringToFile("updateResultP2PActivities.txt", "update ");
+			
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			//e.printStackTrace();
+			ModuleUpdateResult.saveStringToFile("updateResultP2PActivitiesERROR.txt", "ERROR: actId: "+actId+", userId: "+userId+", value: "+value+", Message:"+e.getMessage());
+		}
 	}
 	
 	private static void sendMailCorrection(User user, long actId, 
