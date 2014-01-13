@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 /**
@@ -123,11 +124,15 @@ public class LearningActivityLocalServiceImpl
 		larn.setCompanyId(serviceContext.getCompanyId());
 		larn.setGroupId(serviceContext.getScopeGroupId());
 		larn.setUserId(userId);
-			larn.setGroupId(serviceContext.getScopeGroupId());
+		
+		larn.setUserName(userLocalService.getUser(userId).getFullName());
+		larn.setGroupId(serviceContext.getScopeGroupId());
 		larn.setDescription(description);
 		larn.setTypeId(typeId);
-		larn.setTitle(title);
+		larn.setTitle(title,serviceContext.getLocale());
 		larn.setStartdate(startDate);
+		larn.setCreateDate(new java.util.Date(System.currentTimeMillis()));
+		larn.setModifiedDate(new java.util.Date(System.currentTimeMillis()));
 		larn.setEnddate(endDate);
 		larn.setTries(tries);
 		larn.setPasspuntuation(passpuntuation);
@@ -138,49 +143,21 @@ public class LearningActivityLocalServiceImpl
 		larn.setFeedbackCorrect(feedbackCorrect);
 		larn.setFeedbackNoCorrect(feedbackNoCorrect);
 		learningActivityPersistence.update(larn, true);
-		
-			try
-			{
-				// Resources
-				if (serviceContext.isAddGroupPermissions() ||
-					serviceContext.isAddGuestPermissions()) {
-					resourceLocalService.addResources(
-							serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
-					LearningActivity.class.getName(), larn.getPrimaryKey(), false,
-					serviceContext.isAddGroupPermissions(),
-					serviceContext.isAddGuestPermissions());			
-				}
-				else {
-					
-					resourceLocalService.addModelResources(
-							serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,
-					LearningActivity.class.getName(), larn.getPrimaryKey(),
-					serviceContext.getGroupPermissions(),
-					serviceContext.getGuestPermissions());
-					
-					
-				}
 			
+		resourceLocalService.addModelResources(larn, serviceContext);
 			
-			assetEntryLocalService.updateEntry(
+		assetEntryLocalService.updateEntry(
 					userId, larn.getGroupId(), LearningActivity.class.getName(),
 					larn.getActId(), larn.getUuid(),typeId, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(serviceContext.getLocale()),null, null, 0, 0,
 					null, false);
-			
-		} catch (Exception e) {e.printStackTrace();}
-			
 		
-		try {
-			SocialActivityLocalServiceUtil.addUniqueActivity(
+		socialActivityLocalService.addUniqueActivity(
 					larn.getUserId(), larn.getGroupId(),
 					LearningActivity.class.getName(), larn.getActId(),
 					0, StringPool.BLANK, 0);
-		} catch (Exception e) {e.printStackTrace();}
-			
-
 		//auditing
 		AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
 				
@@ -272,6 +249,10 @@ public class LearningActivityLocalServiceImpl
 	public java.util.List<LearningActivity> getLearningActivitiesOfGroup(long groupId) throws SystemException
 	{
 		return learningActivityPersistence.findByg(groupId);
+	}
+	public long countLearningActivitiesOfGroup(long groupId) throws SystemException
+	{
+		return learningActivityPersistence.countByg(groupId);
 	}
 	public java.util.List<LearningActivity> getLearningActivitiesOfGroupAndType(long groupId,int typeId) throws SystemException
 	{
