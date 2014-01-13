@@ -38,7 +38,7 @@ String name = LearningActivity.class.getName();
 String primKey = String.valueOf(myActivity.getActId());
 %>
 				
-<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE) %>">
+<c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE)||permissionChecker.hasOwnerPermission(myActivity.getCompanyId(),LearningActivity.class.getName(),myActivity.getActId(),myActivity.getUserId(),ActionKeys.UPDATE) %>">
 	<liferay-portlet:actionURL  name="editactivityoptions" var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 		<liferay-portlet:param name="resId" value="<%=primKey %>" />
 		<liferay-portlet:param name="resModuleId" value="<%=Long.toString(myActivity.getModuleId()) %>" />
@@ -93,7 +93,7 @@ String primKey = String.valueOf(myActivity.getActId());
 
 
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),
-ActionKeys.DELETE) %>">
+ActionKeys.DELETE)||permissionChecker.hasOwnerPermission(myActivity.getCompanyId(),LearningActivity.class.getName(),myActivity.getActId(),myActivity.getUserId(),ActionKeys.DELETE) %>">
 
 	<% 
 		if(myActivity.getActId()==actId){ %>
