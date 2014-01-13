@@ -387,7 +387,7 @@ public class LearningActivityResultLocalServiceImpl
 			learningActivityTry.setTryResultData(tryResultData);
 			learningActivityTry.setResult(Math.round(total_score));
 			
-			if (Math.round(total_score) > master_score || "passed".equals(total_lesson_status)) {
+			if (Math.round(total_score) >= master_score || "passed".equals(total_lesson_status)) {
 				Date endDate = new Date(System.currentTimeMillis());
 				learningActivityTry.setEndDate(endDate);
 			}
@@ -625,7 +625,7 @@ public class LearningActivityResultLocalServiceImpl
 			learningActivityTry.setTryResultData(tryResultData);
 			learningActivityTry.setResult(Math.round(total_score));
 			
-			if (Math.round(total_score) > master_score || "passed".equals(total_lesson_status)) {
+			if (Math.round(total_score) >= master_score || "passed".equals(total_lesson_status)) {
 				Date endDate = new Date(System.currentTimeMillis());
 				learningActivityTry.setEndDate(endDate);
 			}
