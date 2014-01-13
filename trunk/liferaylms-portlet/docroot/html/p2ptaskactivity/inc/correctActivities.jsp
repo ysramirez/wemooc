@@ -377,8 +377,34 @@ if(!p2pActList.isEmpty()){
 			if(myP2PActiCor.getDate() == null)
 			{
 				User propietary = UserLocalServiceUtil.getUser(myP2PActivity.getUserId());
-				DLFileEntry dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
-				String urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
+				
+				DLFileEntry dlfile = null;
+				String urlFile = "";
+				int size = 0;
+				int sizeKb = 0;
+				String title = "";
+				String descriptionFile = "";
+				
+				if(myP2PActivity.getFileEntryId() != 0)
+				{
+				
+					try{
+						dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
+						urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
+						size = Integer.parseInt(String.valueOf(dlfile.getSize()));
+						sizeKb = size/1024; //Lo paso a Kilobytes
+						title = dlfile.getTitle();
+						descriptionFile = dlfile.getDescription();
+						
+					}catch(Exception e){
+						e.printStackTrace();
+					}
+					
+				}
+				
+				if(descriptionFile.equals("") && myP2PActivity.getDescription()!=null && !myP2PActivity.getDescription().equals("")){
+					descriptionFile = myP2PActivity.getDescription();
+				}
 				
 				cont++;
 
@@ -393,10 +419,12 @@ if(!p2pActList.isEmpty()){
 								<%=propietary.getFullName() %>
 							</span>
 						</c:if>
+						<c:if test="<%=anonimous %>">
 						<span class="number">
 							<liferay-ui:message key="number" /> 
 							<%=cont%>
 						</span>
+						</c:if>
 					</span>
 					<div class="collapsable">
 						<form enctype="multipart/form-data" method="post" action="<portlet:actionURL name="saveCorrection"></portlet:actionURL>" name="<portlet:namespace />f1_<%=cont%>" id="<portlet:namespace />f1_<%=cont%>">
@@ -406,27 +434,16 @@ if(!p2pActList.isEmpty()){
 							<input type="hidden" name="p2pActivityId" value="<%=myP2PActivity.getP2pActivityId()%>"  />
 							<input type="hidden" name="userId" value="<%=userId%>"  />
 							
-							<%
-							String descriptionFile = dlfile.getDescription();
-							if(descriptionFile.equals(""))
-							{
-								if(myP2PActivity.getDescription()!=null && !myP2PActivity.getDescription().equals("")){
-									descriptionFile = myP2PActivity.getDescription();
-								}
-							}
-							
-							%>
 							<div class="description">
 								<%=HtmlUtil.escape(descriptionFile).replaceAll("(\r\n|\n)", "<br />") %>
 							</div>
-							<%
-							int size = Integer.parseInt(String.valueOf(dlfile.getSize()));
-							int sizeMb = size/1024; 
-							%>
-							<div class="doc_descarga">
-								<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeMb%> Kb)&nbsp;</span>
-								<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
-							</div>
+	
+							<c:if test="<%=myP2PActivity.getFileEntryId() != 0 %>">
+								<div class="doc_descarga">
+									<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+									<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+								</div>
+							</c:if>
 							
 							<div class="container-textarea">
 								<textarea rows="6" cols="90" name="<portlet:namespace />description" onfocus="javascript:<portlet:namespace />clearText('<portlet:namespace />description_<%=cont%>')" id="<portlet:namespace />description_<%=cont%>"><%=textoCorrecion %></textarea>
