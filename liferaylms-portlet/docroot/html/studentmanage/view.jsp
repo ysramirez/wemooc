@@ -1,3 +1,7 @@
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.model.CourseResult"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.CourseResultLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
 <%@include file="/init.jsp" %>
 
@@ -9,7 +13,10 @@
 	PortletURL portletURL = renderResponse.createRenderURL();
 	portletURL.setParameter("jspPage","/html/studentmanage/view.jsp");
 	portletURL.setParameter("criteria", criteria); 
+	Course course=CourseLocalServiceUtil.getCourseByGroupCreatedId(themeDisplay.getScopeGroupId());
+	long courseId=course.getCourseId();
 %>
+
 
 <liferay-portlet:renderURL var="returnurl">
 <liferay-portlet:param name="jspPage" value="/html/studentmanage/view.jsp"></liferay-portlet:param>
@@ -55,6 +62,18 @@
 		<liferay-ui:search-container-row className="com.liferay.portal.model.User" keyProperty="userId" modelVar="user">
 		<liferay-ui:search-container-column-text>
 			<liferay-ui:user-display userId="<%=user.getUserId() %>"></liferay-ui:user-display>
+		</liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text>
+			<%
+			
+			CourseResult courseResult=CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(courseId, user.getUserId());
+			long result=0;
+			if(courseResult!=null)
+			{
+				result=courseResult.getResult();
+			}
+			%>
+			<%=result %>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text>
 			<liferay-portlet:renderURL var="viewGradeURL">
