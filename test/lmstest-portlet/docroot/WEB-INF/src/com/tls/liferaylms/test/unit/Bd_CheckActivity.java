@@ -219,7 +219,9 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 						  submit.click();
 					  }catch(Exception e){}
 					  
-					  Sleep.sleep(1000);
+					  Sleep.sleep(6000);
+
+					  driver.get(url);
 					  
 					  List<WebElement> results = getElements(By.className("floatl"));
 					  assertEquals("Number of results not match",2, results.size());
