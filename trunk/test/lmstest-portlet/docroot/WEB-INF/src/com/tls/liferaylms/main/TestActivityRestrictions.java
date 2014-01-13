@@ -33,19 +33,19 @@ public class TestActivityRestrictions {
 		Context.setTeacherUser(TestProperties.get("teacher-email")); //teacher@liferay.com
 		
 		
-		Context.setCoursePage("http://localhost:8080/web//test-1389604314145");
+		Context.setCoursePage("http://localhost:8080/web//test-1389611325344");
 		Context.setTestPage("http://localhost:8080/web/guest/test");
 
 		HashMap<String, String> activities = new HashMap<String, String>();
-		activities.put("Actividad de test 1389604314145","");
-		activities.put("Actividad r externo 1389604314145","");
-		activities.put("P2P 1389604314145","");
-		activities.put("Encuesta 1389604314145","");
-		activities.put("T Present 1389604314145","");
-		activities.put("Act desa 1389604314145","");
-		activities.put("R media 1389604314145","");
-		activities.put("Eval 1389604314145","");
-		activities.put("SCORM 1389604314145","");
+		activities.put("Actividad de test 1389611325344","");
+		activities.put("Actividad r externo 1389611325344","");
+		activities.put("P2P 1389611325344","");
+		activities.put("Encuesta 1389611325344","");
+		activities.put("T Present 1389611325344","");
+		activities.put("Act desa 1389611325344","");
+		activities.put("R media 1389611325344","");
+		activities.put("Eval 1389611325344","");
+		activities.put("SCORM 1389611325344","");
 		Context.setActivities(activities);
 
 		Class classInstance = null;

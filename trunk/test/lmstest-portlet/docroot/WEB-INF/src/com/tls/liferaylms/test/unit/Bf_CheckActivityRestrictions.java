@@ -58,7 +58,8 @@ public class Bf_CheckActivityRestrictions extends SeleniumTestCase {
 					  
 					  openColapsables();
 					  
-					  WebElement checkStart = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet__lmsactivitieslist_WAR_liferaylmsportlet_startdate-enabledCheckbox"));
+					  WebElement checkStart = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_startdate-enabledCheckbox"));
+					  											
 					  checkStart.click();
 					  
 					  WebElement startYear = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_startYear"));

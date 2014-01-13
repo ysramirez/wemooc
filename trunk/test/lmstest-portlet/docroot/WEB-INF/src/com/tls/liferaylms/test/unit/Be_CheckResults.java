@@ -88,8 +88,8 @@ public class Be_CheckResults extends SeleniumTestCase {
 	private String goTolink(WebElement tr){
 		List<WebElement> tds = getElements(tr,By.tagName("td"));
 		assertNotNull("Not students", tds);
-		assertEquals("Size of tr not correct", 2, tds.size());
-		WebElement td = tds.get(1);
+		assertEquals("Size of tr not correct", 3, tds.size());
+		WebElement td = tds.get(2);
 		assertNotNull("Not td for results", td);
 		WebElement a = getElement(td,By.tagName("a"));
 		assertNotNull("Not link for results", a);
