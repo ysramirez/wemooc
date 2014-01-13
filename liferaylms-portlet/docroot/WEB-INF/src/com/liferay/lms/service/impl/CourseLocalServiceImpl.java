@@ -136,13 +136,13 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			//A�adimos el rol Teacher al usuario que crea el blog
 			long[] usuarios = new long[1];
 			usuarios[0] = userId;
-			UserLocalServiceUtil.addRoleUsers(lmsPrefs.getTeacherRole(), usuarios);
-			UserLocalServiceUtil.addRoleUsers(lmsPrefs.getEditorRole(), usuarios);
+			userLocalService.addRoleUsers(lmsPrefs.getTeacherRole(), usuarios);
+			userLocalService.addRoleUsers(lmsPrefs.getEditorRole(), usuarios);
 			course.setGroupCreatedId(group.getGroupId());
-			GroupLocalServiceUtil.addUserGroups(userId, new long[] { group.getGroupId() });
+			groupLocalService.addUserGroups(userId, new long[] { group.getGroupId() });
 			course.setFriendlyURL(group.getFriendlyURL());
 			coursePersistence.update(course, true);
-			LayoutSetPrototype lsProto=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
+			LayoutSetPrototype lsProto=layoutSetPrototypeLocalService.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
 			/* activamos social activity para la comunidad creada */ 		
 			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);	

@@ -26,14 +26,17 @@ import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseCompetence;
 import com.liferay.lms.model.CourseResult;
+import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.model.UserCompetence;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.base.CourseResultLocalServiceBaseImpl;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
+import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -63,12 +66,30 @@ public class CourseResultLocalServiceImpl
 	{
 		return courseResultPersistence.fetchByuc(userId, courseId);
 	}
-
 	public long countByCourseId(long courseId, boolean passed) throws SystemException
 	{
 		return courseResultPersistence.countByc(courseId, passed);
 	}
-	
+	public Double avgResult(long courseId, boolean passed) throws SystemException
+	{
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(CourseResult.class, classLoader);
+		Criterion criterion=PropertyFactoryUtil.forName("courseId").eq(courseId);
+		dq.add(criterion);
+		criterion=PropertyFactoryUtil.forName("passed").eq(passed);
+		dq.add(criterion);
+		dq.setProjection(ProjectionFactoryUtil.avg("result"));
+		return (Double)(learningActivityResultPersistence.findWithDynamicQuery(dq).get(0));
+	}
+	public Double avgResult(long courseId) throws SystemException
+	{
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(CourseResult.class, classLoader);
+		Criterion criterion=PropertyFactoryUtil.forName("courseId").eq(courseId);
+		dq.add(criterion);
+		dq.setProjection(ProjectionFactoryUtil.avg("result"));
+		return (Double)(learningActivityResultPersistence.findWithDynamicQuery(dq).get(0));
+	}
 	public CourseResult create(long courseId, long userId) throws SystemException
 	{
 

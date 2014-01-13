@@ -723,7 +723,17 @@ public class LearningActivityResultLocalServiceImpl
 	{
 		return learningActivityResultPersistence.fetchByact_user(actId, userId);
 	}
-	
+	public Date getLastEndDateByUserId(long userId) throws SystemException
+	{
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(), "portletClassLoader"); 
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityResult.class, classLoader);
+		Criterion criterion=PropertyFactoryUtil.forName("userId").eq(userId);
+		dq.add(criterion);
+		criterion=PropertyFactoryUtil.forName("endDate").isNotNull();
+		dq.add(criterion);
+		dq.setProjection(ProjectionFactoryUtil.max("endDate"));
+		return (Date)(learningActivityResultPersistence.findWithDynamicQuery(dq).get(0));
+	}
 	public List<LearningActivityResult> getByActId(long actId) throws SystemException
 	{
 		List<LearningActivityResult> results;
