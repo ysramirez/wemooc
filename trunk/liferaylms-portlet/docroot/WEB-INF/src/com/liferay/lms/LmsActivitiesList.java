@@ -241,13 +241,14 @@ public class LmsActivitiesList extends MVCPortlet {
 		//validating
 		Enumeration<String> parNams= uploadRequest.getParameterNames();
 		boolean hasTitle=false;
+		String title="";
 		while(parNams.hasMoreElements())
 		{
 		  String paramName=parNams.nextElement();
 		  if(paramName.startsWith("title_")&&paramName.length()>6)
 		  {
 			  if(uploadRequest.getParameter(paramName)!=null && uploadRequest.getParameter(paramName).length()>0){
-				  String title = uploadRequest.getParameter(paramName);
+				  title = uploadRequest.getParameter(paramName);
 				  StringTokenizer tokens = new StringTokenizer(title);
 				  if(tokens.countTokens() > 0 ){
 					  hasTitle=true;
@@ -278,8 +279,9 @@ public class LmsActivitiesList extends MVCPortlet {
 		
 		LearningActivity larn=null;
 		LearningActivityType learningActivityType=null;
-		
+		boolean isnew=false;
 		if(actId==0){
+			isnew=true;
 			//Type validation
 			if (type==-1){
 				SessionErrors.add(actionRequest, "activity-type-not-selected");
@@ -301,7 +303,8 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		
 		
-		if (actId == 0) {
+		if (actId == 0) 
+		{
 
 			if(permissionChecker.hasPermission(
 					themeDisplay.getScopeGroupId(),
@@ -315,26 +318,32 @@ public class LmsActivitiesList extends MVCPortlet {
 			//Leemos del portal.properties el estado del permiso VIEW por defecto para siteMember en las actividades nuevas (si no existe, por defecto serán visibles)
 			boolean hideStr = Boolean.parseBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", "false"));
 			Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
-			if(hideStr) ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+			if(hideStr)
+			{
+					ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}
 			else ResourcePermissionLocalServiceUtil.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
 			
 		}
-		else {
+		else 
+		{
+			LearningActivity tmp =	LearningActivityLocalServiceUtil.getLearningActivity(actId);
 			if(permissionChecker.hasPermission(
 					themeDisplay.getScopeGroupId(),
 					LearningActivity.class.getName(), actId,
-					ActionKeys.UPDATE))
+					ActionKeys.UPDATE)||permissionChecker.hasOwnerPermission(
+							themeDisplay.getCompanyId(),
+							LearningActivity.class.getName(), actId,tmp.getUserId(),
+							ActionKeys.UPDATE))
 			{
 				
 			String extraContentTmp = "";	
-			try {
-				LearningActivity tmp =	LearningActivityLocalServiceUtil.getLearningActivity(actId);
-				extraContentTmp = tmp.getExtracontent();
-			} catch (Exception e) {
-
-			}
+			
+			
+			extraContentTmp = tmp.getExtracontent();
+			
 				
 			larn=LearningActivityLocalServiceUtil.modLearningActivity(
 				actId, "", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId,  extraContentTmp, feedbackCorrect, feedbackNoCorrect, serviceContext);
@@ -362,7 +371,10 @@ public class LmsActivitiesList extends MVCPortlet {
 		if(permissionChecker.hasPermission(
 				themeDisplay.getScopeGroupId(),
 				LearningActivity.class.getName(), larn.getActId(),
-				ActionKeys.UPDATE))
+				ActionKeys.UPDATE)||permissionChecker.hasOwnerPermission(
+						themeDisplay.getCompanyId(),
+						LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
+						ActionKeys.UPDATE)||isnew)
 		{
 			LearningActivityLocalServiceUtil.updateLearningActivity(larn);
 			learningActivityType.afterInsertOrUpdate(uploadRequest,actionResponse,larn);
@@ -392,23 +404,37 @@ public class LmsActivitiesList extends MVCPortlet {
 		actionResponse.setEvent(new QName("http://www.wemooc.com/" , "themeId"), themeIdEvent);
 	}
 	
-	public void deletemodule(ActionRequest actionRequest, ActionResponse actionResponse)throws Exception {
+	public void deletemodule(ActionRequest actionRequest, ActionResponse actionResponse)throws Exception 
+	{
 
 		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
 		long renderModule = ParamUtil.getLong(actionRequest, "moduleId",0);
-
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+	
 		if(moduleId>0)
 		{
-			if(LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
-			add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)))==0) {
-				ModuleLocalServiceUtil.deleteModule(moduleId);
-				if(moduleId==renderModule) {
-					actionResponse.removePublicRenderParameter("moduleId");
-					actionResponse.removePublicRenderParameter("actId");	
-				}	
-			}
-			else{
-				SessionErrors.add(actionRequest, "activities-in-module");
+			if(permissionChecker.hasPermission(
+					themeDisplay.getScopeGroupId(),
+					Module.class.getName(), moduleId,
+					ActionKeys.DELETE))
+			{
+				if(LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
+				add(PropertyFactoryUtil.forName("moduleId").eq(moduleId)))==0)
+				{
+					ModuleLocalServiceUtil.deleteModule(moduleId);
+					if(moduleId==renderModule)
+					{
+						actionResponse.removePublicRenderParameter("moduleId");
+						actionResponse.removePublicRenderParameter("actId");	
+	
+					}
+				}
+				else
+				{
+				    SessionErrors.add(actionRequest, "activities-in-module");
+			
+				}			
 			}
 		}
 	}
@@ -417,22 +443,39 @@ public class LmsActivitiesList extends MVCPortlet {
 	throws Exception {
 
 		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
-		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+	
 		if(moduleId>0)
 		{
-			ModuleLocalServiceUtil.goUpModule(moduleId);
+			if(permissionChecker.hasPermission(
+		
+				themeDisplay.getScopeGroupId(),
+				Module.class.getName(), moduleId,
+				ActionKeys.UPDATE))
+			{
+				ModuleLocalServiceUtil.goUpModule(moduleId);
+			}
 		}
 		
 	}
 	
 	public void downmodule(ActionRequest actionRequest, ActionResponse actionResponse)
 	throws Exception {
-
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+	
 		long moduleId = ParamUtil.getLong(actionRequest, "resId",0);
-
+		
 		if(moduleId>0)
 		{
+			if(permissionChecker.hasPermission(
+				themeDisplay.getScopeGroupId(),
+				Module.class.getName(), moduleId,
+				ActionKeys.UPDATE))
+			{
 			ModuleLocalServiceUtil.goDownModule(moduleId);
+			}
 		}
 		
 	}
@@ -442,52 +485,78 @@ public class LmsActivitiesList extends MVCPortlet {
 
 		long actId = ParamUtil.getLong(actionRequest, "resId");
 		long renderActId = ParamUtil.getLong(actionRequest, "actId",0); 
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
 		
 		if(actId>0)
 		{
 			LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-			LearningActivityType learningActivityType=new LearningActivityTypeRegistry().
-					getLearningActivityType(larn.getTypeId());
-			learningActivityType.deleteResources(actionRequest, actionResponse, larn);
-			
-			LearningActivityServiceUtil.deleteLearningactivity(actId);
-
-			//auditing
-			ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), actId, themeDisplay.getUserId(), AuditConstants.DELETE, null);
-			
-			if(actId==renderActId) {
-				actionResponse.removePublicRenderParameter("actId");				
-			}
-			
-			if(!LiferayWindowState.EXCLUSIVE.equals(actionRequest.getWindowState())){
-				actionResponse.sendRedirect(
-						((LiferayPortletResponse)actionResponse).createRenderURL().toString());
+			if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(),
+					ActionKeys.DELETE)|| permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
+							ActionKeys.DELETE))
+			{
+				LearningActivityType learningActivityType=new LearningActivityTypeRegistry().
+						getLearningActivityType(larn.getTypeId());
+				learningActivityType.deleteResources(actionRequest, actionResponse, larn);
 				
+				LearningActivityServiceUtil.deleteLearningactivity(actId);
+	
+				//auditing
+				AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), actId, themeDisplay.getUserId(), AuditConstants.DELETE, null);
+				
+				if(actId==renderActId) {
+					actionResponse.removePublicRenderParameter("actId");				
+				}
+				
+				if(!LiferayWindowState.EXCLUSIVE.equals(actionRequest.getWindowState())){
+					actionResponse.sendRedirect(
+							((LiferayPortletResponse)actionResponse).createRenderURL().toString());
+					
+				}
 			}
-
 		}
 	}
 	
 	public void upactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 	throws Exception {
-
+	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+		
 		long actId = ParamUtil.getLong(actionRequest, "resId",0);
 		
 		if(actId>0)
-		{
+		{	
+			LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		
+			if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(),
+					ActionKeys.UPDATE)|| permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
+							ActionKeys.UPDATE))
+			{
 			LearningActivityLocalServiceUtil.goUpLearningActivity(actId);
+			}
 		}
 	}
 	
 	public void downactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 	throws Exception {
-
+	ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+		
 		long actId = ParamUtil.getLong(actionRequest, "resId",0);
 	
 		if(actId>0)
 		{
-			LearningActivityLocalServiceUtil.goDownLearningActivity(actId);
+			LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			
+			if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(),
+					ActionKeys.UPDATE)|| permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
+							ActionKeys.UPDATE))
+			{
+				LearningActivityLocalServiceUtil.goDownLearningActivity(actId);
+			}
 		}
 	}
 	
@@ -533,8 +602,13 @@ public class LmsActivitiesList extends MVCPortlet {
 	throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		long actId=ParamUtil.getLong(actionRequest, "resId", 0);
-		LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-		
+		LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);		
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+	
+		if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(),
+				ActionKeys.PERMISSIONS)|| permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
+						ActionKeys.PERMISSIONS))
+		{
 		String team = LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team");
 		long teamId=0;
 		if(StringPool.BLANK.equals(team)){
@@ -568,6 +642,7 @@ public class LmsActivitiesList extends MVCPortlet {
 				ResourcePermissionLocalServiceUtil.setResourcePermissions(t.getCompanyId(), LearningActivity.class.getName(), 
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), actIds);
 				}
+		}
 		}
 	}
 
