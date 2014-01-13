@@ -71,9 +71,9 @@ public class Be_CheckResults extends SeleniumTestCase {
 					}catch(Exception e){}
 					if(text!=null&&!text.equals("")){
 						if(text.equals(Context.getStudentName())){
-							assertEquals("Result for student not match","10010085100100100100-0", goTolink(tr));
+							assertEquals("Result for student not match","10010085100100100100970", goTolink(tr));
 						}else if(text.equals(Context.getStudentName2())){
-							assertEquals("Result for student2 not match","010085100100100100-0", goTolink(tr));
+							assertEquals("Result for student2 not match","010085100100100100770", goTolink(tr));
 						}
 					} 
 				}

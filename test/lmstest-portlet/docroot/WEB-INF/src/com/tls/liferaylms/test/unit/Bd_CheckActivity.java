@@ -224,8 +224,10 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 					  List<WebElement> results = getElements(By.className("floatl"));
 					  assertEquals("Number of results not match",2, results.size());
 					  
-					  assertEquals("Number of result for student not match",97, results.get(0).getText());
-					  assertEquals("Number of result for student2 not match",77, results.get(1).getText());
+					  assertTrue("Number of text length not correct",results.get(0).getText().length()>2);
+					  assertEquals("Number of result for student not match","97", results.get(0).getText().substring(0,2));
+					  assertTrue("Number of text length not correct",results.get(1).getText().length()>2);
+					  assertEquals("Number of result for student2 not match","77", results.get(1).getText().substring(0,2));
 					  
 					  butcontainer = getElement(evaluation, By.className("evaluationAvg"));
 					  assertNotNull("Container for new item button not found", butcontainer);
@@ -278,7 +280,7 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 					  					  
 					  WebElement optionless = getElement(portlet, By.className("option-more"));
 					  
-					  if(getLog().isInfoEnabled())getLog().info("HTML::"+portlet.getAttribute("innerHTML"));
+					  //if(getLog().isInfoEnabled())getLog().info("HTML::"+portlet.getAttribute("innerHTML"));
 					  
 					  
 					  assertNotNull("Not P2P activity found", optionless);
@@ -326,10 +328,14 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 					  assertNotNull("Response in P2P not correct", buttonClose);
 					  buttonClose.click();
 					  
-					  WebElement result =getElement(By.className("color_tercero"));
+					  WebElement resultFather =getElement(By.id("capa3"));
+					  assertNotNull("Not resultFather for P2P found", resultFather);
+					  WebElement result =getElement(resultFather,By.className("color_tercero"));
 					  assertNotNull("Not result for P2P found", result);
 					  String text = result.getText();
-					  assertEquals("Result not expected", "85", text.substring(text.length()-2, text.length()));
+					  assertTrue("Not result lenght expeted",result.getText().length()>=2);
+					  String rText = text.substring(text.length()-2, text.length());
+					  assertTrue("Result not expected, needed 85 or 50:"+rText,rText.equals("50")||rText.equals("85"));
 				  }
 			  }
 			  

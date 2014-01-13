@@ -63,6 +63,8 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						WebElement butForm1 = getElement(By.className("aui-button-input-submit")); 
 						assertNotNull("formSearch not Find", butForm1);
 						butForm1.click();
+
+						Sleep.sleep(4000);
 						
 						WebElement freetext = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_freetext"));
 						assertNotNull("Freetext not Find", freetext);
