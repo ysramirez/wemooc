@@ -71,21 +71,23 @@ DecimalFormat df = new DecimalFormat("#.#");
 		
 		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 		long registered=UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId(),0);
+		
+		
 		long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
+		long iniciados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados;
 		double avgResult=0;
 		if(finalizados>0)
 		{
 			avgResult=CourseResultLocalServiceUtil.avgResult(course.getCourseId());
 		}
 		long activitiesCount=LearningActivityLocalServiceUtil.countLearningActivitiesOfGroup(course.getGroupCreatedId());
-		long iniciados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados;
 		long modulesCount=ModuleLocalServiceUtil.countByGroupId(course.getGroupCreatedId());
 	%>
 		<liferay-ui:search-container-column-text name="title">
 		<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
 		
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text valign="right" name="coursestats.hay">
+		<liferay-ui:search-container-column-text valign="right" name="registered">
 		<%=registered %>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text  valign="right" name="coursestats.start.course">
@@ -97,7 +99,7 @@ DecimalFormat df = new DecimalFormat("#.#");
 		<liferay-ui:search-container-column-text  valign="right" name="closed">
 		<%=course.getClosed() %>
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text  valign="right" name="coursestats.averagegrade">
+		<liferay-ui:search-container-column-text  valign="right" name="coursestats.modulestats.marks.average">
 		<%=df.format(avgResult) %>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text  valign="right" name="coursestats.modulecounter">
