@@ -79,7 +79,8 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 	PortalException {
 		LearningActivity lernact=this.getLearningActivity(actId);
 		if( getPermissionChecker().hasPermission(lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(),
-				ActionKeys.DELETE))
+				ActionKeys.DELETE)|| getPermissionChecker().hasOwnerPermission(lernact.getCompanyId(), LearningActivity.class.getName(), lernact.getActId(),lernact.getUserId(),
+						ActionKeys.DELETE))
 		{
 			learningActivityLocalService.deleteLearningactivity(lernact);
 
