@@ -1,6 +1,5 @@
 package com.liferay.lms.asset;
 
-import java.io.File;
 import java.util.Locale;
 
 import javax.portlet.MimeResponse;
@@ -11,8 +10,6 @@ import javax.portlet.RenderResponse;
 import javax.script.Invocable;
 import javax.script.ScriptException;
 import javax.servlet.http.HttpServletRequest;
-
-import org.apache.commons.io.FileUtils;
 
 import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.ClpSerializer;
@@ -157,8 +154,14 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invo
 			@Override
 			public boolean hasEditPermission(PermissionChecker permissionChecker)
 					throws PortalException, SystemException {
-				return permissionChecker.hasPermission(_scorm.getGroupId(), SCORMContent.class.getName(), _scorm.getScormId(),ActionKeys.UPDATE);
-
+				if( permissionChecker.hasPermission(_scorm.getGroupId(), SCORMContent.class.getName(), _scorm.getScormId(),ActionKeys.UPDATE))
+				{
+					return true;
+				}
+				else
+				{
+					return permissionChecker.hasOwnerPermission(_scorm.getCompanyId(), SCORMContent.class.getName(), _scorm.getScormId(),_scorm.getUserId(),ActionKeys.UPDATE);
+				}
 			}
 			
 			public String getSummary(Locale locale) {
@@ -220,28 +223,4 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invo
 			public <T> T getInterface(Object thiz, Class<T> clasz) {
 				return null;
 			}
-			
-			/*
-			@Override
-			public String getURLMetadata(LiferayPortletRequest liferayPortletRequest,
-					LiferayPortletResponse liferayPortletResponse) {
-				return PortalUtil.getPortalURL(liferayPortletRequest)+"/"+ClpSerializer.getServletContextName()+"/scorm/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/imsmanifest.xml";
-			}
-
-			@Override
-			public String getURLFile(LiferayPortletRequest liferayPortletRequest,
-					LiferayPortletResponse liferayPortletResponse) {
-				return PortalUtil.getPortalURL(liferayPortletRequest)+"/"+ClpSerializer.getServletContextName()+"/scormzip/"+Long.toString(_scorm.getCompanyId())+"/"+Long.toString(_scorm.getGroupId())+"/"+_scorm.getUuid()+"/"+_scorm.getUuid()+".zip?ciphered="+(_scorm.getCiphered() ? "1" : "0");
-			}
-			
-			@Override
-			public String getPathMetadata() {
-				return SCORMContentLocalServiceUtil.getDirScormPath(_scorm)+"/imsmanifest.xml";
-			}
-
-			@Override
-			public String getPathFile() {
-				return SCORMContentLocalServiceUtil.getDirScormzipPath(_scorm)+"/"+_scorm.getUuid()+".zip";
-			}
-			*/
 }
