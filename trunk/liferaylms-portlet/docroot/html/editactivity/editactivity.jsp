@@ -586,7 +586,6 @@ Liferay.provide(
 		    function setStarDateState(){
 		    	AUI().use('node',function(A) {
 			    	var enabled = document.getElementById('<%=renderResponse.getNamespace() %>startdate-enabledCheckbox').checked; 
-					console.log('enabled: '+enabled);
 		    		var selector = 'form[name="<%=renderResponse.getNamespace() %>fm"]';
 		    		
 		    		A.one(selector).one('select[name="<%=renderResponse.getNamespace() %>startDay"]').set('disabled', !enabled);
