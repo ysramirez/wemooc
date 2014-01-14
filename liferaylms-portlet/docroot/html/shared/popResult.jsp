@@ -38,7 +38,7 @@ if(learnResult.getPassed())
 <div id="activityResult" style="display:none">
 <h1><%=title %></h1>
 <div id="actfeedback"><%=actFeedback %></div>
-<div id="score" style='<%=(true)? "display:none":""%>'>
+<div id="score" style='<%=(learningActivity.getTypeId()!=0)? "display:none":""%>'>
 	<b><liferay-ui:message key="shared-you-guess" /> <%=learnResult.getResult()%>% <liferay-ui:message key="shared-in-tarea" /></b>
 </div>
 <%--div class="negrita color_principal"><liferay-ui:message key="shared-guess-badget" /></div--%>
@@ -65,6 +65,9 @@ else
 <div id="activityResult" style="display:none">
 <h1><%=title %></h1>
 <div id="actfeedback"><%=actFeedback %></div>
+<div id="score" style='<%=(learningActivity.getTypeId()!=0)? "display:none":""%>'>
+	<b><liferay-ui:message key="shared-you-guess" /> <%=learnResult.getResult()%>% <liferay-ui:message key="shared-in-tarea" /></b>
+</div>
 <!--  <a class="button">Ver revisi&oacute;n</a>-->
 <aui:button name="cancelButton" type="button" value="acept" onclick="$('#activityResult').dialog('close')"/>
 </div>
