@@ -6,6 +6,11 @@
 <%@include file="/init.jsp" %>
 
 
+<script type="text/javascript">
+	function removeTest(id){
+		if(confirm(""))
+	}
+</script>
 <c:if test="${empty modules}"><liferay-ui:message key="there-are-no-results" />
 </c:if>
 <c:if test="${not empty modules}">

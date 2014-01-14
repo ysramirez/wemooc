@@ -183,7 +183,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			if( permissionChecker.hasPermission(la.getGroupId(), LearningActivity.class.getName(), la.getActId(), ActionKeys.UPDATE)){
 				switch (la.getTypeId()) {
 				case 0:
-
+					cleanLearningActivityTries(la);
 					response.setRenderParameter("status", "ok");
 					break;
 				case 2:
@@ -191,7 +191,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 					response.setRenderParameter("status", "ok");
 					break;
 				case 3:
-
+					cleanLearningActivityTries(la);
 					response.setRenderParameter("status", "ok");
 					break;
 				case 7:
