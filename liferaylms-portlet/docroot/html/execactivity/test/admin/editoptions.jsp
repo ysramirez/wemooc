@@ -49,8 +49,6 @@
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 		
 		//NUEVOS PERMISOS
-		edit = false;
-		
 		//Permisos por el rol del usuario
 		boolean isUserAdmin = themeDisplay.getPermissionChecker().isOmniadmin();
 		boolean canUpdate = permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
