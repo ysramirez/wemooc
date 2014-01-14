@@ -25,7 +25,7 @@
 	boolean disabled = false;
 	
 	//Permiso de editar los campos del extra content.
-	boolean edit = false;
+	boolean edit = true;
 	
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
@@ -49,6 +49,8 @@
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 		
 		//NUEVOS PERMISOS
+		edit = false;
+		
 		//Permisos por el rol del usuario
 		boolean isUserAdmin = themeDisplay.getPermissionChecker().isOmniadmin();
 		boolean canUpdate = permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
