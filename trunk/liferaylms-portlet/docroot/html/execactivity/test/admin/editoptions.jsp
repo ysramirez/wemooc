@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
@@ -16,7 +17,9 @@
 <%
 	long moduleId=ParamUtil.getLong(renderRequest,"resModuleId",0);
 	long random = 0;
-	long questionsPerPage = 0;
+	boolean qppByDefect = false;
+	long questionsPerPage = (PropsUtil.getProperties().getProperty("lms.questionsPerPage")==null)?0:Long.valueOf(PropsUtil.getProperties().getProperty("lms.questionsPerPage"));
+	if(questionsPerPage>0) qppByDefect=true;
 	String password = StringPool.BLANK;
 	long hourDuration=0,minuteDuration=0,secondDuration=0;
 	boolean showCorrectAnswer= false;
@@ -35,7 +38,7 @@
 		}
 		
 		password = HtmlUtil.unescape(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"password")).trim();
-		questionsPerPage = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"questionsPerPage"));
+		if(!qppByDefect) questionsPerPage = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"questionsPerPage"));
 		
 		long timestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"timeStamp"));		
 		hourDuration = timestamp / 3600;
@@ -188,7 +191,7 @@ window.<portlet:namespace />validate_execactivity={
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=!edit %>" ignoreRequestValue="true"
+	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=!edit || qppByDefect %>" ignoreRequestValue="true"
 	helpMessage="execActivity.options.questionsPerPage.helpMessage"></aui:input>
 	<div id="<portlet:namespace />questionsPerPageError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?
