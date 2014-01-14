@@ -16,6 +16,7 @@ package com.liferay.lms.service.impl;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Locale;
 import java.util.Map;
 
 import com.liferay.lms.auditing.AuditConstants;
@@ -151,7 +152,9 @@ public class LearningActivityLocalServiceImpl
 					larn.getActId(), larn.getUuid(),typeId, serviceContext.getAssetCategoryIds(),
 					serviceContext.getAssetTagNames(), true, null, null,
 					new java.util.Date(System.currentTimeMillis()), null,
-					ContentTypes.TEXT_HTML, larn.getTitle(), null, larn.getDescription(serviceContext.getLocale()),null, null, 0, 0,
+					ContentTypes.TEXT_HTML, 
+					larn.getTitle().length()<255 ? larn.getTitle():larn.getTitle(Locale.getDefault()),
+							null, larn.getDescription(serviceContext.getLocale()),null, null, 0, 0,
 					null, false);
 		
 		socialActivityLocalService.addUniqueActivity(
