@@ -72,8 +72,14 @@
 		</liferay-ui:search-container-results>
 		
 		<liferay-ui:search-container-row className="com.liferay.lms.model.Course" keyProperty="courseId" modelVar="course">
+			<portlet:actionURL var="viewCourseURL" name="viewCourse">
+        		<portlet:param name="id" value="<%=String.valueOf(course.getPrimaryKey()) %>" />
+			</portlet:actionURL>
 			<liferay-ui:search-container-column-text>
-				<span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span>
+				<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span></a>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text>
+				<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span></a>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />
