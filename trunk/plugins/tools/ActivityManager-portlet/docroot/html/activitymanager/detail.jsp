@@ -35,6 +35,9 @@
 	function removeUser(id){
 			window.location.href = urluser+"&id="+id;
 	}
+	function recalculateModule(moduleId){
+		
+	}
 </script>
 <c:if test="${empty modules}"><liferay-ui:message key="there-are-no-results" />
 </c:if>
@@ -43,7 +46,13 @@
 		<table class="taglib-search-iterator"><tbody>
 		<c:forEach var="module" items="${modules}">
 			<tr class="portlet-section-header results-header">
-			<th class="col-1 col-1 first" colspan="2">${module.getTitle(themeDisplay.locale)}</td>
+			<th class="col-1 col-1 first">${module.getTitle(themeDisplay.locale)}</th>
+			<th class="col-1 col-1 first">
+				<liferay-ui:icon-menu>
+					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
+					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
+				</liferay-ui:icon-menu>
+			</th>
 			</tr>
 			<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
 				<tr class="portlet-section-body results-row">

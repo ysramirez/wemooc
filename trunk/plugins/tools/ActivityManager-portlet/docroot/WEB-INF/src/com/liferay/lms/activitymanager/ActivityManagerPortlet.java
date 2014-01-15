@@ -6,7 +6,6 @@ import com.liferay.lms.model.Module;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
-import com.liferay.manager.CleanLearningActivityTries;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -25,6 +24,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 import java.io.IOException;
@@ -50,7 +50,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	public void init() throws PortletException {
 		this.viewJSP = getInitParameter("view-template");
 		this.detailJSP = getInitParameter("detail-template");
-		this.userDetailJSP = getInitParameter("userdetail-template");
+	    this.userDetailJSP = getInitParameter("userdetail-template");
 	}
 
 	public void doView(RenderRequest renderRequest,RenderResponse renderResponse) throws IOException, PortletException {
@@ -62,8 +62,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			try{
 				lid = Long.parseLong(id);
 			}catch(NumberFormatException nfe){
-				if(log.isInfoEnabled())log.info(nfe.getMessage());
-				if(log.isDebugEnabled())nfe.printStackTrace();
+				nfe.printStackTrace();
 			}
 			
 			if(lid!=null){
@@ -71,19 +70,16 @@ public class ActivityManagerPortlet extends MVCPortlet {
 				try {
 					course = CourseLocalServiceUtil.getCourse(lid);
 				} catch (PortalException e) {
-					if(log.isInfoEnabled())log.info(e.getMessage());
-					if(log.isDebugEnabled())e.printStackTrace();
+					e.printStackTrace();
 				} catch (SystemException e) {
-					if(log.isInfoEnabled())log.info(e.getMessage());
-					if(log.isDebugEnabled())e.printStackTrace();
+					e.printStackTrace();
 				}
 				if(course!=null){
 					List<Module> modules = null;
 					try {
 						modules = ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
 					} catch (SystemException e) {
-						if(log.isInfoEnabled())log.info(e.getMessage());
-						if(log.isDebugEnabled())e.printStackTrace();
+						e.printStackTrace();
 					}
 					
 					if(modules!=null){
@@ -92,8 +88,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 							try {
 								lacts = LearningActivityLocalServiceUtil.getLearningActivityIdsOfModule(module.getModuleId());
 							} catch (SystemException e) {
-								if(log.isInfoEnabled())log.info(e.getMessage());
-								if(log.isDebugEnabled())e.printStackTrace();
+								e.printStackTrace();
 							}
 							
 							if(lacts!=null){
@@ -102,11 +97,9 @@ public class ActivityManagerPortlet extends MVCPortlet {
 									try {
 										acts.add(LearningActivityLocalServiceUtil.getLearningActivity(idact));
 									} catch (PortalException e) {
-										if(log.isInfoEnabled())log.info(e.getMessage());
-										if(log.isDebugEnabled())e.printStackTrace();
+										e.printStackTrace();
 									} catch (SystemException e) {
-										if(log.isInfoEnabled())log.info(e.getMessage());
-										if(log.isDebugEnabled())e.printStackTrace();
+										e.printStackTrace();
 									}
 								}
 								
@@ -121,49 +114,60 @@ public class ActivityManagerPortlet extends MVCPortlet {
 
 				include(this.detailJSP, renderRequest, renderResponse);
 			}
-		} else if(view != null && "users".equals(view)){
-			String scourse = ParamUtil.getString(renderRequest, "course", "");
-			String sla = ParamUtil.getString(renderRequest, "la", "");
-			
-			Course course = null;
-			try {
-				course = CourseLocalServiceUtil.getCourse(Long.parseLong(scourse));
-			} catch (PortalException e) {
-				if(log.isInfoEnabled())log.info(e.getMessage());
-				if(log.isDebugEnabled())e.printStackTrace();
-			} catch (SystemException e) {
-				if(log.isInfoEnabled())log.info(e.getMessage());
-				if(log.isDebugEnabled())e.printStackTrace();
-			} catch(NumberFormatException e){
-				if(log.isInfoEnabled())log.info(e.getMessage());
-				if(log.isDebugEnabled())e.printStackTrace();
-			}
-			
-			LearningActivity la = null;
-			try {
-				la = LearningActivityLocalServiceUtil.getLearningActivity(Long.parseLong(sla));
-			} catch (PortalException e) {
-				if(log.isInfoEnabled())log.info(e.getMessage());
-				if(log.isDebugEnabled())e.printStackTrace();
-			} catch (SystemException e) {
-				if(log.isInfoEnabled())log.info(e.getMessage());
-				if(log.isDebugEnabled())e.printStackTrace();
-			} catch(NumberFormatException e){
-				if(log.isInfoEnabled())log.info(e.getMessage());
-				if(log.isDebugEnabled())e.printStackTrace();
-			}
-			
-			if(la!=null&&course!=null){
+		}else if ((view != null) && ("users".equals(view))) {
+		      String scourse = ParamUtil.getString(renderRequest, "course", "");
+		      String sla = ParamUtil.getString(renderRequest, "la", "");
 
-				include(this.userDetailJSP, renderRequest, renderResponse);
-			}
-			
-		} else {
-			String freetext = ParamUtil.getString(renderRequest, "freetext", "");
+		      Course course = null;
+		      try {
+		        course = CourseLocalServiceUtil.getCourse(Long.parseLong(scourse));
+		      } catch (PortalException e) {
+		        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+		        if (this.log.isDebugEnabled()) e.printStackTrace(); 
+		      }
+		      catch (SystemException e) { if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+		        if (this.log.isDebugEnabled()) e.printStackTrace();  } catch (NumberFormatException e)
+		      {
+		        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+		        if (this.log.isDebugEnabled()) e.printStackTrace();
+		      }
+
+		      LearningActivity la = null;
+		      try {
+		        la = LearningActivityLocalServiceUtil.getLearningActivity(Long.parseLong(sla));
+		      } catch (PortalException e) {
+		        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+		        if (this.log.isDebugEnabled()) e.printStackTrace(); 
+		      }
+		      catch (SystemException e) { if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+		        if (this.log.isDebugEnabled()) e.printStackTrace();  } catch (NumberFormatException e)
+		      {
+		        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+		        if (this.log.isDebugEnabled()) e.printStackTrace();
+		      }
+
+		      if ((la != null) && (course != null))
+		      {
+		    	  renderRequest.setAttribute("course", course);
+		    	  renderRequest.setAttribute("la", la);
+		    	  long[] users = null;
+		    	  try {
+		    		  users = UserLocalServiceUtil.getGroupUserIds(course.getGroupCreatedId());
+		    	  } catch (SystemException e) {
+				      if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+				      if (this.log.isDebugEnabled()) e.printStackTrace();
+		    	  }
+		    	  renderRequest.setAttribute("users", users);
+		    	  include(this.userDetailJSP, renderRequest, renderResponse);
+		      }
+		    } else {
+			String freetext = ParamUtil
+					.getString(renderRequest, "freetext", "");
 
 			SearchContext scon = new SearchContext();
 
-			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute("THEME_DISPLAY");
+			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest
+					.getAttribute("THEME_DISPLAY");
 			scon.setCompanyId(themeDisplay.getCompanyId());
 
 			if ((freetext != null) && (!"".equals(freetext))) {
@@ -178,8 +182,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 				hits = indexer.search(scon);
 				docs = hits.getDocs();
 			} catch (SearchException e) {
-				if(log.isInfoEnabled())log.info(e.getMessage());
-				if(log.isDebugEnabled())e.printStackTrace();
+				e.printStackTrace();
 			}
 
 			if (docs != null) {
@@ -238,8 +241,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			id = Long.parseLong(sid);
 			la = LearningActivityLocalServiceUtil.getLearningActivity(id);
 		}catch(Exception e){
-			if(log.isInfoEnabled())log.info(e.getMessage());
-			if(log.isDebugEnabled())e.printStackTrace();
+			e.printStackTrace();
 			response.setRenderParameter("error", "no-activity");
 		}
 
@@ -273,15 +275,15 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}
 	}
 	
-	@ProcessAction(name = "users")
+	@ProcessAction(name="users")
 	public void users(ActionRequest request, ActionResponse response) {
-		if (log.isDebugEnabled())log.debug("users");
-		String sid = ParamUtil.getString(request, "id", "");
-		String course = ParamUtil.getString(request, "course", "");
+		if (this.log.isDebugEnabled()) this.log.debug("users");
+	    String sid = ParamUtil.getString(request, "id", "");
+	    String course = ParamUtil.getString(request, "course", "");
 
-		response.setRenderParameter("view", "users");
-		response.setRenderParameter("course", course);
-		response.setRenderParameter("la", sid);
+	    response.setRenderParameter("view", "users");
+	    response.setRenderParameter("course", course);
+	    response.setRenderParameter("la", sid);
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){

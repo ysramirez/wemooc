@@ -59,8 +59,6 @@
 				List<Document> documents = ListUtil.fromArray(docs);
 				documents = ListUtil.subList(documents, containerStart, containerEnd);
 				
-				System.out.println(documents.size());
-				
 				List<Course> courses = new ArrayList<Course>();
 				for(Document doc : documents){
 					try{
