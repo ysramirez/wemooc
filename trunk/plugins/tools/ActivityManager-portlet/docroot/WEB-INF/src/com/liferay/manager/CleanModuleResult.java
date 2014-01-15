@@ -1,6 +1,7 @@
 package com.liferay.manager;
 
-import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityResult;
+import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -16,6 +17,7 @@ public class CleanModuleResult extends CleanLearningActivity implements MessageL
 		long groupId  = message.getLong("groupId");
 		long moduleId = message.getLong("moduleId");
 		long userId   = message.getLong("userId");
+		long actId    = message.getLong("actId");
 		
 		String action = message.getString("action");
 		
@@ -31,7 +33,12 @@ public class CleanModuleResult extends CleanLearningActivity implements MessageL
 			
 			cleanModuleUser(moduleId, userId);
 			
+		} else if("cleanModuleUserAct".equals(action)){
+			
+			cleanModuleUserAct(userId,actId);
+			
 		}
+		
 	}
 	
 	public void cleanAllCourses(){
@@ -82,6 +89,22 @@ public class CleanModuleResult extends CleanLearningActivity implements MessageL
 
 	}
 
+	public void cleanModuleUserAct(long userId, long actId){
+		
+		try {
 
+			LearningActivityResult actResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+			
+			ModuleResultLocalServiceUtil.update(actResult);
+			
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
 	
 }
