@@ -8,6 +8,7 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@include file="/init.jsp" %>
+<%@ include file="/html/head.jsp" %>
 
 <c:if test="${empty users}"><liferay-ui:message key="there-are-no-results" />
 </c:if>

@@ -1,10 +1,11 @@
 
-<%@include file="/init.jsp" %>
-
 <%@page import="java.util.Collections"%>
 <%@page import="com.liferay.lms.service.LearningActivityServiceUtil"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
+
+<%@include file="/init.jsp" %>
+<%@ include file="/html/head.jsp" %>
 
 <portlet:actionURL var="fixAllURL" name="fix">
 	<portlet:param name="action" value="all"/>
