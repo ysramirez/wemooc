@@ -13,6 +13,10 @@
 			<name>detail-template</name>
 			<value>/html/activitymanager/detail.jsp</value>
 		</init-param>
+		<init-param>
+			<name>userdetail-template</name>
+			<value>/html/activitymanager/userDetail.jsp</value>
+		</init-param>
 		<expiration-cache>0</expiration-cache>
 		<supports>
 			<mime-type>text/html</mime-type>
