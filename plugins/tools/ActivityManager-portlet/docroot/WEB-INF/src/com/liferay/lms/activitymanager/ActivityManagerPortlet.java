@@ -17,6 +17,8 @@ import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -138,6 +140,21 @@ public class ActivityManagerPortlet extends MVCPortlet {
 					this.log.debug("Result size::" + docs.length);
 				renderRequest.setAttribute("docs", docs);
 			}
+			
+			String error = ParamUtil.getString(renderRequest, "error", "");
+			String status = ParamUtil.getString(renderRequest, "status", "");
+			
+			if(!"".equals(error)){
+				SessionErrors.add(renderRequest, "error1");
+			}
+			
+			if(!"".equals(status)){
+				if("ko".equals(status)){
+					SessionErrors.add(renderRequest, "ko");
+				}else{
+					SessionMessages.add(renderRequest, "ok");
+				}
+			}
 
 			renderRequest.setAttribute("state", Integer.valueOf(0));
 			include(this.viewJSP, renderRequest, renderResponse);
@@ -199,7 +216,6 @@ public class ActivityManagerPortlet extends MVCPortlet {
 					response.setRenderParameter("status", "ok");
 					break;
 				default:
-
 					response.setRenderParameter("status", "ko");
 					break;
 				}
