@@ -287,11 +287,6 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){
-		//CleanLearningActivityTries clat = new CleanLearningActivityTries(la);
-		//Thread tclat = new Thread (clat);
-		//tclat.start();
-		
-		
 		Message message=new Message();
 		message.put("learningActivity",la);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTries", message);

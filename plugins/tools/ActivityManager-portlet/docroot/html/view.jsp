@@ -6,6 +6,7 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@ include file="/html/init.jsp" %>
+<%@ include file="/html/head.jsp" %>
 
 <liferay-ui:error message="you-do-not-have-the-required-permissions-to-access-this-application" key="error1"/>
 <liferay-ui:error message="error-type" key="ko"/>
