@@ -11,6 +11,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
@@ -226,9 +228,15 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){
-		CleanLearningActivityTries clat = new CleanLearningActivityTries(la);
-		Thread tclat = new Thread (clat);
-		tclat.start();
+		//CleanLearningActivityTries clat = new CleanLearningActivityTries(la);
+		//Thread tclat = new Thread (clat);
+		//tclat.start();
+		
+		
+		Message message=new Message();
+		message.put("learningActivity",la);
+		MessageBusUtil.sendMessage("liferay/lms/cleanTries", message);
+		
 	}
 
 	protected void include(String path, RenderRequest renderRequest,RenderResponse renderResponse) throws IOException, PortletException {
