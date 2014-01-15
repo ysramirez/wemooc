@@ -45,10 +45,12 @@ public class ActivityManagerPortlet extends MVCPortlet {
 
 	protected String viewJSP;
 	protected String detailJSP;
+	protected String userDetailJSP;
 
 	public void init() throws PortletException {
 		this.viewJSP = getInitParameter("view-template");
 		this.detailJSP = getInitParameter("detail-template");
+		this.userDetailJSP = getInitParameter("userdetail-template");
 	}
 
 	public void doView(RenderRequest renderRequest,RenderResponse renderResponse) throws IOException, PortletException {
@@ -60,7 +62,8 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			try{
 				lid = Long.parseLong(id);
 			}catch(NumberFormatException nfe){
-				nfe.printStackTrace();
+				if(log.isInfoEnabled())log.info(nfe.getMessage());
+				if(log.isDebugEnabled())nfe.printStackTrace();
 			}
 			
 			if(lid!=null){
@@ -68,16 +71,19 @@ public class ActivityManagerPortlet extends MVCPortlet {
 				try {
 					course = CourseLocalServiceUtil.getCourse(lid);
 				} catch (PortalException e) {
-					e.printStackTrace();
+					if(log.isInfoEnabled())log.info(e.getMessage());
+					if(log.isDebugEnabled())e.printStackTrace();
 				} catch (SystemException e) {
-					e.printStackTrace();
+					if(log.isInfoEnabled())log.info(e.getMessage());
+					if(log.isDebugEnabled())e.printStackTrace();
 				}
 				if(course!=null){
 					List<Module> modules = null;
 					try {
 						modules = ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
 					} catch (SystemException e) {
-						e.printStackTrace();
+						if(log.isInfoEnabled())log.info(e.getMessage());
+						if(log.isDebugEnabled())e.printStackTrace();
 					}
 					
 					if(modules!=null){
@@ -86,7 +92,8 @@ public class ActivityManagerPortlet extends MVCPortlet {
 							try {
 								lacts = LearningActivityLocalServiceUtil.getLearningActivityIdsOfModule(module.getModuleId());
 							} catch (SystemException e) {
-								e.printStackTrace();
+								if(log.isInfoEnabled())log.info(e.getMessage());
+								if(log.isDebugEnabled())e.printStackTrace();
 							}
 							
 							if(lacts!=null){
@@ -95,9 +102,11 @@ public class ActivityManagerPortlet extends MVCPortlet {
 									try {
 										acts.add(LearningActivityLocalServiceUtil.getLearningActivity(idact));
 									} catch (PortalException e) {
-										e.printStackTrace();
+										if(log.isInfoEnabled())log.info(e.getMessage());
+										if(log.isDebugEnabled())e.printStackTrace();
 									} catch (SystemException e) {
-										e.printStackTrace();
+										if(log.isInfoEnabled())log.info(e.getMessage());
+										if(log.isDebugEnabled())e.printStackTrace();
 									}
 								}
 								
@@ -112,14 +121,49 @@ public class ActivityManagerPortlet extends MVCPortlet {
 
 				include(this.detailJSP, renderRequest, renderResponse);
 			}
+		} else if(view != null && "users".equals(view)){
+			String scourse = ParamUtil.getString(renderRequest, "course", "");
+			String sla = ParamUtil.getString(renderRequest, "la", "");
+			
+			Course course = null;
+			try {
+				course = CourseLocalServiceUtil.getCourse(Long.parseLong(scourse));
+			} catch (PortalException e) {
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			} catch (SystemException e) {
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			} catch(NumberFormatException e){
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			}
+			
+			LearningActivity la = null;
+			try {
+				la = LearningActivityLocalServiceUtil.getLearningActivity(Long.parseLong(sla));
+			} catch (PortalException e) {
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			} catch (SystemException e) {
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			} catch(NumberFormatException e){
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			}
+			
+			if(la!=null&&course!=null){
+
+				include(this.userDetailJSP, renderRequest, renderResponse);
+			}
+			
 		} else {
-			String freetext = ParamUtil
-					.getString(renderRequest, "freetext", "");
+			String freetext = ParamUtil.getString(renderRequest, "freetext", "");
 
 			SearchContext scon = new SearchContext();
 
-			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest
-					.getAttribute("THEME_DISPLAY");
+			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute("THEME_DISPLAY");
 			scon.setCompanyId(themeDisplay.getCompanyId());
 
 			if ((freetext != null) && (!"".equals(freetext))) {
@@ -134,7 +178,8 @@ public class ActivityManagerPortlet extends MVCPortlet {
 				hits = indexer.search(scon);
 				docs = hits.getDocs();
 			} catch (SearchException e) {
-				e.printStackTrace();
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
 			}
 
 			if (docs != null) {
@@ -193,7 +238,8 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			id = Long.parseLong(sid);
 			la = LearningActivityLocalServiceUtil.getLearningActivity(id);
 		}catch(Exception e){
-			e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
 			response.setRenderParameter("error", "no-activity");
 		}
 
@@ -225,6 +271,17 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}else{
 			response.setRenderParameter("error", "no-permissions");
 		}
+	}
+	
+	@ProcessAction(name = "users")
+	public void users(ActionRequest request, ActionResponse response) {
+		if (log.isDebugEnabled())log.debug("users");
+		String sid = ParamUtil.getString(request, "id", "");
+		String course = ParamUtil.getString(request, "course", "");
+
+		response.setRenderParameter("view", "users");
+		response.setRenderParameter("course", course);
+		response.setRenderParameter("la", sid);
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){
