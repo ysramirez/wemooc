@@ -59,17 +59,9 @@
 				<tr class="portlet-section-body results-row">
 				<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
 				<td class="align-left col-1 col-1 first valign-middle">
-				<c:if test="${activity.typeId eq 0 || activity.typeId eq 2 || activity.typeId eq 3 || activity.typeId eq 7 }">
-					<span>
-						<liferay-ui:icon-menu>
-							<liferay-ui:icon image="close" message="actmanager.delete-all-tries" onClick='removeAll(${activity.actId})' url="#"  />
-							<liferay-ui:icon image="close" message="actmanager.delete-notpased-tries" onClick='removeNotPassed(${activity.actId})' url="#" />
-							<c:if test="${activity.typeId eq 0 || activity.typeId eq 2 || activity.typeId eq 7}">
-								<liferay-ui:icon image="assign" message="actmanager.delete-users" onClick='removeUser(${activity.actId})' url="#" />
-							</c:if>
-						</liferay-ui:icon-menu>
-					</span>
-				</c:if>
+					<liferay-util:include page="/html/activitymanager/actions/module_actions_${activity.typeId}.jsp" servletContext="<%=this.getServletContext() %>">
+						<liferay-util:param name="activity" value="${activity.actId}" />
+					</liferay-util:include>
 				</td>
 				</tr>
 			</c:forEach>
