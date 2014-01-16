@@ -1,11 +1,14 @@
 package com.liferay.lms.activitymanager;
 
+import com.liferay.lms.learningactivity.BaseLearningActivityType;
+import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.lms.service.persistence.LearningActivityUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -28,6 +31,8 @@ import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.sun.corba.se.impl.orb.ParserTable.TestLegacyORBSocketFactory;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,7 +101,12 @@ public class ActivityManagerPortlet extends MVCPortlet {
 								List<LearningActivity> acts = new ArrayList<LearningActivity>();
 								for(Long idact : lacts){
 									try {
-										acts.add(LearningActivityLocalServiceUtil.getLearningActivity(idact));
+										LearningActivity la = LearningActivityLocalServiceUtil.getLearningActivity(idact);
+										if(la!=null){
+											la.setNew( LearningActivityLocalServiceUtil.isLearningActivityDeleteTries(Long.valueOf(la.getTypeId())));
+											acts.add(la);
+										}
+										
 									} catch (PortalException e) {
 										e.printStackTrace();
 									} catch (SystemException e) {

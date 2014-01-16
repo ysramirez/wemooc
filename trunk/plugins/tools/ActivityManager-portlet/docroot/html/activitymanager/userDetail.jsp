@@ -101,7 +101,7 @@
 				<%=usert.getOpenId() %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text>
-				<liferay-util:include page="/html/activitymanager/actions/usermodule_actions_${la.typeId}.jsp" servletContext="<%=this.getServletContext() %>">
+				<liferay-util:include page="/html/activitymanager/actions/usermodule_actions.jsp" servletContext="<%=this.getServletContext() %>">
 					<liferay-util:param name="userId" value="<%=String.valueOf(usert.getUserId()) %>" />
 				</liferay-util:include>
 			</liferay-ui:search-container-column-text>
