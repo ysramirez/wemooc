@@ -22,7 +22,7 @@
 
 	boolean anonimous=false;
 	boolean result=false;
-	boolean disabled=false;
+	boolean disabled=true;
 	boolean newOrCourseEditor=true;
 	boolean fileOptional = false;
 	boolean isOmniadmin = false;
@@ -95,7 +95,6 @@
 
 		}
 		
-		//disabled=P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
@@ -107,13 +106,12 @@
 		if(!(notModuleEditable&&(!newOrCourseEditor))){
 			try{
 				isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-				disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
 			}catch(Exception e){
 			
 			}
 		}
 		
-		if(isOmniadmin ){
+		if(isOmniadmin || LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId())){
 			disabled = false;
 		}
 	}else{

@@ -31,6 +31,7 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
+import com.tls.lms.util.LiferaylmsUtil;
 
 public class TestLearningActivityType extends BaseLearningActivityType 
 {
@@ -132,7 +133,8 @@ public class TestLearningActivityType extends BaseLearningActivityType
 		Module module = ModuleLocalServiceUtil.getModule(learningActivity.getModuleId());
 				
 	    if((!module.getStartDate().before(new Date()))||(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR"))
-	    		|| themeDisplay.getPermissionChecker().hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE"))
+	    		|| themeDisplay.getPermissionChecker().hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE")
+	    		|| LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId()))
 	    {
 			Document document = null;
 			Element rootElement = null;

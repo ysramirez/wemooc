@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Resource;
@@ -66,6 +67,24 @@ public class LiferaylmsUtil {
 			}
 		}
 		return res2;
+	}
+	
+	public static boolean canBeEdited(LearningActivity activity, long companyId){
+		try {
+			Role siteMemberRole = RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_MEMBER);
+			boolean isVisible = ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
+					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+			long latry = LearningActivityTryLocalServiceUtil.getTriesCountByActivity(activity.getActId());
+			boolean hasLearningActivityTry = latry>0;
+			return !isVisible && !hasLearningActivityTry;
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return false;
 	}
 	
 }

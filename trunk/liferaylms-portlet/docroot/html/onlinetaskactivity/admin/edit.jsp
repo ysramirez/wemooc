@@ -1,4 +1,4 @@
-<%@page import="com.liferay.lms.service.impl.LearningActivityLocalServiceImpl"%>
+<%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page	import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
@@ -19,27 +19,24 @@
 	boolean fichero = false;
 	boolean textoenr = false;
 	boolean existTries = false;
-	boolean disabled = false;
+	boolean disabled = true;
 	boolean isOmniadmin = false;
 	
 	
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
 		if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
-	
 			fichero = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"fichero"));
 			textoenr = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"textoenr")); 
-				
 		}
 		
 		try{
 			isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-			disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
 		}catch(Exception e){
 			
 		}
 		
-		if(isOmniadmin ){
+		if(isOmniadmin || LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId())){
 			disabled = false;
 		}
 		

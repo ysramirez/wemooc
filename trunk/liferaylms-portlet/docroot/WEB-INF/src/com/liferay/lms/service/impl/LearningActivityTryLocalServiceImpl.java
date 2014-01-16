@@ -218,6 +218,11 @@ public class LearningActivityTryLocalServiceImpl
 		return learningActivityTryPersistence.countByact_u(actId, userId);	
 	}
 	
+	public int getTriesCountByActivity(long actId) throws SystemException, PortalException
+	{ 			
+		return learningActivityTryPersistence.countByact(actId);	
+	}
+	
 	public HashMap<Long, Long> getMapTryResultData(long actId,long userId) throws SystemException, PortalException 
 	{
 		HashMap<Long, Long> answersMap = new HashMap<Long, Long>();
