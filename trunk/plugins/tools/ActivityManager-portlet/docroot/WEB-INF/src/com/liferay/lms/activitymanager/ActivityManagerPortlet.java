@@ -246,6 +246,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	public void fix(ActionRequest request, ActionResponse response) {
 		if (log.isDebugEnabled())log.debug("fix");
 		String sid = ParamUtil.getString(request, "id", "");
+		String action = ParamUtil.getString(request, "action", "");
 		
 		Long id = null;
 		LearningActivity la = null;
@@ -260,27 +261,13 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		if(la!=null){
 			PermissionChecker permissionChecker = PermissionThreadLocal.getPermissionChecker();
 			if( permissionChecker.hasPermission(la.getGroupId(), LearningActivity.class.getName(), la.getActId(), ActionKeys.UPDATE)){
-				switch (la.getTypeId()) {
-				case 0:
+				
+				if(action.equals("all")){
 					cleanLearningActivityTries(la);
-					response.setRenderParameter("status", "ok");
-					break;
-				case 2:
-					cleanLearningActivityTries(la);
-					response.setRenderParameter("status", "ok");
-					break;
-				case 3:
-					cleanLearningActivityTries(la);
-					response.setRenderParameter("status", "ok");
-					break;
-				case 7:
-					cleanLearningActivityTries(la);
-					response.setRenderParameter("status", "ok");
-					break;
-				default:
-					response.setRenderParameter("status", "ko");
-					break;
+				}else if(action.equals("notpassed")){
+					cleanLearningActivityTriesPassed(la);
 				}
+				
 			}else{
 				response.setRenderParameter("error", "no-permissions");
 			}
@@ -332,6 +319,13 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}else{
 			response.setRenderParameter("status", "ko");
 		}
+	}
+	
+	private void cleanLearningActivityTriesPassed(LearningActivity la){
+		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTriesPassed");
+		Message message=new Message();
+		message.put("learningActivity",la);
+		MessageBusUtil.sendMessage("liferay/lms/cleanTriesPassed", message);
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){
