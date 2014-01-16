@@ -21,6 +21,7 @@
 		<supports>
 			<mime-type>text/html</mime-type>
 		</supports>
+		<resource-bundle>content/activitymanager/Language</resource-bundle>
 		<portlet-info>
 			<title>ActivityManager</title>
 			<short-title>ActivityManager</short-title>
