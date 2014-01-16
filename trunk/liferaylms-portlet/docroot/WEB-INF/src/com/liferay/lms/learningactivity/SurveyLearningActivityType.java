@@ -107,4 +107,8 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 		return PORTLET_ID;
 	}
 
+	@Override
+	public boolean hasDeleteTries() {
+		return true;
+	}
 }

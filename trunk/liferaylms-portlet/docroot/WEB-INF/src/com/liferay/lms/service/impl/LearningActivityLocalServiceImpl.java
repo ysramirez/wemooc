@@ -21,6 +21,8 @@ import java.util.Map;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.learningactivity.LearningActivityType;
+import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.ClpSerializer;
@@ -490,6 +492,20 @@ public class LearningActivityLocalServiceImpl
 			
 		} catch (Exception e) {
 		}
+	}
+	
+	public boolean isLearningActivityDeleteTries(long typeId){
+		LearningActivityTypeRegistry learningActivityTypeRegistry = null;
+		try {
+			learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+		
+		if(learningActivityTypeRegistry!=null){
+			return learningActivityTypeRegistry.getLearningActivityType(typeId).hasDeleteTries();
+		}
+		return false;
 	}
 	
 	private String getNameLearningActivity(int type) throws SystemException{

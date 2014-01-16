@@ -10,6 +10,7 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
@@ -93,8 +94,9 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 	public void setExtraContent(UploadRequest uploadRequest,
 			PortletResponse portletResponse, LearningActivity learningActivity)
 			throws PortalException, SystemException, DocumentException,IOException {
-		
-		 DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
+
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");    
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class,classLoader);
 		  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
 			dq.add(criterion);
 			
@@ -213,8 +215,6 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
         	dlMainFolderId = newDocumentMainFolder.getFolderId();
         }
         //Create portlet folder if not exist
-     
-  
         return dlMainFolderId;
 	}
 	
@@ -227,5 +227,9 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 	public String getPortletId() {
 		return PORTLET_ID;
 	}
-		
+
+	@Override
+	public boolean hasDeleteTries() {
+		return true;
+	}
 }
