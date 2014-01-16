@@ -9,7 +9,7 @@
 	</portlet:actionURL>
 	<liferay-ui:message key="model.resource.com.liferay.lms.model.Course" />: <a href="${viewCourseURL}">${course.getTitle(themeDisplay.locale)}</a>
  		<c:if test="${not empty la}">
- 			><liferay-ui:message key="model.resource.com.liferay.lms.model.LearningActivity" />: ${la.getTitle(themeDisplay.locale)}
+ 			> <liferay-ui:message key="model.resource.com.liferay.lms.model.LearningActivity" />: ${la.getTitle(themeDisplay.locale)}
  		</c:if>
 </c:if> 
 </h3>
