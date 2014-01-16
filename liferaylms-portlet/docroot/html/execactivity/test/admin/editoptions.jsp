@@ -1,4 +1,5 @@
 
+<%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
@@ -59,17 +60,8 @@
 		
 		boolean userPermission = isUserAdmin || canUpdate;
 		
-		//Permisos por el estado de la actividad
-		boolean courseStarted = ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date());
-		boolean activityDone = false;
-		if(learningActivity != null){
-			activityDone = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
-		}
-		
-		boolean actStarted = courseStarted || activityDone;
-		
 		//Permiso para editar los campos de la actividad
-		edit = userPermission || !actStarted;
+		edit = userPermission || LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId());
 	}
 
 %>

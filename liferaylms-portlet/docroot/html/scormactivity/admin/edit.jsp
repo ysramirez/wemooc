@@ -1,3 +1,4 @@
+<%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
@@ -204,17 +205,16 @@ function <portlet:namespace />back() {
 <%
 
 
-	boolean disabled = false;
+	boolean disabled = true;
 	boolean isOmniadmin = false;
 	
 	try{
 		isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-		disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
 	}catch(Exception e){
 		
 	}
 	
-	if(isOmniadmin ){
+	if(isOmniadmin || LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId())){
 		disabled = false;
 	}
 
