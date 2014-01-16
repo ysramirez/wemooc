@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.dao.search.RowChecker"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="org.apache.commons.lang.ArrayUtils"%>
 <%@page import="com.liferay.lms.model.ModuleResult"%>
@@ -10,6 +11,18 @@
 <%@include file="/init.jsp" %>
 <%@ include file="/html/head.jsp" %>
 
+<portlet:actionURL var="fixUserTries" name="fixUser">
+	<portlet:param name="action" value="deleteTries"/>
+	<portlet:param name="id" value="${la.actId}"/>
+</portlet:actionURL>
+<script type="text/javascript">
+	var urldeletetries = '${fixUserTries}';
+	function deleteTries(id){
+		if(confirm('<liferay-ui:message key="actmanager.confirm-delete" />')){
+			window.location.href = urldeletetries+"&userid="+id;
+		}
+	}
+</script>
 <c:if test="${empty users}"><liferay-ui:message key="there-are-no-results" />
 </c:if>
 <c:if test="${not empty users}">
@@ -55,12 +68,14 @@
 							//ModuleResult
 							if(lar!=null){
 								useriter.setOpenId(String.valueOf(mr.getResult()));
+								useriter.setEmailAddressVerified(mr.getPassed());
 							}else{
 								useriter.setOpenId("-");
 							}
 							//ActResult
 							if(lar!=null){
 								useriter.setComments(String.valueOf(lar.getResult()));
+								useriter.setCachedModel(lar.getPassed());
 							}else{
 								useriter.setComments("-");
 							}
@@ -69,25 +84,26 @@
 					}catch(Exception e){e.printStackTrace();}
 				}
 				
-				System.out.println(uusers.size());
 				pageContext.setAttribute("results", uusers);
 				pageContext.setAttribute("total", users.length);
 			%>
 		</liferay-ui:search-container-results>
 		<liferay-ui:search-container-row className="com.liferay.portal.model.User" keyProperty="userId" modelVar="usert">
-			<liferay-ui:search-container-column-text name="fullName" >
+			<liferay-ui:search-container-column-text name="full-name" >
 				<%=usert.getFullName() %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="Activity note">
+			<liferay-ui:search-container-column-text name="actmanager.act-result" property="cachedModel" align="center"/>
+			<liferay-ui:search-container-column-text name="actmanager.act-note">
 				<%=usert.getComments() %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="Module note">
+			<liferay-ui:search-container-column-text name="actmanager.mod-result" property="emailAddressVerified" align="center"/>
+			<liferay-ui:search-container-column-text name="actmanager.mod-note">
 				<%=usert.getOpenId() %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text>
-				<liferay-ui:icon-menu>
-					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateUser(<%=usert.getUserId() %>)' url="#"  />
-				</liferay-ui:icon-menu>
+				<liferay-util:include page="/html/activitymanager/actions/usermodule_actions_${la.typeId}.jsp" servletContext="<%=this.getServletContext() %>">
+					<liferay-util:param name="userId" value="<%=String.valueOf(usert.getUserId()) %>" />
+				</liferay-util:include>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />

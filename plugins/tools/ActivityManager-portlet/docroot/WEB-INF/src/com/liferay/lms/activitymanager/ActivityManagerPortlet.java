@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionThreadLocal;
@@ -121,13 +122,14 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		      Course course = null;
 		      try {
 		        course = CourseLocalServiceUtil.getCourse(Long.parseLong(scourse));
-		      } catch (PortalException e) {
+		      } catch (PortalException e){
 		        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
 		        if (this.log.isDebugEnabled()) e.printStackTrace(); 
 		      }
-		      catch (SystemException e) { if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
-		        if (this.log.isDebugEnabled()) e.printStackTrace();  } catch (NumberFormatException e)
-		      {
+		      catch (SystemException e){
+		    	  if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+		    	  if (this.log.isDebugEnabled()) e.printStackTrace();  
+		      }catch (NumberFormatException e){
 		        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
 		        if (this.log.isDebugEnabled()) e.printStackTrace();
 		      }
@@ -269,9 +271,11 @@ public class ActivityManagerPortlet extends MVCPortlet {
 					response.setRenderParameter("status", "ko");
 					break;
 				}
+			}else{
+				response.setRenderParameter("error", "no-permissions");
 			}
 		}else{
-			response.setRenderParameter("error", "no-permissions");
+			response.setRenderParameter("error", "no-activity");
 		}
 	}
 	
@@ -284,6 +288,34 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	    response.setRenderParameter("view", "users");
 	    response.setRenderParameter("course", course);
 	    response.setRenderParameter("la", sid);
+	}
+
+	@ProcessAction(name="fixUser")
+	public void fixUser(ActionRequest request, ActionResponse response) {
+		if (log.isDebugEnabled())log.debug("fix");
+		String userid = ParamUtil.getString(request, "userid", "");
+		String actid = ParamUtil.getString(request, "id", "");
+		String action = ParamUtil.getString(request, "action", "");
+		
+		LearningActivity la = null;
+		try{
+			la = LearningActivityLocalServiceUtil.getLearningActivity(Long.parseLong(actid));
+		}catch(Exception e){
+			e.printStackTrace();
+			response.setRenderParameter("error", "no-activity");
+		}
+		
+		User user = null;
+		try{
+			user = UserLocalServiceUtil.getUser(Long.parseLong(userid));
+		}catch(Exception e){
+			e.printStackTrace();
+			response.setRenderParameter("error", "no-user");
+		}
+		
+		if(user!=null&&la!=null){
+			
+		}
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){
