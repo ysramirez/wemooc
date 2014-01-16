@@ -49,10 +49,10 @@
 			<tr class="portlet-section-header results-header">
 			<th class="col-1 col-1 first">${module.getTitle(themeDisplay.locale)}</th>
 			<th class="col-1 col-1 first">
-				<liferay-ui:icon-menu>
+				<%-- liferay-ui:icon-menu>
 					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
 					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
-				</liferay-ui:icon-menu>
+				</liferay-ui:icon-menu --%>
 			</th>
 			</tr>
 			<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
