@@ -322,10 +322,10 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	}
 	
 	private void cleanLearningActivityTriesPassed(LearningActivity la){
-		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTriesPassed");
+		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTriesUserNotPassed");
 		Message message=new Message();
 		message.put("learningActivity",la);
-		MessageBusUtil.sendMessage("liferay/lms/cleanTriesPassed", message);
+		MessageBusUtil.sendMessage("liferay/lms/cleanTriesUserNotPassed", message);
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){
