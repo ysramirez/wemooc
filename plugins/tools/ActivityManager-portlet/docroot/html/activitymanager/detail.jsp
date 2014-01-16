@@ -57,7 +57,7 @@
 			</tr>
 			<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
 				<tr class="portlet-section-body results-row">
-				<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}-${activity.isNew()}</td>
+				<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
 				<td class="align-left col-1 col-1 first valign-middle">
 					<c:if test="${activity.isNew()}">
 						<liferay-util:include page="/html/activitymanager/actions/module_actions.jsp" servletContext="<%=this.getServletContext() %>">
