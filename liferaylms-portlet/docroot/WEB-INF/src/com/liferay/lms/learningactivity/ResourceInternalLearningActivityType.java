@@ -231,5 +231,9 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 	public String getPortletId() {
 		return PORTLET_ID;
 	}
-	
+
+	@Override
+	public boolean hasDeleteTries() {
+		return true;
+	}
 }
