@@ -71,12 +71,14 @@ public class LiferaylmsUtil {
 	
 	public static boolean canBeEdited(LearningActivity activity, long companyId){
 		try {
-			Role siteMemberRole = RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_MEMBER);
-			boolean isVisible = ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
-					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
-			long latry = LearningActivityTryLocalServiceUtil.getTriesCountByActivity(activity.getActId());
-			boolean hasLearningActivityTry = latry>0;
-			return !isVisible && !hasLearningActivityTry;
+			if(activity!=null){
+				Role siteMemberRole = RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_MEMBER);
+				boolean isVisible = ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+				long latry = LearningActivityTryLocalServiceUtil.getTriesCountByActivity(activity.getActId());
+				boolean hasLearningActivityTry = latry>0;
+				return !isVisible && !hasLearningActivityTry;
+			}else return true;
 		} catch (PortalException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
