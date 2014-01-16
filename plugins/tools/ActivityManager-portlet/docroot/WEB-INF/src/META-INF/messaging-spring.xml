@@ -7,10 +7,18 @@
 	<bean id="messageListener.liferay.lms.cleanTries_listener"
 		class="com.liferay.manager.CleanLearningActivityTries" />
 	
+	<bean id="messageListener.liferay.lms.cleanTriesUser_listener"
+		class="com.liferay.manager.CleanLearningActivityTriesUser" />
+	
 	<!-- Destinations -->
 	<bean id="destination.liferay.lms.cleanTries"
 		class="com.liferay.portal.kernel.messaging.SerialDestination">
 		<property name="name" value="liferay/lms/cleanTries" />
+	</bean>
+	
+	<bean id="destination.liferay.lms.cleanTriesUser"
+		class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="liferay/lms/cleanTriesUser" />
 	</bean>
 	
 	<!-- Configurator -->
@@ -23,11 +31,17 @@
 						<ref bean="messageListener.liferay.lms.cleanTries_listener" />
 					</list>
 				</entry>
+				<entry key="liferay/lms/cleanTriesUser">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.liferay.lms.cleanTriesUser_listener" />
+					</list>
+				</entry>
 			</map>
 		</property>
 		<property name="destinations">
 			<list>
 				<ref bean="destination.liferay.lms.cleanTries" />
+				<ref bean="destination.liferay.lms.cleanTriesUser" />
 			</list>
 		</property>
 	</bean>
