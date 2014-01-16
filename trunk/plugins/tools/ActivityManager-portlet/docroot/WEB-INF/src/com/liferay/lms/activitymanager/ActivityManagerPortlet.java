@@ -292,7 +292,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 
 	@ProcessAction(name="fixUser")
 	public void fixUser(ActionRequest request, ActionResponse response) {
-		if (log.isDebugEnabled())log.debug("fix");
+		if (log.isDebugEnabled())log.debug("fixUser");
 		String userid = ParamUtil.getString(request, "userid", "");
 		String actid = ParamUtil.getString(request, "id", "");
 		String action = ParamUtil.getString(request, "action", "");
@@ -314,14 +314,30 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}
 		
 		if(user!=null&&la!=null){
-			
+			if(action.equals("deleteTries")){
+				cleanLearningActivityTriesUser(la,user);
+			}else{
+				response.setRenderParameter("status", "ko");
+			}
+		}else{
+			response.setRenderParameter("status", "ko");
 		}
 	}
 	
 	private void cleanLearningActivityTries(LearningActivity la){
+		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTries");
 		Message message=new Message();
 		message.put("learningActivity",la);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTries", message);
+		
+	}
+
+	private void cleanLearningActivityTriesUser(LearningActivity la,User user){
+		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTriesUser");
+		Message message=new Message();
+		message.put("learningActivity",la);
+		message.put("user",user);
+		MessageBusUtil.sendMessage("liferay/lms/cleanTriesUser", message);
 		
 	}
 

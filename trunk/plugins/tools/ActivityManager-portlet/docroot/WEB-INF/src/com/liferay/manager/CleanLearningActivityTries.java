@@ -24,18 +24,15 @@ import com.liferay.portal.kernel.messaging.MessageListenerException;
  * Portlet implementation class ActivityManager
  */
 public class CleanLearningActivityTries extends CleanLearningActivity implements MessageListener{
-	Log log = LogFactoryUtil.getLog(ActivityManagerPortlet.class);
+	Log log = LogFactoryUtil.getLog(CleanLearningActivityTries.class);
 	private LearningActivity la = null;
 	
-	public CleanLearningActivityTries(){}
+	public CleanLearningActivityTries(){
+	}
 	
 	public CleanLearningActivityTries(LearningActivity la) {
 		super();
 		this.la = la;
-	}
-
-	public void run() {
-		process();
 	}
  
 	public void process(){
@@ -63,17 +60,21 @@ public class CleanLearningActivityTries extends CleanLearningActivity implements
 
 	@Override
 	public void receive(Message message) throws MessageListenerException {
+		setRunning(true);
 		
 		try {
 			
 			this.la = (LearningActivity)message.get("learningActivity");
 		
-			System.out.println(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId());
+			if(log.isDebugEnabled())log.debug(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId());
 			
 			process();
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
+		} finally {
+			setRunning(false);
 		}
 		
 	}
