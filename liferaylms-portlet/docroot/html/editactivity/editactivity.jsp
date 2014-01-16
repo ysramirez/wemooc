@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
@@ -484,7 +485,7 @@ Liferay.provide(
 				
 		if(larntype.isScoreConfigurable())
 		{
-			long score=larntype.getDefaultScore();
+			long score=Long.valueOf(LearningActivityResultLocalServiceUtil.translateResult(themeDisplay.getLocale(), larntype.getDefaultScore(), themeDisplay.getScopeGroupId()));
 			if(learnact!=null)
 			{
 				score=learnact.getPasspuntuation();
