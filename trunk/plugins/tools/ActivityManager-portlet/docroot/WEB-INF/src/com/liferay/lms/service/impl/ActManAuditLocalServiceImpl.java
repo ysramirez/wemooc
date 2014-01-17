@@ -14,13 +14,17 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.List;
+
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.model.ActManAudit;
+import com.liferay.lms.service.ActManAuditLocalServiceUtil;
 import com.liferay.lms.service.base.ActManAuditLocalServiceBaseImpl;
 import com.liferay.lms.service.persistence.ActManAuditUtil;
+import com.liferay.manager.CleanLearningActivityTriesUser;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.tls.npa.lsb.tls.badge.model.Badge;
-import com.tls.npa.lsb.tls.badge.service.persistence.BadgeUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 
 /**
  * The implementation of the act man audit local service.
@@ -37,6 +41,7 @@ import com.tls.npa.lsb.tls.badge.service.persistence.BadgeUtil;
  * @see com.liferay.lms.service.ActManAuditLocalServiceUtil
  */
 public class ActManAuditLocalServiceImpl extends ActManAuditLocalServiceBaseImpl {
+	Log log = LogFactoryUtil.getLog(ActManAuditLocalServiceImpl.class);
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -63,5 +68,25 @@ public class ActManAuditLocalServiceImpl extends ActManAuditLocalServiceBaseImpl
 		ActManAudit returned = ActManAuditUtil.update(fileobj, false);
 
 	    return returned;
+	}
+	
+	public List<ActManAudit> findBycompanyId(long companyId, int start, int end){
+		try {
+			return ActManAuditUtil.findBycompanyId(companyId, start, end);
+		} catch (SystemException e) {
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public int countBycompanyId(long companyId){
+	    try {
+			return ActManAuditUtil.countBycompanyId(companyId);
+		} catch (SystemException e) {
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
+			return 0;
+		}
 	}
 }
