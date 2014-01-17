@@ -10,10 +10,13 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 
 public class CleanLearningActivity {
-
 	public static boolean running = false ;
 	
 	private ActManAudit actManAudit = null;
+	
+	public CleanLearningActivity(){
+		createInstance();
+	}
 	
 	public ActManAudit createInstance(){
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();

@@ -31,13 +31,14 @@ public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity i
 	private User user = null;
 	
 	public CleanLearningActivityTriesNotPassed(){
+		super();
 	}
 
 	public void process() throws Exception{
 		
 		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
 		
-		//Los resultados que tengan fecha y no estén aprobados. 
+		//Los resultados que tengan fecha y no estï¿½n aprobados. 
 		DynamicQuery dq = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class,classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(la.getActId()))
 				.add(PropertyFactoryUtil.forName("passed").ne(true))
