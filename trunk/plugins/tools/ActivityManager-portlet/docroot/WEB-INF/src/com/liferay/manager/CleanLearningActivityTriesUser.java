@@ -21,6 +21,7 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 	private User user = null;
 	
 	public CleanLearningActivityTriesUser(){
+		super();
 	}
 
 	public void process() throws Exception{

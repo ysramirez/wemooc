@@ -30,6 +30,7 @@ public class CleanLearningActivityTries extends CleanLearningActivity implements
 	private LearningActivity la = null;
 	
 	public CleanLearningActivityTries(){
+		super();
 	}
 	
 	public CleanLearningActivityTries(LearningActivity la) {
