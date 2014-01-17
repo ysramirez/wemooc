@@ -19,7 +19,10 @@ import com.liferay.counter.service.CounterLocalService;
 import com.liferay.lms.model.ActManAudit;
 import com.liferay.lms.service.ActManAuditLocalService;
 import com.liferay.lms.service.ActManAuditService;
+import com.liferay.lms.service.LearningActivityTryDeletedLocalService;
+import com.liferay.lms.service.LearningActivityTryDeletedService;
 import com.liferay.lms.service.persistence.ActManAuditPersistence;
+import com.liferay.lms.service.persistence.LearningActivityTryDeletedPersistence;
 
 import com.liferay.portal.kernel.bean.BeanReference;
 import com.liferay.portal.kernel.bean.IdentifiableBean;
@@ -110,6 +113,63 @@ public abstract class ActManAuditServiceBaseImpl extends BaseServiceImpl
 	public void setActManAuditPersistence(
 		ActManAuditPersistence actManAuditPersistence) {
 		this.actManAuditPersistence = actManAuditPersistence;
+	}
+
+	/**
+	 * Returns the learning activity try deleted local service.
+	 *
+	 * @return the learning activity try deleted local service
+	 */
+	public LearningActivityTryDeletedLocalService getLearningActivityTryDeletedLocalService() {
+		return learningActivityTryDeletedLocalService;
+	}
+
+	/**
+	 * Sets the learning activity try deleted local service.
+	 *
+	 * @param learningActivityTryDeletedLocalService the learning activity try deleted local service
+	 */
+	public void setLearningActivityTryDeletedLocalService(
+		LearningActivityTryDeletedLocalService learningActivityTryDeletedLocalService) {
+		this.learningActivityTryDeletedLocalService = learningActivityTryDeletedLocalService;
+	}
+
+	/**
+	 * Returns the learning activity try deleted remote service.
+	 *
+	 * @return the learning activity try deleted remote service
+	 */
+	public LearningActivityTryDeletedService getLearningActivityTryDeletedService() {
+		return learningActivityTryDeletedService;
+	}
+
+	/**
+	 * Sets the learning activity try deleted remote service.
+	 *
+	 * @param learningActivityTryDeletedService the learning activity try deleted remote service
+	 */
+	public void setLearningActivityTryDeletedService(
+		LearningActivityTryDeletedService learningActivityTryDeletedService) {
+		this.learningActivityTryDeletedService = learningActivityTryDeletedService;
+	}
+
+	/**
+	 * Returns the learning activity try deleted persistence.
+	 *
+	 * @return the learning activity try deleted persistence
+	 */
+	public LearningActivityTryDeletedPersistence getLearningActivityTryDeletedPersistence() {
+		return learningActivityTryDeletedPersistence;
+	}
+
+	/**
+	 * Sets the learning activity try deleted persistence.
+	 *
+	 * @param learningActivityTryDeletedPersistence the learning activity try deleted persistence
+	 */
+	public void setLearningActivityTryDeletedPersistence(
+		LearningActivityTryDeletedPersistence learningActivityTryDeletedPersistence) {
+		this.learningActivityTryDeletedPersistence = learningActivityTryDeletedPersistence;
 	}
 
 	/**
@@ -301,6 +361,12 @@ public abstract class ActManAuditServiceBaseImpl extends BaseServiceImpl
 	protected ActManAuditService actManAuditService;
 	@BeanReference(type = ActManAuditPersistence.class)
 	protected ActManAuditPersistence actManAuditPersistence;
+	@BeanReference(type = LearningActivityTryDeletedLocalService.class)
+	protected LearningActivityTryDeletedLocalService learningActivityTryDeletedLocalService;
+	@BeanReference(type = LearningActivityTryDeletedService.class)
+	protected LearningActivityTryDeletedService learningActivityTryDeletedService;
+	@BeanReference(type = LearningActivityTryDeletedPersistence.class)
+	protected LearningActivityTryDeletedPersistence learningActivityTryDeletedPersistence;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
 	@BeanReference(type = ResourceLocalService.class)

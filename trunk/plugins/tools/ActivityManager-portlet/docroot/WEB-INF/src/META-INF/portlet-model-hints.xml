@@ -15,4 +15,18 @@
 		<field name="userTargetId" type="long" />
 		<field name="actId" type="long" />
 	</model>
+	<model name="com.liferay.lms.model.LearningActivityTryDeleted">
+		<field name="uuid" type="String" />
+		<field name="latDelId" type="long" />
+		<field name="actManAuditId" type="long" />
+		<field name="latId" type="long" />
+		<field name="actId" type="long" />
+		<field name="userId" type="long" />
+		<field name="startDate" type="Date" />
+		<field name="result" type="long" />
+		<field name="endDate" type="Date" />
+		<field name="tryData" type="String" />
+		<field name="tryResultData" type="String" />
+		<field name="comments" type="String" />
+	</model>
 </model-hints>

@@ -37,8 +37,38 @@
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
+	<mapped-superclass class="com.liferay.lms.model.impl.LearningActivityTryDeletedModelImpl">
+		<attributes>
+			<id name="latDelId" />
+			<basic name="uuid">
+				<column name="UUID_" />
+			</basic>
+			<basic name="actManAuditId" />
+			<basic name="latId" />
+			<basic name="actId" />
+			<basic name="userId" />
+			<basic name="startDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="result" />
+			<basic name="endDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="tryData" />
+			<basic name="tryResultData" />
+			<basic name="comments" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
 	<entity class="com.liferay.lms.model.impl.ActManAuditImpl" name="ActManAudit">
 		<table name="lms_ActManAudit" />
+		<attributes />
+	</entity>
+	<entity class="com.liferay.lms.model.impl.LearningActivityTryDeletedImpl" name="LearningActivityTryDeleted">
+		<table name="lms_LearningActivityTryDeleted" />
 		<attributes />
 	</entity>
 </entity-mappings>

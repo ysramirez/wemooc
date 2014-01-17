@@ -108,17 +108,17 @@ public class ActManAuditLocalServiceClpInvoker {
 				"com.liferay.lms.model.ActManAudit", "boolean"
 			};
 
-		_methodName39 = "getBeanIdentifier";
+		_methodName45 = "getBeanIdentifier";
 
-		_methodParameterTypes39 = new String[] {  };
+		_methodParameterTypes45 = new String[] {  };
 
-		_methodName40 = "setBeanIdentifier";
+		_methodName46 = "setBeanIdentifier";
 
-		_methodParameterTypes40 = new String[] { "java.lang.String" };
+		_methodParameterTypes46 = new String[] { "java.lang.String" };
 
-		_methodName45 = "addActManAudit";
+		_methodName51 = "addActManAudit";
 
-		_methodParameterTypes45 = new String[] {
+		_methodParameterTypes51 = new String[] {
 				"com.liferay.lms.model.ActManAudit"
 			};
 	}
@@ -218,18 +218,18 @@ public class ActManAuditLocalServiceClpInvoker {
 				((Boolean)arguments[1]).booleanValue());
 		}
 
-		if (_methodName39.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes39, parameterTypes)) {
+		if (_methodName45.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
 			return ActManAuditLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName40.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes40, parameterTypes)) {
+		if (_methodName46.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes46, parameterTypes)) {
 			ActManAuditLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 		}
 
-		if (_methodName45.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
+		if (_methodName51.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes51, parameterTypes)) {
 			return ActManAuditLocalServiceUtil.addActManAudit((com.liferay.lms.model.ActManAudit)arguments[0]);
 		}
 
@@ -270,10 +270,10 @@ public class ActManAuditLocalServiceClpInvoker {
 	private String[] _methodParameterTypes15;
 	private String _methodName16;
 	private String[] _methodParameterTypes16;
-	private String _methodName39;
-	private String[] _methodParameterTypes39;
-	private String _methodName40;
-	private String[] _methodParameterTypes40;
 	private String _methodName45;
 	private String[] _methodParameterTypes45;
+	private String _methodName46;
+	private String[] _methodParameterTypes46;
+	private String _methodName51;
+	private String[] _methodParameterTypes51;
 }
