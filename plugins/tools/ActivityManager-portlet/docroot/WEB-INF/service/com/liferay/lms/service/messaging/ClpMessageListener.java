@@ -17,6 +17,8 @@ package com.liferay.lms.service.messaging;
 import com.liferay.lms.service.ActManAuditLocalServiceUtil;
 import com.liferay.lms.service.ActManAuditServiceUtil;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.LearningActivityTryDeletedLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityTryDeletedServiceUtil;
 
 import com.liferay.portal.kernel.messaging.BaseMessageListener;
 import com.liferay.portal.kernel.messaging.Message;
@@ -39,6 +41,9 @@ public class ClpMessageListener extends BaseMessageListener {
 			ActManAuditLocalServiceUtil.clearService();
 
 			ActManAuditServiceUtil.clearService();
+			LearningActivityTryDeletedLocalServiceUtil.clearService();
+
+			LearningActivityTryDeletedServiceUtil.clearService();
 		}
 	}
 }

@@ -15,6 +15,7 @@
 package com.liferay.lms.service;
 
 import com.liferay.lms.model.ActManAuditClp;
+import com.liferay.lms.model.LearningActivityTryDeletedClp;
 
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -106,6 +107,11 @@ public class ClpSerializer {
 			return translateInputActManAudit(oldModel);
 		}
 
+		if (oldModelClassName.equals(
+					LearningActivityTryDeletedClp.class.getName())) {
+			return translateInputLearningActivityTryDeleted(oldModel);
+		}
+
 		return oldModel;
 	}
 
@@ -125,6 +131,17 @@ public class ClpSerializer {
 		ActManAuditClp oldClpModel = (ActManAuditClp)oldModel;
 
 		BaseModel<?> newModel = oldClpModel.getActManAuditRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
+	}
+
+	public static Object translateInputLearningActivityTryDeleted(
+		BaseModel<?> oldModel) {
+		LearningActivityTryDeletedClp oldClpModel = (LearningActivityTryDeletedClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getLearningActivityTryDeletedRemoteModel();
 
 		newModel.setModelAttributes(oldClpModel.getModelAttributes());
 
@@ -151,6 +168,11 @@ public class ClpSerializer {
 		if (oldModelClassName.equals(
 					"com.liferay.lms.model.impl.ActManAuditImpl")) {
 			return translateOutputActManAudit(oldModel);
+		}
+
+		if (oldModelClassName.equals(
+					"com.liferay.lms.model.impl.LearningActivityTryDeletedImpl")) {
+			return translateOutputLearningActivityTryDeleted(oldModel);
 		}
 
 		return oldModel;
@@ -237,6 +259,11 @@ public class ClpSerializer {
 			return new com.liferay.lms.NoSuchActManAuditException();
 		}
 
+		if (className.equals(
+					"com.liferay.lms.NoSuchLearningActivityTryDeletedException")) {
+			return new com.liferay.lms.NoSuchLearningActivityTryDeletedException();
+		}
+
 		return throwable;
 	}
 
@@ -246,6 +273,17 @@ public class ClpSerializer {
 		newModel.setModelAttributes(oldModel.getModelAttributes());
 
 		newModel.setActManAuditRemoteModel(oldModel);
+
+		return newModel;
+	}
+
+	public static Object translateOutputLearningActivityTryDeleted(
+		BaseModel<?> oldModel) {
+		LearningActivityTryDeletedClp newModel = new LearningActivityTryDeletedClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setLearningActivityTryDeletedRemoteModel(oldModel);
 
 		return newModel;
 	}

@@ -1918,6 +1918,8 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 
 	@BeanReference(type = ActManAuditPersistence.class)
 	protected ActManAuditPersistence actManAuditPersistence;
+	@BeanReference(type = LearningActivityTryDeletedPersistence.class)
+	protected LearningActivityTryDeletedPersistence learningActivityTryDeletedPersistence;
 	@BeanReference(type = ResourcePersistence.class)
 	protected ResourcePersistence resourcePersistence;
 	@BeanReference(type = UserPersistence.class)

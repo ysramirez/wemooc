@@ -22,4 +22,25 @@
 		</finder>
     </entity>
     
+    <entity name="LearningActivityTryDeleted" uuid="true" local-service="true">
+    	<column name="latDelId" type="long" primary="true" />
+    	<column name="actManAuditId" type="long" />
+		<column name="latId" type="long" />
+		<column name="actId" type="long" />
+		<column name="userId" type="long" />
+		<column name="startDate" type="Date" />
+		<column name="result" type="long" />
+		<column name="endDate" type="Date" />
+		<column name="tryData" type="String" />
+		<column name="tryResultData" type="String" />
+		<column name="comments" type="String" />
+        <order>
+            <order-column name="latDelId"></order-column>
+        </order>
+		
+		<finder name="actDel" return-type="Collection">
+			<finder-column name="latDelId" />
+		</finder>
+	</entity>
+    
 </service-builder>

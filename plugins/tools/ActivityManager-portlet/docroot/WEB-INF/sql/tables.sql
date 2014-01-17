@@ -12,3 +12,18 @@ create table lms_ActManAudit (
 	userTargetId LONG,
 	actId LONG
 );
+
+create table lms_LearningActivityTryDeleted (
+	uuid_ VARCHAR(75) null,
+	latDelId LONG not null primary key,
+	actManAuditId LONG,
+	latId LONG,
+	actId LONG,
+	userId LONG,
+	startDate DATE null,
+	result LONG,
+	endDate DATE null,
+	tryData VARCHAR(75) null,
+	tryResultData VARCHAR(75) null,
+	comments VARCHAR(75) null
+);

@@ -3,6 +3,7 @@
 
 <hibernate-mapping default-lazy="false" auto-import="false">
 	<import class="com.liferay.lms.model.ActManAudit" />
+	<import class="com.liferay.lms.model.LearningActivityTryDeleted" />
 	<class name="com.liferay.lms.model.impl.ActManAuditImpl" table="lms_ActManAudit">
 		<cache usage="read-write" />
 		<id name="actManAuditId" type="long">
@@ -19,5 +20,22 @@
 		<property name="state" type="com.liferay.portal.dao.orm.hibernate.StringType" column="state_" />
 		<property name="userTargetId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="actId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+	</class>
+	<class name="com.liferay.lms.model.impl.LearningActivityTryDeletedImpl" table="lms_LearningActivityTryDeleted">
+		<cache usage="read-write" />
+		<id name="latDelId" type="long">
+			<generator class="assigned" />
+		</id>
+		<property name="uuid" type="com.liferay.portal.dao.orm.hibernate.StringType" column="uuid_" />
+		<property name="actManAuditId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="latId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="actId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="startDate" type="org.hibernate.type.TimestampType" />
+		<property name="result" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="endDate" type="org.hibernate.type.TimestampType" />
+		<property name="tryData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="tryResultData" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="comments" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 	</class>
 </hibernate-mapping>

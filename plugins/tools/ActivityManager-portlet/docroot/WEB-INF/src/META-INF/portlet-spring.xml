@@ -4,4 +4,7 @@
 	<bean id="com.liferay.lms.service.ActManAuditLocalService" class="com.liferay.lms.service.impl.ActManAuditLocalServiceImpl" />
 	<bean id="com.liferay.lms.service.ActManAuditService" class="com.liferay.lms.service.impl.ActManAuditServiceImpl" />
 	<bean id="com.liferay.lms.service.persistence.ActManAuditPersistence" class="com.liferay.lms.service.persistence.ActManAuditPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.lms.service.LearningActivityTryDeletedLocalService" class="com.liferay.lms.service.impl.LearningActivityTryDeletedLocalServiceImpl" />
+	<bean id="com.liferay.lms.service.LearningActivityTryDeletedService" class="com.liferay.lms.service.impl.LearningActivityTryDeletedServiceImpl" />
+	<bean id="com.liferay.lms.service.persistence.LearningActivityTryDeletedPersistence" class="com.liferay.lms.service.persistence.LearningActivityTryDeletedPersistenceImpl" parent="basePersistence" />
 </beans>
