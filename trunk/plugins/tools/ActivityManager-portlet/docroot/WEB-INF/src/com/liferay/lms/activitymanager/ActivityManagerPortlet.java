@@ -264,8 +264,10 @@ public class ActivityManagerPortlet extends MVCPortlet {
 				
 				if(action.equals("all")){
 					cleanLearningActivityTries(la);
+					response.setRenderParameter("status", "ok");
 				}else if(action.equals("notpassed")){
 					cleanLearningActivityTriesPassed(la);
+					response.setRenderParameter("status", "ok");
 				}
 				
 			}else{
@@ -313,6 +315,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		if(user!=null&&la!=null){
 			if(action.equals("deleteTries")){
 				cleanLearningActivityTriesUser(la,user);
+				response.setRenderParameter("status", "ok");
 			}else{
 				response.setRenderParameter("status", "ko");
 			}
