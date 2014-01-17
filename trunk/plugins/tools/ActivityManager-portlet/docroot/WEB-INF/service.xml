@@ -34,9 +34,6 @@
 		<column name="tryData" type="String" />
 		<column name="tryResultData" type="String" />
 		<column name="comments" type="String" />
-        <order>
-            <order-column name="latDelId"></order-column>
-        </order>
 		
 		<finder name="actDel" return-type="Collection">
 			<finder-column name="latDelId" />
