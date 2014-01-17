@@ -7,6 +7,7 @@ import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -17,6 +18,8 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class LmsConfig extends MVCPortlet {
 	public void changeSettings(ActionRequest request , ActionResponse response) throws Exception
 	{
+		String redirect = ParamUtil.get(request, "redirect", "");
+		
 		String sitetemplates=StringUtil.merge(request.getParameterMap().get( "lmsTemplatesCheckbox"));
 		String activitytypes=StringUtil.merge(request.getParameterMap().get( "activitiesCheckbox"));
 		ThemeDisplay themeDisplay  =(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -25,6 +28,10 @@ public class LmsConfig extends MVCPortlet {
 		prefs.setLmsTemplates(sitetemplates);
 		prefs.setActivities(activitytypes);
 		LmsPrefsLocalServiceUtil.updateLmsPrefs(prefs);
+		
+		if (Validator.isNotNull(redirect)) {
+			response.sendRedirect(redirect);
+		}
 
 	}
 }

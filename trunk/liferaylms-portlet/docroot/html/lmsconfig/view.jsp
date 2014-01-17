@@ -1,3 +1,7 @@
+<%@page import="java.util.Map"%>
+<%@page import="java.util.HashMap"%>
+<%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.portal.model.LayoutSetPrototype"%>
@@ -24,27 +28,21 @@ if(prefs!=null)
 	{
 		layoutsettemplateids[i]=Long.parseLong(layoutsettemplateidsString[i]);
 	}
-	String[] activityidsString=prefs.getActivities().split(",");
-	long[] activityids=new long[activityidsString.length];
-	for(int i=0;i<activityidsString.length;i++)
-	{
-		activityids[i]=Long.parseLong(activityidsString[i]);
-	}
+	List<Long> activityids = ListUtil.toList(StringUtil.split(prefs.getActivities(), ",", 0L));
 %>
 <liferay-portlet:actionURL name="changeSettings" var="changeSettingsURL">
 </liferay-portlet:actionURL>
 <aui:form action="<%=changeSettingsURL %>" method="POST">
+<aui:input type="hidden" name="redirect" value="<%= currentURL %>" />
 <aui:field-wrapper label="site-templates">
 <%
 
 for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.search(themeDisplay.getCompanyId(),true,0, 1000000,null))
 {
 	boolean checked=false;
-	String writechecked="false";
 	if(ArrayUtils.contains(layoutsettemplateids, layoutsetproto.getLayoutSetPrototypeId()))
 	{
 		checked=true;
-		writechecked="true";
 	}
 	%>
 	
@@ -54,29 +52,55 @@ for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.search(
 }
 %>
 </aui:field-wrapper>
-<aui:field-wrapper label="lms-activities">
+<liferay-ui:header title="lms-activities"/>
+<ul id="lms-sortable-activities-contentor">
 <%
+
 LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
-for(LearningActivityType learningActivityType:learningActivityTypeRegistry.getLearningActivityTypes())
+List<LearningActivityType> learningActivityTypes = learningActivityTypeRegistry.getLearningActivityTypes();
+Map<Long, LearningActivityType> mapaLats = new HashMap<Long, LearningActivityType>();
+
+int numMarkedActivities = activityids.size();
+
+for (LearningActivityType learningActivityType : learningActivityTypes)
 {
-	boolean checked=false;
-	String writechecked="false";
-	if(activityids!=null &&activityids.length>0 && ArrayUtils.contains(activityids, learningActivityType.getTypeId()))
-	{
-		checked=true;
-		writechecked="true";
+	mapaLats.put(learningActivityType.getTypeId(), learningActivityType);
+	if (!activityids.contains(learningActivityType.getTypeId())) {
+		activityids.add(learningActivityType.getTypeId());
 	}
+}
+
+
+int i = 0;
+for (Long activityId : activityids) {
+	LearningActivityType learningActivityType = mapaLats.get(activityId);
 	%>
-	
-	<aui:input type="checkbox" name="activities" 
-	label="<%=learningActivityType.getName()  %>" checked="<%=checked %>" value="<%=learningActivityType.getTypeId()%>" />
+	<li class="lms-sortable-activities">
+		<aui:input type="checkbox" name="activities" label="<%= learningActivityType.getName() %>" checked="<%= (i < numMarkedActivities) %>" value="<%= learningActivityType.getTypeId() %>" />
+	</li>
 	<%
+	i++;
 }
 %>
-</aui:field-wrapper>
+</ul>
+
 <aui:input type="submit" name="save" value="save" />
 
 </aui:form>
 <%
 }
 %>
+
+<script type="text/javascript">
+AUI().ready(
+    'aui-sortable',
+   function(A) {
+        window.<portlet:namespace/>lmsActivitiesSortable = new A.Sortable(
+            {
+                nodes: '.lms-sortable-activities'
+            }
+        );
+    }
+);
+
+</script>

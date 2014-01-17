@@ -49,13 +49,11 @@ if (blacklistProp != null) {
 		blacklist = ListUtil.fromArray(blacklistArray);
 	}
 }
-for(Long key:classTypes.keySet())
+for(Long key:activityids)
 {
 	if (blacklist.contains(key.toString())) {
-		break;
+		continue;
 	}
-	if(ArrayUtils.contains(activityids, key))
-	{
 	String classname=classTypes.get(key);
 %>	
 	<liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
@@ -75,7 +73,6 @@ for(Long key:classTypes.keySet())
 		<liferay-ui:icon image="add" label="<%=true%>" message="<%=activityMessage %>" url="<%=newactivityURL%>" cssClass="activity-icon" />
 	</li>
 <%
-	}
 }
 %>
 </ul>
