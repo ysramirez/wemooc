@@ -9,6 +9,7 @@ import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityResultServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.persistence.LearningActivityResultUtil;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
@@ -24,12 +25,12 @@ import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.model.User;
 
-public class CleanLearningActivityTriesUserNotPassed extends CleanLearningActivity implements MessageListener{
+public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity implements MessageListener{
 	Log log = LogFactoryUtil.getLog(CleanLearningActivityTriesUser.class);
 	private LearningActivity la = null;
 	private User user = null;
 	
-	public CleanLearningActivityTriesUserNotPassed(){
+	public CleanLearningActivityTriesNotPassed(){
 	}
 
 	public void process() throws Exception{
@@ -39,14 +40,14 @@ public class CleanLearningActivityTriesUserNotPassed extends CleanLearningActivi
 		//Los resultados que tengan fecha y no estén aprobados. 
 		DynamicQuery dq = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class,classLoader)
 				.add(PropertyFactoryUtil.forName("actId").eq(la.getActId()))
-				.add(PropertyFactoryUtil.forName("passed").eq(0))
+				.add(PropertyFactoryUtil.forName("passed").ne(true))
 				.add(PropertyFactoryUtil.forName("endDate").isNotNull());
 
-		List<LearningActivityResult> results = LearningActivityResultUtil.findWithDynamicQuery(dq);
-		
+		//List<LearningActivityResult> results = LearningActivityResultUtil.findWithDynamicQuery(dq);
+		List<LearningActivityResult> results = LearningActivityResultLocalServiceUtil.dynamicQuery(dq);
 		
 		for(LearningActivityResult result:results){
-			System.out.println(" result : " + result.getActId()+" - "+result.getUserId() );
+			System.out.println(" result : " + result.getActId()+", result: "+result.getUserId() +", passed: "+result.getPassed() );
 
 			List<LearningActivityTry> tries = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(result.getActId(), result.getUserId());
 			
@@ -77,6 +78,8 @@ public class CleanLearningActivityTriesUserNotPassed extends CleanLearningActivi
 		}catch(Exception e){
 			if(log.isInfoEnabled())log.info(e.getMessage());
 			if(log.isDebugEnabled())e.printStackTrace();
+			
+			e.printStackTrace();
 		} finally {
 			setRunning(false);
 		}
