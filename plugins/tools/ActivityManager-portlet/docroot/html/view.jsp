@@ -8,10 +8,6 @@
 <%@ include file="/html/init.jsp" %>
 <%@ include file="/html/head.jsp" %>
 
-<liferay-ui:error message="you-do-not-have-the-required-permissions-to-access-this-application" key="error1"/>
-<liferay-ui:error message="error-type" key="ko"/>
-<liferay-ui:success message="your-request-completed-successfully" key="ok" />
-
 <portlet:actionURL var="searchURL" name="search" />
 
 	<div class="admin-course-search-form">

@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE service-builder PUBLIC "-//Liferay//DTD Service Builder 6.0.0//EN" "http://www.liferay.com/dtd/liferay-service-builder_6_0_0.dtd">
+<service-builder package-path="com.liferay.lms">
+	<author>TLS</author>
+	<namespace>lms</namespace>
+	
+    <entity name="ActManAudit" local-service="true" uuid="true">
+		<column name="actManAuditId" type="long" primary="true" />
+        <column name="companyId" type="long" />
+		<column name="groupId" type="long" />
+		<column name="userId" type="long" />
+		<column name="courseId" type="long" />
+        <column name="className" type="String" />
+        <column name="start" type="Date" />
+        <column name="end" type="Date" />
+        <column name="state" type="String" />
+		<column name="userTargetId" type="long" />
+		<column name="actId" type="long" />
+        
+		<finder name="companyId" return-type="Collection">	
+			<finder-column name="companyId" />
+		</finder>
+    </entity>
+    
+</service-builder>

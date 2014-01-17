@@ -1,5 +1,8 @@
-
 <%@ include file="/html/init.jsp" %>
+
+<liferay-ui:error message="you-do-not-have-the-required-permissions-to-access-this-application" key="error1"/>
+<liferay-ui:error message="error-type" key="ko"/>
+<liferay-ui:success message="your-request-completed-successfully" key="ok" />
 
 <portlet:renderURL var="portletURL" />
 <h3><a href="${portletURL}">></a>

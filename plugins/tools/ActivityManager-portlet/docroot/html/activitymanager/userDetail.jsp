@@ -66,7 +66,7 @@
 							LearningActivityResult lar = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(la.getActId(), userId);
 							ModuleResult mr = ModuleResultLocalServiceUtil.getByModuleAndUser(la.getModuleId(), userId);
 							//ModuleResult
-							if(lar!=null){
+							if(mr!=null){
 								useriter.setOpenId(String.valueOf(mr.getResult()));
 								useriter.setEmailAddressVerified(mr.getPassed());
 							}else{

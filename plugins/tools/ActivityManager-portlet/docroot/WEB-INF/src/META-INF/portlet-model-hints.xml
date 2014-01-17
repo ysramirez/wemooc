@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+
+<model-hints>
+	<model name="com.liferay.lms.model.ActManAudit">
+		<field name="uuid" type="String" />
+		<field name="actManAuditId" type="long" />
+		<field name="companyId" type="long" />
+		<field name="groupId" type="long" />
+		<field name="userId" type="long" />
+		<field name="courseId" type="long" />
+		<field name="className" type="String" />
+		<field name="start" type="Date" />
+		<field name="end" type="Date" />
+		<field name="state" type="String" />
+		<field name="userTargetId" type="long" />
+		<field name="actId" type="long" />
+	</model>
+</model-hints>
