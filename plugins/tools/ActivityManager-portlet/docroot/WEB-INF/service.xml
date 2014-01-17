@@ -36,7 +36,7 @@
 		<column name="comments" type="String" />
 		
 		<finder name="actDel" return-type="Collection">
-			<finder-column name="latDelId" />
+			<finder-column name="actManAuditId" />
 		</finder>
 	</entity>
     
