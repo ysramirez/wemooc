@@ -49,14 +49,13 @@ public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity i
 		List<LearningActivityResult> results = LearningActivityResultLocalServiceUtil.dynamicQuery(dq);
 		
 		for(LearningActivityResult result:results){
-			System.out.println(" result : " + result.getActId()+", result: "+result.getUserId() +", passed: "+result.getPassed() );
+			if(log.isDebugEnabled())log.debug(" result : " + result.getActId()+", result: "+result.getUserId() +", passed: "+result.getPassed() );
 
 			List<LearningActivityTry> tries = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(result.getActId(), result.getUserId());
 			
 			for(LearningActivityTry ltry:tries){
-				System.out.println("   try : " + ltry.getLatId()+" - "+ltry.getResult());
-				
-				LearningActivityTryLocalServiceUtil.deleteLearningActivityTry(ltry);
+				if(log.isDebugEnabled())log.debug("   try : " + ltry.getLatId()+" - "+ltry.getResult());
+				processTry(ltry);
 			}
 			
 			LearningActivityResultLocalServiceUtil.deleteLearningActivityResult(result);
