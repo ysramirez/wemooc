@@ -1,14 +1,12 @@
 package com.liferay.lms.activitymanager;
 
-import com.liferay.lms.learningactivity.BaseLearningActivityType;
-import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
-import com.liferay.lms.service.persistence.LearningActivityUtil;
+import com.liferay.lmssa.service.ActManAuditLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -31,7 +29,6 @@ import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
-import com.sun.corba.se.impl.orb.ParserTable.TestLegacyORBSocketFactory;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -217,7 +214,9 @@ public class ActivityManagerPortlet extends MVCPortlet {
 					SessionMessages.add(renderRequest, "ok");
 				}
 			}
-
+			
+			int auditsnum = ActManAuditLocalServiceUtil.countBycompanyId(themeDisplay.getCompanyId());
+			renderRequest.setAttribute("auditsnum", auditsnum);
 			renderRequest.setAttribute("state", Integer.valueOf(0));
 			include(this.viewJSP, renderRequest, renderResponse);
 		}
@@ -247,6 +246,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		if (log.isDebugEnabled())log.debug("fix");
 		String sid = ParamUtil.getString(request, "id", "");
 		String action = ParamUtil.getString(request, "action", "");
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute("THEME_DISPLAY");
 		
 		Long id = null;
 		LearningActivity la = null;
@@ -263,10 +263,10 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			if( permissionChecker.hasPermission(la.getGroupId(), LearningActivity.class.getName(), la.getActId(), ActionKeys.UPDATE)){
 				
 				if(action.equals("all")){
-					cleanLearningActivityTries(la);
+					cleanLearningActivityTries(la,themeDisplay.getUser());
 					response.setRenderParameter("status", "ok");
 				}else if(action.equals("notpassed")){
-					cleanLearningActivityTriesPassed(la);
+					cleanLearningActivityTriesPassed(la,themeDisplay.getUser());
 					response.setRenderParameter("status", "ok");
 				}
 				
@@ -295,6 +295,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		String userid = ParamUtil.getString(request, "userid", "");
 		String actid = ParamUtil.getString(request, "id", "");
 		String action = ParamUtil.getString(request, "action", "");
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute("THEME_DISPLAY");
 		
 		LearningActivity la = null;
 		try{
@@ -314,7 +315,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		
 		if(user!=null&&la!=null){
 			if(action.equals("deleteTries")){
-				cleanLearningActivityTriesUser(la,user);
+				cleanLearningActivityTriesUser(la,user,themeDisplay.getUser());
 				response.setRenderParameter("status", "ok");
 			}else{
 				response.setRenderParameter("status", "ko");
@@ -324,26 +325,29 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}
 	}
 	
-	private void cleanLearningActivityTriesPassed(LearningActivity la){
+	private void cleanLearningActivityTriesPassed(LearningActivity la,User userc){
 		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTriesNotPassed");
 		Message message=new Message();
 		message.put("learningActivity",la);
+		message.put("userc",userc);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTriesNotPassed", message);
 	}
 	
-	private void cleanLearningActivityTries(LearningActivity la){
+	private void cleanLearningActivityTries(LearningActivity la, User userc){
 		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTries");
 		Message message=new Message();
 		message.put("learningActivity",la);
+		message.put("userc",userc);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTries", message);
 		
 	}
 
-	private void cleanLearningActivityTriesUser(LearningActivity la,User user){
+	private void cleanLearningActivityTriesUser(LearningActivity la,User user,User userc){
 		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTriesUser");
 		Message message=new Message();
 		message.put("learningActivity",la);
 		message.put("user",user);
+		message.put("userc",userc);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTriesUser", message);
 		
 	}
