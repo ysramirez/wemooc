@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lmssa.service.ActManAuditLocalServiceUtil"%>
+<%@page import="com.liferay.lmssa.model.ActManAudit"%>
 <%@page import="com.liferay.portal.kernel.search.Field"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
@@ -27,12 +29,12 @@
 		</aui:form>
 	</div>
 	
+<% 
+	PortletURL filter = renderResponse.createRenderURL();
+	filter.setParameter("freetext", ParamUtil.getString(request, "freetext",""));
+%>
 <c:if test="${not empty docs}">
-	<% 
-		PortletURL filter = renderResponse.createRenderURL();
-		filter.setParameter("freetext", ParamUtil.getString(request, "freetext",""));
-	%>
-	<liferay-ui:search-container iteratorURL="<%=filter %>" emptyResultsMessage="there-are-no-courses" delta="10">
+	<liferay-ui:search-container curParam="courses" iteratorURL="<%=filter %>" emptyResultsMessage="there-are-no-courses" delta="10">
 		<liferay-ui:search-container-results>
 			<%
 
@@ -61,9 +63,10 @@
 					try{
 						Course course = CourseLocalServiceUtil.getCourse(Long.parseLong(doc.get(Field.ENTRY_CLASS_PK)));
 						courses.add(course);
-					}catch(Exception e){}
+					}catch(Exception e){e.printStackTrace();}
 				}
-
+				
+				System.out.print(docs.length);
 				pageContext.setAttribute("results", courses);
 				pageContext.setAttribute("total", docs.length);
 			%>
@@ -78,6 +81,45 @@
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text>
 				<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span></a>
+			</liferay-ui:search-container-column-text>
+		</liferay-ui:search-container-row>
+		<liferay-ui:search-iterator />
+	</liferay-ui:search-container>
+</c:if>
+<c:if test="${auditsnum ne 0}">
+	<liferay-ui:search-container iteratorURL="<%=filter %>" curParam="audit" emptyResultsMessage="there-are-no-courses" delta="10">
+		<liferay-ui:search-container-results>
+			<%
+
+				int containerStart;
+				int containerEnd;
+				try {
+					containerStart = ParamUtil.getInteger(request, "containerStart");
+					containerEnd = ParamUtil.getInteger(request, "containerEnd");
+				} catch (Exception e) {
+					containerStart = searchContainer.getStart();
+					containerEnd = searchContainer.getEnd();
+				}
+				if (containerStart <=0) {
+					containerStart = searchContainer.getStart();
+					containerEnd = searchContainer.getEnd();
+				}
+				
+				int auditsnum = ParamUtil.getInteger(request, "auditsnum");
+
+				List<ActManAudit> audits = new ArrayList<ActManAudit>();
+
+				try{
+					audits = ActManAuditLocalServiceUtil.findBycompanyId(themeDisplay.getCompanyId(), containerStart, containerEnd);
+				}catch(Exception e){}
+
+				pageContext.setAttribute("results", audits);
+				pageContext.setAttribute("total", auditsnum);
+			%>
+		</liferay-ui:search-container-results>
+		<liferay-ui:search-container-row className="com.liferay.lmssa.model.ActManAudit" keyProperty="actManAuditId" modelVar="audit">
+			<liferay-ui:search-container-column-text>
+				<%=audit.getActManAuditId()%>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />
