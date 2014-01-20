@@ -2,9 +2,9 @@
 <!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping default-lazy="false" auto-import="false">
-	<import class="com.liferay.lms.model.ActManAudit" />
-	<import class="com.liferay.lms.model.LearningActivityTryDeleted" />
-	<class name="com.liferay.lms.model.impl.ActManAuditImpl" table="lms_ActManAudit">
+	<import class="com.liferay.lmssa.model.ActManAudit" />
+	<import class="com.liferay.lmssa.model.LearningActivityTryDeleted" />
+	<class name="com.liferay.lmssa.model.impl.ActManAuditImpl" table="lmssa_ActManAudit">
 		<cache usage="read-write" />
 		<id name="actManAuditId" type="long">
 			<generator class="assigned" />
@@ -21,7 +21,7 @@
 		<property name="userTargetId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="actId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
-	<class name="com.liferay.lms.model.impl.LearningActivityTryDeletedImpl" table="lms_LearningActivityTryDeleted">
+	<class name="com.liferay.lmssa.model.impl.LearningActivityTryDeletedImpl" table="lmssa_LearningActivityTryDeleted">
 		<cache usage="read-write" />
 		<id name="latDelId" type="long">
 			<generator class="assigned" />

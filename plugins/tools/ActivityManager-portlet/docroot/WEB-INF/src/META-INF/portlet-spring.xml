@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" default-destroy-method="destroy" default-init-method="afterPropertiesSet" xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd">
-	<bean id="com.liferay.lms.service.ActManAuditLocalService" class="com.liferay.lms.service.impl.ActManAuditLocalServiceImpl" />
-	<bean id="com.liferay.lms.service.ActManAuditService" class="com.liferay.lms.service.impl.ActManAuditServiceImpl" />
-	<bean id="com.liferay.lms.service.persistence.ActManAuditPersistence" class="com.liferay.lms.service.persistence.ActManAuditPersistenceImpl" parent="basePersistence" />
-	<bean id="com.liferay.lms.service.LearningActivityTryDeletedLocalService" class="com.liferay.lms.service.impl.LearningActivityTryDeletedLocalServiceImpl" />
-	<bean id="com.liferay.lms.service.LearningActivityTryDeletedService" class="com.liferay.lms.service.impl.LearningActivityTryDeletedServiceImpl" />
-	<bean id="com.liferay.lms.service.persistence.LearningActivityTryDeletedPersistence" class="com.liferay.lms.service.persistence.LearningActivityTryDeletedPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.lmssa.service.ActManAuditLocalService" class="com.liferay.lmssa.service.impl.ActManAuditLocalServiceImpl" />
+	<bean id="com.liferay.lmssa.service.ActManAuditService" class="com.liferay.lmssa.service.impl.ActManAuditServiceImpl" />
+	<bean id="com.liferay.lmssa.service.persistence.ActManAuditPersistence" class="com.liferay.lmssa.service.persistence.ActManAuditPersistenceImpl" parent="basePersistence" />
+	<bean id="com.liferay.lmssa.service.LearningActivityTryDeletedLocalService" class="com.liferay.lmssa.service.impl.LearningActivityTryDeletedLocalServiceImpl" />
+	<bean id="com.liferay.lmssa.service.LearningActivityTryDeletedService" class="com.liferay.lmssa.service.impl.LearningActivityTryDeletedServiceImpl" />
+	<bean id="com.liferay.lmssa.service.persistence.LearningActivityTryDeletedPersistence" class="com.liferay.lmssa.service.persistence.LearningActivityTryDeletedPersistenceImpl" parent="basePersistence" />
 </beans>

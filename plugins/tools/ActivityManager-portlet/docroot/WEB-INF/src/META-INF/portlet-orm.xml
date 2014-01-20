@@ -7,7 +7,7 @@
 			<access>PROPERTY</access>
 		</persistence-unit-defaults>
 	</persistence-unit-metadata>
-	<mapped-superclass class="com.liferay.lms.model.impl.ActManAuditModelImpl">
+	<mapped-superclass class="com.liferay.lmssa.model.impl.ActManAuditModelImpl">
 		<attributes>
 			<id name="actManAuditId" />
 			<basic name="uuid">
@@ -37,7 +37,7 @@
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
-	<mapped-superclass class="com.liferay.lms.model.impl.LearningActivityTryDeletedModelImpl">
+	<mapped-superclass class="com.liferay.lmssa.model.impl.LearningActivityTryDeletedModelImpl">
 		<attributes>
 			<id name="latDelId" />
 			<basic name="uuid">
@@ -63,12 +63,12 @@
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
-	<entity class="com.liferay.lms.model.impl.ActManAuditImpl" name="ActManAudit">
-		<table name="lms_ActManAudit" />
+	<entity class="com.liferay.lmssa.model.impl.ActManAuditImpl" name="ActManAudit">
+		<table name="lmssa_ActManAudit" />
 		<attributes />
 	</entity>
-	<entity class="com.liferay.lms.model.impl.LearningActivityTryDeletedImpl" name="LearningActivityTryDeleted">
-		<table name="lms_LearningActivityTryDeleted" />
+	<entity class="com.liferay.lmssa.model.impl.LearningActivityTryDeletedImpl" name="LearningActivityTryDeleted">
+		<table name="lmssa_LearningActivityTryDeleted" />
 		<attributes />
 	</entity>
 </entity-mappings>
