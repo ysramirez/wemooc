@@ -22,13 +22,18 @@ public class CleanLearningActivity {
 	public CleanLearningActivity(){
 	}
 	
-	public ActManAudit createInstance(){
+	public ActManAudit createInstance(long companyId,long groupId,long userId){
+		if(log.isDebugEnabled())log.debug("createInstance");
+		setRunning(true);
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
 		actManAudit = new ActManAuditImpl();
 		actManAudit.setClassName(this.getClass().getName());
-		if(serviceContext!=null)
-			actManAudit.setCompanyId(serviceContext.getCompanyId());
+		
+		actManAudit.setCompanyId(companyId);
+		actManAudit.setGroupId(groupId);
+		actManAudit.setUserId(userId);
+		
 		actManAudit.setStart(new Date());
 		actManAudit.setState("run");
 		
@@ -42,6 +47,21 @@ public class CleanLearningActivity {
 		} catch (BeanLocatorException e) {
 			
 		}
+		return actManAudit;
+	}
+
+	public ActManAudit endInstance(){
+		if(log.isDebugEnabled())log.debug("endInstance");
+		actManAudit.setEnd(new Date());
+		actManAudit.setState("stop");
+		try {
+			actManAudit = ActManAuditLocalServiceUtil.updateActManAudit(actManAudit);
+		} catch (SystemException e) {
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
+		}
+		setRunning(false);
+		
 		return actManAudit;
 	}
 

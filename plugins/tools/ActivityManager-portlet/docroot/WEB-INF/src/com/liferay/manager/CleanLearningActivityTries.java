@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
+import com.liferay.portal.model.User;
 
 /**
  * Portlet implementation class ActivityManager
@@ -28,6 +29,7 @@ import com.liferay.portal.kernel.messaging.MessageListenerException;
 public class CleanLearningActivityTries extends CleanLearningActivity implements MessageListener{
 	Log log = LogFactoryUtil.getLog(CleanLearningActivityTries.class);
 	private LearningActivity la = null;
+	private User userc = null;
 	
 	public CleanLearningActivityTries(){
 		super();
@@ -71,11 +73,12 @@ public class CleanLearningActivityTries extends CleanLearningActivity implements
 
 	@Override
 	public void receive(Message message) throws MessageListenerException {
-		setRunning(true);
 		
 		try {
-			
 			this.la = (LearningActivity)message.get("learningActivity");
+			User user = (User)message.get("userc");
+
+			createInstance(la.getCompanyId(),la.getGroupId(),user.getUserId());
 		
 			if(log.isDebugEnabled())log.debug(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId());
 			
@@ -88,5 +91,6 @@ public class CleanLearningActivityTries extends CleanLearningActivity implements
 			setRunning(false);
 		}
 		
+		endInstance();
 	}
 }
