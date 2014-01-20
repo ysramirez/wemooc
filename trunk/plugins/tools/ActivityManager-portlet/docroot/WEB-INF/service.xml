@@ -17,7 +17,7 @@
 		<column name="userTargetId" type="long" />
 		<column name="actId" type="long" />
         
-		<finder name="companyId" return-type="Collection">	
+		<finder name="companyId" return-type="Collection">
 			<finder-column name="companyId" />
 		</finder>
     </entity>
