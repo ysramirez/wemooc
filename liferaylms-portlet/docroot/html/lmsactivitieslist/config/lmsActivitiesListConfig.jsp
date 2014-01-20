@@ -18,7 +18,7 @@
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>
 <aui:form action="<%=saveConfigurationURL %>" >
 	<aui:input type="hidden" name="<%=Constants.CMD %>" value="<%=Constants.UPDATE %>" />
-	<aui:select label="view"  name="viewMode">
+	<aui:select label="viewMode"  name="viewMode">
 		<% boolean selected = viewMode.compareTo("0") == 0; %>
 		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "lmsactivitieslist.view.complete") %></aui:option>
 		<% selected = viewMode.compareTo("1") == 0; %>
