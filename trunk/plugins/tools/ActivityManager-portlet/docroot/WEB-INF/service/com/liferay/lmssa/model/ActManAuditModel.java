@@ -219,32 +219,18 @@ public interface ActManAuditModel extends BaseModel<ActManAudit> {
 	public void setState(String state);
 
 	/**
-	 * Returns the user target ID of this act man audit.
+	 * Returns the number of this act man audit.
 	 *
-	 * @return the user target ID of this act man audit
+	 * @return the number of this act man audit
 	 */
-	public long getUserTargetId();
+	public long getNumber();
 
 	/**
-	 * Sets the user target ID of this act man audit.
+	 * Sets the number of this act man audit.
 	 *
-	 * @param userTargetId the user target ID of this act man audit
+	 * @param number the number of this act man audit
 	 */
-	public void setUserTargetId(long userTargetId);
-
-	/**
-	 * Returns the act ID of this act man audit.
-	 *
-	 * @return the act ID of this act man audit
-	 */
-	public long getActId();
-
-	/**
-	 * Sets the act ID of this act man audit.
-	 *
-	 * @param actId the act ID of this act man audit
-	 */
-	public void setActId(long actId);
+	public void setNumber(long number);
 
 	public boolean isNew();
 

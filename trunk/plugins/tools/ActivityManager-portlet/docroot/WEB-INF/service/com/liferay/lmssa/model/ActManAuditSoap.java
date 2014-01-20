@@ -41,8 +41,7 @@ public class ActManAuditSoap implements Serializable {
 		soapModel.setStart(model.getStart());
 		soapModel.setEnd(model.getEnd());
 		soapModel.setState(model.getState());
-		soapModel.setUserTargetId(model.getUserTargetId());
-		soapModel.setActId(model.getActId());
+		soapModel.setNumber(model.getNumber());
 
 		return soapModel;
 	}
@@ -175,20 +174,12 @@ public class ActManAuditSoap implements Serializable {
 		_state = state;
 	}
 
-	public long getUserTargetId() {
-		return _userTargetId;
+	public long getNumber() {
+		return _number;
 	}
 
-	public void setUserTargetId(long userTargetId) {
-		_userTargetId = userTargetId;
-	}
-
-	public long getActId() {
-		return _actId;
-	}
-
-	public void setActId(long actId) {
-		_actId = actId;
+	public void setNumber(long number) {
+		_number = number;
 	}
 
 	private String _uuid;
@@ -201,6 +192,5 @@ public class ActManAuditSoap implements Serializable {
 	private Date _start;
 	private Date _end;
 	private String _state;
-	private long _userTargetId;
-	private long _actId;
+	private long _number;
 }

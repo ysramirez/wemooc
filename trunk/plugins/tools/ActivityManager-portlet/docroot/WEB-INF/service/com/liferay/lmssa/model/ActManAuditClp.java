@@ -77,8 +77,7 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		attributes.put("start", getStart());
 		attributes.put("end", getEnd());
 		attributes.put("state", getState());
-		attributes.put("userTargetId", getUserTargetId());
-		attributes.put("actId", getActId());
+		attributes.put("number", getNumber());
 
 		return attributes;
 	}
@@ -145,16 +144,10 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 			setState(state);
 		}
 
-		Long userTargetId = (Long)attributes.get("userTargetId");
+		Long number = (Long)attributes.get("number");
 
-		if (userTargetId != null) {
-			setUserTargetId(userTargetId);
-		}
-
-		Long actId = (Long)attributes.get("actId");
-
-		if (actId != null) {
-			setActId(actId);
+		if (number != null) {
+			setNumber(number);
 		}
 	}
 
@@ -246,20 +239,12 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		_state = state;
 	}
 
-	public long getUserTargetId() {
-		return _userTargetId;
+	public long getNumber() {
+		return _number;
 	}
 
-	public void setUserTargetId(long userTargetId) {
-		_userTargetId = userTargetId;
-	}
-
-	public long getActId() {
-		return _actId;
-	}
-
-	public void setActId(long actId) {
-		_actId = actId;
+	public void setNumber(long number) {
+		_number = number;
 	}
 
 	public BaseModel<?> getActManAuditRemoteModel() {
@@ -299,8 +284,7 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		clone.setStart(getStart());
 		clone.setEnd(getEnd());
 		clone.setState(getState());
-		clone.setUserTargetId(getUserTargetId());
-		clone.setActId(getActId());
+		clone.setNumber(getNumber());
 
 		return clone;
 	}
@@ -351,7 +335,7 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -373,17 +357,15 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		sb.append(getEnd());
 		sb.append(", state=");
 		sb.append(getState());
-		sb.append(", userTargetId=");
-		sb.append(getUserTargetId());
-		sb.append(", actId=");
-		sb.append(getActId());
+		sb.append(", number=");
+		sb.append(getNumber());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lmssa.model.ActManAudit");
@@ -430,12 +412,8 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		sb.append(getState());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>userTargetId</column-name><column-value><![CDATA[");
-		sb.append(getUserTargetId());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>actId</column-name><column-value><![CDATA[");
-		sb.append(getActId());
+			"<column><column-name>number</column-name><column-value><![CDATA[");
+		sb.append(getNumber());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -454,7 +432,6 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 	private Date _start;
 	private Date _end;
 	private String _state;
-	private long _userTargetId;
-	private long _actId;
+	private long _number;
 	private BaseModel<?> _actManAuditRemoteModel;
 }

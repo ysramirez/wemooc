@@ -56,8 +56,7 @@ public class ActManAuditWrapper implements ActManAudit,
 		attributes.put("start", getStart());
 		attributes.put("end", getEnd());
 		attributes.put("state", getState());
-		attributes.put("userTargetId", getUserTargetId());
-		attributes.put("actId", getActId());
+		attributes.put("number", getNumber());
 
 		return attributes;
 	}
@@ -123,16 +122,10 @@ public class ActManAuditWrapper implements ActManAudit,
 			setState(state);
 		}
 
-		Long userTargetId = (Long)attributes.get("userTargetId");
+		Long number = (Long)attributes.get("number");
 
-		if (userTargetId != null) {
-			setUserTargetId(userTargetId);
-		}
-
-		Long actId = (Long)attributes.get("actId");
-
-		if (actId != null) {
-			setActId(actId);
+		if (number != null) {
+			setNumber(number);
 		}
 	}
 
@@ -355,39 +348,21 @@ public class ActManAuditWrapper implements ActManAudit,
 	}
 
 	/**
-	* Returns the user target ID of this act man audit.
+	* Returns the number of this act man audit.
 	*
-	* @return the user target ID of this act man audit
+	* @return the number of this act man audit
 	*/
-	public long getUserTargetId() {
-		return _actManAudit.getUserTargetId();
+	public long getNumber() {
+		return _actManAudit.getNumber();
 	}
 
 	/**
-	* Sets the user target ID of this act man audit.
+	* Sets the number of this act man audit.
 	*
-	* @param userTargetId the user target ID of this act man audit
+	* @param number the number of this act man audit
 	*/
-	public void setUserTargetId(long userTargetId) {
-		_actManAudit.setUserTargetId(userTargetId);
-	}
-
-	/**
-	* Returns the act ID of this act man audit.
-	*
-	* @return the act ID of this act man audit
-	*/
-	public long getActId() {
-		return _actManAudit.getActId();
-	}
-
-	/**
-	* Sets the act ID of this act man audit.
-	*
-	* @param actId the act ID of this act man audit
-	*/
-	public void setActId(long actId) {
-		_actManAudit.setActId(actId);
+	public void setNumber(long number) {
+		_actManAudit.setNumber(number);
 	}
 
 	public boolean isNew() {
