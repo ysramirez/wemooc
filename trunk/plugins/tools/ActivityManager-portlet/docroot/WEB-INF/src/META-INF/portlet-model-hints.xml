@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 
 <model-hints>
-	<model name="com.liferay.lms.model.ActManAudit">
+	<model name="com.liferay.lmssa.model.ActManAudit">
 		<field name="uuid" type="String" />
 		<field name="actManAuditId" type="long" />
 		<field name="companyId" type="long" />
@@ -15,7 +15,7 @@
 		<field name="userTargetId" type="long" />
 		<field name="actId" type="long" />
 	</model>
-	<model name="com.liferay.lms.model.LearningActivityTryDeleted">
+	<model name="com.liferay.lmssa.model.LearningActivityTryDeleted">
 		<field name="uuid" type="String" />
 		<field name="latDelId" type="long" />
 		<field name="actManAuditId" type="long" />

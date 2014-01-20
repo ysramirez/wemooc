@@ -2,9 +2,9 @@ package com.liferay.manager;
 
 import java.util.Date;
 
-import com.liferay.lms.model.ActManAudit;
-import com.liferay.lms.model.impl.ActManAuditImpl;
-import com.liferay.lms.service.ActManAuditLocalServiceUtil;
+import com.liferay.lmssa.model.ActManAudit;
+import com.liferay.lmssa.model.impl.ActManAuditImpl;
+import com.liferay.lmssa.service.ActManAuditLocalServiceUtil;
 import com.liferay.portal.kernel.bean.BeanLocatorException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -20,7 +20,6 @@ public class CleanLearningActivity {
 	private ActManAudit actManAudit = null;
 	
 	public CleanLearningActivity(){
-		createInstance();
 	}
 	
 	public ActManAudit createInstance(){
@@ -38,6 +37,7 @@ public class CleanLearningActivity {
 		} catch (SystemException e) {
 			if(log.isInfoEnabled())log.info(e.getMessage());
 			if(log.isDebugEnabled())e.printStackTrace();
+			e.printStackTrace();
 			return null;
 		} catch (BeanLocatorException e) {
 			
