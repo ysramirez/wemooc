@@ -39,8 +39,7 @@ create table lmssa_ActManAudit (
 	start_ DATE null,
 	end_ DATE null,
 	state_ VARCHAR(75) null,
-	userTargetId LONG,
-	actId LONG
+	number_ LONG
 );
 
 create table lmssa_LearningActivityTryDeleted (
