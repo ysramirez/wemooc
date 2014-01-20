@@ -56,7 +56,8 @@ public class CleanLearningActivityTries extends CleanLearningActivity implements
 			if(log.isDebugEnabled())log.debug("delete tries::"+tries.size());
 			for(LearningActivityTry learningActivityTry : tries){
 				if(log.isDebugEnabled())log.debug("delete try::"+learningActivityTry.getLatId());
-				LearningActivityTryLocalServiceUtil.deleteLearningActivityTry(learningActivityTry);
+				//LearningActivityTryLocalServiceUtil.deleteLearningActivityTry(learningActivityTry);
+				processTry(learningActivityTry);
 			}
 			
 			List<LearningActivityResult> lars = LearningActivityResultLocalServiceUtil.getByActId(la.getActId());

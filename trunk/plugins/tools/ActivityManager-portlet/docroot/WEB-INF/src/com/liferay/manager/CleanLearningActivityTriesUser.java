@@ -28,7 +28,8 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 	public void process() throws Exception{
 		List<LearningActivityTry> lats = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(la.getActId(), user.getUserId());
 		for(LearningActivityTry lat : lats){
-			LearningActivityTryLocalServiceUtil.deleteLearningActivityTry(lat.getLatId());
+			//LearningActivityTryLocalServiceUtil.deleteLearningActivityTry(lat.getLatId());
+			processTry(lat);
 		}
 		
 		LearningActivityResult lar = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(la.getActId(), user.getUserId());

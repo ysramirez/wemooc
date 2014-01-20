@@ -14,7 +14,11 @@
 
 package com.liferay.lmssa.service.impl;
 
+import com.liferay.counter.service.CounterLocalServiceUtil;
+import com.liferay.lmssa.model.LearningActivityTryDeleted;
 import com.liferay.lmssa.service.base.LearningActivityTryDeletedLocalServiceBaseImpl;
+import com.liferay.lmssa.service.persistence.LearningActivityTryDeletedUtil;
+import com.liferay.portal.kernel.exception.SystemException;
 
 /**
  * The implementation of the learning activity try deleted local service.
@@ -30,11 +34,25 @@ import com.liferay.lmssa.service.base.LearningActivityTryDeletedLocalServiceBase
  * @see com.liferay.lmssa.service.base.LearningActivityTryDeletedLocalServiceBaseImpl
  * @see com.liferay.lmssa.service.LearningActivityTryDeletedLocalServiceUtil
  */
-public class LearningActivityTryDeletedLocalServiceImpl
-	extends LearningActivityTryDeletedLocalServiceBaseImpl {
-	/*
-	 * NOTE FOR DEVELOPERS:
-	 *
-	 * Never reference this interface directly. Always use {@link com.liferay.lmssa.service.LearningActivityTryDeletedLocalServiceUtil} to access the learning activity try deleted local service.
-	 */
+public class LearningActivityTryDeletedLocalServiceImpl	extends LearningActivityTryDeletedLocalServiceBaseImpl {
+	
+	public LearningActivityTryDeleted addLearningActivityTryDeleted (LearningActivityTryDeleted valid) throws SystemException {
+
+		LearningActivityTryDeleted fileobj = LearningActivityTryDeletedUtil.create(CounterLocalServiceUtil.increment(LearningActivityTryDeleted.class.getName()));
+
+		fileobj.setActId(valid.getActId());
+		fileobj.setActManAuditId(valid.getActManAuditId());
+		fileobj.setEndDate(valid.getEndDate());
+		fileobj.setLatId(valid.getLatId());
+		fileobj.setUserId(valid.getUserId());
+		fileobj.setStartDate(valid.getStartDate());
+		fileobj.setResult(valid.getResult());
+		fileobj.setTryData(valid.getTryData());
+		fileobj.setTryResultData(valid.getTryResultData());
+		fileobj.setComments(valid.getComments());
+
+		LearningActivityTryDeleted returned = LearningActivityTryDeletedUtil.update(fileobj, false);
+
+	    return returned;
+	}
 }

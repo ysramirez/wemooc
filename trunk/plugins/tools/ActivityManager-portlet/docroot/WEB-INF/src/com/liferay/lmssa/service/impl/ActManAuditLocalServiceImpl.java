@@ -49,7 +49,6 @@ public class ActManAuditLocalServiceImpl extends ActManAuditLocalServiceBaseImpl
 		fileobj.setCompanyId(valid.getCompanyId());
 		fileobj.setGroupId(valid.getGroupId());
 		fileobj.setUserId(valid.getUserId());
-		fileobj.setUserId(valid.getUserId());
 		fileobj.setCourseId(valid.getCourseId());
 		fileobj.setUserId(valid.getUserId());
 		fileobj.setClassName(valid.getClassName());
