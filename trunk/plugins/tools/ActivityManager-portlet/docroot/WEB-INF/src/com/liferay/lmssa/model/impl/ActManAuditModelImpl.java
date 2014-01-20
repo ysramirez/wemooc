@@ -76,10 +76,9 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 			{ "start_", Types.TIMESTAMP },
 			{ "end_", Types.TIMESTAMP },
 			{ "state_", Types.VARCHAR },
-			{ "userTargetId", Types.BIGINT },
-			{ "actId", Types.BIGINT }
+			{ "number_", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table lmssa_ActManAudit (uuid_ VARCHAR(75) null,actManAuditId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,courseId LONG,className VARCHAR(75) null,start_ DATE null,end_ DATE null,state_ VARCHAR(75) null,userTargetId LONG,actId LONG)";
+	public static final String TABLE_SQL_CREATE = "create table lmssa_ActManAudit (uuid_ VARCHAR(75) null,actManAuditId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,courseId LONG,className VARCHAR(75) null,start_ DATE null,end_ DATE null,state_ VARCHAR(75) null,number_ LONG)";
 	public static final String TABLE_SQL_DROP = "drop table lmssa_ActManAudit";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -120,8 +119,7 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 		model.setStart(soapModel.getStart());
 		model.setEnd(soapModel.getEnd());
 		model.setState(soapModel.getState());
-		model.setUserTargetId(soapModel.getUserTargetId());
-		model.setActId(soapModel.getActId());
+		model.setNumber(soapModel.getNumber());
 
 		return model;
 	}
@@ -190,8 +188,7 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 		attributes.put("start", getStart());
 		attributes.put("end", getEnd());
 		attributes.put("state", getState());
-		attributes.put("userTargetId", getUserTargetId());
-		attributes.put("actId", getActId());
+		attributes.put("number", getNumber());
 
 		return attributes;
 	}
@@ -258,16 +255,10 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 			setState(state);
 		}
 
-		Long userTargetId = (Long)attributes.get("userTargetId");
+		Long number = (Long)attributes.get("number");
 
-		if (userTargetId != null) {
-			setUserTargetId(userTargetId);
-		}
-
-		Long actId = (Long)attributes.get("actId");
-
-		if (actId != null) {
-			setActId(actId);
+		if (number != null) {
+			setNumber(number);
 		}
 	}
 
@@ -417,21 +408,12 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 	}
 
 	@JSON
-	public long getUserTargetId() {
-		return _userTargetId;
+	public long getNumber() {
+		return _number;
 	}
 
-	public void setUserTargetId(long userTargetId) {
-		_userTargetId = userTargetId;
-	}
-
-	@JSON
-	public long getActId() {
-		return _actId;
-	}
-
-	public void setActId(long actId) {
-		_actId = actId;
+	public void setNumber(long number) {
+		_number = number;
 	}
 
 	public long getColumnBitmask() {
@@ -476,8 +458,7 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 		actManAuditImpl.setStart(getStart());
 		actManAuditImpl.setEnd(getEnd());
 		actManAuditImpl.setState(getState());
-		actManAuditImpl.setUserTargetId(getUserTargetId());
-		actManAuditImpl.setActId(getActId());
+		actManAuditImpl.setNumber(getNumber());
 
 		actManAuditImpl.resetOriginalValues();
 
@@ -601,16 +582,14 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 			actManAuditCacheModel.state = null;
 		}
 
-		actManAuditCacheModel.userTargetId = getUserTargetId();
-
-		actManAuditCacheModel.actId = getActId();
+		actManAuditCacheModel.number = getNumber();
 
 		return actManAuditCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -632,17 +611,15 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 		sb.append(getEnd());
 		sb.append(", state=");
 		sb.append(getState());
-		sb.append(", userTargetId=");
-		sb.append(getUserTargetId());
-		sb.append(", actId=");
-		sb.append(getActId());
+		sb.append(", number=");
+		sb.append(getNumber());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(37);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lmssa.model.ActManAudit");
@@ -689,12 +666,8 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 		sb.append(getState());
 		sb.append("]]></column-value></column>");
 		sb.append(
-			"<column><column-name>userTargetId</column-name><column-value><![CDATA[");
-		sb.append(getUserTargetId());
-		sb.append("]]></column-value></column>");
-		sb.append(
-			"<column><column-name>actId</column-name><column-value><![CDATA[");
-		sb.append(getActId());
+			"<column><column-name>number</column-name><column-value><![CDATA[");
+		sb.append(getNumber());
 		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
@@ -722,8 +695,7 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 	private Date _start;
 	private Date _end;
 	private String _state;
-	private long _userTargetId;
-	private long _actId;
+	private long _number;
 	private long _columnBitmask;
 	private ActManAudit _escapedModelProxy;
 }

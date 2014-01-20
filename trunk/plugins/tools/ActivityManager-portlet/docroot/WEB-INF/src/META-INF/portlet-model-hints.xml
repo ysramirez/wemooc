@@ -12,8 +12,7 @@
 		<field name="start" type="Date" />
 		<field name="end" type="Date" />
 		<field name="state" type="String" />
-		<field name="userTargetId" type="long" />
-		<field name="actId" type="long" />
+		<field name="number" type="long" />
 	</model>
 	<model name="com.liferay.lmssa.model.LearningActivityTryDeleted">
 		<field name="uuid" type="String" />

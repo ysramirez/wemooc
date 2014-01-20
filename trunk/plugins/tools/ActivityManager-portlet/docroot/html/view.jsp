@@ -79,10 +79,10 @@
 			<portlet:actionURL var="viewCourseURL" name="viewCourse">
         		<portlet:param name="id" value="<%=String.valueOf(course.getPrimaryKey()) %>" />
 			</portlet:actionURL>
-			<liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="title">
 				<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span></a>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="description">
 				<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span></a>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
@@ -130,13 +130,16 @@
 					String courset = "";
 					Course courseent = null;
 					try{
-						courseent = CourseLocalServiceUtil.getCourse(audit.getCourseId());
+						courseent = CourseLocalServiceUtil.getCourseByGroupCreatedId(audit.getGroupId());
 					}catch(Exception e){}
 					if(courseent!=null){
 						courset = courseent.getTitle(themeDisplay.getLocale());
 					}
 				%>
 				<%=courset%>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="state">
+				<%=LanguageUtil.get(pageContext,audit.getState()) %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="action">
 				<%=LanguageUtil.get(pageContext,audit.getClassName()) %>

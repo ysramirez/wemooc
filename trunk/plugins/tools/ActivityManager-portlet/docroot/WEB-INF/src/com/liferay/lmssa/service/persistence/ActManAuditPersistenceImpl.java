@@ -458,8 +458,7 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 		actManAuditImpl.setStart(actManAudit.getStart());
 		actManAuditImpl.setEnd(actManAudit.getEnd());
 		actManAuditImpl.setState(actManAudit.getState());
-		actManAuditImpl.setUserTargetId(actManAudit.getUserTargetId());
-		actManAuditImpl.setActId(actManAudit.getActId());
+		actManAuditImpl.setNumber(actManAudit.getNumber());
 
 		return actManAuditImpl;
 	}
