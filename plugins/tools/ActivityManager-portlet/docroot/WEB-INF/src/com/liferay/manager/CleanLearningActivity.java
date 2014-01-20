@@ -35,7 +35,7 @@ public class CleanLearningActivity {
 		actManAudit.setUserId(userId);
 		
 		actManAudit.setStart(new Date());
-		actManAudit.setState("run");
+		actManAudit.setState("actmanager.run");
 		
 		try {
 			actManAudit = ActManAuditLocalServiceUtil.addActManAudit(actManAudit);
@@ -53,7 +53,7 @@ public class CleanLearningActivity {
 	public ActManAudit endInstance(){
 		if(log.isDebugEnabled())log.debug("endInstance");
 		actManAudit.setEnd(new Date());
-		actManAudit.setState("stop");
+		actManAudit.setState("actmanager.stop");
 		try {
 			actManAudit = ActManAuditLocalServiceUtil.updateActManAudit(actManAudit);
 		} catch (SystemException e) {

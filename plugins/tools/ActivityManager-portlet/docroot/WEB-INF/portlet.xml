@@ -23,8 +23,7 @@
 		</supports>
 		<resource-bundle>content/activitymanager/Language</resource-bundle>
 		<portlet-info>
-			<title>ActivityManager</title>
-			<short-title>ActivityManager</short-title>
+			<short-title>Activity Manager</short-title>
 			<keywords>ActivityManager</keywords>
 		</portlet-info>
 		<security-role-ref>

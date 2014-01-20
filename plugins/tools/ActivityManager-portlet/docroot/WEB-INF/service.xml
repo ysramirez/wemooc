@@ -14,8 +14,7 @@
         <column name="start" type="Date" />
         <column name="end" type="Date" />
         <column name="state" type="String" />
-		<column name="userTargetId" type="long" />
-		<column name="actId" type="long" />
+		<column name="number" type="long" />
         
 		<finder name="companyId" return-type="Collection">
 			<finder-column name="companyId" />

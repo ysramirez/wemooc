@@ -56,8 +56,7 @@ public class ActManAuditLocalServiceImpl extends ActManAuditLocalServiceBaseImpl
 		fileobj.setStart(valid.getStart());
 		fileobj.setEnd(valid.getEnd());
 		fileobj.setState(valid.getState());
-		fileobj.setUserTargetId(valid.getUserTargetId());
-		fileobj.setActId(valid.getActId());
+		fileobj.setNumber(valid.getNumber());
 
 		ActManAudit returned = ActManAuditUtil.update(fileobj, false);
 
