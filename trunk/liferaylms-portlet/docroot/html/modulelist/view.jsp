@@ -1,3 +1,8 @@
+<%@page import="javax.portlet.PortletRequest"%>
+<%@page import="com.liferay.lms.service.ClpSerializer"%>
+<%@page import="com.liferay.portal.model.PortletConstants"%>
+<%@page import="com.liferay.portlet.PortletURLFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
 <%@page import="com.liferay.lms.model.ModuleResult"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
@@ -17,6 +22,7 @@
 <%
 boolean registrado=UserLocalServiceUtil.hasGroupUser(themeDisplay.getScopeGroupId(),themeDisplay.getUserId());
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+int i = 0;
 %>
 <table class="coursemodule <%="course-status-".concat(String.valueOf(course.getStatus()))%>">
 <%
@@ -106,11 +112,20 @@ image.getGroupId() %>" />
 		}
 	}
 	
-	%>
-	<liferay-portlet:renderURL plid="<%=retoplid %>" portletName="lmsactivitieslist_WAR_liferaylmsportlet" var="gotoModuleURL">
-	<liferay-portlet:param name="moduleId" value="<%=Long.toString(theModule.getModuleId()) %>"></liferay-portlet:param>
-	</liferay-portlet:renderURL>
-	<%
+	//Para el número de módulo que se envía a la vista.
+	i++;
+	
+	LiferayPortletURL  gotoModuleURL = PortletURLFactoryUtil.create(PortalUtil.getHttpServletRequest(renderRequest),
+			PortalUtil.getJsSafePortletId("lmsactivitieslist"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName()), retoplid, PortletRequest.ACTION_PHASE);		
+	gotoModuleURL.setParameter(ActionRequest.ACTION_NAME, "goToModule");
+	gotoModuleURL.removePublicRenderParameter("actId");
+	gotoModuleURL.setWindowState(WindowState.NORMAL);
+	gotoModuleURL.setParameter("moduleId", Long.toString(theModule.getModuleId()));
+	gotoModuleURL.setParameter("themeId", Long.toString(i));
+	gotoModuleURL.setParameter("actionEditing", Boolean.toString(false));
+	gotoModuleURL.setPlid(retoplid);
+	gotoModuleURL.setPortletId("lmsactivitieslist_WAR_liferaylmsportlet");
+	
 	if(ModuleLocalServiceUtil.isUserPassed(theModule.getModuleId(),themeDisplay.getUserId()))
 	{
 	%>
