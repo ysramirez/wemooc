@@ -29,6 +29,7 @@ public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity i
 	Log log = LogFactoryUtil.getLog(CleanLearningActivityTriesUser.class);
 	private LearningActivity la = null;
 	private User user = null;
+	private User userc = null;
 	
 	public CleanLearningActivityTriesNotPassed(){
 		super();
@@ -67,11 +68,13 @@ public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity i
 
 	@Override
 	public void receive(Message message) throws MessageListenerException {
-		setRunning(true);
 		
 		try{
 			this.la = (LearningActivity)message.get("learningActivity");
 			this.user = (User)message.get("user");
+			User user = (User)message.get("userc");
+
+			createInstance(la.getCompanyId(),la.getGroupId(),user.getUserId());
 			
 			if(log.isDebugEnabled())log.debug(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId() + " - " +user.getFullName());
 			
@@ -82,7 +85,7 @@ public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity i
 			
 			e.printStackTrace();
 		} finally {
-			setRunning(false);
+			endInstance();
 		}
 		
 		

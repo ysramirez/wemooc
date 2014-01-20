@@ -19,6 +19,7 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 	Log log = LogFactoryUtil.getLog(CleanLearningActivityTriesUser.class);
 	private LearningActivity la = null;
 	private User user = null;
+	private User userc = null;
 	
 	public CleanLearningActivityTriesUser(){
 		super();
@@ -38,11 +39,13 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 
 	@Override
 	public void receive(Message message) throws MessageListenerException {
-		setRunning(true);
 		
 		try{
 			this.la = (LearningActivity)message.get("learningActivity");
 			this.user = (User)message.get("user");
+			User userc = (User)message.get("userc");
+
+			createInstance(la.getCompanyId(),la.getGroupId(),user.getUserId());
 			
 			if(log.isDebugEnabled())log.debug(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId() + " - " +user.getFullName());
 			
@@ -51,7 +54,7 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 			if(log.isInfoEnabled())log.info(e.getMessage());
 			if(log.isDebugEnabled())e.printStackTrace();
 		} finally {
-			setRunning(false);
+			endInstance();
 		}
 		
 		
