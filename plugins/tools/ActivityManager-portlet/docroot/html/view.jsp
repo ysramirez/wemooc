@@ -80,10 +80,20 @@
         		<portlet:param name="id" value="<%=String.valueOf(course.getPrimaryKey()) %>" />
 			</portlet:actionURL>
 			<liferay-ui:search-container-column-text name="title">
-				<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span></a>
+				<c:if test="${!active}">
+					<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span></a>
+				</c:if>
+				<c:if test="${active}">
+					<span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span>
+				</c:if>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="description">
-				<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span></a>
+				<c:if test="${!active}">
+					<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span></a>
+				</c:if>
+				<c:if test="${active}">
+					<span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span>
+				</c:if>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />
@@ -158,6 +168,9 @@
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="end-date">
 				<%=sdf.format(audit.getEnd()) %>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="actmanager.deletedtries">
+				<%=audit.getNumber() %>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />

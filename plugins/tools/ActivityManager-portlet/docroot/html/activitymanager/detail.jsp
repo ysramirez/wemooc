@@ -19,10 +19,15 @@
 	<portlet:param name="course" value="${course.courseId}"/>
 </portlet:actionURL>
 
+<portlet:actionURL var="recalculateURL" name="recalculate">
+	<portlet:param name="course" value="${course.courseId}"/>
+</portlet:actionURL>
+
 <script type="text/javascript">
 	var urlall = '${fixAllURL}';
 	var urlnotpassed = '${fixNotPassedURL}';
 	var urluser = '${fixUserURL}';
+	var urlrecalculate = '${recalculateURL}';
 	function removeAll(id){
 		if(confirm('<liferay-ui:message key="actmanager.confirm-delete" />')){
 			window.location.href = urlall+"&id="+id;
@@ -36,8 +41,10 @@
 	function removeUser(id){
 			window.location.href = urluser+"&id="+id;
 	}
-	function recalculateModule(moduleId){
-		
+	function recalculate(moduleId){
+		if(confirm('<liferay-ui:message key="actmanager.confirm-recalculate" />')){
+			window.location.href = urlrecalculate+"&id="+moduleId;
+		}
 	}
 </script>
 <c:if test="${empty modules}"><liferay-ui:message key="there-are-no-results" />
@@ -48,7 +55,12 @@
 		<c:forEach var="module" items="${modules}">
 			<tr class="portlet-section-header results-header">
 			<th class="col-1 col-1 first">${module.getTitle(themeDisplay.locale)}</th>
-			<th class="col-1 col-1 first">
+			<th class="col-1 col-1 first align-left valign-middle">
+				<div style="text-align: right;">
+				<liferay-ui:icon-menu>
+					<liferay-ui:icon cssClass="tag-items" image="close" message="actmanager.recalculate" onClick='recalculate(${module.moduleId})' url="#"  />
+				</liferay-ui:icon-menu>
+				</div>
 				<%-- liferay-ui:icon-menu>
 					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
 					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
