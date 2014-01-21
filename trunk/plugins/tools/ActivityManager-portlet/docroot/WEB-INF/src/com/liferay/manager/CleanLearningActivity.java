@@ -37,7 +37,6 @@ public class CleanLearningActivity {
 	public ActManAudit createInstance(long companyId,long groupId,long userId){
 		if(log.isDebugEnabled())log.debug("createInstance");
 		setRunning(true);
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 		
 		actManAudit = new ActManAuditImpl();
 		actManAudit.setClassName(this.getClass().getName());
@@ -48,7 +47,7 @@ public class CleanLearningActivity {
 		
 		actManAudit.setStart(new Date());
 		actManAudit.setState("actmanager.run");
-		actManAudit.setNumber(0L);
+		actManAudit.setNumber(0);
 		
 		try {
 			actManAudit = ActManAuditLocalServiceUtil.addActManAudit(actManAudit);

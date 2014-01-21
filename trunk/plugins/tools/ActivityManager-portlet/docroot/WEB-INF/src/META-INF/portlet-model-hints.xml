@@ -12,7 +12,7 @@
 		<field name="start" type="Date" />
 		<field name="end" type="Date" />
 		<field name="state" type="String" />
-		<field name="number" type="long" />
+		<field name="number" type="int" />
 	</model>
 	<model name="com.liferay.lmssa.model.LearningActivityTryDeleted">
 		<field name="uuid" type="String" />
@@ -25,7 +25,10 @@
 		<field name="result" type="long" />
 		<field name="endDate" type="Date" />
 		<field name="tryData" type="String" />
-		<field name="tryResultData" type="String" />
+		<field name="tryResultData" type="String">
+			<hint name="display-width">200</hint>
+			<hint name="max-length">500000</hint>
+		</field>
 		<field name="comments" type="String" />
 	</model>
 </model-hints>

@@ -76,9 +76,9 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 			{ "start_", Types.TIMESTAMP },
 			{ "end_", Types.TIMESTAMP },
 			{ "state_", Types.VARCHAR },
-			{ "number_", Types.BIGINT }
+			{ "number_", Types.INTEGER }
 		};
-	public static final String TABLE_SQL_CREATE = "create table lmssa_ActManAudit (uuid_ VARCHAR(75) null,actManAuditId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,courseId LONG,className VARCHAR(75) null,start_ DATE null,end_ DATE null,state_ VARCHAR(75) null,number_ LONG)";
+	public static final String TABLE_SQL_CREATE = "create table lmssa_ActManAudit (uuid_ VARCHAR(75) null,actManAuditId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,courseId LONG,className VARCHAR(75) null,start_ DATE null,end_ DATE null,state_ VARCHAR(75) null,number_ INTEGER)";
 	public static final String TABLE_SQL_DROP = "drop table lmssa_ActManAudit";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -255,7 +255,7 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 			setState(state);
 		}
 
-		Long number = (Long)attributes.get("number");
+		Integer number = (Integer)attributes.get("number");
 
 		if (number != null) {
 			setNumber(number);
@@ -408,11 +408,11 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 	}
 
 	@JSON
-	public long getNumber() {
+	public int getNumber() {
 		return _number;
 	}
 
-	public void setNumber(long number) {
+	public void setNumber(int number) {
 		_number = number;
 	}
 
@@ -695,7 +695,7 @@ public class ActManAuditModelImpl extends BaseModelImpl<ActManAudit>
 	private Date _start;
 	private Date _end;
 	private String _state;
-	private long _number;
+	private int _number;
 	private long _columnBitmask;
 	private ActManAudit _escapedModelProxy;
 }

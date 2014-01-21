@@ -79,7 +79,7 @@ public class LearningActivityTryDeletedModelImpl extends BaseModelImpl<LearningA
 			{ "tryResultData", Types.VARCHAR },
 			{ "comments", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table lmssa_LearningActivityTryDeleted (uuid_ VARCHAR(75) null,latDelId LONG not null primary key,actManAuditId LONG,latId LONG,actId LONG,userId LONG,startDate DATE null,result LONG,endDate DATE null,tryData VARCHAR(75) null,tryResultData VARCHAR(75) null,comments VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table lmssa_LearningActivityTryDeleted (uuid_ VARCHAR(75) null,latDelId LONG not null primary key,actManAuditId LONG,latId LONG,actId LONG,userId LONG,startDate DATE null,result LONG,endDate DATE null,tryData VARCHAR(75) null,tryResultData TEXT null,comments VARCHAR(75) null)";
 	public static final String TABLE_SQL_DROP = "drop table lmssa_LearningActivityTryDeleted";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
