@@ -2,8 +2,14 @@ package com.liferay.manager;
 
 import java.util.Date;
 
+import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
+import com.liferay.lms.model.ModuleResult;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
+import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lmssa.model.ActManAudit;
 import com.liferay.lmssa.model.LearningActivityTryDeleted;
 import com.liferay.lmssa.model.impl.ActManAuditImpl;
@@ -11,6 +17,7 @@ import com.liferay.lmssa.model.impl.LearningActivityTryDeletedImpl;
 import com.liferay.lmssa.service.ActManAuditLocalServiceUtil;
 import com.liferay.lmssa.service.LearningActivityTryDeletedLocalServiceUtil;
 import com.liferay.portal.kernel.bean.BeanLocatorException;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -105,7 +112,56 @@ public class CleanLearningActivity {
 			if(log.isDebugEnabled())e.printStackTrace();
 		}
 		
+		LearningActivityResult res= null;
+		try {
+			res = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(lat.getActId(), lat.getUserId());
+		} catch (SystemException e) {
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
+		}
 		
+
+		LearningActivity larn = null;
+		try {
+			larn = LearningActivityLocalServiceUtil.getLearningActivity(lat.getActId());
+		} catch (PortalException e) {
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
+		} catch (SystemException e) {
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			if(log.isDebugEnabled())e.printStackTrace();
+		}
+		
+		if(res!=null){
+			res.setResult(0);
+			res.setPassed(false);
+			res.setEndDate(null);
+			try {
+				LearningActivityResultLocalServiceUtil.updateLearningActivityResult(res);
+			} catch (SystemException e) {
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			}
+		}
+		
+		if(larn!=null&&larn.getWeightinmodule()>0){
+			ModuleResult mr = null;
+			try {
+				mr = ModuleResultLocalServiceUtil.getByModuleAndUser(larn.getModuleId(), lat.getUserId());
+			} catch (SystemException e) {
+				if(log.isInfoEnabled())log.info(e.getMessage());
+				if(log.isDebugEnabled())e.printStackTrace();
+			}
+			if(mr!=null){
+				mr.setPassed(false);
+				try {
+					ModuleResultLocalServiceUtil.updateModuleResult(mr);
+				} catch (SystemException e) {
+					if(log.isInfoEnabled())log.info(e.getMessage());
+					if(log.isDebugEnabled())e.printStackTrace();
+				}
+			}
+		}
 		
 		return true;
 	}
