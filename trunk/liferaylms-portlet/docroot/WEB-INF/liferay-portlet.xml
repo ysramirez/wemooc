@@ -41,6 +41,7 @@
 	<portlet>
 		<portlet-name>module-portlet</portlet-name>
 		<icon>/icons/icon.png</icon>
+		<configuration-action-class>com.liferay.lms.actions.ModuleAction</configuration-action-class>
 		<portlet-data-handler-class>com.liferay.lms.lar.ModuleDataHandlerImpl</portlet-data-handler-class>
 	    <custom-attributes-display>com.liferay.lms.expando.ModuleCustomAttributesDisplay</custom-attributes-display>
 		<instanceable>false</instanceable>
@@ -156,6 +157,7 @@
 	<portlet>
 		<portlet-name>modulelist</portlet-name>
 		<icon>/icon.png</icon>
+		<configuration-action-class>com.liferay.lms.actions.ModuleListAction</configuration-action-class>
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
