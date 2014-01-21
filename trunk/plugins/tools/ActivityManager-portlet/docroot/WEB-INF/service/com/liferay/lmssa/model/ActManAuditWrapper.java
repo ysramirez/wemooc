@@ -122,7 +122,7 @@ public class ActManAuditWrapper implements ActManAudit,
 			setState(state);
 		}
 
-		Long number = (Long)attributes.get("number");
+		Integer number = (Integer)attributes.get("number");
 
 		if (number != null) {
 			setNumber(number);
@@ -352,7 +352,7 @@ public class ActManAuditWrapper implements ActManAudit,
 	*
 	* @return the number of this act man audit
 	*/
-	public long getNumber() {
+	public int getNumber() {
 		return _actManAudit.getNumber();
 	}
 
@@ -361,7 +361,7 @@ public class ActManAuditWrapper implements ActManAudit,
 	*
 	* @param number the number of this act man audit
 	*/
-	public void setNumber(long number) {
+	public void setNumber(int number) {
 		_actManAudit.setNumber(number);
 	}
 
