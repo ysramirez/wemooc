@@ -15,9 +15,19 @@
 	<jsp:useBean id="moduleFilterURL" class="java.lang.String" scope="request" />
 	<jsp:useBean id="moduleFilter" class="java.lang.String" scope="request" />
 	<%
+	
+	PortletPreferences preferences = null;
+	String portletResource = ParamUtil.getString(request, "portletResource");
+	if (Validator.isNotNull(portletResource)) 
+		preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+	else
+		preferences = renderRequest.getPreferences();
+	
+	boolean viewAlways = (preferences.getValue("viewAlways", "0")).compareTo("1") == 0;
+	
 	long moduleId=ParamUtil.getLong(request,"moduleId",0);
 	boolean actionEditing=(ParamUtil.getBoolean(request,"actionEditing",false));
-	if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ADD_MODULE") && actionEditing)
+	if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ADD_MODULE") && (viewAlways || actionEditing))
 	{
 	
 	%>

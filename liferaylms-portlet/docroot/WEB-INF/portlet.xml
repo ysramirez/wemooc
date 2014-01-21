@@ -622,7 +622,7 @@
 		<portlet-name>modulelist</portlet-name>
 		<display-name>ModuleList</display-name>
 		<portlet-class>
-			com.liferay.util.bridges.mvc.MVCPortlet
+			com.liferay.lms.LmsActivitiesList
 		</portlet-class>
 		<init-param>
 			<name>view-jsp</name>
