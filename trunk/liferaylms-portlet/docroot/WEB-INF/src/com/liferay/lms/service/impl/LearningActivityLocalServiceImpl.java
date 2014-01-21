@@ -503,7 +503,9 @@ public class LearningActivityLocalServiceImpl
 		}
 		
 		if(learningActivityTypeRegistry!=null){
-			return learningActivityTypeRegistry.getLearningActivityType(typeId).hasDeleteTries();
+			if(learningActivityTypeRegistry.getLearningActivityType(typeId)!=null){
+				return learningActivityTypeRegistry.getLearningActivityType(typeId).hasDeleteTries();
+			}
 		}
 		return false;
 	}
