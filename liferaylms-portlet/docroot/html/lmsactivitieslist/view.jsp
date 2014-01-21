@@ -18,10 +18,6 @@
 	boolean completeMode = viewMode.compareTo("0") == 0;
 	boolean actualModuleMode = viewMode.compareTo("1") == 0;
 	
-	System.out.println("completeMode: "+completeMode);
-	System.out.println("actualModuleMode: "+actualModuleMode);
-	System.out.println("moduleId: "+moduleId);
-	
 	if(actualModuleMode && moduleId>0){
 %>
 		<div class="lms-desplegable" style="overflow: hidden;" >
