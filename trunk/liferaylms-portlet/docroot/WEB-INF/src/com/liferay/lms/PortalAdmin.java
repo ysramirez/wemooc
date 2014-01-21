@@ -454,15 +454,21 @@ public class PortalAdmin extends MVCPortlet {
 			
 			System.out.println("");
 			
-			//Borrar el nombre viejo.
-			if(updateBD){
-				portletOld.setPortletId(portletOld.getPortletId()+"_old");
-				PortletLocalServiceUtil.updatePortlet(portletOld);
+			try {
+				//Borrar el nombre viejo.
+				if(updateBD){
+					portletOld.setPortletId(portletOld.getPortletId()+"_old");
+					PortletLocalServiceUtil.updatePortlet(portletOld);
+				}
+			} catch (Exception e) {
+				System.out.println(" No se ha podido borrar el portlet antiguo: "+e.getMessage());
+				//e.printStackTrace();
 			}
 			
 			
 		} catch (Exception e) {
 			System.out.println("ERROR: "+e.getMessage());
+			e.printStackTrace();
 		}
 		
 	}
