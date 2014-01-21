@@ -125,5 +125,5 @@ public class ActManAuditCacheModel implements CacheModel<ActManAudit>,
 	public long start;
 	public long end;
 	public String state;
-	public long number;
+	public int number;
 }
