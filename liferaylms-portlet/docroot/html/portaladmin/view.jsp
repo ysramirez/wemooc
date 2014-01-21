@@ -54,11 +54,11 @@ List<String> portletIds = new ArrayList<String>();
 
 List<Layout> layoutForPortletName = LayoutLocalServiceUtil.getLayouts(0, LayoutLocalServiceUtil.getLayoutsCount()); 
 
-System.out.println("\n\nLayouts:  " +layoutForPortletName.size()); 
+//System.out.println("\n\nLayouts:  " +layoutForPortletName.size()); 
 
 for(Layout l:layoutForPortletName){
 	
-	System.out.println("  Layout:  " +l.getName(themeDisplay.getLocale()));
+	//System.out.println("  Layout:  " +l.getName(themeDisplay.getLocale()));
 
 	LayoutTypePortlet layoutTypePortletName = (LayoutTypePortlet)l.getLayoutType(); 
 	LayoutTemplate layoutTemplate=layoutTypePortletName.getLayoutTemplate(); 
@@ -71,22 +71,11 @@ for(Layout l:layoutForPortletName){
 
 		for(Portlet portlet : portlets){ 
 			
-			System.out.println("    portletId = "+portlet.getPortletId()+" "+" Title = " + PortalUtil.getPortletTitle(portlet, application, locale)); 
+			//System.out.println("    portletId = "+portlet.getPortletId()+" "+" Title = " + PortalUtil.getPortletTitle(portlet, application, locale)); 
 			
 			if(!portletIds.contains(portlet.getPortletId()) && portlet.getPortletId().contains("_WAR_liferaylmsportlet")){
 				portletIds.add(portlet.getPortletId());
 			}
-
-			//PluginPackage pluginPackage = portlet.getPluginPackage(); 
-			//PluginSetting pluginSetting = PluginSettingLocalServiceUtil.getPluginSetting(company.getCompanyId(), portlet.getPortletId(), Plugin.TYPE_PORTLET); 
-
-			//StringBuilder sb = new StringBuilder(); 
-
-			//String displayName = portlet.getDisplayName(); 
-			//String title = PortalUtil.getPortletTitle(portlet, application, locale); 
-
-			//System.out.println("  portletId = "+portlet.getPortletId()+" "+" Title = " +title); 
-
 		}  
 	}	
 
