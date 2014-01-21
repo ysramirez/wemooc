@@ -7,6 +7,7 @@ import javax.mail.internet.InternetAddress;
 import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 
@@ -17,12 +18,12 @@ public class P2PSendMailAsignation {
 		try{
 			InternetAddress to = new InternetAddress(emailTo, nameTo);
 			
-			String portal = LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.portal");
-			String subject= LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.subject");
+			String portal = LanguageUtil.get(LocaleUtil.getDefault(), "p2ptaskactivity.mail.portal");
+			String subject= LanguageUtil.get(LocaleUtil.getDefault(), "p2ptaskactivity.mail.subject");
 			
-			String bodyTitle   = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.body.title", nameTo);
-			String bodyMessage = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.body.message", content);
-			String bodyEnd     = LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.body.end");
+			String bodyTitle   = LanguageUtil.format(LocaleUtil.getDefault(), "p2ptaskactivity.mail.body.title", nameTo);
+			String bodyMessage = LanguageUtil.format(LocaleUtil.getDefault(), "p2ptaskactivity.mail.body.message", content);
+			String bodyEnd     = LanguageUtil.get(LocaleUtil.getDefault(), "p2ptaskactivity.mail.body.end");
 			
 			String body = bodyTitle +"\n\n"+ bodyMessage +"\n\n"+ bodyEnd +"\n\n"+ portal+"\n";
 			
