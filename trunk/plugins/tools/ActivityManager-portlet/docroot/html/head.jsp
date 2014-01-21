@@ -2,8 +2,13 @@
 
 <liferay-ui:error message="you-do-not-have-the-required-permissions-to-access-this-application" key="error1"/>
 <liferay-ui:error message="error-type" key="ko"/>
+
 <liferay-ui:success message="your-request-completed-successfully" key="ok" />
 
+<c:if test="${active}">
+	<span><liferay-ui:message key="actmanager.otherprocess" /></span>
+</c:if>
+ 
 <portlet:renderURL var="portletURL" />
 <h3><a href="${portletURL}">></a>
 <c:if test="${not empty course}">
