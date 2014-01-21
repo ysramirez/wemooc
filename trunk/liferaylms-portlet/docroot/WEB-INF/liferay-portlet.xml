@@ -197,6 +197,7 @@
 		<configuration-action-class>com.liferay.lms.actions.CourseAdminConfigurationAction</configuration-action-class>
 		<indexer-class>com.liferay.lms.indexer.CourseIndexer</indexer-class>
 		<portlet-data-handler-class>com.liferay.lms.lar.ModuleDataHandlerImpl</portlet-data-handler-class>
+		<social-activity-interpreter-class>com.liferay.lms.social.CourseSocialActivityInterpreter</social-activity-interpreter-class>
 		<control-panel-entry-category>content</control-panel-entry-category>
 		<control-panel-entry-weight>17.5</control-panel-entry-weight>
 		<asset-renderer-factory>com.liferay.lms.asset.CourseAssetRendererFactory</asset-renderer-factory>
