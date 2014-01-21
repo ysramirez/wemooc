@@ -24,7 +24,7 @@ create table lms_LearningActivityTryDeleted (
 	result LONG,
 	endDate DATE null,
 	tryData VARCHAR(75) null,
-	tryResultData VARCHAR(75) null,
+	tryResultData TEXT null,
 	comments VARCHAR(75) null
 );
 
@@ -39,7 +39,7 @@ create table lmssa_ActManAudit (
 	start_ DATE null,
 	end_ DATE null,
 	state_ VARCHAR(75) null,
-	number_ LONG
+	number_ INTEGER
 );
 
 create table lmssa_LearningActivityTryDeleted (
@@ -53,6 +53,6 @@ create table lmssa_LearningActivityTryDeleted (
 	result LONG,
 	endDate DATE null,
 	tryData VARCHAR(75) null,
-	tryResultData VARCHAR(75) null,
+	tryResultData TEXT null,
 	comments VARCHAR(75) null
 );

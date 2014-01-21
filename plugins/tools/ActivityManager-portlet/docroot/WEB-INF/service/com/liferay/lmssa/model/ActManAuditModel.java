@@ -223,14 +223,14 @@ public interface ActManAuditModel extends BaseModel<ActManAudit> {
 	 *
 	 * @return the number of this act man audit
 	 */
-	public long getNumber();
+	public int getNumber();
 
 	/**
 	 * Sets the number of this act man audit.
 	 *
 	 * @param number the number of this act man audit
 	 */
-	public void setNumber(long number);
+	public void setNumber(int number);
 
 	public boolean isNew();
 

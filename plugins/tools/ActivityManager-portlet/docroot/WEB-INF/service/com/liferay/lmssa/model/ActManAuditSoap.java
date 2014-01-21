@@ -174,11 +174,11 @@ public class ActManAuditSoap implements Serializable {
 		_state = state;
 	}
 
-	public long getNumber() {
+	public int getNumber() {
 		return _number;
 	}
 
-	public void setNumber(long number) {
+	public void setNumber(int number) {
 		_number = number;
 	}
 
@@ -192,5 +192,5 @@ public class ActManAuditSoap implements Serializable {
 	private Date _start;
 	private Date _end;
 	private String _state;
-	private long _number;
+	private int _number;
 }

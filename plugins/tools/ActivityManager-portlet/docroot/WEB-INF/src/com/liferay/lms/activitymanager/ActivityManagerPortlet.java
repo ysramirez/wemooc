@@ -7,6 +7,7 @@ import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lmssa.service.ActManAuditLocalServiceUtil;
+import com.liferay.manager.CleanLearningActivity;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -218,6 +219,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			int auditsnum = ActManAuditLocalServiceUtil.countBycompanyId(themeDisplay.getCompanyId());
 			renderRequest.setAttribute("auditsnum", auditsnum);
 			renderRequest.setAttribute("state", Integer.valueOf(0));
+			renderRequest.setAttribute("active", CleanLearningActivity.isRunning());
 			include(this.viewJSP, renderRequest, renderResponse);
 		}
 	}
@@ -254,7 +256,8 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			id = Long.parseLong(sid);
 			la = LearningActivityLocalServiceUtil.getLearningActivity(id);
 		}catch(Exception e){
-			e.printStackTrace();
+	        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+	        if (this.log.isDebugEnabled()) e.printStackTrace();
 			response.setRenderParameter("error", "no-activity");
 		}
 
@@ -309,7 +312,8 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		try{
 			user = UserLocalServiceUtil.getUser(Long.parseLong(userid));
 		}catch(Exception e){
-			e.printStackTrace();
+	        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+	        if (this.log.isDebugEnabled()) e.printStackTrace();
 			response.setRenderParameter("error", "no-user");
 		}
 		
@@ -320,6 +324,28 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			}else{
 				response.setRenderParameter("status", "ko");
 			}
+		}else{
+			response.setRenderParameter("status", "ko");
+		}
+	}
+	
+	@ProcessAction(name="recalculate")
+	public void recalculate(ActionRequest request, ActionResponse response) {
+		if (log.isDebugEnabled())log.debug("recalculate");
+		String moduleId = ParamUtil.getString(request, "id", "");
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute("THEME_DISPLAY");
+		
+		Module module = null;
+		try{
+			module = ModuleLocalServiceUtil.getModule(Long.parseLong(moduleId));
+		}catch(Exception e){
+	        if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+	        if (this.log.isDebugEnabled()) e.printStackTrace();
+		}
+		
+		if(module!=null){
+			recalculateModule(module,themeDisplay.getUser());
+			response.setRenderParameter("status", "ok");
 		}else{
 			response.setRenderParameter("status", "ko");
 		}
@@ -339,7 +365,14 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		message.put("learningActivity",la);
 		message.put("userc",userc);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTries", message);
-		
+	}
+	
+	private void recalculateModule(Module module,User userc){
+		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/recalculateModule");
+		Message message=new Message();
+		message.put("module",module);
+		message.put("userc",userc);
+		MessageBusUtil.sendMessage("liferay/lms/recalculateModule", message);
 	}
 
 	private void cleanLearningActivityTriesUser(LearningActivity la,User user,User userc){
@@ -349,7 +382,6 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		message.put("user",user);
 		message.put("userc",userc);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTriesUser", message);
-		
 	}
 
 	protected void include(String path, RenderRequest renderRequest,RenderResponse renderResponse) throws IOException, PortletException {
