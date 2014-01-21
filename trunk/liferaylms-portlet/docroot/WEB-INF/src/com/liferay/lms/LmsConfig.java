@@ -22,11 +22,15 @@ public class LmsConfig extends MVCPortlet {
 		
 		String sitetemplates=StringUtil.merge(request.getParameterMap().get( "lmsTemplatesCheckbox"));
 		String activitytypes=StringUtil.merge(request.getParameterMap().get( "activitiesCheckbox"));
+		String calificationTypes=StringUtil.merge(request.getParameterMap().get( "calificationTypesCheckbox"));
+		String courseEvalsTypes=StringUtil.merge(request.getParameterMap().get( "courseEvalsCheckbox"));
 		ThemeDisplay themeDisplay  =(ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
 		
 		LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId());
 		prefs.setLmsTemplates(sitetemplates);
 		prefs.setActivities(activitytypes);
+		prefs.setCourseevals(courseEvalsTypes);
+		prefs.setScoretranslators(calificationTypes);
 		LmsPrefsLocalServiceUtil.updateLmsPrefs(prefs);
 		
 		if (Validator.isNotNull(redirect)) {
