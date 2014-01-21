@@ -3,15 +3,10 @@ package com.liferay.manager;
 import java.util.List;
 import java.util.Locale;
 
-import com.liferay.lms.activitymanager.ActivityManagerPortlet;
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
-import com.liferay.lms.model.Module;
 import com.liferay.lms.service.ClpSerializer;
-import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
-import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -60,12 +55,12 @@ public class CleanLearningActivityTries extends CleanLearningActivity implements
 				processTry(learningActivityTry);
 			}
 			
-			List<LearningActivityResult> lars = LearningActivityResultLocalServiceUtil.getByActId(la.getActId());
+			/*List<LearningActivityResult> lars = LearningActivityResultLocalServiceUtil.getByActId(la.getActId());
 
 			if(log.isDebugEnabled())log.debug("delete results::"+lars.size());
 			for(LearningActivityResult lar : lars){
 				LearningActivityResultLocalServiceUtil.deleteLearningActivityResult(lar);
-			}
+			}*/
 			
 		} catch (SystemException e) {
 			e.printStackTrace();
