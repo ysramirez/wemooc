@@ -1,3 +1,10 @@
+<%@page import="javax.swing.plaf.ListUI"%>
+<%@page import="com.liferay.portal.model.Plugin"%>
+<%@page import="com.liferay.portal.service.PluginSettingLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.PluginSetting"%>
+<%@page import="com.liferay.portal.kernel.plugin.PluginPackage"%>
+<%@page import="com.liferay.portal.model.LayoutTemplate"%>
+<%@page import="com.liferay.portal.model.LayoutTypePortlet"%>
 <%@page import="com.liferay.portal.service.PortletServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="java.io.IOException"%>
@@ -39,6 +46,54 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),LearningActivi
 
 %>
 
+
+
+<%
+
+List<String> portletIds = new ArrayList<String>();
+
+List<Layout> layoutForPortletName = LayoutLocalServiceUtil.getLayouts(0, LayoutLocalServiceUtil.getLayoutsCount()); 
+
+System.out.println("\n\nLayouts:  " +layoutForPortletName.size()); 
+
+for(Layout l:layoutForPortletName){
+	
+	System.out.println("  Layout:  " +l.getName(themeDisplay.getLocale()));
+
+	LayoutTypePortlet layoutTypePortletName = (LayoutTypePortlet)l.getLayoutType(); 
+	LayoutTemplate layoutTemplate=layoutTypePortletName.getLayoutTemplate(); 
+	List columnCount = layoutTemplate.getColumns(); 
+
+	for(int i=0; i < columnCount.size() ; i++){
+		
+		String column = (String)columnCount.get(i); 
+		List<Portlet> portlets = layoutTypePortletName.getAllPortlets(column); 
+
+		for(Portlet portlet : portlets){ 
+			
+			System.out.println("    portletId = "+portlet.getPortletId()+" "+" Title = " + PortalUtil.getPortletTitle(portlet, application, locale)); 
+			
+			if(!portletIds.contains(portlet.getPortletId()) && portlet.getPortletId().contains("_WAR_liferaylmsportlet")){
+				portletIds.add(portlet.getPortletId());
+			}
+
+			//PluginPackage pluginPackage = portlet.getPluginPackage(); 
+			//PluginSetting pluginSetting = PluginSettingLocalServiceUtil.getPluginSetting(company.getCompanyId(), portlet.getPortletId(), Plugin.TYPE_PORTLET); 
+
+			//StringBuilder sb = new StringBuilder(); 
+
+			//String displayName = portlet.getDisplayName(); 
+			//String title = PortalUtil.getPortletTitle(portlet, application, locale); 
+
+			//System.out.println("  portletId = "+portlet.getPortletId()+" "+" Title = " +title); 
+
+		}  
+	}	
+
+}
+
+%>
+
 <h3><%= "Build date: "	+ date.toString() %></h3>
 <h3><%= "Build number: "+ prop.getProperty("build.number","") %></h3>
 <h3><%= "Auto upgrade: "+ prop.getProperty("build.auto.upgrade","") %></h3>
@@ -58,14 +113,13 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),LearningActivi
 		
 			<aui:select name="before" label="portaladmin.portletname.before">
 			<%
-				List<Portlet> portlets = PortletLocalServiceUtil.getPortlets();
-				for(Portlet  portlet:portlets){
-					if(portlet.getPortletId().contains("_WAR_liferaylmsportlet")){
-						%>
-						<aui:option value="<%=portlet.getPortletId() %>"><%=portlet.getPortletId() %></aui:option>
-						<%
-					}
+			 	java.util.Collections.sort(portletIds);
+				for(String  name:portletIds){
+					%>
+					<aui:option value="<%=name %>"><%=name %></aui:option>
+					<%
 				}
+
 			%>
 			</aui:select>
 			
