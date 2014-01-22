@@ -12,18 +12,13 @@
 	}else{
 		preferences = renderRequest.getPreferences();
 	}
-	String viewAlways = preferences.getValue("viewAlways", "0");
+	boolean viewAlways = (preferences.getValue("viewAlways", "false")).compareTo("true") == 0;
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>
 <aui:form action="<%=saveConfigurationURL %>" >
 	<aui:input type="hidden" name="<%=Constants.CMD %>" value="<%=Constants.UPDATE %>" />
-	<aui:select label="module.viewAlways"  name="viewAlways" inlineLabel="true">
-		<% boolean selected = viewAlways.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = viewAlways.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
+	<aui:input type="checkbox" name="viewAlways" label="module.viewAlways" value="<%=viewAlways %>" checked="<%=viewAlways %>"/>
 	<aui:button-row>
 		<aui:button type="submit" value="save" />
 	</aui:button-row>
