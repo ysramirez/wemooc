@@ -23,7 +23,11 @@ import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.LmsPrefsLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 /**
  * The implementation of the lms prefs local service.
@@ -66,29 +70,58 @@ public class LmsPrefsLocalServiceImpl extends LmsPrefsLocalServiceBaseImpl
 				lmsPrefs.setEditorRole(stAction.courseEditor.getRoleId());
 				lmsPrefs.setLmsTemplates(Long.toString(stAction.layoutSetPrototype.getLayoutSetPrototypeId()));
 				lmsPrefsPersistence.update(lmsPrefs, true);
+				setActivities(lmsPrefs);
 			} catch (Exception e) 
 			{
 				// TODO Auto-generated catch block
 				throw new PortalException(e);
 			}
 			
-		}
+		}		
+		
+		return lmsPrefs;
+		
+	}
+
+	private void setActivities(LmsPrefs lmsPrefs) throws SystemException {
 		if(lmsPrefs.getActivities()==null ||lmsPrefs.getActivities().length()==0)
 		{
 			LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 			java.util.List<LearningActivityType> lats=learningActivityTypeRegistry.getLearningActivityTypes();
-			Long[] actids=new Long[lats.size()];
-			for(int i=0;i<actids.length;i++)
+			java.util.Map<Long, LearningActivityType> mapLats = new java.util.HashMap<Long, LearningActivityType>();
+			
+			for (LearningActivityType lat : lats) {
+				mapLats.put(lat.getTypeId(), lat);
+			}
+			
+			java.util.List<Long> actids = new java.util.ArrayList<Long>();
+			if (PropsUtil.contains("lms.learningactivity.order.default")) 
 			{
-				actids[i]=lats.get(i).getTypeId();
-				
+				String [] defaultOrderArray = PropsUtil.getArray("lms.learningactivity.order.default");
+				if (Validator.isNotNull(defaultOrderArray)) 
+				{
+					for (int i = 0; i < defaultOrderArray.length; i++) {
+						String defaultOrderActIdString = defaultOrderArray[i];
+						if (Validator.isNumber(defaultOrderActIdString)) {
+							Long defaultOrderActId = Long.valueOf(defaultOrderActIdString);
+							if (defaultOrderActId >= 0 && mapLats.get(defaultOrderActId) != null) {
+								actids.add(defaultOrderActId);
+							}
+						}
+					}
+				}
+			}
+						
+			for (int i = 0; i < lats.size(); i++)
+			{
+				Long typeId = lats.get(i).getTypeId();
+				if (!actids.contains(typeId)) {
+					actids.add(typeId);
+				}				
 			}
 			lmsPrefs.setActivities(StringUtil.merge(actids));
 			lmsPrefsPersistence.update(lmsPrefs, true);
 		}
-		
-		return lmsPrefs;
-		
 	}
 	
 	
