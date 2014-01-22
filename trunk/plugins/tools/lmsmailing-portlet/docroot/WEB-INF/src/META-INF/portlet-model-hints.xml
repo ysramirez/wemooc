@@ -19,7 +19,7 @@
 			<hint name="max-length">120</hint>
 		</field>
 		<field name="body" type="String">
-			<hint name="max-length">3000</hint>
+			<hint name="max-length">500000</hint>
 		</field>
 	</model>
 </model-hints>
