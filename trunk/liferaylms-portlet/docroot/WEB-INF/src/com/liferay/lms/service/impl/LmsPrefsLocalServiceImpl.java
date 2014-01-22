@@ -14,17 +14,17 @@
 
 package com.liferay.lms.service.impl;
 
-import com.liferay.lms.NoSuchPrefsException;
 import com.liferay.lms.hook.events.StartupAction;
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
+import com.liferay.lms.learningactivity.calificationtype.CalificationType;
+import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;
+import com.liferay.lms.learningactivity.courseeval.CourseEval;
+import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.LmsPrefs;
-import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.LmsPrefsLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -71,6 +71,8 @@ public class LmsPrefsLocalServiceImpl extends LmsPrefsLocalServiceBaseImpl
 				lmsPrefs.setLmsTemplates(Long.toString(stAction.layoutSetPrototype.getLayoutSetPrototypeId()));
 				lmsPrefsPersistence.update(lmsPrefs, true);
 				setActivities(lmsPrefs);
+				setScoreTranslators(lmsPrefs);
+				setCourseEvals(lmsPrefs);
 			} catch (Exception e) 
 			{
 				// TODO Auto-generated catch block
@@ -121,6 +123,28 @@ public class LmsPrefsLocalServiceImpl extends LmsPrefsLocalServiceBaseImpl
 			}
 			lmsPrefs.setActivities(StringUtil.merge(actids));
 			lmsPrefsPersistence.update(lmsPrefs, true);
+		}
+	}
+	
+	private void setScoreTranslators(LmsPrefs lmsPrefs) throws SystemException {
+		if(lmsPrefs.getScoretranslators()==null || lmsPrefs.getScoretranslators().length()==0){
+			CalificationTypeRegistry calificationTypeRegistry = new CalificationTypeRegistry();
+			java.util.List<CalificationType> cals = calificationTypeRegistry.getCalificationTypes();
+			Long[] calIds = new Long[cals.size()];
+			for(int i=0;i<calIds.length;i++){
+				calIds[i]=cals.get(i).getTypeId();
+			}	
+		}
+	}
+	
+	private void setCourseEvals(LmsPrefs lmsPrefs) throws SystemException {
+		if(lmsPrefs.getCourseevals()==null || lmsPrefs.getCourseevals().length()==0){
+			CourseEvalRegistry courseEvalRegistry = new CourseEvalRegistry();
+			java.util.List<CourseEval> cEvals = courseEvalRegistry.getCourseEvals();
+			Long[]cEvalIds = new Long[cEvals.size()];
+			for(int i=0;i<cEvalIds.length;i++){
+				cEvalIds[i]=cEvals.get(i).getTypeId();
+			}
 		}
 	}
 	
