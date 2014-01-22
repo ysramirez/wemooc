@@ -2,6 +2,7 @@
 <%@page import="com.liferay.portal.kernel.util.StringUtil"%>
 <%@page import="com.liferay.portal.kernel.util.HtmlUtil"%>
 <%@page import="com.liferay.lms.model.SCORMContent"%>
+<%@ include file="/init.jsp" %>
 <%
 int abstractLength = 200;
 
