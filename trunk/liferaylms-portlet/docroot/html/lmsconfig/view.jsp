@@ -1,3 +1,6 @@
+<%@page import="java.util.HashSet"%>
+<%@page import="java.util.Set"%>
+<%@page import="java.util.Collections"%>
 <%@page import="com.liferay.lms.learningactivity.calificationtype.CalificationType"%>
 <%@page import="com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.courseeval.CourseEval"%>
@@ -80,24 +83,37 @@ for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.search(
 
 LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 List<LearningActivityType> learningActivityTypes = learningActivityTypeRegistry.getLearningActivityTypes();
-Map<Long, Long> mapaLats = new HashMap<Long, Long>();
+LearningActivityType [] learningActivityTypesCopy = new LearningActivityType[learningActivityTypes.size()];
+Set<Long> learningActivityTypeIds = new HashSet<Long>();
+Map<Long, Integer> mapaLats = new HashMap<Long, Integer>();
 
-int numMarkedActivities = activityids.size();
-
-for (Long curActId : activityids)
-{
-	mapaLats.put(curActId, curActId);
+for (LearningActivityType learningActivityType : learningActivityTypes) {
+	learningActivityTypeIds.add(learningActivityType.getTypeId());
 }
 
+int index = 0;
+for (Long curActId : activityids)
+{
+	if (learningActivityTypeIds.contains(curActId)) {
+		mapaLats.put(curActId, index++);
+	}
+}
 
-int i = 0;
 for (LearningActivityType learningActivityType : learningActivityTypes) {
+	Integer orderInt = mapaLats.get(learningActivityType.getTypeId());
+	if (orderInt != null) {
+		learningActivityTypesCopy[orderInt] = learningActivityType;
+	} else {
+		learningActivityTypesCopy[index++] = learningActivityType;
+	}
+}
+
+for (LearningActivityType learningActivityType : learningActivityTypesCopy) {
 	%>
 	<li class="lms-sortable-activities">
 		<aui:input type="checkbox" name="activities" label="<%= learningActivityType.getName() %>" checked="<%= (mapaLats.containsKey(learningActivityType.getTypeId())) %>" value="<%= learningActivityType.getTypeId() %>" />
 	</li>
 	<%
-	i++;
 }
 %>
 </ul>
