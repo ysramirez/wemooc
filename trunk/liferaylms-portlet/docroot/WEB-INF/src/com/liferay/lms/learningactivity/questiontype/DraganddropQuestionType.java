@@ -165,7 +165,7 @@ public class DraganddropQuestionType extends BaseQuestionType {
 						"<div class=\"questiontext\">" + question.getText() + "</div>";
 
 			//en la columna de la izq el contenido de testAnswers, con las que el estudiante dejo sin arrastrar
-			leftCol +=	"<div class=\"items\">";
+			leftCol +=	"<div class=\"items\" style=\"border:1px solid #fff; min-height:"+20*testAnswers.size()+"px; min-width=300px;\">";
 			for(TestAnswer answer:testAnswers){
 				leftCol += "<div id=\""+answer.getAnswerId()+"\" class=\"ui-corner-all\">"+answer.getAnswer()+"</div>";
 			}
