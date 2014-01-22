@@ -23,7 +23,7 @@
 	else
 		preferences = renderRequest.getPreferences();
 	
-	boolean viewAlways = (preferences.getValue("viewAlways", "0")).compareTo("1") == 0;
+	boolean viewAlways = (preferences.getValue("viewAlways", "false")).compareTo("true") == 0;
 	
 	long moduleId=ParamUtil.getLong(request,"moduleId",0);
 	boolean actionEditing=(ParamUtil.getBoolean(request,"actionEditing",false));

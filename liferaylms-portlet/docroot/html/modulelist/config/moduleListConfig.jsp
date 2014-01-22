@@ -12,74 +12,29 @@
 	}else{
 		preferences = renderRequest.getPreferences();
 	}
-	String showLockedModulesIcon = preferences.getValue("showLockedModulesIcon", "0");
-	String showModuleIcon = preferences.getValue("showModuleIcon", "1");
-	String numerateModules = preferences.getValue("numerateModules", "0");
-	String moduleTitleLinkable = preferences.getValue("moduleTitleLinkable", "0");
-	String showPercentDone = preferences.getValue("showPercentDone", "1");
-	String showModuleStartDate = preferences.getValue("showModuleStartDate", "1");
-	String showModuleEndDate = preferences.getValue("showModuleEndDate", "1");
-	String allowEditionMode = preferences.getValue("allowEditionMode", "0");
-	String allowAccessWhenFinishedButNotClosed = preferences.getValue("allowAccessWhenFinishedButNotClosed", "0");
+	boolean showLockedModulesIcon = (preferences.getValue("showLockedModulesIcon", "false")).compareTo("true") == 0;
+	boolean showModuleIcon = (preferences.getValue("showModuleIcon", "true")).compareTo("true") == 0;
+	boolean numerateModules = (preferences.getValue("numerateModules", "false")).compareTo("true") == 0;
+	boolean moduleTitleLinkable = (preferences.getValue("moduleTitleLinkable", "false")).compareTo("true") == 0;
+	boolean showPercentDone = (preferences.getValue("showPercentDone", "true")).compareTo("true") == 0;
+	boolean showModuleStartDate = (preferences.getValue("showModuleStartDate", "true")).compareTo("true") == 0;
+	boolean showModuleEndDate = (preferences.getValue("showModuleEndDate", "true")).compareTo("true") == 0;
+	boolean allowEditionMode = (preferences.getValue("allowEditionMode", "false")).compareTo("true") == 0;
+	boolean allowAccessWhenFinishedButNotClosed = (preferences.getValue("allowAccessWhenFinishedButNotClosed", "false")).compareTo("true") == 0;
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>
 <aui:form action="<%=saveConfigurationURL %>" >
 	<aui:input type="hidden" name="<%=Constants.CMD %>" value="<%=Constants.UPDATE %>" />
-	<aui:select label="modulelist.showLockedModulesIcon"  name="showLockedModulesIcon" inlineLabel="true">
-		<% boolean selected = showLockedModulesIcon.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = showLockedModulesIcon.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.showModuleIcon"  name="showModuleIcon" inlineLabel="true">
-		<% boolean selected = showModuleIcon.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = showModuleIcon.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.numerateModules"  name="numerateModules" inlineLabel="true">
-		<% boolean selected = numerateModules.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = numerateModules.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.moduleTitleLinkable"  name="moduleTitleLinkable" inlineLabel="true">
-		<% boolean selected = moduleTitleLinkable.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = moduleTitleLinkable.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.showPercentDone"  name="showPercentDone" inlineLabel="true">
-		<% boolean selected = showPercentDone.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = showPercentDone.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.showModuleStartDate"  name="showModuleStartDate" inlineLabel="true">
-		<% boolean selected = showModuleStartDate.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = showModuleStartDate.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.showModuleEndDate"  name="showModuleEndDate" inlineLabel="true">
-		<% boolean selected = showModuleEndDate.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = showModuleEndDate.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.allowEditionMode"  name="allowEditionMode" inlineLabel="true">
-		<% boolean selected = allowEditionMode.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = allowEditionMode.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
-	<aui:select label="modulelist.allowAccessWhenFinishedButNotClosed"  name="allowAccessWhenFinishedButNotClosed" inlineLabel="true">
-		<% boolean selected = allowAccessWhenFinishedButNotClosed.compareTo("0") == 0; %>
-		<aui:option value="0" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "no") %></aui:option>
-		<% selected = allowAccessWhenFinishedButNotClosed.compareTo("1") == 0; %>
-		<aui:option value="1" selected="<%= selected %>"><%= LanguageUtil.get(pageContext, "yes") %></aui:option>
-	</aui:select>
+	<aui:input type="checkbox" name="showLockedModulesIcon" label="modulelist.showLockedModulesIcon" value="<%=showLockedModulesIcon %>" checked="<%=showLockedModulesIcon %>"/>
+	<aui:input type="checkbox" name="showModuleIcon" label="modulelist.showModuleIcon" value="<%=showModuleIcon %>" checked="<%=showModuleIcon %>"/>
+	<aui:input type="checkbox" name="numerateModules" label="modulelist.numerateModules" value="<%=numerateModules %>" checked="<%=numerateModules %>"/>
+	<aui:input type="checkbox" name="moduleTitleLinkable" label="modulelist.moduleTitleLinkable" value="<%=moduleTitleLinkable %>" checked="<%=moduleTitleLinkable %>"/>
+	<aui:input type="checkbox" name="showPercentDone" label="modulelist.showPercentDone" value="<%=showPercentDone %>" checked="<%=showPercentDone %>"/>
+	<aui:input type="checkbox" name="showModuleStartDate" label="modulelist.showModuleStartDate" value="<%=showModuleStartDate %>" checked="<%=showModuleStartDate %>"/>
+	<aui:input type="checkbox" name="showModuleEndDate" label="modulelist.showModuleEndDate" value="<%=showModuleEndDate %>" checked="<%=showModuleEndDate %>"/>
+	<aui:input type="checkbox" name="allowEditionMode" label="modulelist.allowEditionMode" value="<%=allowEditionMode %>" checked="<%=allowEditionMode %>"/>
+	<aui:input type="checkbox" name="allowAccessWhenFinishedButNotClosed" label="modulelist.allowAccessWhenFinishedButNotClosed" value="<%=allowAccessWhenFinishedButNotClosed %>" checked="<%=allowAccessWhenFinishedButNotClosed %>"/>
 	<aui:button-row>
 		<aui:button type="submit" value="save" />
 	</aui:button-row>

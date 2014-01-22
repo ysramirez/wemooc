@@ -38,6 +38,7 @@ public class ModuleAction implements ConfigurationAction {
 		} else {
 			prefs = actionRequest.getPreferences();
 		}
+		
 		prefs.setValue("viewAlways", actionRequest.getParameter("viewAlways"));
 		
 		prefs.store();

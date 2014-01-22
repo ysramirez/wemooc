@@ -32,15 +32,15 @@
 	else
 		preferences = renderRequest.getPreferences();
 	
-	boolean showLockedModulesIcon = (preferences.getValue("showLockedModulesIcon", "0")).compareTo("1") == 0;
-	boolean showModuleIcon = (preferences.getValue("showModuleIcon", "1")).compareTo("1") == 0;
-	boolean numerateModules = (preferences.getValue("numerateModules", "0")).compareTo("1") == 0;
-	boolean moduleTitleLinkable = (preferences.getValue("moduleTitleLinkable", "0")).compareTo("1") == 0;
-	boolean showPercentDone = (preferences.getValue("showPercentDone", "1")).compareTo("1") == 0;
-	boolean showModuleStartDate = (preferences.getValue("showModuleStartDate", "1")).compareTo("1") == 0;
-	boolean showModuleEndDate = (preferences.getValue("showModuleEndDate", "1")).compareTo("1") == 0;
-	boolean allowEditionMode = (preferences.getValue("allowEditionMode", "0")).compareTo("1") == 0;
-	boolean allowAccessWhenFinishedButNotClosed = (preferences.getValue("allowAccessWhenFinishedButNotClosed", "0")).compareTo("1") == 0;
+	boolean showLockedModulesIcon = (preferences.getValue("showLockedModulesIcon", "false")).compareTo("true") == 0;
+	boolean showModuleIcon = (preferences.getValue("showModuleIcon", "true")).compareTo("true") == 0;
+	boolean numerateModules = (preferences.getValue("numerateModules", "false")).compareTo("true") == 0;
+	boolean moduleTitleLinkable = (preferences.getValue("moduleTitleLinkable", "false")).compareTo("true") == 0;
+	boolean showPercentDone = (preferences.getValue("showPercentDone", "true")).compareTo("true") == 0;
+	boolean showModuleStartDate = (preferences.getValue("showModuleStartDate", "true")).compareTo("true") == 0;
+	boolean showModuleEndDate = (preferences.getValue("showModuleEndDate", "true")).compareTo("true") == 0;
+	boolean allowEditionMode = (preferences.getValue("allowEditionMode", "false")).compareTo("true") == 0;
+	boolean allowAccessWhenFinishedButNotClosed = (preferences.getValue("allowAccessWhenFinishedButNotClosed", "false")).compareTo("true") == 0;
 	
 
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
