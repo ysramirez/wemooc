@@ -14,5 +14,5 @@ create table lmsmail_MailTemplate (
 	groupId LONG,
 	userId LONG,
 	subject VARCHAR(120) null,
-	body VARCHAR(3000) null
+	body TEXT null
 );
