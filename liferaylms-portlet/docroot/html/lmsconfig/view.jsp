@@ -28,32 +28,11 @@ if(prefs!=null)
 	Role editor=RoleLocalServiceUtil.getRole(editorRoleId);
 	long teacherRoleId=prefs.getTeacherRole();
 	Role teacher=RoleLocalServiceUtil.getRole(teacherRoleId);
-	String[] layoutsettemplateidsString=prefs.getLmsTemplates().split(",");
-	long[] layoutsettemplateids=new long[layoutsettemplateidsString.length];
-	long[] actids=new long[layoutsettemplateidsString.length];
-	for(int i=0;i<layoutsettemplateidsString.length;i++)
-	{
-		if(!StringPool.BLANK.equals(layoutsettemplateidsString[i])){
-			layoutsettemplateids[i]=Long.parseLong(layoutsettemplateidsString[i]);
-		}
-	}
+	
+	List<Long> layoutSetTemplateIds = ListUtil.toList(StringUtil.split(prefs.getLmsTemplates(),",",0L));
 	List<Long> activityids = ListUtil.toList(StringUtil.split(prefs.getActivities(), ",", 0L));
-	
-	String[] courseEvalIdsString=prefs.getCourseevals().split(",");
-	long[] courseEvalIds = new long[courseEvalIdsString.length];
-	for(int i=0;i<courseEvalIdsString.length;i++){
-		if(!StringPool.BLANK.equals(courseEvalIdsString[i])){
-			courseEvalIds[i]=Long.parseLong(courseEvalIdsString[i]);
-		}
-	}
-	String[] calificationTypeIdsString=prefs.getScoretranslators().split(",");
-	long[] calificationTypeIds = new long[calificationTypeIdsString.length];
-	for(int i=0;i<calificationTypeIdsString.length;i++){
-		if(!StringPool.BLANK.equals(calificationTypeIdsString[i])){
-			calificationTypeIds[i]=Long.parseLong(calificationTypeIdsString[i]);
-		}
-	}
-	
+	List<Long> courseEvalIds = ListUtil.toList(StringUtil.split(prefs.getCourseevals(),",",0L));
+	List <Long> calificationTypeIds = ListUtil.toList(StringUtil.split(prefs.getScoretranslators(),",",0L));	
 %>
 <liferay-portlet:actionURL name="changeSettings" var="changeSettingsURL">
 </liferay-portlet:actionURL>
@@ -65,7 +44,7 @@ if(prefs!=null)
 for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.search(themeDisplay.getCompanyId(),true,0, 1000000,null))
 {
 	boolean checked=false;
-	if(ArrayUtils.contains(layoutsettemplateids, layoutsetproto.getLayoutSetPrototypeId()))
+	if(ArrayUtils.contains(layoutSetTemplateIds.toArray(), layoutsetproto.getLayoutSetPrototypeId()))
 	{
 		checked=true;
 	}
@@ -125,7 +104,7 @@ for(CourseEval courseEval:courseEvalRegistry.getCourseEvals())
 {
 	boolean checked=false;
 	String writechecked="false";
-	if(courseEvalIds!=null &&courseEvalIds.length>0 && ArrayUtils.contains(courseEvalIds, courseEval.getTypeId()))
+	if(courseEvalIds!=null &&courseEvalIds.size()>0 && ArrayUtil.contains(courseEvalIds.toArray(), courseEval.getTypeId()))
 	{
 		checked=true;
 		writechecked="true";
@@ -145,7 +124,7 @@ for(CalificationType calificationType :calificationTypeRegistry.getCalificationT
 {
 	boolean checked=false;
 	String writechecked="false";
-	if(calificationTypeIds!=null &&calificationTypeIds.length>0 && ArrayUtils.contains(calificationTypeIds, calificationType.getTypeId()))
+	if(calificationTypeIds!=null &&calificationTypeIds.size()>0 && ArrayUtils.contains(calificationTypeIds.toArray(), calificationType.getTypeId()))
 	{
 		checked=true;
 		writechecked="true";
