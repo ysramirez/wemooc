@@ -22,6 +22,7 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
@@ -202,6 +203,31 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 		}
 		
 	}
+	
+	public void moveModule(long modId, long previusMod, long nextMod) throws SystemException {
+		Module actualMod = (modId>0)?modulePersistence.fetchByPrimaryKey(modId):null;
+		Module finalPrevMod = (previusMod>0)?modulePersistence.fetchByPrimaryKey(previusMod):null;
+		Module finalNextMod = (nextMod>0)?modulePersistence.fetchByPrimaryKey(nextMod):null;
+
+		//Elemento subido
+		if(finalNextMod!=null && actualMod.getOrdern() > finalNextMod.getOrdern()){
+			Module prevAct = getPreviusModule(actualMod);
+			while(prevAct != null && actualMod.getOrdern() > finalNextMod.getOrdern()){
+				goUpModule(modId);
+				actualMod = modulePersistence.fetchByPrimaryKey(modId);
+				prevAct = getPreviusModule(actualMod);
+			}
+		}else{//Elemento bajado
+			Module nexMod = getNextModule(actualMod);
+			while (nexMod != null && actualMod.getOrdern() < finalPrevMod.getOrdern()){
+				goDownModule(modId);
+				actualMod = modulePersistence.fetchByPrimaryKey(modId);
+				nexMod = getNextModule(actualMod);
+			}
+		}
+
+	}
+	
 	public Module addmodule (Module validmodule) throws SystemException {
 	    Module fileobj = ModuleUtil.create(CounterLocalServiceUtil.increment(Module.class.getName()));
 
