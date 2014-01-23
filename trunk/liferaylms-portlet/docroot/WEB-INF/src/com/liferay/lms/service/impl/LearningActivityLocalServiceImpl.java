@@ -132,7 +132,7 @@ public class LearningActivityLocalServiceImpl
 		larn.setGroupId(serviceContext.getScopeGroupId());
 		larn.setDescription(description);
 		larn.setTypeId(typeId);
-		larn.setTitle(title,serviceContext.getLocale());
+		larn.setTitle(title);
 		larn.setStartdate(startDate);
 		larn.setCreateDate(new java.util.Date(System.currentTimeMillis()));
 		larn.setModifiedDate(new java.util.Date(System.currentTimeMillis()));
