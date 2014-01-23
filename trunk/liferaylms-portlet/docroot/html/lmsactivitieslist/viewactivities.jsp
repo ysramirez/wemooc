@@ -105,7 +105,9 @@ if ((actionEditing
 	%>
 
 
-<script>
+<liferay-portlet:actionURL name="moveActivity" var="moveActivityURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" />
+
+<script type="text/javascript">
 
 Liferay.provide(
         window,
@@ -119,7 +121,52 @@ Liferay.provide(
         ['aui-dialog','aui-dialog-iframe']
     );
     
+    
+
+AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(A) {
+
+	new A.Sortable(
+		{
+			container: A.one('#myActivities'),
+		    nodes: 'li',
+            after: {   
+            	'drag:end': function(event){ 
+            		
+				    var node = event.target.get('node'),
+			            prev = node.previous(),
+			            next = node.next(),
+                        movedPageId = parseInt(node.get('id').substr(<%=renderResponse.getNamespace().length() %>),0),
+		            	prevPageId = 0,
+		            	nextPageId = 0;
+				    
+			        if(prev){
+			          prevPageId = parseInt(prev.get('id').substr(<%=renderResponse.getNamespace().length() %>),0);
+				    }
+
+			        if(next){
+			          nextPageId = parseInt(next.get('id').substr(<%=renderResponse.getNamespace().length() %>),0);
+				    }
+
+					A.io.request('<%=moveActivityURL %>', {  
+						data: {
+				            <portlet:namespace />pageId: movedPageId,
+				            <portlet:namespace />prevPageId: prevPageId,
+				            <portlet:namespace />nextPageId: nextPageId
+				        },
+					    dataType : 'html', 
+					  on: {  
+				  		success: function() {  
+							 Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});
+				        }  
+					   }  
+					});    
+            	}              
+            }
+		}
+	);
+  });
 </script>
+
 <liferay-portlet:renderURL var="newactivityURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<liferay-portlet:param name="jspPage" value="/html/lmsactivitieslist/newactivity.jsp"/>
 	<liferay-portlet:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
@@ -160,7 +207,7 @@ Liferay.provide(
 }
 %>
 <liferay-ui:error></liferay-ui:error>
-<ul>
+<ul id="myActivities">
 			<%
 			for (LearningActivity activity : activities) {
 				
@@ -239,12 +286,12 @@ Liferay.provide(
 						}
 						
 						%>
-						
 						<portlet:actionURL var="goToActivity" windowState="<%= WindowState.NORMAL.toString()%>" >
 							<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />
 						</portlet:actionURL>
 
-						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> 
+							id="<portlet:namespace/><%=activity.getActId()%>">
 						
 							<a href="<%=goToActivity.toString() %>"  ><%=activity.getTitle(themeDisplay.getLocale())%></a>
 							
@@ -253,7 +300,8 @@ Liferay.provide(
 					else
 					{
 					%>
-						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> >
+						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> 
+							id="<portlet:namespace/><%=activity.getActId()%>">
 							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
 					<%
 					}

@@ -55,6 +55,8 @@ if(actId!=0) {
 }
 
 %>
+<liferay-portlet:actionURL name="moveModule" var="moveModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" />
+
 <script type="text/javascript">
 <!--
 
@@ -116,10 +118,54 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','
 
 });
 
+
+AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(A) {
+
+	new A.Sortable(
+		{
+			container: A.one('#myList'),
+		    nodes: 'ul#myModule > li',
+            after: {   
+            	'drag:end': function(event){ 
+            		
+				    var node = event.target.get('node'),
+			            prev = node.previous(),
+			            next = node.next(),
+                        movedPageId = parseInt(node.get('id').substr(<%=renderResponse.getNamespace().length() %>),0),
+		            	prevPageId = 0,
+		            	nextPageId = 0;
+				    
+			        if(prev){
+			          prevPageId = parseInt(prev.get('id').substr(<%=renderResponse.getNamespace().length() %>),0);
+				    }
+
+			        if(next){
+			          nextPageId = parseInt(next.get('id').substr(<%=renderResponse.getNamespace().length() %>),0);
+				    }
+
+					A.io.request('<%=moveModuleURL %>', {  
+						data: {
+				            <portlet:namespace />pageId: movedPageId,
+				            <portlet:namespace />prevPageId: prevPageId,
+				            <portlet:namespace />nextPageId: nextPageId
+				        },
+					    dataType : 'html', 
+					  on: {  
+				  		success: function() {  
+							 Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});
+				        }  
+					   }  
+					});    
+            	}              
+            }
+		}
+	);
+  });
+
 //-->
 </script>
-<div class="modulo portlet-toolbar search-form lms-tree">
-	<ul>
+<div id="myList" class="modulo portlet-toolbar search-form lms-tree">
+	<ul id="myModule">
 		<%
 		renderRequest.setAttribute("moduleId", Long.toString(moduleId));
 		boolean registrado=UserLocalServiceUtil.hasGroupUser(themeDisplay.getScopeGroupId(),themeDisplay.getUserId());
@@ -141,7 +187,7 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','
 				%>
 				
 				<%--li class='<%= moduleId == theModule.getModuleId() ? "option-less" : "option-more"%>' --%>
-				<li class='option-none  <%=theModule.getModuleId() == moduleId ? "option-less":"" %>'>
+				<li class='option-none  <%=theModule.getModuleId() == moduleId ? "option-less":"" %>' id="<portlet:namespace/><%=theModule.getModuleId()%>">
 					<%
 					if(theModule.getModuleId() == moduleId)
 					{

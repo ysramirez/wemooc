@@ -45,7 +45,54 @@
 
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 %>
-	<table class="coursemodule <%="course-status-".concat(String.valueOf(course.getStatus()))%>">
+<liferay-portlet:actionURL name="moveModule" var="moveModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" />
+
+<script type="text/javascript">
+AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(A) {
+
+	new A.Sortable(
+		{
+			container: A.one('#myModule'),
+		    nodes: 'tr',
+            after: {   
+            	'drag:end': function(event){ 
+            		
+				    var node = event.target.get('node'),
+			            prev = node.previous(),
+			            next = node.next(),
+                        movedPageId = parseInt(node.get('id').substr(<%=renderResponse.getNamespace().length() %>),0),
+		            	prevPageId = 0,
+		            	nextPageId = 0;
+				    
+			        if(prev){
+			          prevPageId = parseInt(prev.get('id').substr(<%=renderResponse.getNamespace().length() %>),0);
+				    }
+
+			        if(next){
+			          nextPageId = parseInt(next.get('id').substr(<%=renderResponse.getNamespace().length() %>),0);
+				    }
+
+					A.io.request('<%=moveModuleURL %>', {  
+						data: {
+				            <portlet:namespace />pageId: movedPageId,
+				            <portlet:namespace />prevPageId: prevPageId,
+				            <portlet:namespace />nextPageId: nextPageId
+				        },
+					    dataType : 'html', 
+					  on: {  
+				  		success: function() {  
+							 Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,'<%=renderResponse.getNamespace()+WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>':'<%=StringPool.TRUE %>'});
+				        }  
+					   }  
+					});    
+            	}              
+            }
+		}
+	);
+  });
+  </script>
+
+	<table class="coursemodule <%="course-status-".concat(String.valueOf(course.getStatus()))%>" id="myModule">
 <%
 		Date today=new java.util.Date(System.currentTimeMillis());
 		if(course!=null && permissionChecker.hasPermission(course.getGroupCreatedId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW)){
@@ -59,7 +106,7 @@
 				boolean canAccessLock = permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK");
 				boolean actionEditing = (permissionChecker.hasPermission(course.getGroupCreatedId(), Course.class.getName(), course.getCourseId() , "UPDATE"))?true:false;
 %>
-				<tr>
+				<tr id="<portlet:namespace/><%=theModule.getModuleId()%>">
 <% 					
 					if(showLockedModulesIcon){
 						boolean showLock = (actionEditing || canAccessLock)?true:false;

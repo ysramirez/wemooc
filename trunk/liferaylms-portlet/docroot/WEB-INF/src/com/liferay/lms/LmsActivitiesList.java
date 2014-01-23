@@ -480,6 +480,24 @@ public class LmsActivitiesList extends MVCPortlet {
 		
 	}
 	
+	public void moveModule(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+		
+		long moduleId = ParamUtil.getLong(actionRequest, "pageId"),
+		     prevModId = ParamUtil.getLong(actionRequest, "prevPageId"),
+		     nextModId = ParamUtil.getLong(actionRequest, "nextPageId");
+		
+		if(moduleId>0){
+			if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), Module.class.getName(), moduleId, ActionKeys.UPDATE)){
+				ModuleLocalServiceUtil.moveModule(moduleId, prevModId, nextModId);
+			}
+		}
+		
+		actionResponse.setRenderParameter("jsp", "/html/lmsactivitieslist/view.jsp");
+	}
+	
 	public void deleteactivity(ActionRequest actionRequest, ActionResponse actionResponse)
 		throws Exception {
 
@@ -558,6 +576,28 @@ public class LmsActivitiesList extends MVCPortlet {
 				LearningActivityLocalServiceUtil.goDownLearningActivity(actId);
 			}
 		}
+	}
+	
+	public void moveActivity(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+		
+		long actId = ParamUtil.getLong(actionRequest, "pageId"),
+		     prevActId = ParamUtil.getLong(actionRequest, "prevPageId"),
+		     nextActId = ParamUtil.getLong(actionRequest, "nextPageId");
+		
+		if(actId>0){
+			LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			
+			if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(),
+					ActionKeys.UPDATE)|| permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
+							ActionKeys.UPDATE))	{
+				LearningActivityLocalServiceUtil.moveActivity(actId, prevActId, nextActId);
+			}
+		}
+		
+		actionResponse.setRenderParameter("jsp", "/html/lmsactivitieslist/view.jsp");
 	}
 	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse)
