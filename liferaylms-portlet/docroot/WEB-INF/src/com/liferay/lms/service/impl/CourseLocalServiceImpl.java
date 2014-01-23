@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
@@ -131,7 +132,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					serviceContext.getAssetTagNames(), true, null, null,new java.util.Date(System.currentTimeMillis()), null,
 					ContentTypes.TEXT_HTML, course.getTitle(), course.getDescription(locale), summary, null, null, 0, 0,null, false);
 			//creating group
-			Group group = GroupLocalServiceUtil.addGroup( getAdministratorUser(serviceContext.getCompanyId()).getUserId(),null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
+			Group group = groupLocalService.addGroup( getAdministratorUser(serviceContext.getCompanyId()).getUserId(),null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
 			
 			//A�adimos el rol Teacher al usuario que crea el blog
 			long[] usuarios = new long[1];
@@ -152,6 +153,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			if(log.isInfoEnabled()){
 				log.info("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
 			}
+			throw new PortalException(e.getMessage());
 		}
 		
 		//auditing
@@ -223,16 +225,16 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return lspRes;
 	}	
 	
-	private static void importLayouts(long userId,Group grupo,LayoutSetPrototype lsProto) throws PortalException, SystemException
+	private void importLayouts(long userId,Group grupo,LayoutSetPrototype lsProto) throws PortalException, SystemException
 	{
 			LayoutSet ls = lsProto.getLayoutSet();	
 			
-		File fileIni= LayoutLocalServiceUtil.exportLayoutsAsFile(ls.getGroupId(), true,
+		File fileIni= layoutLocalService.exportLayoutsAsFile(ls.getGroupId(), true,
 				null,getLayoutSetPrototypeParameters(), null, null);
 	
 		try
 		{
-		LayoutLocalServiceUtil.importLayouts(userId, grupo.getPublicLayoutSet().getGroupId(), 
+		layoutLocalService.importLayouts(userId, grupo.getPublicLayoutSet().getGroupId(), 
 			grupo.getPublicLayoutSet().isPrivateLayout(),
 			getLayoutSetPrototypeParameters(), fileIni);
 		}
