@@ -37,7 +37,7 @@
 <%
 String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
 		%>
-		<aui:field-wrapper  label="alowed-course-templates" >
+		<aui:field-wrapper  label="allowed-site-templates" >
 		<%
 		for(String lspis:lspist)
 		{
