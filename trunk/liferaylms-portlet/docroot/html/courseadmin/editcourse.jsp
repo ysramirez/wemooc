@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@page import="com.liferay.lms.model.LmsPrefs"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
 <%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
@@ -246,17 +248,20 @@ else
 	
 	<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
 	<%
+	List<Long> courseEvalIds = ListUtil.toList(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals(),",",0L));
+	//String[]courseEvals = LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals().split(",");
 	CourseEvalRegistry cer=new CourseEvalRegistry();
-	for(CourseEval ce:cer.getCourseEvals())
+	for(Long ce:courseEvalIds)
 	{
+		CourseEval cel = cer.getCourseEval(ce);
 		boolean selected=false;
-		if(course!=null&&course.getCourseEvalId()==ce.getTypeId())
+		if(course!=null&&course.getCourseEvalId()==ce)
 		{
 			selected=true;
 		}
 		
 		%>
-		<aui:option value="<%=ce.getTypeId() %>" selected="<%=selected %>"><liferay-ui:message key="<%=ce.getName() %>" /></aui:option>
+		<aui:option value="<%=String.valueOf(ce)%>" selected="<%=selected %>"><liferay-ui:message key="<%=cel.getName() %>" /></aui:option>
 		<%
 	}
 	%>
@@ -290,18 +295,19 @@ else
 		</aui:select>
 		<%
 	}
-	
-	List<CalificationType> ctl = new CalificationTypeRegistry().getCalificationTypes();
-	if(ctl.size()>1){
+	List <Long> califications = ListUtil.toList(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getScoretranslators(),",",0L));	
+	CalificationTypeRegistry cal = new CalificationTypeRegistry();
+	if(califications.size()>1){
 		%>
 			<aui:select name="calificationType" label="calificationType">
 		<%
-		for(CalificationType ct:ctl){
+		for(Long ct:califications){
 			boolean selected = false;
-			if((course == null && PropsUtil.get("lms.calification.default.type").equals(Long.toString(ct.getTypeId()))) || (course != null && ct.getTypeId() == course.getCalificationType()))
+			CalificationType ctype = cal.getCalificationType(ct);
+			if((course == null && PropsUtil.get("lms.calification.default.type").equals(String.valueOf(ct))) || (course != null && ct == course.getCalificationType()))
 				selected = true;
 			%>
-				<aui:option value="<%=ct.getTypeId() %>"  selected="<%=selected %>"><liferay-ui:message key="<%=ct.getTitle(themeDisplay.getLocale()) %>" /></aui:option>
+				<aui:option value="<%=String.valueOf(ct)%>"  selected="<%=selected %>"><liferay-ui:message key="<%=ctype.getTitle(themeDisplay.getLocale()) %>" /></aui:option>
 			<%
 		}
 		%>

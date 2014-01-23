@@ -313,6 +313,7 @@ Liferay.provide(
 if(uploadCorrect.equals("true")){
 	uploadCorrect="false";
 	request.setAttribute("uploadCorrect", uploadCorrect);
+	renderResponse.setProperty("clear-request-parameters", Boolean.TRUE.toString());
 	%><script><portlet:namespace />openConfirmation();</script><%
 }
 %>
