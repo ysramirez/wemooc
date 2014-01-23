@@ -45,7 +45,14 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 		
 		for (MailTemplate template : templates) {
 
-			MailTemplateLocalServiceUtil.deleteMailTemplate(template);
+			try {
+				
+				MailTemplateLocalServiceUtil.deleteMailTemplate(template);
+				
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			
 		}
 		
@@ -67,20 +74,26 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 			
 		for (MailTemplate template : templates) {
 	
-			String path = getEntryPath(portletDataContext, template);
+			try {
 				
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
+				String path = getEntryPath(portletDataContext, template);
+					
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+
+				Element entryElement = rootElement.addElement("mailtemplatedata");
+
+				entryElement.addAttribute("path", path);
+
+				portletDataContext.addPermissions(MailTemplate.class, template.getIdTemplate());
+				
+				template.setUserUuid(template.getUserUuid());
+				portletDataContext.addZipEntry(path, template);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-
-			Element entryElement = rootElement.addElement("mailtemplatedata");
-
-			entryElement.addAttribute("path", path);
-
-			portletDataContext.addPermissions(MailTemplate.class, template.getIdTemplate());
-			
-			template.setUserUuid(template.getUserUuid());
-			portletDataContext.addZipEntry(path, template);
 			
 		}
 
@@ -97,21 +110,29 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 		Element rootElement = document.getRootElement();
 		
 		for (Element entryElement : rootElement.elements("mailtemplatedata")) {
-			String path = entryElement.attributeValue("path");
-
-			if (!portletDataContext.isPathNotProcessed(path)) {
-				continue;
-			}
-			MailTemplate template = (MailTemplate)portletDataContext.getZipEntryAsObject(path);
 			
-			MailTemplate newTemplate = MailTemplateLocalServiceUtil.createMailTemplate(CounterLocalServiceUtil.increment(MailTemplate.class.getName()));
-			newTemplate.setCompanyId(template.getCompanyId());
-			newTemplate.setGroupId(portletDataContext.getScopeGroupId());
-			newTemplate.setUserId(template.getUserId());
-			newTemplate.setSubject(template.getSubject());
-			newTemplate.setBody(template.getBody());
+			try {
+				
+				String path = entryElement.attributeValue("path");
 
-			MailTemplateLocalServiceUtil.updateMailTemplate(newTemplate);
+				if (!portletDataContext.isPathNotProcessed(path)) {
+					continue;
+				}
+				MailTemplate template = (MailTemplate)portletDataContext.getZipEntryAsObject(path);
+				
+				MailTemplate newTemplate = MailTemplateLocalServiceUtil.createMailTemplate(CounterLocalServiceUtil.increment(MailTemplate.class.getName()));
+				newTemplate.setCompanyId(template.getCompanyId());
+				newTemplate.setGroupId(portletDataContext.getScopeGroupId());
+				newTemplate.setUserId(template.getUserId());
+				newTemplate.setSubject(template.getSubject());
+				newTemplate.setBody(template.getBody());
+
+				MailTemplateLocalServiceUtil.updateMailTemplate(newTemplate);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		
 		return null;
