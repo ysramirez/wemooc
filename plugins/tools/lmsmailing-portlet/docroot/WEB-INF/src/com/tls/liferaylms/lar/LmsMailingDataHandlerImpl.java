@@ -18,7 +18,7 @@ import com.tls.liferaylms.mail.service.MailTemplateLocalServiceUtil;
 
 public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 	
-	private static final String _NAMESPACE = "module";
+	private static final String _NAMESPACE = "mailing";
 
 	
 	private static PortletDataHandlerBoolean _entries =
@@ -39,17 +39,23 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 	}
 
 	@Override
-	protected PortletPreferences doDeleteData(
-			PortletDataContext portletDataContext, String portletId,
-			PortletPreferences portletPreferences) throws Exception {
-		// TODO Auto-generated method stub
+	protected PortletPreferences doDeleteData(PortletDataContext portletDataContext, String portletId, PortletPreferences portletPreferences) throws Exception {
+
+		List<MailTemplate> templates = MailTemplateLocalServiceUtil.getMailTemplateByGroupId(portletDataContext.getScopeGroupId());
+		
+		for (MailTemplate template : templates) {
+
+			MailTemplateLocalServiceUtil.deleteMailTemplate(template);
+			
+		}
+		
 		return super.doDeleteData(portletDataContext, portletId, portletPreferences);
 	}
 
 	@Override
 	protected String doExportData(PortletDataContext portletDataContext, String portletId, PortletPreferences portletPreferences) throws Exception {
 
-		portletDataContext.addPermissions("com.liferay.lms.model.module", portletDataContext.getScopeGroupId());
+		portletDataContext.addPermissions("com.tls.liferaylms.mail.model.MailTemplate", portletDataContext.getScopeGroupId());
 		
 		Document document = SAXReaderUtil.createDocument();
 
@@ -57,7 +63,7 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 
 		rootElement.addAttribute("group-id", String.valueOf(portletDataContext.getScopeGroupId()));
 		
-		List<MailTemplate> templates = MailTemplateLocalServiceUtil.getMailTemplates(0, MailTemplateLocalServiceUtil.getMailTemplatesCount());
+		List<MailTemplate> templates = MailTemplateLocalServiceUtil.getMailTemplateByGroupId(portletDataContext.getScopeGroupId());
 			
 		for (MailTemplate template : templates) {
 	
@@ -67,7 +73,7 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 				continue;
 			}
 
-			Element entryElement = rootElement.addElement("moduleentry");
+			Element entryElement = rootElement.addElement("mailtemplatedata");
 
 			entryElement.addAttribute("path", path);
 
@@ -84,13 +90,13 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 	@Override
 	protected PortletPreferences doImportData(PortletDataContext portletDataContext, String portletId, PortletPreferences portletPreferences, String data) throws Exception {
 
-		portletDataContext.importPermissions("com.liferay.lms.model.module", portletDataContext.getSourceGroupId(), portletDataContext.getScopeGroupId());
+		portletDataContext.importPermissions("com.tls.liferaylms.mail.model.MailTemplate", portletDataContext.getSourceGroupId(), portletDataContext.getScopeGroupId());
 		
 		Document document = SAXReaderUtil.read(data);
 
 		Element rootElement = document.getRootElement();
 		
-		for (Element entryElement : rootElement.elements("moduleentry")) {
+		for (Element entryElement : rootElement.elements("mailtemplatedata")) {
 			String path = entryElement.attributeValue("path");
 
 			if (!portletDataContext.isPathNotProcessed(path)) {
@@ -100,7 +106,7 @@ public class LmsMailingDataHandlerImpl extends BasePortletDataHandler {
 			
 			MailTemplate newTemplate = MailTemplateLocalServiceUtil.createMailTemplate(CounterLocalServiceUtil.increment(MailTemplate.class.getName()));
 			newTemplate.setCompanyId(template.getCompanyId());
-			newTemplate.setGroupId(template.getGroupId());
+			newTemplate.setGroupId(portletDataContext.getScopeGroupId());
 			newTemplate.setUserId(template.getUserId());
 			newTemplate.setSubject(template.getSubject());
 			newTemplate.setBody(template.getBody());
