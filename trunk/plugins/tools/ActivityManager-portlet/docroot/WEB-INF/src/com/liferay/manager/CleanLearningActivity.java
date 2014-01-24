@@ -21,8 +21,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextThreadLocal;
 
 public class CleanLearningActivity {
 	Log log = LogFactoryUtil.getLog(CleanLearningActivity.class);
@@ -55,6 +53,7 @@ public class CleanLearningActivity {
 			if(log.isInfoEnabled())log.info(e.getMessage());
 			if(log.isDebugEnabled())e.printStackTrace();
 			e.printStackTrace();
+			setRunning(false);
 			return null;
 		} catch (BeanLocatorException e) {
 			

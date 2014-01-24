@@ -1,3 +1,4 @@
+<%@page import="com.liferay.manager.CleanLearningActivity"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lmssa.service.ActManAuditLocalServiceUtil"%>
 <%@page import="com.liferay.lmssa.model.ActManAudit"%>
@@ -164,13 +165,13 @@
 				<%=text %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="begin-date">
-				<%=sdf.format(audit.getStart()) %>
+				<%=audit.getStart()!=null?sdf.format(audit.getStart()):"" %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="end-date">
-				<%=sdf.format(audit.getEnd()) %>
+				<%=audit.getEnd()!=null?sdf.format(audit.getEnd()):"" %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="actmanager.deletedtries">
-				<%=audit.getNumber() %>
+				<%=audit!=null?audit.getNumber():"0" %>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />

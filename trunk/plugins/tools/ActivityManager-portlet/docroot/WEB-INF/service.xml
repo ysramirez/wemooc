@@ -16,9 +16,14 @@
         <column name="state" type="String" />
 		<column name="number" type="int" />
         
+       	<order by="desc">
+			<order-column name="end" />
+		</order>
+        
 		<finder name="companyId" return-type="Collection">
 			<finder-column name="companyId" />
 		</finder>
+		
     </entity>
     
     <entity name="LearningActivityTryDeleted" uuid="true" local-service="true">
