@@ -30,6 +30,7 @@ public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity i
 		super();
 	}
 
+	@SuppressWarnings("unchecked")
 	public void process() throws Exception{
 		
 		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");

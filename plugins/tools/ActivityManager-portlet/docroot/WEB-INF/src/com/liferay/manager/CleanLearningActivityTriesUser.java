@@ -37,11 +37,11 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 			LearningActivityResultLocalServiceUtil.deleteLearningActivityResult(lar);
 		}
 		
-		try {
-			Thread.sleep(30000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			Thread.sleep(30000);
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
