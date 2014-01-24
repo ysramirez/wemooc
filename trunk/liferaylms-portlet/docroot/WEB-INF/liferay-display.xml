@@ -56,5 +56,6 @@
 		<portlet id="competencesadmin"></portlet>
 		<portlet id="usercompetence"></portlet>
 		<portlet id="about"></portlet>
+		<portlet id="courseinscriptiondates"></portlet>
 	</category>
 </display>
