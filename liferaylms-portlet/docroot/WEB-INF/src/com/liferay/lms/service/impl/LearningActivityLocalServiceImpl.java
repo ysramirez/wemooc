@@ -534,7 +534,7 @@ extends LearningActivityLocalServiceBaseImpl {
 	}
 
 	private String getNameLearningActivity(int type) throws SystemException{
-		String res = "";
+		String res = "other";
 
 		switch(type){
 		//test
