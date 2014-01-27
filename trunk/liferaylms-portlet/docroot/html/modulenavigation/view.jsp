@@ -1,8 +1,13 @@
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletURL"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
+<%@page import="com.liferay.portal.kernel.util.Constants"%>
+<%@page import="javax.portlet.PortletPreferences"%>
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
 
 <%@ include file="/init.jsp" %>
 
@@ -19,7 +24,18 @@
 			Module previousModule = ModuleLocalServiceUtil.getPreviusModule(moduleId);
 			Module nextModule 	  = ModuleLocalServiceUtil.getNextModule(moduleId);
 			
-			if(previousModule != null){
+			PortletPreferences preferences = null;
+			String portletResource = ParamUtil.getString(request, "portletResource");
+			
+			if (Validator.isNotNull(portletResource)) {
+				preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+			}else{
+				preferences = renderRequest.getPreferences();
+			}
+			
+			System.out.println(" showPreviousModuleButton : " + preferences.getValue("showPreviousModuleButton", "false") );
+			
+			if(previousModule != null && (preferences.getValue("showPreviousModuleButton", "false")).equals("true")){
 
 				LiferayPortletURL  previousModuleURL = (LiferayPortletURL)renderResponse.createActionURL();	
 				previousModuleURL.setParameter(ActionRequest.ACTION_NAME, "goToModule");
