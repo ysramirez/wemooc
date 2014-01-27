@@ -43,8 +43,9 @@
 						break;
 					} else if(!ModuleLocalServiceUtil.isLocked(previousModule.getModuleId(),themeDisplay.getUserId())){
 						showPreviousModule = true;
+					} else {
+						previousModule = ModuleLocalServiceUtil.getPreviusModule(previousModule.getModuleId());
 					}
-					previousModule = ModuleLocalServiceUtil.getPreviusModule(previousModule.getModuleId());
 				}
 				
 				if(showPreviousModule){
@@ -71,8 +72,9 @@
 						break;
 					} else if(!ModuleLocalServiceUtil.isLocked(nextModule.getModuleId(),themeDisplay.getUserId())){
 						showNextModule = true;
+					} else {
+						nextModule = ModuleLocalServiceUtil.getNextModule(nextModule.getModuleId());
 					}
-					nextModule = ModuleLocalServiceUtil.getNextModule(nextModule.getModuleId());
 				}
 
 				if(showNextModule){
