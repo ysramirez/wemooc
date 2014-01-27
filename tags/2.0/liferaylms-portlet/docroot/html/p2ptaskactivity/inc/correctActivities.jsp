@@ -605,6 +605,7 @@ if(p2pActList.isEmpty()){
 if(correctionsSaved.equals("true")){
 	correctionsSaved="false";
 	request.setAttribute("correctionSaved", correctionsSaved);
+	renderResponse.setProperty("clear-request-parameters", Boolean.TRUE.toString());	
 	%><script><portlet:namespace />openSaved();</script><%
 }
 
