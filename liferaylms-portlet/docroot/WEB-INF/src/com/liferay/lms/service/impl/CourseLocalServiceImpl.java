@@ -393,11 +393,12 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return course;
 	}
 
-	@Indexable(type=IndexableType.DELETE)
-	public Course deleteCourse (long courseId) throws SystemException,
-	PortalException {
-	this.deleteCourse(CourseLocalServiceUtil.getCourse(courseId));
-	return null;
+	@Indexable(type = IndexableType.DELETE)
+	public Course deleteCourse(long courseId) throws SystemException,PortalException {
+		try {
+			this.deleteCourse(CourseLocalServiceUtil.getCourse(courseId));
+		} catch (Exception e) {e.printStackTrace();}
+		return null;
 	}
 	
 	//Siguiendo el indice IX_5DE0BE11 de la tabla group_
