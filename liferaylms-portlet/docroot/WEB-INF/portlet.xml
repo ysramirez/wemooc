@@ -2012,6 +2012,7 @@
 			<portlet-mode>view</portlet-mode>
 			<portlet-mode>config</portlet-mode>
 		</supports>
+		<resource-bundle>content/modulenavigation/Language</resource-bundle>
 		<portlet-info>
 			<title>Module Navigation</title>
 			<short-title>Module Navigation</short-title>
