@@ -1990,6 +1990,56 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<portlet>
+		<portlet-name>modulenavigation</portlet-name>
+		<display-name>Module Navigation</display-name>
+		<portlet-class>com.liferay.lms.ModuleNavigation</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/modulenavigation/view.jsp</value>
+		</init-param>
+		<init-param>
+			<name>config-template</name>
+			<value>/html/modulenavigation/config.jsp</value>
+		</init-param>
+		<init-param>
+			<name>add-process-action-success-action</name>
+			<value>false</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+			<portlet-mode>config</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Module Navigation</title>
+			<short-title>Module Navigation</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<portlet-preferences>
+            <preference>
+                <name>portlet-setup-show-borders-default</name>
+                <value>false</value>
+            </preference>
+        </portlet-preferences>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-processing-event>
+            <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
+        </supported-processing-event>
+		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+	</portlet>
 	<event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
     </event-definition>
@@ -2013,6 +2063,7 @@
 		<identifier>categoryId</identifier>
 		<qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryId</qname>
 	</public-render-parameter>
+
 
 
 
