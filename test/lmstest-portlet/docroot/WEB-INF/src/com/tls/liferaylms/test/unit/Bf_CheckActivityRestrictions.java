@@ -174,6 +174,8 @@ public class Bf_CheckActivityRestrictions extends SeleniumTestCase {
 				}
 			}
 			
+			Sleep.sleep(2000);
+			
 			WebElement a = CourseActivityMenu.findElementActivityMenuTotal(driver,TestProperties.get("act.test.pre"));
 			assertNotNull("Pre Activity not found", a);
 			a.click();
