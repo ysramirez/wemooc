@@ -82,7 +82,7 @@ public class TaskOfflineAssetRenderer extends BaseAssetRenderer {
 			String noSuchEntryRedirect) throws Exception {
 
 		PortletURL portletURL = liferayPortletResponse.createRenderURL("offlinetaskactivity_WAR_liferaylmsportlet");
-		portletURL.setParameter("jspPage", "/html/execactivity/test/view.jsp");
+		portletURL.setParameter("jspPage", "/html/offlinetaskactivity/view.jsp");
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 	
 		return portletURL.toString();
