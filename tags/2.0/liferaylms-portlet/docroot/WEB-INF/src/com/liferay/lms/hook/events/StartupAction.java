@@ -167,7 +167,7 @@ public class StartupAction extends SimpleAction {
 		Map<Locale, String> titleMap = new HashMap<Locale, String>();
 		java.util.List<ResourceAction> actions=null;
 		
-		Role courseCreator = RoleLocalServiceUtil.fetchRole(companyId, "courseCreator");
+		courseCreator = RoleLocalServiceUtil.fetchRole(companyId, "courseCreator");
 		if(courseCreator == null){
 			descriptionMap.put(LocaleUtil.getDefault(), "Course creator, can create courses in a community.");
 			titleMap.put(LocaleUtil.getDefault(), "Course creator.");
@@ -178,7 +178,7 @@ public class StartupAction extends SimpleAction {
 			setRolePermissions(courseCreator,"com.liferay.lms.coursemodel",actions);
 		}
 
-		Role courseEditor = RoleLocalServiceUtil.fetchRole(companyId, "courseEditor");
+		courseEditor = RoleLocalServiceUtil.fetchRole(companyId, "courseEditor");
 		if(courseEditor == null){
 			descriptionMap = new HashMap<Locale, String>();
 			titleMap = new HashMap<Locale, String>();
@@ -193,7 +193,7 @@ public class StartupAction extends SimpleAction {
 			setRolePermissions(courseEditor,LearningActivity.class.getName(),actions);
 		}
 		
-		Role courseTeacher = RoleLocalServiceUtil.fetchRole(companyId, "courseTeacher");
+		courseTeacher = RoleLocalServiceUtil.fetchRole(companyId, "courseTeacher");
 		if(courseTeacher == null){
 			descriptionMap = new HashMap<Locale, String>();
 			titleMap = new HashMap<Locale, String>();
