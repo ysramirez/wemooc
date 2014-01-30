@@ -23,6 +23,7 @@ import java.util.Map;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
@@ -50,6 +51,7 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -391,6 +393,42 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		}	
 		
 		return course;
+	}
+	
+	public Course deleteCourse(Course course) throws SystemException {
+		
+		try {
+			// Remove from lucene
+			Indexer indexer = IndexerRegistryUtil.getIndexer(Course.class);
+			indexer.delete(course);
+		} catch (Exception e2) {e2.printStackTrace();}
+
+		try {
+			// Cambia el titulo y la friendlyurl y desactiva el grupo
+			Group theGroup = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+			theGroup.setName("desactivado(" + course.getGroupCreatedId() + ")");
+			theGroup.setFriendlyURL(course.getFriendlyURL() + "_desac");
+			theGroup.setActive(false);
+
+			GroupLocalServiceUtil.updateGroup(theGroup);
+		} catch (Exception e1) {e1.printStackTrace();}
+
+		try {
+			assetEntryLocalService.deleteEntry(Course.class.getName(),course.getCourseId());
+		} catch (Exception e) {e.printStackTrace();}
+		
+		try {
+			resourceLocalService.deleteResource(course.getCompanyId(), Course.class.getName(),ResourceConstants.SCOPE_INDIVIDUAL, course.getPrimaryKey());
+		} catch (Exception e) {e.printStackTrace();}
+		
+		try {
+			assetEntryLocalService.deleteEntry(LearningActivity.class.getName(),course.getCourseId());
+		} catch (Exception e) {e.printStackTrace();}
+		
+		try {
+			coursePersistence.remove(course);
+		} catch (Exception e) {e.printStackTrace();}
+		return null;
 	}
 
 	@Indexable(type = IndexableType.DELETE)
