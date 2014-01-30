@@ -42,7 +42,7 @@ if (blacklistProp != null) {
 for(Long key:classTypes.keySet())
 {
 	if (blacklist.contains(key.toString())) {
-		break;
+		continue;
 	}
 	String classname=classTypes.get(key);
 %>	
