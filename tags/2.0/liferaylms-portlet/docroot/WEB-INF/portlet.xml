@@ -1954,6 +1954,42 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
+	<portlet>
+		<portlet-name>courseinscriptiondates</portlet-name>
+		<display-name>Course Inscription Dates</display-name>
+		<portlet-class>
+			com.liferay.lms.CourseInscriptionDates
+		</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/courseinscriptiondates/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<resource-bundle>
+			content/courseinscriptiondates/Language
+		</resource-bundle>
+		<portlet-info>
+			<title>Course Inscription Dates</title>
+			<short-title>Course Inscription Dates</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	<event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
     </event-definition>
@@ -1977,6 +2013,7 @@
 		<identifier>categoryId</identifier>
 		<qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryId</qname>
 	</public-render-parameter>
+
 
 
 
