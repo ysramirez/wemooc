@@ -52,7 +52,7 @@ if (blacklistProp != null) {
 for(Long key:classTypes.keySet())
 {
 	if (blacklist.contains(key.toString())) {
-		break;
+		continue;
 	}
 	if(ArrayUtils.contains(activityids, key))
 	{
