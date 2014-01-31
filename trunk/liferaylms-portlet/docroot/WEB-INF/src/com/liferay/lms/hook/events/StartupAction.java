@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.ResourceAction;
 import com.liferay.portal.model.ResourceConstants;
@@ -82,7 +83,13 @@ public class StartupAction extends SimpleAction {
 		
 		ExpandoTable table = getExpandoTable(companyId, Course.class.getName(), ExpandoTableConstants.DEFAULT_TABLE_NAME);
 		if (table != null) {
-				createExpandoColumn(table, "abreviatura", ExpandoColumnConstants.STRING,
+				createExpandoColumn(table, "Abreviatura", ExpandoColumnConstants.STRING,
+							ExpandoColumnConstants.INDEX_TYPE_TEXT, ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, "", true);
+		}
+		
+		ExpandoTable table2 = getExpandoTable(companyId, Group.class.getName(), ExpandoTableConstants.DEFAULT_TABLE_NAME);
+		if (table2 != null) {
+				createExpandoColumn(table2, "Abreviatura", ExpandoColumnConstants.STRING,
 							ExpandoColumnConstants.INDEX_TYPE_TEXT, ExpandoColumnConstants.PROPERTY_DISPLAY_TYPE, "", true);
 		}
 		
