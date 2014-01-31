@@ -76,6 +76,11 @@
 								if(lmsactivitieslistPortlet!=null) {
 									Liferay.Portlet.refresh(lmsactivitieslistPortlet);
 								}
+								var modulelistPortlet=A.one('#p_p_id<%=PortalUtil.getJsSafePortletId(StringPool.UNDERLINE+"modulelist"+
+										PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
+								if(modulelistPortlet!=null) {
+									Liferay.Portlet.refresh(modulelistPortlet);
+								}
 								Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'));		
 							}
 						}
