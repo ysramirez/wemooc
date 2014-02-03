@@ -373,7 +373,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 		{
 			return true;
 		}
-		if((theModule.getEndDate()!=null&&theModule.getEndDate().before(now)) ||(theModule.getStartDate()!=null&&theModule.getStartDate().after(now)))
+
+		if(!((theModule.getEndDate()!=null&&theModule.getEndDate().after(now)) &&(theModule.getStartDate()!=null&&theModule.getStartDate().before(now))))
 		{
 			return true;
 		}
