@@ -148,8 +148,10 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	        },
 	        ['node']
 	    );
-	
-	    function <portlet:namespace />closeWindow(){
+	Liferay.provide(
+	        window,
+	        '<portlet:namespace />closeWindow',
+	    	function (){
 			if ((!!window.postMessage)&&(window.parent != window)) {
 				if (!window.location.origin){
 					window.location.origin = window.location.protocol+"//"+window.location.host;
@@ -166,7 +168,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 				window.location.href='<portlet:renderURL />';
 			}
 	    }
- 
+	);
 	//-->
 	</script>
     
