@@ -18,9 +18,13 @@
 <jsp:useBean id="startDateDia" class="java.lang.String" scope="request" />
 <jsp:useBean id="startDateMes" class="java.lang.String" scope="request" />
 <jsp:useBean id="startDateAno" class="java.lang.String" scope="request" />
+<jsp:useBean id="startDateHora" class="java.lang.String" scope="request" />
+<jsp:useBean id="startDateMinuto" class="java.lang.String" scope="request" />
 <jsp:useBean id="endDateDia" class="java.lang.String" scope="request" />
 <jsp:useBean id="endDateMes" class="java.lang.String" scope="request" />
 <jsp:useBean id="endDateAno" class="java.lang.String" scope="request" />
+<jsp:useBean id="endDateHora" class="java.lang.String" scope="request" />
+<jsp:useBean id="endDateMinuto" class="java.lang.String" scope="request" />
 
 <portlet:defineObjects />
 <script type="text/javascript">
@@ -204,12 +208,15 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 		  monthParam="startDateMes" monthValue="<%= Integer.valueOf(startDateMes)-1 %>"
 		   yearParam="startDateAno" yearValue="<%= Integer.valueOf(startDateAno) %>"  yearNullable="false" 
 				 dayNullable="false" monthNullable="false" ></liferay-ui:input-date>
-		  
+		<liferay-ui:input-time minuteParam="startDateMinuto" amPmParam="startAMPM" 
+			hourParam="startDateHora" hourValue="<%=Integer.valueOf(startDateHora) %>" minuteValue="<%=Integer.valueOf(startDateMinuto) %>"></liferay-ui:input-time>
 	</aui:field-wrapper>
 	<liferay-ui:error key="module-startDate-required" message="module-startDate-required" />
 	<aui:field-wrapper label="end-date">
 		<liferay-ui:input-date  yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="endDateDia" dayValue="<%= Integer.valueOf(endDateDia) %>" monthParam="endDateMes" monthValue="<%= Integer.valueOf(endDateMes)-1 %>" yearParam="endDateAno" yearValue="<%= Integer.valueOf(endDateAno) %>"  yearNullable="false" 
 				 dayNullable="false" monthNullable="false" ></liferay-ui:input-date>
+		<liferay-ui:input-time minuteParam="endDateMinuto" amPmParam="startAMPM" 
+			hourParam="endDateHora" hourValue="<%=Integer.valueOf(endDateHora) %>" minuteValue="<%=Integer.valueOf(endDateMinuto) %>"></liferay-ui:input-time>
 	</aui:field-wrapper>
 	<liferay-ui:error key="module-endDate-required" message="module-endDate-required" />
 	<liferay-ui:error key="module-startDate-before-endDate" message="module-startDate-before-endDate" />
