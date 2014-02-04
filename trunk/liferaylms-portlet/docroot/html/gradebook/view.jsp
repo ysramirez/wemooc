@@ -199,7 +199,7 @@
 							<%} else if(status.equals("not-passed")){%>
 							 	<liferay-ui:icon image="close" alt="not-passed"></liferay-ui:icon>
 							<%} else if(status.equals("started")){%>
-						 		<liferay-ui:icon image="unchecked"></liferay-ui:icon>
+						 		<liferay-ui:icon image="unchecked" alt="unchecked"></liferay-ui:icon>
 						 	<%}
 							
 				 			if(status.equals("passed") || status.equals("not-passed")){
