@@ -178,7 +178,6 @@ extends LearningActivityLocalServiceBaseImpl {
 		larn.setCompanyId(serviceContext.getCompanyId());
 		larn.setGroupId(serviceContext.getScopeGroupId());
 		larn.setUserId(userId);
-		larn.setCreateDate(serviceContext.getCreateDate());
 		larn.setDescription(description);
 		larn.setTitle(title);
 		larn.setStartdate(startDate);
