@@ -1,3 +1,11 @@
+<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.Criterion"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivityTry"%>
+<%@page import="com.liferay.lms.service.ClpSerializer"%>
+<%@page import="com.liferay.portal.kernel.bean.PortletBeanLocatorUtil"%>
 <%@page import="com.liferay.portal.kernel.exception.PortalException"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
@@ -95,7 +103,7 @@ function <portlet:namespace />back() {
 <%
 long assetId=0;
 String assetTitle=StringPool.BLANK;
-
+String disabled = "";
 if(request.getAttribute("activity")!=null) {	
 	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
 	if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
@@ -109,6 +117,11 @@ if(request.getAttribute("activity")!=null) {
 		{
 		}
 	}	
+	ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+	DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class,classLoader);
+  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
+	dq.add(criterion);
+	if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0) disabled="disabled=\"disabled\"";
 }
 
 %>
@@ -116,7 +129,7 @@ if(request.getAttribute("activity")!=null) {
 <aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>"/>
 <aui:field-wrapper name="resourceinternalactivity.edit.asserts" cssClass="search-button-container">
 	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50"/>
-	<button type="button" id="<portlet:namespace/>searchEntry" onclick="<portlet:namespace/>search();" >
+	<button <%=disabled %> type="button" id="<portlet:namespace/>searchEntry" onclick="<portlet:namespace/>search();" >
 	    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 	    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 	</button>
