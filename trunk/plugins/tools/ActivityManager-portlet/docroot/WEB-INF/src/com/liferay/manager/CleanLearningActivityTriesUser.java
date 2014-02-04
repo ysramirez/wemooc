@@ -6,8 +6,13 @@ import java.util.Locale;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
@@ -25,23 +30,31 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 		super();
 	}
 
-	public void process() throws Exception{
-		List<LearningActivityTry> lats = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(la.getActId(), user.getUserId());
-		for(LearningActivityTry lat : lats){
-			//LearningActivityTryLocalServiceUtil.deleteLearningActivityTry(lat.getLatId());
-			processTry(lat);
-		}
+	@SuppressWarnings("unchecked")
+	public void process() throws Exception{	
+
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
 		
-		LearningActivityResult lar = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(la.getActId(), user.getUserId());
-		if(lar!=null){
-			LearningActivityResultLocalServiceUtil.deleteLearningActivityResult(lar);
-		}
+		DynamicQuery dq = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class,classLoader)
+				.add(PropertyFactoryUtil.forName("actId").eq(la.getActId()))
+				.add(PropertyFactoryUtil.forName("userId").eq(user.getUserId()));
+
+		//List<LearningActivityResult> results = LearningActivityResultUtil.findWithDynamicQuery(dq);
+		List<LearningActivityResult> results = LearningActivityResultLocalServiceUtil.dynamicQuery(dq);
 		
-//		try {
-//			Thread.sleep(30000);
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		}
+		for(LearningActivityResult result:results){
+			if(log.isDebugEnabled())log.debug(" result : " + result.getActId()+", result: "+result.getUserId() +", passed: "+result.getPassed() );
+
+			List<LearningActivityTry> tries = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(result.getActId(), result.getUserId());
+			
+			for(LearningActivityTry ltry:tries){
+				if(log.isDebugEnabled())log.debug("   try : " + ltry.getLatId()+" - "+ltry.getResult());
+				processTry(ltry);
+			}
+			
+			LearningActivityResultLocalServiceUtil.deleteLearningActivityResult(result);
+			
+		}
 	}
 
 	@Override
