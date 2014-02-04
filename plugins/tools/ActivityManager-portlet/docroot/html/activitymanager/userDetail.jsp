@@ -71,6 +71,7 @@
 								useriter.setEmailAddressVerified(mr.getPassed());
 							}else{
 								useriter.setOpenId("-");
+								useriter.setEmailAddressVerified(false);
 							}
 							//ActResult
 							if(lar!=null){
@@ -78,6 +79,7 @@
 								useriter.setCachedModel(lar.getPassed());
 							}else{
 								useriter.setComments("-");
+								useriter.setCachedModel(false);
 							}
 							uusers.add(useriter);
 						}
