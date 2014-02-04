@@ -1,3 +1,11 @@
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.Criterion"%>
+<%@page import="com.liferay.lms.service.ClpSerializer"%>
+<%@page import="com.liferay.portal.kernel.bean.PortletBeanLocatorUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivityTry"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
+<%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
 <%@page import="com.liferay.portlet.documentlibrary.model.DLFileVersion"%>
 <%@page import="com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil"%>
@@ -41,12 +49,19 @@
 		}
 	}  
 	
+	ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+	DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class,classLoader);
+  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
+	dq.add(criterion);
+	boolean readonly = true;
+	if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)==0) readonly=false;
+	
 %>
 <aui:field-wrapper label="video" >
-  	<aui:input name="youtubecode" type="textarea" rows="6" cols="45" label="youtube-code" value="<%=youtubecode %>" ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"youtube-code-help\")%>"></aui:input>
+  	<aui:input disabled="<%=readonly %>" name="youtubecode" type="textarea" rows="6" cols="45" label="youtube-code" value="<%=youtubecode %>" ignoreRequestValue="true" helpMessage="<%=LanguageUtil.get(pageContext,\"youtube-code-help\")%>"></aui:input>
 </aui:field-wrapper>
 <aui:field-wrapper label="complementary-file" helpMessage="<%=LanguageUtil.get(pageContext,\"additionalFile-help\")%>" >		  	
-		<aui:input inlineLabel="left" inlineField="true" name="additionalFile" label="" id="additionalFile" type="file" value="" />
+		<aui:input disabled="<%=readonly %>" inlineLabel="left" inlineField="true" name="additionalFile" label="" id="additionalFile" type="file" value="" />
 	  	<%if(previusaditionalfile!=null)
 	  	{
 	  	%><br>
