@@ -63,13 +63,16 @@ else
 	{
 		if(!LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 		{
-			ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
-
-			LearningActivityTry learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
-			learningTry.setEndDate(new java.util.Date(System.currentTimeMillis()));
-			learningTry.setResult(100);
-			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningTry);
+			if(!permissionChecker.hasPermission(learnact.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE) ||
+					!permissionChecker.hasOwnerPermission(learnact.getCompanyId(), LearningActivity.class.getName(), actId, learnact.getUserId(), ActionKeys.UPDATE)){
 			
+				ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
+	
+				LearningActivityTry learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+				learningTry.setEndDate(new java.util.Date(System.currentTimeMillis()));
+				learningTry.setResult(100);
+				LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningTry);
+			}
 
 		}
 		if(learnact.getExtracontent()!=null &&!learnact.getExtracontent().trim().equals("") )
