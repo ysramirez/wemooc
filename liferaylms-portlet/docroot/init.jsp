@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="java.io.IOException"%>
 <%@page import="java.io.FileNotFoundException"%>
 <%@page import="java.util.Properties"%>
@@ -80,14 +81,22 @@ try {
 	e.printStackTrace();
 }
 %>
-<!-- <%="vd-"+bNum+"-"+c.toString() %>-->
-
 <portlet:defineObjects />
+
+<% 
+	WindowState windowState = renderRequest.getWindowState();
+	
+	if(!LiferayWindowState.EXCLUSIVE.equals(windowState)) {
+%>
+<!-- <%="vd-"+bNum+"-"+c.toString() %>-->
+<% 
+	}
+%>
 
 <liferay-theme:defineObjects />
 
 <%
-WindowState windowState = renderRequest.getWindowState();
+
 
 String currentURL = PortalUtil.getCurrentURL(request);
 
