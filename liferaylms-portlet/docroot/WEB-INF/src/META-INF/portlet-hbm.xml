@@ -104,6 +104,7 @@
 		<property name="comments" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="passed" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
+		<property name="passedDate" type="org.hibernate.type.TimestampType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.LearningActivityImpl" table="Lms_LearningActivity">
 		<cache usage="read-write" />

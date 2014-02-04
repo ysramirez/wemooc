@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import java.lang.reflect.Proxy;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +73,7 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		attributes.put("comments", getComments());
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
+		attributes.put("passedDate", getPassedDate());
 
 		return attributes;
 	}
@@ -112,6 +114,12 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 
 		if (passed != null) {
 			setPassed(passed);
+		}
+
+		Date passedDate = (Date)attributes.get("passedDate");
+
+		if (passedDate != null) {
+			setPassedDate(passedDate);
 		}
 	}
 
@@ -175,6 +183,14 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		_passed = passed;
 	}
 
+	public Date getPassedDate() {
+		return _passedDate;
+	}
+
+	public void setPassedDate(Date passedDate) {
+		_passedDate = passedDate;
+	}
+
 	public BaseModel<?> getCourseResultRemoteModel() {
 		return _courseResultRemoteModel;
 	}
@@ -208,6 +224,7 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		clone.setComments(getComments());
 		clone.setUserId(getUserId());
 		clone.setPassed(getPassed());
+		clone.setPassedDate(getPassedDate());
 
 		return clone;
 	}
@@ -258,7 +275,7 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{crId=");
 		sb.append(getCrId());
@@ -272,13 +289,15 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		sb.append(getUserId());
 		sb.append(", passed=");
 		sb.append(getPassed());
+		sb.append(", passedDate=");
+		sb.append(getPassedDate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(22);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.CourseResult");
@@ -308,6 +327,10 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 			"<column><column-name>passed</column-name><column-value><![CDATA[");
 		sb.append(getPassed());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>passedDate</column-name><column-value><![CDATA[");
+		sb.append(getPassedDate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -321,5 +344,6 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 	private long _userId;
 	private String _userUuid;
 	private boolean _passed;
+	private Date _passedDate;
 	private BaseModel<?> _courseResultRemoteModel;
 }

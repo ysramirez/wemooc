@@ -98,6 +98,7 @@ public class CourseResultLocalServiceImpl
 		courseResult.setCourseId(courseId);
 		courseResult.setResult(0);
 		courseResult.setPassed(false);
+		courseResult.setPassedDate(null);
 		courseResultPersistence.update(courseResult, false);
 
 		return courseResult;

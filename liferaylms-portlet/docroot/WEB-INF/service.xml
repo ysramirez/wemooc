@@ -383,6 +383,7 @@
 		<column name="comments" type="String"></column>
 		<column name="userId" type="long" primary="false"></column>
 		<column name="passed" type="boolean"></column>
+		<column name="passedDate" type="Date"></column>
 
 		<finder name="uc" return-type="CourseResult" unique="true">
 			<finder-column name="userId" />

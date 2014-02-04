@@ -22,6 +22,8 @@ import com.liferay.portal.model.CacheModel;
 
 import java.io.Serializable;
 
+import java.util.Date;
+
 /**
  * The cache model class for representing CourseResult in entity cache.
  *
@@ -33,7 +35,7 @@ public class CourseResultCacheModel implements CacheModel<CourseResult>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{crId=");
 		sb.append(crId);
@@ -47,6 +49,8 @@ public class CourseResultCacheModel implements CacheModel<CourseResult>,
 		sb.append(userId);
 		sb.append(", passed=");
 		sb.append(passed);
+		sb.append(", passedDate=");
+		sb.append(passedDate);
 		sb.append("}");
 
 		return sb.toString();
@@ -69,6 +73,13 @@ public class CourseResultCacheModel implements CacheModel<CourseResult>,
 		courseResultImpl.setUserId(userId);
 		courseResultImpl.setPassed(passed);
 
+		if (passedDate == Long.MIN_VALUE) {
+			courseResultImpl.setPassedDate(null);
+		}
+		else {
+			courseResultImpl.setPassedDate(new Date(passedDate));
+		}
+
 		courseResultImpl.resetOriginalValues();
 
 		return courseResultImpl;
@@ -80,4 +91,5 @@ public class CourseResultCacheModel implements CacheModel<CourseResult>,
 	public String comments;
 	public long userId;
 	public boolean passed;
+	public long passedDate;
 }

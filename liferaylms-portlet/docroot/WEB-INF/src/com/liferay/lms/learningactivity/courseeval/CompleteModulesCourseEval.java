@@ -1,6 +1,7 @@
 package com.liferay.lms.learningactivity.courseeval;
 
 import java.io.IOException;
+import java.util.Date;
 import java.util.List;
 
 import com.liferay.lms.auditing.AuditConstants;
@@ -65,6 +66,7 @@ public class CompleteModulesCourseEval implements CourseEval {
 			
 				courseResult.setResult(result);
 				courseResult.setPassed(passed);
+				if(passed && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
 				CourseResultLocalServiceUtil.update(courseResult);
 			
 		}
@@ -105,6 +107,7 @@ public class CompleteModulesCourseEval implements CourseEval {
 		
 			courseResult.setResult(result);
 			courseResult.setPassed(passed);
+			if(passed && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
 			CourseResultLocalServiceUtil.update(courseResult);
 			return true;	
 	}
@@ -149,6 +152,7 @@ public class CompleteModulesCourseEval implements CourseEval {
 			
 				courseResult.setResult(result);
 				courseResult.setPassed(passed);
+				if(passed && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
 				CourseResultLocalServiceUtil.update(courseResult);
 				
 				}				

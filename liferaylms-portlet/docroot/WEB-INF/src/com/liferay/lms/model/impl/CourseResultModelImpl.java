@@ -37,6 +37,7 @@ import java.io.Serializable;
 import java.sql.Types;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,9 +69,10 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 			{ "result", Types.BIGINT },
 			{ "comments", Types.VARCHAR },
 			{ "userId", Types.BIGINT },
-			{ "passed", Types.BOOLEAN }
+			{ "passed", Types.BOOLEAN },
+			{ "passedDate", Types.TIMESTAMP }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_CourseResult (crId LONG not null primary key,courseId LONG,result LONG,comments VARCHAR(75) null,userId LONG,passed BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_CourseResult (crId LONG not null primary key,courseId LONG,result LONG,comments VARCHAR(75) null,userId LONG,passed BOOLEAN,passedDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_CourseResult";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -107,6 +109,7 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		model.setComments(soapModel.getComments());
 		model.setUserId(soapModel.getUserId());
 		model.setPassed(soapModel.getPassed());
+		model.setPassedDate(soapModel.getPassedDate());
 
 		return model;
 	}
@@ -171,6 +174,7 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		attributes.put("comments", getComments());
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
+		attributes.put("passedDate", getPassedDate());
 
 		return attributes;
 	}
@@ -211,6 +215,12 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 
 		if (passed != null) {
 			setPassed(passed);
+		}
+
+		Date passedDate = (Date)attributes.get("passedDate");
+
+		if (passedDate != null) {
+			setPassedDate(passedDate);
 		}
 	}
 
@@ -315,6 +325,14 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		return _originalPassed;
 	}
 
+	public Date getPassedDate() {
+		return _passedDate;
+	}
+
+	public void setPassedDate(Date passedDate) {
+		_passedDate = passedDate;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -353,6 +371,7 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		courseResultImpl.setComments(getComments());
 		courseResultImpl.setUserId(getUserId());
 		courseResultImpl.setPassed(getPassed());
+		courseResultImpl.setPassedDate(getPassedDate());
 
 		courseResultImpl.resetOriginalValues();
 
@@ -444,12 +463,21 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 
 		courseResultCacheModel.passed = getPassed();
 
+		Date passedDate = getPassedDate();
+
+		if (passedDate != null) {
+			courseResultCacheModel.passedDate = passedDate.getTime();
+		}
+		else {
+			courseResultCacheModel.passedDate = Long.MIN_VALUE;
+		}
+
 		return courseResultCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{crId=");
 		sb.append(getCrId());
@@ -463,13 +491,15 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		sb.append(getUserId());
 		sb.append(", passed=");
 		sb.append(getPassed());
+		sb.append(", passedDate=");
+		sb.append(getPassedDate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(22);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.CourseResult");
@@ -499,6 +529,10 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 			"<column><column-name>passed</column-name><column-value><![CDATA[");
 		sb.append(getPassed());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>passedDate</column-name><column-value><![CDATA[");
+		sb.append(getPassedDate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -522,6 +556,7 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 	private boolean _passed;
 	private boolean _originalPassed;
 	private boolean _setOriginalPassed;
+	private Date _passedDate;
 	private long _columnBitmask;
 	private CourseResult _escapedModelProxy;
 }

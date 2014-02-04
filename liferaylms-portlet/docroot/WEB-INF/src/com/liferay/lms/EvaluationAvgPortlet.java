@@ -354,6 +354,8 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
     			courseResult.setPassed(courseEval.getPassPuntuation(course)<=result);
     		}
     		
+    		if(courseEval.getPassPuntuation(course)<=result && courseResult.getPassedDate()==null) courseResult.setPassedDate(new Date());
+    		
     		CourseResultLocalServiceUtil.update(courseResult);
     		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[49]); //1    		
     		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.grade.updating")});  
