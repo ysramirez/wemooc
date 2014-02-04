@@ -693,6 +693,7 @@ public static String SEPARATOR = "_";
         calendar.set(startDateAno, startDateMes, startDateDia);
         calendar.set(Calendar.HOUR_OF_DAY,startDateHora);
         calendar.set(Calendar.MINUTE,startDateMinuto);
+        calendar.set(Calendar.SECOND,0);
         module.setStartDate(calendar.getTime());
 
         int endDateAno = ParamUtil.getInteger(request, "endDateAno");
@@ -705,6 +706,7 @@ public static String SEPARATOR = "_";
         calendar.set(endDateAno, endDateMes, endDateDia);
         calendar.set(Calendar.HOUR_OF_DAY,endDateHora);
         calendar.set(Calendar.MINUTE,endDateMinuto);
+        calendar.set(Calendar.SECOND,0);
         module.setEndDate(calendar.getTime());
         
 		try {
