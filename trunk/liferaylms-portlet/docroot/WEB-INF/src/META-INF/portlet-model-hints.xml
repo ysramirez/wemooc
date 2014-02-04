@@ -78,6 +78,7 @@
 		<field name="comments" type="String" />
 		<field name="userId" type="long" />
 		<field name="passed" type="boolean" />
+		<field name="passedDate" type="Date" />
 	</model>
 	<model name="com.liferay.lms.model.LearningActivity">
 		<field name="uuid" type="String" />

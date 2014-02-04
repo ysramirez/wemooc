@@ -24,6 +24,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Date;
+
 /**
  * The base model interface for the CourseResult service. Represents a row in the &quot;Lms_CourseResult&quot; database table, with each column mapped to a property of this class.
  *
@@ -164,6 +166,20 @@ public interface CourseResultModel extends BaseModel<CourseResult> {
 	 * @param passed the passed of this course result
 	 */
 	public void setPassed(boolean passed);
+
+	/**
+	 * Returns the passed date of this course result.
+	 *
+	 * @return the passed date of this course result
+	 */
+	public Date getPassedDate();
+
+	/**
+	 * Sets the passed date of this course result.
+	 *
+	 * @param passedDate the passed date of this course result
+	 */
+	public void setPassedDate(Date passedDate);
 
 	public boolean isNew();
 
