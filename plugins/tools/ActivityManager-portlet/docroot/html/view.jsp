@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.manager.CleanLearningActivity"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lmssa.service.ActManAuditLocalServiceUtil"%>
@@ -95,6 +96,9 @@
 				<c:if test="${active}">
 					<span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span>
 				</c:if>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="num_modules">
+				<span><%=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId()).size() %></span>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />
