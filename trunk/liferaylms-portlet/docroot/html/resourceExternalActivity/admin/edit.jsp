@@ -21,6 +21,7 @@
 	DLFileVersion previusaditionalfile=null;
 	String youtubecode=StringPool.BLANK;
 	LearningActivity learningActivity=null;
+	boolean readonly = false;
 	if(request.getAttribute("activity")!=null) {
 		learningActivity=(LearningActivity)request.getAttribute("activity");
 		
@@ -47,14 +48,13 @@
 			}
 		
 		}
+		
+		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class,classLoader);
+	  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
+		dq.add(criterion);
+		if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0) readonly=true;
 	}  
-	
-	ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-	DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class,classLoader);
-  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
-	dq.add(criterion);
-	boolean readonly = true;
-	if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)==0) readonly=false;
 	
 %>
 <aui:field-wrapper label="video" >
