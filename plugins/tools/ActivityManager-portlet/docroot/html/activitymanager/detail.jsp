@@ -54,46 +54,46 @@
 </c:if>
 <c:if test="${not empty modules}">
 	<div class="lfr-search-container "><div class="yui3-widget aui-component aui-searchcontainer aui-searchcontainer-focused"><div class="results-grid aui-searchcontainer-content">
-		<table class="taglib-search-iterator"><tbody>
-		<% int numModule = 0; %>
+		<% int numModule = 0; String title = ""; %>
 		<c:forEach var="module" items="${modules}">
-			<% numModule++; %>
-			<tr class="portlet-section-header results-header">
-			<th class="col-1 col-1 first">
-				<%=LanguageUtil.format(pageContext, "actmanager.moduleTitle.chapter", new Object[]{numModule})%> ${module.getTitle(themeDisplay.locale)}
-			</th>
-			<th><%=LanguageUtil.get(pageContext, "actmanager.type") %></th>
-			<th><%=LanguageUtil.get(pageContext, "actmanager.startdate") %></th>
-			<th><%=LanguageUtil.get(pageContext, "actmanager.enddate") %></th>
-			<th class="col-1 col-1 first align-left valign-middle">
-				<div style="text-align: right;">
-				<liferay-ui:icon-menu>
-					<liferay-ui:icon cssClass="tag-items" image="close" message="actmanager.recalculate" onClick='recalculate(${module.moduleId})' url="#"  />
-				</liferay-ui:icon-menu>
-				</div>
-				<%-- liferay-ui:icon-menu>
-					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
-					<liferay-ui:icon image="close" message="actmanager.recalculate-module" onClick='recalculateModule(${module.moduleId})' url="#"  />
-				</liferay-ui:icon-menu --%>
-			</th>
-			</tr>
-			<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
-				<tr class="portlet-section-body results-row">
-				<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
-				<td class="align-left col-1 col-1 first valign-middle">${activity.getTypeId()}</td>
-				<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getStartdate()}" pattern="dd/MM/yyyy HH:mm" /></td>
-				<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getEnddate()}" pattern="dd/MM/yyyy HH:mm" /></td>
-				<td class="align-left col-1 col-1 first valign-middle">
-					<c:if test="${activity.isNew()}">
-						<liferay-util:include page="/html/activitymanager/actions/module_actions.jsp" servletContext="<%=this.getServletContext() %>">
-							<liferay-util:param name="activity" value="${activity.actId}" />
-						</liferay-util:include>
-					</c:if>
-				</td>
-				</tr>
-			</c:forEach>
+			<% 
+			numModule++; 
+			title = LanguageUtil.format(pageContext, "actmanager.moduleTitle.chapter", new Object[]{numModule}); 
+			pageContext.setAttribute("title", title);
+			%>
+			<liferay-ui:panel title="${title} ${module.getTitle(themeDisplay.locale)}"  collapsible="true" defaultState="closed">	
+				<table class="taglib-search-iterator"><tbody>
+					<tr class="portlet-section-header results-header">
+					<th class="col-1 col-1 first"><%=LanguageUtil.get(pageContext, "activity")%></th>
+					<th><%=LanguageUtil.get(pageContext, "actmanager.type") %></th>
+					<th><%=LanguageUtil.get(pageContext, "actmanager.startdate") %></th>
+					<th><%=LanguageUtil.get(pageContext, "actmanager.enddate") %></th>
+					<th class="col-1 col-1 first align-left valign-middle">
+						<div style="text-align: right;">
+						<liferay-ui:icon-menu>
+							<liferay-ui:icon cssClass="tag-items" image="close" message="actmanager.recalculate" onClick='recalculate(${module.moduleId})' url="#"  />
+						</liferay-ui:icon-menu>
+						</div>
+					</th>
+					</tr>
+					<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
+						<tr class="portlet-section-body results-row">
+						<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
+						<td class="align-left col-1 col-1 first valign-middle">${activity.getTypeId()}</td>
+						<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getStartdate()}" pattern="dd/MM/yyyy HH:mm" /></td>
+						<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getEnddate()}" pattern="dd/MM/yyyy HH:mm" /></td>
+						<td class="align-left col-1 col-1 first valign-middle">
+							<c:if test="${activity.isNew()}">
+								<liferay-util:include page="/html/activitymanager/actions/module_actions.jsp" servletContext="<%=this.getServletContext() %>">
+									<liferay-util:param name="activity" value="${activity.actId}" />
+								</liferay-util:include>
+							</c:if>
+						</td>
+						</tr>
+					</c:forEach>
+				</tbody></table>
+			</liferay-ui:panel>
 		</c:forEach>
-		</tbody></table>
 	</div></div></div>
 </c:if>
 
