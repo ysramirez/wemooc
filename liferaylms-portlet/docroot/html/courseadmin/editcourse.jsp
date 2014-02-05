@@ -168,18 +168,17 @@ else
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="courseId" type="hidden" value="<%=courseId %>"/>
-	<aui:input name="title" label="title"/>
+	<aui:input name="title" label="title" id="title"/>
 	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=groupCreated!=null?groupCreated.getFriendlyURL():"" %> </aui:input>
 	
-	<aui:field-wrapper label="description">
+	<aui:field-wrapper label="description" name="description">
 			<liferay-ui:input-editor name="description" width="100%" />
-			<aui:input name="description" type="hidden" />
+			<aui:input name="description" type="hidden"/>
 			<script type="text/javascript">
     		    function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
     		</script>
 	</aui:field-wrapper>
 	
-		
 	<c:if test="<%= permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),0,publishPermission) %>">
 		<aui:input type="checkbox" name="visible" label="published-in-catalog" value="<%=visibleencatalogo %>" />
 	</c:if>
@@ -212,11 +211,11 @@ else
 		['node']
 	);
 	</script>
-	<aui:field-wrapper label="image" cssClass="wrapper-icon-course">
+	<aui:field-wrapper cssClass="wrapper-icon-course">
 		<% if (course != null && course.getIcon() != 0 && !requiredCourseIcon) { %>
 				<aui:input type="checkbox" name="discardLogo" label="discard-course-icon" onClick='<%= renderResponse.getNamespace()+"toggleInputLogo()" %>'/>
 			<% } %>
-			<aui:input name="fileName" label="" id="fileName" type="file" value="" >
+			<aui:input name="fileName" label="image" id="fileName" type="file" value="" >
 				<aui:validator name="acceptFiles">'jpg, jpeg, png, gif'</aui:validator>
 				<% if (requiredCourseIcon) { %>
 					<aui:validator errorMessage="course-icon-required" name="customRequiredCourseIcon1">(function(val, fieldNode, ruleValue) {return (AUI().one('#<portlet:namespace/>icon').val() || val != null);})()</aui:validator>
@@ -234,28 +233,36 @@ else
 	<liferay-ui:error key="error_number_format" message="error_number_format" />
 	
 	<aui:input type="textarea" cols="100" rows="4" name="summary" label="summary" value="<%=summary %>"/>
-	
-	<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
 	<%
 	List<Long> courseEvalIds = ListUtil.toList(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals(),",",0L));
-	//String[]courseEvals = LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals().split(",");
 	CourseEvalRegistry cer=new CourseEvalRegistry();
-	for(Long ce:courseEvalIds)
-	{
-		CourseEval cel = cer.getCourseEval(ce);
-		boolean selected=false;
-		if(course!=null&&course.getCourseEvalId()==ce)
-		{
-			selected=true;
-		}
-		
-		%>
-		<aui:option value="<%=String.valueOf(ce)%>" selected="<%=selected %>"><liferay-ui:message key="<%=cel.getName() %>" /></aui:option>
+	if(courseEvalIds.size()>1)
+	{%>
+		<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
 		<%
-	}
-	%>
-	</aui:select>
+		//String[]courseEvals = LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals().split(",");
+		for(Long ce:courseEvalIds)
+		{
+			CourseEval cel = cer.getCourseEval(ce);
+			boolean selected=false;
+			if(course!=null&&course.getCourseEvalId()==ce)
+			{
+				selected=true;
+			}
+			
+			%>
+			<aui:option value="<%=String.valueOf(ce)%>" selected="<%=selected %>"><liferay-ui:message key="<%=cel.getName() %>" /></aui:option>
+			<%
+		}
+		%>
+		</aui:select>
 	<%
+	}
+	else{
+		CourseEval cel = cer.getCourseEval(courseEvalIds.get(0));
+		%>
+		<aui:input name="courseEvalId" value="<%=cel.getTypeId()%>" type="hidden"/>
+	<%}
 	if(course==null)
 	{
 		String[] layusprsel=null;
@@ -270,19 +277,26 @@ else
 			lspist=layusprsel;
 
 		}
+		if(lspist.length>1){
 		%>
-		<aui:select name="courseTemplate" label="course-template">
-		<%
-		for(String lspis:lspist)
-		{
-			LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
-			%>
-			<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+			<aui:select name="courseTemplate" label="course-template">
 			<%
-		}
-		%>
-		</aui:select>
+			for(String lspis:lspist)
+			{
+				LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
+				%>
+				<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+				<%
+			}
+			%>
+			</aui:select>
 		<%
+		}
+		else{
+			LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspist[0]));
+		%>
+			<aui:input name="courseTemplate" value="<%=lsp.getLayoutSetPrototypeId()%>" type="hidden"/>
+		<%}
 	}
 	List <Long> califications = ListUtil.toList(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getScoretranslators(),",",0L));	
 	CalificationTypeRegistry cal = new CalificationTypeRegistry();
@@ -303,18 +317,25 @@ else
 			</aui:select>
 		<%
 	}
+	else{
+		CalificationType ctype = cal.getCalificationType(califications.get(0));
+		%>
+		<aui:input name="calificationType" value="<%=ctype.getTypeId()%>" type="hidden"/>
+	<%}
 	
 	boolean showInscriptionDate = GetterUtil.getBoolean(renderRequest.getPreferences().getValues("showInscriptionDate", new String[]{StringPool.TRUE})[0],true);
 
 	%>
 <liferay-ui:panel-container extended="false"  persistState="false">
 	<liferay-ui:panel title="lms-inscription-configuration" collapsible="true" defaultState="closed">
-		<aui:field-wrapper label="start-inscription-date" cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
+		<aui:field-wrapper name="inscriptionDate" label="start-inscription-date" cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
+			<aui:input type="hidden" name="inscriptionDate"/>
 			<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon"
 					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
 			<liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>"></liferay-ui:input-time>
 		</aui:field-wrapper>
-		<aui:field-wrapper label="end-inscription-date"  cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
+		<aui:field-wrapper name="endInscriptionDate" label="end-inscription-date"  cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
+			<aui:input type="hidden" name="endInscriptionDate"/>
 			<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="stopDay" monthParam="stopMon"
 					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 			 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time></br>

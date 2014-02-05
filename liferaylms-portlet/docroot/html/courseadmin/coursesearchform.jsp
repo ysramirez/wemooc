@@ -1,4 +1,4 @@
-<h1 class="taglib-categorization-filter entry-title">
+<!-- <h1 class="taglib-categorization-filter entry-title"> -->
 <%
 
 String search = ParamUtil.getString(request, "search","");
