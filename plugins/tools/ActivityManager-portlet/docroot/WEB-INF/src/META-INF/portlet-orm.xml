@@ -32,6 +32,8 @@
 			<basic name="number">
 				<column name="NUMBER_" />
 			</basic>
+			<basic name="moduleId" />
+			<basic name="actId" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

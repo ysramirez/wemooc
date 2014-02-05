@@ -19,6 +19,8 @@
 		<property name="end" type="org.hibernate.type.TimestampType" column="end_" />
 		<property name="state" type="com.liferay.portal.dao.orm.hibernate.StringType" column="state_" />
 		<property name="number" type="com.liferay.portal.dao.orm.hibernate.IntegerType" column="number_" />
+		<property name="moduleId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="actId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lmssa.model.impl.LearningActivityTryDeletedImpl" table="lmssa_LearningActivityTryDeleted">
 		<cache usage="read-write" />

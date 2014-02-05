@@ -15,7 +15,8 @@
         <column name="end" type="Date" />
         <column name="state" type="String" />
 		<column name="number" type="int" />
-        
+        <column name="moduleId" type="long" />
+		<column name="actId" type="long" />
        	<order by="desc">
 			<order-column name="end" />
 		</order>
