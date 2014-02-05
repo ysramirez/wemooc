@@ -13,10 +13,12 @@ import javax.portlet.ProcessAction;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
-import com.liferay.lms.lti.model.LtiItem;
-import com.liferay.lms.lti.service.LtiItemLocalServiceUtil;
+import com.liferay.lms.lti.util.LtiItem;
+import com.liferay.lms.lti.util.LtiItemLocalServiceUtil;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -130,8 +132,10 @@ public class LtiGeneralPortlet extends MVCPortlet {
 					String postLaunch = BasicLTIUtil.postLaunchHTML(props, ltiItem.getUrl(), false,themeDisplay.getLocale(),ltiItem.getIframe());
 					
 					int times = 0;
+					LearningActivityResult result = null;
 					try {
 						times = LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId, themeDisplay.getUserId());
+						result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, themeDisplay.getUserId());
 					} catch (PortalException e) {
 					} catch (SystemException e) {
 					}
@@ -139,6 +143,7 @@ public class LtiGeneralPortlet extends MVCPortlet {
 					if(log.isDebugEnabled())log.debug("PostLaunch\n"+postLaunch);
 					renderRequest.setAttribute("postLaunch", postLaunch);
 					renderRequest.setAttribute("times", times);
+					renderRequest.setAttribute("result", result);
 					include(viewJSP, renderRequest, renderResponse);
 					
 				}else{
