@@ -57,6 +57,8 @@ public class ActManAuditWrapper implements ActManAudit,
 		attributes.put("end", getEnd());
 		attributes.put("state", getState());
 		attributes.put("number", getNumber());
+		attributes.put("moduleId", getModuleId());
+		attributes.put("actId", getActId());
 
 		return attributes;
 	}
@@ -126,6 +128,18 @@ public class ActManAuditWrapper implements ActManAudit,
 
 		if (number != null) {
 			setNumber(number);
+		}
+
+		Long moduleId = (Long)attributes.get("moduleId");
+
+		if (moduleId != null) {
+			setModuleId(moduleId);
+		}
+
+		Long actId = (Long)attributes.get("actId");
+
+		if (actId != null) {
+			setActId(actId);
 		}
 	}
 
@@ -363,6 +377,42 @@ public class ActManAuditWrapper implements ActManAudit,
 	*/
 	public void setNumber(int number) {
 		_actManAudit.setNumber(number);
+	}
+
+	/**
+	* Returns the module ID of this act man audit.
+	*
+	* @return the module ID of this act man audit
+	*/
+	public long getModuleId() {
+		return _actManAudit.getModuleId();
+	}
+
+	/**
+	* Sets the module ID of this act man audit.
+	*
+	* @param moduleId the module ID of this act man audit
+	*/
+	public void setModuleId(long moduleId) {
+		_actManAudit.setModuleId(moduleId);
+	}
+
+	/**
+	* Returns the act ID of this act man audit.
+	*
+	* @return the act ID of this act man audit
+	*/
+	public long getActId() {
+		return _actManAudit.getActId();
+	}
+
+	/**
+	* Sets the act ID of this act man audit.
+	*
+	* @param actId the act ID of this act man audit
+	*/
+	public void setActId(long actId) {
+		_actManAudit.setActId(actId);
 	}
 
 	public boolean isNew() {

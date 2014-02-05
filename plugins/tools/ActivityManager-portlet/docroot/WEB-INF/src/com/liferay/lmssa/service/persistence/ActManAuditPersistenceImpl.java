@@ -459,6 +459,8 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 		actManAuditImpl.setEnd(actManAudit.getEnd());
 		actManAuditImpl.setState(actManAudit.getState());
 		actManAuditImpl.setNumber(actManAudit.getNumber());
+		actManAuditImpl.setModuleId(actManAudit.getModuleId());
+		actManAuditImpl.setActId(actManAudit.getActId());
 
 		return actManAuditImpl;
 	}
@@ -641,7 +643,7 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_ACTMANAUDIT_WHERE);
@@ -661,6 +663,10 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(ActManAuditModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -925,6 +931,10 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 			}
 		}
 
+		else {
+			query.append(ActManAuditModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1035,7 +1045,7 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 		}
 
 		if (result == null) {
-			StringBundler query = new StringBundler(3);
+			StringBundler query = new StringBundler(4);
 
 			query.append(_SQL_SELECT_ACTMANAUDIT_WHERE);
 
@@ -1052,6 +1062,8 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 			}
 
 			query.append(_FINDER_COLUMN_UUID_G_GROUPID_2);
+
+			query.append(ActManAuditModelImpl.ORDER_BY_JPQL);
 
 			String sql = query.toString();
 
@@ -1198,7 +1210,7 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 						(orderByComparator.getOrderByFields().length * 3));
 			}
 			else {
-				query = new StringBundler(2);
+				query = new StringBundler(3);
 			}
 
 			query.append(_SQL_SELECT_ACTMANAUDIT_WHERE);
@@ -1208,6 +1220,10 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 			if (orderByComparator != null) {
 				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
 					orderByComparator);
+			}
+
+			else {
+				query.append(ActManAuditModelImpl.ORDER_BY_JPQL);
 			}
 
 			String sql = query.toString();
@@ -1463,6 +1479,10 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 			}
 		}
 
+		else {
+			query.append(ActManAuditModelImpl.ORDER_BY_JPQL);
+		}
+
 		String sql = query.toString();
 
 		Query q = session.createQuery(sql);
@@ -1566,7 +1586,7 @@ public class ActManAuditPersistenceImpl extends BasePersistenceImpl<ActManAudit>
 				sql = query.toString();
 			}
 			else {
-				sql = _SQL_SELECT_ACTMANAUDIT;
+				sql = _SQL_SELECT_ACTMANAUDIT.concat(ActManAuditModelImpl.ORDER_BY_JPQL);
 			}
 
 			Session session = null;

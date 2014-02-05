@@ -13,6 +13,9 @@
 	<bean id="messageListener.liferay.lms.cleanTriesNotPassed_listener"
 		class="com.liferay.manager.CleanLearningActivityTriesNotPassed" />
 	
+	<bean id="messageListener.liferay.lms.recalculateModule_listener"
+		class="com.liferay.manager.RecalculateModule" />
+		
 	<!-- Destinations -->
 	<bean id="destination.liferay.lms.cleanTries"
 		class="com.liferay.portal.kernel.messaging.SerialDestination">
@@ -27,6 +30,11 @@
 	<bean id="destination.liferay.lms.cleanTriesNotPassed"
 		class="com.liferay.portal.kernel.messaging.SerialDestination">
 		<property name="name" value="liferay/lms/cleanTriesNotPassed" />
+	</bean>	
+	
+	<bean id="destination.liferay.lms.recalculateModule"
+		class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="liferay/lms/recalculateModule" />
 	</bean>	
 	
 	<!-- Configurator -->
@@ -49,6 +57,11 @@
 						<ref bean="messageListener.liferay.lms.cleanTriesNotPassed_listener" />
 					</list>
 				</entry>
+				<entry key="liferay/lms/recalculateModule">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.liferay.lms.recalculateModule_listener" />
+					</list>
+				</entry>
 			</map>
 		</property>
 		<property name="destinations">
@@ -56,6 +69,7 @@
 				<ref bean="destination.liferay.lms.cleanTries" />
 				<ref bean="destination.liferay.lms.cleanTriesUser" />
 				<ref bean="destination.liferay.lms.cleanTriesNotPassed" />
+				<ref bean="destination.liferay.lms.recalculateModule" />
 			</list>
 		</property>
 	</bean>

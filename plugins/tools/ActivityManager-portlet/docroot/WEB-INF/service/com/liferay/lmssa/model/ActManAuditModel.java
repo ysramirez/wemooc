@@ -232,6 +232,34 @@ public interface ActManAuditModel extends BaseModel<ActManAudit> {
 	 */
 	public void setNumber(int number);
 
+	/**
+	 * Returns the module ID of this act man audit.
+	 *
+	 * @return the module ID of this act man audit
+	 */
+	public long getModuleId();
+
+	/**
+	 * Sets the module ID of this act man audit.
+	 *
+	 * @param moduleId the module ID of this act man audit
+	 */
+	public void setModuleId(long moduleId);
+
+	/**
+	 * Returns the act ID of this act man audit.
+	 *
+	 * @return the act ID of this act man audit
+	 */
+	public long getActId();
+
+	/**
+	 * Sets the act ID of this act man audit.
+	 *
+	 * @param actId the act ID of this act man audit
+	 */
+	public void setActId(long actId);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);

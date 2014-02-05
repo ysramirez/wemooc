@@ -35,7 +35,7 @@ public class ActManAuditCacheModel implements CacheModel<ActManAudit>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -59,6 +59,10 @@ public class ActManAuditCacheModel implements CacheModel<ActManAudit>,
 		sb.append(state);
 		sb.append(", number=");
 		sb.append(number);
+		sb.append(", moduleId=");
+		sb.append(moduleId);
+		sb.append(", actId=");
+		sb.append(actId);
 		sb.append("}");
 
 		return sb.toString();
@@ -109,6 +113,8 @@ public class ActManAuditCacheModel implements CacheModel<ActManAudit>,
 		}
 
 		actManAuditImpl.setNumber(number);
+		actManAuditImpl.setModuleId(moduleId);
+		actManAuditImpl.setActId(actId);
 
 		actManAuditImpl.resetOriginalValues();
 
@@ -126,4 +132,6 @@ public class ActManAuditCacheModel implements CacheModel<ActManAudit>,
 	public long end;
 	public String state;
 	public int number;
+	public long moduleId;
+	public long actId;
 }

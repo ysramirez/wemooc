@@ -18,6 +18,7 @@ import com.liferay.lmssa.service.ActManAuditLocalServiceUtil;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.impl.BaseModelImpl;
@@ -78,6 +79,8 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		attributes.put("end", getEnd());
 		attributes.put("state", getState());
 		attributes.put("number", getNumber());
+		attributes.put("moduleId", getModuleId());
+		attributes.put("actId", getActId());
 
 		return attributes;
 	}
@@ -148,6 +151,18 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 
 		if (number != null) {
 			setNumber(number);
+		}
+
+		Long moduleId = (Long)attributes.get("moduleId");
+
+		if (moduleId != null) {
+			setModuleId(moduleId);
+		}
+
+		Long actId = (Long)attributes.get("actId");
+
+		if (actId != null) {
+			setActId(actId);
 		}
 	}
 
@@ -247,6 +262,22 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		_number = number;
 	}
 
+	public long getModuleId() {
+		return _moduleId;
+	}
+
+	public void setModuleId(long moduleId) {
+		_moduleId = moduleId;
+	}
+
+	public long getActId() {
+		return _actId;
+	}
+
+	public void setActId(long actId) {
+		_actId = actId;
+	}
+
 	public BaseModel<?> getActManAuditRemoteModel() {
 		return _actManAuditRemoteModel;
 	}
@@ -285,22 +316,24 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		clone.setEnd(getEnd());
 		clone.setState(getState());
 		clone.setNumber(getNumber());
+		clone.setModuleId(getModuleId());
+		clone.setActId(getActId());
 
 		return clone;
 	}
 
 	public int compareTo(ActManAudit actManAudit) {
-		long primaryKey = actManAudit.getPrimaryKey();
+		int value = 0;
 
-		if (getPrimaryKey() < primaryKey) {
-			return -1;
+		value = DateUtil.compareTo(getEnd(), actManAudit.getEnd());
+
+		value = value * -1;
+
+		if (value != 0) {
+			return value;
 		}
-		else if (getPrimaryKey() > primaryKey) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
+
+		return 0;
 	}
 
 	@Override
@@ -335,7 +368,7 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -359,13 +392,17 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 		sb.append(getState());
 		sb.append(", number=");
 		sb.append(getNumber());
+		sb.append(", moduleId=");
+		sb.append(getModuleId());
+		sb.append(", actId=");
+		sb.append(getActId());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lmssa.model.ActManAudit");
@@ -415,6 +452,14 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 			"<column><column-name>number</column-name><column-value><![CDATA[");
 		sb.append(getNumber());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>moduleId</column-name><column-value><![CDATA[");
+		sb.append(getModuleId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>actId</column-name><column-value><![CDATA[");
+		sb.append(getActId());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -433,5 +478,7 @@ public class ActManAuditClp extends BaseModelImpl<ActManAudit>
 	private Date _end;
 	private String _state;
 	private int _number;
+	private long _moduleId;
+	private long _actId;
 	private BaseModel<?> _actManAuditRemoteModel;
 }

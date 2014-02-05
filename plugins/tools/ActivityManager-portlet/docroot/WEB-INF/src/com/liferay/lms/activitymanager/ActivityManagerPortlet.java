@@ -1,5 +1,18 @@
 package com.liferay.lms.activitymanager;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.PortletException;
+import javax.portlet.PortletRequestDispatcher;
+import javax.portlet.ProcessAction;
+import javax.portlet.RenderRequest;
+import javax.portlet.RenderResponse;
+
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
@@ -30,19 +43,6 @@ import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletException;
-import javax.portlet.PortletRequestDispatcher;
-import javax.portlet.ProcessAction;
-import javax.portlet.RenderRequest;
-import javax.portlet.RenderResponse;
 
 public class ActivityManagerPortlet extends MVCPortlet {
 	Log log = LogFactoryUtil.getLog(ActivityManagerPortlet.class);
@@ -279,6 +279,20 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}else{
 			response.setRenderParameter("error", "no-activity");
 		}
+		
+		Course course = null;
+		String courseId = "0";
+		try {
+			course = CourseLocalServiceUtil.getCourseByGroupCreatedId(ModuleLocalServiceUtil.getModule(la.getModuleId()).getGroupId());
+			courseId = String.valueOf(course.getCourseId());
+		} catch (PortalException e) {
+			if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+			if (this.log.isDebugEnabled()) e.printStackTrace();
+		} catch (Exception e) { e.printStackTrace(); return;}
+		
+	    response.setRenderParameter("id", courseId);
+	    response.setRenderParameter("la", sid);
+	    response.setRenderParameter("view", "detail");
 	}
 	
 	@ProcessAction(name="users")
@@ -293,7 +307,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	}
 
 	@ProcessAction(name="fixUser")
-	public void fixUser(ActionRequest request, ActionResponse response) {
+	public void fixUser(ActionRequest request, ActionResponse response) throws IOException, PortletException {
 		if (log.isDebugEnabled())log.debug("fixUser");
 		String userid = ParamUtil.getString(request, "userid", "");
 		String actid = ParamUtil.getString(request, "id", "");
@@ -327,6 +341,20 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}else{
 			response.setRenderParameter("status", "ko");
 		}
+		
+		Course course = null;
+		String courseId = "0";
+		try {
+			course = CourseLocalServiceUtil.getCourseByGroupCreatedId(ModuleLocalServiceUtil.getModule(la.getModuleId()).getGroupId());
+			courseId = String.valueOf(course.getCourseId());
+		} catch (PortalException e) {
+			if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+			if (this.log.isDebugEnabled()) e.printStackTrace();
+		} catch (Exception e) { e.printStackTrace(); return;}
+		
+	    response.setRenderParameter("course", courseId);
+	    response.setRenderParameter("la", actid);
+	    response.setRenderParameter("view", "users");
 	}
 	
 	@ProcessAction(name="recalculate")
