@@ -232,25 +232,36 @@ else
 	<liferay-ui:error key="error_number_format" message="error_number_format" />
 	
 	<aui:input type="textarea" cols="100" rows="4" name="summary" label="summary" value="<%=summary %>"/>
-	
-	<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
 	<%
+	List<Long> courseEvalIds = ListUtil.toList(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals(),",",0L));
 	CourseEvalRegistry cer=new CourseEvalRegistry();
-	for(CourseEval ce:cer.getCourseEvals())
-	{
-		boolean selected=false;
-		if(course!=null&&course.getCourseEvalId()==ce.getTypeId())
-		{
-			selected=true;
-		}
-		
-		%>
-		<aui:option value="<%=ce.getTypeId() %>" selected="<%=selected %>"><liferay-ui:message key="<%=ce.getName() %>" /></aui:option>
+	if(courseEvalIds.size()>1)
+	{%>
+		<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
 		<%
-	}
-	%>
-	</aui:select>
+		//String[]courseEvals = LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals().split(",");
+		for(Long ce:courseEvalIds)
+		{
+			CourseEval cel = cer.getCourseEval(ce);
+			boolean selected=false;
+			if(course!=null&&course.getCourseEvalId()==ce)
+			{
+				selected=true;
+			}
+			
+			%>
+			<aui:option value="<%=String.valueOf(ce)%>" selected="<%=selected %>"><liferay-ui:message key="<%=cel.getName() %>" /></aui:option>
+			<%
+		}
+		%>
+		</aui:select>
 	<%
+	}
+	else{
+		CourseEval cel = cer.getCourseEval(courseEvalIds.get(0));
+		%>
+		<aui:input name="courseEvalId" value="<%=cel.getTypeId()%>" type="hidden"/>
+	<%}
 	if(course==null)
 	{
 		String[] layusprsel=null;
@@ -265,43 +276,56 @@ else
 			lspist=layusprsel;
 
 		}
+		if(lspist.length>1){
 		%>
-		<aui:select name="courseTemplate" label="course-template">
-		<%
-		for(String lspis:lspist)
-		{
-			LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
-			%>
-			<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+			<aui:select name="courseTemplate" label="course-template">
 			<%
-		}
-		%>
-		</aui:select>
+			for(String lspis:lspist)
+			{
+				LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
+				%>
+				<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+				<%
+			}
+			%>
+			</aui:select>
 		<%
+		}
+		else{
+			LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspist[0]));
+		%>
+			<aui:input name="courseTemplate" value="<%=lsp.getLayoutSetPrototypeId()%>" type="hidden"/>
+		<%}
 	}
-	
-	List<CalificationType> ctl = new CalificationTypeRegistry().getCalificationTypes();
-	if(ctl.size()>1){
+	List <Long> califications = ListUtil.toList(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getScoretranslators(),",",0L));	
+	CalificationTypeRegistry cal = new CalificationTypeRegistry();
+	if(califications.size()>1){
 		%>
 			<aui:select name="calificationType" label="calificationType">
 		<%
-		for(CalificationType ct:ctl){
+		for(Long ct:califications){
 			boolean selected = false;
-			if((course == null && PropsUtil.get("lms.calification.default.type").equals(Long.toString(ct.getTypeId()))) || (course != null && ct.getTypeId() == course.getCalificationType()))
+			CalificationType ctype = cal.getCalificationType(ct);
+			if((course == null && PropsUtil.get("lms.calification.default.type").equals(String.valueOf(ct))) || (course != null && ct == course.getCalificationType()))
 				selected = true;
 			%>
-				<aui:option value="<%=ct.getTypeId() %>"  selected="<%=selected %>"><liferay-ui:message key="<%=ct.getTitle(themeDisplay.getLocale()) %>" /></aui:option>
+				<aui:option value="<%=String.valueOf(ct)%>"  selected="<%=selected %>"><liferay-ui:message key="<%=ctype.getTitle(themeDisplay.getLocale()) %>" /></aui:option>
 			<%
 		}
 		%>
 			</aui:select>
 		<%
 	}
+	else{
+		CalificationType ctype = cal.getCalificationType(califications.get(0));
+		%>
+		<aui:input name="calificationType" value="<%=ctype.getTypeId()%>" type="hidden"/>
+	<%}
 	
 	boolean showInscriptionDate = GetterUtil.getBoolean(renderRequest.getPreferences().getValues("showInscriptionDate", new String[]{StringPool.TRUE})[0],true);
 
 	%>
-<liferay-ui:panel-container extended="false"  persistState="false">
+	<liferay-ui:panel-container extended="false"  persistState="false">
 	<liferay-ui:panel title="lms-inscription-configuration" collapsible="true" defaultState="closed">
 		<aui:field-wrapper label="start-inscription-date" cssClass="<%=(showInscriptionDate)?StringPool.BLANK:\"aui-helper-hidden\" %>">
 			<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon"
