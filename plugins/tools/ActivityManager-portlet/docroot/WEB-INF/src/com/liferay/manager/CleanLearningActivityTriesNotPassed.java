@@ -69,7 +69,7 @@ public class CleanLearningActivityTriesNotPassed extends CleanLearningActivity i
 			this.user = (User)message.get("user");
 			User user = (User)message.get("userc");
 
-			createInstance(la.getCompanyId(),la.getGroupId(),user.getUserId());
+			createInstance(la.getCompanyId(),la.getGroupId(),user.getUserId(), la.getModuleId(), la.getActId());
 			
 			if(log.isDebugEnabled())log.debug(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId() + " - " +user.getFullName());
 			

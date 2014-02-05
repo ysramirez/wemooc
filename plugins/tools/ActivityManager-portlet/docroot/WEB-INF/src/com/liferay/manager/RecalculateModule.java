@@ -63,7 +63,7 @@ public class RecalculateModule extends CleanLearningActivity implements MessageL
 			this.module = (Module)message.get("module");
 			User userc = (User)message.get("userc");
 
-			createInstance(module.getCompanyId(),module.getGroupId(),userc.getUserId());
+			createInstance(module.getCompanyId(),module.getGroupId(),userc.getUserId(), module.getModuleId(), 0);
 			
 			if(log.isDebugEnabled())log.debug(" Module: " + module.getTitle(Locale.getDefault()));
 			

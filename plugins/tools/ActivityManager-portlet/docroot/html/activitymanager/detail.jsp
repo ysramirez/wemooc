@@ -81,8 +81,8 @@
 				<tr class="portlet-section-body results-row">
 				<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
 				<td class="align-left col-1 col-1 first valign-middle">${activity.getTypeId()}</td>
-				<td class="align-left col-1 col-1 first valign-middle">${activity.getStartdate()}</td>
-				<td class="align-left col-1 col-1 first valign-middle">${activity.getEnddate()}</td>
+				<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getStartdate()}" pattern="dd/MM/yyyy HH:mm" /></td>
+				<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getEnddate()}" pattern="dd/MM/yyyy HH:mm" /></td>
 				<td class="align-left col-1 col-1 first valign-middle">
 					<c:if test="${activity.isNew()}">
 						<liferay-util:include page="/html/activitymanager/actions/module_actions.jsp" servletContext="<%=this.getServletContext() %>">

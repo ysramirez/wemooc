@@ -65,7 +65,7 @@ public class CleanLearningActivityTriesUser extends CleanLearningActivity implem
 			this.user = (User)message.get("user");
 			User userc = (User)message.get("userc");
 
-			createInstance(la.getCompanyId(),la.getGroupId(),userc.getUserId());
+			createInstance(la.getCompanyId(),la.getGroupId(),userc.getUserId(), la.getModuleId(), la.getActId());
 			
 			if(log.isDebugEnabled())log.debug(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId() + " - " +user.getFullName());
 			
