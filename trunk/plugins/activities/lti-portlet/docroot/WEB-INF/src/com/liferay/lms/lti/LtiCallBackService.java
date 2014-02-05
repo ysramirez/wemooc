@@ -14,8 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.io.IOUtils;
 
-import com.liferay.lms.lti.model.LtiItem;
-import com.liferay.lms.lti.service.LtiItemLocalServiceUtil;
+import com.liferay.lms.lti.util.LtiItem;
+import com.liferay.lms.lti.util.LtiItemLocalServiceUtil;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.LearningActivityTry;
@@ -25,7 +25,6 @@ import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.tls.pox.IMSPOXRequest;
 
 public class LtiCallBackService extends HttpServlet{
@@ -118,9 +117,9 @@ public class LtiCallBackService extends HttpServlet{
 				if(ctry){
 					try{
 						if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(actId, userId)){
-							if(log.isDebugEnabled())log.debug("Update!");
 							LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
-							if(learningActivityResult.getResult()!=lGrade){
+							if(log.isDebugEnabled())log.debug("Update!"+learningActivityResult.getResult()+"::"+lGrade);
+							if((learningActivityResult.getPassed()&&learningActivityResult.getResult()<=lGrade)||!learningActivityResult.getPassed()){
 								if(learningActivityResult!=null){
 									
 									ServiceContext serviceContext =  new ServiceContext();
