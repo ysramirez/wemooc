@@ -111,3 +111,5 @@
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
 </c:if>
+
+<%@ include file="/html/activitymanager/audit.jspf" %>

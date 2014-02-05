@@ -1,4 +1,7 @@
 
+<%@page import="java.util.Locale"%>
+<%@page import="com.liferay.lms.model.LearningActivity"%>
+<%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="java.util.Collections"%>
 <%@page import="com.liferay.lms.service.LearningActivityServiceUtil"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
@@ -52,9 +55,16 @@
 <c:if test="${not empty modules}">
 	<div class="lfr-search-container "><div class="yui3-widget aui-component aui-searchcontainer aui-searchcontainer-focused"><div class="results-grid aui-searchcontainer-content">
 		<table class="taglib-search-iterator"><tbody>
+		<% int numModule = 0; %>
 		<c:forEach var="module" items="${modules}">
+			<% numModule++; %>
 			<tr class="portlet-section-header results-header">
-			<th class="col-1 col-1 first">${module.getTitle(themeDisplay.locale)}</th>
+			<th class="col-1 col-1 first">
+				<%=LanguageUtil.format(pageContext, "actmanager.moduleTitle.chapter", new Object[]{numModule})%> ${module.getTitle(themeDisplay.locale)}
+			</th>
+			<th><%=LanguageUtil.get(pageContext, "actmanager.type") %></th>
+			<th><%=LanguageUtil.get(pageContext, "actmanager.startdate") %></th>
+			<th><%=LanguageUtil.get(pageContext, "actmanager.enddate") %></th>
 			<th class="col-1 col-1 first align-left valign-middle">
 				<div style="text-align: right;">
 				<liferay-ui:icon-menu>
@@ -70,6 +80,9 @@
 			<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
 				<tr class="portlet-section-body results-row">
 				<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
+				<td class="align-left col-1 col-1 first valign-middle">${activity.getTypeId()}</td>
+				<td class="align-left col-1 col-1 first valign-middle">${activity.getStartdate()}</td>
+				<td class="align-left col-1 col-1 first valign-middle">${activity.getEnddate()}</td>
 				<td class="align-left col-1 col-1 first valign-middle">
 					<c:if test="${activity.isNew()}">
 						<liferay-util:include page="/html/activitymanager/actions/module_actions.jsp" servletContext="<%=this.getServletContext() %>">
@@ -83,3 +96,5 @@
 		</tbody></table>
 	</div></div></div>
 </c:if>
+
+<%@ include file="/html/activitymanager/audit.jspf" %>

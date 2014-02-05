@@ -39,7 +39,9 @@ create table lmssa_ActManAudit (
 	start_ DATE null,
 	end_ DATE null,
 	state_ VARCHAR(75) null,
-	number_ INTEGER
+	number_ INTEGER,
+	moduleId LONG,
+	actId LONG
 );
 
 create table lmssa_LearningActivityTryDeleted (
