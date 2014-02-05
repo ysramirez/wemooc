@@ -29,6 +29,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 
@@ -74,7 +75,9 @@ public class CommunityInscription extends MVCPortlet {
 
 		try {
 	    	ServiceContext serviceContext=ServiceContextFactory.getInstance(request);
-	    	MembershipRequestLocalServiceUtil.addMembershipRequest(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), "Enroll petition", serviceContext); 
+	    	MembershipRequestLocalServiceUtil.addMembershipRequest(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), "Enroll petition", serviceContext);
+	    	SocialActivityLocalServiceUtil.addActivity(themeDisplay.getUserId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), com.liferay.portlet.social.model.SocialActivityConstants.TYPE_SUBSCRIBE, "", course.getUserId());
+	    	
 		} catch (PortalException e) {
 			if(log.isDebugEnabled()){
 				e.printStackTrace();
@@ -115,7 +118,7 @@ public class CommunityInscription extends MVCPortlet {
 		//auditing
 		AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
 				course.getCourseId(), themeDisplay.getUserId(), AuditConstants.REGISTER, null);
-		
+		SocialActivityLocalServiceUtil.addActivity(userId, course.getGroupId(), Course.class.getName(), course.getCourseId(), com.liferay.portlet.social.model.SocialActivityConstants.TYPE_SUBSCRIBE, "", course.getUserId());
 		// Informamos que se ha inscrito.
 		Date hoy = new Date();
 		String userName = ""+userId;
@@ -207,6 +210,7 @@ public class CommunityInscription extends MVCPortlet {
     	Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId[0]);
 		AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
 				course.getCourseId(), themeDisplay.getUserId(), AuditConstants.UNREGISTER, null);
+		SocialActivityLocalServiceUtil.addActivity(userId, course.getGroupId(), Course.class.getName(), course.getCourseId(), com.liferay.portlet.social.model.SocialActivityConstants.TYPE_UNSUBSCRIBE, "", course.getUserId());
 		
 		// Informamos de que lo ha dejado.
 		Date hoy = new Date();
