@@ -111,8 +111,12 @@
 						   	<%=(SessionErrors.contains(renderRequest, "answer-test-required_"+testanswer.getAnswerId()))?
 						   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 						</div>
-						<aui:input  name="feedbackCorrect" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
-						<aui:input  name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>"></aui:input>
+						<aui:input  name="feedbackCorrect" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>">
+							<aui:validator name="maxLength">300</aui:validator>
+						</aui:input>
+						<aui:input  name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>">
+							<aui:validator name="maxLength">300</aui:validator>
+						</aui:input>
 						<aui:button-row>
 							<aui:button type="submit" value="modify"></aui:button>
 						</aui:button-row>
@@ -178,8 +182,12 @@
 			   	<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 			</div>
 			<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
-			<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedbackCorrect"></aui:input>
-			<aui:input cssClass="input-comment" name="feedbackNoCorrect" label="feedbackNoCorrect"></aui:input>
+			<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedbackCorrect">
+				<aui:validator name="maxLength">300</aui:validator>
+			</aui:input>
+			<aui:input cssClass="input-comment" name="feedbackNoCorrect" label="feedbackNoCorrect">
+				<aui:validator name="maxLength">300</aui:validator>
+			</aui:input>
 			<aui:input  type="hidden" name="correct" value="true"/>
 			<aui:button-row>
 				<aui:button type="submit" />

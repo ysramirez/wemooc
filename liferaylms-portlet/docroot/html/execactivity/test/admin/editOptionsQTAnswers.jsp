@@ -55,7 +55,9 @@
 			   	<%=(SessionErrors.contains(renderRequest, "answer-test-required"))?LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 			</div>
 			<aui:input type="hidden" name="questionId" value="<%=question.getQuestionId() %>"></aui:input>
-			<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedback"></aui:input>
+			<aui:input cssClass="input-comment" name="feedbackCorrect" label="feedback">
+				<aui:validator name="maxLength">300</aui:validator>
+			</aui:input>
 			<aui:input  type="checkbox" name="correct" label="correct"></aui:input>
 			<aui:button-row>
 				<aui:button type="submit" value="add-more-answers" ></aui:button>
@@ -160,7 +162,9 @@
 								   			LanguageUtil.get(pageContext,"answer-test-required"):StringPool.BLANK %>
 								</div>
 								
-								<aui:input  name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"></aui:input>
+								<aui:input  name="feedbackCorrect" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>">
+									<aui:validator name="maxLength">300</aui:validator>
+								</aui:input>
 								<aui:input type="checkbox" name="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
 								<aui:button-row>
 									<aui:button type="submit" value="modify"></aui:button>
