@@ -32,7 +32,7 @@ public class CleanLearningActivity {
 	public CleanLearningActivity(){
 	}
 	
-	public ActManAudit createInstance(long companyId,long groupId,long userId){
+	public ActManAudit createInstance(long companyId,long groupId,long userId, long moduleId, long actId){
 		if(log.isDebugEnabled())log.debug("createInstance");
 		setRunning(true);
 		
@@ -46,6 +46,9 @@ public class CleanLearningActivity {
 		actManAudit.setStart(new Date());
 		actManAudit.setState("actmanager.run");
 		actManAudit.setNumber(0);
+		
+		actManAudit.setModuleId(moduleId);
+		actManAudit.setActId(actId);
 		
 		try {
 			actManAudit = ActManAuditLocalServiceUtil.addActManAudit(actManAudit);

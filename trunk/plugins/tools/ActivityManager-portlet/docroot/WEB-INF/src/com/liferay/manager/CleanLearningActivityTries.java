@@ -76,7 +76,7 @@ public class CleanLearningActivityTries extends CleanLearningActivity implements
 			this.la = (LearningActivity)message.get("learningActivity");
 			User user = (User)message.get("userc");
 
-			createInstance(la.getCompanyId(),la.getGroupId(),user.getUserId());
+			createInstance(la.getCompanyId(),la.getGroupId(),user.getUserId(), la.getModuleId(), la.getActId());
 		
 			if(log.isDebugEnabled())log.debug(" LearningActivity: " + la.getTitle(Locale.getDefault()) + " - " + la.getActId());
 			
