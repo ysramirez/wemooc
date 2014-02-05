@@ -480,11 +480,11 @@ public class BasicLTIUtil {
 			// paint auto submit script
 			text.append("<div class='ltimessage'>");
 			if(iframe){
-				text.append("<a href='#content' onclick='javascript:goto();' >");
+				text.append(" <a href='#content' onclick='javascript:goto();' >");
 				text.append(LanguageUtil.format(locale, "learningactivity.lti.goiframe", null));
 			}else{
 				text.append(LanguageUtil.format(locale, "learningactivity.lti.outplataform", null));
-				text.append("<a href='#' onclick='javascript:goto();' >");
+				text.append(" <a href='#' onclick='javascript:goto();' >");
 				text.append(LanguageUtil.format(locale, "learningactivity.lti.go", null));
 			}
 			text.append("</a>");
