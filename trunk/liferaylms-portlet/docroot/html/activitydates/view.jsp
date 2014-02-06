@@ -62,14 +62,18 @@
 			}
 	%>
 	<div id="displayDate">
+		<span class="date-column">
+			<liferay-ui:message key="activityDates.startDate"/>
+		</span>
 		<span class="date">
-			<label class="date-column"><liferay-ui:message key="activityDates.startDate"/></label>
-			<label><%=actDisplayDate%></label>
+			<%=actDisplayDate%>
 		</span>
 		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-		<span class="date" >
-			<label class="date-column"><liferay-ui:message key="activityDates.endDate"/></label>
-			<label><%=actEndDate%></label>
+		<span class="date-column" >
+			<liferay-ui:message key="activityDates.endDate"/>
+		</span>
+		<span class="date">
+			<%=actEndDate%>
 		</span>
 	</div>
 <%	

@@ -335,44 +335,44 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	<% if((activity.getTries()==0)||(activity.getTries()>LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId, user.getUserId()))){ 
 	
 	if(isSetTextoEnr){ %>
-	<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initEditor"  />
-	
-	<script type="text/javascript">
-    <!--
 
-		function <portlet:namespace />initEditor() {
-			return "";
-		}
-
-	    function <portlet:namespace />extractCodeFromEditor()
-	    {
-			try {
-				document.<portlet:namespace />fm['<portlet:namespace />text'].value = window['<portlet:namespace />DescripcionRichTxt'].getHTML();
-			}
-			catch (e) {
-			}
-	    	
-	    }
-
-    -->
-	</script>
 	<% } %>
 	
 	<aui:form name="fm" action="<%=setActivity%>"  method="post" enctype="multipart/form-data" cssClass='<%=(result!=null)?((result.getEndDate()!= null)?"aui-helper-hidden":""):""%>' >
 		<aui:fieldset>
 		<% if(isSetTextoEnr){ %>
 		<aui:input type="hidden" name="text" value=''/>
-		<aui:field-wrapper label="text" >
+		<aui:field-wrapper label="text" name="DescripcionRichTxt" >
 			<div id="<portlet:namespace/>DescripcionRichTxt" ></div>
-		</aui:field-wrapper>	
+		</aui:field-wrapper>
+		<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initEditor"  />
+		<script type="text/javascript">
+	    <!--
+	
+			function <portlet:namespace />initEditor() {
+				return "";
+			}
+	
+		    function <portlet:namespace />extractCodeFromEditor()
+		    {
+				try {
+					document.<portlet:namespace />fm['<portlet:namespace />text'].value = window['<portlet:namespace />DescripcionRichTxt'].getHTML();
+				}
+				catch (e) {
+				}
+		    	
+		    }
+	
+	    -->
+		</script>	
 		<% } 
 		   else { %>
-		<aui:field-wrapper label="text" >
+		<aui:field-wrapper label="text" name="text" >
 			<aui:input type="textarea" cols="100" rows="5" name="text" label="" value=''/>
 		</aui:field-wrapper>
 		<% }
 		   if(isSetFichero){ %>
-		<aui:field-wrapper label="courseadmin.importuserrole.file" >
+		<aui:field-wrapper label="courseadmin.importuserrole.file" name="fileName" >
    		<aui:input inlineLabel="left" inlineField="true"
 			  	name="fileName" label="" id="fileName" type="file" value="" />
 		</aui:field-wrapper>

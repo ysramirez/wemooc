@@ -10,6 +10,7 @@ SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 %>
 <div class="asset-resource-info">
 	<liferay-ui:icon
+					alt="ico-preview"
 					image='<%= "../file_system/large/scorm" %>'
 					label="<%= false %>"
 					message="<%= scorm.getTitle() %>"	
