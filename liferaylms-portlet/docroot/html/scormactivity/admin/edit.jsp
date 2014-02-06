@@ -202,22 +202,10 @@ function <portlet:namespace />back() {
 </script>
 
 <%
-
-
 	boolean disabled = false;
-	boolean isOmniadmin = false;
-	
-	try{
-		isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-		disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
-	}catch(Exception e){
-		
-	}
-	
-	if(isOmniadmin ){
+	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())){
 		disabled = false;
 	}
-
 %>
 
 <aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>">

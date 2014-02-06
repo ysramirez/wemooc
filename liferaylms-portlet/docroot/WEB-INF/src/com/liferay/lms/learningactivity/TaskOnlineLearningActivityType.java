@@ -8,6 +8,7 @@ import com.liferay.lms.asset.TaskOnlineAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -18,11 +19,13 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
@@ -65,13 +68,10 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 	@Override
 	public void setExtraContent(UploadRequest uploadRequest,
 			PortletResponse portletResponse, LearningActivity learningActivity)
-			throws PortalException, SystemException, DocumentException,IOException {
+			throws NumberFormatException, Exception {
 		
-	    DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
-	  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
-		dq.add(criterion);
-		
-	    if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)==0) {
+		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), themeDisplay.getUserId())) {
 		
 			String fichero = ParamUtil.getString(uploadRequest, "fichero", StringPool.FALSE);
 			String textoenr = ParamUtil.getString(uploadRequest, "textoenr", StringPool.FALSE);

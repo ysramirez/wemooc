@@ -490,16 +490,8 @@ Liferay.provide(
 				score=learnact.getPasspuntuation();
 			}
 			boolean disabled = false;
-			boolean isOmniadmin = false;
 			
-			try{
-				isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learnact.getGroupId(), LearningActivity.class.getName(),learnact.getActId(),"UPDATE_ACTIVE");
-				disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learnact.getActId()))) != 0;
-			}catch(Exception e){
-				
-			}
-			
-			if(isOmniadmin ){
+			if(LearningActivityLocalServiceUtil.canBeEdited(learnact, themeDisplay.getCompanyId(), user.getUserId())){
 				disabled = false;
 			}
 		%>

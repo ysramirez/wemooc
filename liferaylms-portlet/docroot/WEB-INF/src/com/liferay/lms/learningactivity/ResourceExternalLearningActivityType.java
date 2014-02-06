@@ -9,6 +9,7 @@ import com.liferay.lms.asset.ResourceExternalAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -92,13 +93,10 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 	@Override
 	public void setExtraContent(UploadRequest uploadRequest,
 			PortletResponse portletResponse, LearningActivity learningActivity)
-			throws PortalException, SystemException, DocumentException,IOException {
-		
-		 DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
-		  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
-			dq.add(criterion);
-			
-		if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)==0) {
+			throws NumberFormatException, Exception {
+
+		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), themeDisplay.getUserId())) {
 			PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(
 					JavaConstants.JAVAX_PORTLET_REQUEST);
 			String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");
@@ -153,7 +151,6 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 				
 				if((additionalFile!=null)&&(!StringPool.BLANK.equals(additionalFile.trim()))){
 					
-					ThemeDisplay themeDisplay = (ThemeDisplay) portletRequest.getAttribute(WebKeys.THEME_DISPLAY);
 					long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 					long folderId=createDLFolders(themeDisplay.getUserId(),repositoryId, portletRequest);
 					ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), portletRequest);

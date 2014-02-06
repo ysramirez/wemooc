@@ -40,6 +40,9 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -276,5 +279,23 @@ public class LearningActivityTryLocalServiceImpl
 			
 		//Si tiene menos intentos de los que se puede hacer.
 		return Long.valueOf(userTries-opened) < activityTries;
+	}
+	
+	@SuppressWarnings("unchecked")
+	public boolean areThereTriesNotFromEditors(LearningActivity activity) throws Exception
+	{ 		
+		boolean resp = false;
+		List<User> users = getUsersByLearningActivity(activity.getActId());
+		for(User usu:users){
+			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(usu);
+			if(!(permissionChecker.hasPermission(activity.getGroupId(),"com.liferay.lms.model",activity.getGroupId(),"EDITLOCK")||
+					permissionChecker.hasOwnerPermission(activity.getGroupId(),"com.liferay.lms.model",activity.getGroupId(),activity.getUserId(),"EDITLOCK")||
+					permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
+					permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),ActionKeys.UPDATE))){
+				resp = true;
+				break;
+			}
+		}
+		return resp;		
 	}
 }
