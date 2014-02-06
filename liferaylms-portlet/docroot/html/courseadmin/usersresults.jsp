@@ -80,9 +80,10 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 
 
 <liferay-portlet:renderURL var="backURL" >
-<portlet:param name="courseId" value="<%=Long.toString(courseId) %>" />
-<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" />
-<portlet:param name="jspPage" value="/html/courseadmin/rolemembers.jsp" />
+	<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
+	<portlet:param name="courseId" value="<%=Long.toString(courseId) %>" />
+	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" />
+	<portlet:param name="tabs1" value="<%=tab %>" />
 </liferay-portlet:renderURL>
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>" backURL="<%=backURL %>"></liferay-ui:header>
 <h2><%=role.getTitle(themeDisplay.getLocale()) %></h2>
