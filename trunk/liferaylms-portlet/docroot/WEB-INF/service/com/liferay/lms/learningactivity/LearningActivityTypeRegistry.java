@@ -5,10 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import com.liferay.lms.service.ClpSerializer;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 public class LearningActivityTypeRegistry {
 	Map<Long, LearningActivityType> types;
@@ -38,8 +41,28 @@ public class LearningActivityTypeRegistry {
 			} catch (ClassNotFoundException e) {
 				try {
 					String [] context = ((String) key).split("\\.");
-					Class c = Class.forName(type, true, PortletClassLoaderUtil.getClassLoader(context[1]));
-					ClassLoaderProxy clp = new ClassLoaderProxy(c.newInstance(), type, PortletClassLoaderUtil.getClassLoader(context[1]));
+					
+					Class c = null;
+					ClassLoaderProxy clp = null;
+					if (Validator.isNumber(context[1])) {
+						c = Class.forName(
+								type,
+								true,
+								PortletBeanLocatorUtil.getBeanLocator(
+										ClpSerializer.getServletContextName())
+										.getClassLoader());
+						clp = new ClassLoaderProxy(c.newInstance(), type,
+								PortletBeanLocatorUtil.getBeanLocator(
+										ClpSerializer.getServletContextName())
+										.getClassLoader());
+					} else {
+						c = Class.forName(type, true, PortletClassLoaderUtil
+								.getClassLoader(context[1]));
+						clp = new ClassLoaderProxy(c.newInstance(), type,
+								PortletClassLoaderUtil
+										.getClassLoader(context[1]));
+					}
+					
 					LearningActivityTypeClp latyclp = new LearningActivityTypeClp(clp);
 					long typeId=latyclp.getTypeId();
 					types.put(typeId,latyclp);
