@@ -206,7 +206,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 
 	var fieldStrings = {			
         	<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
-        		required: '<liferay-ui:message key="title-required" />'
+        		required: '<liferay-ui:message key="activity-title-required" />'
             },
         	<portlet:namespace />description: {
         		required: '<liferay-ui:message key="description-required" />'
@@ -354,10 +354,10 @@ Liferay.provide(
 
 		<aui:input name="title" label="title" defaultLanguageId="<%=renderRequest.getLocale().toString() %>">
 		</aui:input>
-		<div id="<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>Error" class="<%=(SessionErrors.contains(renderRequest, "title-required"))?
+		<div id="<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>Error" class="<%=(SessionErrors.contains(renderRequest, "activity-title-required"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
-	    	<%=(SessionErrors.contains(renderRequest, "title-required"))?
-	    			LanguageUtil.get(pageContext,"title-required"):StringPool.BLANK %>
+	    	<%=(SessionErrors.contains(renderRequest, "activity-title-required"))?
+	    			LanguageUtil.get(pageContext,"activity-title-required"):StringPool.BLANK %>
 	    </div>
 	    
 	    <script type="text/javascript">
