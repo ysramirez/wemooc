@@ -505,6 +505,9 @@ Liferay.provide(
 		%>
 		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" disabled="<%=disabled %>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
 		</aui:input>
+		<% if (disabled) { %>
+		<input name="<portlet:namespace />passpuntuation" type="hidden" value="<%=Long.toString(score) %>" />
+		<% } %>
   		<div id="<portlet:namespace />passpuntuationError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))||
 																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))||
 																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range")))?
