@@ -1,3 +1,8 @@
+<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LmsPrefs"%>
+<%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.portal.model.Role"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@include file="/init.jsp" %>
 <%@page import="com.liferay.portal.service.permission.PortalPermissionUtil"%>
@@ -9,13 +14,42 @@ long courseId=ParamUtil.getLong(request, "courseId",0);
 long roleId=ParamUtil.getLong(request, "roleId",0);
 Course course=CourseLocalServiceUtil.getCourse(courseId);
 long createdGroupId=course.getGroupCreatedId();
+
+
+LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
+String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
+String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
+String tab="";
+if(roleId==commmanager.getRoleId()){
+	tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
+}else if(roleId==prefs.getEditorRole()){
+	tab = editorName;
+}else{
+	tab = teacherName;
+}
 %>
+<liferay-portlet:actionURL name="removeAll" var="removeAllURL">
+		<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" /> 
+		<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
+		<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
+		<liferay-portlet:param name="tabs1" value="<%=tab %>"></liferay-portlet:param>
+	</liferay-portlet:actionURL>
+<script type="text/javascript">
+	function areyousure(){
+		if(confirm('<liferay-ui:message key="are-you-sure-you-want-to-permanently-delete-the-selected-users" />')){
+			window.location.href="<%= removeAllURL %>";
+		}
+	}
+</script>
 <portlet:renderURL var="importUsersURL"  windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 	<portlet:param name="courseId" value="<%=ParamUtil.getString(renderRequest, \"courseId\") %>" /> 
 	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" /> 
 	<portlet:param name="jspPage" value="/html/courseadmin/popups/importUsers.jsp" /> 
 </portlet:renderURL>
-<liferay-ui:icon-menu align="left" cssClass='<%= "lfr-toolbar-button add-button " + (toolbarItem.equals("add") ? "current" : StringPool.BLANK) %>' direction="down" extended="<%= false %>"  message="add" showWhenSingleIcon="<%= false %>">
+
+<aui:fieldset>
+<liferay-ui:icon-menu align="left" cssClass='<%= "lfr-toolbar-button add-button " + (toolbarItem.equals("add") ? "current" : StringPool.BLANK) %>' direction="down" extended="<%= false %>"  message="edit-users" showWhenSingleIcon="<%= false %>">
 	<div class="bt_newuser">	
 		<portlet:renderURL var="adduserURL">
 			<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
@@ -23,8 +57,16 @@ long createdGroupId=course.getGroupCreatedId();
 			<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 		</portlet:renderURL>		
 		<liferay-ui:icon
+			image="add_user" 
 			message="add-user"
 			url="<%= adduserURL %>"
+		/>
+		
+	
+		<liferay-ui:icon 
+			image="leave" 
+			message="clear-all"
+			url="javascript:areyousure()"
 		/>
 	</div>
 </liferay-ui:icon-menu>
@@ -51,7 +93,7 @@ long createdGroupId=course.getGroupCreatedId();
 		/>
 	</div>
 </liferay-ui:icon-menu>
-
+</aui:fieldset>
 
 <script type="text/javascript">
 <!--
