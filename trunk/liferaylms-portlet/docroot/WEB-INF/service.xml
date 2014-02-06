@@ -249,6 +249,7 @@
 		<column name="userId" type="long" primary="false"></column>
 		<column name="passed" type="boolean"></column>
 		<column name="mrId" type="long" primary="true"></column>
+		<column name="passedDate" type="Date"></column>
         <order>
             <order-column name="mrId"></order-column>
         </order>
