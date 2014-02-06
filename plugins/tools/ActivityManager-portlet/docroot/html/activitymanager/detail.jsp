@@ -61,7 +61,9 @@
 			title = LanguageUtil.format(pageContext, "actmanager.moduleTitle.chapter", new Object[]{numModule}); 
 			pageContext.setAttribute("title", title);
 			%>
-			<liferay-ui:panel title="${title} ${module.getTitle(themeDisplay.locale)}"  collapsible="true" defaultState="closed">	
+			<c:if test="${module.getModuleId() eq activeModuleId }"><c:set var="state" value="open"></c:set></c:if>
+			<c:if test="${module.getModuleId() ne activeModuleId }"><c:set var="state" value="closed"></c:set></c:if>
+			<liferay-ui:panel id="${module.getModuleId()}" title="${title} ${module.getTitle(themeDisplay.locale)}" collapsible="true" defaultState="${state}">	
 				<table class="taglib-search-iterator"><tbody>
 					<tr class="portlet-section-header results-header">
 					<th class="col-1 col-1 first"><%=LanguageUtil.get(pageContext, "activity")%></th>
