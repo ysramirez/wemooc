@@ -203,21 +203,10 @@ function <portlet:namespace />back() {
 </script>
 
 <%
-
-
 	boolean disabled = true;
-	boolean isOmniadmin = false;
-	
-	try{
-		isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-	}catch(Exception e){
-		
-	}
-	
-	if(isOmniadmin || LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId())){
+	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())){
 		disabled = false;
 	}
-
 %>
 
 <aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>">

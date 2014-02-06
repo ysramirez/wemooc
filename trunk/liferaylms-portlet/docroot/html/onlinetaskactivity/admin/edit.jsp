@@ -20,7 +20,6 @@
 	boolean textoenr = false;
 	boolean existTries = false;
 	boolean disabled = true;
-	boolean isOmniadmin = false;
 	
 	
 	if(request.getAttribute("activity")!=null) {
@@ -30,13 +29,7 @@
 			textoenr = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"textoenr")); 
 		}
 		
-		try{
-			isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-		}catch(Exception e){
-			
-		}
-		
-		if(isOmniadmin || LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId())){
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())){
 			disabled = false;
 		}
 		

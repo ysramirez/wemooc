@@ -36,7 +36,7 @@ public interface LearningActivityType extends InvokableService
 	public boolean hasDeleteTries();
 	
 	public String getExpecificContentPage();
-	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException;
+	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException, NumberFormatException, Exception;
 	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse);
 	public void afterInsertOrUpdate(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException;
 	public String getPortletId();
