@@ -96,7 +96,7 @@ public abstract class BaseLearningActivityType implements LearningActivityType, 
 	}
 	
 	@Override
-	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException {
+	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException, NumberFormatException, Exception {
 	}
 	
 	@Override

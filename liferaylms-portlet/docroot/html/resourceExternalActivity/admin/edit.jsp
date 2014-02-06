@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.Criterion"%>
 <%@page import="com.liferay.lms.service.ClpSerializer"%>
@@ -49,11 +50,7 @@
 		
 		}
 		
-		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-		DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class,classLoader);
-	  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
-		dq.add(criterion);
-		if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0) readonly=true;
+		if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())) readonly=true;
 	}  
 	
 %>

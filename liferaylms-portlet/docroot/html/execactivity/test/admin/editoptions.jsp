@@ -53,15 +53,7 @@
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 		
-		//NUEVOS PERMISOS
-		//Permisos por el rol del usuario
-		boolean isUserAdmin = themeDisplay.getPermissionChecker().isOmniadmin();
-		boolean canUpdate = permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-		
-		boolean userPermission = isUserAdmin || canUpdate;
-		
-		//Permiso para editar los campos de la actividad
-		edit = userPermission || LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId());
+		edit = LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId());
 	}
 
 %>

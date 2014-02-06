@@ -12,6 +12,7 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -126,15 +127,14 @@ public class TestLearningActivityType extends BaseLearningActivityType
 	@Override
 	public void setExtraContent(UploadRequest uploadRequest,
 			PortletResponse portletResponse, LearningActivity learningActivity)
-			throws PortalException, SystemException, DocumentException,IOException {
+			throws NumberFormatException, Exception {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);	
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		Module module = ModuleLocalServiceUtil.getModule(learningActivity.getModuleId());
 				
 	    if((!module.getStartDate().before(new Date()))||(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR"))
-	    		|| themeDisplay.getPermissionChecker().hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE")
-	    		|| LiferaylmsUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId()))
+	    		|| LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), themeDisplay.getUserId()))
 	    {
 			Document document = null;
 			Element rootElement = null;
