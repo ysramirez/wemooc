@@ -681,7 +681,7 @@ public static String SEPARATOR = "_";
             module.setIcon(ParamUtil.getLong(request, "icon"));
         } catch (Exception nfe) {
         }
-	    PortletPreferences prefs = actRequest.getPreferences();
+
         int startDateAno = ParamUtil.getInteger(request, "startDateAno");
         int startDateMes = ParamUtil.getInteger(request, "startDateMes");
         int startDateDia = ParamUtil.getInteger(request, "startDateDia");

@@ -1,4 +1,8 @@
 <!-- <h1 class="taglib-categorization-filter entry-title"> -->
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="java.util.Comparator"%>
+<%@page import="java.util.Collections"%>
+
 <%
 
 String search = ParamUtil.getString(request, "search","");
@@ -153,14 +157,6 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 	entryQuery.setVisible(false);
 	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
 
-	/*ClassName cn = ClassNameLocalServiceUtil.getClassName(Course.class.getName());
-
-	DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(AssetEntry.class, PortalClassLoaderUtil.getClassLoader());
-	dynamicQuery.add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId()));
-	dynamicQuery.add(PropertyFactoryUtil.forName("classNameId").eq(cn.getClassNameId()));
-	entries.addAll(AssetEntryLocalServiceUtil.dynamicQuery(dynamicQuery));*/
-	//entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
-
 	courses=new ArrayList<Course>();
 	if(!freetext.isEmpty()){
 		for(AssetEntry entry:entries)
@@ -183,7 +179,6 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 							courses.add(course);
 					}
 				}else{
-					System.out.println("Add!");
 					courses.add(course);
 				}
 			}
@@ -207,7 +202,6 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 						courses.add(course);
 				}
 			}else{
-				System.out.println("Add!");
 				courses.add(course);
 			}
 		}
@@ -220,13 +214,21 @@ else
 java.util.List<Course> finalCourses=new ArrayList<Course>();
 for(Course course:courses)
 {
-	/*if(!course.isClosed())
-	{*/
 		finalCourses.add(course);
-	/*}*/
 }
 courses=finalCourses;
 
+//Order courses
+
+if(courses!=null&&courses.size()>0){
+	Collections.sort(courses, new Comparator<Course>() {
+		
+	    @Override
+	    public int compare(final Course object1, final Course object2) {
+	        return object1.getDescription().compareTo(object2.getDescription());
+	    }
+	} );
+}
 %>
 
 <portlet:renderURL var="searchURL">
