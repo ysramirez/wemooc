@@ -61,6 +61,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		String view = ParamUtil.getString(renderRequest, "view", "");
 		if (view != null && "detail".equals(view)) {
 			String id = ParamUtil.getString(renderRequest, "id", "");
+			long activeModuleId = ParamUtil.getLong(renderRequest, "activeModuleId", 0);;
 			Long lid = null;
 			HashMap<Long, List<LearningActivity>> learningActivities = new HashMap<Long, List<LearningActivity>>();
 			try{
@@ -116,6 +117,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 							}
 						}
 					}
+					renderRequest.setAttribute("activeModuleId", activeModuleId);
 					renderRequest.setAttribute("modules", modules);
 					renderRequest.setAttribute("learningActivities", learningActivities);
 					renderRequest.setAttribute("course", course);
@@ -293,6 +295,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	    response.setRenderParameter("id", courseId);
 	    response.setRenderParameter("la", sid);
 	    response.setRenderParameter("view", "detail");
+	    response.setRenderParameter("activeModuleId", String.valueOf(la.getModuleId()));
 	}
 	
 	@ProcessAction(name="users")
