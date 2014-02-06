@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="java.util.Locale"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
@@ -53,6 +54,7 @@
 <c:if test="${empty modules}"><liferay-ui:message key="there-are-no-results" />
 </c:if>
 <c:if test="${not empty modules}">
+	<% LearningActivityTypeRegistry latr = new LearningActivityTypeRegistry(); %>
 	<div class="lfr-search-container "><div class="yui3-widget aui-component aui-searchcontainer aui-searchcontainer-focused"><div class="results-grid aui-searchcontainer-content">
 		<% int numModule = 0; String title = ""; %>
 		<c:forEach var="module" items="${modules}">
@@ -81,7 +83,16 @@
 					<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
 						<tr class="portlet-section-body results-row">
 						<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
-						<td class="align-left col-1 col-1 first valign-middle">${activity.getTypeId()}</td>
+						<%
+						LearningActivity la = (LearningActivity)pageContext.getAttribute("activity");
+						Long laId = new Long(la.getTypeId());
+						LearningActivityType lat = latr.getLearningActivityType(laId);
+						String laName = lat.getName();
+						String laType = LanguageUtil.get(pageContext, laName);
+						pageContext.setAttribute("laType", laType);
+						%>
+						<td class="align-left col-1 col-1 first valign-middle">${laType}</td>
+						
 						<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getStartdate()}" pattern="dd/MM/yyyy HH:mm" /></td>
 						<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getEnddate()}" pattern="dd/MM/yyyy HH:mm" /></td>
 						<td class="align-left col-1 col-1 first valign-middle">
