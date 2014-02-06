@@ -44,6 +44,9 @@ import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -55,6 +58,8 @@ import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.search.Indexer;
+import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -64,6 +69,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -83,6 +89,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.persistence.GroupUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.announcements.EntryDisplayDateException;
@@ -110,7 +117,7 @@ public class CourseAdmin extends MVCPortlet {
 	public static String IMAGEGALLERY_PORTLETFOLDER_DESCRIPTION = "";	
 	
 	private static Log _log = LogFactoryUtil.getLog(CourseAdmin.class);
-
+	
 	public void deleteCourse(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
@@ -134,6 +141,9 @@ public class CourseAdmin extends MVCPortlet {
 	public void closeCourse(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
 
+
+		Indexer indexer=IndexerRegistryUtil.getIndexer(Course.class);
+		
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 				Course.class.getName(), actionRequest);
 
@@ -624,6 +634,57 @@ public class CourseAdmin extends MVCPortlet {
 		}
 		UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { userId },
 				course.getGroupCreatedId(), roleId);
+		actionResponse.setRenderParameters(actionRequest.getParameterMap());
+	}
+
+	public void removeAll(ActionRequest actionRequest,ActionResponse actionResponse) throws Exception {
+		if(log.isDebugEnabled())log.debug("removeAll");
+		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
+		long roleId = ParamUtil.getLong(actionRequest, "roleId", 0);
+		if(log.isDebugEnabled())log.debug("removeAll"+courseId+"--"+roleId);
+
+		Course course = CourseLocalServiceUtil.getCourse(courseId);
+		
+		UserLocalServiceUtil.getRoleUserIds(roleId);
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		Role commmanager = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+
+		if(log.isDebugEnabled())log.debug("removeAllquery");
+		if (roleId != commmanager.getRoleId()) {
+			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(UserGroupRole.class,PortalClassLoaderUtil.getClassLoader());
+			dynamicQuery.add(PropertyFactoryUtil.forName("primaryKey.roleId").eq(roleId));
+			dynamicQuery.add(PropertyFactoryUtil.forName("primaryKey.groupId").eq(course.getGroupCreatedId()));
+			
+			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.dynamicQuery(dynamicQuery);
+			
+			if(log.isDebugEnabled())log.debug("removeAll"+userGroupRoles.size());
+			
+			for(UserGroupRole userGroupRole : userGroupRoles){
+				if(log.isDebugEnabled())log.debug("removeAll::"+userGroupRole.getUserId());
+
+				UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(
+						new long[] { userGroupRole.getUserId() }, course.getGroupCreatedId(), roleId);
+			}
+			actionResponse.setRenderParameters(actionRequest.getParameterMap());
+		}else{
+			long[] users = UserLocalServiceUtil.getGroupUserIds(course.getGroupCreatedId());
+			
+			for(long user : users){
+				List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(user, course.getGroupCreatedId());
+				//List<Role> roles = RoleLocalServiceUtil.getUserGroupGroupRoles(user, course.getGroupCreatedId());
+				
+				if(log.isDebugEnabled())log.debug("User::"+user);
+				if((userGroupRoles.size()==0)||(userGroupRoles.size()==1&&userGroupRoles.get(0).getRoleId()==roleId)){
+					if(log.isDebugEnabled())log.debug("deleted!");
+					GroupLocalServiceUtil.unsetUserGroups(user,new long[] { course.getGroupCreatedId() });
+				}
+				/*for(UserGroupRole userGroupRole:userGroupRoles){
+					if(log.isDebugEnabled())log.debug("Role::"+userGroupRole.getRoleId());
+				}*/
+			}
+			//GroupLocalServiceUtil.unsetUserGroups(userGroupRole.getUserId(), new long[] { course.getGroupCreatedId() });
+		}
+
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 	}
 

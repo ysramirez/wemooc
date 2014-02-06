@@ -49,7 +49,6 @@ if(roleId==commmanager.getRoleId()){
 </portlet:renderURL>
 
 <aui:fieldset>
-<liferay-ui:icon-menu align="left" cssClass='<%= "lfr-toolbar-button add-button " + (toolbarItem.equals("add") ? "current" : StringPool.BLANK) %>' direction="down" extended="<%= false %>"  message="edit-users" showWhenSingleIcon="<%= false %>">
 	<div class="bt_newuser">	
 		<portlet:renderURL var="adduserURL">
 			<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
@@ -59,17 +58,16 @@ if(roleId==commmanager.getRoleId()){
 		<liferay-ui:icon
 			image="add_user" 
 			message="add-user"
+			label="true"
 			url="<%= adduserURL %>"
 		/>
-		
-	
+	</div>
 		<liferay-ui:icon 
 			image="leave" 
-			message="clear-all"
+			message="delete-all-users"
+			label="true"
 			url="javascript:areyousure()"
 		/>
-	</div>
-</liferay-ui:icon-menu>
 <liferay-ui:icon-menu cssClass='bt_importexport' direction="down" extended="<%= false %>"  message="export-import" showWhenSingleIcon="<%= false %>">
 	<div>
 		<liferay-portlet:resourceURL var="exportURL" >
