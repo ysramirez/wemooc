@@ -380,6 +380,20 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}else{
 			response.setRenderParameter("status", "ko");
 		}
+		
+		Course course = null;
+		String courseId = "0";
+		try {
+			course = CourseLocalServiceUtil.getCourseByGroupCreatedId(ModuleLocalServiceUtil.getModule(Long.parseLong(moduleId)).getGroupId());
+			courseId = String.valueOf(course.getCourseId());
+		} catch (PortalException e) {
+			if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
+			if (this.log.isDebugEnabled()) e.printStackTrace();
+		} catch (Exception e) { e.printStackTrace(); return;}
+		
+	    response.setRenderParameter("id", courseId);
+	    response.setRenderParameter("view", "detail");
+	    response.setRenderParameter("activeModuleId", moduleId);
 	}
 	
 	private void cleanLearningActivityTriesPassed(LearningActivity la,User userc){
