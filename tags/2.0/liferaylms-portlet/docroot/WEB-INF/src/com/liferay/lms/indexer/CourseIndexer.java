@@ -1,5 +1,6 @@
 package com.liferay.lms.indexer;
 
+import java.text.Normalizer;
 import java.util.Date;
 import java.util.Locale;
 
@@ -7,13 +8,15 @@ import javax.portlet.PortletURL;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.CourseLocalServiceUtil;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchEngineUtil;
+import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Summary;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -21,7 +24,6 @@ import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetCategoryLocalServiceUtil;
@@ -31,19 +33,19 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 import com.liferay.portlet.expando.util.ExpandoBridgeIndexerUtil;
 
 public class CourseIndexer extends BaseIndexer {
+	private static Log log = LogFactoryUtil.getLog(CourseIndexer.class);
 
 	public static final String[] CLASS_NAMES = {Course.class.getName()};
 	public static final String PORTLET_ID = "courseadmin_WAR_liferaylmsportlet"; 
 	@Override
 	public String[] getClassNames() {
-		// TODO Auto-generated method stub
+		if(log.isDebugEnabled())log.debug("getClassNames");
 		return CLASS_NAMES;
 	} 
 
 	
-	public Summary getSummary(Document document, String snippet,
-			PortletURL portletURL) {
-		// TODO Auto-generated method stub
+	public Summary getSummary(Document document, String snippet, PortletURL portletURL) {
+		if(log.isDebugEnabled())log.debug("getSummary");
 		String title = document.get(Field.TITLE);
 
 		String content = snippet;
@@ -60,6 +62,7 @@ public class CourseIndexer extends BaseIndexer {
 
 	@Override
 	protected void doDelete(Object obj) throws Exception {
+		if(log.isDebugEnabled())log.debug("doDelete");
 		Course entry = (Course)obj;
 
 		Document document = new DocumentImpl();
@@ -70,10 +73,22 @@ public class CourseIndexer extends BaseIndexer {
 			entry.getCompanyId(), document.get(Field.UID));
 
 	}
-
+	
+	@Override
+	public Document getDocument(Object obj) throws SearchException {
+		try {
+			return doGetDocument(obj);
+		} catch (Exception e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
+			return null;
+		}
+	}
+	
 	@Override
 	protected Document doGetDocument(Object obj) throws Exception {
 		Course entry = (Course)obj;
+		if(log.isDebugEnabled())log.debug("doGetDocument::"+entry.getCourseId());
 		
 		long companyId = entry.getCompanyId();
 		long groupId = getParentGroupId(entry.getGroupId());
@@ -83,31 +98,38 @@ public class CourseIndexer extends BaseIndexer {
 		long entryId = entry.getCourseId();
 		String title = entry.getTitle();
 		
-		AssetEntry assetEntry=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), entryId);
-		String content=assetEntry.getSummary();
-			content=content+" "+HtmlUtil.extractText(entry.getDescription(LocaleUtil.getDefault(),true));
+		AssetEntry assetEntry= null;
+		try{
+			assetEntry = AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), entryId);
+		}catch(Exception e){
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
+		}
+		String content= null;
+		if(assetEntry!=null){
+			content = assetEntry.getSummary();
+		}
+			content= content+" "+HtmlUtil.extractText(entry.getDescription(LocaleUtil.getDefault(),true));
 			
 		String contentSinAcentos=content.toLowerCase();
-		contentSinAcentos=contentSinAcentos.replace('á', 'a');
-		contentSinAcentos=contentSinAcentos.replace('é', 'e');
-		contentSinAcentos=contentSinAcentos.replace('í', 'i');
-		contentSinAcentos=contentSinAcentos.replace('ó', 'o');
-		contentSinAcentos=contentSinAcentos.replace('ú', 'u');
+		contentSinAcentos = Normalizer.normalize(contentSinAcentos, Normalizer.Form.NFD);
+		contentSinAcentos = contentSinAcentos.replaceAll("[^\\p{InCombiningDiacriticalMarks}]", "");
+		
 		content=content+" "+contentSinAcentos;
-		Date displayDate = assetEntry.getPublishDate();
+		Date displayDate = null;
+		
+		if(assetEntry!=null){
+			displayDate = assetEntry.getPublishDate();
+		}		
 
-		long[] assetCategoryIds = AssetCategoryLocalServiceUtil.getCategoryIds(
-			Course.class.getName(), entryId);
-		String[] assetTagNames = AssetTagLocalServiceUtil.getTagNames(
-			Course.class.getName(), entryId);
+		long[] assetCategoryIds = AssetCategoryLocalServiceUtil.getCategoryIds(Course.class.getName(), entryId);
+		String[] assetTagNames = AssetTagLocalServiceUtil.getTagNames(Course.class.getName(), entryId);
 		ExpandoBridge expandoBridge = entry.getExpandoBridge();
 
 		Document document = new DocumentImpl();
 
 		document.addUID(PORTLET_ID, entryId);
-
-		document.addModifiedDate(displayDate);
-
+		document.addDate(Field.MODIFIED_DATE, displayDate);
 		document.addKeyword(Field.COMPANY_ID, companyId);
 		document.addKeyword(Field.PORTLET_ID, PORTLET_ID);
 		document.addKeyword(Field.GROUP_ID, groupId);
@@ -131,41 +153,30 @@ public class CourseIndexer extends BaseIndexer {
 		document.addKeyword("assetCategoryTitles", assetCategoryTitles);
 		ExpandoBridgeIndexerUtil.addAttributes(document, expandoBridge);
 
+		if(log.isDebugEnabled())log.debug("return Document");
 		return document;
 	}
 
 	@Override
 	protected void doReindex(Object obj) throws Exception {
 		Course entry = (Course)obj;
-		try
-		{
-			AssetEntry assetEntry=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), entry.getCourseId());
-			if (!assetEntry.getVisible()) {
-				this.delete(obj);
-				return;
-			}
-
-			Document document = getDocument(entry);
-
-			SearchEngineUtil.updateDocument(entry.getCompanyId(), document);
-		}
-		catch(com.liferay.portlet.asset.NoSuchEntryException ae)
-		{
-			return;
-		}
+		if(log.isDebugEnabled())log.debug("doReindex::"+entry.getCourseId());
 		
-		
+		Document document = getDocument(entry);
 
+		SearchEngineUtil.updateDocument(getSearchEngineId(),entry.getCompanyId(), document);
 	}
 
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
+		if(log.isDebugEnabled())log.debug("doReindex");
 		Course entry = CourseLocalServiceUtil.getCourse(classPK);
 		doReindex(entry);
 	}
 
 	@Override
 	protected void doReindex(String[] ids) throws Exception {
+		if(log.isDebugEnabled())log.debug("doReindex");
 		long companyId = GetterUtil.getLong(ids[0]);
 
 		reindexEntries(companyId);
@@ -173,6 +184,7 @@ public class CourseIndexer extends BaseIndexer {
 	}
 
 	private void reindexEntries(long companyId) throws Exception {
+		if(log.isDebugEnabled())log.debug("reindexEntries company::"+companyId);
 		java.util.List<Course> entries=CourseLocalServiceUtil.getCourses(companyId);
 		if(entries==null ||entries.isEmpty())
 		{
@@ -187,22 +199,22 @@ public class CourseIndexer extends BaseIndexer {
 
 	@Override
 	protected String getPortletId(SearchContext searchContext) {
-		// TODO Auto-generated method stub
+		if(log.isDebugEnabled())log.debug("getPortletId");
 		return PORTLET_ID;
 	}
 
 
 	@Override
 	public String getPortletId() {
-		// TODO Auto-generated method stub
-		return null;
+		if(log.isDebugEnabled())log.debug("getPortletId");
+		return PORTLET_ID;
 	}
 
 
 	@Override
 	protected Summary doGetSummary(Document document, Locale locale, String snippet,
 			PortletURL portletURL) throws Exception {
-		// TODO Auto-generated method stub
+		if(log.isDebugEnabled())log.debug("doGetSummary");
 		return getSummary(document, snippet, portletURL);
 	}
 
