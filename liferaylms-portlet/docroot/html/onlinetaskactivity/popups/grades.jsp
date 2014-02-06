@@ -79,10 +79,11 @@ if(renderRequest.getParameter("studentId")!=null){%>
 <%
 }
  if(richtext!=null) { %>
-	<aui:field-wrapper label="onlinetaskactivity.text" >
+	<aui:field-wrapper label="onlinetaskactivity.text" name="panelLabel" >
 		<liferay-ui:panel-container >
 			<liferay-ui:panel id="panelId" title="" collapsible="false" extended="false" >
 				<%=richtext %>
+				<aui:input type="hidden" name="panelLabel"/>
 			</liferay-ui:panel>
 		</liferay-ui:panel-container >
 	</aui:field-wrapper>
