@@ -79,9 +79,10 @@
 								
 								AUI().use('node', function(Y){
 								    var questions = Y.all('div.question')
-			
+				
 								    for(var i=0;i<questions.size();i++){
-								        if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
+								        alert(questions.item(i));
+								    	if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
 								        	if(!confirm('<liferay-ui:message key="execativity.test.questions.without.response" />')) {
 			
 												if (e.target) targ = e.target.blur();
@@ -113,7 +114,7 @@
 							for(TestAnswer answer:testAnswers)
 							{
 							%>
-								<div class="answer"><input type="radio" name="question_<%=question.getQuestionId()%>" value="<%=answer.getAnswerId() %>" ><%=answer.getAnswer() %>
+								<div class="answer"><aui:input id='<%="question_"+question.getQuestionId()%>' type="radio" name='<%="question_"+question.getQuestionId()%>' value="<%=answer.getAnswerId() %>" label="<%=answer.getAnswer() %>"/>
 								</div>
 							<%
 							}
