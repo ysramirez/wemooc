@@ -293,6 +293,9 @@
 			<basic name="comments" />
 			<basic name="userId" />
 			<basic name="passed" />
+			<basic name="passedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

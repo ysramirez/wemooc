@@ -445,6 +445,7 @@ public class ModuleResultPersistenceImpl extends BasePersistenceImpl<ModuleResul
 		moduleResultImpl.setUserId(moduleResult.getUserId());
 		moduleResultImpl.setPassed(moduleResult.isPassed());
 		moduleResultImpl.setMrId(moduleResult.getMrId());
+		moduleResultImpl.setPassedDate(moduleResult.getPassedDate());
 
 		return moduleResultImpl;
 	}

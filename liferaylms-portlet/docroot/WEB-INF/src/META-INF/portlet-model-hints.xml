@@ -176,6 +176,7 @@
 		<field name="userId" type="long" />
 		<field name="passed" type="boolean" />
 		<field name="mrId" type="long" />
+		<field name="passedDate" type="Date" />
 	</model>
 	<model name="com.liferay.lms.model.P2pActivity">
 		<field name="uuid" type="String" />
