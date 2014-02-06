@@ -258,7 +258,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		if(!hasTitle)
 		{
-			SessionErrors.add(actionRequest, "title-required");
+			SessionErrors.add(actionRequest, "activity-title-required");
 			return;
 		}
 		/* La descripcion es opcional */
