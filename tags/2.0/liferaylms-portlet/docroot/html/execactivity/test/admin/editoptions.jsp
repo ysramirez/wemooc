@@ -52,24 +52,7 @@
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 		
-		//NUEVOS PERMISOS
-		//Permisos por el rol del usuario
-		boolean isUserAdmin = themeDisplay.getPermissionChecker().isOmniadmin();
-		boolean canUpdate = permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-		
-		boolean userPermission = isUserAdmin || canUpdate;
-		
-		//Permisos por el estado de la actividad
-		boolean courseStarted = ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date());
-		boolean activityDone = false;
-		if(learningActivity != null){
-			activityDone = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
-		}
-		
-		boolean actStarted = courseStarted || activityDone;
-		
-		//Permiso para editar los campos de la actividad
-		edit = userPermission || !actStarted;
+		edit = LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId());
 	}
 
 %>

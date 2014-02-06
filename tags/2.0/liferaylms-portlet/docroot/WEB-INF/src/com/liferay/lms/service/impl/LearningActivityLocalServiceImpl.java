@@ -14,6 +14,8 @@
 
 package com.liferay.lms.service.impl;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Locale;
@@ -23,9 +25,12 @@ import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.Module;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.LearningActivityLocalServiceBaseImpl;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
@@ -37,6 +42,7 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
@@ -44,7 +50,16 @@ import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.model.User;
+import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.social.model.SocialActivity;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
@@ -515,6 +530,51 @@ public class LearningActivityLocalServiceImpl
 		}
 		
 		return res;
+	}
+	
+	public boolean canBeEdited(LearningActivity activity, long companyId, long userId) throws Exception{
+		User user = UserLocalServiceUtil.getUser(userId);
+		if(activity!=null && user!=null){
+			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(user);
+			//Si tengo permiso de editar bloqueados, es editable
+			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")||
+					permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),"UPDATE_ACTIVE")){
+				return true;
+			//Si tengo permiso de edición
+			}else if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
+					permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),ActionKeys.UPDATE)){
+				//y no hay intentos de la actividad por parte de alumnos
+				if(!LearningActivityTryLocalServiceUtil.areThereTriesNotFromEditors(activity)){
+					Date today = new Date();
+					Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
+					if(module.getStartDate() != null && module.getEndDate() != null){//xq la fecha en los modulos es obligatoria
+						//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
+						if(
+								((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
+								(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
+								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>=0))||
+								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>=0)))
+						){return true;}
+						//Si estoy dentro del intervalo de fechas de la actividad, o del módulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este está cerrado, entonces es editable
+						if(
+								((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
+								(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
+								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<0))||
+								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<0)))
+						){
+							if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null){
+								Role siteMemberRole = RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_MEMBER);
+								if(!ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW))
+									return true;
+							}
+						}
+					}
+				}
+			}
+		}
+		
+		return false;
 	}
 
 }

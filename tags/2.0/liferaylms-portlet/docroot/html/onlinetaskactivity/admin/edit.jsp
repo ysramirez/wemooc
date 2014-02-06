@@ -20,7 +20,6 @@
 	boolean textoenr = false;
 	boolean existTries = false;
 	boolean disabled = false;
-	boolean isOmniadmin = false;
 	
 	
 	if(request.getAttribute("activity")!=null) {
@@ -32,14 +31,7 @@
 				
 		}
 		
-		try{
-			isOmniadmin  = themeDisplay.getPermissionChecker().isOmniadmin()|| permissionChecker.hasPermission(learningActivity.getGroupId(), LearningActivity.class.getName(),learningActivity.getActId(),"UPDATE_ACTIVE");
-			disabled = LearningActivityTryLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivityTry.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))) != 0;
-		}catch(Exception e){
-			
-		}
-		
-		if(isOmniadmin ){
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())){
 			disabled = false;
 		}
 		

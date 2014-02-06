@@ -117,11 +117,7 @@ if(request.getAttribute("activity")!=null) {
 		{
 		}
 	}	
-	ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-	DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class,classLoader);
-  	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId());
-	dq.add(criterion);
-	if(LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq)!=0) disabled="disabled=\"disabled\"";
+	if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())) disabled="disabled=\"disabled\"";
 }
 
 %>
