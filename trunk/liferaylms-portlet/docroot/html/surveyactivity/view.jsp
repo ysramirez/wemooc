@@ -81,7 +81,6 @@
 								    var questions = Y.all('div.question')
 				
 								    for(var i=0;i<questions.size();i++){
-								        alert(questions.item(i));
 								    	if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
 								        	if(!confirm('<liferay-ui:message key="execativity.test.questions.without.response" />')) {
 			
