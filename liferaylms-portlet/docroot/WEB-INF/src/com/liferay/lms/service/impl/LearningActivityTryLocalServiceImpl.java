@@ -288,8 +288,7 @@ public class LearningActivityTryLocalServiceImpl
 		List<User> users = getUsersByLearningActivity(activity.getActId());
 		for(User usu:users){
 			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(usu);
-			if(!(permissionChecker.hasPermission(activity.getGroupId(),"com.liferay.lms.model",activity.getGroupId(),"EDITLOCK")||
-					permissionChecker.hasOwnerPermission(activity.getGroupId(),"com.liferay.lms.model",activity.getGroupId(),activity.getUserId(),"EDITLOCK")||
+			if(!(permissionChecker.hasPermission(activity.getGroupId(),"com.liferay.lms.model",activity.getGroupId(),"UPDATE_ACTIVE")||
 					permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
 					permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),ActionKeys.UPDATE))){
 				resp = true;
