@@ -2,6 +2,38 @@
 
 <portlet:actionURL name="save" var="save" />
 
+<script type="text/javascript">
+	var error = "error";
+	function check(){
+		if(document.getElementById('url').value==null||document.getElementById('url').value==""){
+			alert('<liferay-ui:message key="learningactivity.lti.error.url" />');
+			return;
+		}
+		if(document.getElementById('secret').value==null||document.getElementById('secret').value==""){
+			alert('<liferay-ui:message key="learningactivity.lti.error.secret" />');
+			return;
+		}
+		if(document.getElementById('rol').value==null||document.getElementById('rol').value==""){
+			alert('<liferay-ui:message key="learningactivity.lti.error.rol" />');
+			return;
+		}
+		if(document.getElementById('note').value==null||document.getElementById('note').value==""){
+			alert('<liferay-ui:message key="learningactivity.lti.error.note" />');
+			return;
+		}
+		if(!isInt(document.getElementById('note').value)){
+			alert('<liferay-ui:message key="learningactivity.lti.error.note.nan" />');
+			return;
+		}
+		document.getElementById("sabeform").submit();
+	}
+	
+	function isInt(x) {
+		  var y=parseInt(x);
+		  if (isNaN(y)) return false;
+		  return x==y && x.toString()==y.toString();
+	}
+</script>
 <c:if test="${not empty learningActivity}">
 	<liferay-ui:message key="learningactivity.lti.propertiesfor" /> ${learningActivity.getTitle(themeDisplay.locale)}
 	<form action="${save}" name="saveform" id="sabeform" method="POST" >
@@ -22,6 +54,6 @@
 				<liferay-ui:message key="learningactivity.lti.iframe" />:<input type="checkbox" name="iframe" id="iframe" ><br/>
 			</c:otherwise>
 		</c:choose>
-		<input type="submit" value="<liferay-ui:message key="save" />" >
+		<input type="button" value="<liferay-ui:message key="save" />" onclick="javascript:check()" >
 	</form>
 </c:if>
