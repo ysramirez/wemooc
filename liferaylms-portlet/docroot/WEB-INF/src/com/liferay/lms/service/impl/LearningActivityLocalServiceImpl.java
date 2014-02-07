@@ -538,8 +538,7 @@ public class LearningActivityLocalServiceImpl
 		else if(user!=null){
 			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(user);
 			//Si tengo permiso de editar bloqueados, es editable
-			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")||
-					permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),"UPDATE_ACTIVE")){
+			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")){
 				return true;
 			//Si tengo permiso de edición
 			}else if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
@@ -567,8 +566,9 @@ public class LearningActivityLocalServiceImpl
 									Boolean.valueOf(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity"))){
 								Role siteMemberRole = RoleLocalServiceUtil.getRole(activity.getCompanyId(), RoleConstants.SITE_MEMBER);
 								if(!ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
-										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW))
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW)){
 									return true;
+								}
 							}
 						}
 					}
