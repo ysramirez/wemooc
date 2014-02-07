@@ -407,7 +407,7 @@ Liferay.provide(
 		//-->
 		</script>
 	    
-		<aui:field-wrapper label="description">
+		<aui:field-wrapper label="description" name="description">
 			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
 			<script type="text/javascript">
 		        function <portlet:namespace />initEditor() 
@@ -433,9 +433,10 @@ Liferay.provide(
 				mandatory = (learnact.getWeightinmodule() != 0);
 			}
 		%>
-		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field">
+		<aui:field-wrapper label="editactivity.mandatory" cssClass="editactivity-mandatory-field" name="mandatorylabel">
 			<aui:input label="editactivity.mandatory.yes" type="radio" name="weightinmodule" value="1" checked="<%= mandatory %>" inlineField="true" />
 			<aui:input label="editactivity.mandatory.no" type="radio" name="weightinmodule" value="0" checked="<%= !mandatory %>" inlineField="true" />
+			<aui:input type="hidden" name="mandatorylabel" />
 		</aui:field-wrapper>
 	 <liferay-ui:panel-container extended="false" persistState="false">
 	 <%
@@ -461,7 +462,7 @@ Liferay.provide(
 			}
 		%>
 		
-		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>">
+		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>" type="number">
 		</aui:input><%--liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help--%>
   		<div id="<portlet:namespace />triesError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.tries.required"))||
 														      (SessionErrors.contains(renderRequest, "editActivity.tries.number"))||
@@ -534,7 +535,7 @@ Liferay.provide(
 				feedbacCorrect=learnact.getFeedbackCorrect();
 			}
 		%>	
-		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" helpMessage="feedbackCorrect.helpMessage"></aui:input>	
+		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" helpMessage="feedbackCorrect.helpMessage" type="text"></aui:input>	
 		<%
 		}
 		else
@@ -551,7 +552,7 @@ Liferay.provide(
 				feedbacNoCorrect=learnact.getFeedbackCorrect();
 			}
 		%>
-		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage"></aui:input>	
+		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage" type="text"></aui:input>	
 		<%
 		}
 		else

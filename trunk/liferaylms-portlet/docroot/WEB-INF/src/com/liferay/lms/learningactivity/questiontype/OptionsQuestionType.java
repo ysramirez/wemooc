@@ -123,7 +123,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 			int correctAnswers=0, correctAnswered=0, incorrectAnswered=0;
 			if(feedback) feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
-			
+			int i=0;
 			for(TestAnswer answer:testAnswers){
 				String correct="", checked="", showCorrectAnswer="false", disabled ="";
 				if(feedback) {
@@ -145,8 +145,10 @@ public class OptionsQuestionType extends BaseQuestionType {
 				}
 
 				answersFeedBack += "<div class=\"answer " + correct + "\">" +
-										"<input type=\"" + inputType + "\" name=\""+namespace+"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\" " + disabled + "><div class=\"answer-options\">" + answer.getAnswer() + "</div>" + 
+										"<label for=\""+namespace+"question_"+question.getQuestionId()+"_"+i+"\" />"+
+										"<input id=\""+namespace+"question_"+question.getQuestionId()+"_"+i+"\" type=\"" + inputType + "\" name=\""+namespace+"question_" + question.getQuestionId() + "\" " + checked + " value=\"" + answer.getAnswerId() +"\" " + disabled + "><div class=\"answer-options\">" + answer.getAnswer() + "</div>" + 
 									"</div>";
+				i++;
 			}
 
 			if(feedback){
@@ -159,7 +161,7 @@ public class OptionsQuestionType extends BaseQuestionType {
 				}
 			}
 
-			html += "<div class=\"question" + cssclass + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">" + 
+			html += "<div class=\"question" + cssclass + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">" +
 						"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 						"<div class=\"questiontext\">" + question.getText() + "</div>" +
 						answersFeedBack +

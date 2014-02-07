@@ -139,7 +139,7 @@ public class FreetextQuestionType extends BaseQuestionType {
 			feedBack += "<div class=\"question" + cssclass + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">" + 
 					"<input type=\"hidden\" name=\""+namespace+"question\" value=\"" + question.getQuestionId() + "\"/>"+
 					"<div class=\"questiontext\">" + question.getText() + "</div>" +
-					(!feedback ? "<div class=\"answer\"><textarea rows=\"4\" cols=\"60\" maxlength=\"1000\" name=\""+namespace+"question_" + question.getQuestionId() + "\" label=\"answer\">"+answer+"</textarea></div>" : "") +
+					(!feedback ? "<div class=\"answer\"><label for=\""+namespace+"question_" + question.getQuestionId() + "\" /><textarea rows=\"4\" cols=\"60\" maxlength=\"1000\" id=\""+namespace+"question_" + question.getQuestionId() + "\" name=\""+namespace+"question_" + question.getQuestionId() + "\">"+answer+"</textarea></div>" : "") +
 					answersFeedBack +
 					"</div>";	
 		} catch (SystemException e) {

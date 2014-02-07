@@ -255,7 +255,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 						if (feedback) {
 							readonly = "readonly";
 						}
-						auxans= "<input name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" "+readonly+" type=\"text\" value=\""+ans+"\" >";//input
+						auxans= "<label for=\""+namespace+"question_"+question.getQuestionId()+"_"+i+"\" /> <input id=\""+namespace+"question_" + question.getQuestionId()+"_"+i+"\" name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" "+readonly+" type=\"text\" value=\""+ans+"\" >";//input
 						
 						if("true".equals(showCorrectAnswer)) {
 							for(String blankSol:blankSols){
@@ -274,7 +274,7 @@ public class FillblankQuestionType extends BaseQuestionType {
 							if(blankSol.equals(ans)) checked="checked='checked'";
 							if(feedback) disabled = "disabled='disabled'";
 							if("true".equals(showCorrectAnswer) && blankSols.contains(blankSol)) correct = "font_14 color_cuarto negrita";
-							aux = "<div class=\"answer " + correct + "\"><input name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" type=\"radio\"" + checked + "value=\"" + blankSol + "\" "+disabled+" >" + blankSol + "</div>";//radiobuttons
+							aux = "<div class=\"answer " + correct + "\"> <label for=\""+namespace+"question_"+question.getQuestionId()+"_"+i+"\" /> <input id=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" name=\""+namespace+"question_" + question.getQuestionId()+"_"+i + "\" type=\"radio\"" + checked + "value=\"" + blankSol + "\" "+disabled+" >" + blankSol + "</div>";//radiobuttons
 							auxans += aux;
 						}
 						auxans += "</div>";
