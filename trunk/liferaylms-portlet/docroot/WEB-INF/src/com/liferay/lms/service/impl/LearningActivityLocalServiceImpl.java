@@ -580,8 +580,7 @@ extends LearningActivityLocalServiceBaseImpl {
 			System.out.println("bbb");
 			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(user);
 			//Si tengo permiso de editar bloqueados, es editable
-			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")||
-					permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),"UPDATE_ACTIVE")){
+			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")){
 				System.out.println("ccc");
 				return true;
 			//Si tengo permiso de edición
