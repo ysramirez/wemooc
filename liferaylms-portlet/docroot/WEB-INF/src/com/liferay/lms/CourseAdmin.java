@@ -207,7 +207,6 @@ public class CourseAdmin extends MVCPortlet {
 				if (title.equals("")) {
 					title = uploadRequest.getParameter(paramName);
 				}
-
 			}
 		}
 

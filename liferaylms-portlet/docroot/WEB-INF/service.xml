@@ -414,7 +414,7 @@
         <column name="lmsTemplates" type="String"></column>
         <column name="activities" type="String"></column>
         <column name="courseevals" type="String"></column>
-         <column name="scoretranslators" type="String"></column>
+        <column name="scoretranslators" type="String"></column>
     </entity>
         
 	<entity name="SurveyResult" uuid="true" local-service="true" remote-service="false" json-enabled="false">
