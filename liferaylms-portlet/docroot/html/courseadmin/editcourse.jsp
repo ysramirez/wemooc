@@ -129,10 +129,12 @@ boolean visibleencatalogo=false;
 int type = GroupConstants.TYPE_SITE_OPEN;
 long maxUsers = 0;
 Group groupCreated = null;
+long assetEntryId=0;
 if(course!=null)
 {
 	groupCreated = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 	entry=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(),course.getCourseId());
+	assetEntryId=entry.getEntryId();
 	visibleencatalogo=entry.getVisible();
 	summary=entry.getSummary();
 	courseId=course.getCourseId();
@@ -391,7 +393,13 @@ else
 	</liferay-ui:custom-attributes-available>
 	<aui:input name="tags" type="assetTags" />
 	<aui:input name="categories" type="assetCategories" />
+	<aui:fieldset label="related-assets">
+	<liferay-ui:input-asset-links
+					className="<%= Course.class.getName() %>"
+					classPK="<%= courseId %>" assetEntryId="<%=assetEntryId %>" 	/>
+	</aui:fieldset>
 	</liferay-ui:panel>
+	
 	</liferay-ui:panel-container>
 	<aui:button-row>
 		<aui:button type="submit"></aui:button>							
