@@ -574,7 +574,8 @@ extends LearningActivityLocalServiceBaseImpl {
 	
 	public boolean canBeEdited(LearningActivity activity, long companyId, long userId) throws Exception{
 		User user = UserLocalServiceUtil.getUser(userId);
-		if(activity!=null && user!=null){
+		if(activity == null) return true;
+		else if(user!=null){
 			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(user);
 			//Si tengo permiso de editar bloqueados, es editable
 			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")||
