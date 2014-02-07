@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
+<%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
@@ -62,9 +64,11 @@
 				}
 			
 				List<Course> orderedCourses = new ArrayList<Course>();
-				Document[] docs = (Document[])request.getAttribute("docs");
+				//Document[] docs = (Document[])request.getAttribute("docs");
 
-				List<Document> documents = ListUtil.fromArray(docs);
+				//List<Document> documents = ListUtil.fromArray(docs);
+				List<Document> documents = (List<Document>)request.getAttribute("docs");
+				int size = documents.size();
 				documents = ListUtil.subList(documents, containerStart, containerEnd);
 				
 				List<Course> courses = new ArrayList<Course>();
@@ -76,7 +80,8 @@
 				}
 				
 				pageContext.setAttribute("results", courses);
-				pageContext.setAttribute("total", docs.length);
+				System.out.println(documents.size());
+				pageContext.setAttribute("total", size);
 			%>
 		</liferay-ui:search-container-results>
 		
@@ -93,15 +98,34 @@
 				</c:if>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="description">
-				<c:if test="${!active}">
-					<a href="<%=viewCourseURL%>"><span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span></a>
-				</c:if>
-				<c:if test="${active}">
-					<span class="cclosed"><%=course.getDescription(themeDisplay.getLocale()) %></span>
-				</c:if>
+				<%
+					String text = course.getDescription(themeDisplay.getLocale());
+					if(text.length()>300){
+						text = text.substring(0,300)+"...";
+					}
+				%>
+					<span class="cclosed"><%=text %></span>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="actmanager.num_modules">
 				<span><%=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId()).size() %></span>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="model.resource.com.liferay.portal.model.Group">
+				<%
+					Group g = null; 
+					try{
+						g = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+					}catch(Exception e){}
+				%>
+				<span><%if(g==null){ %><liferay-ui:message key="no" /><%}else{%><liferay-ui:message key="yes" /><%}%></span>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="model.resource.com.liferay.portlet.asset">
+				<%
+					AssetEntry ae = null; 
+					try{
+						ae = AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
+					}catch(Exception e){}
+				%>
+				<span><%if(ae==null){ %><liferay-ui:message key="no" /><%}else{%><liferay-ui:message key="yes" /><%}%></span>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />
