@@ -96,6 +96,11 @@ for(Layout l:layoutForPortletName){
 	</div>
 	
 	<div class="action">
+		<portlet:actionURL name="updateModulePassedDate" var="updateModulePassedDateURL" />
+		<liferay-ui:icon image="refresh" label="<%=true %>" message="portaladmin.updateModulePassedDate" url='<%=updateModulePassedDateURL %>'/>
+	</div>
+	
+	<div class="action">
 		<h4><liferay-ui:message key="cambiar nombre del portlet" /></h4>
 		<portlet:actionURL name="changePortletName" var="changePortletNameURL" />
 		<aui:form action="<%=changePortletNameURL %>" method="POST" name="form_mail">
