@@ -27,6 +27,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 
 /**
  * The implementation of the learning activity remote service.
@@ -71,6 +72,8 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			//auditing
 			if(lernact!=null){
 				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.DELETE, null);
+				SocialActivityLocalServiceUtil.addActivity(getUserId(), lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(), com.liferay.lms.social.LearningActivityKeys.DELETE_ENTRY, "", lernact.getUserId());
+				
 			}
 			
 		}
@@ -87,6 +90,8 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			//auditing
 			if(lernact!=null){
 				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.DELETE, null);
+				SocialActivityLocalServiceUtil.addActivity(getUserId(), lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(), com.liferay.lms.social.LearningActivityKeys.DELETE_ENTRY, "", lernact.getUserId());
+				
 			}
 		}
 	}
@@ -116,6 +121,8 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			//auditing
 			if(lernact!=null){
 				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.ADD, null);
+				SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(), lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(), com.liferay.lms.social.LearningActivityKeys.ADD_ENTRY, "", lernact.getUserId());
+				
 			}
 			
 			return lernact;
@@ -136,6 +143,8 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			//auditing
 			if(lernact!=null){
 				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), lernact.getUserId(), AuditConstants.UPDATE, null);
+				SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(), lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(), com.liferay.lms.social.LearningActivityKeys.UPDATE_ENTRY, "", lernact.getUserId());
+				
 			}
 		
 			return lernact;
@@ -169,6 +178,7 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 			//auditing
 			if(lernact!=null){
 				AuditingLogFactory.audit(lernact.getCompanyId(), lernact.getGroupId(), Course.class.getName(), lernact.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+				SocialActivityLocalServiceUtil.addActivity(serviceContext.getUserId(), lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(), com.liferay.lms.social.LearningActivityKeys.UPDATE_ENTRY, "", lernact.getUserId());
 			}
 		
 			return lernact;
