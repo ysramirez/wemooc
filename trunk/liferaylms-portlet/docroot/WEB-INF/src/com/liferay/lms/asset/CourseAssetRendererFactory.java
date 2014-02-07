@@ -79,6 +79,11 @@ public class CourseAssetRendererFactory extends BaseAssetRendererFactory
 	}
 
 	@Override
+	public boolean isLinkable() {
+		return true;
+	}
+
+	@Override
 	public String getType() {
 		return TYPE;
 	}
