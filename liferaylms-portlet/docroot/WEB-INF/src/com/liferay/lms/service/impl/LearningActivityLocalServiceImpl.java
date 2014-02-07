@@ -592,15 +592,15 @@ extends LearningActivityLocalServiceBaseImpl {
 						if(
 								((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
 								(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
-								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>=0))||
-								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>=0)))
+								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
+								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
 						){return true;}
 						//Si estoy dentro del intervalo de fechas de la actividad, o del módulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este está cerrado, entonces es editable
 						if(
 								((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
 								(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
-								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<0))||
-								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<0)))
+								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<=0))||
+								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<=0)))
 						){
 							if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null){
 								Role siteMemberRole = RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_MEMBER);
