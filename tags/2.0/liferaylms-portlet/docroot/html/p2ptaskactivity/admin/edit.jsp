@@ -103,7 +103,7 @@
 	boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
 	
 		
-	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())){
+	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())){
 		disabled = false;
 	}
 

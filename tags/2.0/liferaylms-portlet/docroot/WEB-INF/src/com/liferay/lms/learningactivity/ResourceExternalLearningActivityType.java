@@ -96,7 +96,7 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 			throws NumberFormatException, Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), themeDisplay.getUserId())) {
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId())) {
 			PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(
 					JavaConstants.JAVAX_PORTLET_REQUEST);
 			String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");

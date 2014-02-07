@@ -491,7 +491,7 @@ Liferay.provide(
 			}
 			boolean disabled = false;
 			
-			if(LearningActivityLocalServiceUtil.canBeEdited(learnact, themeDisplay.getCompanyId(), user.getUserId())){
+			if(LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
 				disabled = false;
 			}
 		%>
