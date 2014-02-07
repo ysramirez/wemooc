@@ -134,7 +134,7 @@ public class TestLearningActivityType extends BaseLearningActivityType
 		Module module = ModuleLocalServiceUtil.getModule(learningActivity.getModuleId());
 				
 	    if((!module.getStartDate().before(new Date()))||(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR"))
-	    		|| LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), themeDisplay.getUserId()))
+	    		|| LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId()))
 	    {
 			Document document = null;
 			Element rootElement = null;

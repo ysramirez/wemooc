@@ -29,7 +29,7 @@
 			textoenr = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"textoenr")); 
 		}
 		
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())){
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())){
 			disabled = false;
 		}
 		

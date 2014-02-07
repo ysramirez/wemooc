@@ -71,7 +71,7 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 			throws NumberFormatException, Exception {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), themeDisplay.getUserId())) {
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId())) {
 		
 			String fichero = ParamUtil.getString(uploadRequest, "fichero", StringPool.FALSE);
 			String textoenr = ParamUtil.getString(uploadRequest, "textoenr", StringPool.FALSE);

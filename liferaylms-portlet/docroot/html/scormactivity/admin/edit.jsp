@@ -204,7 +204,7 @@ function <portlet:namespace />back() {
 
 <%
 	boolean disabled = true;
-	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())){
+	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())){
 		disabled = false;
 	}
 %>

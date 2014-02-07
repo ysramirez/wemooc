@@ -62,7 +62,7 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 			throws NumberFormatException, Exception {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), themeDisplay.getUserId())) {
+		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId())) {
 		
 			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;

@@ -53,7 +53,7 @@
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 		
-		edit = LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId());
+		edit = LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId());
 	}
 
 %>
