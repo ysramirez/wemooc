@@ -2,6 +2,9 @@ package com.liferay.lms.activitymanager;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 
@@ -19,6 +22,7 @@ import com.liferay.lms.model.Module;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.lms.service.util.CourseComparator;
 import com.liferay.lmssa.service.ActManAuditLocalServiceUtil;
 import com.liferay.manager.CleanLearningActivity;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -28,11 +32,13 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.search.Document;
+import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.search.SearchContext;
 import com.liferay.portal.kernel.search.SearchException;
+import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -181,6 +187,8 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest
 					.getAttribute("THEME_DISPLAY");
 			scon.setCompanyId(themeDisplay.getCompanyId());
+			Sort sort = new Sort(Field.TITLE, Sort.STRING_TYPE, true);
+			scon.setSorts(new Sort[]{sort});
 
 			if ((freetext != null) && (!"".equals(freetext))) {
 				renderRequest.setAttribute("freetext", freetext);
@@ -198,9 +206,20 @@ public class ActivityManagerPortlet extends MVCPortlet {
 			}
 
 			if (docs != null) {
-				if (this.log.isDebugEnabled())
-					this.log.debug("Result size::" + docs.length);
-				renderRequest.setAttribute("docs", docs);
+				if (this.log.isDebugEnabled())this.log.debug("Result size::" + docs.length);
+				List<Document> ldocs = new ArrayList<Document>(Arrays.asList(docs));
+				
+				CourseComparator comparator = new CourseComparator(themeDisplay.getLocale());
+				
+				Collections.sort(ldocs, new Comparator<Document>() {
+					
+				    @Override
+				    public int compare(final Document object1, final Document object2) {
+				        return object1.get(Field.TITLE).compareTo(object2.get(Field.TITLE));
+				    }
+				} );
+				
+				renderRequest.setAttribute("docs", ldocs);
 			}
 			
 			String error = ParamUtil.getString(renderRequest, "error", "");
