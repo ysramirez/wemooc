@@ -50,7 +50,7 @@
 		
 		}
 		
-		if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())) readonly=true;
+		if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())) readonly=true;
 	}  
 	
 %>
