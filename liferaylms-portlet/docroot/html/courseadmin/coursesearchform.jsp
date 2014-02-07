@@ -1,4 +1,6 @@
 <!-- <h1 class="taglib-categorization-filter entry-title"> -->
+<%@page import="com.liferay.lms.service.util.CourseComparator"%>
+<%@page import="com.liferay.portal.theme.ThemeDisplay"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.Collections"%>
@@ -221,13 +223,8 @@ courses=finalCourses;
 //Order courses
 
 if(courses!=null&&courses.size()>0){
-	Collections.sort(courses, new Comparator<Course>() {
-		
-	    @Override
-	    public int compare(final Course object1, final Course object2) {
-	        return object1.getDescription().compareTo(object2.getDescription());
-	    }
-	} );
+	CourseComparator courseComparator = new CourseComparator(themeDisplay.getLocale());
+	Collections.sort(courses, courseComparator );
 }
 %>
 
