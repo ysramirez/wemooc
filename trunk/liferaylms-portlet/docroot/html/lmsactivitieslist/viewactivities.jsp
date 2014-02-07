@@ -35,8 +35,7 @@
 
 <%
 long moduleId = ParamUtil.getLong(request, "moduleId", 0);
-boolean actionEditing = ParamUtil.getBoolean(request,
-		"actionEditing", false);
+boolean actionEditing = ParamUtil.getBoolean(request, "actionEditing", false);
 long actId = ParamUtil.getLong(request, "actId", 0);
 
 NumberFormat resultNumberFormat = NumberFormat.getInstance(locale);
@@ -60,35 +59,26 @@ if (moduleId == 0) {
 	}
 }
 if (moduleId == 0) {
-
-	activities = LearningActivityServiceUtil
-			.getLearningActivitiesOfGroup(scopeGroupId);
+	activities = LearningActivityServiceUtil.getLearningActivitiesOfGroup(scopeGroupId);
 } else {
 	Module theModule =ModuleLocalServiceUtil.getModule(moduleId);
 	if(!permissionChecker.hasPermission(
 			themeDisplay.getScopeGroupId(),
 			Module.class.getName(), moduleId,
 			"ADD_LACT")&& ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()) &&
-			!permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK"))
-	{
+			!permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK")){
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		activities=new ArrayList<LearningActivity>(); 
+	}else{
+		activities = LearningActivityServiceUtil.getLearningActivitiesOfModule(moduleId);
 	}
-	else
-	{
-	activities = LearningActivityServiceUtil
-			.getLearningActivitiesOfModule(moduleId);
-	}
-
 }
 
 
 String activityEnd = "desactivado";
 Hashtable<AssetCategory, java.util.List<LearningActivity>> catler = new Hashtable<AssetCategory, java.util.List<LearningActivity>>();
 for (LearningActivity activity : activities) {
-	java.util.List<AssetCategory> categorias = AssetCategoryLocalServiceUtil
-			.getCategories(LearningActivity.class.getName(),
-					activity.getActId());
+	java.util.List<AssetCategory> categorias = AssetCategoryLocalServiceUtil.getCategories(LearningActivity.class.getName(), activity.getActId());
 	for (AssetCategory categoria : categorias) {
 		if (!catler.containsKey(categoria)) {
 			catler.put(categoria, new ArrayList());
@@ -97,11 +87,9 @@ for (LearningActivity activity : activities) {
 	}
 }
 if ((actionEditing
-		&& permissionChecker.hasPermission(
-				themeDisplay.getScopeGroupId(),
-				Module.class.getName(), moduleId,
-				"ADD_LACT"))||(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),
-						"com.liferay.lms.learningactivitymodel", themeDisplay.getScopeGroupId(), "ADD_ACTIVITY")&&moduleId==0)) {
+		&& permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),Module.class.getName(), moduleId,	"ADD_LACT"))||
+		(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.learningactivitymodel", themeDisplay.getScopeGroupId(), "ADD_ACTIVITY")&&
+				moduleId==0)) {
 	%>
 
 

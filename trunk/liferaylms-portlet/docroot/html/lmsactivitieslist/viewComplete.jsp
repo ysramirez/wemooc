@@ -54,6 +54,9 @@ if(actId!=0) {
 					getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
 }
 
+	String idModuleUl = "idModuleUl";
+	boolean moduleEditing = permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), Module.class.getName(), themeDisplay.getScopeGroupId(), ActionKeys.UPDATE);
+	if(moduleEditing) idModuleUl = "myModule";
 %>
 <liferay-portlet:actionURL name="moveModule" var="moveModuleURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" />
 
@@ -123,7 +126,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 
 	new A.Sortable(
 		{
-			container: A.one('#myList'),
+			container: A.one('#myContainer'),
 		    nodes: 'ul#myModule > li',
             after: {   
             	'drag:end': function(event){ 
@@ -164,8 +167,8 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 
 //-->
 </script>
-<div id="myList" class="modulo portlet-toolbar search-form lms-tree">
-	<ul id="myModule">
+<div id="myContainer" class="modulo portlet-toolbar search-form lms-tree">
+	<ul id="<%=idModuleUl%>">
 		<%
 		renderRequest.setAttribute("moduleId", Long.toString(moduleId));
 		boolean registrado=UserLocalServiceUtil.hasGroupUser(themeDisplay.getScopeGroupId(),themeDisplay.getUserId());

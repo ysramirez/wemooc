@@ -217,7 +217,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 				actualMod = modulePersistence.fetchByPrimaryKey(modId);
 				prevAct = getPreviusModule(actualMod);
 			}
-		}else{//Elemento bajado
+		//Elemento bajado
+		}else if(finalPrevMod!=null && actualMod.getOrdern() < finalPrevMod.getOrdern()){
 			Module nexMod = getNextModule(actualMod);
 			while (nexMod != null && actualMod.getOrdern() < finalPrevMod.getOrdern()){
 				goDownModule(modId);

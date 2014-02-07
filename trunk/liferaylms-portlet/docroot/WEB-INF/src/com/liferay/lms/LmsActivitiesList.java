@@ -590,9 +590,8 @@ public class LmsActivitiesList extends MVCPortlet {
 		if(actId>0){
 			LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 			
-			if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(),
-					ActionKeys.UPDATE)|| permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
-							ActionKeys.UPDATE))	{
+			if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(), ActionKeys.UPDATE)|| 
+					permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(), ActionKeys.UPDATE)){
 				LearningActivityLocalServiceUtil.moveActivity(actId, prevActId, nextActId);
 			}
 		}
