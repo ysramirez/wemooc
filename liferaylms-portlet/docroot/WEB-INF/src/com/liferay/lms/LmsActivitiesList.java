@@ -644,10 +644,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);		
 		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
 	
-		if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(),
-				ActionKeys.PERMISSIONS)|| permissionChecker.hasOwnerPermission(larn.getCompanyId(), LearningActivity.class.getName(), larn.getActId(),larn.getUserId(),
-						ActionKeys.PERMISSIONS))
-		{
+		if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(), ActionKeys.PERMISSIONS)){
 		String team = LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team");
 		long teamId=0;
 		if(StringPool.BLANK.equals(team)){
