@@ -52,8 +52,8 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 
 	new A.Sortable(
 		{
-			container: A.one('#myModule'),
-		    nodes: 'tr',
+			container: A.one('#myContainer'),
+		    nodes: 'table#myModule > tbody > tr',
             after: {   
             	'drag:end': function(event){ 
             		
@@ -91,8 +91,13 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 	);
   });
   </script>
-
-	<table class="coursemodule <%="course-status-".concat(String.valueOf(course.getStatus()))%>" id="myModule">
+<%
+	String idModuleTable = "idModuleTable";
+	boolean moduleEditing = permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), Module.class.getName(), themeDisplay.getScopeGroupId(), ActionKeys.UPDATE);
+	if(moduleEditing) idModuleTable = "myModule";
+%>
+	<div id="myContainer">
+	<table class="coursemodule <%="course-status-".concat(String.valueOf(course.getStatus()))%>" id="<%=idModuleTable%>">
 <%
 		Date today=new java.util.Date(System.currentTimeMillis());
 		if(course!=null && permissionChecker.hasPermission(course.getGroupCreatedId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW)){
@@ -104,12 +109,12 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 			for(Module theModule:theModules){
 				themeId++;
 				boolean canAccessLock = permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK");
-				boolean actionEditing = (permissionChecker.hasPermission(course.getGroupCreatedId(), Course.class.getName(), course.getCourseId() , "UPDATE"))?true:false;
+				boolean courseEditing = (permissionChecker.hasPermission(course.getGroupCreatedId(), Course.class.getName(), course.getCourseId() , ActionKeys.UPDATE))?true:false;
 %>
 				<tr id="<portlet:namespace/><%=theModule.getModuleId()%>">
 <% 					
 					if(showLockedModulesIcon){
-						boolean showLock = (actionEditing || canAccessLock)?true:false;
+						boolean showLock = (courseEditing || moduleEditing || canAccessLock)?true:false;
 						if(showLock){ 
 %>
 							<td class="icon">
@@ -159,7 +164,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 					gotoModuleURL.setWindowState(WindowState.NORMAL);
 					gotoModuleURL.setParameter("moduleId", Long.toString(theModule.getModuleId()));
 					gotoModuleURL.setParameter("themeId", Long.toString(themeId));
-					gotoModuleURL.setParameter("actionEditing", Boolean.toString(actionEditing));
+					gotoModuleURL.setParameter("actionEditing", Boolean.toString(moduleEditing));
 					gotoModuleURL.setPlid(retoplid);
 					gotoModuleURL.setPortletId("lmsactivitieslist_WAR_liferaylmsportlet");
 					Object[] arg =  new Object[2];
@@ -181,7 +186,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 							<liferay-ui:message key="moduleTitle.chapter"  arguments="<%=arg %>" />
 <%
 						}
-						if(allowEditionMode && actionEditing){%>
+						if(allowEditionMode && moduleEditing){%>
 							<div class="iconsedit"><%@ include file="/JSPs/module/edit_actions.jspf" %></div>
 						<%}
 %>				
@@ -253,7 +258,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 %>
 								<a href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="module-finissed" /></a>
 <%
-							}else if(allowEditionMode && actionEditing){
+							}else if(allowEditionMode && moduleEditing){
 %>
 								<a class="module-list-button-edit" href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="edit" /></a>
 <%
@@ -273,3 +278,4 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 		}
 %>
 	</table>
+	</div>

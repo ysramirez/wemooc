@@ -378,7 +378,8 @@ extends LearningActivityLocalServiceBaseImpl {
 				actualAct = learningActivityPersistence.fetchByPrimaryKey(actId);
 				prevAct = getPreviusLearningActivity(actualAct);
 			}
-		}else{//Elemento bajado
+		//Elemento bajado
+		}else if(finalPrevAct!=null && actualAct.getPriority() < finalPrevAct.getPriority()){
 			LearningActivity nexAct = getNextLearningActivity(actualAct);
 			while (nexAct != null && actualAct.getPriority() < finalPrevAct.getPriority()){
 				goDownLearningActivity(actId);
