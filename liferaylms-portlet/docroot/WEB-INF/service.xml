@@ -373,6 +373,7 @@
 		<reference package-path="com.liferay.portal" entity="LayoutSet" />
 		<reference package-path="com.liferay.portal" entity="LayoutSetPrototype" />
 		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
+		<reference package-path="com.liferay.portlet.asset" entity="AssetLink" />
 		<reference package-path="com.liferay.portlet.ratings"
 			entity="RatingsStats" />
 	</entity>
