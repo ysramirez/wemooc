@@ -117,7 +117,7 @@ if(request.getAttribute("activity")!=null) {
 		{
 		}
 	}	
-	if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getCompanyId(), user.getUserId())) disabled="disabled=\"disabled\"";
+	if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())) disabled="disabled=\"disabled\"";
 }
 
 %>

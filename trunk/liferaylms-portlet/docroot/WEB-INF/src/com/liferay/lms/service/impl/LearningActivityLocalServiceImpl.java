@@ -572,7 +572,7 @@ extends LearningActivityLocalServiceBaseImpl {
 		return res;
 	}
 	
-	public boolean canBeEdited(LearningActivity activity, long companyId, long userId) throws Exception{
+	public boolean canBeEdited(LearningActivity activity, long userId) throws Exception{
 		User user = UserLocalServiceUtil.getUser(userId);
 		if(activity == null) return true;
 		else if(user!=null){
@@ -603,8 +603,9 @@ extends LearningActivityLocalServiceBaseImpl {
 								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<=0))||
 								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<=0)))
 						){
-							if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null){
-								Role siteMemberRole = RoleLocalServiceUtil.getRole(companyId, RoleConstants.SITE_MEMBER);
+							if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null &&
+									Boolean.valueOf(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity"))){
+								Role siteMemberRole = RoleLocalServiceUtil.getRole(activity.getCompanyId(), RoleConstants.SITE_MEMBER);
 								if(!ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
 										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW))
 									return true;
