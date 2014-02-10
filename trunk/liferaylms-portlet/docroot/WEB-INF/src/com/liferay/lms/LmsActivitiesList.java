@@ -367,10 +367,13 @@ public class LmsActivitiesList extends MVCPortlet {
 		  }
 		}
 		
-		boolean setExtraContent = false;
+		//descomentar si se permiten llamadas por webservice, ademas añadir booleano editionBlocked en los metodos setExtraContent de las actividades
+		//para poder diferenciar las partes bloqueadas de las que no lo estan a la hora de crear el extraContent.
+		/*boolean setExtraContent = false;
 		if(actId == 0) setExtraContent = true;
 		else setExtraContent = LearningActivityLocalServiceUtil.canBeEdited(larn, user.getUserId());
-		if(setExtraContent) learningActivityType.setExtraContent(uploadRequest,actionResponse,larn);
+		if(setExtraContent)*/
+		learningActivityType.setExtraContent(uploadRequest,actionResponse,larn);
 
 		if(permissionChecker.hasPermission(
 				themeDisplay.getScopeGroupId(),
