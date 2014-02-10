@@ -256,10 +256,12 @@ SCORM_1_2.API_LIB.prototype.LMSCommit = function(param) {
 			this.$27(false);
 			API_BASE.LOG.displayMessage('LMSCommit with param: \'' + param
 					+ '\'', this.$23, this.$25(this.$23));
+			/*
 			var $0 = this.$1F.getDataTreeValue('nav.event');
 			if ($0 && $0 != 'exitAll' && $0 != 'exit') {
 				this.LMSFinish('');
 			}
+			*/
 			return 'true';
 		} else {
 			this.$23 = '301';
