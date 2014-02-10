@@ -34,28 +34,13 @@ if(prefs!=null)
 	List<Long> courseEvalIds = ListUtil.toList(StringUtil.split(prefs.getCourseevals(),",",0L));
 	List <Long> calificationTypeIds = ListUtil.toList(StringUtil.split(prefs.getScoretranslators(),",",0L));	
 %>
+
+
 <liferay-portlet:actionURL name="changeSettings" var="changeSettingsURL">
 </liferay-portlet:actionURL>
 <aui:form action="<%=changeSettingsURL %>" method="POST">
 <aui:input type="hidden" name="redirect" value="<%= currentURL %>" />
-<aui:field-wrapper label="allowed-site-templates">
-<%
 
-for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.search(themeDisplay.getCompanyId(),true,0, 1000000,null))
-{
-	boolean checked=false;
-	if(ArrayUtils.contains(layoutSetTemplateIds.toArray(), layoutsetproto.getLayoutSetPrototypeId()))
-	{
-		checked=true;
-	}
-	%>
-	
-	<aui:input type="checkbox" name="lmsTemplates" 
-	label="<%=layoutsetproto.getName(themeDisplay.getLocale())  %>" checked="<%=checked %>" value="<%=layoutsetproto.getLayoutSetPrototypeId()%>" />
-	<%
-}
-%>
-</aui:field-wrapper>
 <liferay-ui:header title="lms-activities"/>
 <ul id="lms-sortable-activities-contentor">
 <%
@@ -97,7 +82,28 @@ for (LearningActivityType learningActivityType : learningActivityTypesCopy) {
 %>
 </ul>
 
-<aui:field-wrapper label="course-correction-method">
+<liferay-ui:header title="allowed-site-templates" />
+<aui:field-wrapper>
+<%
+
+for(LayoutSetPrototype layoutsetproto:LayoutSetPrototypeLocalServiceUtil.search(themeDisplay.getCompanyId(),true,0, 1000000,null))
+{
+	boolean checked=false;
+	if(ArrayUtils.contains(layoutSetTemplateIds.toArray(), layoutsetproto.getLayoutSetPrototypeId()))
+	{
+		checked=true;
+	}
+	%>
+	
+	<aui:input type="checkbox" name="lmsTemplates" 
+	label="<%=layoutsetproto.getName(themeDisplay.getLocale())  %>" checked="<%=checked %>" value="<%=layoutsetproto.getLayoutSetPrototypeId()%>" />
+	<%
+}
+%>
+</aui:field-wrapper>
+
+<liferay-ui:header title="course-correction-method" />
+<aui:field-wrapper>
 <%
 CourseEvalRegistry courseEvalRegistry = new CourseEvalRegistry();
 for(CourseEval courseEval:courseEvalRegistry.getCourseEvals())
@@ -117,7 +123,9 @@ for(CourseEval courseEval:courseEvalRegistry.getCourseEvals())
 }
 %>
 </aui:field-wrapper>
-<aui:field-wrapper label="calificationType">
+
+<liferay-ui:header title="calificationType" />
+<aui:field-wrapper>
 <%
 CalificationTypeRegistry calificationTypeRegistry = new CalificationTypeRegistry();
 for(CalificationType calificationType :calificationTypeRegistry.getCalificationTypes())
@@ -137,7 +145,7 @@ for(CalificationType calificationType :calificationTypeRegistry.getCalificationT
 }
 %>
 </aui:field-wrapper>
-<aui:input type="submit" name="save" value="save" />
+<aui:button type="submit" value="save" />
 
 </aui:form>
 <%
