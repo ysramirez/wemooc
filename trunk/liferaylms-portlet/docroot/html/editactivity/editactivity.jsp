@@ -301,7 +301,36 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 
 
 
-
+	function validate(){
+		var start = document.getElementById('<portlet:namespace />startdate-enabledCheckbox').checked;
+		var stop = document.getElementById('<portlet:namespace />stopdate-enabledCheckbox').checked;
+		
+		if(start&&stop){
+			var startDateDia = document.getElementById('<portlet:namespace />startDay').value;
+			var startDateMes = document.getElementById('<portlet:namespace />startMon').value;
+			var startDateAno = document.getElementById('<portlet:namespace />startYear').value;
+			var startDateHora = document.querySelectorAll('[name="<portlet:namespace />startHour"]')[0].value;
+			var startDateMinuto = document.querySelectorAll('[name="<portlet:namespace />startMin"]')[0].value;
+	
+			var endDateDia = document.getElementById('<portlet:namespace />stopDay').value;
+			var endDateMes = document.getElementById('<portlet:namespace />stopMon').value;
+			var endDateAno = document.getElementById('<portlet:namespace />stopYear').value;
+			var endDateHora = document.querySelectorAll('[name="<portlet:namespace />stopHour"]')[0].value;
+			var endDateMinuto = document.querySelectorAll('[name="<portlet:namespace />stopMin"]')[0].value;
+					
+			var start = new Date(startDateAno,startDateMes,startDateDia,startDateHora,startDateMinuto);
+			var end = new Date(endDateAno,endDateMes,endDateDia,endDateHora,endDateMinuto);
+					
+			if(start.getTime()>=end.getTime()){
+				alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
+				return;
+			}else{
+				document.getElementById('<portlet:namespace />fm').submit();
+			}
+		}else{
+			document.getElementById('<portlet:namespace />fm').submit();
+		}
+	}
 
 //-->
 </script>
@@ -707,7 +736,7 @@ Liferay.provide(
 		    
 		//-->
 		</script>
-		<aui:button type="submit" value="savechanges"></aui:button>
+		<input type="button" value="<liferay-ui:message key="savechanges" />" onclick="javascript:validate()" >
 		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
 		
 	</aui:button-row>

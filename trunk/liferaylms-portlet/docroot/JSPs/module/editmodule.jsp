@@ -78,6 +78,30 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 	});
 });
 
+function validate(){
+	var startDateDia = document.getElementById('<portlet:namespace />startDateDia').value;
+	var startDateMes = document.getElementById('<portlet:namespace />startDateMes').value;
+	var startDateAno = document.getElementById('<portlet:namespace />startDateAno').value;
+	var startDateHora = document.querySelectorAll('[name="<portlet:namespace />startDateHora"]')[0].value;
+	var startDateMinuto = document.querySelectorAll('[name="<portlet:namespace />startDateMinuto"]')[0].value;
+
+	var endDateDia = document.getElementById('<portlet:namespace />endDateDia').value;
+	var endDateMes = document.getElementById('<portlet:namespace />endDateMes').value;
+	var endDateAno = document.getElementById('<portlet:namespace />endDateAno').value;
+	var endDateHora = document.querySelectorAll('[name="<portlet:namespace />endDateHora"]')[0].value;
+	var endDateMinuto = document.querySelectorAll('[name="<portlet:namespace />endDateMinuto"]')[0].value;
+	
+	var start = new Date(startDateAno,startDateMes,startDateDia,startDateHora,startDateMinuto);
+	var end = new Date(endDateAno,endDateMes,endDateDia,endDateHora,endDateMinuto);
+	
+	if(start.getTime()>=end.getTime()){
+		alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
+		return;
+	}else{
+		document.getElementById('<portlet:namespace />addmodule').submit();
+	}
+}
+
 //-->
 </script>
 <%
@@ -208,7 +232,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 		  monthParam="startDateMes" monthValue="<%= Integer.valueOf(startDateMes)-1 %>"
 		   yearParam="startDateAno" yearValue="<%= Integer.valueOf(startDateAno) %>"  yearNullable="false" 
 				 dayNullable="false" monthNullable="false" ></liferay-ui:input-date>
-		<liferay-ui:input-time minuteParam="startDateMinuto" amPmParam="startAMPM" 
+		<liferay-ui:input-time minuteParam="startDateMinuto" amPmParam="startAMPM"  
 			hourParam="startDateHora" hourValue="<%=Integer.valueOf(startDateHora) %>" minuteValue="<%=Integer.valueOf(startDateMinuto) %>"></liferay-ui:input-time>
 	</aui:field-wrapper>
 	<liferay-ui:error key="module-startDate-required" message="module-startDate-required" />
@@ -243,7 +267,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', func
 %>
 	</aui:select>       
 	<aui:button-row>
-		<aui:button type="submit"></aui:button>
+		<input type="button" value="<liferay-ui:message key="save" />" onclick="javascript:validate()" >
 		<aui:button onClick="<%=renderResponse.getNamespace() + \"closeWindow()\"%>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />
 	</aui:button-row>
 </aui:form>
