@@ -49,20 +49,14 @@
 	
 	long numEvaluaciones = TaskP2PLearningActivityType.DEFAULT_VALIDATION_NUMBER;
 	
-	LearningActivity learningActivity= null;
-	
-	if(request.getAttribute("activity")!=null) {
-		learningActivity = (LearningActivity)request.getAttribute("activity");	
+	LearningActivity learningActivity = (LearningActivity)request.getAttribute("activity");	
+	if(learningActivity!=null) {
 		anonimous = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"anonimous"));
 		result = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"result"));
-		
 		fileOptional = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"fileoptional"));
-		
 		String numEvaStr = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"validaciones");
 		numEvaluaciones = numEvaStr.equals("") ? TaskP2PLearningActivityType.DEFAULT_VALIDATION_NUMBER : Long.parseLong(numEvaStr);
-	
 		fileOptional = StringPool.TRUE .equals(LearningActivityLocalServiceUtil .getExtraContentValue( learningActivity.getActId(), "fileoptional"));
-		
 		String validaciones = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"validaciones");
 		if (!validaciones.equals("") && Validator.isNumber(validaciones)) {
 			numEvaluaciones = Long.parseLong(validaciones);
@@ -71,18 +65,14 @@
 		dateUpload = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"dateupload");
 
 		if (!dateUpload.equals("")) {
-
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 			dateFormat.setTimeZone(timeZone);
-
 			Date date = dateFormat.parse(dateUpload);
-
 			uploadDay = Integer.parseInt(formatDay.format(date));
 			uploadMonth = Integer.parseInt(formatMonth.format(date)) - 1;
 			uploadYear = Integer.parseInt(formatYear.format(date));
 			uploadHour = Integer.parseInt(formatHour.format(date));
 			uploadMin = Integer.parseInt(formatMin.format(date));
-
 		} else {
 			try{
 				uploadDay = Integer.parseInt(formatDay.format(learningActivity.getEnddate())) - 1;
@@ -91,7 +81,6 @@
 				uploadHour = Integer.parseInt(formatHour.format(learningActivity.getEnddate()));
 				uploadMin = Integer.parseInt(formatMin.format(learningActivity.getEnddate()));
 			}catch(Exception e){}
-
 		}
 		
 		//disabled=P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
@@ -101,7 +90,6 @@
 	}
 	
 	boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
-	
 		
 	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())){
 		disabled = false;

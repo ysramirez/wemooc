@@ -27,15 +27,10 @@
 	boolean newOrCourseEditor=true;
 	boolean disabled = false;
 	
-	//Permiso de editar los campos del extra content.
-	boolean edit = true;
-	
-	if(request.getAttribute("activity")!=null) {
-		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
-		
-		if(!LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random").equals("")){
+	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
+	if(learningActivity != null) {
+		if(!LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random").equals(""))
 			random = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random"));		
-		}
 		
 		password = HtmlUtil.unescape(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"password")).trim();
 		if(!qppByDefect) questionsPerPage = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"questionsPerPage"));
@@ -51,9 +46,10 @@
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
-		
-		edit = LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId());
 	}
+	
+	//Permiso de editar los campos del extra content.
+	boolean edit = LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId());
 
 %>
 
