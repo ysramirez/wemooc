@@ -1,3 +1,4 @@
+<%@page import="java.net.URL"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
@@ -216,8 +217,9 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 					    gotoModuleURL.setParameter("moduleId", Long.toString(theModule.getModuleId()));
 					    gotoModuleURL.setParameter("themeId", Long.toString(themeId));
 					    gotoModuleURL.setPlid(themeDisplay.getPlid());
+					    URL goToModuleRelativeURL = new URL(gotoModuleURL.toString());
 						%>
-						<a href="<%=gotoModuleURL.toString() %>">
+						<a href="<%="?"+goToModuleRelativeURL.getQuery()%>" >
 						<%
 					if(theModule.getModuleId() != moduleId)
 					{
