@@ -38,6 +38,12 @@
 
 <%
 long moduleId=ParamUtil.getLong(request,"resModuleId",0);
+
+Module module = null;
+try{
+	module = ModuleLocalServiceUtil.getModule(moduleId);
+}catch(Exception e){}
+
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 long typeId=ParamUtil.getLong(request, "type");
@@ -302,51 +308,95 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 
 
 	function validate(){
+		
 		var start = document.getElementById('<portlet:namespace />startdate-enabledCheckbox').checked;
 		var stop = document.getElementById('<portlet:namespace />stopdate-enabledCheckbox').checked;
 		
-		if(start&&stop){
-			var startDateDia = document.getElementById('<portlet:namespace />startDay').value;
-			var startDateMes = document.getElementById('<portlet:namespace />startMon').value;
-			var startDateAno = document.getElementById('<portlet:namespace />startYear').value;
-			var startDateHora = document.querySelectorAll('[name="<portlet:namespace />startHour"]')[0].value;
-			var startDateMinuto = document.querySelectorAll('[name="<portlet:namespace />startMin"]')[0].value;
-	
-			var endDateDia = document.getElementById('<portlet:namespace />stopDay').value;
-			var endDateMes = document.getElementById('<portlet:namespace />stopMon').value;
-			var endDateAno = document.getElementById('<portlet:namespace />stopYear').value;
-			var endDateHora = document.querySelectorAll('[name="<portlet:namespace />stopHour"]')[0].value;
-			var endDateMinuto = document.querySelectorAll('[name="<portlet:namespace />stopMin"]')[0].value;
+		if(start&&stop){	
 					
-			var start = new Date(startDateAno,startDateMes,startDateDia,startDateHora,startDateMinuto);
-			var end = new Date(endDateAno,endDateMes,endDateDia,endDateHora,endDateMinuto);
+			var start = getStartDate();
+			var end = getEndDate();
 					
 			if(start.getTime()>=end.getTime()){
 				alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
 				return;
 			}else{
-				if(document.getElementById('<portlet:namespace />uploadDay')==null){
-					document.getElementById('<portlet:namespace />fm').submit();
-				}else{
-					var uploadDateDia = document.getElementById('<portlet:namespace />uploadDay').value;
-					var uploadDateMes = document.getElementById('<portlet:namespace />uploadMon').value;
-					var uploadDateAno = document.getElementById('<portlet:namespace />uploadYear').value;
-					var uploadDateHora = document.querySelectorAll('[name="<portlet:namespace />uploadHour"]')[0].value;
-					var uploadDateMinuto = document.querySelectorAll('[name="<portlet:namespace />uploadMin"]')[0].value;
-
-					var upload = new Date(uploadDateAno,uploadDateMes,uploadDateDia,uploadDateHora,uploadDateMinuto);
+				if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+					var upload = getUpdateDate();
 					if(start.getTime()>upload.getTime()||upload.getTime()>end.getTime()){
 						alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
 						return;
 					}
-					document.getElementById('<portlet:namespace />fm').submit();
+				}
+			}
+		}else if(start){
+			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+				var start = getStartDate();
+				var upload = getUpdateDate();
+				
+				if(start.getTime()>upload.getTime()){
+					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+					return;
+				}
+			}
+		}else if(stop){
+			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+				var end = getEndDate();
+				var upload = getUpdateDate();
+
+				if(upload.getTime()>end.getTime()){
+					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+					return;
 				}
 			}
 		}else{
-			document.getElementById('<portlet:namespace />fm').submit();
+			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+				var startm = new Date(<%= module.getStartDate().getTime() %>);
+				var endm = new Date(<%= module.getEndDate().getTime() %>);
+				var upload = getUpdateDate();
+
+				if(startm.getTime()>upload.getTime()||upload.getTime()>endm.getTime()){
+					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+					return;
+				}
+			}
 		}
+		
+		document.getElementById('<portlet:namespace />fm').submit();
 	}
 
+	function getStartDate(){
+		var startDateDia = document.getElementById('<portlet:namespace />startDay').value;
+		var startDateMes = document.getElementById('<portlet:namespace />startMon').value;
+		var startDateAno = document.getElementById('<portlet:namespace />startYear').value;
+		var startDateHora = document.querySelectorAll('[name="<portlet:namespace />startHour"]')[0].value;
+		var startDateMinuto = document.querySelectorAll('[name="<portlet:namespace />startMin"]')[0].value;
+
+		var start = new Date(startDateAno,startDateMes,startDateDia,startDateHora,startDateMinuto);
+		return start;
+	}
+	
+	function getEndDate(){
+		var endDateDia = document.getElementById('<portlet:namespace />stopDay').value;
+		var endDateMes = document.getElementById('<portlet:namespace />stopMon').value;
+		var endDateAno = document.getElementById('<portlet:namespace />stopYear').value;
+		var endDateHora = document.querySelectorAll('[name="<portlet:namespace />stopHour"]')[0].value;
+		var endDateMinuto = document.querySelectorAll('[name="<portlet:namespace />stopMin"]')[0].value;
+
+		var end = new Date(endDateAno,endDateMes,endDateDia,endDateHora,endDateMinuto);
+		return end;
+	}
+	
+	function getUpdateDate(){
+		var uploadDateDia = document.getElementById('<portlet:namespace />uploadDay').value;
+		var uploadDateMes = document.getElementById('<portlet:namespace />uploadMon').value;
+		var uploadDateAno = document.getElementById('<portlet:namespace />uploadYear').value;
+		var uploadDateHora = document.querySelectorAll('[name="<portlet:namespace />uploadHour"]')[0].value;
+		var uploadDateMinuto = document.querySelectorAll('[name="<portlet:namespace />uploadMin"]')[0].value;
+
+		var upload = new Date(uploadDateAno,uploadDateMes,uploadDateDia,uploadDateHora,uploadDateMinuto);
+		return upload;
+	}
 //-->
 </script>
 <aui:form name="fm" action="<%=saveactivityURL%>"  method="post"  enctype="multipart/form-data">
