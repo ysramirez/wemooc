@@ -539,7 +539,7 @@ if(!p2pActList.isEmpty()){
 						<div class="degradade">
 							<div class="subtitle"><liferay-ui:message key="p2ptask-your-valoration" /> :</div>
 							<div class="container-textarea">
-								<label for="<portlet:namespace/>readonlydesc" title="p2ptask-your-valoration" />
+								<label for="<portlet:namespace/>readonlydesc" />
 								<textarea id="<portlet:namespace/>readonlydesc" rows="6" cols="80" name="<portlet:namespace />description" readonly="readonly"><%=description %></textarea>
 							</div>
 							<%
