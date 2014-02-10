@@ -325,7 +325,22 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 				alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
 				return;
 			}else{
-				document.getElementById('<portlet:namespace />fm').submit();
+				if(document.getElementById('<portlet:namespace />uploadDay')==null){
+					document.getElementById('<portlet:namespace />fm').submit();
+				}else{
+					var uploadDateDia = document.getElementById('<portlet:namespace />uploadDay').value;
+					var uploadDateMes = document.getElementById('<portlet:namespace />uploadMon').value;
+					var uploadDateAno = document.getElementById('<portlet:namespace />uploadYear').value;
+					var uploadDateHora = document.querySelectorAll('[name="<portlet:namespace />uploadHour"]')[0].value;
+					var uploadDateMinuto = document.querySelectorAll('[name="<portlet:namespace />uploadMin"]')[0].value;
+
+					var upload = new Date(uploadDateAno,uploadDateMes,uploadDateDia,uploadDateHora,uploadDateMinuto);
+					if(start.getTime()>upload.getTime()||upload.getTime()>end.getTime()){
+						alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+						return;
+					}
+					document.getElementById('<portlet:namespace />fm').submit();
+				}
 			}
 		}else{
 			document.getElementById('<portlet:namespace />fm').submit();
