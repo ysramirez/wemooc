@@ -67,7 +67,6 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 			throws NumberFormatException, Exception {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId())) {
 		
 			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;
@@ -100,7 +99,6 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 			}
 			learningActivity.setExtracontent(document.formattedString());
 		
-	    }
 			
 	}
 	

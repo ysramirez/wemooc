@@ -132,10 +132,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);	
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-		Module module = ModuleLocalServiceUtil.getModule(learningActivity.getModuleId());
 				
-	    if(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR"))
-	    {
 			Document document = null;
 			Element rootElement = null;
 			if((learningActivity.getExtracontent()==null)||(learningActivity.getExtracontent().trim().length()==0)){
@@ -236,7 +233,6 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			}
 		
 			learningActivity.setExtracontent(document.formattedString());
-	    }
 	}
 	
 	@Override

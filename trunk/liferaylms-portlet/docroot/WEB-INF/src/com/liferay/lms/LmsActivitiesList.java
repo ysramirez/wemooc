@@ -350,6 +350,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			}
 			
 		}
+		
 		larn.setDescription( description,themeDisplay.getLocale());
 		larn.setWeightinmodule(weightinmodule);
 		larn.setPrecedence(precedence);
@@ -366,7 +367,10 @@ public class LmsActivitiesList extends MVCPortlet {
 		  }
 		}
 		
-		learningActivityType.setExtraContent(uploadRequest,actionResponse,larn);
+		boolean setExtraContent = false;
+		if(actId == 0) setExtraContent = true;
+		else setExtraContent = LearningActivityLocalServiceUtil.canBeEdited(larn, user.getUserId());
+		if(setExtraContent) learningActivityType.setExtraContent(uploadRequest,actionResponse,larn);
 
 		if(permissionChecker.hasPermission(
 				themeDisplay.getScopeGroupId(),

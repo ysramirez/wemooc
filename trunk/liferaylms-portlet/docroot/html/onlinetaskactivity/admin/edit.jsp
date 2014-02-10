@@ -21,19 +21,16 @@
 	boolean existTries = false;
 	boolean disabled = true;
 	
-	
-	if(request.getAttribute("activity")!=null) {
-		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
+	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");	
+	if(learningActivity != null) {
 		if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
 			fichero = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"fichero"));
 			textoenr = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"textoenr")); 
 		}
-		
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())){
-			disabled = false;
-		}
-		
-		
+	}
+	
+	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())){
+		disabled = false;
 	}
 %>
 <p><span class="label"><liferay-ui:message key="onlinetaskactivity.permitStudents"/></span></p>
