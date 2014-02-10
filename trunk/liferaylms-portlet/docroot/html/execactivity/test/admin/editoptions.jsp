@@ -25,7 +25,6 @@
 	long hourDuration=0,minuteDuration=0,secondDuration=0;
 	boolean showCorrectAnswer= false;
 	boolean improve=false;
-	boolean newOrCourseEditor=true;
 	boolean disabled = false;
 	
 	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
@@ -46,7 +45,6 @@
 		
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 	}
 	
 	//Permiso de editar los campos del extra content.
@@ -119,7 +117,6 @@ window.<portlet:namespace />validate_execactivity={
 		}	
 };
 
-<% if(!newOrCourseEditor){ %>
 	AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet-url', function(A) {
 
 		A.one('#<portlet:namespace />resModuleId').on('change', function (e) {
@@ -158,7 +155,6 @@ window.<portlet:namespace />validate_execactivity={
 		});
 	
 	});
-<% } %>
 
 //-->
 </script>
