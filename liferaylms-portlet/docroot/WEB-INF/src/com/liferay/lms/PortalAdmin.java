@@ -31,6 +31,8 @@ import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
@@ -43,10 +45,12 @@ import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletItem;
 import com.liferay.portal.model.PortletPreferences;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletItemLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
@@ -488,79 +492,15 @@ public class PortalAdmin extends MVCPortlet {
 	
 	@SuppressWarnings("unchecked")
 	public void updateModulePassedDate (ActionRequest request, ActionResponse response) throws Exception {
-		
-		ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
-		
-		
-		//Obtenemos todos los moduleResult que no tengan la fecha en que se aprobaron.
-		DynamicQuery dq = DynamicQueryFactoryUtil.forClass(ModuleResult.class,classLoader);
-				//.add(PropertyFactoryUtil.forName("passedDate").isNull());
-		
-		List<ModuleResult> modules = LearningActivityLocalServiceUtil.dynamicQuery(dq);
-		
-		for(ModuleResult moduleResult:modules){
-			
-			if(moduleResult.getPassedDate() != null){
-				//continue;
-			}
-			
-			System.out.println("\n ModuleResult: moduleId: " + moduleResult.getModuleId() + ", passed: " + moduleResult.getPassedDate() + ", userId: " + moduleResult.getUserId());
-			
-			//Obtenemos las actividades que tiene el módulo
-			DynamicQuery dqa = DynamicQueryFactoryUtil.forClass(LearningActivity.class,classLoader)
-					.add(PropertyFactoryUtil.forName("moduleId").eq(moduleResult.getModuleId()))
-					.add(PropertyFactoryUtil.forName("weightinmodule").eq((long)1))
-					.addOrder(PropertyFactoryUtil.forName("priority").desc());
-			
-			List<LearningActivity> activities = LearningActivityLocalServiceUtil.dynamicQuery(dqa);
-			
-			for(LearningActivity activity:activities){
-				
-				System.out.println("   activity : " + activity.getTitle(Locale.getDefault()) + " " + activity.getPriority() );
-				
-				LearningActivityResult newestActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(activity.getActId(), moduleResult.getUserId());
-				
-				if(newestActivityResult != null && newestActivityResult.getPassed()){
-					
-					System.out.println("     passedDate : " + newestActivityResult.getEndDate());
-					
-					moduleResult.setPassedDate(newestActivityResult.getEndDate());
-					ModuleResultLocalServiceUtil.updateModuleResult(moduleResult);
-					
-					
-					Course course = null;
-					try {
-						course = CourseLocalServiceUtil.getCourseByGroupCreatedId(ModuleLocalServiceUtil.getModule(moduleResult.getModuleId()).getGroupId());
-						System.out.println("     course : " + course.getTitle(Locale.getDefault()));
-						if(course != null){
-							CourseResult courseResult = CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), moduleResult.getUserId());
-							
-							if(courseResult != null &&courseResult.getPassedDate() == null && courseResult.getPassed()){
-							
-								System.out.println("     courseResult : " + courseResult);
-								Module nextModule = ModuleLocalServiceUtil.getNextModule(moduleResult.getModuleId());
-								System.out.println("     nextModule : " + nextModule);
-								
-								//Si no tiene modulo siguiente, es que es el ultimo.
-								if(nextModule == null){
-									
-									System.out.println("     courseResult passedDate : " + newestActivityResult.getEndDate());
-									
-									courseResult.setPassedDate(newestActivityResult.getEndDate());
-									CourseResultLocalServiceUtil.update(courseResult);
-								}
-							}
-						}
-												
-					} catch (Exception e) { e.printStackTrace();}
-					
 
-					break;
-				}
-				
-			}
-			
-		}
+		boolean updateBD = ParamUtil.getBoolean(request, "updateBD", false);
+		
+		Message message=new Message();
+		
+		message.put("updateBD",updateBD);
+		message.put("action","updateModulePassedDate");
+		
+		MessageBusUtil.sendMessage("liferay/lms/portalAdmin", message);
 		
 	}
 	

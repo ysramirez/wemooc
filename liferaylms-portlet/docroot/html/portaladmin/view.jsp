@@ -96,8 +96,17 @@ for(Layout l:layoutForPortletName){
 	</div>
 	
 	<div class="action">
+		<h4><liferay-ui:message key="portaladmin.updateModulePassedDate" /></h4>
 		<portlet:actionURL name="updateModulePassedDate" var="updateModulePassedDateURL" />
-		<liferay-ui:icon image="refresh" label="<%=true %>" message="portaladmin.updateModulePassedDate" url='<%=updateModulePassedDateURL %>'/>
+		<aui:form action="<%=updateModulePassedDateURL %>" method="POST" name="form_mail">		
+			<aui:input name="updateBD" label="portaladmin.multimedia.updatebd" type="checkbox" helpMessage="portaladmin.updateModulePassedDate"></aui:input>
+			<aui:button-row>
+				<aui:button type="submit" value="send" label="portaladmin.updateModulePassedDate" class="submit"></aui:button>
+			</aui:button-row>
+		</aui:form>
+		<div>
+			<a onClick="openLogs('/custom_logs/updateModulePassedDate.txt')" style="Cursor:pointer;">updateModulePassedDate.txt</a>
+		</div>
 	</div>
 	
 	<div class="action">
