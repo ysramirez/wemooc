@@ -1,3 +1,4 @@
+<%@page import="java.util.Locale"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.StringPool"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
@@ -29,7 +30,6 @@
 <portlet:defineObjects />
 <script type="text/javascript">
 <!--
-
 AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
 	
 	window.<portlet:namespace />validateActivity = new A.FormValidator({
@@ -98,6 +98,17 @@ function validate(){
 		alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
 		return;
 	}else{
+	 	var text = ''; 
+		<% for(Locale localea : LanguageUtil.getAvailableLocales()){ %>
+			if(document.getElementById('<portlet:namespace />title_<%=localea%>')){
+				text = text + document.getElementById('<portlet:namespace />title_<%=localea%>').value;
+			}
+		<%}%>
+		if(text==''){
+			alert("<liferay-ui:message key="please-enter-a-valid-title" />");
+			return;
+		}
+		
 		document.getElementById('<portlet:namespace />addmodule').submit();
 	}
 }
