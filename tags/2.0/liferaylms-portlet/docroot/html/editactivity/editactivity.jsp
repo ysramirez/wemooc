@@ -63,6 +63,11 @@ else
 	
 }
 
+boolean disabled = false;
+if(learnact != null && !LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
+	disabled = true;
+}
+
 String typeName=classTypes.get(typeId);
 LearningActivityType larntype=new LearningActivityTypeRegistry().getLearningActivityType(typeId);
 
@@ -123,7 +128,7 @@ if(learnact!=null)
 	
 <div class="acticons">
 	<%
-		if(larntype.hasEditDetails()){
+		if(larntype.hasEditDetails() && !disabled){
 			AssetRenderer  assetRenderer=larntype.getAssetRenderer(learnact);
 			if(assetRenderer!=null) {
 				String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse).toString();			
