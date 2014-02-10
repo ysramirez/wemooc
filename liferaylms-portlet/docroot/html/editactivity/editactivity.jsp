@@ -47,26 +47,21 @@ Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocal
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 long actId=ParamUtil.getLong(request, "resId",0);
 LearningActivity learnact=null;
-if(request.getAttribute("activity")!=null)
-{
+if(request.getAttribute("activity")!=null){
 	learnact=(LearningActivity)request.getAttribute("activity");
 	typeId=learnact.getTypeId();
 	moduleId=learnact.getModuleId();
-}
-else
-{
-	if(actId>0)
-	{
+}else{
+	if(actId>0)	{
 		learnact=LearningActivityLocalServiceUtil.getLearningActivity(actId);
 		typeId=learnact.getTypeId();
 		moduleId=learnact.getModuleId();
 	}
-	
 }
 
-boolean disabled = false;
-if(learnact != null && !LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
-	disabled = true;
+boolean disabled = true;
+if(LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
+	disabled = false;
 }
 
 String typeName=classTypes.get(typeId);

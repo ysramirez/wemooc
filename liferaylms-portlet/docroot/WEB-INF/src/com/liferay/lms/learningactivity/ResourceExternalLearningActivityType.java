@@ -97,7 +97,6 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 			throws NumberFormatException, Exception {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId())) {
 			PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(
 					JavaConstants.JAVAX_PORTLET_REQUEST);
 			String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");
@@ -182,7 +181,6 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 				}
 				learningActivity.setExtracontent(document.formattedString());	
 			}
-		}
 	}
 	
 	private long createDLFolders(Long userId,Long repositoryId,PortletRequest portletRequest) throws PortalException, SystemException{

@@ -1,26 +1,14 @@
 package com.liferay.lms.learningactivity;
 
-import java.io.IOException;
-
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.asset.SurveyAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.ClpSerializer;
-import com.liferay.lms.service.LearningActivityLocalServiceUtil;
-import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
-import com.liferay.portal.kernel.dao.orm.Criterion;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.PortletConstants;
@@ -30,6 +18,10 @@ import com.liferay.portlet.asset.model.AssetRenderer;
 
 public class SurveyLearningActivityType extends BaseLearningActivityType {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	public static String PORTLET_ID = 
 			PortalUtil.getJsSafePortletId(
 					"surveyactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
@@ -62,7 +54,6 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 			throws NumberFormatException, Exception {
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId())) {
 		
 			String team = ParamUtil.getString(uploadRequest, "team","0");
 			long teamId = 0;
@@ -94,7 +85,6 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 				rootElement.add(teamElement);
 			}
 			learningActivity.setExtracontent(document.formattedString());
-	    }	
 	}
 	
 	@Override

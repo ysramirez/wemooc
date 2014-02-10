@@ -22,36 +22,29 @@
 	DLFileVersion previusaditionalfile=null;
 	String youtubecode=StringPool.BLANK;
 	LearningActivity learningActivity=null;
-	boolean readonly = false;
+	boolean readonly = true;
 	if(request.getAttribute("activity")!=null) {
 		learningActivity=(LearningActivity)request.getAttribute("activity");
 		
-		if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0))
-		{
+		if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0))	{
 			Document document = SAXReaderUtil.read(learningActivity.getExtracontent());
 			Element root=document.getRootElement();
 			Element video=root.element("video");
 			
-			if(video!=null)
-			{
-				youtubecode=video.getText();
-			}
+			if(video!=null) youtubecode=video.getText();
 			
 			Element documento=root.element("document");
-			if(documento!=null)
-			{
-				if(documento.attributeValue("id","").length()!=0)
-				{
+			if(documento!=null){
+				if(documento.attributeValue("id","").length()!=0){
 					AssetEntry docAsset= AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(documento.attributeValue("id")));
 					DLFileEntry docfile=DLFileEntryLocalServiceUtil.getDLFileEntry(docAsset.getClassPK());
 					previusaditionalfile = docfile.getFileVersion();				
 				}		
 			}
-		
 		}
-		
-		if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())) readonly=true;
-	}  
+	}
+	
+	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())) readonly=false;
 	
 %>
 <aui:field-wrapper label="video" >
