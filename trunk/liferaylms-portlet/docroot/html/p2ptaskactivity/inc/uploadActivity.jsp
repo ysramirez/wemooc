@@ -228,7 +228,8 @@ Liferay.provide(
 		%>
 		
 		<div class="container-textarea">
-			<textarea rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(textCorrection) %></textarea>
+			<label for="<portlet:namespace/>descreadonly" />
+			<textarea id="<portlet:namespace/>descreadonly" rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(textCorrection) %></textarea>
 		</div>
 		
 		<%
