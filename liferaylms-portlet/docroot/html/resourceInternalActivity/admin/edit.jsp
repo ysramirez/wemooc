@@ -103,9 +103,9 @@ function <portlet:namespace />back() {
 <%
 long assetId=0;
 String assetTitle=StringPool.BLANK;
-String disabled = "";
-if(request.getAttribute("activity")!=null) {	
-	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
+String disabled = "disabled=\"disabled\"";
+LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
+if(learningActivity!=null) {	
 	if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
 		try{
 			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(
@@ -113,12 +113,11 @@ if(request.getAttribute("activity")!=null) {
 			assetId=entry.getEntryId();
 			assetTitle=entry.getTitle(renderRequest.getLocale());	
 		}
-		catch(PortalException e)
-		{
-		}
+		catch(PortalException e){}
 	}	
-	if(!LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())) disabled="disabled=\"disabled\"";
 }
+
+if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())) disabled="";
 
 %>
 

@@ -130,11 +130,7 @@ public class TestLearningActivityType extends BaseLearningActivityType
 		
 		ThemeDisplay themeDisplay = (ThemeDisplay)uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);	
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-		Module module = ModuleLocalServiceUtil.getModule(learningActivity.getModuleId());
 				
-	    if((!module.getStartDate().before(new Date()))||(themeDisplay.getPermissionChecker().hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR"))
-	    		|| LearningActivityLocalServiceUtil.canBeEdited(learningActivity, themeDisplay.getUserId()))
-	    {
 			Document document = null;
 			Element rootElement = null;
 			if((learningActivity.getExtracontent()==null)||(learningActivity.getExtracontent().trim().length()==0)){
@@ -229,7 +225,6 @@ public class TestLearningActivityType extends BaseLearningActivityType
 			}
 			
 			learningActivity.setExtracontent(document.formattedString());
-	    }
 	}
 	
 	@Override
