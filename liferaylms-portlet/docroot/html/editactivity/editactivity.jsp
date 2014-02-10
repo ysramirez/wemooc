@@ -64,6 +64,11 @@ else
 	
 }
 
+boolean disabled = false;
+if(learnact != null && !LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
+	disabled = true;
+}
+
 String typeName=classTypes.get(typeId);
 LearningActivityType larntype=new LearningActivityTypeRegistry().getLearningActivityType(typeId);
 
@@ -124,7 +129,7 @@ if(learnact!=null)
 	
 <div class="acticons">
 	<%
-		if(larntype.hasEditDetails()){
+		if(larntype.hasEditDetails() && !disabled){
 			AssetRenderer  assetRenderer=larntype.getAssetRenderer(learnact);
 			if(assetRenderer!=null) {
 				String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse).toString();			
@@ -535,11 +540,7 @@ Liferay.provide(
 			{
 				score=learnact.getPasspuntuation();
 			}
-			boolean disabled = true;
 			
-			if(LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
-				disabled = false;
-			}
 		%>
 		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" disabled="<%=disabled %>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
 		</aui:input>
