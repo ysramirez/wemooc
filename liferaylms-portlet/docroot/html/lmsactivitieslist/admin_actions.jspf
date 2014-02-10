@@ -223,7 +223,7 @@ ActionKeys.UPDATE) %>">
 
 </c:if>
 	<c:choose>
-			<c:when test="<%= permissionChecker.isCompanyAdmin() || (permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),ActionKeys.PERMISSIONS)
+			<c:when test="<%= permissionChecker.isOmniadmin() || (permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),ActionKeys.PERMISSIONS)
 				&& !permissionChecker.hasPermission(myActivity.getGroupId(), LearningActivity.class.getName(), myActivity.getActId(),\"SOFT_PERMISSIONS\")) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
