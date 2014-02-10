@@ -116,7 +116,8 @@ if(!p2pActCorList.isEmpty()){
 							</div>
 						</c:if>
 						<div class="container-textarea">
-							<textarea rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(correctionText) %></textarea>
+							<label for="<portlet:namespace/>corrected" />
+							<textarea id="<portlet:namespace/>corrected" name="<portlet:namespace/>corrected" rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(correctionText) %></textarea>
 						</div>
 						<%
 						if(dlfile!=null){
