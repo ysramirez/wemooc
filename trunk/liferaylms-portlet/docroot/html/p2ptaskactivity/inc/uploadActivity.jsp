@@ -285,7 +285,7 @@ Liferay.provide(
 			
 			<% String clearText = "javascript:"+renderResponse.getNamespace()+"clearText();"; %>
 			<div class="container-textarea">
-				<aui:input name="description" type="textarea" label="" onfocus="<%= clearText %>" rows="6" cols="90" value="<%=StringEscapeUtils.unescapeHtml(textCorrection) %>" id="description" />
+				<aui:input name="description" type="textarea" label="&nbsp;" onfocus="<%= clearText %>" rows="6" cols="90" value="<%=StringEscapeUtils.unescapeHtml(textCorrection) %>" id="description" />
 			</div>
 			<liferay-ui:error key="p2ptaskactivity-error-file-size" message="p2ptaskactivity.error.file.size" />
 			<div class="container-file">
