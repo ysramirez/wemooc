@@ -23,7 +23,6 @@
 	boolean anonimous=false;
 	boolean result=false;
 	boolean disabled=true;
-	boolean courseEditor=true;
 	boolean fileOptional = false;
 	
 	String dateUpload = "";
@@ -85,11 +84,8 @@
 		
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-		courseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
 	}
 	
-	boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
-		
 	if(LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId())){
 		disabled = false;
 	}
@@ -118,7 +114,6 @@ window.<portlet:namespace />validate_p2ptaskactivity={
 		}	
 };
 
-<% if(!courseEditor){ %>
 AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet-url', function(A) {
 	A.one('#<portlet:namespace />resModuleId').on('change', function (e) {
 		var renderUrl = Liferay.PortletURL.createRenderURL();							
@@ -150,13 +145,11 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 		}); 
 	});
 });
-<% } %>
 //-->
 </script>
 
 
-<aui:input type="checkbox" name="anonimous" label="p2ptaskactivity.edit.anonimous" checked="<%=anonimous %>" disabled="<%=disabled%>" 
-	ignoreRequestValue="true"></aui:input>
+<aui:input type="checkbox" name="anonimous" label="p2ptaskactivity.edit.anonimous" checked="<%=anonimous %>" ignoreRequestValue="true"></aui:input>
 <aui:input type="checkbox" name="result" label="test.result" checked="<%=result %>" disabled="<%=disabled %>" 
 	ignoreRequestValue="true"></aui:input>
 	
@@ -189,7 +182,7 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 					: StringPool.BLANK%>
 </div>
 	
-<aui:input type="text" size="3" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" disabled="<%=(notModuleEditable&&(!courseEditor))||disabled %>" 
+<aui:input type="text" size="3" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" disabled="<%=disabled %>" 
 	ignoreRequestValue="true"></aui:input>
 	
 <div id="<portlet:namespace />numValidacionesError" class="<%=((SessionErrors.contains(renderRequest, "p2ptaskactivity.editActivity.numValidaciones.required"))||
