@@ -1,3 +1,15 @@
+
+<%@page import="java.util.HashSet"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.OrderFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.xml.Document"%>
+<%@page import="com.liferay.portal.kernel.xml.Element"%>
+<%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
+<%@page import="com.liferay.portal.service.PortletPreferencesLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.RestrictionsFactoryUtil"%>
+<%@page import="com.liferay.portal.model.PortletPreferences"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
 <%@page import="javax.swing.plaf.ListUI"%>
 <%@page import="com.liferay.portal.model.Plugin"%>
 <%@page import="com.liferay.portal.service.PluginSettingLocalServiceUtil"%>
@@ -107,6 +119,39 @@ for(Layout l:layoutForPortletName){
 		<div>
 			<a onClick="openLogs('/custom_logs/updateModulePassedDate.txt')" style="Cursor:pointer;">updateModulePassedDate.txt</a>
 		</div>
+	</div>
+	
+	<div class="action">
+		<liferay-ui:panel id="portlet_titles" title="portaladmin.portlet_titles" extended="closed">
+		<%
+			DynamicQuery dq = new DynamicQueryFactoryUtil().forClass(PortletPreferences.class)
+			.add(RestrictionsFactoryUtil.like("preferences","%portletSetupTitle%"))
+			.add(RestrictionsFactoryUtil.or(RestrictionsFactoryUtil.like("portletId", "%liferaylmsportlet%"),RestrictionsFactoryUtil.like("portletId","%weclassportlet%")))
+			.addOrder(OrderFactoryUtil.getOrderFactory().asc("portletId"));
+
+			List<PortletPreferences> prefs = PortletPreferencesLocalServiceUtil.dynamicQuery(dq);
+			
+			String id = "";
+			for(PortletPreferences pre : prefs){
+				
+				if(pre.getPortletId().equals(id)){
+					continue;
+				}
+				id=pre.getPortletId();
+				
+				System.out.println(pre.getPortletId());
+				%><h4><%=pre.getPortletId() %></h4><%
+				Document document = SAXReaderUtil.read(pre.getPreferences());
+				Element rootElement = document.getRootElement();
+				for (Element element : rootElement.elements("preference")) {
+					if(element.elementText("name").startsWith("portletSetupTitle")){
+						System.out.println("   " + element.elementText("name") + " - " + element.elementText("value"));
+						%><p><%=element.elementText("name") %> - <%=element.elementText("value") %></p><%
+					}
+				}
+			}
+		%>
+		</liferay-ui:panel>
 	</div>
 	
 	<div class="action">
