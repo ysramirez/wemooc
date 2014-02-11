@@ -475,7 +475,7 @@ Liferay.provide(
 	}
 	%>
 
-		<aui:input name="title" label="title" defaultLanguageId="<%=renderRequest.getLocale().toString() %>">
+		<aui:input name="title" label="title" defaultLanguageId="<%=renderRequest.getLocale().toString() %>" id="title">
 		</aui:input>
 		<div id="<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>Error" class="<%=(SessionErrors.contains(renderRequest, "activity-title-required"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
@@ -556,7 +556,7 @@ Liferay.provide(
 			}
 		%>
 		
-		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>" type="number">
+		<aui:input size="5" name="tries" label="tries" value="<%=Long.toString(tries) %>" type="number" disabled="<%=disabled%>">
 		</aui:input><%--liferay-ui:icon-help message="number-of-tries"></liferay-ui:icon-help--%>
   		<div id="<portlet:namespace />triesError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.tries.required"))||
 														      (SessionErrors.contains(renderRequest, "editActivity.tries.number"))||
