@@ -166,7 +166,7 @@ window.<portlet:namespace />validate_execactivity={
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=!edit || qppByDefect %>" ignoreRequestValue="true"
+	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=qppByDefect %>" ignoreRequestValue="true"
 	helpMessage="execActivity.options.questionsPerPage.helpMessage"></aui:input>
 	<div id="<portlet:namespace />questionsPerPageError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?
@@ -210,7 +210,7 @@ window.<portlet:namespace />validate_execactivity={
 		</select>			
 	</aui:field-wrapper>
 	
-	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" disabled="<%=!edit %>" 
+	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" 
 		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrect.helpMessage"></aui:input>
 		
 	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
