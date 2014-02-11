@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ include file="/html/init.jsp" %>
 
 <liferay-ui:error message="you-do-not-have-the-required-permissions-to-access-this-application" key="error1"/>
@@ -22,3 +23,10 @@
 	 		</c:if>
 	</c:if> 
 </h3>
+
+<liferay-ui:icon-menu id="options" showWhenSingleIcon="<%=true %>">
+	<portlet:renderURL var="viewPortletTitlesURL" >   
+	    <portlet:param name="jspPage" value="/html/views/portlettitles.jsp" />           
+	</portlet:renderURL>
+	<liferay-ui:icon image="assign" message="actmanager.viewportlettitles"  url="<%=viewPortletTitlesURL.toString() %>"  />
+</liferay-ui:icon-menu>
