@@ -94,11 +94,17 @@
 			<liferay-ui:search-container-column-text name="full-name" >
 				<%=usert.getFullName() %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="actmanager.act-result" property="cachedModel" align="center"/>
+			<liferay-ui:search-container-column-text name="actmanager.act-result">
+				<c:if test="<%=usert.isCachedModel()%>"><%=LanguageUtil.get(pageContext,"true")%></c:if>
+				<c:if test="<%=!usert.isCachedModel()%>"><%=LanguageUtil.get(pageContext,"false")%></c:if>
+			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="actmanager.act-note">
 				<%=usert.getComments() %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="actmanager.mod-result" property="emailAddressVerified" align="center"/>
+			<liferay-ui:search-container-column-text name="actmanager.mod-result">
+				<c:if test="<%=usert.getEmailAddressVerified()%>"><%=LanguageUtil.get(pageContext,"true")%></c:if>
+				<c:if test="<%=!usert.getEmailAddressVerified()%>"><%=LanguageUtil.get(pageContext,"false")%></c:if>
+			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="actmanager.mod-note">
 				<%=usert.getOpenId() %>
 			</liferay-ui:search-container-column-text>
