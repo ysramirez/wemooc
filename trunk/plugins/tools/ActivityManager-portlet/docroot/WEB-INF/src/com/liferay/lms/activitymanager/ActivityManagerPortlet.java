@@ -22,7 +22,7 @@ import com.liferay.lms.model.Module;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
-import com.liferay.lms.service.util.CourseComparator;
+import com.liferay.lms.util.CourseComparator;
 import com.liferay.lmssa.service.ActManAuditLocalServiceUtil;
 import com.liferay.manager.CleanLearningActivity;
 import com.liferay.portal.kernel.exception.PortalException;
