@@ -158,12 +158,12 @@ public class CompleteModulesCourseEval implements CourseEval {
 	
 	@Override
 	public String getName() {
-		return getName(Locale.getDefault());
+		return "courseeval."+getTypeId()+".name";
 	}
 	
 	@Override
 	public String getName(Locale locale) {
-		return LanguageUtil.get(Locale.getDefault(), "courseeval."+getTypeId()+".name");
+		return LanguageUtil.get(locale, "courseeval."+getTypeId()+".name");
 	}
 
 	@Override
