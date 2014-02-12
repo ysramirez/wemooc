@@ -230,7 +230,46 @@ function validate(){
 		}
 	}
 %>
-	</aui:select>       
+	</aui:select>    
+	
+	<script type="text/javascript">
+	<!--
+		Liferay.provide(
+	        window,
+	        '<portlet:namespace />onChangeDescription',
+	        function(val) {
+	        	var A = AUI();
+				A.one('#<portlet:namespace />description').set('value',val);
+				if(window.<portlet:namespace />validateActivity){
+					window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
+				}
+	        },
+	        ['node']
+	    );
+		Liferay.provide(
+		        window,
+		        '<portlet:namespace />closeWindow',
+		    	function (){
+				if ((!!window.postMessage)&&(window.parent != window)) {
+					if (!window.location.origin){
+						window.location.origin = window.location.protocol+"//"+window.location.host;
+					}
+					
+					if(AUI().UA.ie==0) {
+						parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
+					}
+					else {
+						parent.postMessage(JSON.stringify({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}), window.location.origin);
+					}
+				}
+				else {
+					window.location.href='<portlet:renderURL />';
+				}
+		    }
+		);
+	//-->
+	</script>
+	   
 	<aui:button-row>
 		<input type="button" value="<liferay-ui:message key="save" />" onclick="javascript:validate()" >
 		<aui:button onClick="<%=renderResponse.getNamespace() + \"closeWindow()\"%>" value="<%=LanguageUtil.get(pageContext,\"cancel\")%>" type="cancel" />

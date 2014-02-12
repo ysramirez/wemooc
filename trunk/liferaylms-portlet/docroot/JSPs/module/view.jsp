@@ -96,6 +96,53 @@
 	        },
 	        ['aui-dialog','aui-dialog-iframe']
 	    );
+	
+	AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','json',function(A) {
+		
+		A.one(window).on('message', 
+			function(event){
+
+				var html5Event=event._event;
+
+				if(A.Lang.isString(html5Event.data)){
+					html5Event={data:JSON.parse(html5Event.data)};
+				}
+		
+				if(html5Event.data.name=='reloadModule'){
+					<% if(moduleId!=0){ %>
+					if(html5Event.data.moduleId==<%=Long.toString(moduleId)%>)
+					<% } %>
+					{
+						var moduleTitlePortlet=A.one('#p_p_id<%=StringPool.UNDERLINE+PortalUtil.getJsSafePortletId("ModuleTitle"+
+								PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
+						if(moduleTitlePortlet!=null) {
+							Liferay.Portlet.refresh(moduleTitlePortlet);
+						}
+
+						var moduleDescriptionPortlet=A.one('#p_p_id<%=PortalUtil.getJsSafePortletId(StringPool.UNDERLINE+"moduleDescription"+
+								PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
+						if(moduleDescriptionPortlet!=null) {
+							Liferay.Portlet.refresh(moduleDescriptionPortlet);
+						}
+
+						var activityNavigatorPortlet=A.one('#p_p_id<%=PortalUtil.getJsSafePortletId(StringPool.UNDERLINE+"activityNavigator"+
+								PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+StringPool.UNDERLINE %>');
+						if(activityNavigatorPortlet!=null) {
+							Liferay.Portlet.refresh(activityNavigatorPortlet);
+						}
+					}
+
+					Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'));	
+	  
+				}
+				else if(html5Event.data.name=='closeModule'){
+					A.DialogManager.closeByChild('#editModule');
+				}
+
+			});
+
+	});
+	
 	</script>
 	
 	<div class="<%=(themeDisplay.getLayout().getFriendlyURL().equals("/reto"))?"newitem":"newitem2" %>">
