@@ -2,6 +2,7 @@ package com.liferay.lms.learningactivity.courseeval;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Locale;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
@@ -13,6 +14,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
@@ -156,7 +158,12 @@ public class CompleteModulesCourseEval implements CourseEval {
 	
 	@Override
 	public String getName() {
-		return "Completar Modulos";
+		return getName(Locale.getDefault());
+	}
+	
+	@Override
+	public String getName(Locale locale) {
+		return LanguageUtil.get(Locale.getDefault(), "courseeval."+getTypeId()+".name");
 	}
 
 	@Override
