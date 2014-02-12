@@ -182,7 +182,7 @@ window.<portlet:namespace />validate_execactivity={
 	NumberFormat timeNumberFormat = NumberFormat.getInstance(locale);
 	timeNumberFormat.setMinimumIntegerDigits(2);
 	%>
-		<select name="<portlet:namespace />hourDuration" <% if(!edit){ %> disabled="disabled" <% } %> >
+		<select name="<portlet:namespace />hourDuration" >
 			<%
 			for (int i = 0; i < 24; i++) {
 			%>
@@ -191,7 +191,7 @@ window.<portlet:namespace />validate_execactivity={
 			}
 			%>
 		</select>
-		<select name="<portlet:namespace />minuteDuration" <% if(!edit){ %> disabled="disabled" <% } %> >
+		<select name="<portlet:namespace />minuteDuration" >
 			<%
 			for (int i = 0; i < 60; i++) {
 			%>
@@ -200,7 +200,7 @@ window.<portlet:namespace />validate_execactivity={
 			}
 			%>
 		</select>	
-		<select name="<portlet:namespace />secondDuration" <% if(!edit){ %> disabled="disabled" <% } %> > 
+		<select name="<portlet:namespace />secondDuration" > 
 			<%
 			for (int i = 0; i < 60; i++) {
 			%>
