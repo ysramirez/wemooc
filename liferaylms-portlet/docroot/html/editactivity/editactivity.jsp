@@ -497,7 +497,7 @@ Liferay.provide(
 			{
 				score=learnact.getPasspuntuation();
 			}
-			boolean disabled = false;
+			disabled = false;
 			
 			if(LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
 				disabled = false;
