@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.xml.Document;
@@ -191,7 +192,12 @@ public class EvaluationAvgCourseEval implements CourseEval {
 
 	@Override
 	public String getName() {
-		return "Media de evaluaciones";
+		return getName(Locale.getDefault());
+	}
+	
+	@Override
+	public String getName(Locale locale) {
+		return LanguageUtil.get(Locale.getDefault(), "courseeval."+getTypeId()+".name");
 	}
 
 	@Override
