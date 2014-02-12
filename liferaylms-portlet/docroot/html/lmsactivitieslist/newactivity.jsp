@@ -55,6 +55,9 @@ for(Long key:activityids)
 		continue;
 	}
 	String classname=classTypes.get(key);
+
+	if(classname==null)
+		continue;
 %>	
 	<liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
 		<liferay-portlet:param name="resId" value="0" />

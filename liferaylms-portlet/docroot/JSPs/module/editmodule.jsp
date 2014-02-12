@@ -30,7 +30,7 @@
 <portlet:defineObjects />
 <script type="text/javascript">
 <!--
-AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', function(A) {
+AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'widget-locale', function(A) {
 	
 	window.<portlet:namespace />validateActivity = new A.FormValidator({
 		boundingBox: '#<portlet:namespace />addmodule',
@@ -98,16 +98,7 @@ function validate(){
 		alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
 		return;
 	}else{
-	 	var text = ''; 
-		<% for(Locale localea : LanguageUtil.getAvailableLocales()){ %>
-			if(document.getElementById('<portlet:namespace />title_<%=localea%>')){
-				text = text + document.getElementById('<portlet:namespace />title_<%=localea%>').value;
-			}
-		<%}%>
-		if(text==''){
-			alert("<liferay-ui:message key="please-enter-a-valid-title" />");
-			return;
-		}
+	 	
 		
 		document.getElementById('<portlet:namespace />addmodule').submit();
 	}
@@ -165,7 +156,7 @@ function validate(){
 	<% 
 	}
 %>
-	<aui:input name="title" label="title">
+	<aui:input name="title" label="title" defaultLanguageId="<%=renderRequest.getLocale().toString() %>" id="title">
 	</aui:input>
 	<div id="<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>Error" class="<%=(SessionErrors.contains(renderRequest, "module-title-required"))?
     														"portlet-msg-error":StringPool.BLANK %>">
@@ -173,43 +164,6 @@ function validate(){
     			LanguageUtil.get(pageContext,"module-title-required"):StringPool.BLANK %>
     </div>
     	    
-    <script type="text/javascript">
-	<!--
-		Liferay.provide(
-	        window,
-	        '<portlet:namespace />onChangeDescription',
-	        function(val) {
-	        	var A = AUI();
-				A.one('#<portlet:namespace />description').set('value',val);
-				if(window.<portlet:namespace />validateActivity){
-					window.<portlet:namespace />validateActivity.validateField('<portlet:namespace />description');
-				}
-	        },
-	        ['node']
-	    );
-	Liferay.provide(
-	        window,
-	        '<portlet:namespace />closeWindow',
-	    	function (){
-			if ((!!window.postMessage)&&(window.parent != window)) {
-				if (!window.location.origin){
-					window.location.origin = window.location.protocol+"//"+window.location.host;
-				}
-				
-				if(AUI().UA.ie==0) {
-					parent.postMessage({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}, window.location.origin);
-				}
-				else {
-					parent.postMessage(JSON.stringify({name:'closeModule',moduleId:<%=Long.toString(moduleId)%>}), window.location.origin);
-				}
-			}
-			else {
-				window.location.href='<portlet:renderURL />';
-			}
-	    }
-	);
-	//-->
-	</script>
     
 	<aui:field-wrapper label="description">
 		<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
