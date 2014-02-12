@@ -36,7 +36,7 @@ public class moduleValidator {
 
 		//Field title
 		if (Validator.isNull(module.getTitle(request.getLocale(), true))) {
-			errors.add("title-required");
+			errors.add("module-title-required");
 		}
 	
 		//Field description
