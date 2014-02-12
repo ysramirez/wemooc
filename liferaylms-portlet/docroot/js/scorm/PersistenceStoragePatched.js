@@ -1,6 +1,5 @@
 Type.createNamespace('Player');
 
-
 SCORM_1_2.API_LIB.prototype.$27 = function($p0) {
 	var $0 = false;
 	if (this.$1F.getDataTreeValue('cmi.core.exit') == null || this.$1F.getDataTreeValue('cmi.core.exit') == '') {
@@ -70,7 +69,6 @@ SCORM_1_2.API_LIB.prototype.$27 = function($p0) {
 				new API_BASE.BaseActivityTreeNodeEventArgs(this.$1F, 1));
 	}
 };
-
 
 SCORM_1_3.API_1484_11_LIB.prototype.Initialize = function(param) {
 	this.$30 = '0';
@@ -256,10 +254,12 @@ SCORM_1_2.API_LIB.prototype.LMSCommit = function(param) {
 			this.$27(false);
 			API_BASE.LOG.displayMessage('LMSCommit with param: \'' + param
 					+ '\'', this.$23, this.$25(this.$23));
+			/*
 			var $0 = this.$1F.getDataTreeValue('nav.event');
 			if ($0 && $0 != 'exitAll' && $0 != 'exit') {
 				this.LMSFinish('');
 			}
+			*/
 			return 'true';
 		} else {
 			this.$23 = '301';
