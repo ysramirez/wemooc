@@ -1,4 +1,4 @@
-package com.liferay.lms.service.util;
+package com.liferay.lms.util;
 
 import java.util.Comparator;
 import java.util.Locale;
