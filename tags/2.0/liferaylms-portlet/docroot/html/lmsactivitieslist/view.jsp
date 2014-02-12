@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
@@ -188,13 +189,17 @@ AUI().ready('event', 'node','aui-base','aui-dialog','aui-dialog-iframe','anim','
 						}
 					}
 					%>
-						<%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())})  %></a>
+						<%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+								LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}):
+									theModule.getTitle(themeDisplay.getLocale()) %></a>
 						<%if(actionEditing){%>
 							<div class="iconsedit"><%@ include file="/JSPs/module/edit_actions.jspf" %></div>
 						<%}
 					}else
 					{%>
-						<span class="locked"></span><%=LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %> <span class="module-percent"><%=done %>%</span>
+						<span class="locked"></span><%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+															LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}):
+																theModule.getTitle(themeDisplay.getLocale())  %> <span class="module-percent"><%=done %>%</span>
 						<%if(actionEditing){}
 					}
 					if((theModule.getModuleId()==moduleId)&&(ParamUtil.getBoolean(renderRequest, "viewCurrentModule",true))){%>
