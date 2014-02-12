@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
 <%@page import="javax.portlet.PortletPreferences"%>
 <%@page import="javax.portlet.PortletRequest"%>
@@ -227,11 +228,15 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 <%				
 						if(moduleTitleLinkable && canAccess && (canAccessLock || !ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()))){				 
 %>
-							<a href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="moduleTitle.chapter"  arguments="<%=arg %>" /></a>
+							<a href="<%=gotoModuleURL.toString() %>"><%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+																			LanguageUtil.format(pageContext, "moduleTitle.chapter", arg):
+																				theModule.getTitle(themeDisplay.getLocale()) %></a>
 <%		
 						}else{
 %>
-							<liferay-ui:message key="moduleTitle.chapter"  arguments="<%=arg %>" />
+							<%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+											LanguageUtil.format(pageContext, "moduleTitle.chapter", arg):
+												theModule.getTitle(themeDisplay.getLocale()) %>
 <%
 						}
 						if(allowEditionMode && moduleEditing){%>
