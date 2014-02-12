@@ -1,6 +1,7 @@
 package com.liferay.lms.learningactivity.courseeval;
 
 import java.io.IOException;
+import java.util.Locale;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.ModuleResult;
@@ -15,6 +16,7 @@ public interface CourseEval
 	public boolean updateCourse(Course course, long userId) throws SystemException;
 	public boolean updateCourse(Course course) throws SystemException;
 	public String getName();
+	public String getName(Locale locale);
 	public long getTypeId();
 	public boolean getNeedPassAllModules();
 	public boolean getNeedPassPuntuation();

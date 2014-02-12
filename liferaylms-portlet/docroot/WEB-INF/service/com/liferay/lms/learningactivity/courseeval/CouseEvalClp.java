@@ -2,6 +2,7 @@ package com.liferay.lms.learningactivity.courseeval;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
+import java.util.Locale;
 import java.util.Map;
 
 import com.liferay.lms.model.Course;
@@ -54,6 +55,30 @@ public class CouseEvalClp implements CourseEval {
 
 		try {
 			returnObj = clp.invoke("getName", new Object[] {});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((String)returnObj);
+	}
+	
+	@Override
+	@SuppressWarnings("deprecation")
+	public String getName(Locale locale) {
+		Object returnObj = null;
+
+		try {
+			Method getNameMethod = CourseEval.class.getMethod("getName", Locale.class); 
+			returnObj = clp.invoke(new MethodHandler(getNameMethod, locale));
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
