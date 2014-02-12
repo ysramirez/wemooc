@@ -152,6 +152,13 @@ if(learnact!=null)
 				<% 
 			}
 		}
+		else{
+			if(larntype.hasEditDetails()){
+			%>
+			<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails()%>" label="true" />
+			<% 
+			}
+		}
 		if(larntype.hasDeleteTries()) {
 			%>
 			<liferay-ui:icon-delete label="true" url="<%=deleteMyTriesURL.toString()%>" message="delete-mi-tries" />	
