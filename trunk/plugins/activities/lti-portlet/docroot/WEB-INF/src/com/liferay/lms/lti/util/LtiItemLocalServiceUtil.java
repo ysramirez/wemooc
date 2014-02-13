@@ -95,6 +95,9 @@ public class LtiItemLocalServiceUtil {
 		LearningActivity learningActivity = null;
 		try {
 			learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+			if(learningActivity.getTypeId()!=104){
+				learningActivity = null;
+			}
 		} catch (PortalException e) {
 			if(log.isDebugEnabled())e.printStackTrace();
 			if(log.isErrorEnabled())log.error(e.getMessage());

@@ -3,7 +3,6 @@
 <portlet:actionURL name="save" var="save" />
 
 <script type="text/javascript">
-	var error = "error";
 	function check(){
 		if(document.getElementById('url').value==null||document.getElementById('url').value==""){
 			alert('<liferay-ui:message key="learningactivity.lti.error.url" />');
