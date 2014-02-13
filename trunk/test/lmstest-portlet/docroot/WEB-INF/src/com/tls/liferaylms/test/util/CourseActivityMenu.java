@@ -63,6 +63,9 @@ public class CourseActivityMenu {
 		WebElement liActive = null;
 		for(WebElement li :lisc){
 			String msg = li.getText();
+			if(msg.length()>param.length()){
+				msg = msg.substring(0,param.length());
+			}
 			System.out.println(param+"--"+msg+"::"+param.equals(msg));
 			if(param.equals(msg)){
 				liActive = li;
