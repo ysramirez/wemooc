@@ -63,6 +63,7 @@ import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.util.ImageProcessorUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 import com.tls.util.liferay.patch.MethodKeyPatched;
 
@@ -154,11 +155,11 @@ public static String SEPARATOR = "_";
 			try {
 				showViewEditmodule(renderRequest, renderResponse);
 			} catch (Exception ex) {
-				_log.debug(ex);
+				if(log.isDebugEnabled())log.debug(ex);
 				try {
 					showViewDefault(renderRequest, renderResponse);
 				} catch (Exception ex1) {
-					_log.debug(ex1);
+					if(log.isDebugEnabled())log.debug(ex1);
 				}
 			}
 		}
@@ -196,7 +197,8 @@ public static String SEPARATOR = "_";
 			
 
 		} catch (Exception e) {
-			_log.debug(e);
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
 		}
 		renderRequest.setAttribute("highlightRowWithKey", renderRequest.getParameter("highlightRowWithKey"));
 		renderRequest.setAttribute("containerStart", renderRequest.getParameter("containerStart"));
@@ -393,7 +395,8 @@ public static String SEPARATOR = "_";
 		try {
 			response.setWindowState(LiferayWindowState.POP_UP);
 		} catch (WindowStateException e) {
-			// TODO Auto-generated catch block
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
 		}
 		response.setRenderParameter("moduleId", "0");
 		response.setRenderParameter("editType", "add");
@@ -517,7 +520,8 @@ public static String SEPARATOR = "_";
 			try {
 				response.setWindowState(LiferayWindowState.POP_UP);
 			} catch (WindowStateException e) {
-				// TODO Auto-generated catch block
+				if(log.isDebugEnabled())e.printStackTrace();
+				if(log.isErrorEnabled())log.error(e.getMessage());
 			}
 			response.setRenderParameter("view", "editmodule");
 			response.setRenderParameter("editType", "edit");
@@ -712,7 +716,8 @@ public static String SEPARATOR = "_";
 		try {
 		    module.setPrimaryKey(ParamUtil.getLong(request,"resourcePrimKey"));
 		} catch (NumberFormatException nfe) {
-			//Controled en Validator
+			if(log.isDebugEnabled())nfe.printStackTrace();
+			if(log.isErrorEnabled())log.error(nfe.getMessage());
         }
 		module.setCompanyId(themeDisplay.getCompanyId());
 		module.setGroupId(themeDisplay.getScopeGroupId());
@@ -727,37 +732,47 @@ public static String SEPARATOR = "_";
 		long fileMaxSize = 1024 * 1024;
 		try {
 			fileMaxSize = Long.parseLong(PrefsPropsUtil.getString(PropsKeys.DL_FILE_MAX_SIZE));
-			//System.out.println("---\n fileMaxSize 0 : " + fileMaxSize+", "+ file.length());
 		} catch (NumberFormatException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
 		}
 
 		if(fileName!=null && !fileName.equals("") && file.length() <= fileMaxSize){
 			
 			try {
 				String contentType = request.getContentType("fileName");
-				long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-				long igFolderId=createIGFolders(actRequest, themeDisplay.getUserId(),repositoryId);
+				if(log.isDebugEnabled())log.debug("contentType:"+contentType);
+				if(ImageProcessorUtil.isSupported(contentType)){
+					long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+					long igFolderId=createIGFolders(actRequest, themeDisplay.getUserId(),repositoryId);
+					
+					//Subimos el Archivo en la Document Library
+					ServiceContext serviceContextImg= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
+					//Damos permisos al archivo para usuarios de comunidad.
+					serviceContextImg.setAddGroupPermissions(true);
+					serviceContextImg.setAddGuestPermissions(true);
+					FileEntry image = DLAppLocalServiceUtil.addFileEntry(
+						                      themeDisplay.getUserId(), repositoryId , igFolderId , fileName, contentType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContextImg );
 							
-				//Subimos el Archivo en la Document Library
-				ServiceContext serviceContextImg= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
-				//Damos permisos al archivo para usuarios de comunidad.
-				serviceContextImg.setAddGroupPermissions(true);
-				serviceContextImg.setAddGuestPermissions(true);
-				FileEntry image = DLAppLocalServiceUtil.addFileEntry(
-					                      themeDisplay.getUserId(), repositoryId , igFolderId , fileName, contentType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContextImg ) ;
-						
-				module.setIcon(image.getFileEntryId());
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+					module.setIcon(image.getFileEntryId());
+				}
+			}catch (Exception e) {
+				if(log.isDebugEnabled())e.printStackTrace();
+				if(log.isErrorEnabled())log.error(e.getMessage());
 			}			
 			
 		} else if(file.length() > fileMaxSize){
+			module.setIcon(0);
+		}
+		
+		boolean deleteAdditionalFile = ParamUtil.getBoolean(request,"deleteAdditionalFile");
+		if(deleteAdditionalFile){
+			if(module.getIcon()>0){
+				DLAppLocalServiceUtil.deleteFileEntry(module.getIcon());
+			}
 			module.setIcon(0);
 		}
 
@@ -848,6 +863,6 @@ public static String SEPARATOR = "_";
 	protected String helpJSP;
 	protected String viewJSP;
 
-	private static Log _log = LogFactoryUtil.getLog(modulePortlet.class);
+	private static Log log = LogFactoryUtil.getLog(modulePortlet.class);
 
 }

@@ -1,3 +1,9 @@
+<%@page import="com.liferay.portlet.documentlibrary.model.DLFileVersion"%>
+<%@page import="com.liferay.portlet.documentlibrary.model.DLFileEntry"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="java.util.Locale"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.StringPool"%>
@@ -184,7 +190,20 @@ function validate(){
 	 
 	 <liferay-ui:error key="error-file-size" message="error-file-size" />
 	<aui:field-wrapper label="icon">
-		<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" />
+		<%if(module.getIcon()>0){
+			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(module.getIcon());
+			 %>
+			<aui:column>	
+				<liferay-ui:message key="actual-image"  /><br/>
+				<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, "&imageThumbnail=1") %>">
+			</aui:column>	
+		<%} %>
+		<aui:column>
+			<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" />
+			<c:if test="<%=module.getIcon()>0 %>">
+				<aui:input type="checkbox" label="delete" name="deleteAdditionalFile" value="false" inlineLabel="left"/>
+			</c:if>
+		</aui:column>
 	</aui:field-wrapper>	
 	
 	<liferay-ui:error key="module-icon-required" message="module-icon-required" />
