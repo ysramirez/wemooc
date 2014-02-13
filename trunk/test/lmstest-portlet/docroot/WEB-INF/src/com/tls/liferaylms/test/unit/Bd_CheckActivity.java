@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
@@ -377,13 +378,21 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 					  WebElement anon = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_anonimousCheckbox"));
 					  assertNotNull("Not anon input found for P2P Activity", anon);
 					  anon.click();
+
+					  WebElement uploadYear = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_uploadYear"));
+					  assertNotNull("Not uploadYear input found for P2P Activity", uploadYear);
+					  Calendar calendar = Calendar.getInstance();
+					  uploadYear.sendKeys(String.valueOf(calendar.get(Calendar.YEAR)));
 					  
-					  WebElement submit = getElement(By.className("aui-button-input-submit"));
-					  assertNotNull("Not submit found", submit);
+					  WebElement bHolder = getElement(By.className("aui-button-holder"));
+					  assertNotNull("Not bHolder found", bHolder);
+					  List<WebElement> inputs = getElements(bHolder,By.tagName("input"));
+					  assertEquals("Menu inputs have size incorrect", inputs.size(),2);
+					  
 					  //Doubleclick
 					  try{
-						  submit.click();
-						  submit.click();
+						  inputs.get(0).click();
+						  inputs.get(0).click();
 					  }catch(Exception e){}
 	
 					  Sleep.sleep(2000);

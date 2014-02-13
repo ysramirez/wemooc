@@ -65,12 +65,16 @@ public class Bf_CheckActivityRestrictions extends SeleniumTestCase {
 					  WebElement startYear = getElement(By.id("_lmsactivitieslist_WAR_liferaylmsportlet_startYear"));
 					  startYear.sendKeys("2019");
 					  
-					  WebElement submit = getElement(By.className("aui-button-input-submit"));
-					  assertNotNull("Not submit found", submit);
+
+					  WebElement bHolder = getElement(By.className("aui-button-holder"));
+					  assertNotNull("Not bHolder found", bHolder);
+					  List<WebElement> inputs = getElements(bHolder,By.tagName("input"));
+					  assertEquals("Menu inputs have size incorrect", inputs.size(),2);
+
 					  //Doubleclick
 					  try{
-						  submit.click();
-						  submit.click();
+						  inputs.get(0).click();
+						  inputs.get(0).click();
 					  }catch(Exception e){}
 				}
 			}
@@ -133,13 +137,18 @@ public class Bf_CheckActivityRestrictions extends SeleniumTestCase {
 					
 					precedence.sendKeys(TestProperties.get("act.test.pre"));
 
-					WebElement submit = getElement(By.className("aui-button-input-submit"));
-					assertNotNull("Not submit found", submit);
-					//Doubleclick
-					try{
-						submit.click();
-						submit.click();
-					}catch(Exception e){}
+					WebElement bHolder = getElement(By.className("aui-button-holder"));
+					  assertNotNull("Not bHolder found", bHolder);
+					  List<WebElement> inputs = getElements(bHolder,By.tagName("input"));
+					  assertEquals("Menu inputs have size incorrect", inputs.size(),2);
+					  
+					  //Doubleclick
+					  try{
+						  inputs.get(0).click();
+						  inputs.get(0).click();
+					  }catch(Exception e){}
+	
+					  Sleep.sleep(2000);
 					
 					break;
 				}

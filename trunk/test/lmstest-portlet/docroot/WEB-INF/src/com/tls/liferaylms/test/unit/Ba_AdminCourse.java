@@ -37,6 +37,42 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 					boolean instance = InstancePortlet.createInstance(driver, "administraci\u00f3n de cursos", "portlet_courseadmin_WAR_liferaylmsportlet");
 					assertTrue("Error instance portlet portlet_courseadmin_WAR_liferaylmsportlet", instance);
 					if(instance){
+						//Check is visible
+						WebElement confMenu = getElement(By.id("portlet-topper-toolbar_courseadmin_WAR_liferaylmsportlet"));
+						assertNotNull("Not confMenu find!", confMenu);
+						
+						List<WebElement> as = getElements(confMenu, By.tagName("a"));
+						assertEquals("Menus have size incorrect", as.size(),7);
+						
+						as.get(0).click();
+						as.get(0).click();
+						
+						WebElement menu = getElement(By.className("lfr-menu-list-overflow"));
+						assertNotNull("Not menu find!", menu);
+
+						as = getElements(menu, By.tagName("a"));
+						assertEquals("Menu have size incorrect", as.size(),3);
+
+						as.get(1).click();
+						
+						Sleep.sleep(3000L);
+						
+						driver.switchTo().frame(0);
+						
+						WebElement check = getElement(By.id("_86_showcatalogCheckbox"));
+						assertNotNull("Not showocatalog button find!", check);
+						
+						if(check.getAttribute("checked")==null||!check.getAttribute("checked").equals("true")){
+							check.click();
+							
+							WebElement butForm = getElement(By.className("aui-button-input-submit")); 
+							assertNotNull("submit Search not Find", butForm);
+							butForm.click();
+
+						}
+						
+						GetPage.getPage(driver, "", Context.getTestPage());
+						
 						WebElement addCourse = getElement(By.className("newitem2"));
 						assertNotNull("Not addCourse find!", addCourse);
 						WebElement butAddCourse = getElement(addCourse,By.tagName("a"));
@@ -50,7 +86,7 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						Date date = new Date();
 						title.sendKeys(TestProperties.get("course-name")+" "+date.getTime());
 						WebElement inputVisible = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_visibleCheckbox"));
-						assertNotNull("Not visible find!", title);
+						assertNotNull("Not visible find!", inputVisible);
 						inputVisible.click();
 						WebElement summary = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_summary"));
 						assertNotNull("Not summary", title);
@@ -82,7 +118,7 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						WebElement searchLayout = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_coursesSearchContainerSearchContainer"));
 						assertNotNull("Not form Search", searchLayout);
 						
-						List<WebElement> as = getElements(searchLayout, By.tagName("a"));
+						as = getElements(searchLayout, By.tagName("a"));
 						WebElement course = null;
 						for(WebElement a : as){
 							if(a.getText().equals(TestProperties.get("course-name")+" "+date.getTime())){
