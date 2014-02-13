@@ -6,6 +6,7 @@ import static org.junit.Assert.assertEquals;
 
 import java.awt.datatransfer.StringSelection;
 import java.io.File;
+import java.util.Calendar;
 import java.util.List;
 
 import org.junit.Test;
@@ -56,7 +57,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 				    ((JavascriptExecutor)driver).executeScript("javascript:_moduleportlet_WAR_liferaylmsportlet_openPopup();");
 				}
 
-				Sleep.sleep(1000);
+				Sleep.sleep(2000);
 	
 				driver.switchTo().frame(0);
 				
@@ -66,6 +67,12 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 	
 				WebElement form = getElement(By.id("_moduleportlet_WAR_liferaylmsportlet_addmodule"));
 				assertNotNull("Not form activity found", form);
+				
+				WebElement endAno = getElement(By.id("_moduleportlet_WAR_liferaylmsportlet_endDateAno"));
+				assertNotNull("Not endAno found", endAno);
+				Calendar calendar = Calendar.getInstance();
+				endAno.sendKeys(String.valueOf(calendar.get(Calendar.YEAR)+1));
+				
 				form.submit();
 
 				Sleep.sleep(2000);
@@ -180,7 +187,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					assertNotNull("Not form activity found", form);
 					form.submit();
 
-					Sleep.sleep(2000);
+					Sleep.sleep(3000);
 
 					GetPage.getPage(driver, Context.getCoursePage(), "/reto");
 					
@@ -205,6 +212,8 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					
 					//Editamos la actividad
 					changeEditMode();
+					
+					Sleep.sleep(2000);
 					
 					liActive =  CourseActivityMenu.findElementActivityMenu(driver,param);
 					assertNotNull("Not found activity created", liActive);
