@@ -15,6 +15,21 @@
 	<portlet:param name="action" value="deleteTries"/>
 	<portlet:param name="id" value="${la.actId}"/>
 </portlet:actionURL>
+
+<portlet:actionURL var="form" name="users">
+	<portlet:param name="course" value="${course.courseId}"/>
+	<portlet:param name="id" value="${la.actId}"/>
+</portlet:actionURL>
+	<% 
+		PortletURL filter = renderResponse.createRenderURL();
+		long[] users = (long[])request.getAttribute("users");
+		Course course = (Course)request.getAttribute("course");
+		LearningActivity la = (LearningActivity)request.getAttribute("la");
+
+		filter.setParameter("view", "users");
+		filter.setParameter("course", String.valueOf(course.getCourseId()));
+		filter.setParameter("la", String.valueOf(la.getActId()));
+	%>
 <script type="text/javascript">
 	var urldeletetries = '${fixUserTries}';
 	function deleteTries(id){
@@ -23,18 +38,13 @@
 		}
 	}
 </script>
+<aui:form name="delivery" action="<%=form %>" method="post">
+	<input id="text" class="aui-field-input aui-field-input-text" type="text" value="${text}" name="text">
+	<input class="aui-button-input aui-button-input-submit" type="submit" value='<liferay-ui:message key="search"/>'>
+</aui:form>
 <c:if test="${empty users}"><liferay-ui:message key="there-are-no-results" />
 </c:if>
 <c:if test="${not empty users}">
-	<% 
-		PortletURL filter = renderResponse.createRenderURL();
-		long[] users = (long[])request.getAttribute("users");
-		Course course = (Course)request.getAttribute("course");
-		LearningActivity la = (LearningActivity)request.getAttribute("la");
-	
-		filter.setParameter("course", String.valueOf(course.getCourseId()));
-		filter.setParameter("la", String.valueOf(la.getActId()));
-	%>
 	<liferay-ui:search-container iteratorURL="<%=filter %>" emptyResultsMessage="there-are-no-courses" delta="50">
 		<liferay-ui:search-container-results>
 			<%
