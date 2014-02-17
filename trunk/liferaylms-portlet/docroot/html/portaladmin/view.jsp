@@ -103,6 +103,11 @@ for(Layout l:layoutForPortletName){
 <div class="actions">
 
 	<div class="action">
+		<portlet:actionURL name="checkgroups" var="checkgroupsURL" />
+		<liferay-ui:icon image="unlink" label="<%=true %>" message="checkGroups" url='<%= checkgroupsURL %>'/>
+	</div>
+
+	<div class="action">
 		<portlet:actionURL name="asignP2pActivity" var="asignP2pActivityURL" />
 		<liferay-ui:icon image="assign" label="<%=true %>" message="p2ptaskactivity.edit.asignp2p" url='<%= asignP2pActivityURL %>'/>
 	</div>

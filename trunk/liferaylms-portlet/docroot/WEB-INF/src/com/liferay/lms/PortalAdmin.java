@@ -11,46 +11,42 @@ import javax.portlet.ActionResponse;
 import javax.portlet.ProcessAction;
 
 import com.liferay.lms.model.Course;
-import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.LearningActivityResult;
-import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.portlet.p2p.P2PActivityPortlet;
-import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
-import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
-import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
-import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
-import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
-import com.liferay.portal.kernel.dao.orm.DynamicQuery;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
+import com.liferay.portal.model.ClassName;
+import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.Portlet;
 import com.liferay.portal.model.PortletItem;
 import com.liferay.portal.model.PortletPreferences;
-import com.liferay.portal.model.User;
+import com.liferay.portal.service.ClassNameLocalServiceUtil;
+import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletItemLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.PortletPreferencesLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
@@ -63,6 +59,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  * Portlet implementation class PortalAdmin
  */
 public class PortalAdmin extends MVCPortlet {
+	Log log = LogFactoryUtil.getLog(PortalAdmin.class);
  
 	
 	@ProcessAction(name = "asignP2pActivity")
@@ -504,4 +501,30 @@ public class PortalAdmin extends MVCPortlet {
 		
 	}
 	
+
+	@ProcessAction(name="checkgroups")
+	public void checkgroups(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		List<Course> courses = CourseLocalServiceUtil.findByCompanyId(themeDisplay.getCompanyId());
+		
+		int counter = 0;
+		for(Course course: courses){
+			if(log.isDebugEnabled())log.debug("Course::"+course.getCourseId());
+			Group group = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+			ClassName cn = ClassNameLocalServiceUtil.getClassName(Course.class.getName());
+			if(!group.getClassName().equals(Course.class.getName())){
+				if(log.isDebugEnabled())log.debug("Change!"+group.getGroupId());
+
+				group.setClassNameId(cn.getClassNameId());
+				group.setClassPK(course.getCourseId());
+				
+				GroupLocalServiceUtil.updateGroup(group);
+				
+				counter++;
+			}
+		}
+		actionResponse.setRenderParameter("counter", String.valueOf(counter));
+
+		SessionMessages.add(actionRequest, "ok");
+	}
 }

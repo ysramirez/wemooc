@@ -138,7 +138,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					userId, assetEntry.getEntryId(), serviceContext.getAssetLinkEntryIds(),
 					AssetLinkConstants.TYPE_RELATED);
 			//creating group
-			Group group = groupLocalService.addGroup( getAdministratorUser(serviceContext.getCompanyId()).getUserId(),null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
+			Group group = groupLocalService.addGroup(getAdministratorUser(serviceContext.getCompanyId()).getUserId(),
+					Course.class.getName(), course.getCourseId(), title,summary,typesite,friendlyURL,true,true,serviceContext);
+			
 			
 			//A�adimos el rol Teacher al usuario que crea el blog
 			long[] usuarios = new long[1];
@@ -497,5 +499,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		}
 		
 		return false;
+	}
+	
+	public List<Course> findByCompanyId(Long companyId) throws SystemException{
+		return coursePersistence.findByCompanyId(companyId);
 	}
 }
