@@ -81,28 +81,30 @@
 					</th>
 					</tr>
 					<c:forEach var="activity" items="${learningActivities[module.moduleId]}">
-						<tr class="portlet-section-body results-row">
-						<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
 						<%
 						LearningActivity la = (LearningActivity)pageContext.getAttribute("activity");
 						Long laId = new Long(la.getTypeId());
 						LearningActivityType lat = latr.getLearningActivityType(laId);
-						String laName = lat.getName();
-						String laType = LanguageUtil.get(pageContext, laName);
-						pageContext.setAttribute("laType", laType);
+						if(lat!=null){
+							String laName = lat.getName();
+							String laType = LanguageUtil.get(pageContext, laName);
+							pageContext.setAttribute("laType", laType);
 						%>
-						<td class="align-left col-1 col-1 first valign-middle">${laType}</td>
+							<tr class="portlet-section-body results-row">
+							<td class="align-left col-1 col-1 first valign-middle">${activity.getTitle(themeDisplay.locale)}</td>
+							<td class="align-left col-1 col-1 first valign-middle">${laType}</td>
 						
-						<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getStartdate()}" pattern="dd/MM/yyyy HH:mm" /></td>
-						<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getEnddate()}" pattern="dd/MM/yyyy HH:mm" /></td>
-						<td class="align-left col-1 col-1 first valign-middle">
-							<c:if test="${activity.isNew()}">
-								<liferay-util:include page="/html/activitymanager/actions/module_actions.jsp" servletContext="<%=this.getServletContext() %>">
-									<liferay-util:param name="activity" value="${activity.actId}" />
-								</liferay-util:include>
-							</c:if>
-						</td>
-						</tr>
+							<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getStartdate()}" pattern="dd/MM/yyyy HH:mm" /></td>
+							<td class="align-left col-1 col-1 first valign-middle"><fmt:formatDate value="${activity.getEnddate()}" pattern="dd/MM/yyyy HH:mm" /></td>
+							<td class="align-left col-1 col-1 first valign-middle">
+								<c:if test="${activity.isNew()}">
+									<liferay-util:include page="/html/activitymanager/actions/module_actions.jsp" servletContext="<%=this.getServletContext() %>">
+										<liferay-util:param name="activity" value="${activity.actId}" />
+									</liferay-util:include>
+								</c:if>
+							</td>
+							</tr>
+						<%} %>
 					</c:forEach>
 				</tbody></table>
 			</liferay-ui:panel>

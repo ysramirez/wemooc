@@ -31,17 +31,23 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
+import com.liferay.portal.kernel.search.BooleanClauseOccur;
+import com.liferay.portal.kernel.search.BooleanQuery;
+import com.liferay.portal.kernel.search.BooleanQueryFactoryUtil;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Hits;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.search.ParseException;
 import com.liferay.portal.kernel.search.SearchContext;
+import com.liferay.portal.kernel.search.SearchEngineUtil;
 import com.liferay.portal.kernel.search.SearchException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
@@ -65,6 +71,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 
 	public void doView(RenderRequest renderRequest,RenderResponse renderResponse) throws IOException, PortletException {
 		String view = ParamUtil.getString(renderRequest, "view", "");
+		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);  
 		if (view != null && "detail".equals(view)) {
 			String id = ParamUtil.getString(renderRequest, "id", "");
 			long activeModuleId = ParamUtil.getLong(renderRequest, "activeModuleId", 0);;
@@ -134,6 +141,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		}else if ((view != null) && ("users".equals(view))) {
 		      String scourse = ParamUtil.getString(renderRequest, "course", "");
 		      String sla = ParamUtil.getString(renderRequest, "la", "");
+		      String text = ParamUtil.getString(renderRequest, "text", "");
 
 		      Course course = null;
 		      try {
@@ -166,14 +174,99 @@ public class ActivityManagerPortlet extends MVCPortlet {
 
 		      if ((la != null) && (course != null))
 		      {
+		    	  
 		    	  renderRequest.setAttribute("course", course);
 		    	  renderRequest.setAttribute("la", la);
+		    	  renderRequest.setAttribute("text", text);
 		    	  long[] users = null;
 		    	  try {
 		    		  users = UserLocalServiceUtil.getGroupUserIds(course.getGroupCreatedId());
 		    	  } catch (SystemException e) {
 				      if (this.log.isInfoEnabled()) this.log.info(e.getMessage());
 				      if (this.log.isDebugEnabled()) e.printStackTrace();
+		    	  }
+
+		    	  if(text!=null&&!"".equals(text)){
+		    		  SearchContext searchContext=new SearchContext();
+		    		  searchContext.setCompanyId(themeDisplay.getCompanyId());
+		    		  
+		    		  BooleanQuery query = BooleanQueryFactoryUtil.create(searchContext);
+		    		  query.addRequiredTerm("companyId", themeDisplay.getCompanyId());
+		    		  query.addRequiredTerm("entryClassName", User.class.getName());
+
+		    		  BooleanQuery queryText = BooleanQueryFactoryUtil.create(searchContext);
+		    		  BooleanQuery queryClass = BooleanQueryFactoryUtil.create(searchContext);
+		    		  try {
+		    			  queryClass.addTerm("emailAddress", text, true);
+		    			  queryText.add(queryClass,  BooleanClauseOccur.SHOULD);
+		    		  } catch (ParseException e) {
+		    			  e.printStackTrace();
+		    		  }
+
+		    		  queryClass = BooleanQueryFactoryUtil.create(searchContext);
+		    		  try {
+		    			  queryClass.addTerm("firstName", text, true);
+		    			  queryText.add(queryClass,  BooleanClauseOccur.SHOULD);
+		    		  } catch (ParseException e) {
+		    			  e.printStackTrace();
+		    		  }
+
+		    		  queryClass = BooleanQueryFactoryUtil.create(searchContext);
+		    		  try {
+		    			  queryClass.addTerm("lastName", text, true);
+		    			  queryText.add(queryClass,  BooleanClauseOccur.SHOULD);
+		    		  } catch (ParseException e) {
+		    			  e.printStackTrace();
+		    		  }
+
+		    		  queryClass = BooleanQueryFactoryUtil.create(searchContext);
+		    		  try {
+		    			  queryClass.addTerm("middleName", text, true);
+		    			  queryText.add(queryClass,  BooleanClauseOccur.SHOULD);
+		    		  } catch (ParseException e) {
+		    			  e.printStackTrace();
+		    		  }
+
+		    		  queryClass = BooleanQueryFactoryUtil.create(searchContext);
+		    		  try {
+		    			  queryClass.addTerm("screenName", text, true);
+		    			  queryText.add(queryClass,  BooleanClauseOccur.SHOULD);
+		    		  } catch (ParseException e) {
+		    			  e.printStackTrace();
+		    		  }
+
+		    		  try {
+		    			  queryClass.addTerm("screenName", text, true);
+		    			  query.add(queryText,  BooleanClauseOccur.MUST);
+		    		  } catch (ParseException e) {
+		    			  e.printStackTrace();
+		    		  }
+		    		  
+		    		  
+		    		  try {
+		    			  Hits hits = SearchEngineUtil.search(searchContext, query);
+		    			  Document[] docs = hits.getDocs();
+		    			  if(docs.length<=0){
+		    				  users = null;
+		    			  }else{
+		    				  List<Long> prov = new ArrayList<Long>();
+		    				  for(Document doc : docs){
+		    					  try{
+			    					  long id = Long.parseLong(doc.get(Field.ENTRY_CLASS_PK));
+			    					  for(long userId : users){
+			    						  if(userId==id){
+			    							  prov.add(id);
+			    							  break;
+			    						  }
+			    					  }
+		    					  }catch(Exception e){}
+		    				  }
+		    				  users = new long[prov.size()];
+		    				  for(int i = 0; i < prov.size(); i++) users[i] = prov.get(i);
+		    			  }
+		    		  } catch (SearchException e) {
+		    			  e.printStackTrace();
+		    		  }
 		    	  }
 		    	  renderRequest.setAttribute("users", users);
 		    	  include(this.userDetailJSP, renderRequest, renderResponse);
@@ -183,9 +276,6 @@ public class ActivityManagerPortlet extends MVCPortlet {
 					.getString(renderRequest, "freetext", "");
 
 			SearchContext scon = new SearchContext();
-
-			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest
-					.getAttribute("THEME_DISPLAY");
 			scon.setCompanyId(themeDisplay.getCompanyId());
 			Sort sort = new Sort(Field.TITLE, Sort.STRING_TYPE, true);
 			scon.setSorts(new Sort[]{sort});
@@ -323,6 +413,7 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	    String sid = ParamUtil.getString(request, "id", "");
 	    String course = ParamUtil.getString(request, "course", "");
 
+	    response.setRenderParameter("text", ParamUtil.getString(request, "text", ""));
 	    response.setRenderParameter("view", "users");
 	    response.setRenderParameter("course", course);
 	    response.setRenderParameter("la", sid);
