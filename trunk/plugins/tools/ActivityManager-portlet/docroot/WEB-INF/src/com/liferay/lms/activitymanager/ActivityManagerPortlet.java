@@ -186,14 +186,16 @@ public class ActivityManagerPortlet extends MVCPortlet {
 				      if (this.log.isDebugEnabled()) e.printStackTrace();
 		    	  }
 
-		    	  if(text!=null&&!"".equals(text)){
-		    		  SearchContext searchContext=new SearchContext();
-		    		  searchContext.setCompanyId(themeDisplay.getCompanyId());
-		    		  
-		    		  BooleanQuery query = BooleanQueryFactoryUtil.create(searchContext);
-		    		  query.addRequiredTerm("companyId", themeDisplay.getCompanyId());
-		    		  query.addRequiredTerm("entryClassName", User.class.getName());
+		    	  SearchContext searchContext=new SearchContext();
+		    	  searchContext.setCompanyId(themeDisplay.getCompanyId());
+		    	  Sort sort = new Sort(Field.USER_NAME, Sort.STRING_TYPE, false);
+		    	  searchContext.setSorts(new Sort[]{sort});
 
+		    	  BooleanQuery query = BooleanQueryFactoryUtil.create(searchContext);
+		    	  query.addRequiredTerm("companyId", themeDisplay.getCompanyId());
+		    	  query.addRequiredTerm("entryClassName", User.class.getName());
+
+		    	  if(text!=null&&!"".equals(text)){
 		    		  BooleanQuery queryText = BooleanQueryFactoryUtil.create(searchContext);
 		    		  BooleanQuery queryClass = BooleanQueryFactoryUtil.create(searchContext);
 		    		  try {
@@ -241,33 +243,36 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		    		  } catch (ParseException e) {
 		    			  e.printStackTrace();
 		    		  }
-		    		  
-		    		  
-		    		  try {
-		    			  Hits hits = SearchEngineUtil.search(searchContext, query);
-		    			  Document[] docs = hits.getDocs();
-		    			  if(docs.length<=0){
-		    				  users = null;
-		    			  }else{
-		    				  List<Long> prov = new ArrayList<Long>();
-		    				  for(Document doc : docs){
-		    					  try{
-			    					  long id = Long.parseLong(doc.get(Field.ENTRY_CLASS_PK));
-			    					  for(long userId : users){
-			    						  if(userId==id){
-			    							  prov.add(id);
-			    							  break;
-			    						  }
-			    					  }
-		    					  }catch(Exception e){}
-		    				  }
-		    				  users = new long[prov.size()];
-		    				  for(int i = 0; i < prov.size(); i++) users[i] = prov.get(i);
-		    			  }
-		    		  } catch (SearchException e) {
-		    			  e.printStackTrace();
-		    		  }
 		    	  }
+
+	    		  
+	    		  try {
+	    			  Hits hits = SearchEngineUtil.search(searchContext, query);
+	    			  //Hits hits = SearchEngineUtil.search(themeDisplay.getCompanyId(), query, sort, 0, 20);
+	    			  Document[] docs = hits.getDocs();
+	    			  if(docs.length<=0){
+	    				  users = null;
+	    			  }else{
+	    				  List<Long> prov = new ArrayList<Long>();
+	    				  for(Document doc : docs){
+	    					  if(log.isDebugEnabled())log.debug(doc.get(Field.USER_NAME));
+	    					  try{
+		    					  long id = Long.parseLong(doc.get(Field.ENTRY_CLASS_PK));
+		    					  for(long userId : users){
+		    						  if(userId==id){
+		    							  prov.add(id);
+		    							  break;
+		    						  }
+		    					  }
+	    					  }catch(Exception e){}
+	    				  }
+	    				  users = new long[prov.size()];
+	    				  for(int i = 0; i < prov.size(); i++) users[i] = prov.get(i);
+	    			  }
+	    		  } catch (SearchException e) {
+	    			  e.printStackTrace();
+	    		  }
+	    		  
 		    	  renderRequest.setAttribute("users", users);
 		    	  include(this.userDetailJSP, renderRequest, renderResponse);
 		      }
