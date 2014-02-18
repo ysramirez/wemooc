@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="com.liferay.portlet.asset.model.AssetEntry"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
@@ -100,6 +101,7 @@
 			<liferay-ui:search-container-column-text name="description">
 				<%
 					String text = course.getDescription(themeDisplay.getLocale());
+					text = StringEscapeUtils.escapeHtml(text.substring(0,300));
 					if(text.length()>300){
 						text = text.substring(0,300)+"...";
 					}
