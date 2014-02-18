@@ -189,22 +189,25 @@ function validate(){
 	<br />
 	 
 	 <liferay-ui:error key="error-file-size" message="error-file-size" />
-	<aui:field-wrapper label="icon">
-		<%if(module.getIcon()>0){
-			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(module.getIcon());
-			 %>
-			<aui:column>	
-				<liferay-ui:message key="actual-image"  /><br/>
-				<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, "&imageThumbnail=1") %>">
-			</aui:column>	
-		<%} %>
-		<aui:column>
-			<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" />
-			<c:if test="<%=module.getIcon()>0 %>">
-				<aui:input type="checkbox" label="delete" name="deleteAdditionalFile" value="false" inlineLabel="left"/>
-			</c:if>
-		</aui:column>
-	</aui:field-wrapper>	
+	 
+	<c:if test="${showicon}">
+		<aui:field-wrapper label="icon">
+			<%if(module.getIcon()>0){
+				FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(module.getIcon());
+				 %>
+				<aui:column>	
+					<liferay-ui:message key="actual-image"  /><br/>
+					<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, "&imageThumbnail=1") %>">
+				</aui:column>	
+			<%} %>
+			<aui:column>
+				<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" />
+				<c:if test="<%=module.getIcon()>0 %>">
+					<aui:input type="checkbox" label="delete" name="deleteAdditionalFile" value="false" inlineLabel="left"/>
+				</c:if>
+			</aui:column>
+		</aui:field-wrapper>	
+	</c:if>
 	
 	<liferay-ui:error key="module-icon-required" message="module-icon-required" />
 	<liferay-ui:error key="error_number_format" message="error_number_format" />
