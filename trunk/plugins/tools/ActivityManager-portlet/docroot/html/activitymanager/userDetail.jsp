@@ -87,9 +87,11 @@
 							if(lar!=null){
 								useriter.setComments(String.valueOf(lar.getResult()));
 								useriter.setCachedModel(lar.getPassed());
+								useriter.setPasswordReset(true);
 							}else{
 								useriter.setComments("-");
 								useriter.setCachedModel(false);
+								useriter.setPasswordReset(false);
 							}
 							uusers.add(useriter);
 						}
@@ -118,11 +120,14 @@
 			<liferay-ui:search-container-column-text name="actmanager.mod-note">
 				<%=usert.getOpenId() %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text>
-				<liferay-util:include page="/html/activitymanager/actions/usermodule_actions.jsp" servletContext="<%=this.getServletContext() %>">
-					<liferay-util:param name="userId" value="<%=String.valueOf(usert.getUserId()) %>" />
-				</liferay-util:include>
-			</liferay-ui:search-container-column-text>
+			<c:if test="<%=usert.isPasswordReset()%>">
+				<liferay-ui:search-container-column-text name="actmanager.action">
+					<liferay-util:include page="/html/activitymanager/actions/usermodule_actions.jsp" servletContext="<%=this.getServletContext() %>">
+						<liferay-util:param name="userId" value="<%=String.valueOf(usert.getUserId()) %>" />
+					</liferay-util:include>
+				</liferay-ui:search-container-column-text>
+			</c:if>
+			<c:if test="<%=!usert.isPasswordReset()%>"><liferay-ui:search-container-column-text name="actmanager.action"> </liferay-ui:search-container-column-text></c:if>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
