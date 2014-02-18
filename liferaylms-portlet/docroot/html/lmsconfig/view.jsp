@@ -35,6 +35,11 @@ if(prefs!=null)
 	List <Long> calificationTypeIds = ListUtil.toList(StringUtil.split(prefs.getScoretranslators(),",",0L));	
 %>
 
+<liferay-ui:success message="your-request-completed-successfully" key="ok" />
+<c:if test="${not empty counter}">
+	<div class="portlet-msg-success"><liferay-ui:message key="groups-changed" arguments="<%=new String[]{request.getParameter(\"counter\")} %>" /></div>
+</c:if>
+
 
 <liferay-portlet:actionURL name="changeSettings" var="changeSettingsURL">
 </liferay-portlet:actionURL>
@@ -145,23 +150,37 @@ for(CalificationType calificationType :calificationTypeRegistry.getCalificationT
 }
 %>
 </aui:field-wrapper>
-<aui:button type="submit" value="save" />
+<aui:field-wrapper>
+	<aui:button type="submit" value="save" />
+	<button name="check" value="check" onclick="javascrip:checkGroups();" type="button">
+		<liferay-ui:message key="checkGroups" />
+	</button>
+</aui:field-wrapper>
 
 </aui:form>
 <%
 }
 %>
 
-<script type="text/javascript">
-AUI().ready(
-    'aui-sortable',
-   function(A) {
-        window.<portlet:namespace/>lmsActivitiesSortable = new A.Sortable(
-            {
-                nodes: '.lms-sortable-activities'
-            }
-        );
-    }
-);
+<liferay-portlet:actionURL name="checkgroups" var="checkgroupsURL">
+</liferay-portlet:actionURL>
 
+<script type="text/javascript">
+	AUI().ready(
+	    'aui-sortable',
+	   function(A) {
+	        window.<portlet:namespace/>lmsActivitiesSortable = new A.Sortable(
+	            {
+	                nodes: '.lms-sortable-activities'
+	            }
+	        );
+	    }
+	);
+
+	var checkUrl="${checkgroupsURL}";
+	function checkGroups(){
+		if(confirm('<liferay-ui:message key="change-groups-are-your-sure" />')){
+			window.location.href=checkUrl;
+		}
+	}
 </script>

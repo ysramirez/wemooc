@@ -50,6 +50,7 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -367,8 +368,8 @@ public static String SEPARATOR = "_";
 
 	
 		renderRequest.setAttribute("editmoduleURL", editmoduleURL.toString());
-		
-			include(editmoduleJSP, renderRequest, renderResponse);
+		renderRequest.setAttribute("showicon", ("false".equals(PropsUtil.get("module.show.icon")))?false:true);
+		include(editmoduleJSP, renderRequest, renderResponse);
 		
 	}
 
@@ -764,7 +765,7 @@ public static String SEPARATOR = "_";
 				if(log.isErrorEnabled())log.error(e.getMessage());
 			}			
 			
-		} else if(file.length() > fileMaxSize){
+		} else if(file!=null && file.length() > fileMaxSize){
 			module.setIcon(0);
 		}
 		
