@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
 <%@page import="javax.portlet.PortletPreferences"%>
@@ -192,7 +193,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 								FileEntry image=DLAppLocalServiceUtil.getFileEntry(entryId);
 								if(image!=null){
 %>
-									<img src="<%= themeDisplay.getPathImage()%>/image_gallery?uuid=<%= image.getUuid() %>&groupId=<%=image.getGroupId() %>" />
+									<img src="<%= DLUtil.getPreviewURL(image, image.getFileVersion(), themeDisplay, "&imageThumbnail=1") %>" />
 <%
 								}
 							}
