@@ -79,13 +79,13 @@
 			uploadMin = Integer.parseInt(formatMin.format(date));
 
 		} else {
-
-			uploadDay = Integer.parseInt(formatDay.format(learningActivity.getEnddate())) - 1;
-			uploadMonth = Integer.parseInt(formatMonth.format(learningActivity.getEnddate())) - 1;
-			uploadYear = Integer.parseInt(formatYear.format(learningActivity.getEnddate()));
-			uploadHour = Integer.parseInt(formatHour.format(learningActivity.getEnddate()));
-			uploadMin = Integer.parseInt(formatMin.format(learningActivity.getEnddate()));
-
+			try{
+				uploadDay = Integer.parseInt(formatDay.format(learningActivity.getEnddate())) - 1;
+				uploadMonth = Integer.parseInt(formatMonth.format(learningActivity.getEnddate())) - 1;
+				uploadYear = Integer.parseInt(formatYear.format(learningActivity.getEnddate()));
+				uploadHour = Integer.parseInt(formatHour.format(learningActivity.getEnddate()));
+				uploadMin = Integer.parseInt(formatMin.format(learningActivity.getEnddate()));
+			}catch(Exception e){}
 		}
 		
 		disabled=P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))!=0;
