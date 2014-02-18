@@ -16,7 +16,7 @@
 	boolean showCorrectAnswer= false;
 	boolean improve=false;
 	boolean newOrCourseEditor=true;
-	
+	boolean edit = true;
 	if(request.getAttribute("activity")!=null) {
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
 		String randomString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random");
@@ -37,7 +37,6 @@
 		moduleId=learningActivity.getModuleId();
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
-		
 	}
 	
 	boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
@@ -161,7 +160,7 @@ window.<portlet:namespace />validate_execactivity={
 				LanguageUtil.get(pageContext,"execActivity.options.error.random"):StringPool.BLANK %>
 	</div>
 	
-	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" ignoreRequestValue="true"></aui:input>
+	<aui:input type="text" size="3" name="questionsPerPage" label="execActivity.options.questionsPerPage" value="<%=(questionsPerPage>0)?Long.toString(questionsPerPage):StringPool.BLANK %>" ignoreRequestValue="true"></aui:input>
 	<div id="<portlet:namespace />questionsPerPageError" class="<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?"portlet-msg-error":StringPool.BLANK %>">
 	 	<%=(SessionErrors.contains(renderRequest, "execActivity.options.error.questionsPerPage"))?
 				LanguageUtil.get(pageContext,"execActivity.options.error.questionsPerPage"):StringPool.BLANK %>
@@ -174,7 +173,7 @@ window.<portlet:namespace />validate_execactivity={
 	NumberFormat timeNumberFormat = NumberFormat.getInstance(locale);
 	timeNumberFormat.setMinimumIntegerDigits(2);
 	%>
-		<select name="<portlet:namespace />hourDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> >
+		<select name="<portlet:namespace />hourDuration" >
 			<%
 			for (int i = 0; i < 24; i++) {
 			%>
@@ -183,7 +182,7 @@ window.<portlet:namespace />validate_execactivity={
 			}
 			%>
 		</select>
-		<select name="<portlet:namespace />minuteDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> >
+		<select name="<portlet:namespace />minuteDuration" >
 			<%
 			for (int i = 0; i < 60; i++) {
 			%>
@@ -192,7 +191,7 @@ window.<portlet:namespace />validate_execactivity={
 			}
 			%>
 		</select>	
-		<select name="<portlet:namespace />secondDuration" <% if(notModuleEditable&&(!newOrCourseEditor)){ %> disabled="disabled" <% } %> > 
+		<select name="<portlet:namespace />secondDuration"> 
 			<%
 			for (int i = 0; i < 60; i++) {
 			%>
@@ -203,7 +202,7 @@ window.<portlet:namespace />validate_execactivity={
 		</select>			
 	</aui:field-wrapper>
 	
-	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>" 
 		ignoreRequestValue="true"></aui:input>
 		
 	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 

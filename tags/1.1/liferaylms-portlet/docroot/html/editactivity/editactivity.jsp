@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.impl.LearningActivityLocalServiceImpl"%>
+<%@page import="com.liferay.lms.learningactivity.TestLearningActivityType"%>
 <%@page import="com.liferay.lms.learningactivity.BaseLearningActivityType"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portlet.PortletQNameUtil"%>
@@ -18,6 +20,8 @@
 <%@page import="java.util.Set"%>
 <%@page import="com.liferay.lms.LearningTypesProperties"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Module"%>
 <%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -56,6 +60,9 @@ else
 	}
 	
 }
+Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+boolean newOrCourseEditor=permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(),"COURSEEDITOR");
+boolean notModuleEditable= (moduleId!=0)&&(ModuleLocalServiceUtil.getModule(moduleId).getStartDate().before(new Date()));
 
 String typeName=classTypes.get(typeId);
 LearningActivityType larntype=new LearningActivityTypeRegistry().getLearningActivityType(typeId);
@@ -474,8 +481,11 @@ Liferay.provide(
 				score=learnact.getPasspuntuation();
 			}
 		%>
-		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
+		<aui:input size="5" name="passpuntuation" label="passpuntuation" type="text" value="<%=Long.toString(score) %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" helpMessage="<%=LanguageUtil.get(pageContext,\"editActivity.passpuntuation.help\")%>">
 		</aui:input>
+		<% if (notModuleEditable&&(!newOrCourseEditor)) { %>
+		<input name="<portlet:namespace />passpuntuation" type="hidden" value="<%=Long.toString(score) %>" />
+		<% } %>
   		<div id="<portlet:namespace />passpuntuationError" class="<%=((SessionErrors.contains(renderRequest, "editActivity.passpuntuation.required"))||
 																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.number"))||
 																      (SessionErrors.contains(renderRequest, "editActivity.passpuntuation.range")))?
