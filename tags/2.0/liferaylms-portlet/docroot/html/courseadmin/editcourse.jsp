@@ -258,10 +258,15 @@ else
 		</aui:select>
 	<%
 	}
-	else{
-		CourseEval cel = cer.getCourseEval(courseEvalIds.get(0));
+	else{	
+		CourseEval cel = null;
+		try{
+			if(courseEvalIds.size()>0){
+				cel = cer.getCourseEval(courseEvalIds.get(0));
+			}
+		}catch(Exception e){}
 		%>
-		<aui:input name="courseEvalId" value="<%=cel.getTypeId()%>" type="hidden"/>
+		<aui:input name="courseEvalId" value="<%=cel==null?\"0\":cel.getTypeId()%>" type="hidden"/>
 	<%}
 	if(course==null)
 	{
@@ -318,9 +323,15 @@ else
 		<%
 	}
 	else{
-		CalificationType ctype = cal.getCalificationType(califications.get(0));
+		
+		CalificationType ctype = null;
+		try{
+			if(califications.size()>0){
+				ctype =cal.getCalificationType(califications.get(0));
+			}
+		}catch(Exception e){}
 		%>
-		<aui:input name="calificationType" value="<%=ctype.getTypeId()%>" type="hidden"/>
+		<aui:input name="calificationType" value="<%=ctype==null?\"0\":ctype.getTypeId()%>" type="hidden"/>
 	<%}
 	
 	boolean showInscriptionDate = GetterUtil.getBoolean(renderRequest.getPreferences().getValues("showInscriptionDate", new String[]{StringPool.TRUE})[0],true);
