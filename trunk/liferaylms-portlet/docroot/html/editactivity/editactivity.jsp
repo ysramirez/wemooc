@@ -762,11 +762,14 @@ Liferay.provide(
 		<%}
 		%>
 		</liferay-ui:panel>
-	<liferay-ui:panel title="categorization" collapsible="true" defaultState="closed">
-		<aui:input name="tags" type="assetTags" />
-		<aui:input name="categories" type="assetCategories" />
-		</liferay-ui:panel>
-		</liferay-ui:panel-container>
+	
+		<c:if test="${showcategorization}">
+			<liferay-ui:panel title="categorization" collapsible="true" defaultState="closed">
+				<aui:input name="tags" type="assetTags" />
+				<aui:input name="categories" type="assetCategories" />
+				</liferay-ui:panel>
+		</c:if>
+	</liferay-ui:panel-container>
 	</aui:fieldset>
 	
 	<aui:button-row>
