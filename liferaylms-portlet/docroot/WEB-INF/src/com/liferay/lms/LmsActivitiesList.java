@@ -56,6 +56,7 @@ import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -315,7 +316,7 @@ public class LmsActivitiesList extends MVCPortlet {
 				"", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId, "", feedbackCorrect, feedbackNoCorrect, serviceContext);
 			}
 			
-			//Leemos del portal.properties el estado del permiso VIEW por defecto para siteMember en las actividades nuevas (si no existe, por defecto serán visibles)
+			//Leemos del portal.properties el estado del permiso VIEW por defecto para siteMember en las actividades nuevas (si no existe, por defecto serï¿½n visibles)
 			boolean hideStr = Boolean.parseBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", "false"));
 			Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
 			if(hideStr)
@@ -367,7 +368,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		  }
 		}
 		
-		//descomentar si se permiten llamadas por webservice, ademas añadir booleano editionBlocked en los metodos setExtraContent de las actividades
+		//descomentar si se permiten llamadas por webservice, ademas aï¿½adir booleano editionBlocked en los metodos setExtraContent de las actividades
 		//para poder diferenciar las partes bloqueadas de las que no lo estan a la hora de crear el extraContent.
 		/*boolean setExtraContent = false;
 		if(actId == 0) setExtraContent = true;
@@ -702,6 +703,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		else if(renderRequest.getAttribute("editing")!=null &&renderRequest.getAttribute("editing").equals("true"))
 		{
+			renderRequest.setAttribute("showcategorization", ("false".equals(PropsUtil.get("activity.show.categorization")))?false:true);
 			include("/html/editactivity/editactivity.jsp",renderRequest,renderResponse);
 		}
 		else if(renderRequest.getAttribute("califications")!=null && renderRequest.getAttribute("califications").equals("true"))
