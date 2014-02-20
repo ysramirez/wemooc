@@ -76,13 +76,13 @@
 		}
 		id=pre.getPortletId();
 		
-		System.out.println(pre.getPortletId());
+		
 		%><h4><%=pre.getPortletId() %></h4><%
 		Document document = SAXReaderUtil.read(pre.getPreferences());
 		Element rootElement = document.getRootElement();
 		for (Element element : rootElement.elements("preference")) {
 			if(element.elementText("name").startsWith("portletSetupTitle")){
-				System.out.println("   " + element.elementText("name") + " - " + element.elementText("value"));
+				
 				%><p><%=element.elementText("name") %> - <%=element.elementText("value") %></p><%
 						
 				//Nombre portlet

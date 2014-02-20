@@ -21,6 +21,20 @@
 <%@ include file="/html/init.jsp" %>
 <%@ include file="/html/head.jsp" %>
 
+<portlet:actionURL var="removeRepeatedModuleResult" name="removeRepeatedModule">
+	<portlet:param name="action" value="deleteTries"/>
+	<portlet:param name="id" value="${la.actId}"/>
+</portlet:actionURL>
+
+<script type="text/javascript">
+	var urldeletetries = '${removeRepeatedModuleResult}';
+	function removeRepeatedModuleResult(id){
+		if(confirm('<liferay-ui:message key="actmanager.confirm-delete" />')){
+			window.location.href = urldeletetries+"&courseId="+id;
+		}
+	}
+</script>
+
 <h3><liferay-ui:message key="moduleupdateresult.allcourses" /></h3>
 <portlet:actionURL var="searchURL" name="search" />
 
@@ -83,7 +97,7 @@
 				}
 				
 				pageContext.setAttribute("results", courses);
-				System.out.println(documents.size());
+				
 				pageContext.setAttribute("total", size);
 			%>
 		</liferay-ui:search-container-results>
@@ -131,6 +145,13 @@
 				%>
 				<span><%if(ae==null){ %><liferay-ui:message key="no" /><%}else{%><liferay-ui:message key="yes" /><%}%></span>
 			</liferay-ui:search-container-column-text>
+			
+			<liferay-ui:search-container-column-text name="actmanager.action">
+				<liferay-util:include page="/html/activitymanager/actions/course_actions.jsp" servletContext="<%=this.getServletContext() %>">
+					<liferay-util:param name="courseId" value="<%=String.valueOf(course.getCourseId()) %>" />
+				</liferay-util:include>
+			</liferay-ui:search-container-column-text>
+			
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
