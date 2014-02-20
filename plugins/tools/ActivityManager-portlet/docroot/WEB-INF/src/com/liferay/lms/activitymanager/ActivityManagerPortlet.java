@@ -511,6 +511,26 @@ public class ActivityManagerPortlet extends MVCPortlet {
 	    response.setRenderParameter("activeModuleId", moduleId);
 	}
 	
+	@ProcessAction(name="removeRepeatedModule")
+	public void removeRepeatedModule(ActionRequest request, ActionResponse response) throws IOException, PortletException {
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute("THEME_DISPLAY");
+		
+		long courseId = ParamUtil.getLong(request, "courseId");
+		cleanModuleTriesRepeated(courseId, themeDisplay.getUser());
+		
+	}
+	
+	@ProcessAction(name="removeRepeatedLearningActivity")
+	public void removeRepeatedLearningActivity(ActionRequest request, ActionResponse response) throws IOException, PortletException {
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute("THEME_DISPLAY");
+		
+		long courseId = ParamUtil.getLong(request, "courseId");
+		cleanLearningActivityTriesRepeated(courseId, themeDisplay.getUser());
+		
+	}
+	
 	private void cleanLearningActivityTriesPassed(LearningActivity la,User userc){
 		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanTriesNotPassed");
 		Message message=new Message();
@@ -542,6 +562,24 @@ public class ActivityManagerPortlet extends MVCPortlet {
 		message.put("user",user);
 		message.put("userc",userc);
 		MessageBusUtil.sendMessage("liferay/lms/cleanTriesUser", message);
+	}
+	
+	private void cleanModuleTriesRepeated(long courseId, User user){
+		System.out.println(" cleanModuleTriesRepeated");
+		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanModuleTriesRepeated");
+		Message message=new Message();
+		message.put("courseId",courseId);
+		message.put("user", user);
+		MessageBusUtil.sendMessage("liferay/lms/deleteModuleRepeated", message);
+	}
+	
+	private void cleanLearningActivityTriesRepeated(long courseId, User user){
+		System.out.println(" cleanLearningActivityTriesRepeated");
+		if (this.log.isDebugEnabled()) this.log.debug("senMessage liferay/lms/cleanLearningActivityTriesRepeated");
+		Message message=new Message();
+		message.put("courseId",courseId);
+		message.put("user", user);
+		MessageBusUtil.sendMessage("liferay/lms/deleteLearningActivityRepeated", message);
 	}
 
 	protected void include(String path, RenderRequest renderRequest,RenderResponse renderResponse) throws IOException, PortletException {
