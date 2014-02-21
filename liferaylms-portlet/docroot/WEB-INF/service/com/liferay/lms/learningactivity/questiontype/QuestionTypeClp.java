@@ -409,4 +409,22 @@ public class QuestionTypeClp implements QuestionType {
 		return larnObj;
 	}
 
+	@Override
+	public String getURLNew() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int getMaxAnswers() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public int getDefaultAnswersNo() {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 }

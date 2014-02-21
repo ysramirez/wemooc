@@ -14,7 +14,9 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -85,5 +87,8 @@ public class MultioptionsQuestionType extends OptionsQuestionType {
 		}
 	}
 	
+	public int getDefaultAnswersNo(){
+		return GetterUtil.getInteger(PropsUtil.get("lms.defaultAnswersNo.multioptions"), 2);
+	}
 	
 }

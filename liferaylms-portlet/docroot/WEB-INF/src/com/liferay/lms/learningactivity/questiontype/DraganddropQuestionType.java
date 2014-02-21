@@ -16,7 +16,9 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -45,9 +47,13 @@ public class DraganddropQuestionType extends BaseQuestionType {
 	public String getAnswerEditingAdvise(Locale locale) {
 		return LanguageUtil.get(locale, "draganddrop.advise");
 	}
-
+	
 	public String getURLEdit(){
-		return "/html/execactivity/test/admin/editOptionsQTAnswers.jsp";
+		return "/html/execactivity/test/admin/editAnswerOptions.jsp";
+	}
+	
+	public String getURLNew(){
+		return "/html/execactivity/test/admin/popups/options.jsp";
 	}
 
 	public boolean correct(ActionRequest actionRequest, long questionId){
@@ -262,4 +268,10 @@ public class DraganddropQuestionType extends BaseQuestionType {
 		return answerSelected;
 	}
 
+	public int getMaxAnswers(){
+		return 1000;
+	}
+	public int getDefaultAnswersNo(){
+		return GetterUtil.getInteger(PropsUtil.get("lms.defaultAnswersNo.dragAndDrop"), 2);
+	}
 }

@@ -18,7 +18,9 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -50,7 +52,11 @@ public class FreetextQuestionType extends BaseQuestionType {
 	}
 
 	public String getURLEdit(){
-		return "/html/execactivity/test/admin/editFreetextQTAnswers.jsp";
+		return "/html/execactivity/test/admin/editAnswerFreetext.jsp";
+	}
+	
+	public String getURLNew(){
+		return "/html/execactivity/test/admin/popups/freetext.jsp";
 	}
 
 	public boolean correct(ActionRequest actionRequest, long questionId){
@@ -192,6 +198,13 @@ public class FreetextQuestionType extends BaseQuestionType {
 				return;//porque inicialmente solo aceptamos una respuesta
 			}
 		}
+	}
+	
+	public int getMaxAnswers(){
+		return 1;
+	}
+	public int getDefaultAnswersNo(){
+		return 1;
 	}
 
 }
