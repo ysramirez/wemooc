@@ -10,14 +10,13 @@ Long iterator = ParamUtil.getLong(request, "iterator", -1);
 		<div class="leftSideAnswer">
 			<aui:input  type="hidden" name="answerId" value="<%=\"new\"+iterator %>"></aui:input>
 			<aui:input  type="hidden" name="iterator" value="<%=iterator%>"></aui:input>
-			
+			<aui:input  type="hidden" name="correct_new<%=iterator %>" label="correct" value="true"/>			
 			<script type="text/javascript">
 				function <portlet:namespace />onChangeTextAnswer_new<%=iterator %>(val) {
 		        	var A = AUI();
 					A.one('#<portlet:namespace />answer_new<%=iterator %>').set('value',val);
 		        }
 			</script>
-			
 			<aui:field-wrapper label="">
 				<liferay-ui:input-editor skipEditorLoading="true"  toolbarSet="slimmer" height="15"  name="<%=\"answer_new\"+iterator %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_new\"+iterator %>" initMethod="<%=\"initEditorAnswer_new\"+iterator %>" />
 				<script type="text/javascript">
@@ -28,7 +27,6 @@ Long iterator = ParamUtil.getLong(request, "iterator", -1);
 		    </aui:field-wrapper>
 			<aui:input name="<%=\"feedbackCorrect_new\"+iterator %>" label="feedbackCorrect" value=""></aui:input>
 			<aui:input name="<%=\"feedbackNoCorrect_new\"+iterator %>" label="feedbackNoCorrect" value=""></aui:input>
-			<aui:input  type="hidden" name="correct_new<%=iterator %>" label="correct" value="true"/>
 		</div>
 		<div class="rightSideAnswer">
 			<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_new<%=iterator %>');"><liferay-ui:message key="delete"/></a></span>

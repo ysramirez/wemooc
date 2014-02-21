@@ -48,28 +48,24 @@
 					<div class="leftSideAnswer">
 						<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 						<aui:input  type="hidden" name="iterator" value="<%=i%>"></aui:input>
-						
+						<aui:input type="checkbox" name="<%=\"correct_\"+testanswer.getAnswerId() %>" label="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
 						<script type="text/javascript">
 							function <portlet:namespace />onChangeTextAnswer_<%=testanswer.getAnswerId() %>(val) {
 					        	var A = AUI();
 								A.one('#<portlet:namespace />answer_<%=testanswer.getAnswerId() %>').set('value',val);
 					        }
 						</script>
-						
 						<aui:field-wrapper label="">
 							<liferay-ui:input-editor toolbarSet="slimmer" height="15"  name="<%=\"answer_\"+testanswer.getAnswerId() %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_\"+testanswer.getAnswerId() %>" initMethod="<%=\"initEditorAnswer_\"+testanswer.getAnswerId() %>" />
-							
 							<script type="text/javascript">
 						        function <portlet:namespace />initEditorAnswer_<%=testanswer.getAnswerId() %>() { 
 						            return "<%=JavaScriptUtil.markupToStringLiteral(testanswer.getAnswer())%>";
 						        }
 						    </script>
-						    
 					    </aui:field-wrapper>
 						<aui:input name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>">
 							<aui:validator name="maxLength">300</aui:validator>
 						</aui:input>
-						<aui:input type="checkbox" name="<%=\"correct_\"+testanswer.getAnswerId() %>" label="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>
 					</div>
 					<div class="rightSideAnswer">
 						<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_<%=testanswer.getAnswerId() %>');"><liferay-ui:message key="delete"/></a></span>
