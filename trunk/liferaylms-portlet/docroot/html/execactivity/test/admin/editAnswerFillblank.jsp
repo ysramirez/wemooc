@@ -40,14 +40,13 @@
 				<div class="leftSideAnswer">
 					<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 					<aui:input  type="hidden" name="iterator" value="<%=i%>"></aui:input>
-					
+					<aui:input  type="hidden" name="correct_<%=testanswer.getAnswerId() %>" label="correct" value="true"/>					
 					<script type="text/javascript">
 						function <portlet:namespace />onChangeTextAnswer_<%=testanswer.getAnswerId() %>(val) {
 				        	var A = AUI();
 							A.one('#<portlet:namespace />answer_<%=testanswer.getAnswerId() %>').set('value',val);
 				        }
 					</script>
-					
 					<aui:field-wrapper label="">
 						<liferay-ui:input-editor toolbarSet="slimmer" name="<%=\"answer_\"+testanswer.getAnswerId() %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_\"+testanswer.getAnswerId() %>" initMethod="<%=\"initEditorAnswer\"+testanswer.getAnswerId() %>" />
 						<script type="text/javascript">
@@ -62,7 +61,6 @@
 					<aui:input  name="feedbackNoCorrect_<%=testanswer.getAnswerId() %>" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>">
 						<aui:validator name="maxLength">300</aui:validator>
 					</aui:input>
-					<aui:input  type="hidden" name="correct_<%=testanswer.getAnswerId() %>" label="correct" value="true"/>
 				</div>
 				<div class="rightSideAnswer">
 					<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_<%=testanswer.getAnswerId() %>');"><liferay-ui:message key="delete"/></a></span>
