@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.sun.xml.internal.ws.developer.MemberSubmissionEndpointReference.Elements"%>
 <%@page import="com.liferay.lms.learningactivity.ResourceExternalLearningActivityType"%>
@@ -134,15 +136,30 @@
 				if(i>0){
 					append = append+(i-1);
 				}
+				
 			%>
 				<div id="file<%=append%>">
 					<% 	AssetEntry aEntry = elements.get(i);
+						FileEntry file=DLAppLocalServiceUtil.getFileEntry(aEntry.getClassPK());
+						
+						
+						StringBuilder sb = new StringBuilder(themeDisplay.getPortalURL());
+						sb.append(themeDisplay.getPathContext());
+						sb.append("/documents/");
+						sb.append(file.getGroupId());
+						sb.append(StringPool.SLASH);
+						sb.append(file.getFolderId());
+						sb.append(StringPool.SLASH);
+						sb.append(HttpUtil.encodeURL(HtmlUtil.unescape(file.getTitle())));	
+						
+						Double size = ((double)file.getSize())/1000;
 					%>
 					<input type="hidden" name="<portlet:namespace />additionalFile<%=append %>" id="<portlet:namespace />additionalFile<%=append %>" value="<%= aEntry.getEntryId() %>">
-					<span class="upfile"><%= aEntry.getTitle(themeDisplay.getLocale()) %></span> <span class="upuser"><%=aEntry.getUserName() %></span> <span><%=sdf.format(aEntry.getCreateDate()) %></span>
+					<span class="upfile"><a target="_blanck" href="<%=sb.toString()%>"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= file.getIcon() %>.png" />
+						<%= aEntry.getTitle(themeDisplay.getLocale()) %></a></span> <span class="ufilesize">(<%=String.format(themeDisplay.getLocale(), "%.2f", size) %> KB)</span>
 					<a href="#" onclick="javascript: deleteFile('<%=append %>'); return false;">
-						<img class="icon" title="<%=LanguageUtil.get(pageContext,"delete")%>" alt="<%=LanguageUtil.get(pageContext,"delete")%>" src="/html/themes/classic/images/common/delete.png">
-					</a>
+						<img class="icon" title="<%=LanguageUtil.get(pageContext,"delete")%>" alt="<%=LanguageUtil.get(pageContext,"delete")%>" src="/html/themes/classic/images/common/delete.png"></a>
+						<span class="upuser"><%=aEntry.getUserName() %></span> <span class="udate"><%=sdf.format(aEntry.getCreateDate()) %></span>
 				</div>
 			<%}
 			
@@ -151,16 +168,7 @@
 				<aui:input disabled="<%=readonly %>" inlineLabel="left" inlineField="true" name="additionalFile" label="" id="additionalFile" type="file" value="" />
 			<%} %>
 		</div>
-	  	<%if(previusaditionalfile!=null)
-	  	{
-	  	%><br>
-	  		<liferay-ui:message key="actual-file"  />
-	  		<aui:a href='<%= themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + previusaditionalfile.getGroupId() + StringPool.SLASH + previusaditionalfile.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(previusaditionalfile.getTitle())) %>'>
-				<img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= previusaditionalfile.getIcon() %>.png" /><%= HtmlUtil.escape(previusaditionalfile.getTitle()) %>
-			</aui:a>
-			<aui:input type="checkbox" label="delete" name="deleteAdditionalFile" value="false" disabled="<%=readonly %>" inlineLabel="left"/>
-	  	<%
-	  	}
-	  	%>
-	  	<a href="#" id="add_attachment" class="add_attachment" onclick="addFileInput(); return false;">Añadir otro fichero</a>
+	  	
+	  	
+	  	<a href="#" id="add_attachment" style="<%=(elements.size()>=maxfile)?"display:none":"" %>" class="add_attachment" onclick="addFileInput(); return false;">Añadir otro fichero</a>
 </aui:field-wrapper>	
