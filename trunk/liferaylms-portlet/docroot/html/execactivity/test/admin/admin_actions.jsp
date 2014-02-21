@@ -15,11 +15,12 @@ QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestion
 %>
 <liferay-ui:icon-menu showArrow="true" align="right" showWhenSingleIcon="false">
 	<portlet:renderURL var="editURL">
-		<portlet:param name="jspPage" value="<%=qt.getURLEdit() %>"></portlet:param>
-		<portlet:param name="advise" value="<%=qt.getAnswerEditingAdvise(themeDisplay.getLocale()) %>"></portlet:param>
+		<portlet:param name="jspPage" value="/html/execactivity/test/admin/editQuestion.jsp"></portlet:param>
 		<portlet:param name="questionId" value="<%=primKey %>" />
 		<portlet:param name="resId" value="<%= actId %>" />
 		<portlet:param name="actionEditingDetails" value="<%= StringPool.TRUE %>" />	
+		<portlet:param name="message" value="<%= LanguageUtil.get(themeDisplay.getLocale(), \"execativity.editquestions.editquestion\")%>" />
+		<portlet:param name="typeId" value="<%=String.valueOf(qt.getTypeId()) %>" />
 	</portlet:renderURL>
 	<liferay-ui:icon image="edit" message="edit" url="<%=editURL.toString() %>" />
 	<portlet:actionURL name="deletequestion" var="deleteURL">

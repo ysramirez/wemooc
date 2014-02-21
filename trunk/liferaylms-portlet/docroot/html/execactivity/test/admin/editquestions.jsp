@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
+<%@page import="java.util.List"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
@@ -29,11 +31,6 @@
 %>
 <liferay-util:include page="/html/execactivity/test/admin/editHeader.jsp" servletContext="<%=this.getServletContext() %>" />
 
-<portlet:renderURL var="newquestionURL">
-	<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
-	<portlet:param name="jspPage" value="/html/execactivity/test/admin/newquestion.jsp"></portlet:param>
-	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
-</portlet:renderURL>
 <script type="text/javascript">
 <!--
 AUI().ready(function(A) {
@@ -41,15 +38,36 @@ AUI().ready(function(A) {
 	A.one("#<portlet:namespace/>TabsBack").scrollIntoView();
 });
 //-->
+			
+Liferay.provide(
+        window,
+        '<portlet:namespace />newQuestion',
+        function(typeId) {
+			var renderUrl = Liferay.PortletURL.createRenderURL();							
+			renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
+			renderUrl.setPortletId('<%=themeDisplay.getPortletDisplay().getId()%>');
+			renderUrl.setParameter('jspPage','/html/execactivity/test/admin/editQuestion.jsp');
+			renderUrl.setParameter('typeId', typeId);
+			renderUrl.setParameter('message', Liferay.Language.get('execactivity.editquestions.newquestion'));
+			renderUrl.setParameter('actionEditingDetails', true);
+			renderUrl.setParameter('resId', "<%=String.valueOf(learningActivity.getActId()) %>");
+			location.href=renderUrl.toString();
+        },
+        ['liferay-portlet-url']
+    );
+	
 </script>
 <div class="container-toolbar">
-	<div class="bt_new">
-		<liferay-ui:icon 
-		label="<%= true %>"
-		message="execativity.editquestions.newquestion"
-		url='<%= newquestionURL %>'
-		/>
-	</div>
+	<liferay-ui:icon-menu  align="left" direction="down" extended="false" showWhenSingleIcon="false" message="execativity.editquestions.newquestion" cssClass="bt_new" showArrow="true">
+	<%
+		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
+		for(QuestionType qt:qtypes){
+	%>
+		<liferay-ui:icon message="<%=qt.getTitle(themeDisplay.getLocale()) %>" url="#" onClick="<%=renderResponse.getNamespace()+\"newQuestion(\"+qt.getTypeId()+\");\" %>"/>
+	<%	
+		}
+	%>
+	</liferay-ui:icon-menu>
 	<liferay-ui:icon-menu align="right" direction="down" extended="false" showWhenSingleIcon="false" cssClass='bt_importexport' message="import-export" showArrow="true">
 		<portlet:renderURL var="importquestionsURL">
 			<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />

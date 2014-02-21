@@ -19,7 +19,9 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -50,7 +52,11 @@ public class FillblankQuestionType extends BaseQuestionType {
 	}
 	
 	public String getURLEdit(){
-		return "/html/execactivity/test/admin/editFillblankQTAnswers.jsp";
+		return "/html/execactivity/test/admin/editAnswerFillblank.jsp";
+	}
+	
+	public String getURLNew(){
+		return "/html/execactivity/test/admin/popups/fillblank.jsp";
 	}
 	
 	public boolean correct(ActionRequest actionRequest, long questionId){
@@ -365,6 +371,13 @@ public class FillblankQuestionType extends BaseQuestionType {
 		input = input.replace("\n", "<br/>");
 		input = input.replace("\r", "<br/>");
 		return input;
+	}
+	
+	public int getMaxAnswers(){
+		return 1;
+	}
+	public int getDefaultAnswersNo(){
+		return 1;
 	}
 	
 }

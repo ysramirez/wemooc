@@ -17,8 +17,10 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -61,7 +63,11 @@ public class SortableQuestionType extends BaseQuestionType {
 	}
 	
 	public String getURLEdit(){
-		return "/html/execactivity/test/admin/editSortableQTAnswers.jsp";
+		return "/html/execactivity/test/admin/editAnswerSortable.jsp";
+	}
+	
+	public String getURLNew(){
+		return "/html/execactivity/test/admin/popups/sortable.jsp";
 	}
 	
 	public boolean correct(ActionRequest actionRequest, long questionId){
@@ -254,6 +260,13 @@ public class SortableQuestionType extends BaseQuestionType {
 		    }
 		}
 		return answerSelected;
+	}
+	
+	public int getMaxAnswers(){
+		return 1000;
+	}
+	public int getDefaultAnswersNo(){
+		return GetterUtil.getInteger(PropsUtil.get("lms.defaultAnswersNo.sortable"), 2);
 	}
 	
 }

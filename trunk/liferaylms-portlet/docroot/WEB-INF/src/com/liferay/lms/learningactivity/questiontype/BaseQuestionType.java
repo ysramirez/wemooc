@@ -1,18 +1,11 @@
 package com.liferay.lms.learningactivity.questiontype;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.Locale;
-import java.util.Map;
 import java.util.List;
+import java.util.Locale;
 
 import javax.portlet.ActionRequest;
-import javax.portlet.ActionResponse;
-import javax.portlet.PortletRequest;
-import javax.portlet.PortletResponse;
-import javax.portlet.PortletURL;
-import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.io.IOUtils;
 
@@ -25,17 +18,11 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
-import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.repository.model.FileEntry;
-import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
-import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
-import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -45,6 +32,10 @@ import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 
 public abstract class BaseQuestionType implements QuestionType, Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	protected static Locale locale=null;
 
 	@Override
@@ -79,6 +70,11 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	
 	@Override
 	public String getURLEdit(){
+		return "";
+	}
+	
+	@Override
+	public String getURLNew(){
 		return "";
 	}
 	
@@ -174,6 +170,12 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	}
 	
 	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {}
-	
+
+	public int getMaxAnswers(){
+		return -1;
+	}
+	public int getDefaultAnswersNo(){
+		return -1;
+	}
 	
 }

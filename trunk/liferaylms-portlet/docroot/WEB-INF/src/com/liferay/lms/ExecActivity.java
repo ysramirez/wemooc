@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -37,6 +38,7 @@ import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
@@ -66,11 +68,11 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class ExecActivity extends MVCPortlet 
 {
 	static final Pattern DOCUMENT_EXCEPTION_MATCHER = Pattern.compile("Error on line (\\d+) of document ([^ ]+) : (.*)");
-	
+
 	HashMap<Long, TestAnswer> answersMap = new HashMap<Long, TestAnswer>(); 
-		
+
 	public void correct	(ActionRequest actionRequest,ActionResponse actionResponse)	throws Exception {
-		
+
 		long actId=ParamUtil.getLong(actionRequest, "actId");
 		long latId=ParamUtil.getLong(actionRequest,"latId" );
 		String navigate = ParamUtil.getString(actionRequest, "navigate");
@@ -80,19 +82,19 @@ public class ExecActivity extends MVCPortlet
 				isPartial = true;
 			}
 		}
-		
+
 		LearningActivityTry larntry=LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
-				    
+
 		//Comprobar que el usuario tenga intentos posibles.
 		if (larntry.getEndDate() == null){
-			
+
 			long correctanswers=0;
 			Element resultadosXML=SAXReaderUtil.createElement("results");
 			Document resultadosXMLDoc=SAXReaderUtil.createDocument(resultadosXML);
-			
+
 			long[] questionIds = ParamUtil.getLongValues(actionRequest, "question");
-			
-			
+
+
 			for (long questionId : questionIds) {
 				TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
 				QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
@@ -101,25 +103,25 @@ public class ExecActivity extends MVCPortlet
 				}
 				resultadosXML.add(qt.getResults(actionRequest, questionId));								
 			}
-			
+
 			long random = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"random"));
 			List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
 			long score=isPartial ? 0 : correctanswers*100/((random!=0 && random<questions.size())?random:questions.size());
-		 	
+
 			LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, PortalUtil.getUserId(actionRequest));
 			long oldResult=-1;
 			if(learningActivityResult!=null) oldResult=learningActivityResult.getResult();
-			
+
 			larntry.setTryResultData(resultadosXMLDoc.formattedString());
 			if (!isPartial) {
 				larntry.setResult(score);
 				larntry.setEndDate(new java.util.Date(System.currentTimeMillis()));
 			}
-			
+
 			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(larntry);
-			
+
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
-			
+
 			if (isPartial) {
 				actionResponse.setRenderParameter("improve", ParamUtil.getString(actionRequest, "improve", Boolean.FALSE.toString()));
 				actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/view.jsp");
@@ -133,126 +135,70 @@ public class ExecActivity extends MVCPortlet
 			actionRequest.setAttribute("actId", actId);
 			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/preview.jsp");
 		}						
-		
+
 	}
-		
+
 	public void camposExtra(ActionRequest actionRequest, ActionResponse actionResponse)
 			throws Exception {
-		
-			long actId = ParamUtil.getLong(actionRequest, "actId", 0);
-			long randomString=ParamUtil.getLong(actionRequest, "randomString",0);
-			String passwordString=ParamUtil.getString(actionRequest, "passwordString",StringPool.BLANK);
-			long hourDurationString=ParamUtil.getLong(actionRequest, "hourDurationString",0);
-			long minuteDurationString=ParamUtil.getLong(actionRequest, "minuteDurationString",0);
-			long secondDurationString=ParamUtil.getLong(actionRequest, "secondDurationString",0);
-			long timeStamp = hourDurationString * 3600 + minuteDurationString * 60 + secondDurationString;
-			
-			String showCorrectAnswer=ParamUtil.getString(actionRequest, "showCorrectAnswer", "false");
-			String improve=ParamUtil.getString(actionRequest, "improve", "false");
-			
-			long questionesPerPage = ParamUtil.getInteger(actionRequest, "questionesPerPage", 1);
-			
-			if(randomString==0) {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", StringPool.BLANK);
-			}
-			else {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", Long.toString(randomString));
-			}
-			
-			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "password", HtmlUtil.escape(passwordString.trim()));
-			
-			if(timeStamp==0) {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "timeStamp", StringPool.BLANK);
-			}
-			else {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "timeStamp", Long.toString(timeStamp));
-			}
-			
-			if(showCorrectAnswer.equals("true")) {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "true");
-			}else if(showCorrectAnswer.equals("false")){
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "false");
-			}
-			
-			if(improve.equals("true")) {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "true");
-			}else if(improve.equals("false")) {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "false");
-			}
-			
-			if(questionesPerPage == 0) {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", StringPool.BLANK);
-			}
-			else {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", Long.toString(questionesPerPage));
-			}
 
-			SessionMessages.add(actionRequest, "activity-saved-successfully");
-			actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
-						
+		long actId = ParamUtil.getLong(actionRequest, "actId", 0);
+		long randomString=ParamUtil.getLong(actionRequest, "randomString",0);
+		String passwordString=ParamUtil.getString(actionRequest, "passwordString",StringPool.BLANK);
+		long hourDurationString=ParamUtil.getLong(actionRequest, "hourDurationString",0);
+		long minuteDurationString=ParamUtil.getLong(actionRequest, "minuteDurationString",0);
+		long secondDurationString=ParamUtil.getLong(actionRequest, "secondDurationString",0);
+		long timeStamp = hourDurationString * 3600 + minuteDurationString * 60 + secondDurationString;
+
+		String showCorrectAnswer=ParamUtil.getString(actionRequest, "showCorrectAnswer", "false");
+		String improve=ParamUtil.getString(actionRequest, "improve", "false");
+
+		long questionesPerPage = ParamUtil.getInteger(actionRequest, "questionesPerPage", 1);
+
+		if(randomString==0) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", StringPool.BLANK);
 		}
-	
-	
-	public void saveQuestionWithoutAnswer(ActionRequest actionRequest, ActionResponse actionResponse) {
-		
-			long questionId = ParamUtil.getLong(actionRequest, "questionId");
-			List<TestAnswer> answers;
-			try {
-				answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
-				for(TestAnswer answer:answers){
-					TestAnswerLocalServiceUtil.deleteTestAnswer(answer.getAnswerId());
-				}
-				LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
-				actionResponse.setRenderParameter("questionId", Long.toString(questionId));
-				
-				if (learnact.getTypeId() == 0) {
-					TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-					QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-					actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
-					actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
-					actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
-				}
-			} catch (SystemException e) {
-				e.printStackTrace();
-			} catch (PortalException e) {
-				e.printStackTrace();
-			}
+		else {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", Long.toString(randomString));
 		}
 
-	public void addanswer(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-	
-		long questionId = ParamUtil.getLong(actionRequest, "questionId");
-		String answers = ParamUtil.getString(actionRequest, "answer");
-		boolean correct = ParamUtil.getBoolean(actionRequest, "correct");
-		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
-		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect", "");
-		if("".equals(feedbackNoCorrect)) feedbackNoCorrect = feedbackCorrect;
-		
-		if(Validator.isNull(answers)) 
-			SessionErrors.add(actionRequest, "answer-test-required");
-		else{
-			TestAnswerLocalServiceUtil.addTestAnswer(questionId, answers, feedbackCorrect, feedbackNoCorrect, correct);
-			SessionMessages.add(actionRequest, "answer-added-successfully");
+		LearningActivityLocalServiceUtil.setExtraContentValue(actId, "password", HtmlUtil.escape(passwordString.trim()));
+
+		if(timeStamp==0) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "timeStamp", StringPool.BLANK);
 		}
-		
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(questionId).getActId());
-		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
-		
-		if (learnact.getTypeId() == 0) {
-			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
-			actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
-			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
+		else {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "timeStamp", Long.toString(timeStamp));
 		}
+
+		if(showCorrectAnswer.equals("true")) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "true");
+		}else if(showCorrectAnswer.equals("false")){
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "false");
+		}
+
+		if(improve.equals("true")) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "true");
+		}else if(improve.equals("false")) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "false");
+		}
+
+		if(questionesPerPage == 0) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", StringPool.BLANK);
+		}
+		else {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", Long.toString(questionesPerPage));
+		}
+
+		SessionMessages.add(actionRequest, "activity-saved-successfully");
+		actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/edit.jsp");
+
 	}
 
 	public void importQuestions(ActionRequest actionRequest, ActionResponse actionResponse)
-	throws Exception {
+			throws Exception {
 
 		UploadPortletRequest request = PortalUtil.getUploadPortletRequest(actionRequest);
-		
+
 		long actId = ParamUtil.getLong(actionRequest, "resId");
 		String fileName = request.getFileName("fileName");
 		if(fileName==null || StringPool.BLANK.equals(fileName)){
@@ -273,7 +219,7 @@ public class ExecActivity extends MVCPortlet
 					actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestions.jsp");
 				} catch (DocumentException e) {
 					Matcher matcher = DOCUMENT_EXCEPTION_MATCHER.matcher(e.getMessage());
-					
+
 					if(matcher.matches()) {
 						SessionErrors.add(actionRequest, "execativity.editquestions.importquestions.xml.parseXMLLine", matcher.group(1));
 					}
@@ -285,139 +231,107 @@ public class ExecActivity extends MVCPortlet
 					SessionErrors.add(actionRequest, "execativity.editquestions.importquestions.xml.generic");
 					actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/importquestions.jsp");
 				}
-				
+
 			}
-		
+
 		}
-		
+
 		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
 		actionResponse.setRenderParameter("resId", Long.toString(actId));	
 	}
-	
-	public void addquestion(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-	
+
+	public void editQuestion(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws Exception {
+
+		long questionId = ParamUtil.getLong(actionRequest, "questionId", 0);
 		long actid = ParamUtil.getLong(actionRequest, "resId");
-		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		String text = ParamUtil.getString(actionRequest, "text");
-		long questionType = ParamUtil.getLong(actionRequest, "typeId");
-		TestQuestion question = TestQuestionLocalServiceUtil.addQuestion(actid, text, questionType);
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(actid);
-		actionResponse.setRenderParameter("questionId", Long.toString(question.getQuestionId()));
-		
-		if (learnact.getTypeId() == 0) {
-			QuestionType qt =new QuestionTypeRegistry().getQuestionType(questionType);
-			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
-			actionResponse.setRenderParameter("advise", qt.getAnswerEditingAdvise(themeDisplay.getLocale()));
-			actionResponse.setRenderParameter("resId", Long.toString(actid));
-			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
-		}
-		
-		actionRequest.setAttribute("activity", learnact);
-		actionRequest.setAttribute("questionId", question.getQuestionId());
-		actionRequest.setAttribute("primKey", question.getQuestionId());
-		
-		
-	}
+		long questionType = ParamUtil.getLong(actionRequest, "typeId", -1);
+		String questionText = ParamUtil.get(actionRequest, "text", "");
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		if(Validator.isNotNull(questionText)){//porque no se permite vacio ya que eliminar pregunta va por otro lado
+			TestQuestion question = null;
+			if(questionId == 0){//Nueva pregunta
+				question = TestQuestionLocalServiceUtil.addQuestion(actid, questionText, questionType);
+			}else{//Pregunta existente
+				question = TestQuestionLocalServiceUtil.getTestQuestion(questionId);
+				if(!questionText.equals(question.getText())){//Edicion de pregunta
+					question.setText(questionText);
+					TestQuestionLocalServiceUtil.updateTestQuestion(question);
+				}
+			}
+			if(question!=null){
+				questionId = question.getQuestionId();
+				//Obtengo un array con los ids de las respuestas que ya contenía la pregunta
+				List<TestAnswer> existingAnswers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+				List<Long> existingAnswersIds = new ArrayList<Long>();
+				for(TestAnswer answer:existingAnswers){
+					existingAnswersIds.add(answer.getAnswerId());
+				}
+				//Recorro todas las respuestas y las actualizo o las creo en funcion de si son nuevas o modificaciones y si son modificaciones guardo sus ids en un array para después borrar las que no existan.
+				String[] newAnswersIds = ParamUtil.getParameterValues(actionRequest, "answerId", null);
+				List<Long> editingAnswersIds = new ArrayList<Long>();
+				if(newAnswersIds != null){
+					for(String newAnswerId:newAnswersIds){
+						String answer = ParamUtil.get(actionRequest, "answer_"+newAnswerId, "");
+						if(Validator.isNotNull(answer)){
+							boolean correct = ParamUtil.getBoolean(actionRequest, "correct_"+newAnswerId);
+							String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect_"+newAnswerId, "");
+							if(feedbackCorrect.length()>300) feedbackCorrect = feedbackCorrect.substring(0, 300);
+							String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect_"+newAnswerId, "");
+							if(feedbackNoCorrect.length()>300) feedbackNoCorrect = feedbackNoCorrect.substring(0, 300);
+							if("".equals(feedbackNoCorrect)) feedbackNoCorrect = feedbackCorrect;
+							if(newAnswerId.startsWith("new")){
+								//creo respuesta
+								TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer, feedbackCorrect, feedbackNoCorrect, correct);
+							}else {
+								editingAnswersIds.add(Long.parseLong(newAnswerId));//almaceno en array para posterior borrado de las que no estén
+								//actualizo respuesta
+								TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(Long.parseLong(newAnswerId));
+								testanswer.setAnswer(answer);
+								testanswer.setIsCorrect(correct);
+								testanswer.setFeedbackCorrect(feedbackCorrect);
+								testanswer.setFeedbacknocorrect(feedbackNoCorrect);
+								TestAnswerLocalServiceUtil.updateTestAnswer(testanswer);
+							}
+						}else if(Validator.isNotNull(ParamUtil.getString(actionRequest, "feedbackCorrect_"+newAnswerId, "")) ||
+								Validator.isNotNull(ParamUtil.getString(actionRequest, "feedbackNoCorrect_"+newAnswerId, "")) ||
+								ParamUtil.getBoolean(actionRequest, "correct_"+newAnswerId)==true)
+							SessionErrors.add(actionRequest, "answer-test-required");
+					}
+				}
 
-	public void deleteanswer(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-	
-		TestAnswer answer = TestAnswerLocalServiceUtil.getTestAnswer(ParamUtil.getLong(actionRequest, "answerId"));
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(answer.getQuestionId()).getActId());
-		TestAnswerLocalServiceUtil.deleteTestAnswer(ParamUtil.getLong(actionRequest, "answerId"));
-		SessionMessages.add(actionRequest, "answer-deleted-successfully");
-		actionResponse.setRenderParameter("questionId", Long.toString(answer.getQuestionId()));
-	
-		if (learnact.getTypeId() == 0) {
-			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(answer.getQuestionId());
-			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
-			actionResponse.setRenderParameter("resId", Long.toString(learnact.getActId()));
-			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
+				//Recorro los ids de respuestas que ya contenia y compruebo si siguen estando, si no, elimino dichas respuestas.
+				for(Long existingAnswerId:existingAnswersIds){
+					if(editingAnswersIds != null && editingAnswersIds.size()>0){
+						if(!editingAnswersIds.contains(existingAnswerId)){
+							TestAnswerLocalServiceUtil.deleteTestAnswer(existingAnswerId);
+						}
+					}else TestAnswerLocalServiceUtil.deleteTestAnswer(existingAnswerId);
+				}
+				
+				actionResponse.setRenderParameter("message", LanguageUtil.get(themeDisplay.getLocale(), "execativity.editquestions.editquestion"));
+			}else {
+				SessionErrors.add(actionRequest, "execativity.test.error");
+				actionResponse.setRenderParameter("message", LanguageUtil.get(themeDisplay.getLocale(), "execactivity.editquestions.newquestion"));
+			}
+		}else {
+			SessionErrors.add(actionRequest, "execactivity.editquestions.newquestion.error.text.required");
+			actionResponse.setRenderParameter("message", LanguageUtil.get(themeDisplay.getLocale(), "execactivity.editquestions.newquestion"));
 		}
-	
-	}
 
-	public void deletequestion(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-	
-		TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(actionRequest, "questionId"));
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
-		TestQuestionLocalServiceUtil.deleteTestQuestion(question.getQuestionId());
-		SessionMessages.add(actionRequest, "question-deleted-successfully");
-		
-		if (learnact.getTypeId() == 0) {
-			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
-			actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
-			actionResponse.setRenderParameter("jspPage", qt.getURLBack());
-		}
-	}
-
-	public void editanswer(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-	
-		long answerId = ParamUtil.getLong(actionRequest, "answerId");
-		
-		//Inicialmente tiene que ser ParamUtil.getString(actionRequest, "answer"), que es lo que tienene todas las actividades, pero el FCKEditor necesita que cada editor 
-		//tenga un nombre ï¿½nico, y las test de ordenar usan FCKEditor por lo que, temporalmente dejamos la comprobaciï¿½n de ambos campos hasta que todo se pase a FCKEditor.
-		String answer = ParamUtil.getString(actionRequest, "answer_"+answerId);
-		if("".equals(answer)) answer = ParamUtil.getString(actionRequest, "answer");
-		
-		boolean correct = ParamUtil.getBoolean(actionRequest, "correct");
-		String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect", "");
-		String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect", "");
-		TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(answerId);
-		if("".equals(feedbackNoCorrect)) feedbackNoCorrect = feedbackCorrect;
-		
-		if(Validator.isNull(answer)) 
-			SessionErrors.add(actionRequest, "answer-test-required_"+answerId);
-		else{
-			testanswer.setAnswer(answer);
-			testanswer.setIsCorrect(correct);
-			testanswer.setFeedbackCorrect(feedbackCorrect);
-			testanswer.setFeedbacknocorrect(feedbackNoCorrect);
-			TestAnswerLocalServiceUtil.updateTestAnswer(testanswer);
-			SessionMessages.add(actionRequest, "answer-added-successfully");
-	    }
-		
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(TestQuestionLocalServiceUtil.getTestQuestion(testanswer.getQuestionId()).getActId());
-		actionResponse.setRenderParameter("questionId", Long.toString(testanswer.getQuestionId()));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
-		
-		if (learnact.getTypeId() == 0) {
-			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(testanswer.getQuestionId());
-			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
-			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
-		}
-	}
-
-	public void editquestion(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
-	
-		String text = ParamUtil.getString(actionRequest, "text");
-		long questionType = ParamUtil.getLong(actionRequest, "typeId");
-		long questionId = ParamUtil.getLong(actionRequest, "questionId");
-		TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(questionId);
-		
-		question.setQuestionType(questionType);
-		question.setText(text);
-		TestQuestionLocalServiceUtil.updateTestQuestion(question);
-		SessionMessages.add(actionRequest, "question-modified-successfully");
-		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
+		if(SessionErrors.size(actionRequest)==0) SessionMessages.add(actionRequest, "question-modified-successfully");
+		actionResponse.getRenderParameterMap().putAll(actionRequest.getParameterMap());
 		actionResponse.setRenderParameter("questionId", Long.toString(questionId));
-		actionResponse.setRenderParameter("actId", Long.toString(learnact.getActId()));
-	
-		if (learnact.getTypeId() == 0){ 
-			QuestionType qt =new QuestionTypeRegistry().getQuestionType(questionType);
-			actionResponse.setRenderParameter("jspPage", qt.getURLEdit());
-		}
-	
+		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+		actionResponse.setRenderParameter("resId", Long.toString(actid));
+		actionResponse.setRenderParameter("typeId", Long.toString(questionType));
+		actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editQuestion.jsp");
 	}
+
+
 	public void edit(ActionRequest actionRequest, ActionResponse actionResponse)
-	throws PortalException, SystemException, Exception {
-		
+			throws PortalException, SystemException, Exception {
+
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 		if(ParamUtil.getLong(actionRequest, "actId", 0)==0)// TODO Auto-generated method stub
 		{
@@ -425,7 +339,7 @@ public class ExecActivity extends MVCPortlet
 		}
 	}
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws PortalException, SystemException, Exception {
+			throws PortalException, SystemException, Exception {
 		long actId = ParamUtil.getInteger(actionRequest, "actId");
 		// LearningActivity learnact =
 		// com.liferay.lms.service.LearningActivityServiceUtil.getLearningActivity(actId);
@@ -443,9 +357,9 @@ public class ExecActivity extends MVCPortlet
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws PortletException, IOException {
 		long actId=0;
-		
+
 		if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
-			
+
 			actId=ParamUtil.getLong(renderRequest, "resId", 0);
 			renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
 		}
@@ -454,146 +368,150 @@ public class ExecActivity extends MVCPortlet
 
 		}
 		renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
-					
+
 		if(actId==0)// TODO Auto-generated method stub
 		{
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		}
 		else
 		{
-				LearningActivity activity;
-				try {
+			LearningActivity activity;
+			try {
 
-					//auditing
-					ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-					AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
-							actId, themeDisplay.getUserId(), AuditConstants.VIEW, null);
-					
-					activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-					long typeId=activity.getTypeId();
-					
-					if(typeId==0)
-					{
-						super.render(renderRequest, renderResponse);
-					}
-					else
-					{
-						renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
-					}
-				} catch (PortalException e) {
-				} catch (SystemException e) {
-				}			
+				//auditing
+				ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
+				AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
+						actId, themeDisplay.getUserId(), AuditConstants.VIEW, null);
+
+				activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+				long typeId=activity.getTypeId();
+
+				if(typeId==0)
+				{
+					super.render(renderRequest, renderResponse);
+				}
+				else
+				{
+					renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+				}
+			} catch (PortalException e) {
+			} catch (SystemException e) {
+			}			
 		}
 	}
-	
-	
+
+
 	public void  serveResource(ResourceRequest request, ResourceResponse response)throws PortletException, IOException {
 
 		String action = ParamUtil.getString(request, "action");
 		long actId = ParamUtil.getLong(request, "resId",0);
 		if(action.equals("export")){
-			
+
 			try {
-				
+
 				//Necesario para crear el fichero csv.
 				response.setCharacterEncoding("ISO-8859-1");
 				response.setContentType("text/csv;charset=ISO-8859-1");
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
-		        byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
-		        
-		        response.getPortletOutputStream().write(b);
-		        
-		        CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
-		        
-	
-		        //Crear la cabecera con las preguntas.
-		        List<TestQuestion> questionsTitle = TestQuestionLocalServiceUtil.getQuestions(actId);
-		        //Aï¿½adimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
-		        int numExtraCols = 3;
-		        String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
-		        
-		        //Guardamos el orden en que obtenemos las preguntas de la base de datos para poner las preguntas en el mismo orden.
-		        Long []questionOrder = new Long[questionsTitle.size()];
-		        
-		        //En las columnas extra ponemos la cabecera
-		        cabeceras[0]="User";
-		        cabeceras[1]="UserId";
-		        cabeceras[2]="Date";
-		        
-		        for(int i=numExtraCols;i<questionsTitle.size()+numExtraCols;i++){
-		        	cabeceras[i]=formatString(questionsTitle.get(i-numExtraCols).getText())+" ("+questionsTitle.get(i-numExtraCols).getQuestionId()+")";
-		        	questionOrder[i-numExtraCols]=questionsTitle.get(i-numExtraCols).getQuestionId();
-		        }
-		        writer.writeNext(cabeceras);
-		        
-		      //Partiremos del usuario para crear el csv para que sea mï¿½s facil ver los intentos.
-		        List<User> users = LearningActivityTryLocalServiceUtil.getUsersByLearningActivity(actId);
-		        
-		        for(User user:users){
-		        	
-		        	//Para cada usuario obtenemos los intentos para la learning activity.
-		        	List<LearningActivityTry> activities = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(actId, user.getUserId());
-		        	List<Long> answersIds = new ArrayList<Long>();
-		        	
-		        	for(LearningActivityTry activity:activities){
-		        		
-		        		String xml = activity.getTryResultData();
-		        		
-		        		//Leemos el xml que contiene lo que ha respondido el estudiante.
-		        		if(!xml.equals("")){
-		        			
-			        		Document document = SAXReaderUtil.read(xml);
-			        		Element rootElement = document.getRootElement();
-			        		
-			        		//Obtenemos las respuestas que hay introducido.
-			        		for(Element question:rootElement.elements("question")){
-			        			
-			        			TestQuestion q = TestQuestionLocalServiceUtil.getTestQuestion(Long.valueOf(question.attributeValue("id")));	        		
-			        			
-			        			if(q.getQuestionType() == 0){
-			        			
-					    			for(Element answerElement:question.elements("answer")){
-					        			//Guardamos el id de la respuesta para posteriormente obtener su texto.
-					    				if(Validator.isNumber(answerElement.attributeValue("id"))){
-					    					answersIds.add(Long.valueOf(answerElement.attributeValue("id")));
-					    				}
-					    			}
-			        			}
-	
-			        		}
-			        		
-			    			//Array con los resultados de los intentos.
-			        		String[] resultados = new String[questionOrder.length+numExtraCols];
-			        		
-			        		//Introducimos los datos de las columnas extra
-			        		resultados[0]=user.getFullName();
-			        		resultados[1] = String.valueOf(user.getUserId());
-			        		resultados[2] = String.valueOf(activity.getEndDate());
-			        		
-			        		for(int i=numExtraCols;i <questionOrder.length+numExtraCols ; i++){
-			        			//Si no tenemos respuesta para la pregunta, guardamos ""
-			        			resultados[i] = "";
-			        			
-			        			for(int j=0;j <answersIds.size() ; j++){
-			        				//Cuando la respuesta se corresponda con la pregunta que corresponde.
-			        				if(Long.valueOf(getQuestionIdByAnswerId(answersIds.get(j))).compareTo(Long.valueOf(questionOrder[i-numExtraCols])) == 0){
-			        					//Guardamos la respuesta en el array de resultados
-				        				resultados[i]=getAnswerTextByAnswerId(answersIds.get(j));
-				        			}
-			        			}
-			        			
-			        		}
-			        		//Escribimos las respuestas obtenidas para el intento en el csv.
-			    			writer.writeNext(resultados);
-		        		}
-		        	}
-		        }
-				
+				byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
+
+				response.getPortletOutputStream().write(b);
+
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
+
+
+				//Crear la cabecera con las preguntas.
+				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
+				List<TestQuestion> questionsTitle = new ArrayList<TestQuestion>();
+				for(TestQuestion question:questions){
+					if(question.getQuestionType() == 0) questionsTitle.add(question);
+				}
+				//Aï¿½adimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
+				int numExtraCols = 3;
+				String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
+
+				//Guardamos el orden en que obtenemos las preguntas de la base de datos para poner las preguntas en el mismo orden.
+				Long []questionOrder = new Long[questionsTitle.size()];
+
+				//En las columnas extra ponemos la cabecera
+				cabeceras[0]="User";
+				cabeceras[1]="UserId";
+				cabeceras[2]="Date";
+
+				for(int i=numExtraCols;i<questionsTitle.size()+numExtraCols;i++){
+					cabeceras[i]=formatString(questionsTitle.get(i-numExtraCols).getText())+" ("+questionsTitle.get(i-numExtraCols).getQuestionId()+")";
+					questionOrder[i-numExtraCols]=questionsTitle.get(i-numExtraCols).getQuestionId();
+				}
+				writer.writeNext(cabeceras);
+
+				//Partiremos del usuario para crear el csv para que sea mï¿½s facil ver los intentos.
+				List<User> users = LearningActivityTryLocalServiceUtil.getUsersByLearningActivity(actId);
+
+				for(User user:users){
+
+					//Para cada usuario obtenemos los intentos para la learning activity.
+					List<LearningActivityTry> activities = LearningActivityTryLocalServiceUtil.getLearningActivityTryByActUser(actId, user.getUserId());
+					List<Long> answersIds = new ArrayList<Long>();
+
+					for(LearningActivityTry activity:activities){
+
+						String xml = activity.getTryResultData();
+
+						//Leemos el xml que contiene lo que ha respondido el estudiante.
+						if(!xml.equals("")){
+
+							Document document = SAXReaderUtil.read(xml);
+							Element rootElement = document.getRootElement();
+
+							//Obtenemos las respuestas que hay introducido.
+							for(Element question:rootElement.elements("question")){
+
+								TestQuestion q = TestQuestionLocalServiceUtil.getTestQuestion(Long.valueOf(question.attributeValue("id")));	        		
+
+								if(q.getQuestionType() == 0){
+
+									for(Element answerElement:question.elements("answer")){
+										//Guardamos el id de la respuesta para posteriormente obtener su texto.
+										if(Validator.isNumber(answerElement.attributeValue("id"))){
+											answersIds.add(Long.valueOf(answerElement.attributeValue("id")));
+										}
+									}
+								}
+
+							}
+
+							//Array con los resultados de los intentos.
+							String[] resultados = new String[questionOrder.length+numExtraCols];
+
+							//Introducimos los datos de las columnas extra
+							resultados[0]=user.getFullName();
+							resultados[1] = String.valueOf(user.getUserId());
+							resultados[2] = String.valueOf(activity.getEndDate());
+
+							for(int i=numExtraCols;i <questionOrder.length+numExtraCols ; i++){
+								//Si no tenemos respuesta para la pregunta, guardamos ""
+								resultados[i] = "-";
+
+								for(int j=0;j <answersIds.size() ; j++){
+									//Cuando la respuesta se corresponda con la pregunta que corresponde.
+									if(Long.valueOf(getQuestionIdByAnswerId(answersIds.get(j))).compareTo(Long.valueOf(questionOrder[i-numExtraCols])) == 0){
+										//Guardamos la respuesta en el array de resultados
+										resultados[i]=getAnswerTextByAnswerId(answersIds.get(j));
+									}
+								}
+
+							}
+							//Escribimos las respuestas obtenidas para el intento en el csv.
+							writer.writeNext(resultados);
+						}
+					}
+				}
+
 				writer.flush();
 				writer.close();
 				response.getPortletOutputStream().flush();
-		        response.getPortletOutputStream().close();
-			
+				response.getPortletOutputStream().close();
+
 			} catch (PortalException e) {
 				e.printStackTrace();
 			} catch (SystemException e) {
@@ -602,47 +520,63 @@ public class ExecActivity extends MVCPortlet
 				e.printStackTrace();
 			}finally{
 				response.getPortletOutputStream().flush();
-		        response.getPortletOutputStream().close();
+				response.getPortletOutputStream().close();
 			}
 		}
 	}
-	
-	 private String formatString(String str) {
-		 
-		 String res = "";
-		 
+
+	private String formatString(String str) {
+
+		String res = "";
+
 		//Jsoup elimina todas la etiquetas html del string que se le pasa, devolviendo ï¿½nicamente el texto plano.
-		 res = Jsoup.parse(str).text();
-		 
+		res = Jsoup.parse(str).text();
+
 		//Si el texto es muy largo, lo recortamos para que sea mï¿½s legible.
-		 if(res.length() > 50){
-			 res = res.substring(0, 50);
-		 }
-		 	
-	      return res;
-	    }
-	 
-	 private String getAnswerTextByAnswerId(Long answerId) throws PortalException, SystemException{
-		 //Buscamos la respuesta en el hashmap, si no lo tenemos, lo obtenemos de la bd y lo guardamos.
-		 if(!answersMap.containsKey(answerId))
-		 {
+		if(res.length() > 50){
+			res = res.substring(0, 50);
+		}
+
+		return res;
+	}
+
+	private String getAnswerTextByAnswerId(Long answerId) throws PortalException, SystemException{
+		//Buscamos la respuesta en el hashmap, si no lo tenemos, lo obtenemos de la bd y lo guardamos.
+		if(!answersMap.containsKey(answerId))
+		{
 			TestAnswer answer = TestAnswerLocalServiceUtil.getTestAnswer(Long.valueOf(answerId));
 			answersMap.put(answerId, answer);
-		 }
-		 
-		 return formatString(answersMap.get(answerId).getAnswer())+" ("+answersMap.get(answerId).getAnswerId()+")";
-	 }
-	 
-	 private Long getQuestionIdByAnswerId(Long answerId) throws PortalException, SystemException{
+		}
+
+		return formatString(answersMap.get(answerId).getAnswer())+" ("+answersMap.get(answerId).getAnswerId()+")";
+	}
+
+	private Long getQuestionIdByAnswerId(Long answerId) throws PortalException, SystemException{
 		//Buscamos la respuesta en el hashmap, si no lo tenemos, lo obtenemos y lo guardamos.
-		 if(!answersMap.containsKey(answerId))
-		 {
+		if(!answersMap.containsKey(answerId))
+		{
 			TestAnswer answer = TestAnswerLocalServiceUtil.getTestAnswer(Long.valueOf(answerId));
 			answersMap.put(answerId, answer);
-		 }
-		 
-		 return answersMap.get(answerId).getQuestionId();
-	 }
-	
-	
+		}
+
+		return answersMap.get(answerId).getQuestionId();
+	}
+
+	public void deletequestion(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws Exception {
+
+		TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(actionRequest, "questionId"));
+		LearningActivity learnact = LearningActivityLocalServiceUtil.getLearningActivity(question.getActId());
+		TestQuestionLocalServiceUtil.deleteTestQuestion(question.getQuestionId());
+		SessionMessages.add(actionRequest, "question-deleted-successfully");
+
+		if (learnact.getTypeId() == 0) {
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+			actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
+			actionResponse.setRenderParameter("jspPage", qt.getURLBack());
+		}
+	}
+
+
 }
