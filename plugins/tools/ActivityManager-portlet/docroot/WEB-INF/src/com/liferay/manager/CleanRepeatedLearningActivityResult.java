@@ -130,8 +130,6 @@ public class CleanRepeatedLearningActivityResult extends CleanLearningActivity i
 								
 							isFirst = false;
 						}
-					}else{
-						break;
 					}
 				}
 			}

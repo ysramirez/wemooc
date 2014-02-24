@@ -75,7 +75,7 @@
 					<th class="col-1 col-1 first align-left valign-middle">
 						<div style="text-align: right;">
 						<liferay-ui:icon-menu>
-							<liferay-ui:icon cssClass="tag-items" image="close" message="actmanager.recalculate" onClick='recalculate(${module.moduleId})' url="#"  />
+							<liferay-ui:icon cssClass="tag-items" image="recent_changes" message="actmanager.recalculate" onClick='recalculate(${module.moduleId})' url="#"  />
 						</liferay-ui:icon-menu>
 						</div>
 					</th>
