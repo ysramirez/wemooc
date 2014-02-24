@@ -22,13 +22,17 @@ if(prefs!=null)
 	long[] actids=new long[layoutsettemplateidsString.length];
 	for(int i=0;i<layoutsettemplateidsString.length;i++)
 	{
-		layoutsettemplateids[i]=Long.parseLong(layoutsettemplateidsString[i]);
+		if(!StringPool.BLANK.equals(layoutsettemplateidsString[i])){
+			layoutsettemplateids[i]=Long.parseLong(layoutsettemplateidsString[i]);
+		}
 	}
 	String[] activityidsString=prefs.getActivities().split(",");
 	long[] activityids=new long[activityidsString.length];
 	for(int i=0;i<activityidsString.length;i++)
 	{
-		activityids[i]=Long.parseLong(activityidsString[i]);
+		if(!StringPool.BLANK.equals(activityidsString[i])){
+			activityids[i]=Long.parseLong(activityidsString[i]);
+		}
 	}
 %>
 <liferay-portlet:actionURL name="changeSettings" var="changeSettingsURL">
