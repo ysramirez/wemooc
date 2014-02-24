@@ -264,7 +264,9 @@ else
 	else{
 		CourseEval cel = null;
 		try{
-			cel = cer.getCourseEval(courseEvalIds.get(0));
+			if(courseEvalIds.size()>0){
+				cel = cer.getCourseEval(courseEvalIds.get(0));
+			}
 		}catch(Exception e){}
 		%>
 		<aui:input name="courseEvalId" value="<%=cel==null?\"0\":cel.getTypeId()%>" type="hidden"/>
@@ -327,7 +329,9 @@ else
 		
 		CalificationType ctype = null;
 		try{
-			ctype =cal.getCalificationType(califications.get(0));
+			if(califications.size()>0){
+				ctype =cal.getCalificationType(califications.get(0));
+			}
 		}catch(Exception e){}
 		%>
 		<aui:input name="calificationType" value="<%=ctype==null?\"0\":ctype.getTypeId()%>" type="hidden"/>
