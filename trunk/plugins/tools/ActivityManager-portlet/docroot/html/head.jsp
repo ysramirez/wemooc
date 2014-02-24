@@ -6,11 +6,22 @@
 
 <liferay-ui:success message="your-request-completed-successfully" key="ok" />
 
+<portlet:renderURL var="portletURL" />
+
 <c:if test="${active}">
 	<span><liferay-ui:message key="actmanager.otherprocess" /></span>
+	
+	<c:if test="${not empty course}">
+		<portlet:actionURL var="viewCourseRefreshURL" name="viewCourseRefresh">
+	    	<portlet:param name="id" value="${course.primaryKey}" />
+		</portlet:actionURL>
+		<a href="${viewCourseRefreshURL}"><%=LanguageUtil.get(pageContext,"actmanager.refresh")%></a>
+	</c:if>
+	<c:if test="${empty course}"><a href="${portletURL}"><%=LanguageUtil.get(pageContext,"actmanager.refresh")%></a></c:if>
+	
 </c:if>
  
-<portlet:renderURL var="portletURL" />
+
 <h3>
 	<a href="${portletURL}"><%=themeDisplay.getPortletDisplay().getPortletName() %></a> 
 	<c:if test="${not empty course}">
