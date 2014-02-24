@@ -546,7 +546,7 @@ Liferay.provide(
 	 if(showSpecificPanel){
 	 
 		 String defaultState="open";
-		 if(actId>0)
+		 if(actId>0&&renderRequest.getAttribute("preferencesOpen")==null)
 		 {
 			 defaultState="closed";
 		 }
