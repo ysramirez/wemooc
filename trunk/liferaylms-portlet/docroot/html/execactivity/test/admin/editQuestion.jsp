@@ -196,14 +196,22 @@
 		    	AUI().use('node',
 		    		function(A) {
 			    		var valid = true;
+			    		//todas las respuestas plegadas
+			    		var panels = A.all('[id^=panel_]');
+			    		panels.each(function() {
+			    			this.addClass('lfr-collapsed');
+			    		});
+			    		
+			    		//Pregunta no vacía
 			    		var question = A.one('#<portlet:namespace />text');
-
 			    		if(question.val()==""){
 			    			A.one('#<portlet:namespace />questionError').removeClass('aui-helper-hidden');
 			    			valid=false;
 			    		}else{
 			    			A.one('#<portlet:namespace />questionError').addClass('aui-helper-hidden');
 			    		}
+			    		
+			    		//Ninguna respuesta vacía
 			    		var list = A.all('.solution > div');
 			    		list.each(function() {
 			    			var id = this.get('id');
@@ -217,16 +225,39 @@
 			    										(feedbackNoCorrect != null && feedbackNoCorrect.val() != "") || 
 			    										(correct != null && correct._node.checked);
 			    			if(otherFieldsWithValue){
-			    				console.log("in");
 			    				answer = A.one('textarea[name=<portlet:namespace />answer_'+id+']');
 				    			if (answer != null && answer.val() == "") {
 									A.one('#<portlet:namespace />answerError_'+id).removeClass('aui-helper-hidden');
 				    				valid=false;
+				    				A.one('#panel_'+id).removeClass('lfr-collapsed');
 								}else{
 									A.one('#<portlet:namespace />answerError_'+id).addClass('aui-helper-hidden');
 								}
 			    			}
 			    		});
+			    		
+			    		//Ningun feedback > 300 caracteres
+			    		if(valid){
+				    		list.each(function() {
+				    			var id = this.get('id');
+				    			id=id.replace('testAnswer_','');
+				    			
+				    			feedbackCorrect = A.one('input[name=<portlet:namespace />feedbackCorrect_'+id+']');
+				    			feedbackNoCorrect = A.one('input[name=<portlet:namespace />feedbackNoCorrect_'+id+']');
+								
+				    			console.log(feedbackCorrect);
+				    			console.log(feedbackCorrect.val().length);
+				    			if((feedbackCorrect != null && feedbackCorrect.val().length > 300) || 
+										(feedbackNoCorrect != null && feedbackNoCorrect.val().length > 300)){
+										A.one('#<portlet:namespace />feedBackError_'+id).removeClass('aui-helper-hidden');
+					    				valid=false;
+					    				A.one('#panel_'+id).removeClass('lfr-collapsed');
+				    			}else{
+									A.one('#<portlet:namespace />feedBackError_'+id).addClass('aui-helper-hidden');
+								}
+				    		});
+			    		}
+			    		
 			    		if (!valid && e.preventDefault) {
 							e.preventDefault();
 						}

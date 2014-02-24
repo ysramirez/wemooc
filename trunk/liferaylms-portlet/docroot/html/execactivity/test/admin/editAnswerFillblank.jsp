@@ -36,7 +36,7 @@
 			<div id="<portlet:namespace />answerError_<%=testanswer.getAnswerId() %>" class="aui-helper-hidden portlet-msg-error">
 				<liferay-ui:message key="answer-test-required"/>
 			</div>
-			<liferay-ui:panel id="<%=\"testAnswer_\"+testanswer.getAnswerId() %>" title="answer" collapsible="true" extended="true" defaultState="open" persistState="false">
+			<liferay-ui:panel id="<%=\"panel_\"+testanswer.getAnswerId() %>" title="answer" collapsible="true" extended="true" defaultState="open" persistState="false">
 				<div class="leftSideAnswer">
 					<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 					<aui:input  type="hidden" name="iterator" value="<%=i%>"></aui:input>
@@ -55,12 +55,11 @@
 					        }
 					    </script>
 					</aui:field-wrapper>
-					<aui:input  name="feedbackCorrect_<%=testanswer.getAnswerId() %>" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>">
-						<aui:validator name="maxLength">300</aui:validator>
-					</aui:input>
-					<aui:input  name="feedbackNoCorrect_<%=testanswer.getAnswerId() %>" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>">
-						<aui:validator name="maxLength">300</aui:validator>
-					</aui:input>
+					<div id="<portlet:namespace />feedBackError_<%=testanswer.getAnswerId()%>" class="aui-helper-hidden portlet-msg-error">
+						<liferay-ui:message key="feedback-maxlength"/>
+					</div>
+					<aui:input  name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>"/>
+					<aui:input  name="<%=\"feedbackNoCorrect_\"+testanswer.getAnswerId() %>" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>"/>
 				</div>
 				<div class="rightSideAnswer">
 					<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_<%=testanswer.getAnswerId() %>');"><liferay-ui:message key="delete"/></a></span>
