@@ -17,7 +17,6 @@ import javax.portlet.ActionResponse;
 import javax.portlet.EventRequest;
 import javax.portlet.EventResponse;
 import javax.portlet.PortletException;
-import javax.portlet.PortletURL;
 import javax.portlet.ProcessEvent;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
@@ -30,8 +29,8 @@ import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.events.ThemeIdEvent;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.learningactivity.LearningActivityType;
+import com.liferay.lms.learningactivity.ResourceExternalLearningActivityType;
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.P2pActivity;
 import com.liferay.lms.model.P2pActivityCorrections;
@@ -703,6 +702,36 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		else if(renderRequest.getAttribute("editing")!=null &&renderRequest.getAttribute("editing").equals("true"))
 		{
+			
+			Integer maxfile = ResourceExternalLearningActivityType.DEFAULT_FILENUMBER;
+			try{
+				maxfile = Integer.valueOf(PropsUtil.get("lms.learningactivity.maxfile"));
+			}catch(NumberFormatException nfe){
+			}
+			
+			for(int i=0;i<=maxfile;i++){
+				String paramExt = "extensionfile";
+				String paramSize = "sizefile";
+				if(i > 0){
+					paramExt = paramExt + (i-1);
+					paramSize = paramSize + (i-1);
+				}
+				
+				if(renderRequest.getPortletSession().getAttribute(paramExt)!=null){
+					renderRequest.setAttribute(paramExt,renderRequest.getPortletSession().getAttribute(paramExt));
+					renderRequest.getPortletSession().removeAttribute(paramExt);
+				}
+				if(renderRequest.getPortletSession().getAttribute(paramSize)!=null){
+					renderRequest.setAttribute(paramSize,renderRequest.getPortletSession().getAttribute(paramSize));
+					renderRequest.getPortletSession().removeAttribute(paramSize);
+				}
+			}
+			
+			if(renderRequest.getPortletSession().getAttribute("preferencesOpen")!=null){
+				renderRequest.setAttribute("preferencesOpen",renderRequest.getPortletSession().getAttribute("preferencesOpen"));
+				renderRequest.getPortletSession().removeAttribute("preferencesOpen");
+			}
+			
 			renderRequest.setAttribute("showcategorization", ("false".equals(PropsUtil.get("activity.show.categorization")))?false:true);
 			include("/html/editactivity/editactivity.jsp",renderRequest,renderResponse);
 		}

@@ -1,3 +1,5 @@
+<%@page import="javax.portlet.PortletSession"%>
+<%@page import="java.util.Enumeration"%>
 <%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -24,6 +26,38 @@
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@ include file="/init.jsp" %>
+
+<% 
+	Integer maxfile = ResourceExternalLearningActivityType.DEFAULT_FILENUMBER;
+	PortletSession psession= renderRequest.getPortletSession();
+
+	try{
+		maxfile = Integer.valueOf(PropsUtil.get("lms.learningactivity.maxfile"));
+	}catch(NumberFormatException nfe){
+	}
+	
+	for(int i=0;i<=maxfile;i++){
+		String paramExt = "extensionfile";
+		String paramSize = "sizefile";
+		if(i>0){
+			paramExt = paramExt +(i-1);
+			paramSize = paramSize +(i-1);
+		}
+		
+		try{
+			String valueExt = (String)request.getAttribute(paramExt);
+			String valueSize = (String)request.getAttribute(paramSize);
+			
+			if(valueExt!=null){
+				%>	<div class="portlet-msg-error"><%=LanguageUtil.format(themeDisplay.getLocale(),"error-file-ext",new Object[]{valueExt}) %></div><%
+			}
+			if(valueSize!=null){
+				%>	<div class="portlet-msg-error"><%=LanguageUtil.format(themeDisplay.getLocale(),"error-file-size",new Object[]{valueSize}) %></div><%
+			}
+		}catch(Exception e){}
+	}
+%>
+
 <%
 	SimpleDateFormat sdf = new SimpleDateFormat("HH:mm dd/MM/yyy",themeDisplay.getLocale());
 	sdf.setTimeZone(themeDisplay.getTimeZone());
@@ -33,11 +67,6 @@
 	boolean readonly = true;
 
 	List<AssetEntry> elements = new ArrayList<AssetEntry>(); 
-	Integer maxfile = ResourceExternalLearningActivityType.DEFAULT_FILENUMBER;
-	try{
-		maxfile = Integer.valueOf(PropsUtil.get("lms.learningactivity.maxfile"));
-	}catch(NumberFormatException nfe){
-	}
 		
 	if(request.getAttribute("activity")!=null) {
 		learningActivity=(LearningActivity)request.getAttribute("activity");

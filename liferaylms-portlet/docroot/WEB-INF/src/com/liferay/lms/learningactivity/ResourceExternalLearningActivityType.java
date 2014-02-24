@@ -2,6 +2,7 @@ package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
@@ -34,6 +35,8 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.FileExtensionException;
+import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
@@ -101,8 +104,9 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 		 *  con otras configuraciones de esta actividad.
 		 */
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(
-					JavaConstants.JAVAX_PORTLET_REQUEST);
+			PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
+			//PortletRequest actionRequest = (PortletRequest)uploadRequest.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
+			
 			String youtubecode=ParamUtil.getString(uploadRequest,"youtubecode");
 			//String additionalFile = uploadRequest.getFileName("additionalFile");
 			//boolean deleteVideo=ParamUtil.getBoolean(uploadRequest, "deleteAdditionalFile",false);
@@ -167,6 +171,7 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 				}
 				
 				if(files.size()>0){
+					boolean changes = false;
 					List<Element> elements = new ArrayList<Element>(); 
 					List<Element> createelements = new ArrayList<Element>(); 
 					
@@ -221,25 +226,29 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 						if(j > 0){
 							documentt = documentt + (j-1);
 						}
-						/*if(i > 0){
-							param = param + (i-1);
-							int diff = 0;
-							if(i!=j&&i>j){
-								diff=i-j;
-							}
-							documentt = documentt + (i-(1+diff));
-							if(log.isDebugEnabled())log.debug(" --"+diff+"-->"+i+"j"+j);
-						}*/
+
 						if(log.isDebugEnabled())log.debug("AddElement:"+documentt);
 						
 						String fileName = uploadRequest.getFileName(param);
 						if(fileName!=null&&!"".equals(fileName)){
 							FileEntry dlDocument = null;
 							try {
+								if(!changes)
+									changes=true;
 								dlDocument = DLAppLocalServiceUtil.addFileEntry(
 								          themeDisplay.getUserId(), repositoryId , folderId , uploadRequest.getFileName(param), uploadRequest.getContentType(param), 
 								          uploadRequest.getFileName(param), StringPool.BLANK, StringPool.BLANK, uploadRequest.getFile(param) , serviceContext );
-							} catch (PortalException e) {
+							} catch(FileExtensionException fee){
+								if(log.isDebugEnabled())fee.printStackTrace();
+								if(log.isErrorEnabled())log.error(fee.getMessage());
+								portletRequest.getPortletSession().setAttribute("extensionfile"+i, uploadRequest.getFileName(param));
+								continue;
+							} catch(FileSizeException fse){
+								if(log.isDebugEnabled())fse.printStackTrace();
+								if(log.isErrorEnabled())log.error(fse.getMessage());
+								portletRequest.getPortletSession().setAttribute("sizefile"+i, uploadRequest.getFileName(param));
+								continue;
+							}catch (PortalException e) {
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
 								continue;
@@ -286,6 +295,8 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 								videoAsset = AssetEntryLocalServiceUtil.getAssetEntry(Long.parseLong(element.attributeValue("id")));
 								FileEntry videofile=DLAppLocalServiceUtil.getFileEntry(videoAsset.getClassPK());
 								DLAppLocalServiceUtil.deleteFileEntry(videofile.getFileEntryId());
+								if(!changes)
+									changes=true;
 							} catch (NumberFormatException e) {
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
@@ -304,6 +315,16 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 					for(Element element : createelements){
 						if(log.isDebugEnabled())log.debug("AddElement:"+element.getName());
 						rootElement.add(element);
+					}
+					
+					if(changes){
+						portletRequest.getPortletSession().setAttribute("preferencesOpen", "preferencesOpen");
+						Enumeration<String> attnames = portletRequest.getPortletSession().getAttributeNames();
+						
+						while(attnames.hasMoreElements()){
+							String param = attnames.nextElement();
+							System.out.println("Attr:"+param+"::"+portletRequest.getPortletSession().getAttribute(param));
+						}
 					}
 				}else{
 					//Delete all
