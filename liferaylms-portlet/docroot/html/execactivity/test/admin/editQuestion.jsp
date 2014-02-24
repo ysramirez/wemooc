@@ -141,8 +141,24 @@
 		function <portlet:namespace />deleteNode(id){
 	 		AUI().use('aui-node', 
 	 			function(A) {
-	 				 A.one('#'+id).remove();
-	 				<portlet:namespace />checkMinAnswersNo();
+	 				var validate = false;
+	 				var elemId = id.replace('testAnswer_', '');
+	 				var answer = A.one('textarea[name=<portlet:namespace />answer_'+elemId+']');
+	 				feedbackCorrect = A.one('input[name=<portlet:namespace />feedbackCorrect_'+elemId+']');
+	    			feedbackNoCorrect = A.one('input[name=<portlet:namespace />feedbackNoCorrect_'+elemId+']');
+	    			correct = A.one('input[name=<portlet:namespace />correct_'+elemId+'Checkbox]');
+	    			var somefieldWithValue = (answer != null && answer.val() !="") ||
+	    										(feedbackCorrect != null && feedbackCorrect.val() !="") || 
+												(feedbackNoCorrect != null && feedbackNoCorrect.val() != "") || 
+												(correct != null && correct._node.checked);
+	    			if(somefieldWithValue){
+	    				if(confirm(Liferay.Language.get('deleteContentConfirmation'))) validate = true;
+	    			}else validate = true;
+	    			
+	    			if(validate){
+	 				 	A.one('#'+id).remove();
+	 					<portlet:namespace />checkMinAnswersNo();
+	 				}
 	  			}
 	 		);
 		}
@@ -245,8 +261,6 @@
 				    			feedbackCorrect = A.one('input[name=<portlet:namespace />feedbackCorrect_'+id+']');
 				    			feedbackNoCorrect = A.one('input[name=<portlet:namespace />feedbackNoCorrect_'+id+']');
 								
-				    			console.log(feedbackCorrect);
-				    			console.log(feedbackCorrect.val().length);
 				    			if((feedbackCorrect != null && feedbackCorrect.val().length > 300) || 
 										(feedbackNoCorrect != null && feedbackNoCorrect.val().length > 300)){
 										A.one('#<portlet:namespace />feedBackError_'+id).removeClass('aui-helper-hidden');
