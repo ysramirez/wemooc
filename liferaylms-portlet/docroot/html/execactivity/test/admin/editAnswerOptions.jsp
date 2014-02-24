@@ -63,9 +63,10 @@
 						        }
 						    </script>
 					    </aui:field-wrapper>
-						<aui:input name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>">
-							<aui:validator name="maxLength">300</aui:validator>
-						</aui:input>
+					    <div id="<portlet:namespace />feedBackError_<%=testanswer.getAnswerId()%>" class="aui-helper-hidden portlet-msg-error">
+							<liferay-ui:message key="feedback-maxlength"/>
+						</div>
+						<aui:input name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"/>
 					</div>
 					<div class="rightSideAnswer">
 						<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_<%=testanswer.getAnswerId() %>');"><liferay-ui:message key="delete"/></a></span>

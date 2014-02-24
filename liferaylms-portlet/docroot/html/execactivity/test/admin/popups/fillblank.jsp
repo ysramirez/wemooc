@@ -25,6 +25,9 @@ Long iterator = ParamUtil.getLong(request, "iterator", -1);
 			        }
 			    </script>
 		    </aui:field-wrapper>
+		    <div id="<portlet:namespace />feedBackError_new<%=iterator%>" class="aui-helper-hidden portlet-msg-error">
+				<liferay-ui:message key="feedback-maxlength"/>
+			</div>
 			<aui:input name="<%=\"feedbackCorrect_new\"+iterator %>" label="feedbackCorrect" value=""></aui:input>
 			<aui:input name="<%=\"feedbackNoCorrect_new\"+iterator %>" label="feedbackNoCorrect" value=""></aui:input>
 		</div>
