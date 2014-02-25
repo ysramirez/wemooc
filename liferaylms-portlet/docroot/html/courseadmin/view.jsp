@@ -1,3 +1,4 @@
+<%@page import="java.util.Locale"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
@@ -59,7 +60,7 @@ url='<%= newactivityURL %>'
 
 <%
 }
-
+Locale loc = response.getLocale();
 PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("jspPage","/html/courseadmin/view.jsp");
 portletURL.setParameter("freetext",freetext);
@@ -108,7 +109,7 @@ portletURL.setParameter("search","search");
 		<liferay-ui:search-container-column-text>
 		<c:choose>
 			<c:when test="<%= !course.isClosed() %>">
-				<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+				<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
 			</c:when>
 			<c:otherwise>
 				<span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span>
