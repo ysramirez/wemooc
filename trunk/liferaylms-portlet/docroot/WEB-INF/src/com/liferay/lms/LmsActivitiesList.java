@@ -44,6 +44,8 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -74,7 +76,6 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
-import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -88,6 +89,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  */
 
 public class LmsActivitiesList extends MVCPortlet {
+	private Log log = LogFactoryUtil.getLog(LmsActivitiesList.class);
 	
     @ProcessEvent(qname = "{http://www.wemooc.com/}themeId")
     public void handlethemeEvent(EventRequest eventRequest, EventResponse eventResponse) {
@@ -386,7 +388,14 @@ public class LmsActivitiesList extends MVCPortlet {
 			LearningActivityLocalServiceUtil.updateLearningActivity(larn);
 			learningActivityType.afterInsertOrUpdate(uploadRequest,actionResponse,larn);
 		}
-		SessionMessages.add(actionRequest, "activity-saved-successfully");
+		
+		
+		if(actionRequest.getPortletSession().getAttribute("error")!=null){
+			actionRequest.getPortletSession().removeAttribute("error");
+		}else{
+			SessionMessages.add(actionRequest, "activity-saved-successfully");
+		}
+		
 		WindowState windowState = actionRequest.getWindowState();
 		if (redirect != null && !"".equals(redirect)) {
 			if (!windowState.equals(LiferayWindowState.POP_UP)) {
