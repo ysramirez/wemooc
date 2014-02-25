@@ -28,7 +28,6 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -111,6 +110,8 @@ public class ActivityViewer extends MVCPortlet
         PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
         PortletDisplay portletDisplayClone = new PortletDisplay();
         portletDisplay.copyTo(portletDisplayClone);
+        portletDisplay.setShowConfigurationIcon(false);
+        portletDisplay.setShowMinIcon(false);
         final Map<String, Object> requestAttributeBackup = new HashMap<String, Object>();
         for (final String key : Collections.list((Enumeration<String>) servletRequest.getAttributeNames())) {
             requestAttributeBackup.put(key, servletRequest.getAttribute(key));
@@ -121,10 +122,7 @@ public class ActivityViewer extends MVCPortlet
         String currentOuterPortlet = (String) servletRequest.getAttribute("OUTER_PORTLET_ID");
         Layout currentLayout = (Layout)servletRequest.getAttribute(WebKeys.LAYOUT);
         try {
-			ServletContext servletContext =
-					(ServletContext)servletRequest.getAttribute(WebKeys.CTX);
-			Thread.currentThread().setContextClassLoader(PortalClassLoaderUtil.getClassLoader());
-			
+			ServletContext servletContext = (ServletContext)servletRequest.getAttribute(WebKeys.CTX);
             com.liferay.portal.model.Portlet portlet = PortletLocalServiceUtil.getPortletById(PortalUtil.getCompanyId(request), portletId);
         	servletRequest.setAttribute(WebKeys.RENDER_PORTLET_RESOURCE, Boolean.TRUE);
         	long defaultGroupPlid = LayoutLocalServiceUtil.getDefaultPlid(scopeGroup);
@@ -148,7 +146,7 @@ public class ActivityViewer extends MVCPortlet
 				}
 			}
 
-            result = PortalUtil.renderPortlet(servletContext, servletRequest, servletResponse, 
+            String renderedPortlet = PortalUtil.renderPortlet(servletContext, servletRequest, servletResponse, 
             		new PortletWrapper(portlet){
 						private static final long serialVersionUID = 229422682924083706L;
 		
@@ -158,15 +156,34 @@ public class ActivityViewer extends MVCPortlet
 		        		}
 		        	}, queryString.toString(), false);
 
-            servletRequest.setAttribute(PortletRequest.LIFECYCLE_PHASE,PortletRequest.RENDER_PHASE);
-            servletRequest.setAttribute(WebKeys.RENDER_PORTLET, portlet);
-            servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_REQUEST, request);
-            servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE, response);
-            servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_CONFIG, PortletConfigFactoryUtil.create(portlet, servletContext));
-            servletRequest.setAttribute("PORTLET_CONTENT", result);
-            result=PortalUtil.renderPage(servletContext, servletRequest, servletResponse, "/html/common/themes/portlet.jsp",false);
+            if(portlet.isUseDefaultTemplate()) {
+				String  portletHeader = StringPool.BLANK, 
+						portletBody = renderedPortlet,
+						portletQueue = StringPool.BLANK;
+				
+				int portletBodyBegin = renderedPortlet.indexOf(PORTLET_BODY);
+				if(portletBodyBegin>0) {
+					int portletBodyEnd = renderedPortlet.lastIndexOf(DIV_END, renderedPortlet.lastIndexOf(DIV_END)-1);
+					portletBodyBegin+=PORTLET_BODY.length();
+					portletHeader = renderedPortlet.substring(0, portletBodyBegin);
+					portletBody = renderedPortlet.substring(portletBodyBegin, portletBodyEnd);
+					portletQueue = renderedPortlet.substring(portletBodyEnd);
+				}
+				
+				servletRequest.setAttribute(PortletRequest.LIFECYCLE_PHASE,PortletRequest.RENDER_PHASE);
+				servletRequest.setAttribute(WebKeys.RENDER_PORTLET, portlet);
+				servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_REQUEST, request);
+				servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE, response);
+				servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_CONFIG, PortletConfigFactoryUtil.create(portlet, servletContext));
+				servletRequest.setAttribute("PORTLET_CONTENT", portletBody);
+				result = portletHeader+
+						 PortalUtil.renderPage(servletContext, servletRequest, servletResponse, "/html/common/themes/portlet.jsp",false)+
+						 portletQueue;
+            }
+            else {
+            	result = renderedPortlet;
+            }
 
-            /*
 			Set<String> runtimePortletIds = (Set<String>)request.getAttribute(
 					WebKeys.RUNTIME_PORTLET_IDS);
 
@@ -177,7 +194,7 @@ public class ActivityViewer extends MVCPortlet
 			runtimePortletIds.add(portletId);
 
 			request.setAttribute(WebKeys.RUNTIME_PORTLET_IDS, runtimePortletIds);
-			*/
+
         }finally {
             // Restore the state
         	themeDisplay.setScopeGroupId(currentScopeGroup);
@@ -196,4 +213,7 @@ public class ActivityViewer extends MVCPortlet
         }
         return result;
     }
+    
+    private static final String PORTLET_BODY = "<div class=\"portlet-body\">";
+    private static final String DIV_END = "</div>";
 }
