@@ -172,6 +172,7 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 				
 				if(files.size()>0){
 					boolean changes = false;
+					boolean error = false;
 					List<Element> elements = new ArrayList<Element>(); 
 					List<Element> createelements = new ArrayList<Element>(); 
 					
@@ -242,19 +243,23 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 								if(log.isDebugEnabled())fee.printStackTrace();
 								if(log.isErrorEnabled())log.error(fee.getMessage());
 								portletRequest.getPortletSession().setAttribute("extensionfile"+i, uploadRequest.getFileName(param));
+								if(!error)error = true;
 								continue;
 							} catch(FileSizeException fse){
 								if(log.isDebugEnabled())fse.printStackTrace();
 								if(log.isErrorEnabled())log.error(fse.getMessage());
 								portletRequest.getPortletSession().setAttribute("sizefile"+i, uploadRequest.getFileName(param));
+								if(!error)error = true;
 								continue;
 							}catch (PortalException e) {
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
+								if(!error)error = true;
 								continue;
 							} catch (SystemException e) {
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
+								if(!error)error = true;
 								continue;
 							}
 							Element element=SAXReaderUtil.createElement(documentt);
@@ -263,10 +268,12 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 							} catch (PortalException e) {
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
+								if(!error)error = true;
 								continue;
 							} catch (SystemException e) {
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
+								if(!error)error = true;
 								continue;
 							}
 							createelements.add(element);
@@ -298,12 +305,15 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 								if(!changes)
 									changes=true;
 							} catch (NumberFormatException e) {
+								if(!error)error = true;
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
 							} catch (PortalException e) {
+								if(!error)error = true;
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
 							} catch (SystemException e) {
+								if(!error)error = true;
 								if(log.isDebugEnabled())e.printStackTrace();
 								if(log.isErrorEnabled())log.error(e.getMessage());
 							}
@@ -319,12 +329,10 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 					
 					if(changes){
 						portletRequest.getPortletSession().setAttribute("preferencesOpen", "preferencesOpen");
-						Enumeration<String> attnames = portletRequest.getPortletSession().getAttributeNames();
-						
-						while(attnames.hasMoreElements()){
-							String param = attnames.nextElement();
-							System.out.println("Attr:"+param+"::"+portletRequest.getPortletSession().getAttribute(param));
-						}
+					}
+					
+					if(error){
+						portletRequest.getPortletSession().setAttribute("error", "error");
 					}
 				}else{
 					//Delete all
