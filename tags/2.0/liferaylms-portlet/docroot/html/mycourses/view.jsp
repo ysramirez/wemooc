@@ -1,4 +1,5 @@
 
+<%@page import="java.util.Locale"%>
 <%@page import="com.liferay.portlet.documentlibrary.util.DLUtil"%>
 <%@page import="com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.repository.model.FileEntry"%>
@@ -12,7 +13,7 @@
 <%@ include file="/init.jsp"%>
 
 <%
-
+Locale loc = response.getLocale();
 java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(themeDisplay.getUserId());
 
 int courses = 0;
@@ -36,7 +37,7 @@ for(Group groupCourse:groups)
 			long logoId = course.getIcon();
 			FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(logoId);
 			%>
-			<a href="/web/<%=groupsel.getFriendlyURL()%>" class="course-title">
+			<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>' class="course-title">
 				<img src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK) %>">
 				<%=course.getTitle(themeDisplay.getLocale()) %>
 			</a>
@@ -46,14 +47,14 @@ for(Group groupCourse:groups)
 			long logoId = groupCourse.getPublicLayoutSet().getLogoId();
 			%>
 			
-			<a href="/web/<%=groupsel.getFriendlyURL()%>" class="course-title">
+			<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>' class="course-title">
 				<img src="/image/layout_set_logo?img_id=<%=logoId%>">
 				<%=course.getTitle(themeDisplay.getLocale()) %>
 			</a>
 			<%
 		} else {
 			%>
-			<a class="course-no-image" href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+			<a class="course-no-image" href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
 		<% }
 				
 		%>

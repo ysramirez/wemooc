@@ -1,3 +1,4 @@
+<%@page import="java.util.Locale"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.ModuleServiceUtil"%>
@@ -40,7 +41,8 @@
 <%@ include file="/init.jsp" %>
 <%	
 DecimalFormat df = new DecimalFormat("#.#");
- %>
+Locale loc = response.getLocale();
+%>
 <div class="portlet-toolbar search-form">
 <%@ include file="/html/courseadmin/coursesearchform.jsp" %>
 <liferay-ui:success key="courseadmin.clone.confirmation.success" message="courseadmin.clone.confirmation.success" />
@@ -84,7 +86,7 @@ DecimalFormat df = new DecimalFormat("#.#");
 		long modulesCount=ModuleLocalServiceUtil.countByGroupId(course.getGroupCreatedId());
 	%>
 		<liferay-ui:search-container-column-text name="title">
-		<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+		<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
 		
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text valign="right" name="registered">
