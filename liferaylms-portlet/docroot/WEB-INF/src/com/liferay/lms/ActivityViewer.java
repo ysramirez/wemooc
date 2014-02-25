@@ -25,6 +25,7 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -82,8 +83,10 @@ public class ActivityViewer extends MVCPortlet
 							renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 						}
 						else {
-							renderRequest.setAttribute("activityHtml", renderPortlet(renderRequest, renderResponse, 
-									themeDisplay, themeDisplay.getScopeGroupId(), learningActivityType.getPortletId()));
+							String activityContent = renderPortlet(renderRequest, renderResponse, 
+									themeDisplay, themeDisplay.getScopeGroupId(), learningActivityType.getPortletId());
+							renderResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
+							renderResponse.getWriter().print(activityContent);
 						}
 					}
 				}
@@ -93,7 +96,7 @@ public class ActivityViewer extends MVCPortlet
 			}
 		}
 		
-		super.render(renderRequest, renderResponse);
+		//super.render(renderRequest, renderResponse);
 	}
 
     /**
@@ -211,6 +214,7 @@ public class ActivityViewer extends MVCPortlet
                 servletRequest.setAttribute(entry.getKey(), entry.getValue());
             }
         }
+
         return result;
     }
     
