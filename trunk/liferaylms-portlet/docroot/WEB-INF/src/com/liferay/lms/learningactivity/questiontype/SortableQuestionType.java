@@ -206,7 +206,7 @@ public class SortableQuestionType extends BaseQuestionType {
 				}
 				else{
 					value += "question_"+tmp.get(i).getQuestionId()+ "["+ (i) +"]=" + tmp.get(i).getAnswerId()+"&";
-					html += "<li class=\"ui-sortable-default items\" id=\""+tmp.get(i).getAnswerId()+"\"><div class=\"answer ui-corner-all\">"+ tmp.get(i).getAnswer() + "</div></li> ";
+					html += "<li class=\"ui-sortable-default\" id=\""+tmp.get(i).getAnswerId()+"\"><div class=\"answer ui-corner-all\">"+ tmp.get(i).getAnswer() + "</div></li> ";
 
 				}
 				
