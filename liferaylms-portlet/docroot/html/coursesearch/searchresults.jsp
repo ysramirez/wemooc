@@ -1,3 +1,4 @@
+<%@page import="java.util.Locale"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.Collections"%>
 <%@ include file="/init.jsp" %>
@@ -21,6 +22,7 @@
 <jsp:include page="/html/coursesearch/searchform.jsp"></jsp:include>
 <%
 String text=ParamUtil.getString(request, "text","").trim();
+Locale loc = response.getLocale();
 if(!"".equals(text))
 {
 	SearchContext scon=new SearchContext();
@@ -81,7 +83,7 @@ String path=renderer.render(renderRequest,renderResponse,AssetRenderer.TEMPLATE_
 <% 
 Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 %>
-<a href="/web/<%=groupsel.getFriendlyURL()%>" ><liferay-ui:message key="searchresults.seecoursecard" /></a>
+<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>' ><liferay-ui:message key="searchresults.seecoursecard" /></a>
 </div>
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>

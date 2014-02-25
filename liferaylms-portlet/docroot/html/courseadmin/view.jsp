@@ -1,3 +1,4 @@
+<%@page import="java.util.Locale"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
@@ -76,6 +77,7 @@ for(String param : tparams){
 	portletURL.setParameter(param,request.getParameter(param));
 }
 portletURL.setParameter("search","search");
+Locale loc = response.getLocale();
 %>
 <liferay-ui:success key="courseadmin.clone.confirmation.success" message="courseadmin.clone.confirmation.success" />
 <liferay-ui:error ></liferay-ui:error>
@@ -108,7 +110,7 @@ portletURL.setParameter("search","search");
 		<liferay-ui:search-container-column-text>
 		<c:choose>
 			<c:when test="<%= !course.isClosed() %>">
-				<a href="/web/<%=groupsel.getFriendlyURL()%>"><%=course.getTitle(themeDisplay.getLocale()) %></a>
+				<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
 			</c:when>
 			<c:otherwise>
 				<span class="cclosed"><%=course.getTitle(themeDisplay.getLocale()) %></span>
