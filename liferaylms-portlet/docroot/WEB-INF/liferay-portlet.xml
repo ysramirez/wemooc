@@ -57,6 +57,7 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>resourceInternalActivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 		
 	<portlet>
@@ -66,6 +67,7 @@
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<css-class-wrapper>resourceExternalActivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 	
 	<portlet>
@@ -143,6 +145,7 @@
 		<footer-portlet-javascript>/js/main.js</footer-portlet-javascript>
 		<footer-portlet-javascript>/js/tree.js</footer-portlet-javascript>
 		<css-class-wrapper>p2ptaskactivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 	
 	<portlet>
@@ -374,6 +377,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>surveyactivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 	<portlet>
 		<portlet-name>onlinetaskactivity</portlet-name>
@@ -384,6 +388,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>onlinetaskactivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 	<portlet>
 		<portlet-name>offlinetaskactivity</portlet-name>
@@ -394,6 +399,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>offlinetaskactivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 	<portlet>
 		<portlet-name>portaladmin</portlet-name>
@@ -440,6 +446,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>evaluationtaskactivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 	<portlet>
 		<portlet-name>studentmanage</portlet-name>
@@ -491,6 +498,7 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>scormactivity-portlet</css-class-wrapper>
+		<add-default-resource>true</add-default-resource>
 	</portlet>
 	<portlet>
 		<portlet-name>evaluation</portlet-name>
@@ -606,6 +614,19 @@
 			/js/main.js
 		</footer-portlet-javascript>
 		<css-class-wrapper>modulenavigation-portlet</css-class-wrapper>
+	</portlet>
+	<portlet>
+		<portlet-name>activityViewer</portlet-name>
+		<icon>/icon.png</icon>
+		<use-default-template>false</use-default-template>
+		<instanceable>false</instanceable>
+				<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>
+			activityViewer-portlet
+		</css-class-wrapper>
 	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>

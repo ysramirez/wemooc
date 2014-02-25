@@ -2041,6 +2041,37 @@
         </supported-processing-event>
 		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
 	</portlet>
+	<portlet>
+		<portlet-name>activityViewer</portlet-name>
+		<display-name>activityViewer</display-name>
+		<portlet-class>com.liferay.lms.ActivityViewer</portlet-class>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+        <resource-bundle>content/activityviewer/Language</resource-bundle>
+		<portlet-info>
+			<title>activityViewer</title>
+			<short-title>activityViewer</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-public-render-parameter>actId</supported-public-render-parameter>
+		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+		<supported-public-render-parameter>actionEditing</supported-public-render-parameter>
+	</portlet>
 	<event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
     </event-definition>
