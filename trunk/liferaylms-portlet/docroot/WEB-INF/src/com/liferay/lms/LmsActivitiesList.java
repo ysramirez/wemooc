@@ -389,10 +389,12 @@ public class LmsActivitiesList extends MVCPortlet {
 			learningActivityType.afterInsertOrUpdate(uploadRequest,actionResponse,larn);
 		}
 		
-		
+		if(log.isDebugEnabled())log.debug("Check Errors");
 		if(actionRequest.getPortletSession().getAttribute("error")!=null){
+			if(log.isDebugEnabled())log.debug("Error!!");
 			actionRequest.getPortletSession().removeAttribute("error");
 		}else{
+			if(log.isDebugEnabled())log.debug("No error");
 			SessionMessages.add(actionRequest, "activity-saved-successfully");
 		}
 		
