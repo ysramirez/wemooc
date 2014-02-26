@@ -230,8 +230,8 @@ function <portlet:namespace />back() {
 	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
 </aui:field-wrapper>
 
-<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
-		ignoreRequestValue="true" helpMessage="exectactivity.edit.improve.helpMessage"></aui:input>
+<aui:input type="checkbox" name="improve" label="scormactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
+		ignoreRequestValue="true" helpMessage="scormactivity.edit.improve.helpMessage"></aui:input>
 		
 <div id="<portlet:namespace/>backButton" style="display:none;">
 	<liferay-ui:icon image="back" message="back" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"back();\" %>" label="true"  />
