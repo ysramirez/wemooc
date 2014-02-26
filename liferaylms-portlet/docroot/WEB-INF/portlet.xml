@@ -21,7 +21,8 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		<resource-bundle>content/lmsactivitieslist/Language</resource-bundle>
+		
+
 		<portlet-info>
 			<title>LmsActivitiesList</title>
 			<short-title>LmsActivitiesList</short-title>
@@ -75,7 +76,7 @@
 		</portlet-info>
         <portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
         </portlet-preferences>
@@ -218,7 +219,7 @@
 		</portlet-info>
 		 <portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
         </portlet-preferences>
@@ -264,7 +265,7 @@
 		</portlet-info>
 		 <portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
         </portlet-preferences>
@@ -346,7 +347,7 @@
 		</portlet-info>
 		 <portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
         </portlet-preferences>
@@ -394,7 +395,7 @@
 		</portlet-info>
 		 <portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
         </portlet-preferences>
@@ -439,7 +440,7 @@
 		</portlet-info>
         <portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
 
@@ -508,7 +509,7 @@
 		</portlet-info>
         <portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
 	
@@ -2020,7 +2021,7 @@
 		</portlet-info>
 		<portlet-preferences>
             <preference>
-                <name>portlet-setup-show-borders-default</name>
+                <name>portletSetupShowBorders</name>
                 <value>false</value>
             </preference>
         </portlet-preferences>
