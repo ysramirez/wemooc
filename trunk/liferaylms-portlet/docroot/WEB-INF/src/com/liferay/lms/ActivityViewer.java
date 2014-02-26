@@ -42,6 +42,7 @@ import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletConfigFactoryUtil;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -83,6 +84,7 @@ public class ActivityViewer extends MVCPortlet
 							renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 						}
 						else {
+							PortletPreferencesFactoryUtil.getLayoutPortletSetup(themeDisplay.getLayout(), learningActivityType.getPortletId());
 							String activityContent = renderPortlet(renderRequest, renderResponse, 
 									themeDisplay, themeDisplay.getScopeGroupId(), learningActivityType.getPortletId());
 							renderResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
@@ -113,8 +115,6 @@ public class ActivityViewer extends MVCPortlet
         PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
         PortletDisplay portletDisplayClone = new PortletDisplay();
         portletDisplay.copyTo(portletDisplayClone);
-        portletDisplay.setShowConfigurationIcon(false);
-        portletDisplay.setShowMinIcon(false);
         final Map<String, Object> requestAttributeBackup = new HashMap<String, Object>();
         for (final String key : Collections.list((Enumeration<String>) servletRequest.getAttributeNames())) {
             requestAttributeBackup.put(key, servletRequest.getAttribute(key));
@@ -132,8 +132,7 @@ public class ActivityViewer extends MVCPortlet
         	if(defaultGroupPlid!=LayoutConstants.DEFAULT_PLID) {
         		servletRequest.setAttribute(WebKeys.LAYOUT, LayoutLocalServiceUtil.getLayout(defaultGroupPlid));
         	}
-        	servletRequest.setAttribute(WebKeys.LAYOUT, LayoutLocalServiceUtil.getLayout(defaultGroupPlid));
-        	
+
         	servletRequest.setAttribute("OUTER_PORTLET_ID",PortalUtil.getPortletId(request));
         	
         	StringBundler queryString = new StringBundler();
