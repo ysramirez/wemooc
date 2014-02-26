@@ -313,7 +313,7 @@ public class SurveyActivity extends MVCPortlet {
 						}
 					}//while
 					if(allCorrect){
-						actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editquestions.jsp");
+						actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestions.jsp");
 						SessionMessages.add(actionRequest, "questions-added-successfully");
 					}
 	
