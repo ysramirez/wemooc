@@ -50,7 +50,10 @@
 					editDetails = GetterUtil.getBoolean(PropsUtil.get("lms.scorm.editable."+entry.getClassName()),false);
 				}	
 				openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
-				improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"), true);
+				String improveString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve");
+				if (improveString != null && !"".equals(improveString)) {
+					improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"), true);
+				}
 			}
 			catch(NestableException e)
 			{
