@@ -86,7 +86,7 @@
 
 .ico_course { max-width: 200px;}
 
-.question_sortable ul.sortable .answer{
+.question_sortable .answer{
 	border: 1px solid;
 	background: #fff;
 	color: #555;
