@@ -116,6 +116,16 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 				.getString(uploadRequest, "openWindow", "0"));
 		rootElement.add(openWindow);
 		
+		Element improve=rootElement.element("improve");
+		if(improve!=null)
+		{
+			improve.detach();
+			rootElement.remove(improve);
+		}
+		improve = SAXReaderUtil.createElement("improve");
+		improve.setText(Boolean.toString(ParamUtil.get(uploadRequest,"improve",true)));
+		rootElement.add(improve);
+		
 		Element uuid = rootElement.element("uuid");
 		if (uuid != null) {
 			uuid.detach();
