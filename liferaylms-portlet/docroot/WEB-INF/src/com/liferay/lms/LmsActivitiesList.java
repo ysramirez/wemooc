@@ -696,6 +696,112 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		}
 	}
+	
+	public void changeAllVisibility(ActionRequest actionRequest, ActionResponse actionResponse)
+			throws Exception {
+				ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+				long actId=ParamUtil.getLong(actionRequest, "resId", 0);
+				LearningActivity larn = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+				List<LearningActivity> lacts =LearningActivityLocalServiceUtil.getLearningActivitiesOfGroup(larn.getGroupId());
+				PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
+				for(LearningActivity lact : lacts){
+					if(lact.getActId() == actId){
+					
+						if(permissionChecker.hasPermission(lact.getGroupId(), LearningActivity.class.getName(), lact.getActId(), ActionKeys.PERMISSIONS)){
+						
+							String team = LearningActivityLocalServiceUtil.getExtraContentValue(lact.getActId(),"team");
+							long teamId=0;
+							if(StringPool.BLANK.equals(team)){
+								Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+								boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+								if(!visible) {	
+									String[] actIds = {ActionKeys.VIEW};
+									ResourcePermissionLocalServiceUtil.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+											ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),siteMemberRole.getRoleId(), actIds);
+								}
+							}
+							else{
+								teamId = Long.parseLong(team);
+								Team t = TeamLocalServiceUtil.getTeam(teamId);
+								Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+								boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);
+								
+								if(!visible) {
+									String[] actIds = {ActionKeys.VIEW};
+									ResourcePermissionLocalServiceUtil.setResourcePermissions(t.getCompanyId(), LearningActivity.class.getName(), 
+											ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),teamMemberRole.getRoleId(), actIds);
+									}
+							}
+						}
+					}else{
+						if(permissionChecker.hasPermission(lact.getGroupId(), LearningActivity.class.getName(), lact.getActId(), ActionKeys.PERMISSIONS)){
+							
+							String team = LearningActivityLocalServiceUtil.getExtraContentValue(lact.getActId(),"team");
+							long teamId=0;
+							if(StringPool.BLANK.equals(team)){
+								Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+								boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+								if(visible){
+									ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+								}
+							}
+							else{
+								teamId = Long.parseLong(team);
+								Team t = TeamLocalServiceUtil.getTeam(teamId);
+								Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+								boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);							
+								if(visible){
+									ResourcePermissionLocalServiceUtil.removeResourcePermission(teamMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(lact.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
+								}
+							}
+						}
+					}
+				}
+			/*	
+				if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(), ActionKeys.PERMISSIONS)){
+				String team = LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team");
+				long teamId=0;
+				if(StringPool.BLANK.equals(team)){
+					
+					Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+				
+					boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+					
+					if(visible) {
+						ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+					}else {
+						String[] actIds = {ActionKeys.VIEW};
+						ResourcePermissionLocalServiceUtil.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), actIds);
+					}
+				}
+				else{
+					teamId = Long.parseLong(team);
+					Team t = TeamLocalServiceUtil.getTeam(teamId);
+					Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+					boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), ActionKeys.VIEW);
+					
+					if(visible) {
+						ResourcePermissionLocalServiceUtil.removeResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
+					}else {
+						String[] actIds = {ActionKeys.VIEW};
+						ResourcePermissionLocalServiceUtil.setResourcePermissions(t.getCompanyId(), LearningActivity.class.getName(), 
+								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), actIds);
+						}
+				}
+				} 
+		*/
+			}
 
 
 	@Override

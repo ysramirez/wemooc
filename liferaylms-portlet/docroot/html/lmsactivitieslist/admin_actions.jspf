@@ -331,6 +331,65 @@ boolean showChangeVisibility = Boolean.parseBoolean(hideStr);
 	<liferay-ui:icon message="<%=(visible)?\"activity.visible\":\"activity.invisible\" %>"  image="<%=(visible)?\"eye\":\"eyeno\" %>" url="#" onClick="<%=visibiltyURLJavascript %>"/>
 	<%}catch(NoSuchTeamException nsge){} %>
 </c:if>
+<% 
+String hideAll = "false";
+String hideAllStr = PrefsPropsUtil.getString("learningactivity.show.hideallactivity", hideAll);
+boolean showChangeAllVisibility = Boolean.parseBoolean(hideAllStr);
+%>
+
+<c:if test="<%=showChangeAllVisibility %>">
+
+	<portlet:actionURL name="changeAllVisibility" var="visibiltyURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString()%>" >
+		<portlet:param name="resId" value="<%=primKey %>" />
+	</portlet:actionURL>
+	
+	<%	try{
+			String team = LearningActivityLocalServiceUtil.getExtraContentValue(Long.parseLong(primKey),"team");
+			long teamId=0;
+			boolean visible = false;
+			if(StringPool.BLANK.equals(team)){
+				Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+				visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+				ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+			}else{
+				teamId = Long.parseLong(team);
+				Team t = TeamLocalServiceUtil.getTeam(teamId);
+				Role siteMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+				visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	primKey,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+			}
+			
+		String visibiltyURLJavascript=
+				"javascript:AUI().use('node','aui-io-request','aui-parse-content', function(A){  "+
+						 "          var activitiesListPortlet=A.one('#p_p_id"+renderResponse.getNamespace() +"'); "+
+						 "          var activitiesListPortletId = activitiesListPortlet.attr('portlet'); "+
+						 "          var placeHolder = A.Node.create('<div class=\\'loading-animation\\' id=\\'p_load\\' + activitiesListPortletId + \\'\\' />'); "+	
+						 "          activitiesListPortlet.placeBefore(placeHolder); "+	
+						 "          activitiesListPortlet.hide(); "+
+						 "          A.io.request('"+ visibiltyURL.toString() +"', {  "+
+						 "		      dataType : 'html', "+
+						 "            on: {  "+
+						 "             		success: function() {  "+
+						 "			             var activityNavigatorPortlet=A.one('#p_p_id_"+PortalUtil.getJsSafePortletId("activityNavigator"+
+		 													PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName())+"_'); "+
+		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
+		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
+		 				 "			             }  "+
+		 				 "                       var portletBody = activitiesListPortlet.one('.portlet-body * .portlet-body'); "+
+						 "                       portletBody.plug(A.Plugin.ParseContent); "+
+						 "                       portletBody.setContent(this.get('responseData')); "+
+						 "                       activitiesListPortlet.show(); "+	
+						 "          			 placeHolder.remove(true); "+	
+						 "             }  "+
+						 "            }  "+
+						 "          });  "+	 
+						 "		}); ";
+	
+	%>
+	
+	<liferay-ui:icon message="activity.visible"  image="unlink" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+	<%}catch(NoSuchTeamException nsge){} %>
+</c:if>
 <!-- Mostrar calificaciones actividad. -->
 
 
