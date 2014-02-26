@@ -18,7 +18,7 @@
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <% 
 	long assetId=ParamUtil.getLong(request, "assertId");
-	boolean openWindow = true, editDetails = false; 
+	boolean openWindow = true, editDetails = false, improve = true; 
 	String assetTitle=StringPool.BLANK;
 	long typeId=ParamUtil.getLong(request, "type");
 	LearningActivity learningActivity=null;
@@ -48,7 +48,8 @@
 					assetTitle=entry.getTitle(renderRequest.getLocale());
 					editDetails = GetterUtil.getBoolean(PropsUtil.get("lms.scorm.editable."+entry.getClassName()),false);
 				}	
-				openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));	
+				openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
+				improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"), true);
 			}
 			catch(NestableException e)
 			{
@@ -86,6 +87,8 @@ if(learningActivity!=null){  %>
 <% 
 	editResourceUnicode = UnicodeFormatter.toString(editResource);
 }
+	//Permiso de editar los campos del extra content.
+	boolean edit = LearningActivityLocalServiceUtil.canBeEdited(learningActivity, user.getUserId());
 %>
 
 <script type="text/javascript">
@@ -225,6 +228,9 @@ function <portlet:namespace />back() {
 <aui:field-wrapper name="activity.edit.openwindow.options">
 	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
 </aui:field-wrapper>
+
+<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
+		ignoreRequestValue="true" helpMessage="exectactivity.edit.improve.helpMessage"></aui:input>
 		
 <div id="<portlet:namespace/>backButton" style="display:none;">
 	<liferay-ui:icon image="back" message="back" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"back();\" %>" label="true"  />

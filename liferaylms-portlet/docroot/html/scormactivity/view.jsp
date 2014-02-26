@@ -39,15 +39,24 @@
 <div class="container-activity">
 <%
 	long actId=ParamUtil.getLong(request,"actId",0);
-	boolean improve =ParamUtil.getBoolean(request, "improve", true);
 	long userId = themeDisplay.getUserId();
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
 	String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
+	boolean improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "improve"), true);
 
 	//Obtener si puede hacer un intento de mejorar el resultado.
 	boolean improving = true;
 	LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+	/*
+	if(result != null){
+		LearningActivity act=LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		
+		if(result.getResult() < 100 && !LearningActivityLocalServiceUtil.islocked(actId, userId) && LearningActivityResultLocalServiceUtil.userPassed(actId, userId)){
+			improving = true;
+		}
+	}
+	*/
 
 	if (actId==0) {
 		renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
@@ -71,7 +80,7 @@
 	|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
 	|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")))
 		{		
-		if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
+		if((!improve) && LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 		{
 			request.setAttribute("learningActivity",activity);
 			request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
@@ -90,11 +99,30 @@
 			
 			<% 
 		} 
-		if (permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
+		else if (permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
 		|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")
 	    || improving )
 		{
 
+			if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
+			{
+				request.setAttribute("learningActivity",activity);
+				request.setAttribute("larntry",LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, userId));
+				Object[] arguments = new Object[] { result.getResult() };
+				Object[] arg = new Object[] { activity.getPasspuntuation() };
+				%>
+				<p>
+					<liferay-ui:message key="activity-done" />
+				</p>
+				<p>
+					<liferay-ui:message key="activity.your-result" arguments="<%=arguments%>" />
+				</p>
+				<p class="color_tercero negrita">
+					<liferay-ui:message key="activity.your-result-pass" arguments="<%=arg%>" />
+				</p>
+				
+				<% 
+			}
 	ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
 	long activityTimestamp=0;
 	long timestamp=0;
