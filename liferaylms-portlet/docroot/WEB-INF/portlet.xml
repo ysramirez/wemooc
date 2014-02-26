@@ -21,8 +21,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
-		
-
+		<resource-bundle>content/lmsactivitieslist/Language</resource-bundle>
 		<portlet-info>
 			<title>LmsActivitiesList</title>
 			<short-title>LmsActivitiesList</short-title>
