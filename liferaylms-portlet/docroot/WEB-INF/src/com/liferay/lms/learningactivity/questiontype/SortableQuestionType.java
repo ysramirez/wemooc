@@ -71,45 +71,27 @@ public class SortableQuestionType extends BaseQuestionType {
 	}
 	
 	public boolean correct(ActionRequest actionRequest, long questionId){
-		String cl = ParamUtil.getString(actionRequest, "question_"+questionId+"_contentlist");
-		
-		if(cl.equals("")){
-			return false;
-		}
-		
-		String[] positions = cl.split("&");
-		List<Long> arrayAnswersId = new ArrayList<Long>();
-		for(String answerId:positions){
-			String[] tmp = answerId.split("=");
-			arrayAnswersId.add(Long.parseLong(tmp[1]));
-		}
 		List<TestAnswer> testAnswers = new ArrayList<TestAnswer>();
 		try {
-			testAnswers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			testAnswers.addAll(TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId));
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
-		if(!arrayAnswersId.isEmpty()){
-			int correctAnswers=0, correctAnswered=0, incorrectAnswered=0;
-			int i=0;
-			while (i < testAnswers.size()){
-				if(isCorrect(testAnswers.get(i))){
-					correctAnswers++;
-					//System.out.println(i+"  - "+arrayAnswersId.get(i)+" == " + testAnswers.get(i).getAnswerId() );
-					if(arrayAnswersId.get(i).equals(testAnswers.get(i).getAnswerId())) correctAnswered++;
-				}else if(arrayAnswersId.contains(testAnswers.get(i).getAnswerId())) incorrectAnswered++;
-			i++;	
-			}
-			if(correctAnswers==correctAnswered && incorrectAnswered==0)	return true;
-			else return false;
+
+		List<Long> answersId = new ArrayList<Long>();
+		long[] answers = ParamUtil.getLongValues(actionRequest, "question_"+questionId+"_ans");
+		for(long id:answers){
+			answersId.add(id);
 		}
-		else{
-			return false;
-		}
+
+		if(!isCorrect(answersId, testAnswers)) return false;
+		return true;
 	}
 	
-	protected boolean isCorrect(TestAnswer testAnswer){
-		return (testAnswer!=null)?testAnswer.isIsCorrect():false;
+	protected boolean isCorrect(List<Long> answersId, List<TestAnswer> testAnswers){
+		for(int i=0;i<testAnswers.size();i++) 
+			if(answersId.get(i) == -1 || answersId.get(i) != testAnswers.get(i).getAnswerId())	return false;
+		return true;
 	}
 	
 	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
@@ -117,20 +99,19 @@ public class SortableQuestionType extends BaseQuestionType {
 	}
 	
 	public Element getResults(ActionRequest actionRequest, long questionId){
-		
-		String answersValue = ParamUtil.getString(actionRequest, "question_"+questionId+"_contentlist");
-		//System.out.println(" answers : " + answersValue.toString() );
-		
-		List<Long> arrayAnswersId = new ArrayList<Long>();
-		String answers[] = answersValue.split("&");
-		
-		for(String answer:answers){
-			String values[] = answer.split("=");
-			if(values.length > 1){
-				arrayAnswersId.add(Long.parseLong(values[1]));
-			}
+		List<TestAnswer> testAnswers = new ArrayList<TestAnswer>();
+		try {
+			testAnswers.addAll(TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId));
+		} catch (SystemException e) {
+			e.printStackTrace();
 		}
-		
+
+		List<Long> answersId = new ArrayList<Long>();
+		long[] answers = ParamUtil.getLongValues(actionRequest, "question_"+questionId+"_ans");
+		for(long id:answers){
+			answersId.add(id);
+		}
+
 		Element questionXML=SAXReaderUtil.createElement("question");
 		questionXML.addAttribute("id", Long.toString(questionId));
 		
@@ -138,94 +119,64 @@ public class SortableQuestionType extends BaseQuestionType {
 		if (currentQuestionId == questionId) {
 			questionXML.addAttribute("current", "true");
 		}
-		
-		for(long answer:arrayAnswersId){
-			if(answer >0){
-				Element answerXML=SAXReaderUtil.createElement("answer");
-				answerXML.addAttribute("id", Long.toString(answer));
-				questionXML.add(answerXML);
-			}
+
+		for(long answer:answersId){
+			Element answerXML=SAXReaderUtil.createElement("answer");
+			answerXML.addAttribute("id", Long.toString(answer));
+			questionXML.add(answerXML);
 		}
 		return questionXML;
 	}
 	
 	private String getHtml(Document document, long questionId, boolean feedback, ThemeDisplay themeDisplay){
-		String html = "", answersFeedBack="", feedMessage = "", cssclass="correct";
+		String html = "", showCorrectAnswer="false";
 		String namespace = themeDisplay != null ? themeDisplay.getPortletDisplay().getNamespace() : "";
 		try {
 			TestQuestion question = TestQuestionLocalServiceUtil.fetchTestQuestion(questionId);
-
-			List<TestAnswer> answersSelected = getAnswerSelected(document, questionId);
+			List<TestAnswer> answersSelected=getAnswerSelected(document, questionId);
+			List<TestAnswer> tA= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
+			List<Long>answersSelectedIds = new ArrayList<Long>();
+			for(TestAnswer ans:answersSelected)
+				answersSelectedIds.add(ans.getAnswerId());
 			
-			List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-			List<TestAnswer> tmp = ListUtil.copy(testAnswers);
-			boolean questionCorrect = false;
-								
-			if(feedback){ 
-				//en este caso no existe la pregunta sin contestar
-				//feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
-			}else{
-				html += "<div class=\"question"  + " questiontype_" + getName() + " questiontype_" + getTypeId() + "\">"+
-						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
-						"<div class=\"questiontext\">" + question.getText() + "</div>";
-				if (answersSelected.isEmpty()) {
-					Collections.shuffle(tmp);
-				} else {
-					tmp = answersSelected;
-				}
-				html += "<div class=\"question_sortable\"><ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
-			}
-			String value="";
-			int i=0;
-			while( i < testAnswers.size()){
-				String showCorrectAnswer="false", correct = "";
-				if(feedback) {
-					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
-					if("true".equals(showCorrectAnswer)) {
-						correct="font_14 color_cuarto negrita";
-					}
-					questionCorrect = answersSelected.get(i).equals(testAnswers.get(i));
+			ArrayList<TestAnswer> testAnswers = new ArrayList<TestAnswer>();
+			testAnswers.addAll(tA);
+			Collections.shuffle(testAnswers);
 
-					if("true".equals(showCorrectAnswer)) {
-						if(questionCorrect) {
-							feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"execativity.test.questions.ordenable.correct");
-						}
-						else {
-							cssclass="incorrect";
-							feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"execativity.test.questions.ordenable.incorrect") + 						
-									LanguageUtil.format(themeDisplay.getLocale(),"execativity.test.questions.ordenable.incorrect.showcorrect", new String[]{String.valueOf(testAnswers.indexOf(answersSelected.get(i))+1)});
-						}
-					} else {
-						if(!questionCorrect) {
-							cssclass="incorrect";
-						}
-					}
-					answersFeedBack += "<div class=\"answer\">" + answersSelected.get(i).getAnswer() 
-							+ "<div class=\"message  " + correct + " "+ cssclass +"\">"+feedMessage+"</div> </div>";
-			
-				}
-				else{
-					value += "question_"+tmp.get(i).getQuestionId()+ "["+ (i) +"]=" + tmp.get(i).getAnswerId()+"&";
-					html += "<li class=\"ui-sortable-default\" id=\""+tmp.get(i).getAnswerId()+"\"><div class=\"answer ui-corner-all\">"+ tmp.get(i).getAnswer() + "</div></li> ";
-
-				}
-				
-				i++;
-			}
+			String correctionClass = "";
 			if(feedback){
-				html += "<div class=\"question " + cssclass + "\">" + 
-					"<div class=\"questiontext\">" + question.getText() + "</div>" +
-					"<div class=\"content_answer\">" + answersFeedBack + "</div>" +
-				"</div>";
+				showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+				if(isCorrect(answersSelectedIds, tA)) correctionClass = " correct";
+				else correctionClass = " incorrect";
 			}
-			else{
-				html += "</ul></div>";
-				html += "<input type=hidden id=\""+ namespace +"question_"+question.getQuestionId() +"_contentlist\" name=\""+ namespace +"question_"+question.getQuestionId() +"_contentlist\" value=\""+value+"\"/>";
-				html += "</div>";
-			}
+
+			html += "<div id=\"id"+questionId+"\" class=\"question sortable" + correctionClass + " questiontype_" + getName() + " question_" + getName() + " questiontype_" + getTypeId() + "\">"+
+						"<input type=\"hidden\" name=\""+themeDisplay.getPortletDisplay().getNamespace()+"question\" value=\"" + question.getQuestionId() + "\"/>"+
+						"<div class=\"questiontext\">" + question.getText() + "</div>" +
+						"<div class=\"content_answer\">"+
+							"<ul class=\"sortable\" id=\"question_"+question.getQuestionId() + "\" >";
+	
+								List<TestAnswer> answers = testAnswers;
+								if(answersSelected != null && answersSelected.size()>0) answers = answersSelected;
+								for(int i=0;i<answers.size();i++){
+									html += "<li class=\"ui-sortable-default\" id=\""+answers.get(i).getAnswerId()+"\">"+
+												"<input type=\"hidden\" name=\""+namespace+"question_" + question.getQuestionId()+"_ans\"  value=\""+answers.get(i).getAnswerId()+"\"/>"+
+												"<div class=\"answer ui-corner-all\">"+ answers.get(i).getAnswer() + "</div>" +
+											"</li> ";
+									if("true".equals(showCorrectAnswer)) {
+										html += "<div class=\" font_14 color_cuarto negrita\">" + tA.get(i).getAnswer() + "</div>";
+									}
+								}
+			
+				html += 	"</ul>"+
+						"</div>";
+			html += "</div>";
+
 		} catch (SystemException e) {
 			e.printStackTrace();
 		}
+
+
 		return html;
 	}
 	

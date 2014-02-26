@@ -10,7 +10,7 @@ Long iterator = ParamUtil.getLong(request, "iterator", -1);
 		<div class="leftSideAnswer">
 			<aui:input  type="hidden" name="answerId" value="<%=\"new\"+iterator %>"></aui:input>
 			<aui:input  type="hidden" name="iterator" value="<%=iterator%>"></aui:input>
-			<aui:input  type="hidden" name="correct_new<%=iterator %>" label="correct" value="<%=true %>"></aui:input>			
+			<aui:input  type="hidden" name="correct_new<%=iterator %>" label="correct" value="true"></aui:input>			
 			<script type="text/javascript">
 				function <portlet:namespace />onChangeTextAnswer_new<%=iterator %>(val) {
 		        	var A = AUI();

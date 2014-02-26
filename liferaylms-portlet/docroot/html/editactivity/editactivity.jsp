@@ -38,12 +38,6 @@
 
 <%
 long moduleId=ParamUtil.getLong(request,"resModuleId",0);
-
-Module module = null;
-try{
-	module = ModuleLocalServiceUtil.getModule(moduleId);
-}catch(Exception e){}
-
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 long typeId=ParamUtil.getLong(request, "type");
@@ -64,6 +58,11 @@ if(request.getAttribute("activity")!=null){
 		moduleId=learnact.getModuleId();
 	}
 }
+
+Module module = null;
+try{
+	module = ModuleLocalServiceUtil.getModule(moduleId);
+}catch(Exception e){}
 
 boolean disabled = true;
 if(LearningActivityLocalServiceUtil.canBeEdited(learnact, user.getUserId())){
@@ -587,7 +586,7 @@ Liferay.provide(
 				
 		if(larntype.isScoreConfigurable())
 		{
-			long score=Long.valueOf(LearningActivityResultLocalServiceUtil.translateResult(themeDisplay.getLocale(), larntype.getDefaultScore(), themeDisplay.getScopeGroupId()));
+			long score=Long.valueOf(larntype.getDefaultScore());
 			if(learnact!=null)
 			{
 				score=learnact.getPasspuntuation();

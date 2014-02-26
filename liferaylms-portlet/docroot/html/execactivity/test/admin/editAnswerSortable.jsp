@@ -37,7 +37,7 @@
 				<div class="leftSideAnswer">
 					<aui:input  type="hidden" name="answerId" value="<%=testanswer.getAnswerId() %>"></aui:input>
 					<aui:input  type="hidden" name="iterator" value="<%=i%>"></aui:input>
-					<aui:input type="hidden" name="correct_<%=testanswer.getAnswerId() %>" label="correct" checked="<%=testanswer.getIsCorrect() %>"></aui:input>					
+					<aui:input  type="hidden" name="correct_<%=testanswer.getAnswerId() %>" label="correct" value="true"/>	
 					<script type="text/javascript">
 						function <portlet:namespace />onChangeTextAnswer_<%=testanswer.getAnswerId() %>(val) {
 				        	var A = AUI();
