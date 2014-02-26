@@ -763,44 +763,6 @@ public class LmsActivitiesList extends MVCPortlet {
 						}
 					}
 				}
-			/*	
-				if(permissionChecker.hasPermission(larn.getGroupId(), LearningActivity.class.getName(), larn.getActId(), ActionKeys.PERMISSIONS)){
-				String team = LearningActivityLocalServiceUtil.getExtraContentValue(actId,"team");
-				long teamId=0;
-				if(StringPool.BLANK.equals(team)){
-					
-					Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
-				
-					boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), ActionKeys.VIEW);
-					
-					if(visible) {
-						ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
-					}else {
-						String[] actIds = {ActionKeys.VIEW};
-						ResourcePermissionLocalServiceUtil.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), actIds);
-					}
-				}
-				else{
-					teamId = Long.parseLong(team);
-					Team t = TeamLocalServiceUtil.getTeam(teamId);
-					Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
-					boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
-							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), ActionKeys.VIEW);
-					
-					if(visible) {
-						ResourcePermissionLocalServiceUtil.removeResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
-								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
-					}else {
-						String[] actIds = {ActionKeys.VIEW};
-						ResourcePermissionLocalServiceUtil.setResourcePermissions(t.getCompanyId(), LearningActivity.class.getName(), 
-								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), actIds);
-						}
-				}
-				} 
-		*/
 			}
 
 
