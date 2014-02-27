@@ -1,14 +1,17 @@
 package com.liferay.lms;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
 
+import javax.portlet.MimeResponse;
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
@@ -18,6 +21,11 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
@@ -156,7 +164,25 @@ public class ActivityViewer extends MVCPortlet
 		        		public boolean isUseDefaultTemplate() {
 		        			return false;
 		        		}
-		        	}, queryString.toString(), false);
+					}, queryString.toString(), false);
+
+			List<String> markupHeaders = (List<String>)servletRequest.getAttribute(MimeResponse.MARKUP_HEAD_ELEMENT);
+			if((Validator.isNotNull(markupHeaders))&&(!markupHeaders.isEmpty())) {
+				try {
+					DocumentBuilder documentBuilder = DocumentBuilderFactory.
+							newInstance().newDocumentBuilder();
+					for (String header : markupHeaders) {
+						try {
+							response.addProperty(MimeResponse.MARKUP_HEAD_ELEMENT, documentBuilder
+								    .parse(new ByteArrayInputStream(header.getBytes()))
+								    .getDocumentElement());
+						} catch (SAXException e) {
+						}
+					}
+				} catch (ParserConfigurationException e) {
+					throw new SystemException(e);
+				}
+			}
 
             if(portlet.isUseDefaultTemplate()) {
 				String  portletHeader = StringPool.BLANK, 
