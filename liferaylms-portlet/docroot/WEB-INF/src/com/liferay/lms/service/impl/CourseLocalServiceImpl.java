@@ -139,7 +139,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					AssetLinkConstants.TYPE_RELATED);
 			//creating group
 			Group group = groupLocalService.addGroup(getAdministratorUser(serviceContext.getCompanyId()).getUserId(),
-					Course.class.getName(), course.getCourseId(), title,summary,typesite,friendlyURL,true,true,serviceContext);
+					null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
 			
 			
 			//A�adimos el rol Teacher al usuario que crea el blog
@@ -263,7 +263,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		parameterMap.put(
 				PortletDataHandlerKeys.LAYOUTS_IMPORT_MODE,
 				new String[] {PortletDataHandlerKeys.
-					LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE});
+						LAYOUTS_IMPORT_MODE_CREATED_FROM_PROTOTYPE});
 		parameterMap.put(
 			PortletDataHandlerKeys.DATA_STRATEGY,
 			new String[] {PortletDataHandlerKeys.DATA_STRATEGY_MIRROR});
@@ -271,11 +271,23 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			PortletDataHandlerKeys.DELETE_MISSING_LAYOUTS,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
+				PortletDataHandlerKeys.LAYOUT_SET_PROTOTYPE_LINK_ENABLED,
+				new String[] {Boolean.FALSE.toString()});
+		parameterMap.put(
+				PortletDataHandlerKeys.LAYOUT_SET_SETTINGS,
+				new String[] {Boolean.TRUE.toString()});
+		parameterMap.put(
 			PortletDataHandlerKeys.DELETE_PORTLET_DATA,
-			new String[] {Boolean.TRUE.toString()});
+			new String[] {Boolean.FALSE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.PERMISSIONS,
 			new String[] {Boolean.TRUE.toString()});
+		parameterMap.put(
+				PortletDataHandlerKeys.LOGO,
+				new String[] {Boolean.FALSE.toString()});
+			parameterMap.put(
+				PortletDataHandlerKeys.PERFORM_DIRECT_BINARY_IMPORT,
+				new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.PORTLET_DATA,
 			//new String[] {Boolean.FALSE.toString()});
@@ -291,8 +303,11 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			PortletDataHandlerKeys.PORTLET_USER_PREFERENCES,
 			new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
-			PortletDataHandlerKeys.THEME,
-			new String[] {Boolean.FALSE.toString()});
+				PortletDataHandlerKeys.THEME,
+				new String[] {Boolean.FALSE.toString()});
+			parameterMap.put(
+				PortletDataHandlerKeys.THEME_REFERENCE,
+				new String[] {Boolean.TRUE.toString()});
 		parameterMap.put(
 			PortletDataHandlerKeys.USER_ID_STRATEGY,
 			new String[] {UserIdStrategy.CURRENT_USER_ID});
