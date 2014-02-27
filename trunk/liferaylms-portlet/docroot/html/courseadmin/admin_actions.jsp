@@ -57,7 +57,7 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 		<portlet:param name="courseId" value="<%= primKey %>" />
 		<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
 	</portlet:actionURL>
-	<liferay-ui:icon src="/weclass-theme/images/dock/my_places_private.png" message="open-course" url="<%=openURL.toString() %>" />
+	<liferay-ui:icon src="<%= themeDisplay.getPathThemeImages() %>/dock/my_places_private.png" message="open-course" url="<%=openURL.toString() %>" />
 <%} %>
 <portlet:actionURL name="deleteCourse" var="deleteURL">
 <portlet:param name="courseId" value="<%= primKey %>" />
