@@ -137,7 +137,7 @@
 		}
 		var div = document.createElement("div");
 		div.id = "file"+append;
-		//div.className = "aui-field aui-field-text aui-field-inline";
+		div.className = "row_file";
 		var input = document.createElement("input");
 		div.appendChild(input);
 		var a = document.createElement("a");
@@ -147,7 +147,7 @@
 		img.className="icon";
 		img.tittle="<%=LanguageUtil.get(pageContext,"delete")%>";
 		img.alt="<%=LanguageUtil.get(pageContext,"delete") %>";
-		img.src="/html/themes/classic/images/common/delete.png";
+		img.src="<%= themeDisplay.getPathThemeImages() %>/common/delete.png";
 		a.appendChild(img);
 		input.type = "file";
 		input.name = "<portlet:namespace />additionalFile"+append;
@@ -159,37 +159,37 @@
 	}
 </script>
 <aui:field-wrapper label="complementary-file" helpMessage="<%=LanguageUtil.get(pageContext,\"additionalFile-help\")%>" >		  	
-		<div id="files">
-			<% for(int i=0;i<elements.size();i++){ 
-				String append = "";
-				if(i>0){
-					append = append+(i-1);
-				}
-				
-			%>
-				<div id="file<%=append%>">
-					<% 	AssetEntry aEntry = elements.get(i);
-						FileEntry file=DLAppLocalServiceUtil.getFileEntry(aEntry.getClassPK());
-						
-						
-						StringBuilder sb = new StringBuilder(themeDisplay.getPortalURL());
-						sb.append(themeDisplay.getPathContext());
-						sb.append("/documents/");
-						sb.append(file.getGroupId());
-						sb.append(StringPool.SLASH);
-						sb.append(file.getFolderId());
-						sb.append(StringPool.SLASH);
-						sb.append(HttpUtil.encodeURL(HtmlUtil.unescape(file.getTitle())));	
-						
-						Double size = ((double)file.getSize())/1000;
-					%>
-					<input type="hidden" name="<portlet:namespace />additionalFile<%=append %>" id="<portlet:namespace />additionalFile<%=append %>" value="<%= aEntry.getEntryId() %>">
-					<span class="upfile"><a target="_blanck" href="<%=sb.toString()%>"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= file.getIcon() %>.png" />
-						<%= aEntry.getTitle(themeDisplay.getLocale()) %></a></span> <span class="ufilesize">(<%=String.format(themeDisplay.getLocale(), "%.2f", size) %> KB)</span>
-					<a href="#" onclick="javascript: deleteFile('<%=append %>'); return false;">
-						<img class="icon" title="<%=LanguageUtil.get(pageContext,"delete")%>" alt="<%=LanguageUtil.get(pageContext,"delete")%>" src="/html/themes/classic/images/common/delete.png"></a>
-						<span class="upuser"><%=aEntry.getUserName() %></span> <span class="udate"><%=sdf.format(aEntry.getCreateDate()) %></span>
-				</div>
+	<div id="files" class="container_files">
+		<% for(int i=0;i<elements.size();i++){ 
+			String append = "";
+			if(i>0){
+				append = append+(i-1);
+			}
+			
+		%>
+			<div id="file<%=append%>" class="row_file">
+				<% 	AssetEntry aEntry = elements.get(i);
+					FileEntry file=DLAppLocalServiceUtil.getFileEntry(aEntry.getClassPK());
+					
+					
+					StringBuilder sb = new StringBuilder(themeDisplay.getPortalURL());
+					sb.append(themeDisplay.getPathContext());
+					sb.append("/documents/");
+					sb.append(file.getGroupId());
+					sb.append(StringPool.SLASH);
+					sb.append(file.getFolderId());
+					sb.append(StringPool.SLASH);
+					sb.append(HttpUtil.encodeURL(HtmlUtil.unescape(file.getTitle())));	
+					
+					Double size = ((double)file.getSize())/1000;
+				%>
+				<input type="hidden" name="<portlet:namespace />additionalFile<%=append %>" id="<portlet:namespace />additionalFile<%=append %>" value="<%= aEntry.getEntryId() %>">
+				<span class="upfile"><a target="_blanck" href="<%=sb.toString()%>"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= file.getIcon() %>.png" />
+					<%= aEntry.getTitle(themeDisplay.getLocale()) %></a></span> <span class="ufilesize">(<%=String.format(themeDisplay.getLocale(), "%.2f", size) %> KB)</span>
+				<a href="#" onclick="javascript: deleteFile('<%=append %>'); return false;">
+					<img class="icon" title="<%=LanguageUtil.get(pageContext,"delete")%>" alt="<%=LanguageUtil.get(pageContext,"delete")%>" src="<%= themeDisplay.getPathThemeImages() %>/common/delete.png"></a>
+					<span class="upuser"><%=aEntry.getUserName() %></span> <span class="udate"><%=sdf.format(aEntry.getCreateDate()) %></span>
+			</div>
 			<%}
 			
 			if(elements.size()==0){
@@ -197,7 +197,7 @@
 				<aui:input disabled="<%=readonly %>" inlineLabel="left" inlineField="true" name="additionalFile" label="" id="additionalFile" type="file" value="" />
 			<%} %>
 		</div>
-	  	
-	  	
-	  	<a href="#" id="add_attachment" style="<%=(elements.size()>=maxfile)?"display:none":"" %>" class="add_attachment" onclick="addFileInput(); return false;">Añadir otro fichero</a>
+	<div class="container-buttons">
+		<a href="#" id="add_attachment" style="<%=(elements.size()>=maxfile)?"display:none":"" %>" class="add_attachment bt_new" onclick="addFileInput(); return false;">Añadir otro fichero</a>		
+	</div>	
 </aui:field-wrapper>	
