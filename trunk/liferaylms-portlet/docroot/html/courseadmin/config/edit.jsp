@@ -28,6 +28,17 @@
 	{	
 		layusprsel=preferences.getValue("courseTemplates", "").split(",");
 	}
+	
+	boolean showClose 	= preferences.getValue("showClose",  "true").equals("true");
+	boolean showDelete 	= preferences.getValue("showDelete", "true").equals("true");
+	boolean showMembers = preferences.getValue("showMembers","true").equals("true");
+	boolean showExport 	= preferences.getValue("showExport", "true").equals("true");
+	boolean showImport	= preferences.getValue("showImport", "true").equals("true");
+	boolean showClone 	= preferences.getValue("showClone",  "true").equals("true");
+	boolean showGo 		= preferences.getValue("showGo", 	 "true").equals("true");
+	boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
+
+	
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>
@@ -38,6 +49,17 @@
 		<aui:input type="checkbox" helpMessage="help-inscription-date" label="inscription-date" name="inscriptionDate" value="<%=preferences.getValue(\"showInscriptionDate\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 		<aui:input type="checkbox" helpMessage="help-available-categories" label="available-categories" name="categories" value="<%=preferences.getValue(\"categories\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 		<aui:input type="checkbox" helpMessage="help-published-in-catalog" label="published-in-catalog" name="showcatalog" value="<%=preferences.getValue(\"showcatalog\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
+	</aui:field-wrapper>
+	
+	<aui:field-wrapper label="courseadmin.config.courseactions" >
+		<aui:input type="checkbox" name="showClose" label="courseadmin.config.showClose" 	value="<%=showClose %>" checked="<%=showClose %>"/>
+		<aui:input type="checkbox" name="showDelete" label="courseadmin.config.showDelete" 	value="<%=showDelete %>" checked="<%=showDelete %>"/>
+		<aui:input type="checkbox" name="showMembers" label="courseadmin.config.showMembers" value="<%=showMembers %>" checked="<%=showMembers %>"/>
+		<aui:input type="checkbox" name="showExport" label="courseadmin.config.showExport"	value="<%=showExport %>" checked="<%=showExport %>"/>
+		<aui:input type="checkbox" name="showImport" label="courseadmin.config.showImport" 	value="<%=showImport %>" checked="<%=showImport %>"/>
+		<aui:input type="checkbox" name="showClone" label="courseadmin.config.showClone" 	value="<%=showClone %>" checked="<%=showClone %>"/>
+		<aui:input type="checkbox" name="showGo" label="courseadmin.config.showGo" 			value="<%=showGo %>" checked="<%=showGo %>"/>
+		<aui:input type="checkbox" name="showPermission" label="courseadmin.config.showPermission" 			value="<%=showPermission %>" checked="<%=showPermission %>"/>
 	</aui:field-wrapper>
 <%
 String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");

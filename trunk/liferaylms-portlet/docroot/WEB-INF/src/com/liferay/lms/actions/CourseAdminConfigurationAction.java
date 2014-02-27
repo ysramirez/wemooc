@@ -40,6 +40,14 @@ public class CourseAdminConfigurationAction implements ConfigurationAction {
 		portletPreferences.setValue("showcatalog",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showcatalog",true)));
 		portletPreferences.setValue("courseTemplates",	StringUtil.merge(actionRequest.getParameterMap().get( "courseTemplates")));
 		
+		portletPreferences.setValue("showClose",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showClose",	true)));
+		portletPreferences.setValue("showDelete",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showDelete",	true)));
+		portletPreferences.setValue("showMembers",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showMembers",	true)));
+		portletPreferences.setValue("showExport",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showExport",	true)));
+		portletPreferences.setValue("showImport",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showImport",	true)));
+		portletPreferences.setValue("showClone",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showClone",	true)));
+		portletPreferences.setValue("showGo",		Boolean.toString(ParamUtil.getBoolean(actionRequest, "showGo",		true)));
+		portletPreferences.setValue("showPermission",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showPermission",	true)));
 		
 		portletPreferences.store();
 		SessionMessages.add( 
