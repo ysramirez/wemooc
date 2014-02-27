@@ -303,7 +303,9 @@ else
 					<%
 				}
 			}
-
+			%>
+			<div class="container_files">
+			<%
 			Element documento=null;
 			int i = 0;
 			do{
@@ -324,9 +326,8 @@ else
 						
 						String docURL=themeDisplay.getPortalURL() + themeDisplay.getPathContext() + "/documents/" + docfileVersion.getGroupId() + StringPool.SLASH + docfileVersion.getFolderId() + StringPool.SLASH + HttpUtil.encodeURL(HtmlUtil.unescape(docfileVersion.getTitle()));
 						%>
-						<div class="additionalDocument">
-						
-						<a href="<%=docURL%>"  target="_blank"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= docfileVersion.getIcon() %>.png" /><liferay-ui:message key="resourceexternalactivity.downloadFile"  arguments="<%=new Object[]{HtmlUtil.escape(docfileVersion.getTitle())} %>" /></a>
+						<div class="row_file">
+							<span class="upfile"><a href="<%=docURL%>" target="_blank"><img class="dl-file-icon" src="<%= themeDisplay.getPathThemeImages() %>/file_system/small/<%= docfileVersion.getIcon() %>.png" /><liferay-ui:message key="resourceexternalactivity.downloadFile"  arguments="<%=new Object[]{HtmlUtil.escape(docfileVersion.getTitle())} %>" /></a></span>
 						</div>
 						<%
 					}catch(NoSuchEntryException nsee){}
@@ -334,6 +335,10 @@ else
 				}
 				i++;
 			}while(documento!=null);
+
+			%>
+			</div>
+			<%
 			
 			}
 		}
