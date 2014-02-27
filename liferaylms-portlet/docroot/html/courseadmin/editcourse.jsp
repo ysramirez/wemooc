@@ -137,6 +137,8 @@ long countGroup = CompetenceServiceUtil.getCountCompetencesOfGroup(course.getGro
 long countParentGroup = CompetenceServiceUtil.getCountCompetencesOfGroup(course.getGroupId());
 count = countGroup + countParentGroup;
 
+Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+
 if(course!=null)
 {
 	groupCreated = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
@@ -228,6 +230,9 @@ else
 		</portlet:renderURL>
 		<liferay-ui:icon image="tag" message="competence.label" url="<%=competenceURL %>" />
 	<%}%>
+	
+	<liferay-ui:icon image="submit" message="courseadmin.adminactions.gotocourse" url="<%=themeDisplay.getPortalURL() +\"/\"+ response.getLocale().getLanguage() +\"/web/\"+ groupsel.getFriendlyURL()%>" />
+	
 </liferay-ui:icon-menu>
 
 <aui:form name="fm" action="<%=savecourseURL%>"  method="post" enctype="multipart/form-data">
