@@ -387,7 +387,7 @@ boolean showChangeAllVisibility = Boolean.parseBoolean(hideAllStr);
 	
 	%>
 	
-	<liferay-ui:icon message="activity.visible"  image="unlink" url="#" onClick="<%=visibiltyURLJavascript %>"/>
+	<liferay-ui:icon message="activity.just.one.visible"  image="actividad" url="#" onClick="<%=visibiltyURLJavascript %>"/>
 	<%}catch(NoSuchTeamException nsge){} %>
 </c:if>
 <!-- Mostrar calificaciones actividad. -->
