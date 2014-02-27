@@ -297,7 +297,9 @@
 				<a href="#" class="newitem2" onclick="<portlet:namespace />addNode();"><liferay-ui:message key="add-answer"/></a>
 			</span>
 		</div>
+		<div class="buttons_content">
 		<aui:button type="submit" onClick='<%= "return validateFields(event);" %>'/>
 		<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
+		</div>
 	</aui:button-row>
 </aui:form>
