@@ -533,6 +533,11 @@ public class CourseAdmin extends MVCPortlet {
 				}
 				
 				SessionMessages.add(actionRequest, "course-saved-successfully");
+				
+				actionResponse.setRenderParameter("courseId", String.valueOf(course.getCourseId()));
+				actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+				
+				/*
 				WindowState windowState = actionRequest.getWindowState();
 				if (redirect != null && !"".equals(redirect)) {
 					if (!windowState.equals(LiferayWindowState.POP_UP)) {
@@ -544,7 +549,7 @@ public class CourseAdmin extends MVCPortlet {
 							actionResponse.sendRedirect(redirect);
 						}
 					}
-				}
+				}*/
 				
 			} catch (Exception e) {
 				SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
