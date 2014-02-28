@@ -11,6 +11,7 @@ import javax.portlet.ActionRequest;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -44,10 +45,6 @@ public class DraganddropQuestionType extends BaseQuestionType {
 		return LanguageUtil.get(locale, "draganddrop.description");
 	}
 
-	public String getAnswerEditingAdvise(Locale locale) {
-		return LanguageUtil.get(locale, "draganddrop.advise");
-	}
-	
 	public String getURLEdit(){
 		return "/html/execactivity/test/admin/editAnswerOptions.jsp";
 	}
@@ -267,9 +264,49 @@ public class DraganddropQuestionType extends BaseQuestionType {
 		}
 		return answerSelected;
 	}
+	
+	public Element exportXML(long questionId) {
+		XMLType = "draganddrop";
+		Element questionXML = super.exportXML(questionId);
+		try {
+			List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			for(TestAnswer answer:answers){
+				Element answerE = SAXReaderUtil.createElement("answer");
+				answerE.addAttribute("fraction", (answer.isIsCorrect())?"100":"0");
+				
+				Element text = SAXReaderUtil.createElement("text");
+				text.addText(answer.getAnswer());
+				answerE.add(text);
+				
+				Element feedback = SAXReaderUtil.createElement("feedback");
+				Element feedText = SAXReaderUtil.createElement("text");
+				feedText.addText(answer.getFeedbackCorrect());
+				feedback.add(feedText);
+				answerE.add(feedback);
+				questionXML.add(answerE);
+			}
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+		return questionXML;
+	}
+
+	public void importXML(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+		Element questiontext=question.element("questiontext");
+		String description=questiontext.elementText("text");
+		TestQuestion theQuestion=TestQuestionLocalServiceUtil.addQuestion(actId,description,getTypeId());
+		for(Element answerElement:question.elements("answer")){
+			boolean correct=(!"0".equals(answerElement.attributeValue("fraction")))? true:false;
+			String answer=answerElement.elementText("text");
+			String feedback="";
+			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
+				feedback=answerElement.element("feedback").element("text").getText();
+			testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
+		}
+	}
 
 	public int getMaxAnswers(){
-		return 1000;
+		return GetterUtil.getInteger(PropsUtil.get("lms.maxAnswers.dragAndDrop"), 100);
 	}
 	public int getDefaultAnswersNo(){
 		return GetterUtil.getInteger(PropsUtil.get("lms.defaultAnswersNo.dragAndDrop"), 2);

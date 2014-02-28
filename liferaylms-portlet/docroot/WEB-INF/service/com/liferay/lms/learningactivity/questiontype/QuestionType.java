@@ -21,7 +21,6 @@ public interface QuestionType
 	public String getName();
 	public String getTitle(Locale locale);
 	public String getDescription(Locale locale);
-	public String getAnswerEditingAdvise(Locale locale);
 	public String getURLEdit();
 	public String getURLNew();
 	public String getURLBack();
@@ -32,7 +31,8 @@ public interface QuestionType
 	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay);
 	public void exportQuestionAnswers(PortletDataContext context, Element root, long questionId, LearningActivity activity) throws PortalException, SystemException;
 	public void importQuestionAnswers(PortletDataContext context, Element entryElement, long questionId, long userId, ServiceContext serviceContext) throws SystemException, PortalException;
-	public void importMoodle(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException;
+	public Element exportXML(long questionId);
+	public void importXML(long questionId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException;
 	public int getMaxAnswers();
 	public int getDefaultAnswersNo();
 

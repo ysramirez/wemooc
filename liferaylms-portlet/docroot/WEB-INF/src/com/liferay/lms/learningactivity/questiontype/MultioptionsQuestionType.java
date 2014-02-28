@@ -1,21 +1,9 @@
 package com.liferay.lms.learningactivity.questiontype;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Locale;
 
-import javax.portlet.ActionRequest;
-
-import com.liferay.lms.model.TestAnswer;
-import com.liferay.lms.model.TestQuestion;
-import com.liferay.lms.service.TestAnswerLocalService;
-import com.liferay.lms.service.TestAnswerLocalServiceUtil;
-import com.liferay.lms.service.TestQuestionLocalServiceUtil;
-import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -53,38 +41,25 @@ public class MultioptionsQuestionType extends OptionsQuestionType {
 		return correctAnswers==correctAnswered && incorrectAnswered==0;
 	}
 	
-	/**
-	 * Lo mismo que el caso base pero como puede tener varias respuestas correctas se muestra checkboxes en vez de radio buttons.
-	 */
-	public String getHtmlView(long questionId, ThemeDisplay themeDisplay, Document document){
-		super.setInputType("checkbox");
-		return super.getHtmlView(questionId, themeDisplay, document);
-	}
-	
-	/**
-	 * Lo mismo que el caso base pero como puede tener varias respuestas correctas se muestra checkboxes en vez de radio buttons.
-	 */
-	public String getHtmlFeedback(Document document,long questionId, ThemeDisplay themeDisplay){
-		super.setInputType("checkbox");
+	public String getHtmlFeedback(Document document, long questionId,
+			ThemeDisplay themeDisplay) {
+		inputType="checkbox";
 		return super.getHtmlFeedback(document, questionId, themeDisplay);
 	}
 	
-	/**
-	 * Una respuesta es correcta si tiene cualquier valor distinto de cero.
-	 */
-	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
-		//"multichoice" (not single)
-		Element questiontext=question.element("questiontext");
-		String description=questiontext.elementText("text");
-		TestQuestion theQuestion=TestQuestionLocalServiceUtil.addQuestion(actId,description,getTypeId());
-		for(Element answerElement:question.elements("answer")){
-			boolean correct=(!"0".equals(answerElement.attributeValue("fraction")))? true:false;
-			String answer=answerElement.elementText("text");
-			String feedback="";
-			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
-				feedback=answerElement.element("feedback").element("text").getText();	 
-			testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
-		}
+	public String getHtmlView(long questionId, ThemeDisplay themeDisplay,
+			Document document) {
+		inputType="checkbox";
+		return super.getHtmlView(questionId, themeDisplay, document);
+	}
+	
+	public Element exportXML(long questionId) {
+		XMLSingle="false";
+		return super.exportXML(questionId);
+	}
+	
+	public int getMaxAnswers(){
+		return GetterUtil.getInteger(PropsUtil.get("lms.maxAnswers.multioptions"), 100);
 	}
 	
 	public int getDefaultAnswersNo(){

@@ -60,19 +60,20 @@ public class TestQuestionLocalServiceImpl
 		
 	}
 	private void importXMLQuestion(long actId, Element question) throws SystemException, PortalException {
-		List<String> stringList = Arrays.asList(new String[]{"multichoice","truefalse","essay","numerical","shortanswer","cloze"});
-		if(stringList.contains(question.attributeValue("type"))){
-			long type = getQuestionType(question);
+		long type = getQuestionType(question);
+		if(type != -1){
 			QuestionType qt = new QuestionTypeRegistry().getQuestionType(type);
-			qt.importMoodle(actId, question, testAnswerLocalService);
+			qt.importXML(actId, question, testAnswerLocalService);
 		}
-		
 	}
 	private long getQuestionType(Element question) {
-		long type = 0; //Respuesta única (truefalse o multichoice con single = true)
-		if("multichoice".equals(question.attributeValue("type")) && "false".equals(question.element("single").getText())) type = 1;
+		long type = -1;
+		if("multichoice".equals(question.attributeValue("type")) && "true".equals(question.element("single").getText())) type = 0;
+		else if("multichoice".equals(question.attributeValue("type")) && "false".equals(question.element("single").getText())) type = 1;
 		else if("essay".equals(question.attributeValue("type")) || "numerical".equals(question.attributeValue("type")) || "shortanswer".equals(question.attributeValue("type"))) type = 2;
 		else if("cloze".equals(question.attributeValue("type"))) type = 3;
+		else if("draganddrop".equals(question.attributeValue("type"))) type = 4;
+		else if("sort".equals(question.attributeValue("type"))) type = 5;
 		return type;
 	}
 	public TestQuestion addQuestion(long actId,String text,long questionType) throws SystemException

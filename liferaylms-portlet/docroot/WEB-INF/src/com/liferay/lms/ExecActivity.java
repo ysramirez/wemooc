@@ -2,6 +2,7 @@ package com.liferay.lms;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -405,20 +406,15 @@ public class ExecActivity extends MVCPortlet
 
 		String action = ParamUtil.getString(request, "action");
 		long actId = ParamUtil.getLong(request, "resId",0);
-		if(action.equals("export")){
-
-			try {
-
-				//Necesario para crear el fichero csv.
-				response.setCharacterEncoding("ISO-8859-1");
-				response.setContentType("text/csv;charset=ISO-8859-1");
+		
+		response.setCharacterEncoding("ISO-8859-1");
+		try {
+			if(action.equals("exportResultsCsv")){
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
+				response.setContentType("text/csv;charset=ISO-8859-1");
 				byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
-
 				response.getPortletOutputStream().write(b);
-
 				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
-
 
 				//Crear la cabecera con las preguntas.
 				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
@@ -509,19 +505,39 @@ public class ExecActivity extends MVCPortlet
 
 				writer.flush();
 				writer.close();
-				response.getPortletOutputStream().flush();
-				response.getPortletOutputStream().close();
-
-			} catch (PortalException e) {
-				e.printStackTrace();
-			} catch (SystemException e) {
-				e.printStackTrace();
-			} catch (DocumentException e) {
-				e.printStackTrace();
-			}finally{
-				response.getPortletOutputStream().flush();
-				response.getPortletOutputStream().close();
+					
+			}else if(action.equals("exportXml")){
+				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.xml");
+				response.setContentType("text/xml; charset=UTF-8");
+				PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"));
+				Element quizXML=SAXReaderUtil.createElement("quiz");
+				Document quizXMLDoc=SAXReaderUtil.createDocument(quizXML);
+				
+				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
+				if(questions!=null &&questions.size()>0){
+					for(TestQuestion question:questions){
+						QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+						quizXML.add(qt.exportXML(question.getQuestionId()));
+					}
+				}
+				
+				printWriter.write(quizXMLDoc.formattedString());
+				printWriter.flush();
+				printWriter.close();
 			}
+		
+			response.getPortletOutputStream().flush();
+			response.getPortletOutputStream().close();
+
+		} catch (PortalException e) {
+			e.printStackTrace();
+		} catch (SystemException e) {
+			e.printStackTrace();
+		} catch (DocumentException e) {
+			e.printStackTrace();
+		}finally{
+			response.getPortletOutputStream().flush();
+			response.getPortletOutputStream().close();
 		}
 	}
 

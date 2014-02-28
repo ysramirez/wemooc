@@ -19,9 +19,7 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -30,7 +28,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class FillblankQuestionType extends BaseQuestionType {
 
 	private static final long serialVersionUID = 1L;
-	
+
 	public long getTypeId(){
 		return 3;
 	}
@@ -45,10 +43,6 @@ public class FillblankQuestionType extends BaseQuestionType {
 
 	public String getDescription(Locale locale) {
 		return LanguageUtil.get(locale, "fillblank.description");
-	}
-	
-	public String getAnswerEditingAdvise(Locale locale) {
-		return LanguageUtil.get(locale, "fillblank.advise");
 	}
 	
 	public String getURLEdit(){
@@ -355,7 +349,51 @@ public class FillblankQuestionType extends BaseQuestionType {
 		return answer;
 	}
 	
-	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+	public Element exportXML(long questionId) {
+		XMLType = "cloze";
+		Element questionXML=SAXReaderUtil.createElement("question");
+		questionXML.addAttribute("type", XMLType);
+		
+		Element name = SAXReaderUtil.createElement("name");
+		Element text = SAXReaderUtil.createElement("text");
+		try {
+			TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(questionId);
+			text.addText(question.getText());
+		} catch (SystemException e) {
+			e.printStackTrace();
+		} catch (PortalException e) {
+			e.printStackTrace();
+		}
+		name.add(text);
+		questionXML.add(name);
+		
+		Element questionText = SAXReaderUtil.createElement("questiontext");
+		questionText.addAttribute("format", "html");
+		Element textqt = SAXReaderUtil.createElement("text");
+		String feedback="";
+		try{
+			List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			for(TestAnswer answer:answers){
+				textqt.addText(answer.getAnswer());
+				feedback = answer.getFeedbackCorrect()+"//"+ answer.getFeedbacknocorrect();
+				break;//Solo aceptamos una respuesta
+			}
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}	
+		questionText.add(textqt);
+		questionXML.add(questionText);
+		
+		Element feedbackE = SAXReaderUtil.createElement("generalfeedback");
+		Element feedText = SAXReaderUtil.createElement("text");
+		feedText.addText(feedback);
+		feedbackE.add(feedText);
+		questionXML.add(feedbackE);
+		
+		return questionXML;
+	}
+	
+	public void importXML(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		//"cloze"
 		Element name=question.element("name");
 		String description=(name!=null)?name.elementText("text"):"";
@@ -364,7 +402,21 @@ public class FillblankQuestionType extends BaseQuestionType {
 		String answer=questiontext.elementText("text");
 		Element generalFeedback=question.element("generalfeedback");
 		String feedback=generalFeedback.elementText("text");
-		testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, true);
+		String feedbackCorrect = "", feedbackNoCorrect="";
+		if(feedback.contains("//")){
+			String[] split = feedback.split("//");
+			if(split.length == 2){
+				feedbackCorrect = split[0];
+				feedbackNoCorrect = split[1];
+			}else{
+				feedbackCorrect = feedback;
+				feedbackNoCorrect = feedback;
+			}
+		}else{
+			feedbackCorrect = feedback;
+			feedbackNoCorrect = feedback;
+		}
+		testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedbackCorrect, feedbackNoCorrect, true);
 	}
 	
 	private String translateNewLines(String input){

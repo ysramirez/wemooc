@@ -17,11 +17,7 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.lar.PortletDataContext;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
@@ -181,8 +177,48 @@ public class FreetextQuestionType extends BaseQuestionType {
 		}
 		return answerGiven;
 	}
+	
+	public Element exportXML(long questionId) {
+		try {
+			List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			if(answers==null || answers.size()==0){
+				XMLType="essay";
+			}else XMLType="numerical";
+			Element questionXML = super.exportXML(questionId);
+			if("numerical".equals(XMLType)){
+				for(TestAnswer answer:answers){
+					Element answerE = SAXReaderUtil.createElement("answer");
+					answerE.addAttribute("fraction", "100");
+					
+					Element text = SAXReaderUtil.createElement("text");
+					text.addText(answer.getAnswer());
+					answerE.add(text);
+					
+					Element feedback = SAXReaderUtil.createElement("feedback");
+					Element feedText = SAXReaderUtil.createElement("text");
+					feedText.addText(answer.getFeedbackCorrect()+"//"+ answer.getFeedbacknocorrect());
+					feedback.add(feedText);
+					answerE.add(feedback);
+					questionXML.add(answerE);
+					break;
+				}
+			}else{
+				Element answerE = SAXReaderUtil.createElement("answer");
+				answerE.addAttribute("fraction", "0");
+				
+				Element text = SAXReaderUtil.createElement("text");
+				answerE.add(text);
+				
+				questionXML.add(answerE);
+			}
+			return questionXML;
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+		return SAXReaderUtil.createElement("");
+	}
 
-	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+	public void importXML(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		//"essay","numerical","shortanswer"
 		Element questiontext=question.element("questiontext");
 		String description=questiontext.elementText("text");
@@ -191,10 +227,23 @@ public class FreetextQuestionType extends BaseQuestionType {
 			for(Element answerElement:question.elements("answer")){
 				boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
 				String answer=answerElement.elementText("text");
-				String feedback="";
+				String feedback="", feedbackCorrect="", feedbackNoCorrect="";
 				if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
 					feedback=answerElement.element("feedback").element("text").getText();	 
-				testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
+				if(feedback.contains("//")){
+					String[] split = feedback.split("//");
+					if(split.length == 2){
+						feedbackCorrect = split[0];
+						feedbackNoCorrect = split[1];
+					}else{
+						feedbackCorrect = feedback;
+						feedbackNoCorrect = feedback;
+					}
+				}else{
+					feedbackCorrect = feedback;
+					feedbackNoCorrect = feedback;
+				}
+				testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedbackCorrect, feedbackNoCorrect, correct);
 				return;//porque inicialmente solo aceptamos una respuesta
 			}
 		}
