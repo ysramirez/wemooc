@@ -4,6 +4,7 @@
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="java.util.List"%>
 <%@page import="java.io.FileNotFoundException"%>
+
 <%@ include file="/init.jsp" %>
 
 <portlet:renderURL var="importUsersURL"  windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
@@ -13,12 +14,22 @@
 	<portlet:param name="jspPage" value="/html/courseadmin/popups/importUsers.jsp" />  
 </portlet:renderURL>
 
+<liferay-ui:header title="courseadmin.importuserrole"></liferay-ui:header>
+
+<liferay-ui:panel id="importuserrole_help" title="help" extended="closed">
+	<%=LanguageUtil.get(themeDisplay.getLocale(),"courseadmin.importuserrole.help") %>
+</liferay-ui:panel>
+
 <% if ((!SessionMessages.contains(renderRequest, "courseadmin.importuserrole.csv.saved"))&&(SessionErrors.isEmpty(renderRequest))) { %>
 <iframe name="<portlet:namespace />import_frame" src="" id="<portlet:namespace />import_frame" style="display:none;" onload="<portlet:namespace />doImportUsers();" ></iframe>
 <aui:form name="fm" action="<%=importUsersURL%>"  method="post" enctype="multipart/form-data" target='<%=renderResponse.getNamespace() +"import_frame" %>' >
 	<aui:fieldset>
 		<aui:field-wrapper label="courseadmin.importuserrole.file" helpMessage="courseadmin.importuserrole.file.help" >
-	    	<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" />
+			<div class="container-file">
+		    	<aui:input inlineLabel="left" inlineField="true" name="fileName" label="" id="fileName" type="file" value="" >
+		    		<aui:validator name="acceptFiles">'csv'</aui:validator>
+		    	</aui:input>
+	    	</div>
 		</aui:field-wrapper>
 	</aui:fieldset> 
 	<aui:button-row>
@@ -39,6 +50,7 @@
 		<liferay-ui:success key="courseadmin.importuserrole.csv.saved" message="courseadmin.importuserrole.csv.saved" />
 		<liferay-ui:error key="courseadmin.importuserrole.csv.fileRequired" message="courseadmin.importuserrole.csv.fileRequired" />
 		<liferay-ui:error key="courseadmin.importuserrole.csv.badFormat" message="courseadmin.importuserrole.csv.badFormat" />
+		<liferay-ui:error key="courseadmin.importuserrole.csv.badFormat.size" message="courseadmin.importuserrole.csv.badFormat.size" />
 		<% if(SessionErrors.contains(renderRequest, "courseadmin.importuserrole.csvErrors")) { %>
 		<div class="portlet-msg-error">
 			<% List<String> errors = (List<String>)SessionErrors.get(renderRequest, "courseadmin.importuserrole.csvErrors");
