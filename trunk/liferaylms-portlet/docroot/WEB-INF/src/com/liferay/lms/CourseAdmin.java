@@ -710,6 +710,10 @@ public class CourseAdmin extends MVCPortlet {
 		if(fileName==null || StringPool.BLANK.equals(fileName)){
 			SessionErrors.add(portletRequest, "courseadmin.importuserrole.csv.fileRequired");
 		}
+		//Comprobar que el size del fichero no sea mayor de 2mb.
+		else if(request.getFile("fileName").length()> 2 * 1024 * 1024){
+			SessionErrors.add(portletRequest, "courseadmin.importuserrole.csv.badFormat.size");
+		}
 		else{ 
 			String contentType = request.getContentType("fileName");	
 			System.out.println(" contentType : " + contentType );

@@ -121,8 +121,8 @@ if(roleId==commmanager.getRoleId()){
 	            modal: true,
 	            centered: true,
 	            resizable: true,
-	            width: 650,
-	            height: 350,
+	            width: 700,
+	            height: 530,
 	            destroyOnClose: true,
 	            after: {   
 		          	close: function(event){ 
