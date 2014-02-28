@@ -43,9 +43,17 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.PortletWrapper;
+import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.Role;
+import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
+import com.liferay.portal.service.ResourcePermissionServiceUtil;
+import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -97,6 +105,22 @@ public class ActivityViewer extends MVCPortlet
 									themeDisplay, themeDisplay.getScopeGroupId(), learningActivityType.getPortletId());
 							renderResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
 							renderResponse.getWriter().print(activityContent);
+							
+							String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
+									themeDisplay.getPlid(), learningActivityType.getPortletId());
+							String portletName = learningActivityType.getPortletId();
+
+							int warSeparatorIndex = portletName.indexOf(PortletConstants.WAR_SEPARATOR);
+							if (warSeparatorIndex != -1) {
+								portletName = portletName.substring(0, warSeparatorIndex);
+							}
+
+							if (ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
+									themeDisplay.getCompanyId(), portletName,
+									ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0) {
+					        	Role siteMember = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SITE_MEMBER);
+					        	ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{"ACTION_VIEW"});
+							}
 						}
 					}
 				}
