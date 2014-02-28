@@ -1,6 +1,5 @@
 package com.liferay.lms.learningactivity.questiontype;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -12,13 +11,13 @@ import javax.portlet.ActionRequest;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.xml.Document;
@@ -28,19 +27,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 
 public class SortableQuestionType extends BaseQuestionType {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 1L;
-	private String inputType = "textarea";
-
-	public String getInputType() {
-		return inputType;
-	}
-
-	public void setInputType(String inputType) {
-		this.inputType = inputType;
-	}
 		
 	public long getTypeId(){
 		return 5;
@@ -56,10 +43,6 @@ public class SortableQuestionType extends BaseQuestionType {
 
 	public String getDescription(Locale locale) {
 		return LanguageUtil.get(locale, "sortable.description");
-	}
-	
-	public String getAnswerEditingAdvise(Locale locale) {
-		return LanguageUtil.get(locale, "sortable.advise");
 	}
 	
 	public String getURLEdit(){
@@ -213,8 +196,40 @@ public class SortableQuestionType extends BaseQuestionType {
 		return answerSelected;
 	}
 	
+	public Element exportXML(long questionId) {
+		XMLType="sort";
+		Element questionXML = super.exportXML(questionId);
+		try {
+			List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			for(TestAnswer answer:answers){
+				Element answerE = SAXReaderUtil.createElement("answer");
+				answerE.addAttribute("fraction", "100");
+				
+				Element text = SAXReaderUtil.createElement("text");
+				text.addText(answer.getAnswer());
+				answerE.add(text);
+				
+				questionXML.add(answerE);
+			}
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+		return questionXML;
+	}
+
+	public void importXML(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
+		Element questiontext=question.element("questiontext");
+		String description=questiontext.elementText("text");
+		TestQuestion theQuestion=TestQuestionLocalServiceUtil.addQuestion(actId,description,getTypeId());
+		for(Element answerElement:question.elements("answer")){
+			boolean correct=true;
+			String answer=answerElement.elementText("text");
+			testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, "", "", correct);
+		}
+	}
+	
 	public int getMaxAnswers(){
-		return 1000;
+		return GetterUtil.getInteger(PropsUtil.get("lms.maxAnswers.sortable"), 100);
 	}
 	public int getDefaultAnswersNo(){
 		return GetterUtil.getInteger(PropsUtil.get("lms.defaultAnswersNo.sortable"), 2);

@@ -142,28 +142,6 @@ public class QuestionTypeClp implements QuestionType {
 		return ((String)returnObj);
 	}
 	
-	public String getAnswerEditingAdvise(Locale locale){
-		Object returnObj = null;
-
-		try {
-			Method method = QuestionType.class.getMethod("getAnswerEditingAdvise", Locale.class); 
-			returnObj = clp.invoke(new MethodHandler(method, locale));
-		}
-		catch (Throwable t) {
-			t = ClpSerializer.translateThrowable(t);
-
-			if (t instanceof RuntimeException) {
-				throw (RuntimeException)t;
-			}
-			else {
-				throw new RuntimeException(t.getClass().getName() +
-					" is not a valid exception");
-			}
-		}
-
-		return ((String)returnObj);
-	}
-	
 	public String getURLEdit(){
 		Object returnObj = null;
 
@@ -359,14 +337,14 @@ public class QuestionTypeClp implements QuestionType {
 
 	}
 	
-	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService) throws SystemException, PortalException {
+	public void importXML(long actId, Element question, TestAnswerLocalService testAnswerLocalService) throws SystemException, PortalException {
 
 		try {
 			
 			ClassLoader classLoader = clp.getClassLoader();
 			Class testAnswerLocalServiceClass = Class.forName(TestAnswerLocalService.class.getName(), true, classLoader);
 						
-			Method method = QuestionType.class.getMethod("importMoodle", long.class, Element.class, testAnswerLocalServiceClass);
+			Method method = QuestionType.class.getMethod("importXML", long.class, Element.class, testAnswerLocalServiceClass);
 			clp.invoke(new MethodHandler(method, actId, question, testAnswerLocalService));
 		}
 		catch (Throwable t) {
@@ -425,6 +403,12 @@ public class QuestionTypeClp implements QuestionType {
 	public int getDefaultAnswersNo() {
 		// TODO Auto-generated method stub
 		return 0;
+	}
+
+	@Override
+	public Element exportXML(long questionId) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

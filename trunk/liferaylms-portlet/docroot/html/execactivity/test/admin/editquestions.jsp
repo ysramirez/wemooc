@@ -82,11 +82,17 @@ Liferay.provide(
 		url='<%= importquestionsURL %>'
 		/>
 		
-		<liferay-portlet:resourceURL var="exportURL" >
-			<portlet:param name="action" value="export"/>
+		<liferay-portlet:resourceURL var="exportResultsCsvURL" >
+			<portlet:param name="action" value="exportResultsCsv"/>
 			<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
 		</liferay-portlet:resourceURL>
-		<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
+		<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportResultsCsvURL%>" />
+		
+		<liferay-portlet:resourceURL var="exportXmlURL" >
+			<portlet:param name="action" value="exportXml"/>
+			<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
+		</liferay-portlet:resourceURL>
+		<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportXml" method="get" url="<%=exportXmlURL%>" />
 	</liferay-ui:icon-menu>
 </div>
 <%

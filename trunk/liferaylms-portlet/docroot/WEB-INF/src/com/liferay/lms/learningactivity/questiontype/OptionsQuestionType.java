@@ -27,15 +27,8 @@ import com.liferay.portal.theme.ThemeDisplay;
 public class OptionsQuestionType extends BaseQuestionType {
 
 	private static final long serialVersionUID = 1L;
-	private String inputType = "radio";
-
-	public String getInputType() {
-		return inputType;
-	}
-
-	public void setInputType(String inputType) {
-		this.inputType = inputType;
-	}
+	protected String inputType = "radio";
+	protected String XMLSingle = "true";
 
 	public long getTypeId(){
 		return 0;
@@ -209,27 +202,52 @@ public class OptionsQuestionType extends BaseQuestionType {
 		}
 		return answerSelected;
 	}
+	
+	public Element exportXML(long questionId) {
+		XMLType="multichoice";
+		Element questionXML = super.exportXML(questionId);
+		try {
+			List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
+			for(TestAnswer answer:answers){
+				Element answerE = SAXReaderUtil.createElement("answer");
+				answerE.addAttribute("fraction", (answer.isIsCorrect())?"100":"0");
+				
+				Element text = SAXReaderUtil.createElement("text");
+				text.addText(answer.getAnswer());
+				answerE.add(text);
+				
+				Element feedback = SAXReaderUtil.createElement("feedback");
+				Element feedText = SAXReaderUtil.createElement("text");
+				feedText.addText(answer.getFeedbackCorrect());
+				feedback.add(feedText);
+				answerE.add(feedback);
+				questionXML.add(answerE);
+			}
+			Element single = SAXReaderUtil.createElement("single");
+			single.addText(XMLSingle);
+			questionXML.add(single);
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
+		return questionXML;
+	}
 
-	/**
-	 * S�lo hay una respuesta correcta, por lo que �sta debe tener valor 100
-	 */
-	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
-		//"multichoice" (single),"truefalse"
+	public void importXML(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {
 		Element questiontext=question.element("questiontext");
 		String description=questiontext.elementText("text");
 		TestQuestion theQuestion=TestQuestionLocalServiceUtil.addQuestion(actId,description,getTypeId());
 		for(Element answerElement:question.elements("answer")){
-			boolean correct=("100".equals(answerElement.attributeValue("fraction")))? true:false;
+			boolean correct=(!"0".equals(answerElement.attributeValue("fraction")))? true:false;
 			String answer=answerElement.elementText("text");
 			String feedback="";
 			if(answerElement.element("feedback")!=null && answerElement.element("feedback").element("text")!=null)
-				feedback=answerElement.element("feedback").element("text").getText();	 
+				feedback=answerElement.element("feedback").element("text").getText();
 			testAnswerLocalService.addTestAnswer(theQuestion.getQuestionId(), answer, feedback, feedback, correct);
 		}
 	}
 
 	public int getMaxAnswers(){
-		return 1000;
+		return GetterUtil.getInteger(PropsUtil.get("lms.maxAnswers.options"), 100);
 	}
 	public int getDefaultAnswersNo(){
 		return GetterUtil.getInteger(PropsUtil.get("lms.defaultAnswersNo.options"), 2);

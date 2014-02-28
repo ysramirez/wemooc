@@ -12,6 +12,7 @@ import org.apache.commons.io.IOUtils;
 import com.liferay.lms.lar.ModuleDataHandlerImpl;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.TestAnswer;
+import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -37,6 +39,11 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	 */
 	private static final long serialVersionUID = 1L;
 	protected static Locale locale=null;
+	protected String XMLType = "";
+
+	public void setXMLType(String xMLType) {
+		XMLType = xMLType;
+	}
 
 	@Override
 	public void setLocale(Locale locale){
@@ -60,11 +67,6 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 	
 	@Override
 	public String getDescription(Locale locale){
-		return "";
-	}
-	
-	@Override
-	public String getAnswerEditingAdvise(Locale locale){
 		return "";
 	}
 	
@@ -169,7 +171,34 @@ public abstract class BaseQuestionType implements QuestionType, Serializable {
 		return sb.toString();
 	}
 	
-	public void importMoodle(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {}
+	@Override
+	public Element exportXML(long questionId) {
+		Element questionXML=SAXReaderUtil.createElement("question");
+		questionXML.addAttribute("type", XMLType);
+		
+		Element name = SAXReaderUtil.createElement("name");
+		Element text = SAXReaderUtil.createElement("text");
+		text.addText(getName());
+		name.add(text);
+		questionXML.add(name);
+		
+		Element questionText = SAXReaderUtil.createElement("questiontext");
+		questionText.addAttribute("format", "html");
+		Element textqt = SAXReaderUtil.createElement("text");
+		try {
+			TestQuestion question = TestQuestionLocalServiceUtil.getTestQuestion(questionId);
+			textqt.addText(question.getText());
+		} catch (SystemException e) {
+			e.printStackTrace();
+		} catch (PortalException e) {
+			e.printStackTrace();
+		}
+		questionText.add(textqt);
+		questionXML.add(questionText);
+		return questionXML;
+	}
+	
+	public void importXML(long actId, Element question, TestAnswerLocalService testAnswerLocalService)throws SystemException, PortalException {}
 
 	public int getMaxAnswers(){
 		return -1;

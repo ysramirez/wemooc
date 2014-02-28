@@ -288,7 +288,7 @@
 		);
 	</script>
 	
-	<aui:field-wrapper label="answers" helpMessage="<%=qt.getAnswerEditingAdvise(themeDisplay.getLocale()) %>" />
+	<aui:field-wrapper label="answers" helpMessage="<%=qt.getDescription(themeDisplay.getLocale()) %>" />
 	<liferay-ui:error key="answer-test-required" message="answer-test-required"/>
 	<jsp:include page="<%=(qt!=null)?qt.getURLEdit():\"\" %>"/>
     <aui:button-row>
