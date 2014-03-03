@@ -39,6 +39,7 @@ if(tagsSel != null){
 Enumeration<String> pnames =request.getParameterNames();
 ArrayList<String> tparams = new ArrayList<String>();
 ArrayList<Long> assetCategoryIds = new ArrayList<Long>();
+ArrayList<Long> assetTagIds = new ArrayList<Long>();
 
 
 while(pnames.hasMoreElements()){
@@ -61,6 +62,7 @@ if(ParamUtil.getString(request, "search").equals("search")){
 	portletSession.setAttribute("freetext", freetext);
 	portletSession.setAttribute("state", state);
 	portletSession.setAttribute("assetCategoryIds", assetCategoryIds);
+	portletSession.setAttribute("assetTagIds", tagsSelIds);
 
 }else{
 	try{
@@ -73,6 +75,12 @@ if(ParamUtil.getString(request, "search").equals("search")){
 		ArrayList<Long> assetCategoryIdsTemp = (ArrayList<Long>)portletSession.getAttribute("assetCategoryIds");
 		if(assetCategoryIdsTemp!=null){
 			assetCategoryIds = assetCategoryIdsTemp;
+		}
+	}catch(Exception e){}
+	try{
+		ArrayList<Long> assetTagIdsTemp = (ArrayList<Long>)portletSession.getAttribute("assetTagIds");
+		if(assetTagIdsTemp!=null){
+			assetTagIds = assetTagIdsTemp;
 		}
 	}catch(Exception e){}
 	try{
@@ -283,7 +291,7 @@ boolean showSearchTags = preferences.getValue("showSearchTags","false").equals("
 				<c:if test="<%=showSearchTags %>">
 					<liferay-ui:asset-tags-selector ></liferay-ui:asset-tags-selector>
 				</c:if>
-				
+												
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:fieldset>
 			<c:if test="<%=scategories%>">
