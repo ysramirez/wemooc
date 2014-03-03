@@ -85,21 +85,21 @@ Locale loc = response.getLocale();
 		long activitiesCount=LearningActivityLocalServiceUtil.countLearningActivitiesOfGroup(course.getGroupCreatedId());
 		long modulesCount=ModuleLocalServiceUtil.countByGroupId(course.getGroupCreatedId());
 	%>
-		<liferay-ui:search-container-column-text name="title">
+		<liferay-ui:search-container-column-text name="coursestats.name">
 		<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
 		
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text valign="right" name="registered">
+		<liferay-ui:search-container-column-text valign="right" name="coursestats.registered">
 		<%=registered %>
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text  valign="right" name="coursestats.start.course">
+		<liferay-ui:search-container-column-text  valign="right" name="coursestats.starts.course">
 		<%=iniciados %>
 		</liferay-ui:search-container-column-text>
-		<liferay-ui:search-container-column-text  valign="right" name="coursestats.end.course">
+		<liferay-ui:search-container-column-text  valign="right" name="coursestats.ends.course">
 		<%=finalizados %>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text  valign="right" name="closed">
-		<%=course.getClosed() %>
+		<%=course.getClosed()?LanguageUtil.get(pageContext,"yes"):LanguageUtil.get(pageContext,"no") %>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text  valign="right" name="coursestats.modulestats.marks.average">
 		<%=df.format(avgResult) %>
