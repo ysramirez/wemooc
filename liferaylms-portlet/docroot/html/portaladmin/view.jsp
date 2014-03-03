@@ -1,4 +1,6 @@
 
+<%@page import="java.util.Comparator"%>
+<%@page import="java.util.Collections"%>
 <%@page import="java.util.HashSet"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.OrderFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil"%>
@@ -163,22 +165,45 @@ for(Layout l:layoutForPortletName){
 		<h4><liferay-ui:message key="cambiar nombre del portlet" /></h4>
 		<portlet:actionURL name="changePortletName" var="changePortletNameURL" />
 		<aui:form action="<%=changePortletNameURL %>" method="POST" name="form_mail">
-		
-			<aui:select name="before" label="portaladmin.portletname.before">
+					
+			<aui:select name="before" label="portaladmin.portletname.before" helpMessage="portaladmin.portletname.help">
 			<%
-			 	java.util.Collections.sort(portletIds);
-				for(String  name:portletIds){
-					%>
-					<aui:option value="<%=name %>"><%=name %></aui:option>
-					<%
+				List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(0, PortletLocalServiceUtil.getPortletsCount());
+			
+				//ordenamos la lista 
+			    Collections.sort(portlets, new Comparator() {  
+	
+			        public int compare(Object o1, Object o2) {  
+			        	Portlet e1 = (Portlet) o1;  
+			        	Portlet e2 = (Portlet) o2;  
+			            return e1.getPortletId().compareToIgnoreCase(e2.getPortletId());  
+			        }  
+			    });  
+				
+				for(Portlet  portlet:portlets){
+					if(portlet.getPortletId().contains("_WAR_liferaylmsportlet")){
+						%>
+						<aui:option value="<%=portlet.getPortletId() %>"><%=portlet.getPortletId() %></aui:option>
+						<%
+					}
 				}
-
 			%>
 			</aui:select>
 			
-			<aui:select name="after" label="portaladmin.portletname.after">
+			<aui:select name="after" label="portaladmin.portletname.after" helpMessage="portaladmin.portletname.help">
 			<%
-				List<Portlet> portlets = PortletLocalServiceUtil.getPortlets();
+				List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(0, PortletLocalServiceUtil.getPortletsCount());
+			
+				//ordenamos la lista 
+			    Collections.sort(portlets, new Comparator() {  
+	
+			        public int compare(Object o1, Object o2) {  
+			        	Portlet e1 = (Portlet) o1;  
+			        	Portlet e2 = (Portlet) o2;  
+			            return e1.getPortletId().compareToIgnoreCase(e2.getPortletId());  
+			        }  
+			    });  
+				
 				for(Portlet  portlet:portlets){
 					if(portlet.getPortletId().contains("_WAR_liferaylmsportlet")){
 						%>
