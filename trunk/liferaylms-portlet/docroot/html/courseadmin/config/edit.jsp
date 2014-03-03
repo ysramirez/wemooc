@@ -38,7 +38,7 @@
 	boolean showGo 		= preferences.getValue("showGo", 	 "true").equals("true");
 	boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
 
-	
+	boolean showSearchTags = preferences.getValue("showSearchTags", "true").equals("true");
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>
@@ -60,6 +60,10 @@
 		<aui:input type="checkbox" name="showClone" label="courseadmin.config.showClone" 	value="<%=showClone %>" checked="<%=showClone %>"/>
 		<aui:input type="checkbox" name="showGo" label="courseadmin.config.showGo" 			value="<%=showGo %>" checked="<%=showGo %>"/>
 		<aui:input type="checkbox" name="showPermission" label="courseadmin.config.showPermission" 			value="<%=showPermission %>" checked="<%=showPermission %>"/>
+	</aui:field-wrapper>
+	
+	<aui:field-wrapper label="courseadmin.config.showSearch" >
+		<aui:input type="checkbox" name="showSearchTags" label="courseadmin.config.showSearchTags" value="<%=showSearchTags %>" checked="<%=showSearchTags %>"/>
 	</aui:field-wrapper>
 <%
 String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
