@@ -44,6 +44,7 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
+import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
@@ -116,11 +117,13 @@ public class ActivityViewer extends MVCPortlet
 								portletName = portletName.substring(0, warSeparatorIndex);
 							}
 
-							if (ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
+							if ((ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
 									themeDisplay.getCompanyId(), portletName,
-									ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0) {
+									ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
+								(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, "ACTION_VIEW")!=null)) {
 					        	Role siteMember = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SITE_MEMBER);
-					        	ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{"ACTION_VIEW"});
+				        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), 
+				        				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{"ACTION_VIEW"});
 							}
 						}
 					}
