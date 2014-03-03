@@ -38,7 +38,7 @@
 	boolean showGo 		= preferences.getValue("showGo", 	 "true").equals("true");
 	boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
 
-	boolean showSearchTags = preferences.getValue("showSearchTags", "true").equals("true");
+	boolean showSearchTags = preferences.getValue("showSearchTags", "false").equals("true");
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>

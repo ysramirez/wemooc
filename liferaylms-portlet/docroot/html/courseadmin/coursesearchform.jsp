@@ -264,7 +264,7 @@ if (Validator.isNotNull(portletResource)) {
 	preferences = renderRequest.getPreferences();
 }
 
-boolean showSearchTags = preferences.getValue("showSearchTags","true").equals("true");
+boolean showSearchTags = preferences.getValue("showSearchTags","false").equals("true");
 %>
 
 <portlet:renderURL var="searchURL">
