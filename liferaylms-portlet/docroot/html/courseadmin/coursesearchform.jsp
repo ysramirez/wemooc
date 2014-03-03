@@ -1,17 +1,40 @@
 <!-- <h1 class="taglib-categorization-filter entry-title"> -->
+<%@page import="com.liferay.portal.kernel.dao.orm.QueryUtil"%>
+<%@page import="com.liferay.portlet.asset.service.AssetTagLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.asset.service.AssetEntryServiceUtil"%>
+<%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryFinderUtil"%>
+<%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryQuery"%>
+<%@page import="com.liferay.portal.service.ServiceContextFactory"%>
 <%@page import="com.liferay.lms.util.CourseComparator"%>
 <%@page import="com.liferay.portal.theme.ThemeDisplay"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.Collections"%>
+<%@page import="javax.portlet.PortletPreferences"%>
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
+<%@page import="com.liferay.portal.service.ServiceContext"%>
 
 <%
 
 String search = ParamUtil.getString(request, "search","");
 String freetext = ParamUtil.getString(request, "freetext","");
+String tags = ParamUtil.getString(request, "tags","");
 Integer state = ParamUtil.getInteger(request, "state",WorkflowConstants.STATUS_APPROVED);
 
 long catId=ParamUtil.getLong(request, "categoryId",0);
+
+String[] tagsSel = null;
+
+ServiceContext sc=ServiceContextFactory.getInstance(request);
+tagsSel = sc.getAssetTagNames();
+
+long[] tagsSelIds = null;
+
+if(tagsSel != null){
+	long[] groups = new long[]{themeDisplay.getScopeGroupId()};
+	tagsSelIds = AssetTagLocalServiceUtil.getTagIds(groups, tagsSel);
+}
+
 
 Enumeration<String> pnames =request.getParameterNames();
 ArrayList<String> tparams = new ArrayList<String>();
@@ -38,6 +61,7 @@ if(ParamUtil.getString(request, "search").equals("search")){
 	portletSession.setAttribute("freetext", freetext);
 	portletSession.setAttribute("state", state);
 	portletSession.setAttribute("assetCategoryIds", assetCategoryIds);
+
 }else{
 	try{
 		String freetextTemp = (String)portletSession.getAttribute("freetext");
@@ -150,6 +174,9 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 	AssetEntryQuery entryQuery=new AssetEntryQuery();
 	long[] groupIds={themeDisplay.getScopeGroupId()};
 	entryQuery.setAllCategoryIds(catIds);
+	if(tagsSelIds != null){
+		entryQuery.setAllTagIds(tagsSelIds);
+	}
 	entryQuery.setGroupIds(groupIds);
 	entryQuery.setClassName(Course.class.getName());
 	entryQuery.setEnablePermissions(true);
@@ -226,6 +253,18 @@ if(courses!=null&&courses.size()>0){
 	CourseComparator courseComparator = new CourseComparator(themeDisplay.getLocale());
 	Collections.sort(courses, courseComparator );
 }
+
+
+PortletPreferences preferences = null;
+String portletResource = ParamUtil.getString(request, "portletResource");
+
+if (Validator.isNotNull(portletResource)) {
+	preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+}else{
+	preferences = renderRequest.getPreferences();
+}
+
+boolean showSearchTags = preferences.getValue("showSearchTags","true").equals("true");
 %>
 
 <portlet:renderURL var="searchURL">
@@ -240,6 +279,11 @@ if(courses!=null&&courses.size()>0){
 					<aui:option label="inactive" selected="<%= (state == WorkflowConstants.STATUS_INACTIVE) %>" value="<%= WorkflowConstants.STATUS_INACTIVE %>" />
 					<aui:option label="any-status" selected="<%= (state == WorkflowConstants.STATUS_ANY) %>" value="<%= WorkflowConstants.STATUS_ANY %>" />
 				</aui:select>
+				
+				<c:if test="<%=showSearchTags %>">
+					<liferay-ui:asset-tags-selector ></liferay-ui:asset-tags-selector>
+				</c:if>
+				
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:fieldset>
 			<c:if test="<%=scategories%>">
