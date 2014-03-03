@@ -1,6 +1,5 @@
 package com.liferay.lms;
 
-import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.Enumeration;
@@ -21,11 +20,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-
-import org.xml.sax.SAXException;
 
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
@@ -66,6 +60,13 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
  */
 public class ActivityViewer extends MVCPortlet 
 {
+	
+	static Set<String> reservedAttrs = new HashSet<String>();
+
+	static {
+		reservedAttrs.add(WebKeys.PAGE_TOP);
+	}
+
 	@Override
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws PortletException, IOException {
@@ -192,20 +193,13 @@ public class ActivityViewer extends MVCPortlet
 
 			List<String> markupHeaders = (List<String>)servletRequest.getAttribute(MimeResponse.MARKUP_HEAD_ELEMENT);
 			if((Validator.isNotNull(markupHeaders))&&(!markupHeaders.isEmpty())) {
-				try {
-					DocumentBuilder documentBuilder = DocumentBuilderFactory.
-							newInstance().newDocumentBuilder();
-					for (String header : markupHeaders) {
-						try {
-							response.addProperty(MimeResponse.MARKUP_HEAD_ELEMENT, documentBuilder
-								    .parse(new ByteArrayInputStream(header.getBytes()))
-								    .getDocumentElement());
-						} catch (SAXException e) {
-						}
-					}
-				} catch (ParserConfigurationException e) {
-					throw new SystemException(e);
+				StringBundler pageTopStringBundler = (StringBundler)request.getAttribute(WebKeys.PAGE_TOP);
+
+				if (pageTopStringBundler == null) {
+					pageTopStringBundler = new StringBundler();
+					request.setAttribute(WebKeys.PAGE_TOP, pageTopStringBundler);
 				}
+				pageTopStringBundler.append(markupHeaders);
 			}
 
             if(portlet.isUseDefaultTemplate()) {
@@ -255,7 +249,7 @@ public class ActivityViewer extends MVCPortlet
             portletDisplay.copyFrom(portletDisplayClone);
             portletDisplayClone.recycle();
             for (final String key : Collections.list((Enumeration<String>) servletRequest.getAttributeNames())) {
-                if (!requestAttributeBackup.containsKey(key)) {
+                if ((!requestAttributeBackup.containsKey(key))&&(!reservedAttrs.contains(key))) {
                     servletRequest.removeAttribute(key);
                 }
             }
