@@ -278,7 +278,7 @@ if(!"".equals(preferences.getValue("showSearchTagsGeneralStats", ""))){
 }
 
 if(!"".equals(preferences.getValue("showSearchCategoriesGeneralStats", ""))){
-	scategories = preferences.getValue("showSearchCategoriesGeneralStats", "false").equals("true");
+	scategories = preferences.getValue("showSearchCategoriesGeneralStats", "true").equals("true");
 }
 %>
 
