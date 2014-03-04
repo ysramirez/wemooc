@@ -600,6 +600,10 @@ Player.ContentPlayer.prototype.$22 = function($p0, $p1) {
 			document.getElementById('open-close-scorm-menu').style.display = 'none';
 			if (window.opener) {
 				window.close();
+			} else {
+				if (typeof finish_scorm != 'undefined') {
+					finish_scorm(null);
+				}
 			}
 			if (this.$1) {
 				API_BASE.LOG.displayMessage('End Session!', '0', null);

@@ -43,7 +43,10 @@
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 
 	String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
-	boolean improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "improve"), true);
+	boolean improve = true;
+	if (Validator.isNotNull(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "improve"))) {
+		improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "improve"), true);
+	}
 
 	//Obtener si puede hacer un intento de mejorar el resultado.
 	boolean improving = true;
@@ -155,7 +158,13 @@
 	Object [] arg =  new Object [] { activity.getPasspuntuation() };
 %>
 
-<% if ("true".equals(openWindow)) { %>
+<%
+themeDisplay.setIncludeServiceJs(true);
+%>
+<script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
+<%
+if ("true".equals(openWindow)) { %>
+
 				<liferay-portlet:renderURL var="scormwindow" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<liferay-portlet:param name="jspPage" value="/html/scormactivity/window.jsp"/>
 					<liferay-portlet:param name="latId" value="<%= String.valueOf(learningTry.getLatId()) %>"/>
@@ -208,6 +217,30 @@
 						if (e != null && window.<portlet:namespace />ventana != null && !window.<portlet:namespace />ventana.closed) {
 							window.<portlet:namespace />ventana.close();
 						}
+						window.messageHandler = A.one(window).on('message', 
+							function(event) {
+								var html5Event = event._event;
+								
+								if (html5Event.data.name == 'update_scorm') {
+									var serviceParameterTypes = [
+		                    	     	'long',
+		                    	    	'java.lang.String'
+		                    	    ];
+			              			var message = Liferay.Service.Lms.LearningActivityResult.getByActIdAndUser(
+		            			    	{
+		            			   			actId: <%= learningTry.getActId() %>,
+		            			   			login: '<%= themeDisplay.getUser().getLogin() %>',
+		            			   			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
+		            			    	}
+		            			    );
+									if (message.passed) {
+										Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+									} else {
+										
+									}
+								}
+							}
+						);
 						window.<portlet:namespace />ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
 						if (window.<portlet:namespace />ventana != null) {
 							window.<portlet:namespace />ventana.location = '<%= scormwindow %>';
@@ -225,7 +258,7 @@
 			
 			<script type="text/javascript">
 				AUI().ready(function() {					
-					<portlet:namespace />abrirActividad(null);					
+					<portlet:namespace />abrirActividad(null);
 				});
 			</script>
 			

@@ -11,6 +11,10 @@
 
 if (Validator.isNotNull(scorm.getDescription()) && request.getAttribute("learningTry") == null) { %>
 
+<script type="text/javascript">
+	localStorage.removeItem('scormpool');
+</script>
+
 <div class="asset-description"><%=scorm.getDescription() %></div>
 
 <% } 
