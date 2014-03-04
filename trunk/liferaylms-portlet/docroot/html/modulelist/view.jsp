@@ -227,7 +227,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 					
 					<td class="title">
 <%				
-						if(moduleTitleLinkable && canAccess && (canAccessLock || !ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()))){				 
+						if((moduleTitleLinkable || (allowEditionMode && moduleEditing)) && canAccess && (canAccessLock || !ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()))){				 
 %>
 							<a href="<%=gotoModuleURL.toString() %>"><%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
 																			LanguageUtil.format(pageContext, "moduleTitle.chapter", arg):
@@ -240,9 +240,6 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 												theModule.getTitle(themeDisplay.getLocale()) %>
 <%
 						}
-						if(allowEditionMode && moduleEditing){%>
-							<div class="iconsedit"><%@ include file="/JSPs/module/edit_actions.jspf" %></div>
-						<%}
 %>				
 					</td>
 					
@@ -297,28 +294,28 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 					}
 %>
 					
-					<td class="access">
+					<td class="contain_actions">
 <%
 						if(theModule.getStartDate()!=null &&today.before(theModule.getStartDate()) && !canAccessLock){
 %>
-							<liferay-ui:message key="starting-soon"/><!-- En LMS esta etiqueta es vacía -->
+							<div class="access"><liferay-ui:message key="starting-soon"/><!-- En LMS esta etiqueta es vacía --></div>
 <%
 						}else if(ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()) && !canAccessLock){
 %>
-							<liferay-ui:message key="module-closed"/><!-- En LMS esta etiqueta es vacía -->
+							<div class="access"><liferay-ui:message key="module-closed"/><!-- En LMS esta etiqueta es vacía --></div>
 <%
 						}else if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()) || canAccessLock){
 							if(!allowAccessWhenFinishedButNotClosed && ModuleLocalServiceUtil.isUserPassed(theModule.getModuleId(),themeDisplay.getUserId())){
 %>
-								<a href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="module-finissed" /></a>
+								<div class="access"><a href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="module-finissed" /></a></div>
 <%
 							}else if(allowEditionMode && moduleEditing){
 %>
-								<a class="module-list-button-edit" href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="edit" /></a>
-<%
+								<div class="iconsedit"><%@ include file="/JSPs/module/edit_actions.jspf" %></div>
+<%							
 							}else{ 
 %>
-								<a class="module-list-button-access" href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="module-access" /></a>
+								<div class="access"><a class="module-list-button-access" href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="module-access" /></a></div>
 <%
 							} 
 						}
