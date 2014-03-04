@@ -273,6 +273,13 @@ if (Validator.isNotNull(portletResource)) {
 }
 
 boolean showSearchTags = preferences.getValue("showSearchTags","false").equals("true");
+if(!"".equals(preferences.getValue("showSearchTagsGeneralStats", ""))){
+	showSearchTags = preferences.getValue("showSearchTagsGeneralStats","false").equals("true");
+}
+
+if(!"".equals(preferences.getValue("showSearchCategoriesGeneralStats", ""))){
+	scategories = preferences.getValue("showSearchCategoriesGeneralStats", "false").equals("true");
+}
 %>
 
 <portlet:renderURL var="searchURL">
@@ -287,9 +294,7 @@ boolean showSearchTags = preferences.getValue("showSearchTags","false").equals("
 					<aui:option label="inactive" selected="<%= (state == WorkflowConstants.STATUS_INACTIVE) %>" value="<%= WorkflowConstants.STATUS_INACTIVE %>" />
 					<aui:option label="any-status" selected="<%= (state == WorkflowConstants.STATUS_ANY) %>" value="<%= WorkflowConstants.STATUS_ANY %>" />
 				</aui:select>
-				
-
-												
+							
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:fieldset>
 			<c:if test="<%=showSearchTags %>">
