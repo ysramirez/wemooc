@@ -12,7 +12,7 @@
 	}
 	
 	boolean showSearchTagsGeneralStats = 		preferences.getValue("showSearchTagsGeneralStats", "false").equals("true");
-	boolean showSearchCategoriesGeneralStats = 	preferences.getValue("showSearchCategoriesGeneralStats", "false").equals("true");
+	boolean showSearchCategoriesGeneralStats = 	preferences.getValue("showSearchCategoriesGeneralStats", "true").equals("true");
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL" portletConfiguration="true"/>
