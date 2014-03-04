@@ -288,14 +288,17 @@ boolean showSearchTags = preferences.getValue("showSearchTags","false").equals("
 					<aui:option label="any-status" selected="<%= (state == WorkflowConstants.STATUS_ANY) %>" value="<%= WorkflowConstants.STATUS_ANY %>" />
 				</aui:select>
 				
-				<c:if test="<%=showSearchTags %>">
-					<liferay-ui:asset-tags-selector ></liferay-ui:asset-tags-selector>
-				</c:if>
+
 												
 				<aui:button type="submit" value="search"></aui:button>
 			</aui:fieldset>
+			<c:if test="<%=showSearchTags %>">
+				<liferay-ui:panel id="panel_tags" title="tags" collapsible="true" defaultState="closed">
+					<liferay-ui:asset-tags-selector ></liferay-ui:asset-tags-selector>
+				</liferay-ui:panel>
+			</c:if>
 			<c:if test="<%=scategories%>">
-				<liferay-ui:panel title="categorization" collapsible="true" defaultState="<%=catIds.length>0?\"open\":\"closed\" %>">
+				<liferay-ui:panel id="panel_categories" title="categorization" collapsible="true" defaultState="<%=catIds.length>0?\"open\":\"closed\" %>">
 					<aui:fieldset cssClass="checkBoxes">
 						<liferay-ui:asset-categories-selector  className="<%= Course.class.getName() %>" curCategoryIds="<%=catIdsText %>" />
 					</aui:fieldset>

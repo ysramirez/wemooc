@@ -45,9 +45,14 @@
 <aui:form action="<%=saveConfigurationURL %>" >
 	<aui:input type="hidden" name="<%=Constants.CMD %>" value="<%=Constants.UPDATE %>" />
 	
+		
+	<aui:field-wrapper label="courseadmin.config.showSearch" >
+		<aui:input type="checkbox" name="showSearchTags" label="courseadmin.config.showSearchTags" value="<%=showSearchTags %>" checked="<%=showSearchTags %>"/>
+		<aui:input type="checkbox" helpMessage="help-available-categories" label="available-categories" name="categories" value="<%=preferences.getValue(\"categories\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
+	</aui:field-wrapper>
+	
 	<aui:field-wrapper label="course-fields" >
 		<aui:input type="checkbox" helpMessage="help-inscription-date" label="inscription-date" name="inscriptionDate" value="<%=preferences.getValue(\"showInscriptionDate\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
-		<aui:input type="checkbox" helpMessage="help-available-categories" label="available-categories" name="categories" value="<%=preferences.getValue(\"categories\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 		<aui:input type="checkbox" helpMessage="help-published-in-catalog" label="published-in-catalog" name="showcatalog" value="<%=preferences.getValue(\"showcatalog\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 	</aui:field-wrapper>
 	
@@ -61,10 +66,7 @@
 		<aui:input type="checkbox" name="showGo" label="courseadmin.config.showGo" 			value="<%=showGo %>" checked="<%=showGo %>"/>
 		<aui:input type="checkbox" name="showPermission" label="courseadmin.config.showPermission" 			value="<%=showPermission %>" checked="<%=showPermission %>"/>
 	</aui:field-wrapper>
-	
-	<aui:field-wrapper label="courseadmin.config.showSearch" >
-		<aui:input type="checkbox" name="showSearchTags" label="courseadmin.config.showSearchTags" value="<%=showSearchTags %>" checked="<%=showSearchTags %>"/>
-	</aui:field-wrapper>
+
 <%
 String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
 		%>
