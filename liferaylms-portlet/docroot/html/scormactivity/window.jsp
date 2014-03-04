@@ -18,6 +18,8 @@ if (learningTry == null) {
 }
 request.setAttribute("learningTry", learningTry);
 
+String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
+
 long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "assetEntry"), 0);
 			
 if(entryId != 0) {
@@ -25,11 +27,13 @@ if(entryId != 0) {
 	AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
 	AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 	String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT); 
+	if ("true".equals(openWindow)) {
 	themeDisplay.setIncludeServiceJs(true); 
 	
 
 	%>
 <script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
+<% } %>
 <script type="text/javascript">
 	localStorage.removeItem('scormpool');
 	var tryResultDataOld = '<%= learningTry.getTryResultData() %>';
@@ -39,6 +43,37 @@ if(entryId != 0) {
 </script>
 <liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>"></liferay-util:include>
 <script type="text/javascript">
+
+	if (window.opener) {
+		window.onunload = function() {
+			if ((!!window.opener.postMessage)) {
+    			if (!window.location.origin){
+    				var nada = '';
+    				window.location.origin = window.location.protocol+"/"+nada+"/"+window.location.host;
+    			}
+    			window.opener.postMessage({name: 'update_scorm'}, window.location.origin);
+    		}			
+		};
+	}
+	
+	var finish_scorm = function(e) {
+		var serviceParameterTypes = [
+   	     	'long',
+   	    	'java.lang.String'
+   	    ];
+		var message = Liferay.Service.Lms.LearningActivityResult.getByActIdAndUser(
+		   	{
+		  			actId: <%= learningTry.getActId() %>,
+		  			login: '<%= themeDisplay.getUser().getLogin() %>',
+		  			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
+		   	}
+		);
+		if (message.passed) {
+			Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+		} else {
+			
+		}
+	};
 
 	var update_scorm = function(e) {
         	
