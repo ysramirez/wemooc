@@ -88,9 +88,9 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 					LiferayPortletResponse liferayPortletResponse,
 					String noSuchEntryRedirect) throws Exception {
 				// TODO Auto-generated method stub
-				
+				Locale loc = liferayPortletRequest.getLocale();
 				Group objectiveGroup=GroupLocalServiceUtil.getGroup(_course.getGroupCreatedId());
-				return "/web"+objectiveGroup.getFriendlyURL();
+				return "/"+loc.getLanguage()+"/web"+objectiveGroup.getFriendlyURL();
 			}
 			@Override
 			public String getViewInContextMessage() {
