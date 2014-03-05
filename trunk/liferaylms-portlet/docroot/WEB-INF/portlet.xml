@@ -560,6 +560,12 @@
 			<short-title>P2PTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>portletSetupShowBorders</name>
+				<value>false</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
@@ -1327,6 +1333,12 @@
 			<short-title>SurveyActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>portletSetupShowBorders</name>
+				<value>false</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
@@ -1371,6 +1383,12 @@
 			<short-title>OnlineTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>portletSetupShowBorders</name>
+				<value>false</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
@@ -1415,6 +1433,12 @@
 			<short-title>OfflineTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>portletSetupShowBorders</name>
+				<value>false</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
@@ -1455,6 +1479,12 @@
 			<short-title>EvaluationTaskActivity</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>portletSetupShowBorders</name>
+				<value>false</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
@@ -1535,7 +1565,7 @@
 			<role-name>user</role-name>
 		</security-role-ref>
 	</portlet>
-		<portlet>
+	<portlet>
 		<portlet-name>userprogress</portlet-name>
 		<display-name>User Progress</display-name>
 		<portlet-class>com.liferay.lms.UserProgress</portlet-class>
@@ -1618,6 +1648,12 @@
 				<short-title>SCORM Activity</short-title>
 				<keywords></keywords>
 			</portlet-info>
+			<portlet-preferences>
+				<preference>
+					<name>portletSetupShowBorders</name>
+					<value>false</value>
+				</preference>
+			</portlet-preferences>
 			<security-role-ref>
 				<role-name>administrator</role-name>
 			</security-role-ref>
