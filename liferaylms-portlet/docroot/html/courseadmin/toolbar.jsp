@@ -56,18 +56,18 @@ if(roleId==commmanager.getRoleId()){
 			<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 		</portlet:renderURL>		
 		<liferay-ui:icon
-			image="add_user" 
 			message="add-user"
 			label="true"
 			url="<%= adduserURL %>"
 		/>
 	</div>
+	<div class="bt_removeuser">
 		<liferay-ui:icon 
-			image="leave" 
 			message="delete-all-users"
 			label="true"
 			url="javascript:areyousure()"
 		/>
+	</div>
 <liferay-ui:icon-menu cssClass='bt_importexport' direction="down" extended="<%= false %>"  message="export-import" showWhenSingleIcon="<%= false %>">
 	<div>
 		<liferay-portlet:resourceURL var="exportURL" >
