@@ -2077,6 +2077,43 @@
 		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
 		<supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 	</portlet>
+	<portlet>
+		<portlet-name>moduleselector</portlet-name>
+		<display-name>Module Selector</display-name>
+		<portlet-class>
+			com.liferay.lms.portlet.ModuleSelector
+		</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/moduleselector/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<resource-bundle>
+			content/moduleselector/Language
+		</resource-bundle>
+		<portlet-info>
+			<title>Module Selector</title>
+			<short-title>Module Selector</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+	</portlet>
 	<event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
     </event-definition>
@@ -2100,6 +2137,7 @@
 		<identifier>categoryId</identifier>
 		<qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryId</qname>
 	</public-render-parameter>
+
 
 
 
