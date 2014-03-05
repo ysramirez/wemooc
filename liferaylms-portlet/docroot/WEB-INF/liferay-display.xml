@@ -59,5 +59,6 @@
 		<portlet id="courseinscriptiondates"></portlet>
 		<portlet id="modulenavigation"></portlet>
 		<portlet id="activityViewer"></portlet>
+		<portlet id="moduleselector"></portlet>
 	</category>
 </display>
