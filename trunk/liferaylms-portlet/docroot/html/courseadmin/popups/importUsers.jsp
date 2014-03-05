@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.ClpSerializer"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
@@ -6,6 +7,10 @@
 <%@page import="java.io.FileNotFoundException"%>
 
 <%@ include file="/init.jsp" %>
+
+<%
+String urlExample = "<a href=\"/"+ ClpSerializer.getServletContextName()+"/html/courseadmin/examples/document.csv\">"+LanguageUtil.get(themeDisplay.getLocale(),"example")+"</a>";
+%>
 
 <portlet:renderURL var="importUsersURL"  windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
 	<portlet:param name="ajaxAction" value="importUserRole" /> 
@@ -19,6 +24,10 @@
 <liferay-ui:panel id="importuserrole_help" title="help" extended="closed">
 	<%=LanguageUtil.get(themeDisplay.getLocale(),"courseadmin.importuserrole.help") %>
 </liferay-ui:panel>
+
+<span>
+	<%=LanguageUtil.get(pageContext,"courseadmin.importuserrole.download") +" "+ urlExample%>
+</span>
 
 <% if ((!SessionMessages.contains(renderRequest, "courseadmin.importuserrole.csv.saved"))&&(SessionErrors.isEmpty(renderRequest))) { %>
 <iframe name="<portlet:namespace />import_frame" src="" id="<portlet:namespace />import_frame" style="display:none;" onload="<portlet:namespace />doImportUsers();" ></iframe>
