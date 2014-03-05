@@ -184,6 +184,7 @@ public class ActivityViewer extends MVCPortlet
 									publicParameters.put(publicRenderParameterName, parameterValues);
 								}
 							}
+							renderResponse.setProperty("clear-request-parameters",StringPool.TRUE);
 						}
 						
 						String activityContent = renderPortlet(renderRequest, renderResponse, 
