@@ -1,6 +1,9 @@
 package com.liferay.lms;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Collections;
@@ -19,6 +22,7 @@ import javax.portlet.PortletRequest;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ValidatorException;
+import javax.portlet.filter.RenderResponseWrapper;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -31,6 +35,7 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.io.WriterOutputStream;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -169,10 +174,11 @@ public class ActivityViewer extends MVCPortlet
 					}
 					else {
 						Portlet portlet = PortletLocalServiceUtil.getPortletById(themeDisplay.getCompanyId(), learningActivityType.getPortletId());
+						HttpServletRequest renderHttpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
 						PortletPreferencesFactoryUtil.getLayoutPortletSetup(themeDisplay.getLayout(), portlet.getPortletId());
 						
 						if(isWidget) {
-							Map<String, String[]> publicParameters = getPublicParameters(PortalUtil.getHttpServletRequest(renderRequest), themeDisplay.getPlid());
+							Map<String, String[]> publicParameters = getPublicParameters(renderHttpServletRequest, themeDisplay.getPlid());
 							for(PublicRenderParameter publicRenderParameter:portlet.getPublicRenderParameters()) {
 								String[] parameterValues = renderRequest.getParameterValues(publicRenderParameter.getIdentifier());
 								if(Validator.isNotNull(parameterValues)) {
@@ -185,8 +191,42 @@ public class ActivityViewer extends MVCPortlet
 								}
 							}
 							renderResponse.setProperty("clear-request-parameters",StringPool.TRUE);
-						}
-						
+
+							if(ParamUtil.getBoolean(renderRequest, "scriptMobile",true)) {
+								RenderResponseWrapper renderResponseWrapper = new RenderResponseWrapper(renderResponse) {
+									private final StringWriter stringWriter = new StringWriter();
+								
+									@Override
+									public PrintWriter getWriter() throws IOException {
+										return new PrintWriter(stringWriter);
+									}
+									
+									@Override
+									public OutputStream getPortletOutputStream()
+										throws IOException {
+										return new WriterOutputStream(stringWriter);
+									}
+									
+									@Override
+									public String toString() {
+										return stringWriter.toString();
+									}
+							
+								};
+								include("/html/activityViewer/scriptMobile.jsp", renderRequest, renderResponseWrapper);
+
+								StringBundler pageTopStringBundler = (StringBundler)renderRequest.getAttribute(WebKeys.PAGE_TOP);
+	
+								if (pageTopStringBundler == null) {
+									pageTopStringBundler = new StringBundler();
+									renderRequest.setAttribute(WebKeys.PAGE_TOP, pageTopStringBundler);
+								}
+								
+								
+								pageTopStringBundler.append(renderResponseWrapper.toString());
+							}
+						}							
+
 						String activityContent = renderPortlet(renderRequest, renderResponse, 
 								themeDisplay, themeDisplay.getScopeGroupId(), portlet, isWidget, true);
 						renderResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
