@@ -299,7 +299,8 @@ public class ActivityViewer extends MVCPortlet
 
         	if(copyNonNamespaceParameters) {
         		String portletNamespace = PortalUtil.getPortletNamespace(portlet.getPortletId());
-	        	for (Map.Entry<String, String[]> entry : servletRequest.getParameterMap().entrySet()) {
+        		Map<String, String[]> parameters = servletRequest.getParameterMap();
+	        	for (Map.Entry<String, String[]> entry : parameters.entrySet()) {
 	        		if((!entry.getKey().startsWith(PortletQName.PUBLIC_RENDER_PARAMETER_NAMESPACE))&&
 	        		   (!entry.getKey().startsWith(portletNamespace))&&
 	        		   (!PortalUtil.isReservedParameter(entry.getKey()))&&
