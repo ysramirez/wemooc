@@ -9,7 +9,20 @@ Liferay.provide(
         window,
         '<portlet:namespace />goToModule',
         function() {
-        	
+        	var A = AUI();
+        	var val = A.one('#<portlet:namespace />moduleSelect > :selected').val();
+        	var modId = val.split("_")[0];
+        	console.log(modId);
+        	var i = val.split("_")[1];
+        	console.log(i);
+			var renderUrl = Liferay.PortletURL.createRenderURL();	
+			renderUrl.setWindowState('<%= LiferayWindowState.NORMAL.toString() %>');
+			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
+			renderUrl.setParameter('jspPage','/html/moduleselector/view.jsp');
+			renderUrl.setParameter('actionEditingDetails', <%=ParamUtil.getBoolean(request, "actionEditingDetails", false)%>);
+			renderUrl.setParameter('moduleId', modId);
+			renderUrl.setParameter('themeId', i);
+			location.href=renderUrl.toString();
         },
         ['liferay-portlet-url']
     );
@@ -17,7 +30,6 @@ Liferay.provide(
 </script>
 
 <%
-/*renderUrl.setParameter('actionEditingDetails', true);*/
 	long moduleId = ParamUtil.getLong(request, "moduleId", 0);
 	
 	if(moduleId > 0){
@@ -30,8 +42,10 @@ Liferay.provide(
 				for(Module mod:modules){
 					i++;
 %>
-					<aui:option label="<%=LanguageUtil.format(pageContext, \"moduleTitle.chapter\", new Object[]{i,mod.getTitle(themeDisplay.getLocale())})%>" 
-					value="<%=mod.getModuleId() %>"/>
+					<aui:option selected="<%= mod.getModuleId()==moduleId %>" 
+						label="<%=LanguageUtil.format(pageContext, \"moduleTitle.chapter\", new Object[]{i,mod.getTitle(themeDisplay.getLocale())})%>" 
+						value="<%=mod.getModuleId() + \"_\" + i%>" />
+					
 <%
 				}
 %>
