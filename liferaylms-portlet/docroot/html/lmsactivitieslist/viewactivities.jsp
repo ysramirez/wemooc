@@ -244,35 +244,6 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 							|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") 
 							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing))
 					{
-						LearningActivityAssetRendererFactory laf = null;
-						try{
-							laf = new LearningActivityAssetRendererFactory();
-						}catch(Exception e){}
-						
-						if(laf==null||activity==null)
-							continue;
-						
-						AssetRenderer assetRenderer = null;
-						
-						try{
-							assetRenderer = laf.getAssetRenderer(activity.getActId());
-						}catch(Exception e){}
-						
-						if(assetRenderer==null)
-							continue;
-						
-						String view1URL = assetRenderer.getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse, "");	
-						Portlet view1URLPortlet =PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(view1URL, "p_p_id",false));
-						
-						if(view1URLPortlet!=null) {
-							PublicRenderParameter moduleIdPublicParameter = view1URLPortlet.getPublicRenderParameter("moduleId");
-							if(moduleIdPublicParameter!=null) {					
-								view1URL=HttpUtil.addParameter(view1URL, PortletQNameUtil.getPublicRenderParameterName(moduleIdPublicParameter.getQName()),Long.toString(activity.getModuleId()));
-								view1URL=HttpUtil.removeParameter(view1URL, "p_p_state");
-								view1URL=HttpUtil.addParameter(view1URL, "p_p_state","normal");
-							}
-						}
-						
 						%>
 						<portlet:actionURL var="goToActivity" windowState="<%= WindowState.NORMAL.toString()%>" >
 							<portlet:param name="actId" value="<%=Long.toString(activity.getActId()) %>" />

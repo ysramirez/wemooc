@@ -62,10 +62,7 @@ String primKey = String.valueOf(myActivity.getActId());
 			"					Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"')); ");
 			
 	if(myActivity.getActId()==actId) {	
-		String activityPortletId = HttpUtil.getParameter(
-				learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
-						getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
-	
+		String activityPortletId = learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getPortletId();
 		if(activityPortletId!=null) {
 			editActivityPopup.append(
 			 "         			var activityTitlePortlet=AUI().one('#p_p_id_"+JavaScriptUtil.markupToStringLiteral(activityPortletId)+"_');"+
@@ -125,10 +122,8 @@ ActionKeys.DELETE)||permissionChecker.hasOwnerPermission(myActivity.getCompanyId
 		 				 "		                 if(activityNavigatorPortlet!=null) {  "+
 		 				 "				            Liferay.Portlet.refresh(activityNavigatorPortlet);  "+
 		 				 "			             }  ");
-		 				if(myActivity.getActId()==actId) {	
-		 					String activityPortletId = HttpUtil.getParameter(
-		 							learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getAssetRenderer(myActivity).
-		 									getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+		 				if(myActivity.getActId()==actId) {
+		 					String activityPortletId = learningActivityTypeRegistry.getLearningActivityType(myActivity.getTypeId()).getPortletId();
 		 				
 		 					if(activityPortletId!=null) {
 		 						deleteURLJavascript.append(
