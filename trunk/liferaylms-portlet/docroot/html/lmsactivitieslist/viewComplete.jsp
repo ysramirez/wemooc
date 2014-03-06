@@ -52,8 +52,7 @@ if (moduleId == 0){
 String currentActivityPortletId =  null;
 if(actId!=0) {				
 	LearningActivity currentLeaningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-    currentActivityPortletId = HttpUtil.getParameter(new LearningActivityTypeRegistry().getLearningActivityType(currentLeaningActivity.getTypeId()).getAssetRenderer(currentLeaningActivity).
-					getURLViewInContext((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse,StringPool.BLANK), "p_p_id",false);
+    currentActivityPortletId = new LearningActivityTypeRegistry().getLearningActivityType(currentLeaningActivity.getTypeId()).getPortletId();
 }
 
 	String idModuleUl = "idModuleUl";
