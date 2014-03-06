@@ -33,11 +33,14 @@ Liferay.provide(
 	long moduleId = ParamUtil.getLong(request, "moduleId", 0);
 	
 	if(moduleId > 0){
+		%>
+		<div class="modules_selector_container">
+		<%
 		List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 		if(modules.size()>0){
 			int i=0;
 %>
-			<aui:select name="moduleSelect" inlineLabel="true" label="">
+			<aui:select name="moduleSelect" inlineLabel="true" label="" cssClass="modules_selector_list">
 <%
 				for(Module mod:modules){
 					i++;
@@ -53,5 +56,8 @@ Liferay.provide(
 			<aui:button name="go" value="go" onClick="<%=renderResponse.getNamespace()+\"goToModule();\" %>"/>
 <%			
 		}
+		%>
+		</div>
+		<%
 	}
 %>
