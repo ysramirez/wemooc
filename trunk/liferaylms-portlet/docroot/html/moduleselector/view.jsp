@@ -12,16 +12,14 @@ Liferay.provide(
         	var A = AUI();
         	var val = A.one('#<portlet:namespace />moduleSelect > :selected').val();
         	var modId = val.split("_")[0];
-        	console.log(modId);
         	var i = val.split("_")[1];
-        	console.log(i);
-			var renderUrl = Liferay.PortletURL.createRenderURL();	
+			var renderUrl = Liferay.PortletURL.createActionURL();	
 			renderUrl.setWindowState('<%= LiferayWindowState.NORMAL.toString() %>');
-			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
-			renderUrl.setParameter('jspPage','/html/moduleselector/view.jsp');
-			renderUrl.setParameter('actionEditingDetails', <%=ParamUtil.getBoolean(request, "actionEditingDetails", false)%>);
+			renderUrl.setPortletId("lmsactivitieslist_WAR_liferaylmsportlet");
+			renderUrl.setParameter('actionEditing', <%=ParamUtil.getBoolean(request, "actionEditing", false)%>);
 			renderUrl.setParameter('moduleId', modId);
 			renderUrl.setParameter('themeId', i);
+			renderUrl.setParameter('<%=ActionRequest.ACTION_NAME%>', "goToModule");
 			location.href=renderUrl.toString();
         },
         ['liferay-portlet-url']
