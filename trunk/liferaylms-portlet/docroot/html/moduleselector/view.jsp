@@ -35,7 +35,7 @@ Liferay.provide(
 		<div class="modules_selector_container">
 		<%
 		List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
-		if(modules.size()>0){
+		if(modules.size()>1){
 			int i=0;
 %>
 			<aui:select name="moduleSelect" inlineLabel="true" label="" cssClass="modules_selector_list">
@@ -53,6 +53,10 @@ Liferay.provide(
 			</aui:select>
 			<aui:button name="go" value="go" onClick="<%=renderResponse.getNamespace()+\"goToModule();\" %>"/>
 <%			
+		}else if(modules.size() == 1){
+%>
+			<aui:field-wrapper label="<%=LanguageUtil.format(pageContext, \"moduleTitle.chapter\", new Object[]{1,modules.get(0).getTitle(themeDisplay.getLocale())})%>"/>
+<%		
 		}
 		%>
 		</div>
