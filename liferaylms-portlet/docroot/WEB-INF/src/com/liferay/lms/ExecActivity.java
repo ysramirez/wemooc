@@ -153,7 +153,7 @@ public class ExecActivity extends MVCPortlet
 		String showCorrectAnswer=ParamUtil.getString(actionRequest, "showCorrectAnswer", "false");
 		String improve=ParamUtil.getString(actionRequest, "improve", "false");
 
-		long questionesPerPage = ParamUtil.getInteger(actionRequest, "questionesPerPage", 1);
+		long questionsPerPage = ParamUtil.getInteger(actionRequest, "questionsPerPage", 1);
 
 		if(randomString==0) {
 			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", StringPool.BLANK);
@@ -183,11 +183,11 @@ public class ExecActivity extends MVCPortlet
 			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "false");
 		}
 
-		if(questionesPerPage == 0) {
-			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", StringPool.BLANK);
+		if(questionsPerPage == 0) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionsPerPage", StringPool.BLANK);
 		}
 		else {
-			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", Long.toString(questionesPerPage));
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionsPerPage", Long.toString(questionsPerPage));
 		}
 
 		SessionMessages.add(actionRequest, "activity-saved-successfully");
@@ -262,13 +262,13 @@ public class ExecActivity extends MVCPortlet
 			}
 			if(question!=null){
 				questionId = question.getQuestionId();
-				//Obtengo un array con los ids de las respuestas que ya contenía la pregunta
+				//Obtengo un array con los ids de las respuestas que ya contenï¿½a la pregunta
 				List<TestAnswer> existingAnswers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
 				List<Long> existingAnswersIds = new ArrayList<Long>();
 				for(TestAnswer answer:existingAnswers){
 					existingAnswersIds.add(answer.getAnswerId());
 				}
-				//Recorro todas las respuestas y las actualizo o las creo en funcion de si son nuevas o modificaciones y si son modificaciones guardo sus ids en un array para después borrar las que no existan.
+				//Recorro todas las respuestas y las actualizo o las creo en funcion de si son nuevas o modificaciones y si son modificaciones guardo sus ids en un array para despuï¿½s borrar las que no existan.
 				String[] newAnswersIds = ParamUtil.getParameterValues(actionRequest, "answerId", null);
 				List<Long> editingAnswersIds = new ArrayList<Long>();
 				if(newAnswersIds != null){
@@ -285,7 +285,7 @@ public class ExecActivity extends MVCPortlet
 								//creo respuesta
 								TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer, feedbackCorrect, feedbackNoCorrect, correct);
 							}else {
-								editingAnswersIds.add(Long.parseLong(newAnswerId));//almaceno en array para posterior borrado de las que no estén
+								editingAnswersIds.add(Long.parseLong(newAnswerId));//almaceno en array para posterior borrado de las que no estï¿½n
 								//actualizo respuesta
 								TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(Long.parseLong(newAnswerId));
 								testanswer.setAnswer(answer);
@@ -385,7 +385,7 @@ public class ExecActivity extends MVCPortlet
 						actId, themeDisplay.getUserId(), AuditConstants.VIEW, null);
 
 				activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-				long typeId=activity.getTypeId();
+				long typeId = activity.getTypeId();
 
 				if(typeId==0)
 				{
