@@ -401,15 +401,9 @@ public class ActivityViewer extends MVCPortlet
 				servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_RESPONSE, response);
 				servletRequest.setAttribute(JavaConstants.JAVAX_PORTLET_CONFIG, PortletConfigFactoryUtil.create(portlet, servletContext));
 				servletRequest.setAttribute("PORTLET_CONTENT", portletBody);
-				try {
 				result = portletHeader+
 						 PortalUtil.renderPage(servletContext, servletRequest, servletResponse, "/html/common/themes/portlet.jsp",false)+
 						 portletQueue;
-				}
-				catch(Throwable e){
-					e.printStackTrace();
-				}
-
             }
             else {
             	result = renderedPortlet;
