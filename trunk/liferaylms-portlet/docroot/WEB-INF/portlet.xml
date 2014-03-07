@@ -55,6 +55,10 @@
 		<display-name>ExecActivity</display-name>
 		<portlet-class>com.liferay.lms.ExecActivity</portlet-class>
 		<init-param>
+			<name>check-auth-token</name>
+			<value>false</value>
+		</init-param>
+		<init-param>
 			<name>view-jsp</name>
 			<value>/html/execactivity/test/view.jsp</value>
 		</init-param>
