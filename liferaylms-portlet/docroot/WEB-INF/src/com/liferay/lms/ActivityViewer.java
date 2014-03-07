@@ -77,7 +77,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class ActivityViewer extends MVCPortlet 
 {
 	
-	private static final String ACTION_VIEW = "ACTION_VIEW";
+	public static final String ACTION_VIEW = "ACTION_VIEW";
 	private static Set<String> reservedAttrs = new HashSet<String>();
 	private volatile Constructor<?> createComponentContext;
 	private volatile Method getContext;
