@@ -1,3 +1,14 @@
+<%@page import="com.liferay.portal.service.ResourcePermissionServiceUtil"%>
+<%@page import="com.liferay.portal.model.Role"%>
+<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.lms.ActivityViewer"%>
+<%@page import="com.liferay.portal.service.ResourceActionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.ResourceConstants"%>
+<%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.PortletConstants"%>
+<%@page import="com.liferay.portal.service.permission.PortletPermissionUtil"%>
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityTry"%>
@@ -153,6 +164,28 @@ if(learnact!=null)
 		}
 		else{
 			if(larntype.hasEditDetails()){
+				if ((themeDisplay.getLayout().isTypePortlet())&&
+					(!themeDisplay.getLayoutTypePortlet().getPortletIds().contains(larntype.getPortletId()))){
+					PortletPreferencesFactoryUtil.getLayoutPortletSetup(themeDisplay.getLayout(), larntype.getPortletId());
+					
+					String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
+							themeDisplay.getPlid(), larntype.getPortletId());
+					String activityPortletName = larntype.getPortletId();
+
+					int warSeparatorIndex = activityPortletName.indexOf(PortletConstants.WAR_SEPARATOR);
+					if (warSeparatorIndex != -1) {
+						activityPortletName = activityPortletName.substring(0, warSeparatorIndex);
+					}
+
+					if ((ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
+							themeDisplay.getCompanyId(), activityPortletName,
+							ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
+						(ResourceActionLocalServiceUtil.fetchResourceAction(activityPortletName, ActivityViewer.ACTION_VIEW)!=null)) {
+			        	Role siteMember = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SITE_MEMBER);
+		        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), 
+		        				activityPortletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ActivityViewer.ACTION_VIEW});
+					}
+				}
 			%>
 			<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails()%>" label="true" />
 			<% 
