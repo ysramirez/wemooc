@@ -326,47 +326,48 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 			if(start.getTime()>=end.getTime()){
 				alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
 				return;
-			}else{
-				if(document.getElementById('<portlet:namespace />uploadDay')!=null){
-					var upload = getUpdateDate();
-					if(start.getTime()>upload.getTime()||upload.getTime()>end.getTime()){
-						alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
-						return;
-					}
-				}
 			}
-		}else if(start){
-			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
-				var start = getStartDate();
-				var upload = getUpdateDate();
+// 			else{
+// 				if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+// 					var upload = getUpdateDate();
+// 					if(start.getTime()>upload.getTime()||upload.getTime()>end.getTime()){
+// 						alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+// 						return;
+// 					}
+// 				}
+// 			}
+// 		}else if(start){
+// 			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+// 				var start = getStartDate();
+// 				var upload = getUpdateDate();
 				
-				if(start.getTime()>upload.getTime()){
-					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
-					return;
-				}
-			}
-		}else if(stop){
-			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
-				var end = getEndDate();
-				var upload = getUpdateDate();
+// 				if(start.getTime()>upload.getTime()){
+// 					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+// 					return;
+// 				}
+// 			}
+// 		}else if(stop){
+// 			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+// 				var end = getEndDate();
+// 				var upload = getUpdateDate();
 
-				if(upload.getTime()>end.getTime()){
-					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
-					return;
-				}
-			}
-		}else{
-			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
-				var startm = new Date(<%= module.getStartDate().getTime() %>);
-				var endm = new Date(<%= module.getEndDate().getTime() %>);
-				var upload = getUpdateDate();
+// 				if(upload.getTime()>end.getTime()){
+// 					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+// 					return;
+// 				}
+// 			}
+// 		}else{
+// 			if(document.getElementById('<portlet:namespace />uploadDay')!=null){
+<%-- 				var startm = new Date(<%= module.getStartDate().getTime() %>); --%>
+<%-- 				var endm = new Date(<%= module.getEndDate().getTime() %>); --%>
+// 				var upload = getUpdateDate();
 
-				if(startm.getTime()>upload.getTime()||upload.getTime()>endm.getTime()){
-					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
-					return;
-				}
-			}
-		}
+// 				if(startm.getTime()>upload.getTime()||upload.getTime()>endm.getTime()){
+// 					alert("<liferay-ui:message key="please-enter-a-correct-update-date" />");
+// 					return;
+// 				}
+// 			}
+ 		}
 		
 		document.getElementById('<portlet:namespace />fm').submit();
 	}

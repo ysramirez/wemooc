@@ -171,16 +171,7 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 
 </aui:field-wrapper>
 
-<div id="<portlet:namespace />updateDate"
-	class="<%=((SessionErrors.contains(renderRequest,
-					"p2ptaskactivity.editActivity.dateupload.afteractivity"))) ? "portlet-msg-error"
-					: StringPool.BLANK%>">
-	<%=(SessionErrors.contains(renderRequest,
-					"p2ptaskactivity.editActivity.dateupload.afteractivity")) ? LanguageUtil
-					.get(pageContext,
-							"p2ptaskactivity.editActivity.dateupload.afteractivity")
-					: StringPool.BLANK%>
-</div>
+
 	
 <aui:input type="text" size="3" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" disabled="<%=disabled %>" 
 	ignoreRequestValue="true"></aui:input>
