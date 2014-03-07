@@ -18,9 +18,11 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadRequest;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -204,7 +206,8 @@ public class TestLearningActivityType extends BaseLearningActivityType
 				rootElement.remove(questionsPerPage);
 			}
 			questionsPerPage = SAXReaderUtil.createElement("questionsPerPage");
-			questionsPerPage.setText(Long.toString(ParamUtil.get(uploadRequest,"questionsPerPage", 0L)));
+			
+			questionsPerPage.setText(Long.toString(ParamUtil.get(uploadRequest,"questionsPerPage", GetterUtil.getLong(PropsUtil.get("lms.questionsPerPage"), 0L))));
 			rootElement.add(questionsPerPage);	
 			
 			String team = ParamUtil.getString(uploadRequest, "team","0");
