@@ -28,6 +28,7 @@ import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
@@ -42,6 +43,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -78,6 +81,8 @@ public class ActivityViewer extends MVCPortlet
 {
 	
 	public static final String ACTION_VIEW = "ACTION_VIEW";
+	public static final String AUTH_TOKEN_IMPL = PropsUtil.get(PropsKeys.AUTH_TOKEN_IMPL);
+	public static final String SESSION_AUTH_TOKEN_CLASS = "com.liferay.portal.security.auth.SessionAuthToken";
 	private static Set<String> reservedAttrs = new HashSet<String>();
 	private volatile Constructor<?> createComponentContext;
 	private volatile Method getContext;
@@ -270,7 +275,8 @@ public class ActivityViewer extends MVCPortlet
 			final long scopeGroup, final Portlet portlet,final boolean copyNonNamespaceParameters,final boolean copyPublicParameters) 
 			throws SystemException, IOException, ServletException, ValidatorException, PortalException {
         // Get servlet request / response
-        HttpServletRequest servletRequest = PortalUtil.getOriginalServletRequest(PortalUtil.getHttpServletRequest(request));
+    	HttpServletRequest renderServletRequest = PortalUtil.getHttpServletRequest(request);
+        HttpServletRequest servletRequest = PortalUtil.getOriginalServletRequest(renderServletRequest);
         HttpServletResponse servletResponse = PortalUtil.getHttpServletResponse(response);
         
         PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
@@ -340,6 +346,20 @@ public class ActivityViewer extends MVCPortlet
 		        			return false;
 		        		}
 					}, queryStringStringBundler.toString(), false);
+
+            if(SESSION_AUTH_TOKEN_CLASS.equals(AUTH_TOKEN_IMPL)) {
+            	HttpSession renderServletSession = renderServletRequest.getSession();
+            	HttpSession servletSession = servletRequest.getSession();
+            	Enumeration<String> sessionAttributesNames = servletSession.getAttributeNames();
+            	while(sessionAttributesNames.hasMoreElements()) {
+            		String sessionAttributeName = sessionAttributesNames.nextElement();
+            		if(sessionAttributeName.startsWith(WebKeys.AUTHENTICATION_TOKEN)){
+            			Object sessionAttributeValue = servletSession.getAttribute(sessionAttributeName);
+            			servletSession.removeAttribute(sessionAttributeName);
+            			renderServletSession.setAttribute(sessionAttributeName, sessionAttributeValue);
+            		}
+            	}
+            }
 
 			List<String> markupHeaders = (List<String>)servletRequest.getAttribute(MimeResponse.MARKUP_HEAD_ELEMENT);
 			if((Validator.isNotNull(markupHeaders))&&(!markupHeaders.isEmpty())) {
