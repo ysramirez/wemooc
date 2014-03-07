@@ -102,6 +102,159 @@
 	</portlet-resource>
 	
 	<model-resource>
+		<model-name>execactivity</model-name>
+		<portlet-ref>
+			<portlet-name>execactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>resourceExternalActivity</model-name>
+		<portlet-ref>
+			<portlet-name>resourceExternalActivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>p2ptaskactivity</model-name>
+		<portlet-ref>
+			<portlet-name>p2ptaskactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>surveyactivity</model-name>
+		<portlet-ref>
+			<portlet-name>surveyactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>offlinetaskactivity</model-name>
+		<portlet-ref>
+			<portlet-name>offlinetaskactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>onlinetaskactivity</model-name>
+		<portlet-ref>
+			<portlet-name>onlinetaskactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>resourceInternalActivity</model-name>
+		<portlet-ref>
+			<portlet-name>resourceInternalActivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>evaluationtaskactivity</model-name>
+		<portlet-ref>
+			<portlet-name>evaluationtaskactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+
+	<model-resource>
+		<model-name>scormactivity</model-name>
+		<portlet-ref>
+			<portlet-name>scormactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>	
+
+	<model-resource>
 		<model-name>com.liferay.lms.model</model-name>
 		<portlet-ref>
 			<portlet-name>module-portlet</portlet-name>
@@ -348,6 +501,22 @@
 				<action-key>DELETE</action-key>
 				<action-key>PERMISSIONS</action-key>
 				<action-key>UPDATE</action-key>
+			</guest-unsupported>
+		</permissions>
+	</model-resource>
+	<model-resource>
+		<model-name>p2ptaskactivity</model-name>
+		<portlet-ref>
+			<portlet-name>p2ptaskactivity</portlet-name>
+		</portlet-ref>
+		<permissions>
+			<supports>
+				<action-key>ACTION_VIEW</action-key>
+			</supports>
+			<site-member-defaults />
+			<guest-defaults />
+			<guest-unsupported>
+				<action-key>ACTION_VIEW</action-key>
 			</guest-unsupported>
 		</permissions>
 	</model-resource>
