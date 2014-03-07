@@ -29,7 +29,7 @@ public class GeneralStatsConfigurationAction implements ConfigurationAction {
 		PortletPreferences portletPreferences =	PortletPreferencesFactoryUtil.getPortletSetup(actionRequest, ParamUtil.getString(actionRequest, "portletResource")); 
 				
 		portletPreferences.setValue("showSearchTagsGeneralStats",		Boolean.toString(ParamUtil.getBoolean(actionRequest, "showSearchTagsGeneralStats", false)));
-		portletPreferences.setValue("showSearchCategoriesGeneralStats",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showSearchCategoriesGeneralStats", false)));
+		portletPreferences.setValue("showSearchCategoriesGeneralStats",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showSearchCategoriesGeneralStats", true)));
 		
 		portletPreferences.store();
 		
