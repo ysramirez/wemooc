@@ -70,20 +70,18 @@
 		<liferay-ui:error key="execactivity.editquestions.newquestion.error.text.required" message="execactivity.editquestions.newquestion.error.text.required"/>
 		<liferay-ui:error key="execativity.test.error" message="execativity.test.error"/>
 		
-		<liferay-ui:panel id="<%=qId%>" title="execativity.editquestions.editquestion.enunciation" collapsible="true" extended="<%=extended %>" defaultState="open" persistState="false">
-			<aui:field-wrapper label="">
-				<liferay-ui:input-editor toolbarSet="slimmer" name="text" width="80%" onChangeMethod="onChangeText" initMethod="initEditor"/>
-				<%
-				String qText = "";
-				if(question != null) qText = question.getText();	
-				%>
-					<script type="text/javascript">
-				        function <portlet:namespace />initEditor() { 
-				            return "<%=JavaScriptUtil.markupToStringLiteral(qText)%>";
-				        }
-				    </script>
-		    </aui:field-wrapper>
-	    </liferay-ui:panel>
+		<aui:field-wrapper label="execativity.editquestions.editquestion.enunciation">
+			<liferay-ui:input-editor toolbarSet="slimmer" name="text" width="80%" onChangeMethod="onChangeText" initMethod="initEditor"/>
+			<%
+			String qText = "";
+			if(question != null) qText = question.getText();	
+			%>
+				<script type="text/javascript">
+			        function <portlet:namespace />initEditor() { 
+			            return "<%=JavaScriptUtil.markupToStringLiteral(qText)%>";
+			        }
+			    </script>
+	    </aui:field-wrapper>
 	</aui:field-wrapper>
 	
 	<portlet:renderURL var="viewAnswerURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
