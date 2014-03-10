@@ -13,6 +13,7 @@ import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.portal.NoSuchLayoutException;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -213,8 +214,15 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 
 	@Override
 	public boolean hasEditPermission(PermissionChecker permissionChecker) throws PortalException, SystemException {	
-		return permissionChecker.
-				hasPermission(this.getGroupId(), LearningActivity.class.getName(), this.getClassPK(), ActionKeys.UPDATE);
+		try {
+			return LearningActivityLocalServiceUtil.canBeEdited(_learningactivity, permissionChecker.getUserId());
+		} catch (PortalException e) {
+			throw e;
+		} catch (SystemException e) {
+			throw e;
+		} catch (Exception e) {
+			throw new SystemException(e);
+		}
 	}
 	
 	
