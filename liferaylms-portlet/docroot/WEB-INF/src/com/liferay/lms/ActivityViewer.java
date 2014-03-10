@@ -72,13 +72,14 @@ import com.liferay.portlet.PortletQName;
 import com.liferay.portlet.PortletQNameUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
+import static com.liferay.lms.asset.LearningActivityBaseAssetRenderer.ACTION_VIEW;
+
 /**
  * Portlet implementation class ActivityViewer
  */
 public class ActivityViewer extends MVCPortlet 
 {
-	
-	public static final String ACTION_VIEW = "ACTION_VIEW";
+
 	private static Set<String> reservedAttrs = new HashSet<String>();
 	private volatile Constructor<?> createComponentContext;
 	private volatile Method getContext;
