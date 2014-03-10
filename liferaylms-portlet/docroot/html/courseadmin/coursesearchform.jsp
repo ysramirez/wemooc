@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portlet.asset.service.persistence.AssetEntryUtil"%>
 <h1 class="taglib-categorization-filter entry-title">
 <%
 
@@ -150,6 +151,7 @@ if( (catIds!=null&&catIds.length>0) || !freetext.isEmpty() || state!=WorkflowCon
 	entryQuery.setExcludeZeroViewCount(false);
 	entryQuery.setVisible(true);
 	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
+	
 	entryQuery.setVisible(false);
 	entries.addAll(AssetEntryLocalServiceUtil.getEntries(entryQuery));
 
