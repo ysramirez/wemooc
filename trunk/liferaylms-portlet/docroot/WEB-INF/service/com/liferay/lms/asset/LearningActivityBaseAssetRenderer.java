@@ -9,7 +9,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
-import com.liferay.lms.ActivityViewer;
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
@@ -43,6 +42,8 @@ import com.liferay.portlet.asset.model.BaseAssetRenderer;
 
 public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRenderer {
 	
+	
+	public static final String ACTION_VIEW = "ACTION_VIEW";
 	public static final String TEMPLATE_JSP = "template_JSP";
 	public static final String TEMPLATE_PORTLET_ID = "template_portlet_id";
 	protected static final String LMS_ACTIVITIES_LIST_PORTLET_ID =  PortalUtil.getJsSafePortletId("lmsactivitieslist"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
@@ -171,10 +172,10 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 			if ((ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
 					_learningactivity.getCompanyId(), portletName,
 					ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
-				(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, ActivityViewer.ACTION_VIEW)!=null)) {
+				(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, ACTION_VIEW)!=null)) {
 	        	Role siteMember = RoleLocalServiceUtil.getRole(_learningactivity.getCompanyId(),RoleConstants.SITE_MEMBER);
         		ResourcePermissionServiceUtil.setIndividualResourcePermissions(_learningactivity.getGroupId(), _learningactivity.getCompanyId(), 
-        				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ActivityViewer.ACTION_VIEW});
+        				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ACTION_VIEW});
 			}
 
 		}
