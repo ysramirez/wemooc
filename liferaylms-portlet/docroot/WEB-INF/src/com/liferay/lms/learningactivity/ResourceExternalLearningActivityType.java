@@ -236,6 +236,8 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 							try {
 								if(!changes)
 									changes=true;
+								serviceContext.setAddGroupPermissions(true);
+								serviceContext.setAddGuestPermissions(true);
 								dlDocument = DLAppLocalServiceUtil.addFileEntry(
 								          themeDisplay.getUserId(), repositoryId , folderId , uploadRequest.getFileName(param), uploadRequest.getContentType(param), 
 								          uploadRequest.getFileName(param), StringPool.BLANK, StringPool.BLANK, uploadRequest.getFile(param) , serviceContext );
