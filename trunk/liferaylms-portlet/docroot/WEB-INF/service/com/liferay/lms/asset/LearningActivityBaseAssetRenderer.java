@@ -35,7 +35,6 @@ import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
-import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
@@ -64,11 +63,11 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		this(learningactivity, new LearningActivityTypeRegistry().getLearningActivityType(learningactivity.getTypeId()),false);
 	}
 	
-	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity, LearningActivityType learningActivityType, boolean isLmsLearningActivity) throws SystemException,PortalException {
+	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity, LearningActivityType learningActivityType, boolean isLmsExternalTemplates) throws SystemException,PortalException {
 		_learningactivity = learningactivity;
 		_nameKey = learningActivityType.getName();
 		_portletId = learningActivityType.getPortletId();
-		_isLmsExternalTemplates = isLmsLearningActivity;
+		_isLmsExternalTemplates = isLmsExternalTemplates;
 		
 		@SuppressWarnings("unchecked")
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(LayoutLocalServiceUtil.dynamicQuery().
