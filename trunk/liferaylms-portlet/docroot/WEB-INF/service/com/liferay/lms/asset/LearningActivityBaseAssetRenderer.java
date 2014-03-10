@@ -43,6 +43,8 @@ import com.liferay.portlet.asset.model.BaseAssetRenderer;
 
 public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRenderer {
 	
+	public static final String TEMPLATE_JSP = "template_JSP";
+	public static final String TEMPLATE_PORTLET_ID = "template_portlet_id";
 	protected static final String LMS_ACTIVITIES_LIST_PORTLET_ID =  PortalUtil.getJsSafePortletId("lmsactivitieslist"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
 	protected static final String ACTIVITY_VIEWER_PORTLET_ID =  PortalUtil.getJsSafePortletId("activityViewer"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
 	
@@ -50,16 +52,22 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	private String _nameKey;
 	private String _portletId;
 	private Layout _layout;
+	private boolean _isLmsExternalTemplates = false;
 	private boolean _isRuntimePortlet = false;
-	
+
 	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity) throws SystemException,PortalException {
 		this(learningactivity, new LearningActivityTypeRegistry().getLearningActivityType(learningactivity.getTypeId()));
 	}
 	
-	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity,LearningActivityType learningActivityType) throws SystemException,PortalException {
+	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity, LearningActivityType learningActivityType) throws SystemException,PortalException {
+		this(learningactivity, new LearningActivityTypeRegistry().getLearningActivityType(learningactivity.getTypeId()),false);
+	}
+	
+	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity, LearningActivityType learningActivityType, boolean isLmsLearningActivity) throws SystemException,PortalException {
 		_learningactivity = learningactivity;
 		_nameKey = learningActivityType.getName();
 		_portletId = learningActivityType.getPortletId();
+		_isLmsExternalTemplates = isLmsLearningActivity;
 		
 		@SuppressWarnings("unchecked")
 		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(LayoutLocalServiceUtil.dynamicQuery().
@@ -109,15 +117,25 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		return _learningactivity.getUuid();
 	}
 
-	@Override
-	public String render(RenderRequest request, RenderResponse response, String template) throws Exception {
+	protected String getTemplatePath(String template) {
+		return "/html/asset/";
+	}
 
-		if (template.equals(TEMPLATE_FULL_CONTENT)) {
+	@Override
+	public final String render(RenderRequest request, RenderResponse response, String template) throws Exception {
+
+		if(TEMPLATE_FULL_CONTENT.equals(template)) {
 			request.setAttribute("learningactivity", _learningactivity);
-			return "/html/asset/" + template + ".jsp";
 		}
 
-		return "/html/asset/" + template + ".jsp";
+	    String templateJSP =  getTemplatePath(template) + template + ".jsp";
+	    if(_isLmsExternalTemplates) {
+	    	request.setAttribute(TEMPLATE_PORTLET_ID, _portletId);
+	    	request.setAttribute(TEMPLATE_JSP, templateJSP);
+	    	return "/html/asset/externalTemplate.jsp";
+	    }
+
+		return templateJSP;
 	}
 
 	@Override
