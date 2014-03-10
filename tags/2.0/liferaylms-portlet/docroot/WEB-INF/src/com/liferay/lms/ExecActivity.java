@@ -150,7 +150,7 @@ public class ExecActivity extends MVCPortlet
 			String showCorrectAnswer=ParamUtil.getString(actionRequest, "showCorrectAnswer", "false");
 			String improve=ParamUtil.getString(actionRequest, "improve", "false");
 			
-			long questionesPerPage = ParamUtil.getInteger(actionRequest, "questionesPerPage", 1);
+			long questionsPerPage = ParamUtil.getInteger(actionRequest, "questionsPerPage", 1);
 			
 			if(randomString==0) {
 				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "random", StringPool.BLANK);
@@ -180,11 +180,11 @@ public class ExecActivity extends MVCPortlet
 				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "improve", "false");
 			}
 			
-			if(questionesPerPage == 0) {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", StringPool.BLANK);
+			if(questionsPerPage == 0) {
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionsPerPage", StringPool.BLANK);
 			}
 			else {
-				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionesPerPage", Long.toString(questionesPerPage));
+				LearningActivityLocalServiceUtil.setExtraContentValue(actId, "questionsPerPage", Long.toString(questionsPerPage));
 			}
 
 			SessionMessages.add(actionRequest, "activity-saved-successfully");
