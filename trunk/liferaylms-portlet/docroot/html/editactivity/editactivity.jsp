@@ -1,8 +1,8 @@
+<%@page import="com.liferay.lms.asset.LearningActivityBaseAssetRenderer"%>
 <%@page import="com.liferay.portal.service.ResourcePermissionServiceUtil"%>
 <%@page import="com.liferay.portal.model.Role"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
-<%@page import="com.liferay.lms.ActivityViewer"%>
 <%@page import="com.liferay.portal.service.ResourceActionLocalServiceUtil"%>
 <%@page import="com.liferay.portal.model.ResourceConstants"%>
 <%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
@@ -180,10 +180,10 @@ if(learnact!=null)
 					if ((ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
 							themeDisplay.getCompanyId(), activityPortletName,
 							ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
-						(ResourceActionLocalServiceUtil.fetchResourceAction(activityPortletName, ActivityViewer.ACTION_VIEW)!=null)) {
+						(ResourceActionLocalServiceUtil.fetchResourceAction(activityPortletName, LearningActivityBaseAssetRenderer.ACTION_VIEW)!=null)) {
 			        	Role siteMember = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SITE_MEMBER);
 		        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), 
-		        				activityPortletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ActivityViewer.ACTION_VIEW});
+		        				activityPortletName, resourcePrimKey, siteMember.getRoleId(), new String[]{LearningActivityBaseAssetRenderer.ACTION_VIEW});
 					}
 				}
 			%>
