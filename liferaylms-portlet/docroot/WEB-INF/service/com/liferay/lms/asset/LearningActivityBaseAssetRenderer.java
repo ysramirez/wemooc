@@ -35,6 +35,7 @@ import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
@@ -110,6 +111,11 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	@Override
 	public long getUserId() {
 		return _learningactivity.getUserId();
+	}
+	
+	@Override
+	public String getUserName() {
+		return _learningactivity.getUserName();
 	}
 
 	@Override
