@@ -43,8 +43,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
-import com.liferay.portal.kernel.util.PropsKeys;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -81,8 +79,6 @@ public class ActivityViewer extends MVCPortlet
 {
 	
 	public static final String ACTION_VIEW = "ACTION_VIEW";
-	public static final String AUTH_TOKEN_IMPL = PropsUtil.get(PropsKeys.AUTH_TOKEN_IMPL);
-	public static final String SESSION_AUTH_TOKEN_CLASS = "com.liferay.portal.security.auth.SessionAuthToken";
 	private static Set<String> reservedAttrs = new HashSet<String>();
 	private volatile Constructor<?> createComponentContext;
 	private volatile Method getContext;
@@ -276,8 +272,12 @@ public class ActivityViewer extends MVCPortlet
 			throws SystemException, IOException, ServletException, ValidatorException, PortalException {
         // Get servlet request / response
     	HttpServletRequest renderServletRequest = PortalUtil.getHttpServletRequest(request);
+    	HttpSession renderServletSession = renderServletRequest.getSession();
         HttpServletRequest servletRequest = PortalUtil.getOriginalServletRequest(renderServletRequest);
+    	HttpSession servletSession = servletRequest.getSession();
         HttpServletResponse servletResponse = PortalUtil.getHttpServletResponse(response);
+    	
+
         
         PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
         PortletDisplay portletDisplayClone = new PortletDisplay();
@@ -286,6 +286,18 @@ public class ActivityViewer extends MVCPortlet
         for (final String key : Collections.list((Enumeration<String>) servletRequest.getAttributeNames())) {
             requestAttributeBackup.put(key, servletRequest.getAttribute(key));
         }
+        
+        final Map<String, Object> sessionAttributeBackup = new HashMap<String, Object>();
+        for (final String key : Collections.list((Enumeration<String>) servletSession.getAttributeNames())) {
+			sessionAttributeBackup.put(key, servletSession.getAttribute(key));
+        }
+
+        for (final String key : Collections.list((Enumeration<String>) renderServletSession.getAttributeNames())) {
+        	if(Validator.isNull(servletSession.getAttribute(key))) {
+        		servletSession.setAttribute(key, renderServletSession.getAttribute(key));
+        	}
+        }
+        
         // Render the portlet as a runtime portlet
         String result=null;
         long currentScopeGroup = themeDisplay.getScopeGroupId();
@@ -347,18 +359,10 @@ public class ActivityViewer extends MVCPortlet
 		        		}
 					}, queryStringStringBundler.toString(), false);
 
-            if(SESSION_AUTH_TOKEN_CLASS.equals(AUTH_TOKEN_IMPL)) {
-            	HttpSession renderServletSession = renderServletRequest.getSession();
-            	HttpSession servletSession = servletRequest.getSession();
-            	Enumeration<String> sessionAttributesNames = servletSession.getAttributeNames();
-            	while(sessionAttributesNames.hasMoreElements()) {
-            		String sessionAttributeName = sessionAttributesNames.nextElement();
-            		if(sessionAttributeName.startsWith(WebKeys.AUTHENTICATION_TOKEN)){
-            			Object sessionAttributeValue = servletSession.getAttribute(sessionAttributeName);
-            			servletSession.removeAttribute(sessionAttributeName);
-            			renderServletSession.setAttribute(sessionAttributeName, sessionAttributeValue);
-            		}
-            	}
+            for (final String key : Collections.list((Enumeration<String>) servletSession.getAttributeNames())) {
+				if(Validator.isNull(renderServletRequest.getAttribute(key))) {
+					renderServletRequest.setAttribute(key, servletSession.getAttribute(key));
+				}
             }
 
 			List<String> markupHeaders = (List<String>)servletRequest.getAttribute(MimeResponse.MARKUP_HEAD_ELEMENT);
@@ -421,6 +425,19 @@ public class ActivityViewer extends MVCPortlet
 			request.setAttribute(WebKeys.RUNTIME_PORTLET_IDS, runtimePortletIds);
         }finally {
             // Restore the state
+        	Set<Entry<String,Object>> sessionAttributesSet = sessionAttributeBackup.entrySet();
+        	for (Entry<String, Object> entry : sessionAttributesSet) {
+				if(Validator.isNull(servletRequest.getAttribute(entry.getKey()))) {
+					servletSession.setAttribute(entry.getKey(), entry.getValue());
+				}
+			}
+        	        	
+            for (final String key : Collections.list((Enumeration<String>) servletSession.getAttributeNames())) {
+            	if(!sessionAttributeBackup.containsKey(key)) {
+            		servletSession.removeAttribute(key);
+            	}
+            }
+  
         	themeDisplay.setScopeGroupId(currentScopeGroup);
             servletRequest.setAttribute(WebKeys.LAYOUT, currentLayout);
             servletRequest.setAttribute("OUTER_PORTLET_ID",currentOuterPortlet);
