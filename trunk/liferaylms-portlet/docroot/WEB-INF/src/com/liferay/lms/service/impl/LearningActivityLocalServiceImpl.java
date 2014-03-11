@@ -52,7 +52,6 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
@@ -573,38 +572,95 @@ extends LearningActivityLocalServiceBaseImpl {
 	}
 	
 	public boolean canBeView(LearningActivity activity, long userId) throws Exception{
-
-		User user = UserLocalServiceUtil.getUser(userId);
-		if(activity == null) { 
+		if(activity == null) {
 			return false;
 		}
-		else if(user != null){
-			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(user);
-			//Si tengo permiso de correct soy profesor y puedo siempre
-			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"CORRECT")){
-				return true;
+		
+		return canBeView(activity, 
+				PermissionCheckerFactoryUtil.create(
+						UserLocalServiceUtil.getUser(userId)));
+	}
+	
+	public boolean canBeView(LearningActivity activity, PermissionChecker permissionChecker) throws Exception{
+
+		//Si tengo permiso de correct soy profesor y puedo siempre
+		if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"CORRECT")){
+			return true;
+		}
+		
+		// Si no soy de la comunidad no puedo acceder.
+		if(UserLocalServiceUtil.hasGroupUser(activity.getGroupId(), permissionChecker.getUserId())) {
+			Date today = new Date();
+			Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
+			if(module.getStartDate() != null && module.getEndDate() != null){//xq la fecha en los modulos es obligatoria
+				//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
+				if(
+					((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
+					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
+					((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
+					(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
+				){
+				  return true;
+				}
+				//Si estoy dentro del intervalo de fechas de la actividad, o del módulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este está cerrado, entonces es editable
+				if(
+					((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
+					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
+					((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<=0))||
+					(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<=0)))
+				){
+					if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null &&
+							Boolean.valueOf(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity"))){
+						Role siteMemberRole = RoleLocalServiceUtil.getRole(activity.getCompanyId(), RoleConstants.SITE_MEMBER);
+						if(!ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
+								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW)){
+							return true;
+						}
+					}
+				}
+				
 			}
-			
-			// Si no soy de la comunidad no puedo acceder.
-			if(UserLocalServiceUtil.hasGroupUser(activity.getGroupId(), userId)) {
+		}
+		
+		
+		return false;
+	}
+	
+	public boolean canBeEdited(LearningActivity activity, long userId) throws Exception{
+		if(activity == null) {
+			return true;
+		}
+		
+		return canBeEdited(activity, 
+				PermissionCheckerFactoryUtil.create(
+						UserLocalServiceUtil.getUser(userId)));
+	}
+	
+	public boolean canBeEdited(LearningActivity activity, PermissionChecker permissionChecker) throws Exception{
+		//Si tengo permiso de editar bloqueados, es editable
+		if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")){
+			return true;
+		//Si tengo permiso de edición
+		}else if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
+				permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),ActionKeys.UPDATE)){
+			//y no hay intentos de la actividad por parte de alumnos
+			if(!LearningActivityTryLocalServiceUtil.areThereTriesNotFromEditors(activity)){
 				Date today = new Date();
 				Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 				if(module.getStartDate() != null && module.getEndDate() != null){//xq la fecha en los modulos es obligatoria
 					//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
 					if(
-						((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
-						(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
-						((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
-						(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
-					){
-					  return true;
-					}
+							((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
+							(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
+							((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
+							(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
+					){return true;}
 					//Si estoy dentro del intervalo de fechas de la actividad, o del módulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este está cerrado, entonces es editable
 					if(
-						((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
-						(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
-						((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<=0))||
-						(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<=0)))
+							((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
+							(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
+							((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<=0))||
+							(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<=0)))
 					){
 						if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null &&
 								Boolean.valueOf(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity"))){
@@ -615,59 +671,10 @@ extends LearningActivityLocalServiceBaseImpl {
 							}
 						}
 					}
-					
 				}
 			}
 		}
 		
-		return false;
-	}
-	
-	public boolean canBeEdited(LearningActivity activity, long userId) throws Exception{
-		User user = UserLocalServiceUtil.getUser(userId);
-		if(activity == null) { 
-			return true;
-		}
-		else if(user!=null){
-			PermissionChecker permissionChecker = PermissionCheckerFactoryUtil.create(user);
-			//Si tengo permiso de editar bloqueados, es editable
-			if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")){
-				return true;
-			//Si tengo permiso de edición
-			}else if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
-					permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),ActionKeys.UPDATE)){
-				//y no hay intentos de la actividad por parte de alumnos
-				if(!LearningActivityTryLocalServiceUtil.areThereTriesNotFromEditors(activity)){
-					Date today = new Date();
-					Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
-					if(module.getStartDate() != null && module.getEndDate() != null){//xq la fecha en los modulos es obligatoria
-						//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
-						if(
-								((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
-								(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
-								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
-								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
-						){return true;}
-						//Si estoy dentro del intervalo de fechas de la actividad, o del módulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este está cerrado, entonces es editable
-						if(
-								((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
-								(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
-								((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<=0))||
-								(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<=0)))
-						){
-							if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null &&
-									Boolean.valueOf(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity"))){
-								Role siteMemberRole = RoleLocalServiceUtil.getRole(activity.getCompanyId(), RoleConstants.SITE_MEMBER);
-								if(!ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
-										ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW)){
-									return true;
-								}
-							}
-						}
-					}
-				}
-			}
-		}
 		
 		return false;
 	}
