@@ -273,15 +273,17 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 					//Enviar los emails.
 					P2PSendMailAsignation.sendMail(user.getEmailAddress(), user.getFullName(), params, user.getCompanyId());
 		
-				} catch (Exception e) {}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 				
 			} 			
 			
 			
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} catch (Exception e) {
-			// TODO Auto-generated catch block
+			e.printStackTrace();
 		} 
 	}
 	
