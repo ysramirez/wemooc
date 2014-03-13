@@ -27,16 +27,21 @@ public class P2PSendMailAsignation {
 			
 			String body = bodyTitle +"\n\n"+ bodyMessage +"\n\n"+ bodyEnd +"\n\n"+ portal+"\n";
 			
-			String fromName = "noreply";
-			String fromAddress ="noreply@miriadax.net";
+			String fromName=PrefsPropsUtil.getString(companyId,PropsKeys.ADMIN_EMAIL_FROM_NAME,"");
+			String fromAddress=PrefsPropsUtil.getString(companyId,PropsKeys.ADMIN_EMAIL_FROM_ADDRESS,"");
+			System.out.println("fromName: "+ fromName);
+			System.out.println("fromAddress: " + fromAddress);
 						
 			InternetAddress from = new InternetAddress(fromAddress, fromName);
+			System.out.println("from: " + from.toString());
 			
 			MailMessage mailm = new MailMessage(from, to, subject, body, true);
 			MailServiceUtil.sendEmail(mailm);
+			System.out.println("Mail enviado");
 		}
 		catch(Exception ex)
 		{
+			ex.printStackTrace();
 		}	
 	
 	}

@@ -220,26 +220,46 @@ Liferay.provide(
 <div>
 
 <%
-	if(myP2PActivity!=null){
+if(myP2PActivity != null){
+	
+	textCorrection = myP2PActivity.getDescription();
+	p2pActivityId = myP2PActivity.getP2pActivityId();
+	%>
+	
+	<div class="container-textarea">
+		<label for="<portlet:namespace/>descreadonly" />
+		<textarea id="<portlet:namespace/>descreadonly" rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(textCorrection) %></textarea>
+	</div>
+	
+	<%
+		if(myP2PActivity.getFileEntryId() != 0){
+			
+			DLFileEntry dlfile = null;
+			String urlFile = "";
+			int size = 0;
+			int sizeKb = 0;
+			String title = "";
+			
+			try{
+				dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
+				urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
+				size = Integer.parseInt(String.valueOf(dlfile.getSize()));
+				sizeKb = size/1024; //Lo paso a Kilobytes
+				title = dlfile.getTitle();
+			}catch(Exception e){
+				
+			}
 
-		DLFileEntry dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myP2PActivity.getFileEntryId());
-		String urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
-		textCorrection = myP2PActivity.getDescription();
-		p2pActivityId = myP2PActivity.getP2pActivityId();
-		%>
-		<div class="container-textarea">
-			<textarea rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(textCorrection) %></textarea>
-		</div>
-		<% 
-			int size = Integer.parseInt(String.valueOf(dlfile.getSize()));
-			int sizeKb = size/1024; //Lo paso a Kilobytes
-		%>
-		<div class="doc_descarga">
-			<span><%=dlfile.getTitle()%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-			<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
-		</div>
-		<%
-	} 
+			if(dlfile != null){
+			%>
+				<div class="doc_descarga">
+					<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+					<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+				</div>
+			<%
+			}
+		}
+	}
 
 	//Si ha pasado la fecha de entrega.
 	else if(isDateExpired){

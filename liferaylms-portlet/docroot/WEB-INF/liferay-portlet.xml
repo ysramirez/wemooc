@@ -113,17 +113,6 @@
 		<icon>/icon.png</icon>
 		<scheduler-entry>
 			<scheduler-description>
-			Cron para comprobar cada noche a las 3 AM si ya hay suficientes tareas para el P2P.
-			</scheduler-description>
-			<scheduler-event-listener-class>com.liferay.util.P2pCheckActivity</scheduler-event-listener-class>
-			<trigger>
-				<cron>
-					<cron-trigger-value>0 3 0 * * ?</cron-trigger-value>
-				</cron>
-			</trigger>
-		</scheduler-entry> 
-		<scheduler-entry>
-			<scheduler-description>
 			Lanzar las asignaciones de las correcciones de P2P.
 			0/30 * * * * ? es cada 30 segundos.
 			0 0 3 * * ? A las 3 de la madrugada de todos los días.

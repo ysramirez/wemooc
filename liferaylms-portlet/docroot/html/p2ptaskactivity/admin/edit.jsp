@@ -157,7 +157,7 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 </script>
 
 
-<aui:input type="checkbox" name="anonimous" label="p2ptaskactivity.edit.anonimous" checked="<%=anonimous %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))%>" 
+<aui:input type="checkbox" name="anonimous" label="p2ptaskactivity.edit.anonimous" checked="<%=anonimous %>" 
 	ignoreRequestValue="true"></aui:input>
 <aui:input type="checkbox" name="result" label="test.result" checked="<%=result %>" disabled="<%=(notModuleEditable&&(!newOrCourseEditor))||disabled %>" 
 	ignoreRequestValue="true"></aui:input>

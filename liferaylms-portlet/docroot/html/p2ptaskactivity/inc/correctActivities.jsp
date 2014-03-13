@@ -386,16 +386,20 @@ if(!p2pActList.isEmpty()){
 				<div class="option-more">
 					
 					<span class="label-col"><liferay-ui:message key="p2ptask-exercise" /> 
-						<c:if test="<%=!anonimous %>">
-							<span class="name">
-								<liferay-ui:message key="of" /> 
-								<%=propietary.getFullName() %>
-							</span>
-						</c:if>
-						<span class="number">
-							<liferay-ui:message key="number" /> 
-							<%=cont%>
-						</span>
+						<c:choose>
+							<c:when test="<%=!anonimous %>">
+								<span class="name">
+									<liferay-ui:message key="of" /> 
+									<%=propietary.getFullName() %>
+								</span>
+							</c:when>
+							<c:otherwise>
+								<span class="number">
+									<liferay-ui:message key="number" /> 
+									<%=cont%>
+								</span>
+							</c:otherwise>
+						</c:choose>
 					</span>
 					<div class="collapsable">
 						<form enctype="multipart/form-data" method="post" action="<portlet:actionURL name="saveCorrection"></portlet:actionURL>" name="<portlet:namespace />f1_<%=cont%>" id="<portlet:namespace />f1_<%=cont%>">

@@ -15,6 +15,7 @@ import com.liferay.lms.model.Module;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
@@ -75,11 +76,7 @@ public class ModuleUpdateResult extends MVCPortlet {
 	
 	public static void saveStringToFile(String fileName, String text){
 
-		StringBuffer sb = new StringBuffer(PropsUtil.get("default.liferay.home"));
-		sb.append(File.separator);
-		sb.append("tomcat-6.0.29");
-		sb.append(File.separator);
-		sb.append("webapps");
+		StringBuffer sb = new StringBuffer(PropsUtil.get("java.io.tmpdir"));
 		sb.append(File.separator);
 		sb.append("custom_logs"); //Directorio para los ficheros.
 		
