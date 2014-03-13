@@ -316,18 +316,33 @@ public class LmsActivitiesList extends MVCPortlet {
 			larn =LearningActivityLocalServiceUtil.addLearningActivity(
 				"", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId, "", feedbackCorrect, feedbackNoCorrect, serviceContext);
 			}
-			
+			long teamId =ParamUtil.get(uploadRequest, "team", 0);
 			//Leemos del portal.properties el estado del permiso VIEW por defecto para siteMember en las actividades nuevas (si no existe, por defecto ser�n visibles)
 			boolean hideStr = Boolean.parseBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", "false"));
 			Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
-			if(hideStr)
-			{
-					ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+			if(teamId==0){
+				if(hideStr)
+				{
+						ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+				}
+				else ResourcePermissionLocalServiceUtil.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
 			}
-			else ResourcePermissionLocalServiceUtil.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
-			
+			else{
+				Team t = TeamLocalServiceUtil.getTeam(teamId);
+				Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+				if(hideStr)
+				{
+					ResourcePermissionLocalServiceUtil.removeResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
+				}else {
+					String[] actIds = {ActionKeys.VIEW};
+					ResourcePermissionLocalServiceUtil.setResourcePermissions(t.getCompanyId(), LearningActivity.class.getName(), 
+							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), actIds);
+				}
+			}
+				
 		}
 		else 
 		{
