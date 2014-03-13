@@ -647,8 +647,10 @@ public class P2PActivityPortlet extends MVCPortlet {
 			if(_log.isDebugEnabled()){_log.debug("P2PActivityPortlet::sendMailCorrection::subject:"+subject);}
 			if(_log.isDebugEnabled()){_log.debug("P2PActivityPortlet::sendMailCorrection::body:"+body);}
 			
-			String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
-			InternetAddress from = new InternetAddress(fromUser, "");
+			//String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+			String fromName=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME,"");
+			String fromAddress=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS,"");
+			InternetAddress from = new InternetAddress(fromAddress, fromName);
 			InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
 			
 			MailEngine.send(from, new InternetAddress[]{to}, new InternetAddress[]{}, subject, body, true);
@@ -707,8 +709,10 @@ public class P2PActivityPortlet extends MVCPortlet {
 			if(_log.isDebugEnabled()){_log.debug("P2PActivityPortlet::sendMailNoCorrection::subject:"+subject);}
 			if(_log.isDebugEnabled()){_log.debug("P2PActivityPortlet::sendMailNoCorrection::body:"+body);}
 			
-			String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
-			InternetAddress from = new InternetAddress(fromUser, "");
+			//String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+			String fromName=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME,"");
+			String fromAddress=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS,"");
+			InternetAddress from = new InternetAddress(fromAddress, fromName);
 			InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
 			
 			MailEngine.send(from, new InternetAddress[]{to}, new InternetAddress[]{}, subject, body, true);

@@ -97,7 +97,7 @@ if(!p2pActCorList.isEmpty()){
 					 		<%=propietary.getFullName() %>
 					 	</span>
 				 	</c:if>
-				 	<c:if test="<%=!anonimous %>">
+				 	<c:if test="<%=anonimous %>">
 					 	<span class="number">
 					 		<liferay-ui:message key="number" /> 
 					 		<%=cont%>
