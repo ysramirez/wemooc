@@ -214,7 +214,7 @@ function <portlet:namespace />back() {
 		disabled = false;
 	}
 %>
-
+<liferay-ui:error key="scormactivity.error.invalid-asset" message="scormactivity.error.invalid-asset"></liferay-ui:error>
 <aui:input type="hidden" name="assetEntryId" ignoreRequestValue="true" value="<%=Long.toString(assetId) %>">
 	<aui:validator name="required"></aui:validator>
 </aui:input>
