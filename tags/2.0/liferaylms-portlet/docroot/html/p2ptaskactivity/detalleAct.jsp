@@ -284,11 +284,12 @@ if(actId!=0)
 							<%=propietary.getFullName() %>
 						</span>
 					</c:if>
-
-					<span class="number">
-						<liferay-ui:message key="number" /> 
-						<%=cont%>
-					</span> 
+					<c:if test="<%=anonimous %>">
+						<span class="number">
+							<liferay-ui:message key="number" /> 
+							<%=cont%>
+						</span>
+					</c:if>
 					<%=correctionDate %>
 				</span>
 					<div class="collapsable" style="padding-left:10px">

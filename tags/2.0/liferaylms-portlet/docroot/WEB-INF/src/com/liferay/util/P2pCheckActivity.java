@@ -166,8 +166,10 @@ public class P2pCheckActivity implements MessageListener
 			
 			//String body=new String(LanguageUtil.format(user.getLocale(), "you-can-pass-activity-p2p-body", new Object[]{user.getFullName(),url}).getBytes(), Charset.forName("UTF-8"));
 			
-			String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
-			InternetAddress from = new InternetAddress(fromUser, "");
+			//String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+			String fromName=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME,"");
+			String fromAddress=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS,"");
+			InternetAddress from = new InternetAddress(fromAddress, fromName);
 			InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
 			MailEngine.send(from, new InternetAddress[]{to}, new InternetAddress[]{}, subject, body, true);
 			/*String from=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
