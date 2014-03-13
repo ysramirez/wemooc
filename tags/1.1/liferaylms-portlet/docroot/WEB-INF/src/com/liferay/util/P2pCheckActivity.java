@@ -72,14 +72,14 @@ public class P2pCheckActivity implements MessageListener
 						}
 						long NumFilesToPass = Long.valueOf(sNumFilesToPass)+1;
 						//Se le suma 1 puesto que tiene que debe haber el numero de actividades 
-						//más la del usuario puesto que el no se corrige a si mismo.
+						//mas la del usuario puesto que el no se corrige a si mismo.
 						List<P2pActivity> ListP2PinAct = P2pActivityLocalServiceUtil.findByActIdOrderByP2pId(lAct.getActId());
 						if(ListP2PinAct.size() > NumFilesToPass){
 							int cont = 0;
 							for(P2pActivity myp2p:ListP2PinAct){
 								long userId = myp2p.getUserId();
 								User user = UserLocalServiceUtil.getUser(userId);
-								//Comprobamos que la actividad no esté bloqueada para el usuario.
+								//Comprobamos que la actividad no este bloqueada para el usuario.
 								if(!LearningActivityLocalServiceUtil.islocked(lAct.getActId(), userId)){
 									cont++;
 									sendMail(user, lAct.getActId());
@@ -166,8 +166,10 @@ public class P2pCheckActivity implements MessageListener
 			
 			//String body=new String(LanguageUtil.format(user.getLocale(), "you-can-pass-activity-p2p-body", new Object[]{user.getFullName(),url}).getBytes(), Charset.forName("UTF-8"));
 			
-			String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
-			InternetAddress from = new InternetAddress(fromUser, "");
+			//String fromUser=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+			String fromName=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME,"");
+			String fromAddress=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS,"");
+			InternetAddress from = new InternetAddress(fromAddress, fromName);
 			InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
 			MailEngine.send(from, new InternetAddress[]{to}, new InternetAddress[]{}, subject, body, true);
 			/*String from=PrefsPropsUtil.getString(user.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
