@@ -247,7 +247,7 @@ Liferay.provide(
 					sizeKb = size/1024; //Lo paso a Kilobytes
 					title = dlfile.getTitle();
 				}catch(Exception e){
-					e.printStackTrace();
+					
 				}
 	
 				if(dlfile != null){

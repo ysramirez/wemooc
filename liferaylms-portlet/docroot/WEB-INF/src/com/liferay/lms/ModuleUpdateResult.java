@@ -84,7 +84,7 @@ public class ModuleUpdateResult extends MVCPortlet {
 		sb.append("custom_logs"); //Directorio para los ficheros.
 		*/
 		
-		StringBuffer sb = new StringBuffer(PropsUtil.get("auto.deploy.tomcat.dest.dir"));
+		StringBuffer sb = new StringBuffer(PropsUtil.get("java.io.tmpdir"));
 		sb.append(File.separator);
 		sb.append("custom_logs"); //Directorio para los ficheros.
 		
