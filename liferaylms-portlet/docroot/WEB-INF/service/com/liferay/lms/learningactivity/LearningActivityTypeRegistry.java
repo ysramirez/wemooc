@@ -1,92 +1,71 @@
 package com.liferay.lms.learningactivity;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import com.liferay.lms.service.ClpSerializer;
-import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
-import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.cache.Lifecycle;
+import com.liferay.portal.kernel.cache.ThreadLocalCache;
+import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
 
 public class LearningActivityTypeRegistry {
-	Map<Long, LearningActivityType> types;
-	List<LearningActivityType> typesList;
+	
+	private static final String LEARNING_ACTIVITY_TYPES_KEY = "learningActivityTypes";
+	private Map<Long,LearningActivityType> _learningActivityTypes;
+	
+	public LearningActivityTypeRegistry() {
+		ThreadLocalCache<Map<Long,LearningActivityType>> threadLocalCache =
+				ThreadLocalCacheManager.getThreadLocalCache(
+					Lifecycle.REQUEST, LearningActivityType.class.getName());
+		_learningActivityTypes = threadLocalCache.get(LEARNING_ACTIVITY_TYPES_KEY);
+		
+		if(Validator.isNull(_learningActivityTypes)) {
+			Properties props = PropsUtil.getProperties("lms.learningactivity.type", true);
+			_learningActivityTypes = new HashMap<Long, LearningActivityType>();
+			for (Object key:props.keySet()) {
+				String type=props.getProperty(key.toString());
+				try {			
+					LearningActivityType lat = (LearningActivityType)Class.forName(type).newInstance();
+					long typeId=lat.getTypeId();
+					_learningActivityTypes.put(typeId,lat);
+				} catch (ClassNotFoundException e) {
+					try {
+						String [] context = ((String) key).split("\\.");
+						ClassLoaderProxy clp = new ClassLoaderProxy(Class.forName(type, true, 
+							PortletClassLoaderUtil.getClassLoader(context[1])).newInstance(), type, 
+							PortletClassLoaderUtil.getClassLoader(context[1]));
+						LearningActivityTypeClp latyclp = new LearningActivityTypeClp(clp);
+						long typeId=latyclp.getTypeId();
+						_learningActivityTypes.put(typeId,latyclp);
+					} catch (Throwable throwable) {
+					}
+				} catch (Throwable throwable) {
+				}
+			}
+			
+			threadLocalCache.put(LEARNING_ACTIVITY_TYPES_KEY, _learningActivityTypes);
+		}
+	}
 
 	public LearningActivityType getLearningActivityType(long typeId) {
-		return types.get(typeId);
+		return _learningActivityTypes.get(typeId);
 	}
 
-	public java.util.List<LearningActivityType> getLearningActivityTypes() {
-		return typesList;
-	}
-
-	public LearningActivityTypeRegistry() throws SystemException {
-		Properties props = PropsUtil.getProperties("lms.learningactivity.type", true);
-		types = new HashMap<Long, LearningActivityType>();
-		typesList = new java.util.ArrayList<LearningActivityType>();
-		for (Object key:props.keySet()) {
-			String type=props.getProperty(key.toString());
-			try {
-				Class<?> c = Class.forName(type);
-			
-				LearningActivityType lat = (LearningActivityType)c.newInstance();
-				long typeId=lat.getTypeId();
-				types.put(typeId,lat);
-				typesList.add(lat);
-			} catch (ClassNotFoundException e) {
-				try {
-					String [] context = ((String) key).split("\\.");
-					
-					Class c = null;
-					ClassLoaderProxy clp = null;
-					if (Validator.isNumber(context[1])) {
-						c = Class.forName(
-								type,
-								true,
-								PortletBeanLocatorUtil.getBeanLocator(
-										ClpSerializer.getServletContextName())
-										.getClassLoader());
-						clp = new ClassLoaderProxy(c.newInstance(), type,
-								PortletBeanLocatorUtil.getBeanLocator(
-										ClpSerializer.getServletContextName())
-										.getClassLoader());
-					} else {
-						c = Class.forName(type, true, PortletClassLoaderUtil
-								.getClassLoader(context[1]));
-						clp = new ClassLoaderProxy(c.newInstance(), type,
-								PortletClassLoaderUtil
-										.getClassLoader(context[1]));
-					}
-					
-					LearningActivityTypeClp latyclp = new LearningActivityTypeClp(clp);
-					long typeId=latyclp.getTypeId();
-					types.put(typeId,latyclp);
-					typesList.add(latyclp);
-				} catch (ClassNotFoundException e1) {
-					e1.printStackTrace();
-				} catch (InstantiationException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (IllegalAccessException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} catch (Throwable e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			} catch (InstantiationException e) {
-				// TODO Auto-generated catch block
-			} catch (IllegalAccessException e) {
-				// TODO Auto-generated catch block
-			}
+	public List<LearningActivityType> getLearningActivityTypes() {
+		Collection<LearningActivityType> values =  _learningActivityTypes.values();
+		if(values instanceof List) {
+			return new UnmodifiableList<LearningActivityType>
+				((List<LearningActivityType>)values);
 		}
+		return  new UnmodifiableList<LearningActivityType>
+				(new ArrayList<LearningActivityType>(values));
 	}
 }
