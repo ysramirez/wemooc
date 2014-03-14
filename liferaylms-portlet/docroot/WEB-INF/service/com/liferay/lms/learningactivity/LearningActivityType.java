@@ -27,7 +27,7 @@ public interface LearningActivityType extends InvokableService
 	public boolean isFeedbackCorrectConfigurable();
 	public boolean isFeedbackNoCorrectConfigurable();
 	public String getName();
-	public AssetRenderer getAssetRenderer(LearningActivity larn);
+	public AssetRenderer getAssetRenderer(LearningActivity larn) throws SystemException, PortalException;
 	public String getUrlIcon();
 	public String getDescription();
 	public boolean gradebook();
