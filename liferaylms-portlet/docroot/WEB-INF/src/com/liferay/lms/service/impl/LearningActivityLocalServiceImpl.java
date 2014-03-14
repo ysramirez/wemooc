@@ -534,7 +534,7 @@ extends LearningActivityLocalServiceBaseImpl {
 		LearningActivityTypeRegistry learningActivityTypeRegistry = null;
 		try {
 			learningActivityTypeRegistry = new LearningActivityTypeRegistry();
-		} catch (SystemException e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
@@ -593,7 +593,7 @@ extends LearningActivityLocalServiceBaseImpl {
 			Date today = new Date();
 			Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 			if(module.getStartDate() != null && module.getEndDate() != null){//xq la fecha en los modulos es obligatoria
-				//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
+				//Si estoy fuera del intervalo de fechas de la actividad, o del mï¿½dulo en caso de no estar alguna definida en la actividad, es editable
 				if(
 					((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
 					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
@@ -602,7 +602,7 @@ extends LearningActivityLocalServiceBaseImpl {
 				){
 				  return true;
 				}
-				//Si estoy dentro del intervalo de fechas de la actividad, o del módulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este está cerrado, entonces es editable
+				//Si estoy dentro del intervalo de fechas de la actividad, o del mï¿½dulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este estï¿½ cerrado, entonces es editable
 				if(
 					((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
 					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
@@ -640,7 +640,7 @@ extends LearningActivityLocalServiceBaseImpl {
 		//Si tengo permiso de editar bloqueados, es editable
 		if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")){
 			return true;
-		//Si tengo permiso de edición
+		//Si tengo permiso de ediciï¿½n
 		}else if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
 				permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),ActionKeys.UPDATE)){
 			//y no hay intentos de la actividad por parte de alumnos
@@ -648,14 +648,14 @@ extends LearningActivityLocalServiceBaseImpl {
 				Date today = new Date();
 				Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 				if(module.getStartDate() != null && module.getEndDate() != null){//xq la fecha en los modulos es obligatoria
-					//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
+					//Si estoy fuera del intervalo de fechas de la actividad, o del mï¿½dulo en caso de no estar alguna definida en la actividad, es editable
 					if(
 							((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
 							(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
 							((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
 							(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
 					){return true;}
-					//Si estoy dentro del intervalo de fechas de la actividad, o del módulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este está cerrado, entonces es editable
+					//Si estoy dentro del intervalo de fechas de la actividad, o del mï¿½dulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este estï¿½ cerrado, entonces es editable
 					if(
 							((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
 							(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())>=0))) &&
