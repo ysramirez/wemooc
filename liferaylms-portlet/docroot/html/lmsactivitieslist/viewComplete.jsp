@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="java.net.URL"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
@@ -52,7 +53,10 @@ if (moduleId == 0){
 String currentActivityPortletId =  null;
 if(actId!=0) {				
 	LearningActivity currentLeaningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
-    currentActivityPortletId = new LearningActivityTypeRegistry().getLearningActivityType(currentLeaningActivity.getTypeId()).getPortletId();
+	LearningActivityType currentLearningActivityType = new LearningActivityTypeRegistry().getLearningActivityType(currentLeaningActivity.getTypeId());
+	if(Validator.isNotNull(currentLearningActivityType)) {
+		currentActivityPortletId = currentLearningActivityType.getPortletId();
+	}
 }
 
 	String idModuleUl = "idModuleUl";

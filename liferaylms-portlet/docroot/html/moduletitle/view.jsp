@@ -14,11 +14,11 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@ include file="/init.jsp" %>
 <%
-long moduleId=ParamUtil.getLong(request,"moduleId",0);
-long currentModuleId=0;
-long actId=ParamUtil.getLong(request,"actId",0);
-long themeId=ParamUtil.getLong(request,"themeId",1);
-boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
+	long moduleId=ParamUtil.getLong(request,"moduleId",0);
+	long currentModuleId=0;
+	long actId=ParamUtil.getLong(request,"actId",0);
+	long themeId=ParamUtil.getLong(request,"themeId");
+	boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
 	Module theModule=null;
 	if(moduleId!=0)
 	{
@@ -33,20 +33,34 @@ boolean actionEditing=ParamUtil.getBoolean(request,"actionEditing",false);
 		}
 		else
 		{
-			java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+			List<Module> modules=(List<Module>)ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 			if(modules.size()>0)
 			{
 				theModule=modules.get(0);
+				themeId=1;
 			}
 		}
 	}
 	if(theModule!=null)
 	{
-		%>
-		<liferay-ui:header title="<%=(GetterUtil.getBoolean(PropsUtil.get(\"module.show.number\"),true))?
-											LanguageUtil.format(pageContext, \"moduleTitle.chapter2\", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}):
-												theModule.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
-		<%
+		if(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true)) {
+			if(themeId==GetterUtil.DEFAULT_INTEGER) {
+				for(Module module:(List<Module>)ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId())) {
+					themeId++;
+					if(module.getModuleId()==theModule.getModuleId()) {
+						break;
+					}
+				}
+			}
+			%>
+				<liferay-ui:header title="<%=LanguageUtil.format(pageContext, \"moduleTitle.chapter2\", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}) %>" />
+			<%
+		}
+		else {
+			%>
+				<liferay-ui:header title="<%=theModule.getTitle(themeDisplay.getLocale()) %>" />
+			<%	
+		}
 	}
 	else
 	{

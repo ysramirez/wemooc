@@ -45,7 +45,9 @@
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <%@ include file="/init.jsp" %>
  <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
-<portlet:actionURL var="saveactivityURL" name="saveActivity" />
+<portlet:actionURL var="saveactivityURL" name="saveActivity" >
+	<portlet:param name="editing" value="<%=StringPool.TRUE %>"/>
+</portlet:actionURL>
 
 <%
 long moduleId=ParamUtil.getLong(request,"resModuleId",0);
@@ -53,7 +55,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 long typeId=ParamUtil.getLong(request, "type");
 AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
-Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
+Map<Long,String> classTypes=arf.getClassTypes(new long[]{themeDisplay.getScopeGroupId()}, themeDisplay.getLocale());
 
 String referringPortletResource = ParamUtil.getString(request, "referringPortletResource");
 long actId=ParamUtil.getLong(request, "resId",0);
@@ -131,6 +133,7 @@ if(learnact!=null)
 	%>
 	
 	<portlet:actionURL name="deleteMyTries" var="deleteMyTriesURL">
+		<portlet:param name="editing" value="<%=StringPool.TRUE %>"/>
 		<portlet:param name="resId" value="<%=Long.toString(learnact.getActId()) %>" />
 		<portlet:param name="redirect" value="<%=redirect %>" />
 		<portlet:param name="backURL" value="<%=backURL%>" />
@@ -143,49 +146,34 @@ if(learnact!=null)
 		if(larntype.hasEditDetails() && !disabled){
 			AssetRenderer  assetRenderer=larntype.getAssetRenderer(learnact);
 			if(assetRenderer!=null) {
-				String urlEdit = assetRenderer.getURLEdit((LiferayPortletRequest) renderRequest, (LiferayPortletResponse) renderResponse).toString();			
-				Portlet urlEditPortlet = PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(urlEdit, "p_p_id",false));
-				if(urlEditPortlet!=null) {
+				liferayPortletRequest.setAttribute(LearningActivityBaseAssetRenderer.EDIT_DETAILS, true);
+				PortletURL urlEditDetails = assetRenderer.getURLEdit(liferayPortletRequest, liferayPortletResponse);
+				if(Validator.isNotNull(urlEditDetails)){
+					urlEditDetails.setWindowState(LiferayWindowState.POP_UP);
+					String urlEdit = urlEditDetails.toString();
+					Portlet urlEditPortlet = PortletLocalServiceUtil.getPortletById(HttpUtil.getParameter(urlEdit, "p_p_id",false));
+					
 					PublicRenderParameter actIdPublicParameter = urlEditPortlet.getPublicRenderParameter("actId");
-					if(actIdPublicParameter!=null) {
+					if(Validator.isNotNull(actIdPublicParameter)) {
 						urlEdit=HttpUtil.removeParameter(urlEdit,PortletQNameUtil.getPublicRenderParameterName(actIdPublicParameter.getQName()));
 					}
+					
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId");
 					urlEdit=HttpUtil.addParameter   (urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resId", Long.toString(learnact.getActId()));
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId");
 					urlEdit=HttpUtil.addParameter   (urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"resModuleId", Long.toString(learnact.getModuleId()) );
 					urlEdit=HttpUtil.removeParameter(urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails");
 					urlEdit=HttpUtil.addParameter   (urlEdit, StringPool.UNDERLINE+urlEditPortlet.getPortletId()+StringPool.UNDERLINE+"actionEditingDetails", true);
+					
+					%>
+					<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails()%>" label="true" 
+									 url="<%=urlEdit%>" />
+					<% 
 				}
-				%>
-				<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails()%>" label="true" url="<%=urlEdit%>" />
-				<% 
 			}
 		}
 		else{
 			if(larntype.hasEditDetails()){
-				if ((themeDisplay.getLayout().isTypePortlet())&&
-					(!themeDisplay.getLayoutTypePortlet().getPortletIds().contains(larntype.getPortletId()))){
-					PortletPreferencesFactoryUtil.getLayoutPortletSetup(themeDisplay.getLayout(), larntype.getPortletId());
-					
-					String resourcePrimKey = PortletPermissionUtil.getPrimaryKey(
-							themeDisplay.getPlid(), larntype.getPortletId());
-					String activityPortletName = larntype.getPortletId();
-
-					int warSeparatorIndex = activityPortletName.indexOf(PortletConstants.WAR_SEPARATOR);
-					if (warSeparatorIndex != -1) {
-						activityPortletName = activityPortletName.substring(0, warSeparatorIndex);
-					}
-
-					if ((ResourcePermissionLocalServiceUtil.getResourcePermissionsCount(
-							themeDisplay.getCompanyId(), activityPortletName,
-							ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
-						(ResourceActionLocalServiceUtil.fetchResourceAction(activityPortletName, LearningActivityBaseAssetRenderer.ACTION_VIEW)!=null)) {
-			        	Role siteMember = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SITE_MEMBER);
-		        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), 
-		        				activityPortletName, resourcePrimKey, siteMember.getRoleId(), new String[]{LearningActivityBaseAssetRenderer.ACTION_VIEW});
-					}
-				}
 			%>
 			<liferay-ui:icon image="edit" message="<%=larntype.getMesageEditDetails()%>" label="true" />
 			<% 
