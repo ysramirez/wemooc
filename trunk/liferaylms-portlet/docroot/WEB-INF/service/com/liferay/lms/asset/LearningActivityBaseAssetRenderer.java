@@ -59,14 +59,6 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	private boolean _editDetails = false;
 	private boolean _isLmsExternalTemplates = false;
 	private boolean _isRuntimePortlet = false;
-
-	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity) throws SystemException,PortalException {
-		this(learningactivity, new LearningActivityTypeRegistry().getLearningActivityType(learningactivity.getTypeId()));
-	}
-	
-	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity, LearningActivityType learningActivityType) throws SystemException,PortalException {
-		this(learningactivity, new LearningActivityTypeRegistry().getLearningActivityType(learningactivity.getTypeId()),false);
-	}
 	
 	public LearningActivityBaseAssetRenderer (LearningActivity learningactivity, LearningActivityType learningActivityType, boolean isLmsExternalTemplates) throws SystemException,PortalException {
 		_learningactivity = learningactivity;
