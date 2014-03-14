@@ -69,9 +69,9 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 
 
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) {
+	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) throws SystemException, PortalException {
 		
-		return new ResourceInternalAssetRenderer(learningactivity);
+		return new ResourceInternalAssetRenderer(learningactivity,this);
 	}
 
 

@@ -45,8 +45,8 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 					"p2ptaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity larn) {
-		return new TaskP2PAssetRenderer(larn);
+	public AssetRenderer getAssetRenderer(LearningActivity larn) throws SystemException, PortalException {
+		return new TaskP2PAssetRenderer(larn,this);
 	}
 	@Override
 	public long getDefaultScore() {		

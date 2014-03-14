@@ -75,8 +75,8 @@ public class TestLearningActivityType extends BaseLearningActivityType
 
 
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) {	
-		return new TestAssetRenderer(learningactivity);
+	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) throws SystemException, PortalException {	
+		return new TestAssetRenderer(learningactivity,this);
 	}
 
 

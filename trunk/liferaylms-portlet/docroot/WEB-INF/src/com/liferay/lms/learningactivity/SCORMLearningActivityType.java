@@ -59,9 +59,9 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 	}
 
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) {
+	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) throws SystemException, PortalException {
 
-		return new SCORMAssetRenderer(learningactivity);
+		return new SCORMAssetRenderer(learningactivity,this);
 	}
 
 	@Override
