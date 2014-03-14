@@ -53,7 +53,7 @@ long started=ModuleResultLocalServiceUtil.countByModule(theModule.getModuleId())
 			
 <%
 AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
-Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
+Map<Long,String> classTypes=arf.getClassTypes(new long[]{themeDisplay.getScopeGroupId()}, themeDisplay.getLocale());
 request.setAttribute("types", classTypes);
 
 PortletURL portletURL = renderResponse.createRenderURL();

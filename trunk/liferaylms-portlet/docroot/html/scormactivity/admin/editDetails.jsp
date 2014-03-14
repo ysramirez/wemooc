@@ -61,7 +61,7 @@
 <liferay-ui:icon image="back" message="back" url="<%=backUrl.toString() %>" label="true" onClick="<%=renderResponse.getNamespace()+\"back(this)\" %>" />
 <liferay-ui:header title="<%=AssetRendererFactoryRegistryUtil.
 								getAssetRendererFactoryByClassName(LearningActivity.class.getName()).
-								getClassTypes(new long[0], themeDisplay.getLocale()).get(Long.valueOf(learningActivity.getTypeId()))%>"></liferay-ui:header>
+								getClassTypes(new long[]{themeDisplay.getScopeGroupId()}, themeDisplay.getLocale()).get(Long.valueOf(learningActivity.getTypeId()))%>"></liferay-ui:header>
 <liferay-ui:header title="<%=learningActivity.getTitle(themeDisplay.getLocale()) %>"></liferay-ui:header>
 <iframe id="<portlet:namespace/>editor" src="<%=path.toString() %>" frameBorder="0" scrolling="no" width="100%" height="0"></iframe>
 

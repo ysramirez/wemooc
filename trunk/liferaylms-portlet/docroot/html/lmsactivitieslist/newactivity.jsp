@@ -31,39 +31,22 @@ AUI().ready(
 
 <ul class="activity-list">
 <%
-LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId());
-String[] activityidsString=prefs.getActivities().split(",");
-long[] activityids=new long[activityidsString.length];
-for(int i=0;i<activityidsString.length;i++)
-{
-	activityids[i]=Long.parseLong(activityidsString[i]);
-}
-AssetRendererFactory arf=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
-Map<Long,String> classTypes=arf.getClassTypes(new long[0], themeDisplay.getLocale());
-LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
-String blacklistProp = PropsUtil.get("lms.learningactivity.invisibles");
-List<String> blacklist = new ArrayList<String>();
-if (blacklistProp != null) {
-	String[] blacklistArray = blacklistProp.split(",");
-	if (blacklistArray != null) {
-		blacklist = ListUtil.fromArray(blacklistArray);
-	}
-}
-for(Long key:activityids)
-{
-	if (blacklist.contains(key.toString())) {
-		continue;
-	}
-	String classname=classTypes.get(key);
-
-	if(classname==null)
-		continue;
+	LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+	Map<Long,String> classTypes=AssetRendererFactoryRegistryUtil.
+		getAssetRendererFactoryByClassName(LearningActivity.class.getName()).
+		getClassTypes(new long[]{themeDisplay.getScopeGroupId()}, themeDisplay.getLocale());
+	for(Long key:StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getActivities(), 
+		StringPool.COMMA, GetterUtil.DEFAULT_LONG))
+	{
+		String classname=classTypes.get(key);
+		if(Validator.isNotNull(classname)) {
 %>	
-	<liferay-portlet:actionURL name="editactivityoptions" var="newactivityURL">
+	<liferay-portlet:renderURL var="newactivityURL">
+		<liferay-portlet:param name="editing" value="<%=StringPool.TRUE %>" />
 		<liferay-portlet:param name="resId" value="0" />
 		<liferay-portlet:param name="resModuleId" value="<%=ParamUtil.getString(renderRequest, \"resModuleId\") %>" />
 		<liferay-portlet:param name="type" value="<%=key.toString() %>" />
-	</liferay-portlet:actionURL>
+	</liferay-portlet:renderURL>
 	
 	<liferay-util:buffer var="activityMessage">
 	    <%=LanguageUtil.get(themeDisplay.getLocale(), classTypes.get(key)) %>
@@ -76,6 +59,7 @@ for(Long key:activityids)
 		<liferay-ui:icon image="add" label="<%=true%>" message="<%=activityMessage %>" url="<%=newactivityURL%>" cssClass="activity-icon" />
 	</li>
 <%
-}
+		}
+	}
 %>
 </ul>

@@ -39,10 +39,11 @@ String primKey = String.valueOf(myActivity.getActId());
 %>
 				
 <c:if test="<%= permissionChecker.hasPermission(myActivity.getGroupId(),LearningActivity.class.getName(),myActivity.getActId(),ActionKeys.UPDATE)||permissionChecker.hasOwnerPermission(myActivity.getCompanyId(),LearningActivity.class.getName(),myActivity.getActId(),myActivity.getUserId(),ActionKeys.UPDATE) %>">
-	<liferay-portlet:actionURL  name="editactivityoptions" var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<liferay-portlet:renderURL var="editoptionsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:param name="editing" value="<%=StringPool.TRUE %>" />
 		<liferay-portlet:param name="resId" value="<%=primKey %>" />
 		<liferay-portlet:param name="resModuleId" value="<%=Long.toString(myActivity.getModuleId()) %>" />
-	</liferay-portlet:actionURL>
+	</liferay-portlet:renderURL>
 	<%
 	String portletnamespace = renderResponse.getNamespace();
 		
@@ -51,7 +52,7 @@ String primKey = String.valueOf(myActivity.getActId());
 			"	new A.Dialog( "+
 			"		{ "+
 			"    		id: 'editlesson', "+ 
-			"			title: '"+LanguageUtil.get(pageContext,"activity.edition")+" "+ LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(myActivity.getTypeId()).getName())  +"', "+
+			"			title: '"+LanguageUtil.get(pageContext,"activity.edition")+StringPool.SPACE+ LanguageUtil.get(pageContext, learningActivityType.getName())  +"', "+
 		    "			destroyOnClose: true, "+
 		    "			width: 750, "+
 		    "			modal:true, "+
@@ -394,10 +395,11 @@ String visibleStr = PrefsPropsUtil.getString("learningactivity.show.calification
 boolean visibleCalifications = Boolean.parseBoolean(visibleStr);
 %>
 <c:if test="<%=visibleCalifications %>">
-	<liferay-portlet:actionURL  name="showCalifications" var="showCalificationsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+	<liferay-portlet:renderURL var="showCalificationsURL" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
+		<liferay-portlet:param name="califications" value="<%=StringPool.TRUE %>" />
 		<liferay-portlet:param name="resId" value="<%=primKey %>" />
 		<liferay-portlet:param name="resModuleId" value="<%=Long.toString(myActivity.getModuleId()) %>" />
-	</liferay-portlet:actionURL>
+	</liferay-portlet:renderURL>
 	<%
 		
 	StringBuilder showCalificationsPopup = new StringBuilder("javascript:AUI().use('aui-dialog','aui-dialog-iframe', "+

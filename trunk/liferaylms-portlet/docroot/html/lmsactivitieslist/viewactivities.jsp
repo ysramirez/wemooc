@@ -238,11 +238,14 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 					editing="editing";
 				}
 				
-				if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),	activity.getActId(), ActionKeys.VIEW)){
+				LearningActivityType learningActivityType = learningActivityTypeRegistry.getLearningActivityType(activity.getTypeId());
+				
+				if (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),	activity.getActId(), ActionKeys.VIEW)){
 					
-					if(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())
+					if((Validator.isNotNull(learningActivityType))&&
+						(!LearningActivityLocalServiceUtil.islocked(activity.getActId(),themeDisplay.getUserId())
 							|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId() , "ACCESSLOCK") 
-							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing))
+							||(permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(), activity.getActId(), ActionKeys.UPDATE) && actionEditing)))
 					{
 						%>
 						<portlet:actionURL var="goToActivity" windowState="<%= WindowState.NORMAL.toString()%>" >
@@ -264,7 +267,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
 					<%
 					}
-				if (actionEditing
+				if ((actionEditing)&&(Validator.isNotNull(learningActivityType))
 					&& (permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.UPDATE)
 						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(), ActionKeys.DELETE) 
 						|| permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.PERMISSIONS)
