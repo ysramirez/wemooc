@@ -1,6 +1,7 @@
 package com.liferay.lms.asset;
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -159,7 +160,9 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 		try {
 			List<Course> courses = null;
 			ThemeDisplay themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
+			long type = GetterUtil.getLong(liferayPortletRequest.getAttribute(WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID));
 			long courseId = GetterUtil.getLong(liferayPortletRequest.getAttribute("courseId"));
+
 
 			if(Validator.isNull(courseId)) {
 				courses = CourseLocalServiceUtil.dynamicQuery(
@@ -168,9 +171,18 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 								in(ArrayUtil.toArray(
 									getGroupIds(themeDisplay.getPortletDisplay().getPortletSetup(), 
 												themeDisplay.getScopeGroupId(), themeDisplay.getLayout())))));
-				if(!courses.isEmpty()) {
+				
+				List<Course> filterCourses = new ArrayList<Course>(courses.size());
+				for (Course course : courses) {
+					if(ArrayUtil.contains(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(course.getCompanyId()).getActivities(), 
+							StringPool.COMMA, GetterUtil.DEFAULT_LONG), type)){
+						filterCourses.add(course);
+					}
+				}
+				if(!filterCourses.isEmpty()) {
 					courseId = courses.get(0).getCourseId();
 				}
+				courses = filterCourses;
 			}
 			
 			long plid = getPlid(courseId,themeDisplay);
@@ -178,7 +190,7 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 			if(Validator.isNull(plid)) {
 				return null;
 			}			
-			long type = GetterUtil.getLong(liferayPortletRequest.getAttribute(WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID));
+
 			long resModuleId = GetterUtil.getLong(liferayPortletRequest.getAttribute("resModuleId"));
 	  	  	PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,PORTLET_ID,plid,PortletRequest.RENDER_PHASE);
 
