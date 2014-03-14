@@ -1,65 +1,35 @@
-<%@page import="org.apache.commons.lang.ArrayUtils"%>
-<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
-<%@page import="com.liferay.lms.model.LmsPrefs"%>
-<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
-<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
-<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
-<%@page import="java.util.Map"%>
-<%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
-<%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
-<%@page import="com.liferay.portal.security.permission.ResourceActionsUtil"%>
-<%@page import="com.liferay.lms.model.LearningActivity"%>
-
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
+<%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
+<%@page import="com.liferay.portal.service.PortletPreferencesLocalServiceUtil"%>
+<%@page import="java.lang.reflect.Method"%>
+<%@page import="javax.portlet.PortletPreferences"%>
+<%@page import="com.liferay.portal.kernel.util.PortalClassLoaderUtil"%>
 <%@ include file="/init.jsp"%>
+<% 
+	long typeId = ParamUtil.getLong(renderRequest, "type",-1);
+	long assetRendererPlid = ParamUtil.getLong(renderRequest, "assetRendererPlid");
+	Class<?> assetPublisherUtilClass = PortalClassLoaderUtil.getClassLoader().loadClass("com.liferay.portlet.assetpublisher.util.AssetPublisherUtil");
+	Method  getGroupIds = assetPublisherUtilClass.getMethod("getGroupIds", PortletPreferences.class, Long.TYPE, Layout.class);
+    PortletPreferences assetRendererPreferences = PortletPreferencesLocalServiceUtil.getPreferences(themeDisplay.getCompanyId(),
+													PortletKeys.PREFS_OWNER_ID_DEFAULT,
+													PortletKeys.PREFS_OWNER_TYPE_LAYOUT,
+													assetRendererPlid,
+													ParamUtil.getString(renderRequest, "assetRendererId"));
+    Layout assetRendererLayout = LayoutLocalServiceUtil.fetchLayout(assetRendererPlid);
+    List<Course> courses = CourseLocalServiceUtil.dynamicQuery(
+			CourseLocalServiceUtil.dynamicQuery().
+				add(PropertyFactoryUtil.forName("groupCreatedId").
+					in(ArrayUtil.toArray((long[])
+						getGroupIds.invoke(null,assetRendererPreferences, 
+								assetRendererLayout.getScopeGroup().getGroupId(), assetRendererLayout)))));
+%>
+
 
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 
-<script type="text/javascript">
-<!--
-AUI().ready(
-    function(A) {
-		A.all('img[onblur*=hide]').each(function(img){
-			img.after(['blur','mouseout'],function(event){ 
-				Liferay.Portal.ToolTip._cached.destroy();
-				Liferay.Portal.ToolTip._cached=null;
-			 });
-		});
-    }
-);
-//-->
-</script>
 
-<ul class="activity-list">
-<%
-	LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
-	Map<Long,String> classTypes=AssetRendererFactoryRegistryUtil.
-		getAssetRendererFactoryByClassName(LearningActivity.class.getName()).
-		getClassTypes(new long[]{themeDisplay.getScopeGroupId()}, themeDisplay.getLocale());
-	for(Long key:StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getActivities(), 
-		StringPool.COMMA, GetterUtil.DEFAULT_LONG))
-	{
-		String classname=classTypes.get(key);
-		if(Validator.isNotNull(classname)) {
-%>	
-	<liferay-portlet:renderURL var="newactivityURL">
-		<liferay-portlet:param name="editing" value="<%=StringPool.TRUE %>" />
-		<liferay-portlet:param name="resId" value="0" />
-		<liferay-portlet:param name="resModuleId" value="<%=ParamUtil.getString(renderRequest, \"resModuleId\") %>" />
-		<liferay-portlet:param name="type" value="<%=key.toString() %>" />
-	</liferay-portlet:renderURL>
-	
-	<liferay-util:buffer var="activityMessage">
-	    <%=LanguageUtil.get(themeDisplay.getLocale(), classTypes.get(key)) %>
-	    <span class="activity-help">
-			<liferay-ui:icon-help message="<%=learningActivityTypeRegistry.getLearningActivityType(key).getDescription() %>"  />
-		</span>
-	</liferay-util:buffer>
 
-	<li class="activity_<%=key%>">
-		<liferay-ui:icon image="add" label="<%=true%>" message="<%=activityMessage %>" url="<%=newactivityURL%>" cssClass="activity-icon" />
-	</li>
-<%
-		}
-	}
-%>
-</ul>
+
+
