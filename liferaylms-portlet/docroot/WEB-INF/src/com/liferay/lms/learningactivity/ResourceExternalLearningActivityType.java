@@ -2,7 +2,6 @@ package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Enumeration;
 import java.util.List;
 
 import javax.portlet.PortletRequest;
@@ -75,9 +74,9 @@ public class ResourceExternalLearningActivityType extends BaseLearningActivityTy
 
 
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) {
+	public AssetRenderer getAssetRenderer(LearningActivity learningactivity) throws SystemException, PortalException {
 		
-		return new ResourceExternalAssetRenderer(learningactivity);
+		return new ResourceExternalAssetRenderer(learningactivity,this);
 	}
 
 

@@ -5,6 +5,8 @@ import javax.portlet.PortletResponse;
 import com.liferay.lms.asset.SurveyAssetRenderer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -27,8 +29,8 @@ public class SurveyLearningActivityType extends BaseLearningActivityType {
 					"surveyactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 	
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity larn) {
-		return new SurveyAssetRenderer(larn);
+	public AssetRenderer getAssetRenderer(LearningActivity larn) throws SystemException, PortalException {
+		return new SurveyAssetRenderer(larn,this);
 	}
 
 	@Override

@@ -36,8 +36,8 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 					"onlinetaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 	
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity larn) {
-		return new TaskOnlineAssetRenderer(larn);
+	public AssetRenderer getAssetRenderer(LearningActivity larn) throws SystemException, PortalException {
+		return new TaskOnlineAssetRenderer(larn,this);
 	}
 
 	@Override

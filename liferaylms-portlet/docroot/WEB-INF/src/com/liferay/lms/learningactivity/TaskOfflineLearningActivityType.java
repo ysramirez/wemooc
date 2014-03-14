@@ -36,8 +36,8 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 					"offlinetaskactivity" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
 	
 	@Override
-	public AssetRenderer getAssetRenderer(LearningActivity larn) {
-		return new TaskOfflineAssetRenderer(larn);
+	public AssetRenderer getAssetRenderer(LearningActivity larn) throws SystemException, PortalException {
+		return new TaskOfflineAssetRenderer(larn,this);
 	}
 
 	@Override
