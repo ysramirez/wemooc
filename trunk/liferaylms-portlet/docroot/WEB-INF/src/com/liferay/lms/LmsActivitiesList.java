@@ -27,8 +27,8 @@ import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.events.ThemeIdEvent;
-import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.learningactivity.LearningActivityType;
+import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.learningactivity.ResourceExternalLearningActivityType;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
@@ -181,9 +181,11 @@ public class LmsActivitiesList extends MVCPortlet {
 		ThemeDisplay themeDisplay = (ThemeDisplay) uploadRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		PermissionChecker permissionChecker=themeDisplay.getPermissionChecker();
 		String redirect = ParamUtil.getString(uploadRequest, "redirect");
-		for(Map.Entry<String, String[]> parameter: (Set<Map.Entry<String,  String[]>>) uploadRequest.getParameterMap().entrySet()){
-			if(parameter.getValue()!=null) {
-				actionResponse.setRenderParameter(parameter.getKey(), parameter.getValue());
+		if(Validator.isNull(redirect)) {
+			for(Map.Entry<String, String[]> parameter: (Set<Map.Entry<String,  String[]>>) uploadRequest.getParameterMap().entrySet()){
+				if(parameter.getValue()!=null) {
+					actionResponse.setRenderParameter(parameter.getKey(), parameter.getValue());
+				}
 			}
 		}
 		uploadRequest.setAttribute("editing", "true");
@@ -384,7 +386,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		  }
 		}
 		
-		//descomentar si se permiten llamadas por webservice, ademas aï¿½adir booleano editionBlocked en los metodos setExtraContent de las actividades
+		//descomentar si se permiten llamadas por webservice, ademas añadir booleano editionBlocked en los metodos setExtraContent de las actividades
 		//para poder diferenciar las partes bloqueadas de las que no lo estan a la hora de crear el extraContent.
 		/*boolean setExtraContent = false;
 		if(actId == 0) setExtraContent = true;
@@ -411,7 +413,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		
 		WindowState windowState = actionRequest.getWindowState();
-		if (redirect != null && !"".equals(redirect)) {
+		if (Validator.isNotNull(redirect)) {
 			if (!windowState.equals(LiferayWindowState.POP_UP)) {
 				actionResponse.sendRedirect(redirect);
 			}
@@ -655,17 +657,6 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		SessionMessages.add(actionRequest, "asset-renderer-not-defined");
 	}
-	public void editactivityoptions(ActionRequest actionRequest, ActionResponse actionResponse)
-	throws PortalException, SystemException, Exception {
-		long actId=ParamUtil.getLong(actionRequest, "resId",0);
-		if(actId>0)
-		{
-		LearningActivity larn=LearningActivityLocalServiceUtil.getLearningActivity(actId);
-		actionRequest.setAttribute("activity", larn);
-		}
-		actionResponse.setRenderParameters(actionRequest.getParameterMap());
-		actionRequest.setAttribute("editing", "true");
-	}
 	
 	public void changeVisibility(ActionRequest actionRequest, ActionResponse actionResponse)
 	throws Exception {
@@ -791,7 +782,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		if((themeDisplay!=null)&&(themeDisplay.isWidget())) {
 			include("/html/lmsactivitieslist/widget/view.jsp",renderRequest,renderResponse);
 		}
-		else if(renderRequest.getAttribute("editing")!=null &&renderRequest.getAttribute("editing").equals("true"))
+		else if(ParamUtil.getBoolean(renderRequest,"editing"))
 		{
 			
 			Integer maxfile = ResourceExternalLearningActivityType.DEFAULT_FILENUMBER;
@@ -826,7 +817,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			renderRequest.setAttribute("showcategorization", ("false".equals(PropsUtil.get("activity.show.categorization")))?false:true);
 			include("/html/editactivity/editactivity.jsp",renderRequest,renderResponse);
 		}
-		else if(renderRequest.getAttribute("califications")!=null && renderRequest.getAttribute("califications").equals("true"))
+		else if(ParamUtil.getBoolean(renderRequest,"califications"))
 		{
 			include("/html/lmsactivitieslist/califications.jsp",renderRequest,renderResponse);
 		}
@@ -874,19 +865,6 @@ public class LmsActivitiesList extends MVCPortlet {
 		LearningActivityLocalServiceUtil.updateLearningActivity(learningActivity, false);
 		editactivity(actionRequest, actionResponse);
 		SessionMessages.add(actionRequest, "activity-modified-successfully");
-	}
-	
-	public void showCalifications(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException, SystemException, Exception {
-		
-		long actId = ParamUtil.getLong(actionRequest, "resId",0);
-		
-		if(actId>0){
-			actionRequest.setAttribute("actId", actId);
-		}
-	
-		actionResponse.setRenderParameters(actionRequest.getParameterMap());
-		actionRequest.setAttribute("califications", "true");
-		
 	}
 	
 }
