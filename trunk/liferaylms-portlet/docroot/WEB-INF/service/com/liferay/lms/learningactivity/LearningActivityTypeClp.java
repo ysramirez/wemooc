@@ -1,7 +1,7 @@
 package com.liferay.lms.learningactivity;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
+//import java.lang.reflect.Method;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portlet.asset.model.AssetRenderer;
 
@@ -270,7 +271,9 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		return larnObj;
 	}
 	
-	public AssetRenderer getAssetRenderer(LearningActivity larn) {
+	
+	@SuppressWarnings("deprecation")
+	public AssetRenderer getAssetRenderer(LearningActivity larn) throws SystemException, PortalException {
 		Object returnObj = null;
 
 		try {
@@ -281,6 +284,12 @@ public class LearningActivityTypeClp implements LearningActivityType {
 
 			if (t instanceof RuntimeException) {
 				throw (RuntimeException)t;
+			}
+			else if (t instanceof SystemException) {
+				throw (SystemException)t;
+			}
+			else if (t instanceof PortalException) {
+				throw (PortalException)t;
 			}
 			else {
 				throw new RuntimeException(t.getClass().getName() +
@@ -422,10 +431,8 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			throws PortalException,SystemException,DocumentException,IOException {
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
 			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
-			
-			Method setExtraContentMethod = learningActivityTypeClass.getMethod("setExtraContent", UploadRequest.class, PortletResponse.class, learningActivityClass);    
+			MethodKey setExtraContentMethod = new MethodKey(clp.getClassName(), "setExtraContent", UploadRequest.class, PortletResponse.class, learningActivityClass);
 			Object learningActivityObj = translateLearningActivity(learningActivity);
 			clp.invoke(new MethodHandler(setExtraContentMethod, uploadRequest, portletResponse, learningActivityObj));
 			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
@@ -465,12 +472,7 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		Object returnObj = null;
 
 		try {
-			ClassLoader classLoader = clp.getClassLoader();
-			
-			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
-		    
-			Method especificValidationsMethod = learningActivityTypeClass.getMethod("especificValidations", UploadRequest.class, PortletResponse.class);    
-		    
+			MethodKey especificValidationsMethod = new MethodKey(clp.getClassName(), "especificValidations", UploadRequest.class, PortletResponse.class);		    
 			returnObj = clp.invoke(new MethodHandler(especificValidationsMethod, uploadRequest, portletResponse));
 		}
 		catch (Throwable t) {
@@ -493,10 +495,9 @@ public class LearningActivityTypeClp implements LearningActivityType {
 		
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(), true, classLoader);
 			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
 			
-			Method afterInsertOrUpdateMethod = learningActivityTypeClass.getMethod("afterInsertOrUpdate", UploadRequest.class, PortletResponse.class, learningActivityClass);
+			MethodKey afterInsertOrUpdateMethod = new MethodKey(clp.getClassName(), "afterInsertOrUpdate", UploadRequest.class, PortletResponse.class, learningActivityClass);
 			Object learningActivityObj = translateLearningActivity(learningActivity);
 			clp.invoke(new MethodHandler(afterInsertOrUpdateMethod, uploadRequest, portletResponse, learningActivityObj));
 			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
@@ -570,10 +571,9 @@ public class LearningActivityTypeClp implements LearningActivityType {
 			throws PortalException,SystemException,DocumentException,IOException{
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			Class learningActivityTypeClass = Class.forName(LearningActivityType.class.getName(),true, classLoader);
 			Class learningActivityClass = Class.forName(LearningActivity.class.getName(),true, classLoader);
 			
-			Method deleteResourcesMethod = learningActivityTypeClass.getMethod("deleteResources", ActionRequest.class, ActionResponse.class, learningActivityClass);    
+			MethodKey deleteResourcesMethod = new MethodKey(clp.getClassName(), "deleteResources", ActionRequest.class, ActionResponse.class, learningActivityClass);    
 			Object learningActivityObj = translateLearningActivity(learningActivity);
 			clp.invoke(new MethodHandler(deleteResourcesMethod, actionRequest, actionResponse, learningActivityObj));
 			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(learningActivityObj, clp.getClassLoader());
