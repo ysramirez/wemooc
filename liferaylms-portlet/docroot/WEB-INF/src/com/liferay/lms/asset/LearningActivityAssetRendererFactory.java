@@ -91,8 +91,8 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 			if(companies.add(course.getCompanyId())){
 				for(long typeId:
 					StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(course.getCompanyId()).getActivities(), 
-						StringPool.COMMA, GetterUtil.DEFAULT_LONG)){
-					if((Validator.isNotNull(typeId))
+						StringPool.COMMA, -1)){
+					if((typeId>=0)
 							&&(!ArrayUtil.contains(invisibleTypes, typeId))
 							&&(activityTypes.add(typeId))) {
 						String learningActivityTypeName = learningActivityTypeRegistry.getLearningActivityType(typeId).getName();
