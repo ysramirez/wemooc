@@ -6,6 +6,9 @@
 
 <aui:select label="bloquing-activity" name="precedence" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
 <%
+	renderResponse.setProperty(
+			"clear-request-parameters", Boolean.TRUE.toString());
+
 	long actId=ParamUtil.getLong(request, "resId", 0);
 	long moduleId=ParamUtil.getLong(request, "resModuleId", 0);
 	long precedence=ParamUtil.getLong(request, "precedence", 0);
