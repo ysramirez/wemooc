@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
 <%@page import="com.liferay.portal.util.comparator.*"%>
 <%@include file="/init.jsp" %>
@@ -41,8 +42,8 @@
 				
 				OrderByComparator obc = new UserFirstNameComparator(true);
 			
-				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, 1, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 1, params);
+				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_APPROVED, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_APPROVED, params);
 						
 				pageContext.setAttribute("results", userListPage);
 			    pageContext.setAttribute("total", userCount);
