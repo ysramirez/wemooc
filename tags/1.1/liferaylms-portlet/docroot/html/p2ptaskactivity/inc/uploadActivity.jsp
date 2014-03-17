@@ -20,6 +20,7 @@
 <liferay-ui:error key="error-subir-p2p" message="error-subir-p2p" />
 <liferay-ui:error key="p2ptaskactivity-error-file-type" message="p2ptaskactivity.error.file.type" />
 <liferay-ui:error key="p2ptaskactivity-error-file-name" message="p2ptaskactivity-error-file-name" />
+<liferay-ui:error key="p2ptaskactivity-error-file" message="p2ptaskactivity-error-file" />
 <%
 long actId = ParamUtil.getLong(request, "actId",0);
 String textCorrection = LanguageUtil.get(pageContext,"p2ptask-text-upload");
