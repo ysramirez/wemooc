@@ -18,7 +18,7 @@ import com.liferay.portal.kernel.util.Validator;
 
 public class LearningActivityTypeRegistry {
 	
-	private static final String LEARNING_ACTIVITY_TYPES_KEY = "learningActivityTypes";
+	private static final String LEARNING_ACTIVITY_TYPES_KEY = LearningActivityTypeRegistry.class.getName()+"_learningActivityTypes";
 	private Map<Long,LearningActivityType> _learningActivityTypes;
 	
 	public LearningActivityTypeRegistry() {
@@ -26,8 +26,12 @@ public class LearningActivityTypeRegistry {
 				ThreadLocalCacheManager.getThreadLocalCache(
 					Lifecycle.REQUEST, LearningActivityType.class.getName());
 		_learningActivityTypes = threadLocalCache.get(LEARNING_ACTIVITY_TYPES_KEY);
-		
-		if(Validator.isNull(_learningActivityTypes)) {
+
+		if((Validator.isNull(_learningActivityTypes))||
+			(!(_learningActivityTypes instanceof Map))||
+			(!_learningActivityTypes.isEmpty())||
+			(!(_learningActivityTypes.entrySet().iterator().next().getValue() instanceof LearningActivityType))
+		) {
 			Properties props = PropsUtil.getProperties("lms.learningactivity.type", true);
 			_learningActivityTypes = new HashMap<Long, LearningActivityType>();
 			for (Object key:props.keySet()) {
