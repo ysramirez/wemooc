@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
@@ -49,7 +48,6 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -69,12 +67,12 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.documentlibrary.FileExtensionException;
+import com.liferay.portlet.documentlibrary.FileNameException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 import com.liferay.util.mail.MailEngine;
 import com.liferay.util.mail.MailEngineException;
@@ -179,6 +177,11 @@ public class P2PActivityPortlet extends MVCPortlet {
 							
 						} catch (FileExtensionException fee) {
 							SessionErrors.add(request, "p2ptaskactivity-error-file-type");
+							request.setAttribute("actId", actId);
+							return;
+						
+						} catch (FileNameException fee) {
+							SessionErrors.add(request, "p2ptaskactivity-error-file-name");
 							request.setAttribute("actId", actId);
 							return;
 						} catch (Exception e) {
@@ -297,8 +300,15 @@ public class P2PActivityPortlet extends MVCPortlet {
 							SessionErrors.add(request, "p2ptaskactivity-error-file-type");
 							request.setAttribute("actId", actId);
 							return;
+						} catch (FileNameException fee) {
+							SessionErrors.add(request, "p2ptaskactivity-error-file-name");
+							request.setAttribute("actId", actId);
+							return;
 						}catch (Exception e) {
 							e.printStackTrace();
+							SessionErrors.add(request, "p2ptaskactivity-error-file");
+							request.setAttribute("actId", actId);
+							return;
 						}
 						
 						
