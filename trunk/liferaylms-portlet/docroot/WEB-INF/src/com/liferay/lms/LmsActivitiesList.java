@@ -23,6 +23,8 @@ import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 import javax.xml.namespace.QName;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
@@ -362,7 +364,23 @@ public class LmsActivitiesList extends MVCPortlet {
 			
 			
 			extraContentTmp = tmp.getExtracontent();
-			
+			String teamIdStr = StringUtils.substringAfter(extraContentTmp, "<team>");
+			teamIdStr = StringUtils.substringBefore(teamIdStr, "</team>");
+			if(StringPool.BLANK.equals(teamIdStr)){
+				teamIdStr="0";
+			}
+			long teamId = Long.parseLong(teamIdStr);
+			Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+			if(teamId==0){
+				ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+				ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(tmp.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}
+			else{
+				Team t = TeamLocalServiceUtil.getTeam(teamId);
+				Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+				ResourcePermissionLocalServiceUtil.removeResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+				ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(tmp.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}
 				
 			larn=LearningActivityLocalServiceUtil.modLearningActivity(
 				actId, "", "", ahora, startDate, stopDate, type, tries, passpuntuation, moduleId,  extraContentTmp, feedbackCorrect, feedbackNoCorrect, serviceContext);
@@ -386,14 +404,40 @@ public class LmsActivitiesList extends MVCPortlet {
 		  }
 		}
 		
-		//descomentar si se permiten llamadas por webservice, ademas añadir booleano editionBlocked en los metodos setExtraContent de las actividades
+		//descomentar si se permiten llamadas por webservice, ademas aï¿½adir booleano editionBlocked en los metodos setExtraContent de las actividades
 		//para poder diferenciar las partes bloqueadas de las que no lo estan a la hora de crear el extraContent.
 		/*boolean setExtraContent = false;
 		if(actId == 0) setExtraContent = true;
 		else setExtraContent = LearningActivityLocalServiceUtil.canBeEdited(larn, user.getUserId());
 		if(setExtraContent)*/
 		learningActivityType.setExtraContent(uploadRequest,actionResponse,larn);
-
+		//Seteamos permiso de view a quien corresponda.
+		long teamId =ParamUtil.get(uploadRequest, "team", 0);
+		//Leemos del portal.properties el estado del permiso VIEW por defecto para siteMember en las actividades nuevas (si no existe, por defecto serï¿½n visibles)
+		boolean hideStr = Boolean.parseBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", "false"));
+		Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+		if(teamId==0){
+			if(hideStr)
+			{
+					ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}
+			else ResourcePermissionLocalServiceUtil.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
+		}
+		else{
+			Team t = TeamLocalServiceUtil.getTeam(teamId);
+			Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
+			if(hideStr)
+			{
+				ResourcePermissionLocalServiceUtil.removeResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}else {
+				String[] actIds = {ActionKeys.VIEW};
+				ResourcePermissionLocalServiceUtil.setResourcePermissions(t.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), actIds);
+			}
+		}
 		if(permissionChecker.hasPermission(
 				themeDisplay.getScopeGroupId(),
 				LearningActivity.class.getName(), larn.getActId(),
