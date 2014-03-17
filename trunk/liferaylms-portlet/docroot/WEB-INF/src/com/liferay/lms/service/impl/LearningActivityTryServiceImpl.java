@@ -59,9 +59,14 @@ public class LearningActivityTryServiceImpl
 		java.util.Date today=new java.util.Date(System.currentTimeMillis());
 		lat.setStartDate(today);
 		learningActivityTryPersistence.update(lat, true);
-
-		//auditing
+		
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		
+		if(serviceContext!=null){
+			courseResultLocalService.softInitializeByGroupIdAndUserId(serviceContext.getScopeGroupId(), serviceContext.getUserId());
+		}
+		
+		//auditing
 		if(serviceContext!=null){
 			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
 				actId, serviceContext.getUserId(), AuditConstants.ADD, null);

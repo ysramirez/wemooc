@@ -9,7 +9,14 @@
 
 <% SCORMContent scorm=(SCORMContent)request.getAttribute("scorm");
 
+if (request.getAttribute("learningTry") == null) { %>
+<script type="text/javascript">
+	localStorage.removeItem('scormpool');
+</script>
+<% }
+
 if (Validator.isNotNull(scorm.getDescription()) && request.getAttribute("learningTry") == null) { %>
+
 
 <div class="asset-description"><%=scorm.getDescription() %></div>
 

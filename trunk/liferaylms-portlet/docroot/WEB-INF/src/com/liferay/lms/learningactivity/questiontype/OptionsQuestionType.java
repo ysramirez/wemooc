@@ -10,6 +10,7 @@ import javax.portlet.ActionRequest;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
@@ -126,6 +127,12 @@ public class OptionsQuestionType extends BaseQuestionType {
 				String correct="", checked="", showCorrectAnswer="false", disabled ="";
 				if(feedback) {
 					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+					String showCorrectAnswerOnlyOnFinalTryString = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswerOnlyOnFinalTry");
+					try {
+						if ("true".equals(showCorrectAnswerOnlyOnFinalTryString) && LearningActivityTryLocalServiceUtil.canUserDoANewTry(question.getActId(), themeDisplay.getUserId())) {
+							showCorrectAnswer = "false";
+						}
+					} catch (Exception e) {}
 					disabled = "disabled='disabled'";
 				}
 				if(isCorrect(answer)){
