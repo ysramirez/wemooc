@@ -13,6 +13,7 @@ import org.jsoup.Jsoup;
 import com.liferay.lms.model.TestAnswer;
 import com.liferay.lms.model.TestQuestion;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerLocalService;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
@@ -222,6 +223,12 @@ public class FillblankQuestionType extends BaseQuestionType {
 				if (feedback){
 					feedMessage = LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank") ;
 					showCorrectAnswer = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswer");
+					String showCorrectAnswerOnlyOnFinalTryString = LearningActivityLocalServiceUtil.getExtraContentValue(question.getActId(), "showCorrectAnswerOnlyOnFinalTry");
+					try {
+						if ("true".equals(showCorrectAnswerOnlyOnFinalTryString) && LearningActivityTryLocalServiceUtil.canUserDoANewTry(question.getActId(), themeDisplay.getUserId())) {
+							showCorrectAnswer = "false";
+						}
+					} catch (Exception e) {}
 					int i=0, correctAnswers=0;
 					for(String sol:sols){
 						String ans= (answers.length>i)?answers[i]:"";

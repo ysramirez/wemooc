@@ -151,6 +151,8 @@ public class LearningActivityTryLocalServiceImpl
 		larnt.setStartDate(new java.util.Date(System.currentTimeMillis()));
 		learningActivityTryPersistence.update(larnt, true);
 		LearningActivityResultLocalServiceUtil.update(larnt);
+		
+		courseResultLocalService.softInitializeByGroupIdAndUserId(serviceContext.getScopeGroupId(), serviceContext.getUserId());
 
 		//auditing
 		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 

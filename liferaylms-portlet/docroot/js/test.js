@@ -97,7 +97,7 @@ $(document).ready(function() {
 			});
 			
 		});
-		$("ul.sortable").sortable({
+		$("div.question-page-current ul.sortable").sortable({
 	        connectWith: '.sortable',
 	        update: function(event, ui) {
 	        	var position = $('.sortable').serial();

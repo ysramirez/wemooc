@@ -24,6 +24,7 @@
 	String password = StringPool.BLANK;
 	long hourDuration=0,minuteDuration=0,secondDuration=0;
 	boolean showCorrectAnswer= false;
+	boolean showCorrectAnswerOnlyOnFinalTry= false;
 	boolean improve=false;
 	boolean disabled = false;
 	
@@ -41,6 +42,7 @@
 		secondDuration = timestamp % 60;
 		
 		showCorrectAnswer = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"showCorrectAnswer"));
+		showCorrectAnswerOnlyOnFinalTry = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"showCorrectAnswerOnlyOnFinalTry"));
 		improve = StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"));	
 		
 		moduleId=learningActivity.getModuleId();
@@ -136,6 +138,7 @@ window.<portlet:namespace />validate_execactivity={
 						A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />minuteDuration]').set('disabled',notEditable);
 						A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />secondDuration]').set('disabled',notEditable);
 						A.one('#<portlet:namespace />showCorrectAnswerCheckbox').set('disabled',notEditable);
+						A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTryCheckbox').set('disabled',notEditable);
 						A.one('#<portlet:namespace />improveCheckbox').set('disabled',notEditable);
 	
 		      			if(notEditable) {
@@ -146,6 +149,8 @@ window.<portlet:namespace />validate_execactivity={
 							A.one('#<portlet:namespace />fm * select[name=<portlet:namespace />secondDuration]').set('value',<%=Long.toString(secondDuration)%>);
 							A.one('#<portlet:namespace />showCorrectAnswer').set('value','<%=Boolean.toString(showCorrectAnswer)%>');
 							A.one('#<portlet:namespace />showCorrectAnswerCheckbox').set('checked',<%=Boolean.toString(showCorrectAnswer)%>);
+							A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTry').set('value','<%=Boolean.toString(showCorrectAnswerOnlyOnFinalTry)%>');
+							A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTryCheckbox').set('checked',<%=Boolean.toString(showCorrectAnswerOnlyOnFinalTry)%>);
 							A.one('#<portlet:namespace />improve').set('value','<%=Boolean.toString(improve)%>');
 							A.one('#<portlet:namespace />improveCheckbox').set('checked',<%=Boolean.toString(improve)%>);
 			      		}
@@ -153,8 +158,49 @@ window.<portlet:namespace />validate_execactivity={
 			   } 
 			}); 
 		});
-	
+			
+		A.one('#<portlet:namespace />showCorrectAnswerCheckbox').on('onclick', function(e) {
+			console.log("ah");
+			if (!e.target._node.checked) {
+				A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTry').set('value','false');
+				A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTryCheckbox').set('checked', false);
+			}
+		});
+		
+		A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTryCheckbox').on('onclick', function(e) {
+			console.log("eh");
+			if (e.target._node.checked) {
+				A.one('#<portlet:namespace />showCorrectAnswer').set('value','true');
+				A.one('#<portlet:namespace />showCorrectAnswerCheckbox').set('checked', true);
+			}
+		});
 	});
+	
+	Liferay.provide(
+			window,
+			'<portlet:namespace/>showAnswer1',
+			function(e) {
+				var A = AUI();
+				if (!e.target.checked) {
+					A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTry').set('value','false');
+					A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTryCheckbox').set('checked', false);
+				}
+			}, 
+			['node']
+			);
+	
+	Liferay.provide(
+			window,
+			'<portlet:namespace/>showAnswer2',
+			function(e) {
+				var A = AUI();
+				if (e.target.checked) {
+					A.one('#<portlet:namespace />showCorrectAnswer').set('value','true');
+					A.one('#<portlet:namespace />showCorrectAnswerCheckbox').set('checked', true);
+				}
+			}, 
+			['node']
+			);
 
 //-->
 </script>
@@ -213,7 +259,10 @@ window.<portlet:namespace />validate_execactivity={
 	</aui:field-wrapper>
 	
 	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>"
-		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrect.helpMessage"></aui:input>
+		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrect.helpMessage" onClick='<%= renderResponse.getNamespace() + "showAnswer1(event)" %>'></aui:input>
+		
+	<aui:input type="checkbox" name="showCorrectAnswerOnlyOnFinalTry" label="exectactivity.edit.showcorrectonlyonfinaltry" checked="<%=showCorrectAnswerOnlyOnFinalTry %>"
+		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrectonlyonfinaltry.helpMessage" onClick='<%= renderResponse.getNamespace() + "showAnswer2(event)" %>'></aui:input>
 		
 	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
 		ignoreRequestValue="true" helpMessage="exectactivity.edit.improve.helpMessage"></aui:input>

@@ -28,6 +28,9 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.learningactivity.SurveyLearningActivityType;
+import com.liferay.lms.learningactivity.questiontype.QuestionType;
+import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.SurveyResult;
@@ -49,7 +52,9 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
@@ -237,6 +242,12 @@ public class SurveyActivity extends MVCPortlet {
 	}
 	
 	public void importSurveyQuestions(ActionRequest actionRequest, ActionResponse actionResponse) throws PortletException, IOException {
+		
+		String[] typeIds = PropsUtil.getArray("lms.questions.allowed.for.4");
+		long typeId = 0;
+		if (typeIds != null && typeIds.length > 0) {
+			typeId = Long.valueOf(typeIds[0]);
+		}
 		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
 		long actId = ParamUtil.getLong(actionRequest, "resId",0);
 		
@@ -265,6 +276,7 @@ public class SurveyActivity extends MVCPortlet {
 					String questionText="";
 					String[] currLine; 
 					while ((currLine = reader.readNext()) != null) {
+						if (line == 0) { line++; continue; }
 						boolean correct = true;
 						line++;
 						if (currLine.length == 2) {
@@ -288,7 +300,7 @@ public class SurveyActivity extends MVCPortlet {
 							}
 							
 							if(correct){
-								TestQuestion q= TestQuestionLocalServiceUtil.addQuestion(actId, questionText, 0);
+								TestQuestion q= TestQuestionLocalServiceUtil.addQuestion(actId, questionText, typeId);
 								for(String a:answers){
 									if(!a.equalsIgnoreCase("")){
 										TestAnswerLocalServiceUtil.addTestAnswer(q.getQuestionId(), a, "", "",false);
@@ -371,9 +383,15 @@ public class SurveyActivity extends MVCPortlet {
 		TestQuestionLocalServiceUtil.deleteTestQuestion(ParamUtil.getLong(actionRequest, "questionId"));
 	
 		SessionMessages.add(actionRequest, "question-deleted-successfully");
-		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
-		actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
-		actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/edit.jsp");
+		String backUrl = ParamUtil.get(actionRequest, "backUrl", "");
+		if (Validator.isNotNull(backUrl)) {
+			actionResponse.sendRedirect(backUrl);
+		} else {
+			QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
+			actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
+			actionResponse.setRenderParameter("resId", Long.toString(question.getActId()));
+			actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/edit.jsp");
+		}
 	}
 	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException, SystemException, Exception {
@@ -455,7 +473,7 @@ public class SurveyActivity extends MVCPortlet {
 
 				//Crear la cabecera con las preguntas.
 				List<TestQuestion> questionsTitle = TestQuestionLocalServiceUtil.getQuestions(actId);
-				//A�adimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
+				//Anadimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
 				int numExtraCols = 3;
 				String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
 
@@ -537,6 +555,58 @@ public class SurveyActivity extends MVCPortlet {
 			} catch (PortalException e) {
 			} catch (SystemException e) {
 			} catch (DocumentException e) {
+			}finally{
+				response.getPortletOutputStream().flush();
+				response.getPortletOutputStream().close();
+			}
+		} else if(action.equals("exportQuestions")){
+			try {
+
+				//Necesario para crear el fichero csv.
+				response.setCharacterEncoding("ISO-8859-1");
+				response.setContentType("text/csv;charset=ISO-8859-1");
+				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
+				byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
+
+				response.getPortletOutputStream().write(b);
+
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
+				
+				String[] cabeceras = new String[2];
+				
+				//En las columnas extra ponemos la cabecera
+				cabeceras[0]="Q";
+				cabeceras[1]="A";
+				
+				writer.writeNext(cabeceras);
+
+				//Crear la cabecera con las preguntas.
+				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
+
+				for(TestQuestion question : questions){
+					
+					String[] resultados = new String[2];
+					
+					List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
+					String[] answerTitles = new String[answers.size()];
+					
+					resultados[0] = question.getText();
+
+					for(int i = 0; i < answers.size(); i++) {
+						answerTitles[i] = answers.get(i).getAnswer();
+					}
+					resultados[1] = StringUtil.merge(answerTitles);
+
+					//Escribimos las respuestas obtenidas para el intento en el csv.
+					writer.writeNext(resultados);
+				}
+
+				writer.flush();
+				writer.close();
+				response.getPortletOutputStream().flush();
+				response.getPortletOutputStream().close();
+
+			} catch (SystemException e) {
 			}finally{
 				response.getPortletOutputStream().flush();
 				response.getPortletOutputStream().close();

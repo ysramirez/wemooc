@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
@@ -52,6 +53,7 @@ Liferay.provide(
 			renderUrl.setParameter('message', Liferay.Language.get('execactivity.editquestions.newquestion'));
 			renderUrl.setParameter('actionEditingDetails', true);
 			renderUrl.setParameter('resId', "<%=String.valueOf(learningActivity.getActId()) %>");
+			renderUrl.setParameter('backUrl', '<%= currentURL %>');
 			location.href=renderUrl.toString();
         },
         ['liferay-portlet-url']
@@ -61,11 +63,18 @@ Liferay.provide(
 <div class="container-toolbar">
 	<liferay-ui:icon-menu  align="left" direction="down" extended="false" showWhenSingleIcon="false" message="execativity.editquestions.newquestion" cssClass="bt_new" showArrow="true">
 	<%
-		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes(); 
+		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes();
+		String[] allowedTypes = PropsUtil.getArray("lms.questions.allowed.for."+learningActivity.getTypeId());
+	 	List<String> allowedTypesList = new ArrayList<String>();
+		if (allowedTypes != null) {
+			allowedTypesList = ListUtil.fromArray(allowedTypes);
+		}
 		for(QuestionType qt:qtypes){
+			if (allowedTypesList.contains(String.valueOf(qt.getTypeId()))) {
 	%>
 		<liferay-ui:icon message="<%=qt.getTitle(themeDisplay.getLocale()) %>" url="#" onClick="<%=renderResponse.getNamespace()+\"newQuestion(\"+qt.getTypeId()+\");\" %>"/>
 	<%	
+			}
 		}
 	%>
 	</liferay-ui:icon-menu>
@@ -114,7 +123,7 @@ Liferay.provide(
 	</liferay-ui:search-container-results>
 	<liferay-ui:search-container-row className="com.liferay.lms.model.TestQuestion" keyProperty="actId" modelVar="activity">
 		<liferay-ui:search-container-column-text name="text">
-		<% String titleQuestion = activity.getText();
+		<% String titleQuestion = HtmlUtil.stripHtml(activity.getText());
 			if(titleQuestion.length() > 80) titleQuestion = titleQuestion.substring(0, 80) + " ...";%>
 			<%=titleQuestion %>
 		</liferay-ui:search-container-column-text>

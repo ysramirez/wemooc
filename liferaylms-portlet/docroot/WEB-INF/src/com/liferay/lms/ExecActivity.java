@@ -151,6 +151,7 @@ public class ExecActivity extends MVCPortlet
 		long timeStamp = hourDurationString * 3600 + minuteDurationString * 60 + secondDurationString;
 
 		String showCorrectAnswer=ParamUtil.getString(actionRequest, "showCorrectAnswer", "false");
+		String showCorrectAnswerOnlyOnFinalTry=ParamUtil.getString(actionRequest, "showCorrectAnswerOnlyOnFinalTry", "false");
 		String improve=ParamUtil.getString(actionRequest, "improve", "false");
 
 		long questionsPerPage = ParamUtil.getInteger(actionRequest, "questionsPerPage", 1);
@@ -175,6 +176,12 @@ public class ExecActivity extends MVCPortlet
 			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "true");
 		}else if(showCorrectAnswer.equals("false")){
 			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswer", "false");
+		}
+		
+		if(showCorrectAnswerOnlyOnFinalTry.equals("true")) {
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswerOnlyOnFinalTry", "true");
+		}else if(showCorrectAnswerOnlyOnFinalTry.equals("false")){
+			LearningActivityLocalServiceUtil.setExtraContentValue(actId, "showCorrectAnswerOnlyOnFinalTry", "false");
 		}
 
 		if(improve.equals("true")) {
@@ -248,6 +255,7 @@ public class ExecActivity extends MVCPortlet
 		long actid = ParamUtil.getLong(actionRequest, "resId");
 		long questionType = ParamUtil.getLong(actionRequest, "typeId", -1);
 		String questionText = ParamUtil.get(actionRequest, "text", "");
+		String backUrl = ParamUtil.get(actionRequest, "backUrl", "");
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		if(Validator.isNotNull(questionText)){//porque no se permite vacio ya que eliminar pregunta va por otro lado
 			TestQuestion question = null;
@@ -262,13 +270,13 @@ public class ExecActivity extends MVCPortlet
 			}
 			if(question!=null){
 				questionId = question.getQuestionId();
-				//Obtengo un array con los ids de las respuestas que ya conten�a la pregunta
+				//Obtengo un array con los ids de las respuestas que ya contenia la pregunta
 				List<TestAnswer> existingAnswers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(questionId);
 				List<Long> existingAnswersIds = new ArrayList<Long>();
 				for(TestAnswer answer:existingAnswers){
 					existingAnswersIds.add(answer.getAnswerId());
 				}
-				//Recorro todas las respuestas y las actualizo o las creo en funcion de si son nuevas o modificaciones y si son modificaciones guardo sus ids en un array para despu�s borrar las que no existan.
+				//Recorro todas las respuestas y las actualizo o las creo en funcion de si son nuevas o modificaciones y si son modificaciones guardo sus ids en un array para despues borrar las que no existan.
 				String[] newAnswersIds = ParamUtil.getParameterValues(actionRequest, "answerId", null);
 				List<Long> editingAnswersIds = new ArrayList<Long>();
 				if(newAnswersIds != null){
@@ -285,7 +293,7 @@ public class ExecActivity extends MVCPortlet
 								//creo respuesta
 								TestAnswerLocalServiceUtil.addTestAnswer(questionId, answer, feedbackCorrect, feedbackNoCorrect, correct);
 							}else {
-								editingAnswersIds.add(Long.parseLong(newAnswerId));//almaceno en array para posterior borrado de las que no est�n
+								editingAnswersIds.add(Long.parseLong(newAnswerId));//almaceno en array para posterior borrado de las que no esten
 								//actualizo respuesta
 								TestAnswer testanswer = TestAnswerLocalServiceUtil.getTestAnswer(Long.parseLong(newAnswerId));
 								testanswer.setAnswer(answer);
@@ -326,6 +334,7 @@ public class ExecActivity extends MVCPortlet
 		actionResponse.setRenderParameter("actionEditingDetails", StringPool.TRUE);
 		actionResponse.setRenderParameter("resId", Long.toString(actid));
 		actionResponse.setRenderParameter("typeId", Long.toString(questionType));
+		actionResponse.setRenderParameter("backUrl", backUrl);
 		actionResponse.setRenderParameter("jspPage", "/html/execactivity/test/admin/editQuestion.jsp");
 	}
 
@@ -358,8 +367,9 @@ public class ExecActivity extends MVCPortlet
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws PortletException, IOException {
 		long actId=0;
+		boolean actionEditingDetails = ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false);
 
-		if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
+		if(actionEditingDetails){
 
 			actId=ParamUtil.getLong(renderRequest, "resId", 0);
 			renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
@@ -387,7 +397,7 @@ public class ExecActivity extends MVCPortlet
 				activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 				long typeId = activity.getTypeId();
 
-				if(typeId==0)
+				if(typeId==0 || (typeId == 4 && actionEditingDetails))
 				{
 					super.render(renderRequest, renderResponse);
 				}

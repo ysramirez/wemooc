@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ParamUtil"%>
@@ -16,18 +18,35 @@
 	long questionId = ParamUtil.getLong(request,"questionId", 0);
 	long typeId = ParamUtil.getLong(request,"typeId", -1);
 	long actId = ParamUtil.getLong(request,"resId", 0);
+	String backUrl = ParamUtil.getString(request, "backUrl", currentURL);
 	
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 	request.setAttribute("activity", learningActivity);
+	/*
 	PortletURL backUrl = renderResponse.createRenderURL();
 	backUrl.setParameter("resId", String.valueOf(learningActivity.getActId()));
 	backUrl.setParameter("jspPage", "/html/execactivity/test/admin/editquestions.jsp");
 	backUrl.setParameter("actionEditingDetails",StringPool.TRUE);
+	*/
 	request.setAttribute("backUrl", backUrl.toString());
-
+	
+	
 	TestQuestion question = null;
 	if(questionId != 0){
 		question = TestQuestionLocalServiceUtil.getTestQuestion(ParamUtil.getLong(request,"questionId"));
+		
+		String[] allowedTypes = PropsUtil.getArray("lms.questions.allowed.for."+learningActivity.getTypeId());
+	 	List<String> allowedTypesList = new ArrayList<String>();
+		if (allowedTypes != null) {
+			allowedTypesList = ListUtil.fromArray(allowedTypes);
+		}
+		
+		if (!allowedTypesList.isEmpty() && !allowedTypesList.contains(String.valueOf(question.getQuestionType()))) {
+			typeId = Long.valueOf(allowedTypes[0]);
+			question.setQuestionType(typeId);
+			question = TestQuestionLocalServiceUtil.updateTestQuestion(question);
+			
+		}
 	}
 	
 %>
@@ -43,6 +62,7 @@
 		int defaultAnswersNo = (qt!=null)?qt.getDefaultAnswersNo():0;
 	%>
 	<aui:input type="hidden" id="typeId" name="typeId" value="<%=typeId%>" />
+	<aui:input type="hidden" id="backUrl" name="backUrl" value="<%=backUrl%>" />
 
 	<aui:input name="resId" type="hidden" value="<%=learningActivity.getActId() %>"></aui:input>
 	<%if(question != null){ %>

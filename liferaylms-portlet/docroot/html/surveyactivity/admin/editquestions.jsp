@@ -1,3 +1,7 @@
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
+<%@page import="java.util.List"%>
+<%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletMode"%>
 <%@page import="com.liferay.portal.model.PortletConstants"%>
@@ -13,7 +17,6 @@
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
-<%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@ include file="/init.jsp" %>
 <%
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"resId"));
@@ -22,92 +25,115 @@
 	LiferayPortletURL backUrl = PortletURLFactoryUtil.create(request, PortalUtil.getJsSafePortletId("lmsactivitieslist"+
 				PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName()), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
 	backUrl.setWindowState(LiferayWindowState.POP_UP);
-	backUrl.setParameter("resId", String.valueOf(learningActivity.getActId()));
+	backUrl.setParameter("resId", String.valueOf(learningActivity.getActId()));	
 	backUrl.setParameter("resModuleId", String.valueOf(learningActivity.getModuleId()));
 	backUrl.setParameter("jspPage", "/html/editactivity/editactivity.jsp");
 	request.setAttribute("backUrl", backUrl.toString());
 
 %>
-<liferay-util:include page="/html/surveyactivity/admin/editHeader.jsp" servletContext="<%=this.getServletContext() %>" />
+<liferay-util:include page="/html/execactivity/test/admin/editHeader.jsp" servletContext="<%=this.getServletContext() %>" />
 
-<portlet:renderURL var="newquestionURL">
-	<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
-	<portlet:param name="jspPage" value="/html/surveyactivity/admin/newquestion.jsp"></portlet:param>
-	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
-</portlet:renderURL>
-
-<liferay-ui:icon
-image="add" cssClass="newitem2"
-label="<%= true %>"
-message="surveyactivity.editquestions.newquestion"
-url='<%= newquestionURL %>'
-/>
 <script type="text/javascript">
 <!--
 AUI().ready(function(A) {
 	A.one('.newitem2 a').focus();
-	A.one("#<portlet:namespace/>backbutton").scrollIntoView();
-
+	A.one("#<portlet:namespace/>TabsBack").scrollIntoView();
 });
 //-->
+			
+Liferay.provide(
+        window,
+        '<portlet:namespace />newQuestion',
+        function(typeId) {
+			var renderUrl = Liferay.PortletURL.createRenderURL();							
+			renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
+			renderUrl.setPortletId('execactivity_WAR_liferaylmsportlet');
+			renderUrl.setParameter('jspPage','/html/execactivity/test/admin/editQuestion.jsp');
+			renderUrl.setParameter('typeId', typeId);
+			renderUrl.setParameter('message', Liferay.Language.get('execactivity.editquestions.newquestion'));
+			renderUrl.setParameter('actionEditingDetails', true);
+			renderUrl.setParameter('resId', "<%=String.valueOf(learningActivity.getActId()) %>");
+			renderUrl.setParameter('backUrl', '<%= currentURL %>');
+			console.log(renderUrl.toString());
+			location.href=renderUrl.toString();
+        },
+        ['liferay-portlet-url']
+    );
+	
 </script>
-
-<portlet:renderURL var="importquestionsURL">
-	<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
-	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
-	<portlet:param name="jspPage" value="/html/surveyactivity/admin/importquestions.jsp"></portlet:param>
-</portlet:renderURL>
-<liferay-ui:icon
-image="add"
-label="<%= true %>"
-message="surveyactivity.editquestions.importquestions"
-url='<%= importquestionsURL %>'
-/>
-<liferay-portlet:resourceURL var="exportURL" >
-	<portlet:param name="action" value="export"/>
-	<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
-</liferay-portlet:resourceURL>
-<liferay-ui:icon image="export" label="<%= true %>" message="surveyactivity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
-<% if(SessionMessages.contains(renderRequest, "questions-added-successfully")) { %>
-<div class="portlet-msg-success">
-	<%=LanguageUtil.format(pageContext, "questions-added-successfully", SessionMessages.get(renderRequest, "questions-added-successfully"),false) %>
+<div class="container-toolbar">
+	<liferay-ui:icon-menu align="left" direction="down" extended="false" showExpanded="false" showWhenSingleIcon="false" message="execativity.editquestions.newquestion" cssClass="bt_new" showArrow="false">
+	<%
+		List<QuestionType> qtypes = new QuestionTypeRegistry().getQuestionTypes();
+		String[] allowedTypes = PropsUtil.getArray("lms.questions.allowed.for."+learningActivity.getTypeId());
+	 	List<String> allowedTypesList = new ArrayList<String>();
+		if (allowedTypes != null) {
+			allowedTypesList = ListUtil.fromArray(allowedTypes);
+		}
+		for(QuestionType qt:qtypes){
+			if (allowedTypesList.contains(String.valueOf(qt.getTypeId()))) {
+	%>
+		<liferay-ui:icon cssClass="bt_new" message="execativity.editquestions.newquestion" url="#" onClick="<%=renderResponse.getNamespace()+\"newQuestion(\"+qt.getTypeId()+\");\" %>"/>
+	<%	
+			}
+		}
+	%>
+	</liferay-ui:icon-menu>
+	<liferay-ui:icon-menu align="right" direction="down" extended="false" showWhenSingleIcon="false" cssClass='bt_importexport' message="import-export" showArrow="true">
+		<portlet:renderURL var="importquestionsURL">
+			<portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
+			<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>"></portlet:param>	
+			<portlet:param name="jspPage" value="/html/surveyactivity/admin/importquestions.jsp"></portlet:param>
+		</portlet:renderURL>
+		<liferay-ui:icon
+		image="add"
+		label="<%= true %>"
+		message="surveyactivity.editquestions.importquestions"
+		url='<%= importquestionsURL %>'
+		/>
+		
+		<liferay-portlet:resourceURL var="exportResultsCsvURL" >
+			<portlet:param name="action" value="export"/>
+			<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
+		</liferay-portlet:resourceURL>
+		<liferay-ui:icon image="export" label="<%= true %>" message="execativity.editquestions.exportcsv" method="get" url="<%=exportResultsCsvURL%>" />
+		
+		<liferay-portlet:resourceURL var="exportURL" >
+			<portlet:param name="action" value="exportQuestions"/>
+			<portlet:param name="resId" value="<%=Long.toString(learningActivity.getActId()) %>"/>
+		</liferay-portlet:resourceURL>
+		<liferay-ui:icon image="export" label="<%= true %>" message="surveyactivity.editquestions.exportcsv" method="get" url="<%=exportURL%>" />
+		
+	</liferay-ui:icon-menu>
 </div>
-<% } %>
 <%
 	PortletURL editQuestionsURL = renderResponse.createRenderURL();
-	editQuestionsURL.setParameter("jspPage","/html/surveyactivity/admin/editquestions.jsp");
+	editQuestionsURL.setParameter("jspPage","/html/execactivity/test/admin/editquestions.jsp");
 	editQuestionsURL.setParameter("resId",Long.toString(learningActivity.getActId()));
 	editQuestionsURL.setParameter("actionEditingDetails",StringPool.TRUE);
 %>
 <liferay-ui:search-container emptyResultsMessage="there-are-no-questions"
  delta="10" iteratorURL="<%=editQuestionsURL%>">
-<liferay-ui:search-container-results>
-<%
-  DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()));
-  pageContext.setAttribute("results", TestQuestionLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),
-		searchContainer.getEnd()));
-  pageContext.setAttribute("total", (int)TestQuestionLocalServiceUtil.dynamicQueryCount(
-		  DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))));
-%>
-</liferay-ui:search-container-results>
-<liferay-ui:search-container-row
-className="com.liferay.lms.model.TestQuestion"
-keyProperty="actId"
-modelVar="activity">
-<liferay-ui:search-container-column-text
-name="text"
-property="text"
-/>
-<liferay-ui:search-container-column-jsp
-path="/html/surveyactivity/admin/admin_actions.jsp"
-align="right"
-/>
-
-</liferay-ui:search-container-row>
-<liferay-ui:search-iterator />
-
+	<liferay-ui:search-container-results>
+	<%
+	  DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()));
+	  pageContext.setAttribute("results", TestQuestionLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),
+			searchContainer.getEnd()));
+	  pageContext.setAttribute("total", (int)TestQuestionLocalServiceUtil.dynamicQueryCount(
+			  DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))));
+	%>
+	</liferay-ui:search-container-results>
+	<liferay-ui:search-container-row className="com.liferay.lms.model.TestQuestion" keyProperty="actId" modelVar="activity">
+		<liferay-ui:search-container-column-text name="text">
+		<% String titleQuestion = HtmlUtil.stripHtml(activity.getText());
+			if(titleQuestion.length() > 80) titleQuestion = titleQuestion.substring(0, 80) + " ...";%>
+			<%=titleQuestion %>
+		</liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-jsp path="/html/execactivity/test/admin/admin_actions.jsp" align="right"/>
+	</liferay-ui:search-container-row>
+	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 
 <aui:button-row>		
-	<liferay-util:include page="/html/surveyactivity/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
+	<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
 </aui:button-row>
