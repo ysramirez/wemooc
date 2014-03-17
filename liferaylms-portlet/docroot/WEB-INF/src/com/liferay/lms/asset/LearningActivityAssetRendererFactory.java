@@ -42,12 +42,14 @@ import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portal.util.PortletKeys;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
 
 public class LearningActivityAssetRendererFactory extends BaseAssetRendererFactory
  {
+	private static final String LEARNING_ACTIVITY_EXEC_ACTIVITY = LearningActivityAssetRendererFactory.class.getName()+"_execActivity";
 	public static final String CLASS_NAME = LearningActivity.class.getName();
 	public static final String TYPE = "learningactivity";
 	private static final String PORTLET_ID =  PortalUtil.getJsSafePortletId("lmsactivitieslist"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
@@ -160,9 +162,20 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 		try {
 			List<Course> courses = null;
 			ThemeDisplay themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			long type = GetterUtil.getLong(liferayPortletRequest.getAttribute(WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID));
+			Object typeAttribute = liferayPortletRequest.getAttribute(WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID);
+			long type = GetterUtil.getLong(typeAttribute);
 			long courseId = GetterUtil.getLong(liferayPortletRequest.getAttribute("courseId"));
 
+			if((type==GetterUtil.DEFAULT_LONG)&&
+			   (PortletKeys.ASSET_PUBLISHER.equals(themeDisplay.getPortletDisplay().getPortletName()))){
+				if(GetterUtil.getBoolean(liferayPortletRequest.getAttribute(LEARNING_ACTIVITY_EXEC_ACTIVITY), false)){
+					liferayPortletRequest.removeAttribute(LEARNING_ACTIVITY_EXEC_ACTIVITY);
+				}
+				else{
+					typeAttribute=null;
+					liferayPortletRequest.setAttribute(LEARNING_ACTIVITY_EXEC_ACTIVITY,StringPool.TRUE);
+				}
+			}
 
 			if(Validator.isNull(courseId)) {
 				courses = CourseLocalServiceUtil.dynamicQuery(
@@ -199,11 +212,11 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 	  	  		portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/selectCourse.jsp");
 	  	  		portletURL.setParameter("assetRendererId",themeDisplay.getPortletDisplay().getId());
 	  	  		portletURL.setParameter("assetRendererPlid",Long.toString(themeDisplay.getPlid()));
-	  	  		if(Validator.isNull(type)){
+	  	  		if(Validator.isNull(typeAttribute)){
 	  	  			portletURL.setParameter("type", Long.toString(type));
 	  	  		}
 	  	  	}
-	  	  	else if(Validator.isNull(type)) {
+	  	  	else if(typeAttribute==null) {
 				portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/newactivity.jsp");
 			}
 			else {
