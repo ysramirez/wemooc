@@ -25,6 +25,8 @@
 <liferay-ui:error key="p2ptask-no-empty-answer" message="p2ptask-no-empty-answer" />
 <liferay-ui:error key="error-p2ptask-correction" message="error-p2ptask-correction" />
 <liferay-ui:error key="p2ptaskactivity-error-file-type" message="p2ptaskactivity.error.file.type" />
+<liferay-ui:error key="p2ptaskactivity-error-file-name" message="p2ptaskactivity-error-file-name" />
+<liferay-ui:error key="p2ptaskactivity-error-file" message="p2ptaskactivity-error-file" />
 
 <%
 String textoCorrecion = LanguageUtil.get(pageContext,"p2ptask-text-corrections");
