@@ -7,7 +7,6 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
@@ -49,7 +48,6 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
-import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
@@ -68,12 +66,13 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
+import com.liferay.portlet.documentlibrary.FileExtensionException;
+import com.liferay.portlet.documentlibrary.FileNameException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
-import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 import com.liferay.util.mail.MailEngine;
 import com.liferay.util.mail.MailEngineException;
@@ -165,18 +164,30 @@ public class P2PActivityPortlet extends MVCPortlet {
 						//Obtenermos el Id de directorio. Creamos el directorio si no existe.
 						long folderId = createDLFolders(user.getUserId(), repositoryId, request);
 						
-						//System.out.println(" folderId " + folderId);
+						try {
 
-						//Subimos el Archivo en la Document Library
-						InputStream is = new FileInputStream(file);
-						DLFileEntry dlDocument = DLFileEntryLocalServiceUtil.addFileEntry(serviceContext.getUserId(), groupId, groupId,folderId,fileName, mimeType, title, description, "Importation", 0, null, null , is, file.length(), serviceContext);
+							//Subimos el Archivo en la Document Library
+							InputStream is = new FileInputStream(file);
+							DLFileEntry dlDocument = DLFileEntryLocalServiceUtil.addFileEntry(serviceContext.getUserId(), groupId, groupId,folderId,fileName, mimeType, title, description, "Importation", 0, null, null , is, file.length(), serviceContext);
+							
+							//Damos permisos al archivo para usuarios de comunidad.
+							DLFileEntryLocalServiceUtil.addFileEntryResources(dlDocument, true, false);
+							//Asociamos con el fichero subido.
+							p2pActivity.setFileEntryId(dlDocument.getFileEntryId());
 						
-						//Damos permisos al archivo para usuarios de comunidad.
-						DLFileEntryLocalServiceUtil.addFileEntryResources(dlDocument, true, false);
-						//Asociamos con el fichero subido.
-						p2pActivity.setFileEntryId(dlDocument.getFileEntryId());
+						} catch (FileExtensionException fee) {
+							SessionErrors.add(request, "p2ptaskactivity-error-file-type");
+							request.setAttribute("actId", actId);
+							return;
 						
-						//System.out.println(" dlDocument.getFileEntryId() " + dlDocument.getFileEntryId());
+						} catch (FileNameException fee) {
+							SessionErrors.add(request, "p2ptaskactivity-error-file-name");
+							request.setAttribute("actId", actId);
+							return;
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					
 					//A�adir la actividad a bd
@@ -275,10 +286,25 @@ public class P2PActivityPortlet extends MVCPortlet {
 						ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), request);
 						//Damos permisos al archivo para usuarios de comunidad.
 						serviceContext.setAddGroupPermissions(true);
-						FileEntry document = DLAppLocalServiceUtil.addFileEntry(
-							user.getUserId(), repositoryId , folderId , fileName, mimeType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContext );
 						
-						fileId = document.getFileEntryId();
+						try {
+							FileEntry document = DLAppLocalServiceUtil.addFileEntry(
+								user.getUserId(), repositoryId , folderId , fileName, mimeType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContext );
+							
+							fileId = document.getFileEntryId();
+						} catch (FileExtensionException fee) {
+							SessionErrors.add(request, "p2ptaskactivity-error-file-type");
+							request.setAttribute("actId", actId);
+							return;
+						
+						} catch (FileNameException fee) {
+							SessionErrors.add(request, "p2ptaskactivity-error-file-name");
+							request.setAttribute("actId", actId);
+							return;
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
 					
 					//Usamos la que tenemos
