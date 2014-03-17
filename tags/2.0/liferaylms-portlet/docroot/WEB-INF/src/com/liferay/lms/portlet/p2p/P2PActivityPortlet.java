@@ -705,8 +705,17 @@ public class P2PActivityPortlet extends MVCPortlet {
 	
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 	throws PortletException, IOException {
-		// TODO Auto-generated method stub
-		if(ParamUtil.getLong(renderRequest, "actId", 0)==0)// TODO Auto-generated method stub
+		long actId=ParamUtil.getLong(renderRequest, "actId", 0);
+		if(ParamUtil.getBoolean(renderRequest, "actionEditingDetails", false)){
+			actId=ParamUtil.getLong(renderRequest, "resId", 0);
+		}
+		else{
+			actId=ParamUtil.getLong(renderRequest, "actId", 0);
+
+		}
+		renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
+		
+		if(actId == 0)// TODO Auto-generated method stub
 		{
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		}
@@ -714,7 +723,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 		{
 			LearningActivity activity;
 			try {
-				activity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(renderRequest, "actId", 0));
+				activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 				
 				//auditing
 				ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
