@@ -18,8 +18,18 @@ DynamicQuery dq=DynamicQueryFactoryUtil.forClass(LearningActivityTry.class);
 	Criterion criterion=PropertyFactoryUtil.forName("actId").eq(actId);
 dq.add(criterion);
 long tries = LearningActivityTryLocalServiceUtil.dynamicQueryCount(dq);
+boolean disabled = false;
+if(actId!=0){
+	LearningActivity larn =LearningActivityLocalServiceUtil.getLearningActivity(actId);
+	if(LearningActivityLocalServiceUtil.canBeEdited(larn, user.getUserId())){
+		disabled = false;
+	}
+	else{
+		disabled = true;
+	}
+}
 %>
-<aui:select label="team-activity" name="team" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.team\")%>" disabled="<%=(tries != 0) %>" >
+<aui:select label="team-activity" name="team" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.team\")%>" disabled="<%=disabled %>" >
 <%
 	
 	long teamId=ParamUtil.getLong(request, "teamId", 0);
