@@ -832,7 +832,9 @@ Liferay.provide(
 		//-->
 		</script>
 		<input type="button" value="<liferay-ui:message key="savechanges" />" onclick="javascript:validate()" >
-		<aui:button onClick="<%=renderResponse.getNamespace()+\"closeWindow()\" %>" type="cancel" value="canceledition"/>
+		<button name="Close" value="close" onclick="<portlet:namespace />closeWindow();" type="button">
+			<liferay-ui:message key="canceledition" />
+		</button>
 		
 	</aui:button-row>
 </aui:form>
