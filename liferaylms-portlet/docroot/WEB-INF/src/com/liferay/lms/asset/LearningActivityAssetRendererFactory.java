@@ -2,13 +2,11 @@ package com.liferay.lms.asset;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.Set;
 
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
@@ -76,35 +74,23 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public Map<Long, String> getClassTypes(long[] groupId, Locale locale)
 			throws Exception {
 
-		Set<Long> companies = new HashSet<Long>();
-		Set<Long> activityTypes = new HashSet<Long>();
-		Map<Long, String> classTypes = new HashMap<Long, String>();
-		LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
-		ResourceBundle resourceBundle = PortletBagPool.get(getPortletId()).getResourceBundle(locale);
-		
-		long[] invisibleTypes = StringUtil.split(PropsUtil.get("lms.learningactivity.invisibles"), StringPool.COMMA, GetterUtil.DEFAULT_LONG);
-		for (Course course : (List<Course>)CourseLocalServiceUtil.dynamicQuery(
-				CourseLocalServiceUtil.dynamicQuery().
-					add(PropertyFactoryUtil.forName("groupCreatedId").in(ArrayUtil.toArray(groupId))))) {
-			if(companies.add(course.getCompanyId())){
-				for(long typeId:
-					StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(course.getCompanyId()).getActivities(), 
-						StringPool.COMMA, -1)){
-					if((typeId>=0)
-							&&(!ArrayUtil.contains(invisibleTypes, typeId))
-							&&(activityTypes.add(typeId))) {
-						String learningActivityTypeName = learningActivityTypeRegistry.getLearningActivityType(typeId).getName();
-						classTypes.put(typeId, (resourceBundle.containsKey(learningActivityTypeName)?
-								resourceBundle.getString(learningActivityTypeName):learningActivityTypeName));
-					}
+		Map<Long, String> classTypes = new LinkedHashMap<Long, String>();
+		if(CourseLocalServiceUtil.dynamicQueryCount(CourseLocalServiceUtil.dynamicQuery().
+				add(PropertyFactoryUtil.forName("groupCreatedId").in(ArrayUtil.toArray(groupId))))>0){
+			LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+			ResourceBundle resourceBundle = PortletBagPool.get(getPortletId()).getResourceBundle(locale);		
+			long[] invisibleTypes = StringUtil.split(PropsUtil.get("lms.learningactivity.invisibles"), StringPool.COMMA,-1L);
+			for(LearningActivityType learningActivityType:learningActivityTypeRegistry.getLearningActivityTypes()){
+				if(!ArrayUtil.contains(invisibleTypes, learningActivityType.getTypeId())){
+					String learningActivityTypeName = learningActivityTypeRegistry.getLearningActivityType(learningActivityType.getTypeId()).getName();
+					classTypes.put(learningActivityType.getTypeId(), (resourceBundle.containsKey(learningActivityTypeName)?
+							resourceBundle.getString(learningActivityTypeName):learningActivityTypeName));
 				}
-			}
+			}	
 		}
-
 		return classTypes;
 	}
 
