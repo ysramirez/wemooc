@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
@@ -25,7 +26,9 @@ AUI().ready(
 <%
 	LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 	long[] invisibleTypes = StringUtil.split(PropsUtil.get("lms.learningactivity.invisibles"), StringPool.COMMA,-1L);
-	for(LearningActivityType learningActivityType:learningActivityTypeRegistry.getLearningActivityTypes())
+	long[] orderedIds = StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getActivities(), StringPool.COMMA, -1L);
+	int currentLearningActivityType=0;
+	for(LearningActivityType learningActivityType:learningActivityTypeRegistry.getLearningActivityTypesForCreating())
 	{
 		if(!ArrayUtil.contains(invisibleTypes, learningActivityType.getTypeId())) {
 %>	
