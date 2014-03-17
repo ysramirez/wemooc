@@ -83,7 +83,7 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 			LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 			ResourceBundle resourceBundle = PortletBagPool.get(getPortletId()).getResourceBundle(locale);		
 			long[] invisibleTypes = StringUtil.split(PropsUtil.get("lms.learningactivity.invisibles"), StringPool.COMMA,-1L);
-			for(LearningActivityType learningActivityType:learningActivityTypeRegistry.getLearningActivityTypes()){
+			for(LearningActivityType learningActivityType:learningActivityTypeRegistry.getLearningActivityTypesForCreating()){
 				if(!ArrayUtil.contains(invisibleTypes, learningActivityType.getTypeId())){
 					String learningActivityTypeName = learningActivityTypeRegistry.getLearningActivityType(learningActivityType.getTypeId()).getName();
 					classTypes.put(learningActivityType.getTypeId(), (resourceBundle.containsKey(learningActivityTypeName)?
