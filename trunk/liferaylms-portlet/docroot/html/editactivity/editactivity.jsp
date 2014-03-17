@@ -50,6 +50,9 @@
 </portlet:actionURL>
 
 <%
+renderResponse.setProperty(
+		"clear-request-parameters", Boolean.TRUE.toString());
+
 long moduleId=ParamUtil.getLong(request,"resModuleId",0);
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
