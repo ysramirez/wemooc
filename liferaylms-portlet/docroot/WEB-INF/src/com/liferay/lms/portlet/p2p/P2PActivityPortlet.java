@@ -677,6 +677,8 @@ public class P2PActivityPortlet extends MVCPortlet {
 	
 	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 	throws PortletException, IOException {
+		
+		renderResponse.setProperty("clear-request-parameters",Boolean.TRUE.toString());
 		// TODO Auto-generated method stub
 		if(ParamUtil.getLong(renderRequest, "actId", 0)==0)// TODO Auto-generated method stub
 		{
