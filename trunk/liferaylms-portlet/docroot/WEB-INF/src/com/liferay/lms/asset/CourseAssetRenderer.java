@@ -1,5 +1,6 @@
 package com.liferay.lms.asset;
 
+import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletRequest;
@@ -10,17 +11,24 @@ import javax.portlet.WindowState;
 
 import com.liferay.lms.model.Course;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.portal.NoSuchLayoutException;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.Layout;
+import com.liferay.portal.model.LayoutConstants;
+import com.liferay.portal.model.LayoutTypePortlet;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
@@ -29,7 +37,9 @@ import com.liferay.portlet.asset.model.BaseAssetRenderer;
 
 public class CourseAssetRenderer extends BaseAssetRenderer {
 	
+	public final String COURSE_VIEW_EVALUATION="COURSE_VIEW_EVALUATION";
 	protected static final String COURSE_ADMIN_PORTLET_ID =  PortalUtil.getJsSafePortletId("courseadmin"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
+	protected static final String EVALUATION_AVG_PORTLET_ID =  PortalUtil.getJsSafePortletId("evaluationAvg"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
 	
 	private Course _course;
 
@@ -88,6 +98,28 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 	@Override
 	public final PortletURL getURLEdit(LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse) throws Exception {
+		if(GetterUtil.getBoolean(liferayPortletRequest.getAttribute(COURSE_VIEW_EVALUATION),true)) {
+			@SuppressWarnings("unchecked")
+			List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(LayoutLocalServiceUtil.dynamicQuery().
+					add(PropertyFactoryUtil.forName("privateLayout").eq(false)).
+					add(PropertyFactoryUtil.forName("type").eq(LayoutConstants.TYPE_PORTLET)).
+					add(PropertyFactoryUtil.forName("companyId").eq(_course.getCompanyId())).
+					add(PropertyFactoryUtil.forName("groupId").eq(_course.getGroupId())).
+					add(PropertyFactoryUtil.forName("friendlyURL").eq("/reto")), 0, 1);
+
+			if(layouts.isEmpty()) {
+				throw new NoSuchLayoutException();
+			}
+			else {
+				Layout layout = layouts.get(0);
+				if(((LayoutTypePortlet)layout.getLayoutType()).getPortletIds().contains(EVALUATION_AVG_PORTLET_ID)){
+					PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(layout.getPlid(), EVALUATION_AVG_PORTLET_ID, PortletRequest.RENDER_PHASE);
+					portletURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
+					return portletURL;
+				}
+			}
+		}
+		
 		ThemeDisplay themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
   	  	PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,COURSE_ADMIN_PORTLET_ID,getControlPanelPlid(themeDisplay),PortletRequest.RENDER_PHASE);
   	  	portletURL.setParameter("mvcPath", "/html/courseadmin/editcourse.jsp");
