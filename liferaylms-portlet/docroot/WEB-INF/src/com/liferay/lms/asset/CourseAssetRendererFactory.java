@@ -1,26 +1,22 @@
 package com.liferay.lms.asset;
 
-import javax.portlet.PortletMode;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletURL;
-import javax.portlet.WindowState;
-import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.Course;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
-import com.liferay.portal.kernel.portlet.PortletModeFactory;
-import com.liferay.portal.kernel.portlet.WindowStateFactory;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
-import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.portlet.asset.model.BaseAssetRendererFactory;
 
 public class CourseAssetRendererFactory extends BaseAssetRendererFactory
@@ -28,7 +24,8 @@ public class CourseAssetRendererFactory extends BaseAssetRendererFactory
 
 	public static final String CLASS_NAME = Course.class.getName();
 	public static final String TYPE = "course";
-
+	private static final String PORTLET_ID =  PortalUtil.getJsSafePortletId("courseadmin"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
+	
 	@Override
 	public String getClassName() {
 	
@@ -37,37 +34,27 @@ public class CourseAssetRendererFactory extends BaseAssetRendererFactory
 
 	public AssetRenderer getAssetRenderer(long classPK, int type)
 	throws PortalException, SystemException {
-	Course course = CourseLocalServiceUtil.getCourse(classPK);
-	
+		Course course = CourseLocalServiceUtil.getCourse(classPK);
 		return new CourseAssetRenderer(course);
 	}
-	public PortletURL getURLAdd(
-            LiferayPortletRequest liferayPortletRequest,
-            LiferayPortletResponse liferayPortletResponse)
-        {
+	public PortletURL getURLAdd(LiferayPortletRequest liferayPortletRequest, LiferayPortletResponse liferayPortletResponse){
+		ThemeDisplay themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		
-        return null;
-/*
-        HttpServletRequest request =
-            liferayPortletRequest.getHttpServletRequest();
+		try {
+			if(!themeDisplay.getPermissionChecker().
+					hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.coursemodel",themeDisplay.getScopeGroupId(),"ADD_COURSE")){
+				return null;
+			}
+			
+	  	  	PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,PORTLET_ID,getControlPanelPlid(themeDisplay),PortletRequest.RENDER_PHASE);
+	  	  	portletURL.setParameter("mvcPath", "/html/courseadmin/editcourse.jsp");
+			return portletURL;
+			
+		}
+		catch(Throwable t) {
+			return null;
+		}
 
-        ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-            WebKeys.THEME_DISPLAY);
-
-      try
-      {
-    	  PortletURL portletURL= 
-    			  PortletURLFactoryUtil.create(request,"lmsactivitieslist_WAR_liferaylmsportlet",getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
-          portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/editactivity.jsp");
-         return portletURL;
-      }
-      catch(Exception e)
-      {
-    	  e.printStackTrace();
-    	  
-      }
-        return null;
-        */
     }
 	@Override
 	public boolean hasPermission(PermissionChecker permissionChecker,
