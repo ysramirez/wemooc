@@ -193,6 +193,10 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	    return portletURL;
 	}
 	
+	protected String getMvcPathView() throws Exception {
+		return StringPool.BLANK;
+	}
+	
 	@Override
 	public final PortletURL getURLView(LiferayPortletResponse liferayPortletResponse,
 			WindowState windowState) throws Exception {
@@ -200,6 +204,12 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		portletURL.setWindowState(windowState);
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 		portletURL.setParameter("moduleId",Long.toString( _learningactivity.getModuleId()));
+		
+		String mvcPath = getMvcPathView();
+		if(Validator.isNotNull(mvcPath)){
+			portletURL.setParameter("mvcPath",mvcPath);
+		}
+		
 		prepareRuntimePortlet(portletURL);
 		return portletURL;
 	}
@@ -212,6 +222,12 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(_layout.getPlid(), _portletId, PortletRequest.RENDER_PHASE);
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 		portletURL.setParameter("moduleId",Long.toString( _learningactivity.getModuleId()));
+		
+		String mvcPath = getMvcPathView();
+		if(Validator.isNotNull(mvcPath)){
+			portletURL.setParameter("mvcPath",mvcPath);
+		}
+		
 		prepareRuntimePortlet(portletURL);
 		return portletURL.toString();
 	}
