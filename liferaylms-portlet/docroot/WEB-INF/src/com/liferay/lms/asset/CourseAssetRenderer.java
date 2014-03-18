@@ -99,7 +99,7 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 	public final PortletURL getURLView(LiferayPortletResponse liferayPortletResponse,
 			WindowState windowState) throws Exception {
 		Group courseGroup= GroupLocalServiceUtil.getGroup(_course.getGroupCreatedId());
-		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(courseGroup.getDefaultPrivatePlid(), StringPool.BLANK, PortletRequest.RENDER_PHASE);
+		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(courseGroup.getDefaultPublicPlid(), StringPool.BLANK, PortletRequest.RENDER_PHASE);
 		return portletURL;
 	}
 	
