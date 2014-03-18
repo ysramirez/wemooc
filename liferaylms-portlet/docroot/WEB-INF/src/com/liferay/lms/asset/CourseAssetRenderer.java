@@ -98,7 +98,7 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 	@Override
 	public final PortletURL getURLEdit(LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse) throws Exception {
-		if(GetterUtil.getBoolean(liferayPortletRequest.getAttribute(COURSE_VIEW_EVALUATION),true)) {
+		if(GetterUtil.getBoolean(liferayPortletRequest.getAttribute(COURSE_VIEW_EVALUATION),false)) {
 			@SuppressWarnings("unchecked")
 			List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(LayoutLocalServiceUtil.dynamicQuery().
 					add(PropertyFactoryUtil.forName("privateLayout").eq(false)).
