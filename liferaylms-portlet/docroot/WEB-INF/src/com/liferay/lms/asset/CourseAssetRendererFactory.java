@@ -12,7 +12,9 @@ import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -59,10 +61,11 @@ public class CourseAssetRendererFactory extends BaseAssetRendererFactory
 	@Override
 	public boolean hasPermission(PermissionChecker permissionChecker,
 			long classPK, String actionId) throws Exception {
-	
 		Course course=CourseLocalServiceUtil.getCourse(classPK);
+		if(ActionKeys.VIEW.equals(actionId)){
+			return (UserLocalServiceUtil.hasGroupUser(course.getGroupCreatedId(), permissionChecker.getUserId()));
+		}
 		return permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(), classPK,actionId);
-
 	}
 
 	@Override
