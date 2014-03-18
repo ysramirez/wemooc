@@ -193,7 +193,7 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	    return portletURL;
 	}
 	
-	protected String getMvcPathView() throws Exception {
+	protected String getMvcPathView(LiferayPortletResponse liferayPortletResponse,WindowState windowState) throws Exception {
 		return StringPool.BLANK;
 	}
 	
@@ -205,7 +205,7 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 		portletURL.setParameter("moduleId",Long.toString( _learningactivity.getModuleId()));
 		
-		String mvcPath = getMvcPathView();
+		String mvcPath = getMvcPathView(liferayPortletResponse,windowState);
 		if(Validator.isNotNull(mvcPath)){
 			portletURL.setParameter("mvcPath",mvcPath);
 		}
@@ -223,7 +223,7 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 		portletURL.setParameter("moduleId",Long.toString( _learningactivity.getModuleId()));
 		
-		String mvcPath = getMvcPathView();
+		String mvcPath = getMvcPathView(liferayPortletResponse,liferayPortletRequest.getWindowState());
 		if(Validator.isNotNull(mvcPath)){
 			portletURL.setParameter("mvcPath",mvcPath);
 		}
