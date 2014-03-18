@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRendererFactory"%>
@@ -23,8 +24,9 @@
 													assetRendererPlid,
 													ParamUtil.getString(renderRequest, "assetRendererId"));
     Layout assetRendererLayout = LayoutLocalServiceUtil.fetchLayout(assetRendererPlid);
-    Long[] groups = ArrayUtil.toArray((long[])getGroupIds.invoke(null,assetRendererPreferences, assetRendererLayout.getScopeGroup().getGroupId(), assetRendererLayout));
-    AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivityType.class.getName());
+    System.out.println(assetRendererLayout);
+    Long[] groups = ArrayUtil.toArray((long[])getGroupIds.invoke(null,assetRendererPreferences, assetRendererLayout.getGroupId(), assetRendererLayout));
+    AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
     
     PortletURL selectCourseUrl = renderResponse.createRenderURL();
 	    selectCourseUrl.setParameter("mvcPath", "/html/lmsactivitieslist/selectCourse.jsp");
@@ -60,13 +62,14 @@
 			if(typeId>=0){
 				liferayPortletRequest.setAttribute(WebKeys.ASSET_RENDERER_FACTORY_CLASS_TYPE_ID,typeId);
 			}
-			String newURL = assetRendererFactory.getURLAdd(liferayPortletRequest, liferayPortletResponse).toString();
+			PortletURL newURL = assetRendererFactory.getURLAdd(liferayPortletRequest, liferayPortletResponse);
+			newURL.setWindowState(renderRequest.getWindowState());
 		%>
 		<liferay-ui:search-container-column-text name="course" align="left" >
 			<%=course.getTitle(themeDisplay.getLocale()) %>	
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text align="right" >
-			<liferay-ui:icon image="add" message="add" label="<%=false %>" url="<%=newURL %>" />
+			<liferay-ui:icon image="add" message="add" label="<%=false %>" url="<%=newURL.toString() %>" />
 		</liferay-ui:search-container-column-text>	
 	</liferay-ui:search-container-row>
 	<liferay-ui:search-iterator />
