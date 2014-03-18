@@ -104,7 +104,7 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 					add(PropertyFactoryUtil.forName("privateLayout").eq(false)).
 					add(PropertyFactoryUtil.forName("type").eq(LayoutConstants.TYPE_PORTLET)).
 					add(PropertyFactoryUtil.forName("companyId").eq(_course.getCompanyId())).
-					add(PropertyFactoryUtil.forName("groupId").eq(_course.getGroupId())).
+					add(PropertyFactoryUtil.forName("groupId").eq(_course.getGroupCreatedId())).
 					add(PropertyFactoryUtil.forName("friendlyURL").eq("/reto")), 0, 1);
 
 			if(layouts.isEmpty()) {
