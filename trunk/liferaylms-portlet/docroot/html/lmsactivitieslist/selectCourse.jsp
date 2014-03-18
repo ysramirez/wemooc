@@ -24,7 +24,6 @@
 													assetRendererPlid,
 													ParamUtil.getString(renderRequest, "assetRendererId"));
     Layout assetRendererLayout = LayoutLocalServiceUtil.fetchLayout(assetRendererPlid);
-    System.out.println(assetRendererLayout);
     Long[] groups = ArrayUtil.toArray((long[])getGroupIds.invoke(null,assetRendererPreferences, assetRendererLayout.getGroupId(), assetRendererLayout));
     AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
     
