@@ -2,6 +2,7 @@ package com.liferay.lms.asset;
 
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -170,23 +171,26 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 								in(ArrayUtil.toArray(
 									getGroupIds(themeDisplay.getPortletDisplay().getPortletSetup(), 
 												themeDisplay.getScopeGroupId(), themeDisplay.getLayout())))));
-				
-				if(typeAttribute!=null){
-					List<Course> filterCourses = new ArrayList<Course>(courses.size());
-					for (Course course : courses) {
-						if(ArrayUtil.contains(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(course.getCompanyId()).getActivities(), 
-								StringPool.COMMA, GetterUtil.DEFAULT_LONG), type)){
-							filterCourses.add(course);
-						}
-					}
-					if(!filterCourses.isEmpty()) {
-						courseId = courses.get(0).getCourseId();
-					}
-					courses = filterCourses;
+			}
+			else {
+				courses = Arrays.asList(CourseLocalServiceUtil.getCourse(courseId));
+			}
+			
+			List<Course> filterCourses = new ArrayList<Course>(courses.size());
+			for (Course course : courses) {
+				if((themeDisplay.getPermissionChecker().hasPermission(course.getGroupCreatedId(),
+						"com.liferay.lms.model", course.getGroupCreatedId(), "ADD_MODULE"))&& 
+				   ((typeAttribute==null)||(ArrayUtil.contains(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(course.getCompanyId()).getActivities(), 
+						StringPool.COMMA, GetterUtil.DEFAULT_LONG), type)))){
+					filterCourses.add(course);
 				}
 			}
 			
-			long plid = getPlid(courseId,themeDisplay);
+			if(filterCourses.isEmpty()) {
+				return null;
+			}
+
+			long plid = getPlid(filterCourses.get(0).getCourseId(),themeDisplay);
 			
 			if(Validator.isNull(plid)) {
 				return null;
@@ -195,8 +199,7 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 			long resModuleId = GetterUtil.getLong(liferayPortletRequest.getAttribute("resModuleId"));
 	  	  	PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,PORTLET_ID,plid,PortletRequest.RENDER_PHASE);
 
-	  	  	if((courses!=null)&&
-	  	  	   (courses.size()>1)) {
+	  	  	if(filterCourses.size()>1) {
 	  	  		portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/selectCourse.jsp");
 	  	  		portletURL.setParameter("assetRendererId",themeDisplay.getPortletDisplay().getId());
 	  	  		portletURL.setParameter("assetRendererPlid",Long.toString(themeDisplay.getPlid()));
