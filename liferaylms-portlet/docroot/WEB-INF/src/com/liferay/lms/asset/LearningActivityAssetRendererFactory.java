@@ -171,17 +171,19 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 									getGroupIds(themeDisplay.getPortletDisplay().getPortletSetup(), 
 												themeDisplay.getScopeGroupId(), themeDisplay.getLayout())))));
 				
-				List<Course> filterCourses = new ArrayList<Course>(courses.size());
-				for (Course course : courses) {
-					if(ArrayUtil.contains(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(course.getCompanyId()).getActivities(), 
-							StringPool.COMMA, GetterUtil.DEFAULT_LONG), type)){
-						filterCourses.add(course);
+				if(typeAttribute!=null){
+					List<Course> filterCourses = new ArrayList<Course>(courses.size());
+					for (Course course : courses) {
+						if(ArrayUtil.contains(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(course.getCompanyId()).getActivities(), 
+								StringPool.COMMA, GetterUtil.DEFAULT_LONG), type)){
+							filterCourses.add(course);
+						}
 					}
+					if(!filterCourses.isEmpty()) {
+						courseId = courses.get(0).getCourseId();
+					}
+					courses = filterCourses;
 				}
-				if(!filterCourses.isEmpty()) {
-					courseId = courses.get(0).getCourseId();
-				}
-				courses = filterCourses;
 			}
 			
 			long plid = getPlid(courseId,themeDisplay);
@@ -198,7 +200,7 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 	  	  		portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/selectCourse.jsp");
 	  	  		portletURL.setParameter("assetRendererId",themeDisplay.getPortletDisplay().getId());
 	  	  		portletURL.setParameter("assetRendererPlid",Long.toString(themeDisplay.getPlid()));
-	  	  		if(Validator.isNull(typeAttribute)){
+	  	  		if(Validator.isNotNull(typeAttribute)){
 	  	  			portletURL.setParameter("type", Long.toString(type));
 	  	  		}
 	  	  	}
