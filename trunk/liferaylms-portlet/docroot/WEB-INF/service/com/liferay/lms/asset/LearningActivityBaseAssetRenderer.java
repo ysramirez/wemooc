@@ -10,7 +10,6 @@ import javax.portlet.RenderResponse;
 import javax.portlet.WindowState;
 
 import com.liferay.lms.learningactivity.LearningActivityType;
-import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
