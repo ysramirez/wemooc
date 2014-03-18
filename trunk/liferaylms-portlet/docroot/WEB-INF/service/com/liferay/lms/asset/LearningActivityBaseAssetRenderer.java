@@ -196,7 +196,7 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	    return portletURL;
 	}
 	
-	protected String getMvcPathView(long userId, LiferayPortletResponse liferayPortletResponse,WindowState windowState) throws Exception {
+	protected String getMvcPathView(long userId, LiferayPortletResponse liferayPortletResponse, WindowState windowState) throws Exception {
 		return StringPool.BLANK;
 	}
 	
