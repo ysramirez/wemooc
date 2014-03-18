@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.LayoutConstants;
 import com.liferay.portal.model.LayoutTypePortlet;
@@ -29,6 +30,7 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
@@ -36,6 +38,7 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
+import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
@@ -193,7 +196,7 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	    return portletURL;
 	}
 	
-	protected String getMvcPathView(LiferayPortletResponse liferayPortletResponse,WindowState windowState) throws Exception {
+	protected String getMvcPathView(long userId, LiferayPortletResponse liferayPortletResponse,WindowState windowState) throws Exception {
 		return StringPool.BLANK;
 	}
 	
@@ -205,9 +208,13 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 		portletURL.setParameter("moduleId",Long.toString( _learningactivity.getModuleId()));
 		
-		String mvcPath = getMvcPathView(liferayPortletResponse,windowState);
-		if(Validator.isNotNull(mvcPath)){
-			portletURL.setParameter("mvcPath",mvcPath);
+		long userId = PrincipalThreadLocal.getUserId();
+		
+		if(Validator.isNotNull(userId)) {
+			String mvcPath = getMvcPathView(userId,liferayPortletResponse,windowState);
+			if(Validator.isNotNull(mvcPath)){
+				portletURL.setParameter("mvcPath",mvcPath);
+			}
 		}
 		
 		prepareRuntimePortlet(portletURL);
@@ -219,11 +226,12 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 			LiferayPortletRequest liferayPortletRequest,
 			LiferayPortletResponse liferayPortletResponse,
 			String noSuchEntryRedirect) throws Exception {
+		ThemeDisplay themeDisplay = (ThemeDisplay) liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		PortletURL portletURL = liferayPortletResponse.createLiferayPortletURL(_layout.getPlid(), _portletId, PortletRequest.RENDER_PHASE);
 		portletURL.setParameter("actId",Long.toString( _learningactivity.getActId()));
 		portletURL.setParameter("moduleId",Long.toString( _learningactivity.getModuleId()));
 		
-		String mvcPath = getMvcPathView(liferayPortletResponse,liferayPortletRequest.getWindowState());
+		String mvcPath = getMvcPathView(themeDisplay.getUserId(),liferayPortletResponse,liferayPortletRequest.getWindowState());
 		if(Validator.isNotNull(mvcPath)){
 			portletURL.setParameter("mvcPath",mvcPath);
 		}
