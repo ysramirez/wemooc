@@ -76,7 +76,14 @@
 		        </portlet:renderURL>
 		        
 		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
-		        	<portlet:actionURL name="updateCourse" var="updateCourseURL" />
+		        	<portlet:actionURL name="updateCourse" var="updateCourseURL" >
+			        	<% 
+			        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
+			        	%>
+		        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
+		        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
+		        		</c:if>
+		        	</portlet:actionURL>
 		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
 			        <aui:button-row  cssClass="container-buttons">
 			      	  <aui:button type="button" name="calculate" value="evaluationAvg.calculate.acept"  
@@ -253,6 +260,12 @@
 								   <div id="<portlet:namespace />recalculateContents_<%=Long.toString(user.getUserId()) %>" class="aui-helper-hidden">
 							        	<portlet:actionURL name="reCalculate" var="reCalculateURL">
 									   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+									   		<% 
+								        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
+								        	%>
+							        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
+							        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
+							        		</c:if>
 									    </portlet:actionURL>
 									    <h1><%=user.getFullName() %></h1>
 							        	<liferay-ui:message key="evaluationAvg.recalculate.confirm" />

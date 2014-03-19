@@ -73,7 +73,14 @@ if(actId==0){
 		        </portlet:renderURL>
 		        
 		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
-		        	<portlet:actionURL name="update" var="updateURL" />
+		        	<portlet:actionURL name="update" var="updateURL" >
+    				<% 
+		        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
+		        	%>
+	        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
+	        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
+	        		</c:if>
+		        	</portlet:actionURL>
 		        	<liferay-ui:message key="evaluationtaskactivity.calculate.confirm" />
 			        <aui:button-row cssClass="container-buttons">
 			        				        	<aui:button type="button" name="calculate" value="evaluationtaskactivity.calculate.acept"  
@@ -86,7 +93,14 @@ if(actId==0){
 		        </div>
 		        
 		        <div id="<portlet:namespace />publishContents" class="aui-helper-hidden">
-		        	<portlet:actionURL name="publish" var="publishURL" />
+		        	<portlet:actionURL name="publish" var="publishURL" >
+	    				<% 
+			        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
+			        	%>
+		        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
+		        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
+		        		</c:if>
+		        	</portlet:actionURL>
 		        	<liferay-ui:message key="evaluationtaskactivity.publish.confirm" />
 			        <aui:button-row  cssClass="container-buttons">
 			        	
@@ -267,6 +281,12 @@ if(actId==0){
 								if(!hasPublishDate) {%>
 									<portlet:actionURL name="reCalculate" var="reCalculateURL">
 								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+							   			<% 
+							        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
+							        	%>
+						        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
+						        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
+						        		</c:if>
 								   	</portlet:actionURL>
 								   	
 								   	<div id="<portlet:namespace />recalculateContents_<%=Long.toString(user.getUserId()) %>" class="aui-helper-hidden">
