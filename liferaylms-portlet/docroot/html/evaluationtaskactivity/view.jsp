@@ -24,7 +24,6 @@
 <div class="container-activity">
 <%
 long actId = ParamUtil.getLong(request,"actId",0);
-String urlBack = ParamUtil.getString(request,"urlBack","");
 
 if(actId==0){
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
@@ -47,7 +46,7 @@ if(actId==0){
 		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");	
 %>
 			<div class="evaluationAvg view">
-				<liferay-ui:header title="<%=learningActivity.getTitle(themeDisplay.getLocale()) %>" backURL="<%=urlBack%>"></liferay-ui:header>
+				<liferay-ui:header title="<%=learningActivity.getTitle(themeDisplay.getLocale()) %>" />
 				<h3><liferay-ui:message key="description" /></h3>
 				<div class="description"><%=learningActivity.getDescription(themeDisplay.getLocale()) %></div>
 			<%if(isTeacher){ 
