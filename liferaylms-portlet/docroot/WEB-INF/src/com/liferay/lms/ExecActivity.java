@@ -433,7 +433,10 @@ public class ExecActivity extends MVCPortlet
 				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
 
 				//Crear la cabecera con las preguntas.
-				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
+				List<TestQuestion> questiones=TestQuestionLocalServiceUtil.getQuestions(actId);
+				List<TestQuestion> questions = ListUtil.copy(questiones);
+				BeanComparator beanComparator = new BeanComparator("weight");
+				Collections.sort(questions, beanComparator);
 				List<TestQuestion> questionsTitle = new ArrayList<TestQuestion>();
 				for(TestQuestion question:questions){
 					if(question.getQuestionType() == 0) questionsTitle.add(question);
@@ -529,7 +532,11 @@ public class ExecActivity extends MVCPortlet
 				Element quizXML=SAXReaderUtil.createElement("quiz");
 				Document quizXMLDoc=SAXReaderUtil.createDocument(quizXML);
 				
-				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
+				List<TestQuestion> questiones=TestQuestionLocalServiceUtil.getQuestions(actId);
+				List<TestQuestion> questions = ListUtil.copy(questiones);
+				BeanComparator beanComparator = new BeanComparator("weight");
+				Collections.sort(questions, beanComparator);
+				
 				if(questions!=null &&questions.size()>0){
 					for(TestQuestion question:questions){
 						QuestionType qt =new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
