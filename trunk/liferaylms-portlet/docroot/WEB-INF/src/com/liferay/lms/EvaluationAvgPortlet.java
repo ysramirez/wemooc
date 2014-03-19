@@ -249,6 +249,11 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
     		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
     		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.systemError")});  
     	} finally{
+    		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+    		if(Validator.isNotNull(returnToFullPageURL)) {
+    			actionResponse.setRenderParameter("returnToFullPageURL", returnToFullPageURL);
+    		}
+    		
 	    	actionResponse.setRenderParameter("jspPage","/html/evaluationAvg/popups/evaluationsResult.jsp");   	
 	    	actionResponse.setRenderParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
     	}
@@ -276,6 +281,12 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();
 		viewPortletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");   	
 		viewPortletURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
+		
+		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+		if(Validator.isNotNull(returnToFullPageURL)) {
+			viewPortletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
+		}
+		
     	actionResponse.sendRedirect(viewPortletURL.toString());
 	}
 	
@@ -299,6 +310,12 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();
 		viewPortletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");   	
 		viewPortletURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
+		
+		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+		if(Validator.isNotNull(returnToFullPageURL)) {
+			viewPortletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
+		}
+		
     	actionResponse.sendRedirect(viewPortletURL.toString());
 	}
 	
@@ -365,6 +382,11 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
     		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
     		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.systemError")});  
     	} finally{
+    		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+    		if(Validator.isNotNull(returnToFullPageURL)) {
+    			actionResponse.setRenderParameter("returnToFullPageURL", returnToFullPageURL);
+    		}
+    		
 	    	actionResponse.setRenderParameter("jspPage","/html/evaluationAvg/popups/evaluationsResult.jsp");   	
 	    	actionResponse.setRenderParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
     	}
