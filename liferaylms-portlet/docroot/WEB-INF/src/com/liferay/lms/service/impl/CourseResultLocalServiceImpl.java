@@ -181,7 +181,7 @@ public class CourseResultLocalServiceImpl
 	
 	public void softInitializeByGroupIdAndUserId(long groupId, long userId) throws SystemException {
 		Course course = courseLocalService.getCourseByGroupCreatedId(groupId);
-		if (courseResultLocalService.getByUserAndCourse(course.getCourseId(), userId) == null) {
+		if (course != null && courseResultLocalService.getByUserAndCourse(course.getCourseId(), userId) == null) {
 			courseResultLocalService.create(course.getCourseId(), userId);
 		}
 	}
