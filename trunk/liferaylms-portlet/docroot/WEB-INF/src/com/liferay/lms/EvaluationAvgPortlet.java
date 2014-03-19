@@ -20,6 +20,7 @@ import javax.portlet.PortletURL;
 import javax.portlet.ProcessEvent;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 import com.liferay.lms.events.ThemeIdEvent;
 import com.liferay.lms.learningactivity.courseeval.CourseEval;
@@ -375,6 +376,10 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
 			RenderResponse renderResponse) throws IOException, PortletException {
 		
 		if(ParamUtil.getBoolean(renderRequest, WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,false)){
+			if(WindowState.MAXIMIZED.equals(renderRequest.getWindowState())){
+				renderRequest.setAttribute(WebKeys.PORTLET_DECORATE, Boolean.TRUE);
+			}
+			
 			super.doView(renderRequest, renderResponse);
 		}
 		else {
