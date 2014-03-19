@@ -168,7 +168,8 @@ if(lista.size()>=2){ %>
 		<liferay-portlet:renderURL var="orderURL" >
 			<liferay-portlet:param name="mvcPath" value="/html/execactivity/test/admin/orderQuestions.jsp" />
 			<liferay-portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
-			<liferay-portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>" />	
+			<liferay-portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>" />
+			<liferay-portlet:param name="backUrl" value="<%= currentURL %>"/>
 		</liferay-portlet:renderURL>
 		<aui:button name="order" href="<%=orderURL%>" value="execativity.editquestions.orderquestions"></aui:button>
 	</div>
