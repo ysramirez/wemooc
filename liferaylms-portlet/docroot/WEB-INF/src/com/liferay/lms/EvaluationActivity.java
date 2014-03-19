@@ -406,6 +406,11 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
     		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
     		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.systemError")});  
     	} finally{
+    		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+    		if(Validator.isNotNull(returnToFullPageURL)) {
+    			actionResponse.setRenderParameter("returnToFullPageURL", returnToFullPageURL);
+    		}
+
 	    	actionResponse.setRenderParameter("jspPage","/html/evaluationtaskactivity/popups/activitiesResult.jsp");   	
     	}
     }
@@ -429,7 +434,13 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 		//}
 		
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();
-		viewPortletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp");   	
+		viewPortletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp"); 
+		
+		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+		if(Validator.isNotNull(returnToFullPageURL)) {
+			viewPortletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
+		}
+		
     	actionResponse.sendRedirect(viewPortletURL.toString());
 	}
 	
@@ -449,7 +460,13 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 
 		
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();
-		viewPortletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp");   	
+		viewPortletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp");
+		
+		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+		if(Validator.isNotNull(returnToFullPageURL)) {
+			viewPortletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
+		}
+		
     	actionResponse.sendRedirect(viewPortletURL.toString());
 	}
 	
@@ -467,7 +484,13 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 		}
 
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();
-		viewPortletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp");   	
+		viewPortletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp");
+		
+		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+		if(Validator.isNotNull(returnToFullPageURL)) {
+			viewPortletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
+		}
+		
     	actionResponse.sendRedirect(viewPortletURL.toString());
 	}
 	
@@ -519,6 +542,11 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
     		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
     		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.systemError")});  
     	} finally{
+    		String returnToFullPageURL = actionRequest.getParameter("returnToFullPageURL");
+    		if(Validator.isNotNull(returnToFullPageURL)) {
+    			actionResponse.setRenderParameter("returnToFullPageURL", returnToFullPageURL);
+    		}
+    		
 	    	actionResponse.setRenderParameter("jspPage","/html/evaluationtaskactivity/popups/activitiesResult.jsp");   	
 	    	actionResponse.setRenderParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
     	}
