@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.sun.corba.se.impl.copyobject.JavaStreamObjectCopierImpl"%>
@@ -227,7 +228,7 @@
 
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
 			if(window.<portlet:namespace />validateActivities.hasErrors()) {
-				_return=confirm('<liferay-ui:message key="evaluationtaskactivity.confirm.message"/>');
+				_return=confirm('<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "evaluationtaskactivity.confirm.message")) %>');
 			}
 		});		
 
