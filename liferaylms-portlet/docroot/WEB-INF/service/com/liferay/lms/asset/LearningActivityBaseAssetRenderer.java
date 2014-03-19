@@ -14,6 +14,9 @@ import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.portal.NoSuchLayoutException;
+import com.liferay.portal.kernel.cache.Lifecycle;
+import com.liferay.portal.kernel.cache.ThreadLocalCache;
+import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -69,22 +72,32 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		_editDetails = learningActivityType.hasEditDetails();
 		_isLmsExternalTemplates = isLmsExternalTemplates;
 		
-		@SuppressWarnings("unchecked")
-		List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(LayoutLocalServiceUtil.dynamicQuery().
-				add(PropertyFactoryUtil.forName("privateLayout").eq(false)).
-				add(PropertyFactoryUtil.forName("type").eq(LayoutConstants.TYPE_PORTLET)).
-				add(PropertyFactoryUtil.forName("companyId").eq(_learningactivity.getCompanyId())).
-				add(PropertyFactoryUtil.forName("groupId").eq(_learningactivity.getGroupId())).
-				add(PropertyFactoryUtil.forName("friendlyURL").eq("/reto")), 0, 1);
-
-		if(!layouts.isEmpty()) {
-			_layout = layouts.get(0);
-			if(!((LayoutTypePortlet)_layout.getLayoutType()).getPortletIds().contains(_portletId)){
-				_isRuntimePortlet = true;
+		ThreadLocalCache<Layout> threadLocalCache =
+				ThreadLocalCacheManager.getThreadLocalCache(
+					Lifecycle.REQUEST, LearningActivityBaseAssetRenderer.class.getName());
+		
+		String layoutKey = _learningactivity.getCompanyId()+StringPool.SLASH+_learningactivity.getGroupId();
+		_layout  = threadLocalCache.get(layoutKey);
+		
+		if(Validator.isNull(_layout)) {
+			@SuppressWarnings("unchecked")
+			List<Layout> layouts = LayoutLocalServiceUtil.dynamicQuery(LayoutLocalServiceUtil.dynamicQuery().
+					add(PropertyFactoryUtil.forName("privateLayout").eq(false)).
+					add(PropertyFactoryUtil.forName("type").eq(LayoutConstants.TYPE_PORTLET)).
+					add(PropertyFactoryUtil.forName("companyId").eq(_learningactivity.getCompanyId())).
+					add(PropertyFactoryUtil.forName("groupId").eq(_learningactivity.getGroupId())).
+					add(PropertyFactoryUtil.forName("friendlyURL").eq("/reto")), 0, 1);
+	
+			if(layouts.isEmpty()) {
+				throw new NoSuchLayoutException();			
 			}
+			
+			_layout = layouts.get(0);
+			threadLocalCache.put(layoutKey, _layout);
 		}
-		else {
-			throw new NoSuchLayoutException();
+		
+		if(!((LayoutTypePortlet)_layout.getLayoutType()).getPortletIds().contains(_portletId)){
+			_isRuntimePortlet = true;
 		}
 		
 	}
