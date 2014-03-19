@@ -17,6 +17,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.WindowState;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
@@ -557,6 +558,10 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 					
 					if(typeId==8)
 					{
+						if(WindowState.MAXIMIZED.equals(renderRequest.getWindowState())){
+							renderRequest.setAttribute(WebKeys.PORTLET_DECORATE, Boolean.TRUE);
+						}
+
 						super.render(renderRequest, renderResponse);
 					}
 					else
