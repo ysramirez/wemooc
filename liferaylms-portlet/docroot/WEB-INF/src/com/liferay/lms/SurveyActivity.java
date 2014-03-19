@@ -64,7 +64,9 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 
@@ -396,7 +398,7 @@ public class SurveyActivity extends MVCPortlet {
 	
 	public void editactivity(ActionRequest actionRequest, ActionResponse actionResponse) throws PortalException, SystemException, Exception {
 		long actId = ParamUtil.getInteger(actionRequest, "resId");
-		LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
+		AssetRendererFactory laf = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
 		if (laf != null) {
 			AssetRenderer assetRenderer = laf.getAssetRenderer(actId, 0);
 
