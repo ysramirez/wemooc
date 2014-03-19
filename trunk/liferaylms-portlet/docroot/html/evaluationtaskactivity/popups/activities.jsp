@@ -1,7 +1,6 @@
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
-<%@page import="com.sun.corba.se.impl.copyobject.JavaStreamObjectCopierImpl"%>
 <%@page import="java.util.Iterator"%>
 <%@page import="com.liferay.portal.kernel.xml.Element"%>
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
@@ -63,7 +62,10 @@
 	catch(Throwable e){
 	}
 	List<Module> moduleList = (List<Module>)ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
-	long moduleId=ParamUtil.get(request, "currModuleId",ParamUtil.get(request, "moduleId",moduleList.get(0).getModuleId()));
+	long moduleId=ParamUtil.get(request, "currModuleId",ParamUtil.get(request, "moduleId",GetterUtil.DEFAULT_LONG));
+	if((!moduleList.isEmpty())&&(Validator.isNull(moduleId))){
+		moduleId = moduleList.get(0).getModuleId();
+	}
 	JSONArray moduleItems = JSONFactoryUtil.createJSONArray();
 	for(Module module:moduleList){
 		JSONObject jsonModule = JSONFactoryUtil.createJSONObject();
