@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionMessages"%>
 <%@page import="com.liferay.portal.kernel.json.JSONFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.json.JSONObject"%>
@@ -187,7 +188,7 @@
 		var _return=true;
 		AUI().use('node-base','<portlet:namespace />eval-model', function(A) {
 			if(window.<portlet:namespace />validateEvaluations.hasErrors()) {
-				_return=confirm('<liferay-ui:message key="evaluationAvg.confirm.message"/>');
+				_return=confirm('<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "evaluationAvg.confirm.message")) %>');
 			}
 		});		
 		return _return;	
