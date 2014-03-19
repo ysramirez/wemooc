@@ -161,20 +161,19 @@ Liferay.provide(
 </liferay-ui:search-container>
 
 <aui:button-row>
-	<liferay-portlet:renderURL var="orderURL" >
-		<liferay-portlet:param name="mvcPath" value="/html/execactivity/test/admin/orderQuestions.jsp" />
-		<liferay-portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
-		<liferay-portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>" />	
-	</liferay-portlet:renderURL>
-	<aui:button name="order" href="<%=orderURL%>" value="execativity.editquestions.orderquestions"></aui:button>
-<%--
-	<liferay-ui:icon
-		image="all_pages"
-		alt="order"
-		label="<%= true %>"
-		message="execativity.editquestions.orderquestions"
-		url='<%= orderURL %>'
-	/>
---%>		
+<%
+List<TestQuestion> lista = TestQuestionLocalServiceUtil.getQuestions(learningActivity.getActId());
+if(lista.size()>=2){ %>	
+	<div>
+		<liferay-portlet:renderURL var="orderURL" >
+			<liferay-portlet:param name="mvcPath" value="/html/execactivity/test/admin/orderQuestions.jsp" />
+			<liferay-portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
+			<liferay-portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>" />	
+		</liferay-portlet:renderURL>
+		<aui:button name="order" href="<%=orderURL%>" value="execativity.editquestions.orderquestions"></aui:button>
+	</div>
+<%} %>
+<div>	
 	<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
+</div>
 </aui:button-row>
