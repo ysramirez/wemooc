@@ -472,30 +472,32 @@ Liferay.provide(
 //-->
 </script>
 
+	<c:if test="<%=!ParamUtil.getBoolean(renderRequest,\"noModule\",false) %>">
 		<aui:select id="resModuleId" label="module" name="resModuleId" onChange="<%=renderResponse.getNamespace()+\"reloadComboActivities(this.options[this.selectedIndex].value);\" %>">
-	<%
-	java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
-	for(Module theModule:modules)
-	{
-		boolean selected=false;
-		if(learnact!=null && learnact.getModuleId()==theModule.getModuleId())
-		{
-			selected=true;
-		}
-		else
-		{
-			if(theModule.getModuleId()==moduleId)
+		<%
+			java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+			for(Module theModule:modules)
 			{
-				selected=true;
+				boolean selected=false;
+				if(learnact!=null && learnact.getModuleId()==theModule.getModuleId())
+				{
+					selected=true;
+				}
+				else
+				{
+					if(theModule.getModuleId()==moduleId)
+					{
+						selected=true;
+					}
+				}
+				%>
+					<aui:option value="<%=theModule.getModuleId() %>" selected="<%=selected %>"><%=theModule.getTitle() %></aui:option>
+				<% 
 			}
-		}
 		%>
-			<aui:option value="<%=theModule.getModuleId() %>" selected="<%=selected %>"><%=theModule.getTitle() %></aui:option>
-		<% 
-	}
-%>
 
 		</aui:select>
+	</c:if>
 
 <%
 	if(actId==0)
@@ -797,45 +799,8 @@ Liferay.provide(
 	</aui:fieldset>
 	
 	<aui:button-row>
-		
-		
-		<script type="text/javascript">
-		<!--
-		
-		Liferay.provide(
-		        window,
-		        '<portlet:namespace />closeWindow',
-		        function() {
-			        
-					if ((!!window.postMessage)&&(window.parent != window)) {
-						if (!window.location.origin){
-							window.location.origin = window.location.protocol+"//"+window.location.host;
-						}
-						
-						if(AUI().UA.ie==0) {
-							parent.postMessage({name:'closeActivity',
-								                moduleId:<%=Long.toString(moduleId)%>,
-								                actId:<%=Long.toString(actId)%>}, window.location.origin);
-						}
-						else {
-							parent.postMessage(JSON.stringify({name:'closeActivity',
-				                							   moduleId:<%=Long.toString(moduleId)%>,
-				                							   actId:<%=Long.toString(actId)%>}), window.location.origin);
-						}
-					}
-					else {
-						window.location.href='<portlet:renderURL />';
-					}
-		        }
-		    );
-		    
-		//-->
-		</script>
 		<input type="button" value="<liferay-ui:message key="savechanges" />" onclick="javascript:validate()" >
-		<button name="Close" value="close" onclick="<portlet:namespace />closeWindow();" type="button">
-			<liferay-ui:message key="canceledition" />
-		</button>
-		
+		<aui:button  type="cancel" value="canceledition" />
 	</aui:button-row>
 </aui:form>
  <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
