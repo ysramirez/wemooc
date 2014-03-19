@@ -80,7 +80,22 @@ String primKey = String.valueOf(myActivity.getActId());
 			"	).plug( "+
 			"		A.Plugin.DialogIframe, "+
 			"		{ "+
-			"			uri: '" + JavaScriptUtil.markupToStringLiteral(editoptionsURL) + "' "+
+			"			uri: '" + JavaScriptUtil.markupToStringLiteral(editoptionsURL) + "', "+
+		    "			on: { "+
+			"    			load: function(evt){ "+
+		    "					var instance = evt.target; "+
+		    "					var	iframeDocument = instance.node.get('contentDocument'); "+
+			"					var	iframeBody = iframeDocument.one('body'); "+	
+			"					iframeBody.delegate( "+	
+			"						'click', "+	
+			"						function() { "+	
+			"							iframeDocument.purge(true); "+	
+			"							instance.get('host').close(); "+	
+			"						}, "+	
+			"						'.aui-button-input-cancel' "+	
+			"					); "+	
+			"				} "+
+			"			} "+
 			"		} "+
 			"	).render().show(); "+
 			"});");
