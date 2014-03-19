@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
+<%@page import="org.apache.commons.beanutils.BeanComparator"%>
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
@@ -57,6 +59,7 @@
 		if(actId==0)
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		else{
+			TestQuestionLocalServiceUtil.checkWeights(actId);
 			LearningActivity activity=LearningActivityLocalServiceUtil.getLearningActivity(actId);
 			long typeId=activity.getTypeId();
 	
@@ -111,7 +114,10 @@
   								</liferay-util:include>  	
 <%
 							}else{	
-								List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
+								List<TestQuestion> questiones=TestQuestionLocalServiceUtil.getQuestions(actId);
+								List<TestQuestion> questions = ListUtil.copy(questiones);
+								BeanComparator beanComparator = new BeanComparator("weight");
+								Collections.sort(questions, beanComparator);
 								Object  [] arg =  new Object[]{activity.getPasspuntuation()};
 			
 								if (activity.getPasspuntuation()>0){ 
