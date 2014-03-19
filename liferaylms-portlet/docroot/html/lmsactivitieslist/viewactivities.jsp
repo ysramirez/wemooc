@@ -182,7 +182,22 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 			"	).plug( "+
 			"		A.Plugin.DialogIframe, "+
 			"		{ "+
-			"			uri: '" + JavaScriptUtil.markupToStringLiteral(newactivityURL) + "' "+
+			"			uri: '" + JavaScriptUtil.markupToStringLiteral(newactivityURL) + "', "+
+		    "			on: { "+
+			"    			load: function(evt){ "+
+		    "					var instance = evt.target; "+
+		    "					var	iframeDocument = instance.node.get('contentDocument'); "+
+			"					var	iframeBody = iframeDocument.one('body'); "+	
+			"					iframeBody.delegate( "+	
+			"						'click', "+	
+			"						function() { "+	
+			"							iframeDocument.purge(true); "+	
+			"							instance.get('host').close(); "+	
+			"						}, "+	
+			"						'.aui-button-input-cancel' "+	
+			"					); "+	
+			"				} "+
+			"			} "+
 			"		} "+
 			"	).render().show(); "+
 			"});";
