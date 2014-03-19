@@ -1,3 +1,5 @@
+<%@page import="java.util.Collections"%>
+<%@page import="org.apache.commons.beanutils.BeanComparator"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
 <%@page import="java.util.List"%>
@@ -29,15 +31,21 @@
 	backUrl.setParameter("resModuleId", String.valueOf(learningActivity.getModuleId()));
 	backUrl.setParameter("jspPage", "/html/editactivity/editactivity.jsp");
 	request.setAttribute("backUrl", backUrl.toString());
-
+	String orderByCol =  (String)request.getAttribute("orderByCol");
+	if(orderByCol==null)
+		orderByCol="weigth";
+	String orderByType = (String)request.getAttribute("orderByType");
+	if(orderByType==null)
+		orderByType="asc";
+	TestQuestionLocalServiceUtil.checkWeights(learningActivity.getActId());
 %>
 <liferay-util:include page="/html/execactivity/test/admin/editHeader.jsp" servletContext="<%=this.getServletContext() %>" />
 
 <script type="text/javascript">
 <!--
 AUI().ready(function(A) {
-	A.one('.newitem2 a').focus();
-	A.one("#<portlet:namespace/>TabsBack").scrollIntoView();
+	A.one('div.taglib-header > h1.header-title').scrollIntoView();
+	//A.one("#<portlet:namespace/>TabsBack").scrollIntoView();
 });
 //-->
 			
@@ -114,14 +122,31 @@ Liferay.provide(
  delta="10" iteratorURL="<%=editQuestionsURL%>">
 	<liferay-ui:search-container-results>
 	<%
+	List listaAux = (List)request.getAttribute("listaAux");
+	if(listaAux==null){
+		listaAux = (List<TestQuestion>)TestQuestionLocalServiceUtil.getQuestions(learningActivity.getActId());
+	}
+	List<TestQuestion>listaTotal = ListUtil.copy(listaAux);
+	BeanComparator beanComparator = new BeanComparator("weight");
+	if(orderByType.equals("asc")){
+		Collections.sort(listaTotal, beanComparator);
+	 }
+	else {
+		Collections.sort(listaTotal, Collections.reverseOrder(beanComparator));
+	 }
+	pageContext.setAttribute("results", ListUtil.subList(listaTotal,searchContainer.getStart(),
+			searchContainer.getEnd()));
+	pageContext.setAttribute("total", listaTotal.size());
+	%>
+	<%--
 	  DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()));
 	  pageContext.setAttribute("results", TestQuestionLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),
 			searchContainer.getEnd()));
 	  pageContext.setAttribute("total", (int)TestQuestionLocalServiceUtil.dynamicQueryCount(
 			  DynamicQueryFactoryUtil.forClass(TestQuestion.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId()))));
-	%>
+	--%>
 	</liferay-ui:search-container-results>
-	<liferay-ui:search-container-row className="com.liferay.lms.model.TestQuestion" keyProperty="actId" modelVar="activity">
+	<liferay-ui:search-container-row className="com.liferay.lms.model.TestQuestion" keyProperty="questionId" modelVar="activity">
 		<liferay-ui:search-container-column-text name="text">
 		<% String titleQuestion = HtmlUtil.stripHtml(activity.getText());
 			if(titleQuestion.length() > 80) titleQuestion = titleQuestion.substring(0, 80) + " ...";%>
@@ -135,6 +160,21 @@ Liferay.provide(
 	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 
-<aui:button-row>		
+<aui:button-row>
+	<liferay-portlet:renderURL var="orderURL" >
+		<liferay-portlet:param name="mvcPath" value="/html/execactivity/test/admin/orderQuestions.jsp" />
+		<liferay-portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
+		<liferay-portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>" />	
+	</liferay-portlet:renderURL>
+	<aui:button name="order" href="<%=orderURL%>" value="execativity.editquestions.orderquestions"></aui:button>
+<%--
+	<liferay-ui:icon
+		image="all_pages"
+		alt="order"
+		label="<%= true %>"
+		message="execativity.editquestions.orderquestions"
+		url='<%= orderURL %>'
+	/>
+--%>		
 	<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
 </aui:button-row>
