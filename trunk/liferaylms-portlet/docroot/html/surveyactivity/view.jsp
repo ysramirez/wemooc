@@ -1,4 +1,7 @@
 
+<%@page import="java.util.Collections"%>
+<%@page import="org.apache.commons.beanutils.BeanComparator"%>
+<%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@page import="com.liferay.lms.service.TestAnswerLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.TestAnswer"%>
 <%@page import="com.liferay.lms.model.TestQuestion"%>
@@ -64,7 +67,10 @@
 						ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
 						
 						LearningActivityTry learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
-						List<TestQuestion> questions=TestQuestionLocalServiceUtil.getQuestions(actId);
+						List<TestQuestion> questiones=TestQuestionLocalServiceUtil.getQuestions(actId);
+						List<TestQuestion> questions = ListUtil.copy(questiones);
+						BeanComparator beanComparator = new BeanComparator("weight");
+						Collections.sort(questions, beanComparator);
 						
 					%>
 						<portlet:actionURL name="correct" var="correctURL">

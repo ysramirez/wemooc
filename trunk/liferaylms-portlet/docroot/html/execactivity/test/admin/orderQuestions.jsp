@@ -13,14 +13,19 @@
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 
 <%
+String backUrl = ParamUtil.getString(request, "backUrl", currentURL);
+
 LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"resId"));
 request.setAttribute("activity", learningActivity);
+
+/*
 LiferayPortletURL backUrl = PortletURLFactoryUtil.create(request, PortalUtil.getJsSafePortletId("lmsactivitieslist"+
 		PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName()), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
 backUrl.setWindowState(LiferayWindowState.POP_UP);
 backUrl.setParameter("resId", String.valueOf(learningActivity.getActId()));	
 backUrl.setParameter("resModuleId", String.valueOf(learningActivity.getModuleId()));
 backUrl.setParameter("jspPage", "/html/execactivity/test/admin/editquestions.jsp");
+*/
 request.setAttribute("backUrl", backUrl.toString());
 PortletURL orderQuestionsURL = renderResponse.createRenderURL();
 orderQuestionsURL.setParameter("jspPage","/html/execactivity/test/admin/orderQuestions.jsp");
@@ -151,7 +156,7 @@ new A.Sortable(
 	</liferay-ui:search-container-results>
 	<liferay-ui:search-container-row className="com.liferay.lms.model.TestQuestion" keyProperty="questionId" modelVar="activity" rowIdProperty="questionId">
 		<liferay-ui:search-container-column-text name="text">
-		<% String titleQuestion = activity.getText();
+		<% String titleQuestion = HtmlUtil.stripHtml(activity.getText());
 			if(titleQuestion.length() > 80) titleQuestion = titleQuestion.substring(0, 80) + " ...";%>
 			<%=titleQuestion %>
 		</liferay-ui:search-container-column-text>

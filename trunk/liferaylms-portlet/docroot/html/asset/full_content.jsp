@@ -4,5 +4,4 @@
 <%
 LearningActivity larn=(LearningActivity)request.getAttribute("learningactivity");
 %>
-<h1><%=larn.getTitle(themeDisplay.getLocale()) %></h1>
 <p><%=larn.getDescription(themeDisplay.getLocale()) %></p>
