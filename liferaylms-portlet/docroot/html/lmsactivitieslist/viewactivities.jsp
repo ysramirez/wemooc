@@ -49,6 +49,7 @@ if(actId!=0) {
 
 Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(themeDisplay.getScopeGroupId());
 LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+AssetRendererFactory assetRendererFactory = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
 
 java.util.List<LearningActivity> activities = null;
 if (moduleId == 0) {
@@ -270,7 +271,8 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> 
 							id="<portlet:namespace/><%=activity.getActId()%>">
 						
-							<a href="<%=goToActivity.toString() %>"  ><%=activity.getTitle(themeDisplay.getLocale())%></a>
+							<a href="<%=assetRendererFactory.getAssetRenderer(activity.getActId()).
+									getURLViewInContext(liferayPortletRequest, liferayPortletResponse, StringPool.BLANK) %>"  ><%=activity.getTitle(themeDisplay.getLocale())%></a>
 							
 					<%
 					}
