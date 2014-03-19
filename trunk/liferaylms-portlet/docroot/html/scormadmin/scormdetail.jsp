@@ -23,6 +23,20 @@ String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextP
 <%=urlIndex %><br />
    <script type="text/javascript">
      function InitPlayer() {
+    	 var frame = document.getElementById("contentIFrame");
+    	 if (frame != null) {
+	    	 frameDoc = frame.contentDocument || frame.contentWindow.document;
+	    	 frameDoc.removeChild(frameDoc.documentElement);
+    	 }
+    	 var treeC = document.getElementById('treeContainer');
+    	 var navC = document.getElementById('navigationContainer');
+    	 if (treeC != null) {
+    		treeC.parentNode.removeChild(treeC); 
+    	 }
+    	 if (navC != null) {
+    		 navC.parentNode.removeChild(navC);
+    	 }
+    	 localStorage.removeItem('scormpool');
        PlayerConfiguration.Debug = false;
        PlayerConfiguration.StorageSupport = true;
 
@@ -38,6 +52,10 @@ String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextP
        PlayerConfiguration.BtnAbandonLabel = "Abandon";
        PlayerConfiguration.BtnAbandonAllLabel = "Abandon All";
        PlayerConfiguration.BtnSuspendAllLabel = "Suspend All";
+       
+       Run.$0 = null;
+       Run.$1 = null;
+       Run.$2 = null;
 
        //manifest by URL   
        Run.ManifestByURL("<%=urlIndex%>", false);
