@@ -578,7 +578,8 @@ extends LearningActivityLocalServiceBaseImpl {
 	public boolean canBeView(LearningActivity activity, PermissionChecker permissionChecker) throws Exception{
 
 		//Si tengo permiso de correct soy profesor y puedo siempre
-		if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"CORRECT")){
+		if((permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"ACCESSLOCK"))||
+				(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"CORRECT"))){
 			return true;
 		}
 		
