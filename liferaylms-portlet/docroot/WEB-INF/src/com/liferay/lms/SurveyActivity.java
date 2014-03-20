@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
@@ -19,16 +20,15 @@ import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
 
+import org.apache.commons.beanutils.BeanComparator;
 import org.jsoup.Jsoup;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.counter.service.CounterLocalServiceUtil;
-import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
-import com.liferay.lms.learningactivity.SurveyLearningActivityType;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
 import com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
@@ -43,7 +43,6 @@ import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
@@ -51,6 +50,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -475,6 +475,10 @@ public class SurveyActivity extends MVCPortlet {
 
 				//Crear la cabecera con las preguntas.
 				List<TestQuestion> questionsTitle = TestQuestionLocalServiceUtil.getQuestions(actId);
+				List<TestQuestion> listaTotal = ListUtil.copy(questionsTitle);
+				BeanComparator beanComparator = new BeanComparator("weight");
+				Collections.sort(listaTotal, beanComparator);
+				questionsTitle = listaTotal;
 				//Anadimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
 				int numExtraCols = 3;
 				String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
@@ -584,6 +588,10 @@ public class SurveyActivity extends MVCPortlet {
 
 				//Crear la cabecera con las preguntas.
 				List<TestQuestion> questions = TestQuestionLocalServiceUtil.getQuestions(actId);
+				List<TestQuestion> listaTotal = ListUtil.copy(questions);
+				BeanComparator beanComparator = new BeanComparator("weight");
+				Collections.sort(listaTotal, beanComparator);
+				questions = listaTotal;
 
 				for(TestQuestion question : questions){
 					

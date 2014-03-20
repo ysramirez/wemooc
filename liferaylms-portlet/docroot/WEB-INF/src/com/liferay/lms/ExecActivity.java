@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -25,7 +24,6 @@ import org.jsoup.Jsoup;
 
 import au.com.bytecode.opencsv.CSVWriter;
 
-import com.liferay.lms.asset.LearningActivityAssetRendererFactory;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
@@ -66,7 +64,9 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
+import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -359,7 +359,7 @@ public class ExecActivity extends MVCPortlet
 		long actId = ParamUtil.getInteger(actionRequest, "actId");
 		// LearningActivity learnact =
 		// com.liferay.lms.service.LearningActivityServiceUtil.getLearningActivity(actId);
-		LearningActivityAssetRendererFactory laf = new LearningActivityAssetRendererFactory();
+		AssetRendererFactory laf = AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(LearningActivity.class.getName());
 		if (laf != null) {
 			AssetRenderer assetRenderer = laf.getAssetRenderer(actId, 0);
 
