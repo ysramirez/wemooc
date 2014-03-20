@@ -42,8 +42,11 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -52,6 +55,8 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.model.Team;
+import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
@@ -179,6 +184,91 @@ extends LearningActivityLocalServiceBaseImpl {
 
 		return larn;
 
+	}
+	
+	public LearningActivity addLearningActivity(long userId, long groupId, int status, 
+			Map<Locale, String> title, Map<Locale, String> description, 
+			int typeId, Date startdate, Date enddate, 
+			long precedence, long tries, int passpuntuation, 
+			long moduleId, String extracontent, 
+			String feedbackCorrect, String feedbackNoCorrect, 
+			long weightinmodule, long teamId, ServiceContext serviceContext) throws PortalException, SystemException{
+		
+		User user = userLocalService.getUser(userId);
+		Date now = new Date();
+		
+		LearningActivity learningActivity = learningActivityPersistence.create(counterLocalService.increment(LearningActivity.class.getName()));
+		learningActivity.setCompanyId(user.getCompanyId());
+		learningActivity.setGroupId(groupId);
+		learningActivity.setUserId(user.getUserId());
+		learningActivity.setUserName(user.getFullName());
+		learningActivity.setCreateDate(serviceContext.getCreateDate(now));
+		learningActivity.setModifiedDate(serviceContext.getModifiedDate(now));
+		learningActivity.setStatus(status);
+		learningActivity.setStatusByUserId(user.getUserId());
+		learningActivity.setStatusByUserName(user.getFullName());
+		learningActivity.setStatusDate(serviceContext.getModifiedDate(now));
+		learningActivity.setTitleMap(title, serviceContext.getLocale());
+		learningActivity.setDescriptionMap(description, serviceContext.getLocale());
+		learningActivity.setTypeId(typeId);
+		learningActivity.setStartdate(startdate);
+		learningActivity.setEnddate(enddate);
+		learningActivity.setPrecedence(precedence);
+		learningActivity.setTries(tries);
+		learningActivity.setPasspuntuation(passpuntuation);
+		learningActivity.setPriority(learningActivity.getActId());
+		learningActivity.setModuleId(moduleId);
+		learningActivity.setExtracontent(extracontent);
+		learningActivity.setFeedbackCorrect(feedbackCorrect);
+		learningActivity.setFeedbackNoCorrect(feedbackNoCorrect);
+		learningActivity.setWeightinmodule(weightinmodule);
+		learningActivity.setExpandoBridgeAttributes(serviceContext);
+		
+		Role siteMemberRole = RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER);
+		
+		if(Validator.isNull(teamId)){
+			if(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE))){
+				resourcePermissionLocalService.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}
+			else { 
+				resourcePermissionLocalService.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
+			}
+		}
+		else{
+			Team team = teamLocalService.getTeam(teamId);
+			Role teamMemberRole = roleLocalService.getTeamRole(team.getCompanyId(), team.getTeamId());
+			if(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE))){
+				resourcePermissionLocalService.removeResourcePermission(team.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}else {
+				resourcePermissionLocalService.setResourcePermissions(team.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
+			}
+		}
+		
+		learningActivityPersistence.update(learningActivity, true);
+		resourceLocalService.addModelResources(learningActivity, serviceContext);
+
+		assetEntryLocalService.updateEntry(
+				userId, learningActivity.getGroupId(), LearningActivity.class.getName(),
+				learningActivity.getActId(), learningActivity.getUuid(),typeId, serviceContext.getAssetCategoryIds(),
+				serviceContext.getAssetTagNames(), true, null, null,
+				new java.util.Date(System.currentTimeMillis()), null,
+				ContentTypes.TEXT_HTML, 
+				learningActivity.getTitle().length()<255 ? learningActivity.getTitle():learningActivity.getTitle(Locale.getDefault()),
+						null, learningActivity.getDescription(serviceContext.getLocale()),null, null, 0, 0,
+						null, false);
+
+		socialActivityLocalService.addUniqueActivity(
+				learningActivity.getUserId(), learningActivity.getGroupId(),
+				LearningActivity.class.getName(), learningActivity.getActId(),
+				0, StringPool.BLANK, 0);
+		//auditing
+		AuditingLogFactory.audit(learningActivity.getCompanyId(), learningActivity.getGroupId(), LearningActivity.class.getName(), learningActivity.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
+
+		return learningActivity;
 	}
 
 	public LearningActivity modLearningActivity (long actId,String title, String description, java.util.Date createDate,java.util.Date startDate,java.util.Date endDate, int typeId,long tries,int passpuntuation,long moduleId,
