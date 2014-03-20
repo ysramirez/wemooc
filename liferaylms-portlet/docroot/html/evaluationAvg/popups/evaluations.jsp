@@ -314,10 +314,6 @@
 			    	searchContainer.getStart(), searchContainer.getEnd()));
 			
 			    pageContext.setAttribute("total",(int)LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
-			    		add(PropertyFactoryUtil.forName("moduleId").in(
-				    			DynamicQueryFactoryUtil.forClass(Module.class).add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
-				    			setProjection(ProjectionFactoryUtil.property("moduleId"))	
-				    		)).
 				    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
 				    	    add(PropertyFactoryUtil.forName("typeId").eq(8))
 			    		));			
