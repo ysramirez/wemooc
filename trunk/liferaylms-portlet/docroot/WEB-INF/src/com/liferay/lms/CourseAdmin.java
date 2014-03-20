@@ -344,8 +344,8 @@ public class CourseAdmin extends MVCPortlet {
 			try{
 				course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
 						title, description, summary, friendlyURL,
-						themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,type,
-						serviceContext, courseCalificationType,maxusers);
+						themeDisplay.getLocale(), ahora, startDate, stopDate,courseTemplateId,type,courseEvalId,
+						courseCalificationType,maxusers,serviceContext);
 			}catch(PortalException pe){
 				if(log.isDebugEnabled())log.debug("Error:"+pe.getMessage());
 				if(pe.getMessage().startsWith("maxUsers ")){					
