@@ -308,10 +308,6 @@
 	   	<liferay-ui:search-container-results>
 			<%
 				pageContext.setAttribute("results", LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
-		    		add(PropertyFactoryUtil.forName("moduleId").in(
-			    			DynamicQueryFactoryUtil.forClass(Module.class).add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
-			    			setProjection(ProjectionFactoryUtil.property("moduleId"))	
-			    		)).
 			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
 			    	    add(PropertyFactoryUtil.forName("typeId").eq(8)).
 			    	    addOrder(OrderFactoryUtil.asc("moduleId")), 
@@ -330,7 +326,7 @@
 		
 		<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="evaluation">
 			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.module" title="evaluationAvg.evaluation.module">
-				<%=ModuleLocalServiceUtil.getModule(evaluation.getModuleId()).getTitle(themeDisplay.getLocale()) %>
+				<%=GetterUtil.getString(ModuleLocalServiceUtil.getModule(evaluation.getModuleId()).getTitle(themeDisplay.getLocale())) %>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.name" title="evaluationAvg.evaluation.name">
 				<%=evaluation.getTitle(themeDisplay.getLocale()) %>
