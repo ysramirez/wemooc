@@ -58,10 +58,12 @@
 			<finder-column name="moduleId" />
 		</finder>
 		<reference package-path="com.liferay.portal" entity="User" />
+		<reference package-path="com.liferay.portal" entity="Role" />
+		<reference package-path="com.liferay.portal" entity="Team" />
+		<reference package-path="com.liferay.portal" entity="ResourcePermission" />
 		<reference package-path="com.liferay.portlet.asset" entity="AssetEntry" />
 		<reference package-path="com.liferay.portlet.social" entity="SocialActivity" />
-		<reference package-path="com.liferay.portlet.ratings"
-			entity="RatingsStats" />
+		<reference package-path="com.liferay.portlet.ratings" entity="RatingsStats" />
 
 	</entity>
 	
