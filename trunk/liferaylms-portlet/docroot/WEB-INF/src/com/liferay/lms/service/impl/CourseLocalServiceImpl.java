@@ -54,7 +54,6 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
-import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -62,7 +61,6 @@ import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -92,7 +90,6 @@ import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
 public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl { 
 	
 	private static final int DEFAULT_EVALUATIONS = 3;
-	private static final String LMS_ACTIVITIES_LIST_PORTLET_ID =  PortalUtil.getJsSafePortletId("lmsactivitieslist"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
 	
 	Log log = LogFactoryUtil.getLog(CourseLocalServiceImpl.class);
 	
@@ -116,8 +113,15 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	{
 		return coursePersistence.fetchByGroupCreatedId(groupId);
 	}
+	
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite,ServiceContext serviceContext, long calificationType, int maxUsers)
+			throws SystemException, PortalException {
+		return addCourse(title, description, summary, friendlyURL, locale, createDate, startDate, endDate, layoutSetPrototypeId, typesite, serviceContext, calificationType, maxUsers);
+	}
+	
+	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
+			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite, long CourseEvalId, long calificationType, int maxUsers,ServiceContext serviceContext)
 			throws SystemException, PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long userId=serviceContext.getUserId();
@@ -133,6 +137,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setEndDate(endDate);
 			course.setStatus(WorkflowConstants.STATUS_APPROVED);
 			course.setExpandoBridgeAttributes(serviceContext);
+			course.setCourseEvalId(CourseEvalId);
 			course.setCalificationType(calificationType);
 			course.setMaxusers(maxUsers);
 			coursePersistence.update(course, true);
@@ -161,7 +166,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			LayoutSetPrototype lsProto=layoutSetPrototypeLocalService.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
 			
-			if(calificationType==1) //EvaluationAvgCourseEval
+			if(CourseEvalId==1) //EvaluationAvgCourseEval
 			{
 				int defaultEvaluations =  GetterUtil.getInteger(PropsUtil.get("lms.course.default.evaluations"),DEFAULT_EVALUATIONS);
 				
