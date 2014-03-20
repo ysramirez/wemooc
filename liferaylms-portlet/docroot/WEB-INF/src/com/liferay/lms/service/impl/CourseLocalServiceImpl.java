@@ -15,6 +15,7 @@
 package com.liferay.lms.service.impl;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -34,6 +35,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
@@ -42,23 +44,25 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
-import com.liferay.portal.kernel.transaction.Transactional;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -86,6 +90,9 @@ import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
  * @see com.liferay.lms.service.CourseLocalServiceUtil
  */
 public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl { 
+	
+	private static final int DEFAULT_EVALUATIONS = 3;
+	private static final String LMS_ACTIVITIES_LIST_PORTLET_ID =  PortalUtil.getJsSafePortletId("lmsactivitieslist"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
 	
 	Log log = LogFactoryUtil.getLog(CourseLocalServiceImpl.class);
 	
@@ -153,6 +160,20 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			coursePersistence.update(course, true);
 			LayoutSetPrototype lsProto=layoutSetPrototypeLocalService.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
+			
+			if(calificationType==1) //EvaluationAvgCourseEval
+			{
+				int defaultEvaluations =  GetterUtil.getInteger(PropsUtil.get("lms.course.default.evaluations"),DEFAULT_EVALUATIONS);
+				
+				for(int currentEvaluation=1;currentEvaluation<=defaultEvaluations;currentEvaluation++) {
+
+					Map<Locale,String> evaluationTitle = new HashMap<Locale, String>(1);
+					evaluationTitle.put(locale, LanguageUtil.format(locale, "evaluation.number", new Object[]{currentEvaluation}));
+					learningActivityLocalService.addLearningActivity(userId, group.getGroupId(), WorkflowConstants.STATUS_APPROVED, 
+							evaluationTitle, evaluationTitle, 8 /* Evaluation */, null, null, 0, 0, 0, 0, null, null, null, 0, 0, serviceContext);
+					}
+			}
+			
 			/* activamos social activity para la comunidad creada */ 		
 			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);	
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(Course.class);
