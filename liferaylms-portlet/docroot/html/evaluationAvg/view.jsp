@@ -25,7 +25,8 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@ include file="/init.jsp" %>
-
+<liferay-ui:error key="evaluationAvg.evaluation.error"
+	message="evaluationAvg.evaluation.error" />
 <%
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
 		CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
