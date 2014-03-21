@@ -24,6 +24,7 @@
 <div class="container-activity">
 <%
 long actId = ParamUtil.getLong(request,"actId",0);
+String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
 
 if(actId==0){
 	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
@@ -74,9 +75,6 @@ if(actId==0){
 		        
 		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
 		        	<portlet:actionURL name="update" var="updateURL" >
-    				<% 
-		        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
-		        	%>
 	        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
 	        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
 	        		</c:if>
@@ -94,9 +92,6 @@ if(actId==0){
 		        
 		        <div id="<portlet:namespace />publishContents" class="aui-helper-hidden">
 		        	<portlet:actionURL name="publish" var="publishURL" >
-	    				<% 
-			        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
-			        	%>
 		        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
 		        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
 		        		</c:if>
@@ -198,6 +193,9 @@ if(actId==0){
 				
 				<liferay-portlet:renderURL var="returnurl" >
 					<liferay-portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>
+					<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
+	        			<liferay-portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
+	        		</c:if>
 				</liferay-portlet:renderURL>
 				
 				<h5><liferay-ui:message key="studentsearch"/></h5>
@@ -281,9 +279,6 @@ if(actId==0){
 								if(!hasPublishDate) {%>
 									<portlet:actionURL name="reCalculate" var="reCalculateURL">
 								   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
-							   			<% 
-							        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
-							        	%>
 						        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
 						        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
 						        		</c:if>

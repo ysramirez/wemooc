@@ -29,6 +29,7 @@
 	message="evaluationAvg.evaluation.error" />
 <%
 		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
 		CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
 		boolean needPassPuntuation = courseEval.getNeedPassPuntuation(); 
 		long passPuntuation = (needPassPuntuation)?courseEval.getPassPuntuation(course):0;		
@@ -78,9 +79,6 @@
 		        
 		        <div id="<portlet:namespace />calculateContents" class="aui-helper-hidden">
 		        	<portlet:actionURL name="updateCourse" var="updateCourseURL" >
-			        	<% 
-			        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
-			        	%>
 		        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
 		        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
 		        		</c:if>
@@ -169,6 +167,9 @@
 				
 				<liferay-portlet:renderURL var="returnurl" >
 					<liferay-portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>
+					<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
+	        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
+	        		</c:if>
 				</liferay-portlet:renderURL>
 				
 				<h5><liferay-ui:message key="studentsearch"/></h5>
@@ -261,9 +262,6 @@
 								   <div id="<portlet:namespace />recalculateContents_<%=Long.toString(user.getUserId()) %>" class="aui-helper-hidden">
 							        	<portlet:actionURL name="reCalculate" var="reCalculateURL">
 									   		<portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
-									   		<% 
-								        		String returnToFullPageURL = renderRequest.getParameter("returnToFullPageURL");
-								        	%>
 							        		<c:if test="<%=Validator.isNotNull(returnToFullPageURL) %>" >
 							        			<portlet:param name="returnToFullPageURL" value="<%=returnToFullPageURL %>"/>
 							        		</c:if>
