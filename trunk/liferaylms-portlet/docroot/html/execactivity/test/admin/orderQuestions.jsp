@@ -181,7 +181,7 @@ new A.Sortable(
 					 "          });  "+	 
 					 "		}); ";
 		%>
-		<liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text cssClass="th_ico_down">
 			<liferay-ui:icon image="bottom" message="down" url="#" onClick="<%=downURLJavascript %>"/>
 		</liferay-ui:search-container-column-text>
 		
@@ -202,7 +202,7 @@ new A.Sortable(
 						 "          });  "+	 
 						 "		}); ";
 		%>		
-		<liferay-ui:search-container-column-text>
+		<liferay-ui:search-container-column-text cssClass="th_ico_up">
 			<liferay-ui:icon image="top" message="up" url="#" onClick="<%=upURLJavascript %>"/>
 		</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
