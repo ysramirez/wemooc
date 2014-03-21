@@ -14,6 +14,7 @@
 
 package com.liferay.lms.service.impl;
 
+import com.liferay.lms.NoSuchPrefsException;
 import com.liferay.lms.hook.events.StartupAction;
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
@@ -52,8 +53,7 @@ public class LmsPrefsLocalServiceImpl extends LmsPrefsLocalServiceBaseImpl
 {
 
 	
-	public LmsPrefs getLmsPrefsIni(long companyId) throws PortalException,
-			SystemException {
+	public LmsPrefs getLmsPrefsIni(long companyId) throws SystemException {
 		LmsPrefs lmsPrefs=null;
 		
 		lmsPrefs=lmsPrefsPersistence.fetchByPrimaryKey(companyId);
@@ -73,16 +73,22 @@ public class LmsPrefsLocalServiceImpl extends LmsPrefsLocalServiceBaseImpl
 				setActivities(lmsPrefs);
 				setScoreTranslators(lmsPrefs);
 				setCourseEvals(lmsPrefs);
-			} catch (Exception e) 
+			} catch (PortalException e) 
 			{
-				// TODO Auto-generated catch block
-				throw new PortalException(e);
+				throw new SystemException(e);
+			} catch (RuntimeException e) 
+			{
+				throw new SystemException(e);
 			}
-			
+
 		}		
 		
 		return lmsPrefs;
 		
+	}
+	
+	public LmsPrefs getStrictLmsPrefsIni(long companyId) throws PortalException, SystemException {
+		return lmsPrefsPersistence.findByPrimaryKey(companyId);
 	}
 
 	private void setActivities(LmsPrefs lmsPrefs) throws SystemException {

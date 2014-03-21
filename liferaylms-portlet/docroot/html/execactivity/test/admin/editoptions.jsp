@@ -160,22 +160,6 @@ window.<portlet:namespace />validate_execactivity={
 			   } 
 			}); 
 		});
-			
-		A.one('#<portlet:namespace />showCorrectAnswerCheckbox').on('onclick', function(e) {
-			console.log("ah");
-			if (!e.target._node.checked) {
-				A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTry').set('value','false');
-				A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTryCheckbox').set('checked', false);
-			}
-		});
-		
-		A.one('#<portlet:namespace />showCorrectAnswerOnlyOnFinalTryCheckbox').on('onclick', function(e) {
-			console.log("eh");
-			if (e.target._node.checked) {
-				A.one('#<portlet:namespace />showCorrectAnswer').set('value','true');
-				A.one('#<portlet:namespace />showCorrectAnswerCheckbox').set('checked', true);
-			}
-		});
 	});
 	
 	Liferay.provide(
