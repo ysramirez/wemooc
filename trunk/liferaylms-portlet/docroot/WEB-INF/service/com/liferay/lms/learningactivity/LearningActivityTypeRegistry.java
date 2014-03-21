@@ -58,7 +58,7 @@ public class LearningActivityTypeRegistry {
 				LearningActivityType[] learningActivityTypes = _getLearningActivityTypes();
 				int orderedIdsSize = learningActivityTypes.length; 
 				try{
-					long[] orderedIds = StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(CompanyThreadLocal.getCompanyId()).getActivities(), 
+					long[] orderedIds = StringUtil.split(LmsPrefsLocalServiceUtil.getStrictLmsPrefsIni(CompanyThreadLocal.getCompanyId()).getActivities(), 
 															StringPool.COMMA, GetterUtil.DEFAULT_LONG);
 					orderedIdsSize = orderedIds.length; 
 					for (int currentPosition = 0; currentPosition < orderedIds.length; currentPosition++) {
