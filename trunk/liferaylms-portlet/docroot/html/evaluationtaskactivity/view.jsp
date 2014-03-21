@@ -189,6 +189,9 @@ if(actId==0){
 				portletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");
 				portletURL.setParameter("criteria", criteria); 
 				portletURL.setParameter("gradeFilter", gradeFilter);
+				if(Validator.isNotNull(returnToFullPageURL)){
+					portletURL.setParameter("returnToFullPageURL", returnToFullPageURL);
+				}
 				%>
 				
 				<liferay-portlet:renderURL var="returnurl" >
