@@ -42,7 +42,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -428,9 +427,12 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 			learningActivity.setExtracontent(document.formattedString());
 			LearningActivityLocalServiceUtil.updateLearningActivity(learningActivity);
 			
-			Message message = new Message();
-			message.put("actId", learningActivity.getActId());
-			MessageBusUtil.sendMessage("liferay/lms/evaluationActivity", message);
+			/*
+				Message message = new Message();
+				message.put("actId", learningActivity.getActId());
+				MessageBusUtil.sendMessage("liferay/lms/evaluationActivity", message);
+			*/
+			evaluate(learningActivity.getActId());
 		//}
 		
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();

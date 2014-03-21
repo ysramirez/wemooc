@@ -43,7 +43,6 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
-import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
@@ -272,10 +271,15 @@ public class EvaluationAvgPortlet extends MVCPortlet implements MessageListener{
 			rootElement.addElement("firedDate").setText(_dateFormat.format(new Date()));
 			course.setCourseExtraData(document.formattedString());
 			CourseLocalServiceUtil.updateCourse(course);
-			
-			Message message = new Message();
-			message.put("courseId", course.getCourseId());
-			MessageBusUtil.sendMessage("liferay/lms/evaluationAverage", message);
+			/*
+				Message message = new Message();
+				message.put("courseId", course.getCourseId());
+				MessageBusUtil.sendMessage("liferay/lms/evaluationAverage", message);
+			*/
+			CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
+			if(!courseEval.updateCourse(course)){
+				SessionErrors.add(actionRequest, "evaluationAvg.evaluation.error");
+			}
 		}
 		
 		PortletURL viewPortletURL = ((LiferayPortletResponse)actionResponse).createRenderURL();
