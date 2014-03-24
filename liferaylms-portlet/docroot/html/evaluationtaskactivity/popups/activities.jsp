@@ -511,15 +511,17 @@
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:button-row>
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveActivities();" type="button" class='<%=(courseEvalModel.has("firedDate"))?"aui-helper-hidden":"" %>' >
-		<liferay-ui:message key="evaluationtaskactivity.save" />
-	</button>
-	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
-		<liferay-ui:message key="evaluationtaskactivity.cancel" />
-	</button>
-
-</aui:button-row>
+<c:if test="<%=!hasFiredDate %>">
+	<aui:button-row>
+		<button name="Save" value="save" onclick="<portlet:namespace />doSaveActivities();" type="button">
+			<liferay-ui:message key="evaluationtaskactivity.save" />
+		</button>
+		<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupActivities();" type="button">
+			<liferay-ui:message key="evaluationtaskactivity.cancel" />
+		</button>
+	
+	</aui:button-row>
+</c:if>
 <div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.bad-updating"))?
 									   "portlet-msg-error":((SessionMessages.contains(renderRequest, "evaluationtaskactivity.updating"))?
 									   "portlet-msg-success":StringPool.BLANK) %>">
