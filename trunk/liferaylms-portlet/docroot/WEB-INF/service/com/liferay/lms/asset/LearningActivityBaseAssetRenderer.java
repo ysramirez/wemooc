@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -33,6 +35,7 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -46,6 +49,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
+import com.liferay.portlet.portletconfiguration.util.PortletConfigurationUtil;
 
 public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRenderer {
 	
@@ -178,8 +182,13 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 					ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
 				(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, ACTION_VIEW)!=null)) {
 	        	Role siteMember = RoleLocalServiceUtil.getRole(_learningactivity.getCompanyId(),RoleConstants.SITE_MEMBER);
-        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(_learningactivity.getGroupId(), _learningactivity.getCompanyId(), 
+	        	try {
+	        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(_learningactivity.getGroupId(), _learningactivity.getCompanyId(), 
         				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ACTION_VIEW});
+	        	}
+	        	catch(PrincipalException principalException){
+	        		System.out.println("Error setting individuar resource permission: "+portletName+StringPool.SLASH+resourcePrimKey);
+	        	}
 			}
 
 		}
@@ -308,5 +317,5 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 	}
 	
 	
-
+	private static Log _log = LogFactoryUtil.getLog(LearningActivityBaseAssetRenderer.class);
 }
