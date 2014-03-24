@@ -1,14 +1,12 @@
 package com.liferay.lms.lar;
 
 import java.io.InputStream;
-import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.PortletPreferences;
 
 import org.apache.commons.io.IOUtils;
-import org.jsoup.Jsoup;
 
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.learningactivity.questiontype.QuestionType;
@@ -34,16 +32,15 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
-import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Image;
-import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
+import com.liferay.portlet.documentlibrary.FileExtensionException;
+import com.liferay.portlet.documentlibrary.FileSizeException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.model.DLFolderConstants;
@@ -623,11 +620,13 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				//LearningActivityLocalServiceUtil.setExtraContentValue(nuevaLarn.getActId(), "document", String.valueOf(asset.getEntryId()));
 				//System.out.println("    Extracontent : \n"+nuevaLarn.getExtracontent());
 				
-				
-
+			}catch(FileExtensionException fee){
+				System.out.println("*ERROR! dlfileentry path FileExtensionException:" + actElement.element("dlfileentry").attributeValue("path") +", message: "+fee.getMessage());
+			}catch(FileSizeException fse){
+				System.out.println("*ERROR! dlfileentry path FileSizeException:" + actElement.element("dlfileentry").attributeValue("path") +", message: "+ fse.getMessage());
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
-				e.printStackTrace();
+				//e.printStackTrace();
 				System.out.println("*ERROR! dlfileentry path: " + actElement.element("dlfileentry").attributeValue("path") +", message: "+e.getMessage());
 			}
 
