@@ -433,15 +433,17 @@
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:button-row>
-	
-	<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button" class='<%=(courseEvalModel.has("firedDate"))?"aui-helper-hidden":"" %>'>
-		<liferay-ui:message key="offlinetaskactivity.save" />
-	</button>
-	<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
-		<liferay-ui:message key="offlinetaskactivity.cancel" />
-	</button>
-</aui:button-row>
+<c:if test="<%=!courseEvalModel.has(\"firedDate\") %>">
+	<aui:button-row>
+		
+		<button name="Save" value="save" onclick="<portlet:namespace />doSaveEvaluations();" type="button">
+			<liferay-ui:message key="offlinetaskactivity.save" />
+		</button>
+		<button name="Close" value="close" onclick="<portlet:namespace />doClosePopupEvaluations();" type="button">
+			<liferay-ui:message key="offlinetaskactivity.cancel" />
+		</button>
+	</aui:button-row>
+</c:if>
 <div id="<portlet:namespace />evaluationResult" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.bad-updating"))?
 									   "portlet-msg-error":((SessionMessages.contains(renderRequest, "evaluationAvg.updating"))?
 									   "portlet-msg-success":StringPool.BLANK) %>">
