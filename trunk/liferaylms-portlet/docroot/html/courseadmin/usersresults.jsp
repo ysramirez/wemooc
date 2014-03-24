@@ -123,6 +123,11 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	                                                " (SELECT UserGroupRole.userId "+
 	                                                "  FROM UserGroupRole "+
 	                                                "  WHERE  (UserGroupRole.groupId = ?) AND (UserGroupRole.roleId = ?))",new Long[]{course.getGroupCreatedId(),roleId}));
+	if (new Long(roleId).equals(prefs.getTeacherRole()) || new Long(roleId).equals(prefs.getEditorRole())) {
+		params.put("inRole", new CustomSQLParam("WHERE User_.userId IN (SELECT UserGroupRole.userId "+
+            "  FROM UserGroupRole "+
+            "  WHERE UserGroupRole.roleId = ?)", new Long[]{roleId}));
+	}
 
 	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
 	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
