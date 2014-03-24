@@ -30,9 +30,17 @@
 	}
 	catch(Throwable e){
 		courseEvalModel = JSONFactoryUtil.createJSONObject();
+	}
+
+	if(!courseEvalModel.has("evaluations")){
 		courseEvalModel.put("evaluations", JSONFactoryUtil.createJSONArray());
 	}
-		
+	
+	boolean showModuleColumn = LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
+    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
+    	    add(PropertyFactoryUtil.forName("typeId").eq(8)).
+    	    add(PropertyFactoryUtil.forName("moduleId").ne(0L)))>0;
+
 	PortletURL viewEvaluationsURL = renderResponse.createRenderURL();
 	viewEvaluationsURL.setParameter(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY,StringPool.TRUE);
 	viewEvaluationsURL.setParameter("jspPage","/html/evaluationAvg/popups/evaluations.jsp");
@@ -310,7 +318,7 @@
 				pageContext.setAttribute("results", LearningActivityLocalServiceUtil.dynamicQuery(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
 			    		add(PropertyFactoryUtil.forName("groupId").eq(themeDisplay.getScopeGroupId())).
 			    	    add(PropertyFactoryUtil.forName("typeId").eq(8)).
-			    	    addOrder(OrderFactoryUtil.asc("moduleId")), 
+			    	    addOrder(OrderFactoryUtil.asc("priority")), 
 			    	searchContainer.getStart(), searchContainer.getEnd()));
 			
 			    pageContext.setAttribute("total",(int)LearningActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(LearningActivity.class).
@@ -321,13 +329,22 @@
 		</liferay-ui:search-container-results>
 		
 		<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="evaluation">
-			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.module" title="evaluationAvg.evaluation.module">
-				<%=GetterUtil.getString(ModuleLocalServiceUtil.getModule(evaluation.getModuleId()).getTitle(themeDisplay.getLocale())) %>
-			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.name" title="evaluationAvg.evaluation.name">
+			<c:if test="<%=showModuleColumn %>">
+				<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.module" title="evaluationAvg.evaluation.module">
+					<c:choose>
+						<c:when test="<%=Validator.isNotNull(evaluation.getModuleId()) %>">
+							<%=GetterUtil.getString(ModuleLocalServiceUtil.getModule(evaluation.getModuleId()).getTitle(themeDisplay.getLocale())) %>
+						</c:when>
+						<c:otherwise>
+							--
+						</c:otherwise>
+					</c:choose>
+				</liferay-ui:search-container-column-text>
+			</c:if>
+			<liferay-ui:search-container-column-text name="evaluation" title="evaluationAvg.evaluation.name">
 				<%=evaluation.getTitle(themeDisplay.getLocale()) %>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.weight" title="evaluationAvg.evaluation.weight">
+			<liferay-ui:search-container-column-text name="evaluationAvg.evaluation.weight" title="evaluationAvg.evaluation.weight"  align="right">
 				<aui:input type="text" label="<%=weightHelp %>" inlineLabel="right" name="<%=\"weight_\"+evaluation.getActId() %>" size="3" disabled='<%=(courseEvalModel.has("firedDate")) %>'>  </aui:input>
 				<div id="<portlet:namespace />weight_<%=evaluation.getActId() %>Error" class="<%=(SessionErrors.contains(renderRequest, "evaluationAvg.weight_"+evaluation.getActId()+".bad-format"))?
 	    														"portlet-msg-error":StringPool.BLANK %>">
