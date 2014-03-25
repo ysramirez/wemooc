@@ -39,9 +39,8 @@
 	
 	<%
 	String site = PropsUtil.get("lms.site.types");
-	Set<Integer> sites = null;
-	if(site!=null&&!"".equals(site)){
-		sites = new HashSet<Integer>();
+	Set<Integer> sites = new HashSet<Integer>();
+	if(Validator.isNotNull(site)){
 		String[] ssites = site.split(",");
 		for(int i=0;i<ssites.length;i++){
 			try{
@@ -49,7 +48,9 @@
 			}catch(Exception e){}
 		}
 	}
-	
+	if (sites.isEmpty()) {
+		sites.add(GroupConstants.TYPE_SITE_OPEN);
+	}	
 	
 	String maxUsersError= ParamUtil.getString(request,"maxUsersError");
 	if(SessionErrors.contains(renderRequest, "newCourseErrors")) { %>

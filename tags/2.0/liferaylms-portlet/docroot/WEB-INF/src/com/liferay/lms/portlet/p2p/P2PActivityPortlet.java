@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
@@ -190,7 +191,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 						}
 					}
 					
-					//A�adir la actividad a bd
+					//Anadir la actividad a bd
 					P2pActivityLocalServiceUtil.addP2pActivity(p2pActivity);
 					
 					//Creamos el LearningActivityTry
@@ -259,7 +260,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 				return;
 			}
 		
-		//Comprobar que el tamaño del fichero no supere los 300mb
+		//Comprobar que el tamano del fichero no supere los 300mb
 		if(file.length()> 300 * 1024 * 1024){
 			SessionErrors.add(request, "p2ptaskactivity-error-file-size");
 			request.setAttribute("actId", actId);
@@ -460,16 +461,16 @@ public class P2PActivityPortlet extends MVCPortlet {
 		//La p2p que se corrige.
 		P2pActivity p2pActivityCorrected = P2pActivityLocalServiceUtil.getP2pActivity(p2pActivityId);
 		
-		//La p2p del que realiza la corrección.
+		//La p2p del que realiza la correccion.
 		P2pActivity p2pActivityFromCorrectorUser = P2pActivityLocalServiceUtil.findByActIdAndUserId(p2pActivityCorrected.getActId(), userId);
 		
-		//La actividad será la misma para las dos actividades.
+		//La actividad sera la misma para las dos actividades.
 		long actId = p2pActivityCorrected.getActId();
 		
 		//Obtener los valores del extracontent.
 		String result = LearningActivityLocalServiceUtil.getExtraContentValue(actId, "result");
 		
-		//Log para ver la traza de ejecución.
+		//Log para ver la traza de ejecucion.
 		if(_log.isDebugEnabled()){
 			_log.debug("----------------------");
 			_log.debug(" PARA EL USUARIO QUE CORRIGE");
@@ -517,7 +518,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 		} 
 		//Si en las p2p NO tenemos nota en la correccion.
 		else {
-			// Sólo se aprueba la actividad (sin nota) si estan todas las valoraciones asignadas corregidas. 
+			// Solo se aprueba la actividad (sin nota) si estan todas las valoraciones asignadas corregidas. 
 			correctionCompleted = P2pActivityCorrectionsLocalServiceUtil.areAllCorrectionsDoneByUserInP2PActivity(actId, p2pActivityFromCorrectorUser.getUserId());
 			
 			//Si las que ha corregido son las que tiene que corregir.
@@ -595,14 +596,15 @@ public class P2PActivityPortlet extends MVCPortlet {
 			Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 			String courseFriendlyUrl = "";
 			String courseTitle = "";
-			String activityTitle = activity.getTitle(themeDisplay.getLocale());
-			String moduleTitle =  module.getTitle(themeDisplay.getLocale());
+			Locale userLocale = user.getLocale();
+			String activityTitle = activity.getTitle(userLocale);
+			String moduleTitle =  module.getTitle(userLocale);
 			String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
 				courseFriendlyUrl = portalUrl + pathPublic + group.getFriendlyURL();
-				courseTitle = course.getTitle(themeDisplay.getLocale());
+				courseTitle = course.getTitle(userLocale);
 			}
 							
 			String messageArgs[]= {activityTitle, moduleTitle, courseTitle, courseFriendlyUrl};
@@ -613,16 +615,16 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 			//Nuevos campos del email
 			//Subject
-			String subject = LanguageUtil.get(themeDisplay.getLocale(), "p2ptaskactivity.mail.valoration.recieved.subject"); 
+			String subject = LanguageUtil.get(userLocale, "p2ptaskactivity.mail.valoration.recieved.subject"); 
 			
 			//Body
-			String title  			 = LanguageUtil.format(themeDisplay.getLocale(), "p2ptaskactivity.mail.valoration.recieved.body.title",   titleArgs); 
-			String message  		 = LanguageUtil.format(themeDisplay.getLocale(), "p2ptaskactivity.mail.valoration.recieved.body.message", messageArgs);
-			String usercorrection    = LanguageUtil.format(themeDisplay.getLocale(), "p2ptaskactivity.mail.valoration.recieved.body.usercorrection", userArgs); 
-			String resultcorrection  = LanguageUtil.format(themeDisplay.getLocale(), "p2ptaskactivity.mail.valoration.recieved.body.result",  resultArgs); 			
-			String end  			 = LanguageUtil.get(themeDisplay.getLocale(), 	"p2ptaskactivity.mail.valoration.recieved.body.end"); 
+			String title  			 = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.title",   titleArgs); 
+			String message  		 = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.message", messageArgs);
+			String usercorrection    = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.usercorrection", userArgs); 
+			String resultcorrection  = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.result",  resultArgs); 			
+			String end  			 = LanguageUtil.get(userLocale, 	"p2ptaskactivity.mail.valoration.recieved.body.end"); 
 			
-			//Componer el body seg�n la actividad.
+			//Componer el body segun la actividad.
 			String body = title;
 			
 			body += "<br /><br />" + message;
@@ -640,9 +642,9 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 			String fileId = String.valueOf(p2pActiCor.getFileEntryId());
 			if(fileId.length() == 1 && fileId.equals("0")){
-				body += "<br /><br />" + LanguageUtil.get(themeDisplay.getLocale(), 	"p2ptaskactivity.mail.valoration.recieved.body.file.no"); 
+				body += "<br /><br />" + LanguageUtil.get(userLocale, 	"p2ptaskactivity.mail.valoration.recieved.body.file.no"); 
 			} else {
-				body += "<br /><br />" + LanguageUtil.get(themeDisplay.getLocale(), 	"p2ptaskactivity.mail.valoration.recieved.body.file.yes");
+				body += "<br /><br />" + LanguageUtil.get(userLocale, 	"p2ptaskactivity.mail.valoration.recieved.body.file.yes");
 			}
 			
 			body += "<br /><br />" + end;
@@ -685,14 +687,15 @@ public class P2PActivityPortlet extends MVCPortlet {
 			Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 			String courseFriendlyUrl = "";
 			String courseTitle = "";
-			String activityTitle = activity.getTitle(themeDisplay.getLocale());
-			String moduleTitle =  module.getTitle(themeDisplay.getLocale());
+			Locale userLocale = user.getLocale();
+			String activityTitle = activity.getTitle(userLocale);
+			String moduleTitle =  module.getTitle(userLocale);
 			String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
 				courseFriendlyUrl = portalUrl + pathPublic + group.getFriendlyURL();
-				courseTitle = course.getTitle(themeDisplay.getLocale());
+				courseTitle = course.getTitle(userLocale);
 			}
 			
 			String messageArgs[]= {activityTitle, moduleTitle, courseTitle, courseFriendlyUrl};
@@ -700,9 +703,9 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 			//Nuevos campos del email
 			//Subject
-			String subject = LanguageUtil.get(themeDisplay.getLocale(), "p2ptaskactivity.mail.sendactivity.mail.subject"); 
-			String title = LanguageUtil.format(themeDisplay.getLocale(), "p2ptaskactivity.mail.sendactivity.mail.title", titleArgs);
-			String body = title +"<br /><br />"+ LanguageUtil.format(themeDisplay.getLocale(), "p2ptaskactivity.mail.sendactivity.mail.message", messageArgs);
+			String subject = LanguageUtil.get(userLocale, "p2ptaskactivity.mail.sendactivity.mail.subject"); 
+			String title = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.sendactivity.mail.title", titleArgs);
+			String body = title +"<br /><br />"+ LanguageUtil.format(userLocale, "p2ptaskactivity.mail.sendactivity.mail.message", messageArgs);
 			
 			String firmaPortal  = PrefsPropsUtil.getString(themeDisplay.getCompanyId(),"firma.email.admin");
 			// JOD
