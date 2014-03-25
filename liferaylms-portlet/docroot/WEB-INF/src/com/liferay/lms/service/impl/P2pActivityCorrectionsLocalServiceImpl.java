@@ -334,20 +334,21 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 					com.liferay.lms.model.Module module = ModuleLocalServiceUtil.getModule(learn.getModuleId());
 					String courseFriendlyUrl = "";
 					String courseTitle = "";
-					String activityTitle = learn.getTitle(Locale.getDefault());
-					String moduleTitle =  module.getTitle(Locale.getDefault());
+					Locale userLocale = user.getLocale();
+					String activityTitle = learn.getTitle(userLocale);
+					String moduleTitle =  module.getTitle(userLocale);
 					String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
 					String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 					
 					if(course != null){
 						courseFriendlyUrl = portalUrl + pathPublic + course.getFriendlyURL();
-						courseTitle = course.getTitle(Locale.getDefault());
+						courseTitle = course.getTitle(userLocale);
 					}
 						
 					String[] params={activityTitle, moduleTitle, courseTitle, courseFriendlyUrl};
 					
 					//Enviar los emails.
-					P2PSendMailAsignation.sendMail(user.getEmailAddress(), user.getFullName(), params, user.getCompanyId());
+					P2PSendMailAsignation.sendMail(user.getEmailAddress(), user.getFullName(), params, user.getCompanyId(), userLocale);
 		
 				} catch (Exception e) {}
 				
