@@ -1,3 +1,14 @@
+AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(A) {
+
+	A.all('div.question-page-current ul.sortable').each(function(node) {
+		new A.Sortable(
+		{
+			container: node,
+		    nodes: 'li'
+		});
+	});
+});
+
 (function ($) {
 		   $.fn.liveDraggable = function (opts) {
 			  this.on("mouseover", function() {
@@ -7,24 +18,6 @@
 			  });
 			  return this;
 		   };
-		   $.fn.serial = function() {
-		    	var content;
-		        var array = [];
-		        var $elem = $(this);
-		        var n;
-		        $elem.each(function(i) {
-		            var menu = this.id;
-		            
-		            n= "_execactivity_WAR_liferaylmsportlet_" + menu + "_contentlist";
-		            content = document.getElementById(n);
-		            content.value="";
-		            $('li', this).each(function(e) {
-		                array.push(menu + '[' + e + ']=' + this.id);
-		                content.value = content.value + menu + '[' + e + ']=' + this.id + '&';    
-		            });
-		        });
-		        return array.join('&');
-		    };
 		}(jQuery));
   
 $(document).ready(function() {
@@ -97,10 +90,4 @@ $(document).ready(function() {
 			});
 			
 		});
-		$("div.question-page-current ul.sortable").sortable({
-	        connectWith: '.sortable',
-	        update: function(event, ui) {
-	        	var position = $('.sortable').serial();
-	        }
-	    });
 	});
