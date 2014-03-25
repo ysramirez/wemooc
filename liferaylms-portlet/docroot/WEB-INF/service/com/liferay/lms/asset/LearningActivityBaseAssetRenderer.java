@@ -20,8 +20,6 @@ import com.liferay.portal.kernel.cache.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -35,15 +33,11 @@ import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
-import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
-import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -162,15 +156,6 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 
 		return templateJSP;
 	}
-	
-	protected PermissionChecker getPermissionChecker() throws PrincipalException {
-		PermissionChecker permissionChecker = PermissionThreadLocal.getPermissionChecker();
-
-		if (permissionChecker == null) {
-			throw new PrincipalException("PermissionChecker not initialized");
-		}
-		return permissionChecker;
-	}
 
 	private void prepareRuntimePortlet(PortletURL portletURL)
 			throws SystemException, PortalException {
@@ -192,10 +177,8 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 					ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
 				(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, ACTION_VIEW)!=null)) {
 	        	Role siteMember = RoleLocalServiceUtil.getRole(_learningactivity.getCompanyId(),RoleConstants.SITE_MEMBER);
-	        	if(PortletPermissionUtil.contains(getPermissionChecker(), _layout.getPlid(), _portletId, ActionKeys.CONFIGURATION)){
-	        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(_learningactivity.getGroupId(), _learningactivity.getCompanyId(), 
-        				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ACTION_VIEW});
-	        	}
+	        	ResourcePermissionLocalServiceUtil.setResourcePermissions(_learningactivity.getCompanyId(), portletName, ResourceConstants.SCOPE_INDIVIDUAL, 
+        				resourcePrimKey,siteMember.getRoleId(), new String[]{ACTION_VIEW});
 			}
 
 		}
@@ -323,6 +306,4 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 		return _layout;
 	}
 	
-	
-	private static Log _log = LogFactoryUtil.getLog(LearningActivityBaseAssetRenderer.class);
 }
