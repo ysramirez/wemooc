@@ -31,6 +31,8 @@
 	}catch(Exception e){}
 %>
 
+<liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
+<liferay-ui:header title="<%= course != null ? course.getTitle(themeDisplay.getLocale()) : \"course\" %>" backURL="<%=backURL %>"></liferay-ui:header>
 
 <liferay-portlet:resourceURL var="exportURL" >
 	<portlet:param name="action" value="exportCourse"/>
