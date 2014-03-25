@@ -13,17 +13,17 @@ import com.liferay.portal.kernel.util.PropsKeys;
 
 public class P2PSendMailAsignation {
 	
-	public static void sendMail(String emailTo, String nameTo, String content[], long companyId) {
+	public static void sendMail(String emailTo, String nameTo, String content[], long companyId, Locale userLocale) {
 		
 		try{
 			InternetAddress to = new InternetAddress(emailTo, nameTo);
 			
-			String portal = LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.portal");
-			String subject= LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.subject");
+			String portal = LanguageUtil.get(userLocale, "p2ptaskactivity.mail.portal");
+			String subject= LanguageUtil.get(userLocale, "p2ptaskactivity.mail.subject");
 			
-			String bodyTitle   = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.body.title", nameTo);
-			String bodyMessage = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.body.message", content);
-			String bodyEnd     = LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.body.end");
+			String bodyTitle   = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.body.title", nameTo);
+			String bodyMessage = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.body.message", content);
+			String bodyEnd     = LanguageUtil.get(userLocale, "p2ptaskactivity.mail.body.end");
 			
 			String body = bodyTitle +"\n\n"+ bodyMessage +"\n\n"+ bodyEnd +"\n\n"+ portal+"\n";
 			
