@@ -76,6 +76,7 @@ import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
@@ -229,7 +230,7 @@ public class CourseAdmin extends MVCPortlet {
 		String summary = ParamUtil.getString(uploadRequest, "summary", "");
 		boolean visible = ParamUtil.getBoolean(uploadRequest, "visible", false);
 		
-		int type = ParamUtil.getInteger(uploadRequest, "type");
+		int type = ParamUtil.getInteger(uploadRequest, "type", GroupConstants.TYPE_SITE_OPEN);
 		int maxusers = ParamUtil.getInteger(uploadRequest, "maxUsers");
 		
 		long courseEvalId=ParamUtil.getLong(uploadRequest, "courseEvalId", 0);
