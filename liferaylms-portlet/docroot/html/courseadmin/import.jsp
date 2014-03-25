@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.model.Course"%>
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@ page import="com.liferay.portal.LARFileException" %>
 <%@ page import="com.liferay.portal.LARTypeException" %>
 <%@ page import="com.liferay.portal.LayoutImportException" %>
@@ -14,8 +16,10 @@
 
 <%
 	String groupId = request.getParameter("groupId");
-
+	Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(Long.parseLong(groupId));
 %>
+<liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
+<liferay-ui:header title="<%= course != null ? course.getTitle(themeDisplay.getLocale()) : \"course\" %>" backURL="<%=backURL %>"></liferay-ui:header>
 
 <portlet:actionURL name="importCourse" var="importURL">
 	<portlet:param name="groupId" value="<%= groupId %>" />

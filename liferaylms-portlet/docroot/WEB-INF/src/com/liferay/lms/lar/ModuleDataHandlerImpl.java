@@ -453,30 +453,31 @@ protected PortletPreferences doImportData(PortletDataContext context, String por
 private void importEntry(PortletDataContext context, Element entryElement, Module entry) throws SystemException, PortalException {
 	
 	long userId = context.getUserId(entry.getUserUuid());
+	
+	ServiceContext serviceContext=new ServiceContext();
+	serviceContext.setUserId(userId);
+	serviceContext.setCompanyId(context.getCompanyId());
+	serviceContext.setScopeGroupId(context.getScopeGroupId());
+	
 	entry.setGroupId(context.getScopeGroupId());
 	entry.setUserId(userId);
 	entry.setCompanyId(context.getCompanyId());
 		
 	//Para convertir < correctamente.
 	entry.setDescription(entry.getDescription().replace("&amp;lt;", "&lt;"));
-
+	//entry.setDescription(parseFilesFromDescription(entry.getDescription().replace("&amp;lt;", "&lt;"), entryElement.elements("descriptionfile"), userId, context, serviceContext));
+	
 	Module theModule=ModuleLocalServiceUtil.addmodule(entry);
-	
-	
-	//Añadir la imagen al módulo.
-	ServiceContext serviceContext=new ServiceContext();
-
-	serviceContext.setUserId(userId);
-	serviceContext.setCompanyId(context.getCompanyId());
-	serviceContext.setScopeGroupId(context.getScopeGroupId());
 	
 	//Importar imagenes del modulo.
 	if(entryElement.attributeValue("file") != null){
 	
+		String name[] = entryElement.attributeValue("file").split("/");
+		String imageName = "module.jpg";
+		String imageExtension ="jpg";
+		long folderId=0;
+		
 		try {
-			String name[] = entryElement.attributeValue("file").split("/");
-			String imageName = "module.jpg";
-			String imageExtension ="jpg";
 			
 			if(name.length > 0){
 				imageName = name[name.length-1];
@@ -492,7 +493,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 			if(input != null){
 			
 				long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-				long folderId=createDLFolders(userId,repositoryId, serviceContext);
+				folderId=createDLFolders(userId,repositoryId, serviceContext);
 											
 				FileEntry image = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , imageName, "contentType", imageName, StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext ) ;
 		
@@ -502,9 +503,16 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				
 			}
 			
+		} catch(DuplicateFileException dfl){
+			
+			FileEntry image = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, imageName);
+			theModule.setIcon(image.getFileEntryId());	
+			
+			ModuleLocalServiceUtil.updateModule(theModule);
+			
 		} catch (Exception e) {
-			//e.printStackTrace();
-			System.out.println("* ERROR! module file: " + e.getMessage());
+			e.printStackTrace();
+			System.out.println("* ERROR! module file: " + e.getCause().toString());
 		}
 		
 	}
@@ -973,18 +981,18 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		
 		//<img src="/documents/10808/0/GibbonIndexer.jpg/b24c4a8f-e65c-434a-ba36-3b3e10b21a8d?t=1376472516221"
 		//<a  href="/documents/10808/10884/documento.pdf/32c193ed-16b3-4a83-93da-630501b72ee4">Documento</a></p>
-				
-		//System.out.println("   description         : " + description );
 		
 		String target 		= "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+oldFile.getTitle()+"/"+oldFile.getUuid();
 		String replacement 	= "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid();
-			
-		//System.out.println("   target      : " + target );	
-		//System.out.println("   replacement : " + replacement );
-		
+
 		res = description.replace(target, replacement);
 		
 		//System.out.println("   res         : " + res );
+		if(res.equals(description)){
+			System.out.println("   :: description         : " + description );
+			System.out.println("   :: target      : " + target );	
+			System.out.println("   :: replacement : " + replacement );
+		}
 				
 		String changed = (!res.equals(description))?" changed":" not changed";
 		
@@ -1004,5 +1012,47 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 	    }
 	    return str;
 	}
+	
+	private String parseFilesFromDescription(String description, List<Element> elements, long userId, PortletDataContext context, ServiceContext serviceContext){
+		
+		FileEntry newFile;
+		long folderId=0;
+		String res = description;
+		
+		//Si tenemos ficheros en las descripciones de las actividades
+		for (Element actElementFile : elements) {
+			
+			FileEntry oldFile = (FileEntry)context.getZipEntryAsObject(actElementFile.attributeValue("path"));
+			
+			//System.out.println("      Description File: " + oldFile.getTitle()); 
+
+			try {
+				
+				InputStream input = context.getZipEntryAsInputStream(actElementFile.attributeValue("file"));
+				
+				long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+				folderId=createDLFolders(userId,repositoryId,serviceContext);
+				
+				newFile = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , oldFile.getTitle(), "contentType", oldFile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext );
+									
+				res = descriptionFileParserLarToDescription(description, oldFile, newFile);
+				
+			} catch(DuplicateFileException dfl){
+				
+				try{
+					FileEntry existingFile = DLAppLocalServiceUtil.getFileEntry(context.getScopeGroupId(), folderId, oldFile.getTitle());
+					res = descriptionFileParserLarToDescription(description, oldFile, existingFile);
+				}catch(Exception e){
+					System.out.println("ERROR! descriptionfile descriptionFileParserLarToDescription : " +e.getMessage());
+				}
+				
+			} catch (Exception e) {
+				//e.printStackTrace();
+			}
+
+		}
+		return res;
+	}
+	
 	
 }
