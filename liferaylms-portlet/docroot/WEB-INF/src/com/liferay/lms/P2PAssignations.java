@@ -29,11 +29,11 @@ public class P2PAssignations implements MessageListener {
 	public void asignP2PActivities(){
 
 		try {
-			//Obtener el día de ayer
+			//Obtener el dia de ayer
 			Calendar yesterday = Calendar.getInstance();
 			yesterday.set(Calendar.DAY_OF_YEAR, yesterday.get(Calendar.DAY_OF_YEAR)-1);
 			
-			//Obtener la lista de actividades p2p de usuarios que entregaron la actividad en el día.
+			//Obtener la lista de actividades p2p de usuarios que entregaron la actividad en el dia.
 			List<P2pActivity> activities = P2pActivityLocalServiceUtil.getP2PActivitiesInDay(yesterday);
 			
 			//Recorrer la lista de usuario para asignar.
@@ -89,7 +89,7 @@ public class P2PAssignations implements MessageListener {
 					numAsigns = Integer.valueOf(validations);
 				} catch (Exception e) {}
 				
-				//Obtenemos las asignaciones que ya están realidas.
+				//Obtenemos las asignaciones que ya estan realidas.
 				int activityAsignations =P2pActivityCorrectionsLocalServiceUtil.getNumCorrectionsAsignToUser(activity.getActId(),activity.getUserId());
 
 				//Si la actividad no tiene asignadas todas las tareas que tiene que correguir.

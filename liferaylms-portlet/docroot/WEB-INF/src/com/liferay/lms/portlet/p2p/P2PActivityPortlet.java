@@ -568,14 +568,15 @@ public class P2PActivityPortlet extends MVCPortlet {
 			Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 			String courseFriendlyUrl = "";
 			String courseTitle = "";
-			String activityTitle = activity.getTitle(Locale.getDefault());
-			String moduleTitle =  module.getTitle(Locale.getDefault());
+			Locale userLocale = user.getLocale();
+			String activityTitle = activity.getTitle(userLocale);
+			String moduleTitle =  module.getTitle(userLocale);
 			String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
 				courseFriendlyUrl = portalUrl + pathPublic + group.getFriendlyURL();
-				courseTitle = course.getTitle(Locale.getDefault());
+				courseTitle = course.getTitle(userLocale);
 			}
 							
 			String messageArgs[]= {activityTitle, moduleTitle, courseTitle, courseFriendlyUrl};
@@ -586,14 +587,14 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 			//Nuevos campos del email
 			//Subject
-			String subject = LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.valoration.recieved.subject"); 
+			String subject = LanguageUtil.get(userLocale, "p2ptaskactivity.mail.valoration.recieved.subject"); 
 			
 			//Body
-			String title  			 = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.valoration.recieved.body.title",   titleArgs); 
-			String message  		 = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.valoration.recieved.body.message", messageArgs);
-			String usercorrection    = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.valoration.recieved.body.usercorrection", userArgs); 
-			String resultcorrection  = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.valoration.recieved.body.result",  resultArgs); 			
-			String end  			 = LanguageUtil.get(Locale.getDefault(), 	"p2ptaskactivity.mail.valoration.recieved.body.end"); 
+			String title  			 = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.title",   titleArgs); 
+			String message  		 = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.message", messageArgs);
+			String usercorrection    = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.usercorrection", userArgs); 
+			String resultcorrection  = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.valoration.recieved.body.result",  resultArgs); 			
+			String end  			 = LanguageUtil.get(userLocale, 	"p2ptaskactivity.mail.valoration.recieved.body.end"); 
 			
 			//Componer el body seg�n la actividad.
 			String body = title;
@@ -613,9 +614,9 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 			String fileId = String.valueOf(p2pActiCor.getFileEntryId());
 			if(fileId.length() == 1 && fileId.equals("0")){
-				body += "<br /><br />" + LanguageUtil.get(Locale.getDefault(), 	"p2ptaskactivity.mail.valoration.recieved.body.file.no"); 
+				body += "<br /><br />" + LanguageUtil.get(userLocale, 	"p2ptaskactivity.mail.valoration.recieved.body.file.no"); 
 			} else {
-				body += "<br /><br />" + LanguageUtil.get(Locale.getDefault(), 	"p2ptaskactivity.mail.valoration.recieved.body.file.yes");
+				body += "<br /><br />" + LanguageUtil.get(userLocale, 	"p2ptaskactivity.mail.valoration.recieved.body.file.yes");
 			}
 			
 			body += "<br /><br />" + end;
@@ -658,14 +659,15 @@ public class P2PActivityPortlet extends MVCPortlet {
 			Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 			String courseFriendlyUrl = "";
 			String courseTitle = "";
-			String activityTitle = activity.getTitle(Locale.getDefault());
-			String moduleTitle =  module.getTitle(Locale.getDefault());
+			Locale userLocale = user.getLocale();
+			String activityTitle = activity.getTitle(userLocale);
+			String moduleTitle =  module.getTitle(userLocale);
 			String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
 				courseFriendlyUrl = portalUrl + pathPublic + group.getFriendlyURL();
-				courseTitle = course.getTitle(Locale.getDefault());
+				courseTitle = course.getTitle(userLocale);
 			}
 			
 			String messageArgs[]= {activityTitle, moduleTitle, courseTitle, courseFriendlyUrl};
@@ -673,9 +675,9 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 			//Nuevos campos del email
 			//Subject
-			String subject = LanguageUtil.get(Locale.getDefault(), "p2ptaskactivity.mail.sendactivity.mail.subject"); 
-			String title = LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.sendactivity.mail.title", titleArgs);
-			String body = title +"<br /><br />"+ LanguageUtil.format(Locale.getDefault(), "p2ptaskactivity.mail.sendactivity.mail.message", messageArgs);
+			String subject = LanguageUtil.get(userLocale, "p2ptaskactivity.mail.sendactivity.mail.subject"); 
+			String title = LanguageUtil.format(userLocale, "p2ptaskactivity.mail.sendactivity.mail.title", titleArgs);
+			String body = title +"<br /><br />"+ LanguageUtil.format(userLocale, "p2ptaskactivity.mail.sendactivity.mail.message", messageArgs);
 			
 			String firmaPortal  = PrefsPropsUtil.getString(themeDisplay.getCompanyId(),"firma.email.admin");
 			// JOD
