@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.Time"%>
 <%@page import="java.text.SimpleDateFormat"%>
@@ -7,6 +9,7 @@
 <%
 	String groupId = request.getParameter("groupId");
 	Group groupObj = GroupLocalServiceUtil.getGroup(Long.valueOf(groupId));
+	Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(Long.parseLong(groupId));
 	
 	SimpleDateFormat formatDay = new SimpleDateFormat("dd");
 	formatDay.setTimeZone(timeZone);
@@ -32,6 +35,9 @@
 	int endHour=Integer.parseInt(formatHour.format(today));
 	int endMin=Integer.parseInt(formatMin.format(today));
 %>
+
+<liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
+<liferay-ui:header title="<%= course != null ? course.getTitle(themeDisplay.getLocale()) : \"course\" %>" backURL="<%=backURL %>"></liferay-ui:header>
 
 <portlet:actionURL name="cloneCourse" var="cloneCourseURL">
 	<portlet:param name="groupId" value="<%= groupId %>" />
