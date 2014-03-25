@@ -89,7 +89,7 @@ AUI().ready(function(A) {
 	</liferay-ui:search-container-results>
 	<liferay-ui:search-container-row className="com.liferay.lms.model.TestQuestion" keyProperty="actId" modelVar="activity">
 		<liferay-ui:search-container-column-text name="text">
-		<% String titleQuestion = activity.getText();
+		<% String titleQuestion = HtmlUtil.stripHtml(activity.getText());
 			if(titleQuestion.length() > 80) titleQuestion = titleQuestion.substring(0, 80) + " ...";%>
 			<%=titleQuestion %>
 		</liferay-ui:search-container-column-text>
