@@ -37,7 +37,9 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.security.permission.PermissionThreadLocal;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
@@ -49,7 +51,6 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletURLFactoryUtil;
 import com.liferay.portlet.asset.model.BaseAssetRenderer;
-import com.liferay.portlet.portletconfiguration.util.PortletConfigurationUtil;
 
 public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRenderer {
 	
@@ -161,6 +162,15 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 
 		return templateJSP;
 	}
+	
+	protected PermissionChecker getPermissionChecker() throws PrincipalException {
+		PermissionChecker permissionChecker = PermissionThreadLocal.getPermissionChecker();
+
+		if (permissionChecker == null) {
+			throw new PrincipalException("PermissionChecker not initialized");
+		}
+		return permissionChecker;
+	}
 
 	private void prepareRuntimePortlet(PortletURL portletURL)
 			throws SystemException, PortalException {
@@ -182,12 +192,9 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 					ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
 				(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, ACTION_VIEW)!=null)) {
 	        	Role siteMember = RoleLocalServiceUtil.getRole(_learningactivity.getCompanyId(),RoleConstants.SITE_MEMBER);
-	        	try {
+	        	if(PortletPermissionUtil.contains(getPermissionChecker(), _layout.getPlid(), _portletId, ActionKeys.CONFIGURATION)){
 	        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(_learningactivity.getGroupId(), _learningactivity.getCompanyId(), 
         				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ACTION_VIEW});
-	        	}
-	        	catch(PrincipalException principalException){
-	        		System.out.println("Error setting individuar resource permission: "+portletName+StringPool.SLASH+resourcePrimKey);
 	        	}
 			}
 
