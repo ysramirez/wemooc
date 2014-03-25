@@ -1,5 +1,7 @@
 package com.liferay.lms;
 
+import static com.liferay.lms.asset.LearningActivityBaseAssetRenderer.ACTION_VIEW;
+
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintWriter;
@@ -56,12 +58,10 @@ import com.liferay.portal.model.PublicRenderParameter;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
-import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
-import com.liferay.portal.service.ResourcePermissionServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.permission.PortletPermissionUtil;
 import com.liferay.portal.theme.PortletDisplay;
@@ -72,8 +72,6 @@ import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletQName;
 import com.liferay.portlet.PortletQNameUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
-
-import static com.liferay.lms.asset.LearningActivityBaseAssetRenderer.ACTION_VIEW;
 
 /**
  * Portlet implementation class ActivityViewer
@@ -249,10 +247,8 @@ public class ActivityViewer extends MVCPortlet
 								ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
 							(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, ACTION_VIEW)!=null)) {
 				        	Role siteMember = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SITE_MEMBER);
-				        	if(PortletPermissionUtil.contains(themeDisplay.getPermissionChecker(), themeDisplay.getPlid(), learningActivityType.getPortletId(), ActionKeys.CONFIGURATION)){
-				        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), 
-			        				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ACTION_VIEW});
-				        	}
+				        	ResourcePermissionLocalServiceUtil.setResourcePermissions(themeDisplay.getCompanyId(), portletName, ResourceConstants.SCOPE_INDIVIDUAL, 
+			        				resourcePrimKey,siteMember.getRoleId(), new String[]{ACTION_VIEW});
 						}
 					}
 				}
