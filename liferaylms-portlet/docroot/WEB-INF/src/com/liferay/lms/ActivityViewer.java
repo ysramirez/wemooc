@@ -56,6 +56,7 @@ import com.liferay.portal.model.PublicRenderParameter;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.PortletLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
@@ -248,8 +249,10 @@ public class ActivityViewer extends MVCPortlet
 								ResourceConstants.SCOPE_INDIVIDUAL, resourcePrimKey) == 0)&&
 							(ResourceActionLocalServiceUtil.fetchResourceAction(portletName, ACTION_VIEW)!=null)) {
 				        	Role siteMember = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(),RoleConstants.SITE_MEMBER);
-			        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), 
+				        	if(PortletPermissionUtil.contains(themeDisplay.getPermissionChecker(), themeDisplay.getPlid(), learningActivityType.getPortletId(), ActionKeys.CONFIGURATION)){
+				        		ResourcePermissionServiceUtil.setIndividualResourcePermissions(themeDisplay.getScopeGroupId(), themeDisplay.getCompanyId(), 
 			        				portletName, resourcePrimKey, siteMember.getRoleId(), new String[]{ACTION_VIEW});
+				        	}
 						}
 					}
 				}
