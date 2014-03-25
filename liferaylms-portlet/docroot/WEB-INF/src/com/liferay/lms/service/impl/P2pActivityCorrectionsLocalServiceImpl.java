@@ -16,7 +16,6 @@ package com.liferay.lms.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import com.liferay.lms.P2PSendMailAsignation;
 import com.liferay.lms.auditing.AuditConstants;
@@ -41,7 +40,6 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
@@ -335,20 +333,20 @@ public void asignCorrectionsToP2PActivities(long actId, long p2pActivityId,int n
 					com.liferay.lms.model.Module module = ModuleLocalServiceUtil.getModule(learn.getModuleId());
 					String courseFriendlyUrl = "";
 					String courseTitle = "";
-					String activityTitle = learn.getTitle(LocaleUtil.getDefault());
-					String moduleTitle =  module.getTitle(LocaleUtil.getDefault());
+					String activityTitle = learn.getTitle(user.getLocale());
+					String moduleTitle =  module.getTitle(user.getLocale());
 					String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
 					String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 					
 					if(course != null){
 						courseFriendlyUrl = portalUrl + pathPublic + course.getFriendlyURL();
-						courseTitle = course.getTitle(LocaleUtil.getDefault());
+						courseTitle = course.getTitle(user.getLocale());
 					}
 						
 					String[] params={activityTitle, moduleTitle, courseTitle, courseFriendlyUrl};
 					
 					//Enviar los emails.
-					P2PSendMailAsignation.sendMail(user.getEmailAddress(), user.getFullName(), params, user.getCompanyId());
+					P2PSendMailAsignation.sendMail(user.getEmailAddress(), user.getFullName(), params, user.getCompanyId(), user.getLocale());
 		
 				} catch (Exception e) {}
 				
