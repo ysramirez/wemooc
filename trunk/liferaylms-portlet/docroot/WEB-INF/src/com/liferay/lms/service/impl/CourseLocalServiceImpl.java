@@ -117,7 +117,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite,ServiceContext serviceContext, long calificationType, int maxUsers)
 			throws SystemException, PortalException {
-		return addCourse(title, description, summary, friendlyURL, locale, createDate, startDate, endDate, layoutSetPrototypeId, typesite, serviceContext, calificationType, maxUsers);
+		return addCourse(title, description, summary, friendlyURL, locale, createDate, startDate, endDate, layoutSetPrototypeId, typesite, 0, calificationType, maxUsers, serviceContext);
 	}
 	
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
