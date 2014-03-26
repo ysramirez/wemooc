@@ -10,6 +10,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
@@ -690,9 +691,42 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 					  
 					  List<WebElement> inputSort = getElements(we, By.tagName("input"));
 					  assertNotNull("Not found input for sort destination", inputSort);
-					  assertEquals("Not found correct inputs number for sort",2, inputSort.size());
+					  assertEquals("Not found correct inputs number for sort",11, inputSort.size());
+
+					  WebElement sorts = getElement(By.className("question_sortable"));
+					  List<WebElement> lis = getElements(sorts, By.tagName("li"));
 					  
-					  String value = inputSort.get(1).getAttribute("value");
+					  List<Integer> orden = new ArrayList<Integer>(); 
+					  
+					  for(int i=0;i<10;i++){
+						  for(WebElement li : lis){
+							  String text = li.getText();
+							  String[] te = text.split(" ");
+							  if(getLog().isInfoEnabled())getLog().info("text!"+li.getText());
+							  if(te.length==3){;
+								  if(te[1].equals(String.valueOf(i))){
+									  orden.add(Integer.valueOf(li.getAttribute("id")));
+									  break;
+								  }
+							  }
+						  }
+					  }
+
+					  for(int i=0;i<10;i++){
+						  WebElement li = lis.get(i);
+						  Integer ord = orden.get(i);
+						  assertNotNull("Not li element for "+i, li);
+						  WebElement inputt = getElement(li,By.tagName("input"));
+						  assertNotNull("Not input element for "+i, inputt);
+						  ((JavascriptExecutor)driver).executeScript("javascript:document.getElementById("+li.getAttribute("id")+").id= '"+ord+"'");
+						  ((JavascriptExecutor)driver).executeScript("javascript:document.getElementById("+li.getAttribute("id")+").getElementsByTagName('input')[0].value= '"+ord+"'");
+						  //inputt.clear();
+						  //inputt.sendKeys(String.valueOf(i));
+					  }
+					  
+					  Sleep.sleep(20000);
+					  
+					  /*String value = inputSort.get(1).getAttribute("value");
 					  String[] values = value.split("&");
 					  
 					  StringBuilder result = new StringBuilder();
@@ -726,9 +760,9 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 							  }
 						  }
 						  result.append("&");
-					  }
+					  }*/
 					  
-					  ((JavascriptExecutor)driver).executeScript("javascript:document.getElementsByClassName(\"questiontype_sortable\")[0].getElementsByTagName(\"input\")[1].value = '"+result.toString()+"';");
+					  //((JavascriptExecutor)driver).executeScript("javascript:document.getElementsByClassName(\"questiontype_sortable\")[0].getElementsByTagName(\"input\")[1].value = '"+result.toString()+"';");
 
 					  
 					  WebElement submit = driver.findElement(By.className("aui-button-input-submit"));
@@ -880,6 +914,7 @@ public class Bd_CheckActivity extends SeleniumTestCase {
 		  File f = new File("docroot"+File.separator+"WEB-INF"+File.separator+"classes"+File.separator+"resources"+File.separator+"encuesta.csv");
 		  String text = readFile(f);
 		  StringBuilder sb = new StringBuilder();
+		  sb.append("Pregunta;Respuesta\n");
 		  for(WebElement question : questions){
 			  List<WebElement> answers = getElements(question,By.className("answer"));
 			  WebElement questiontext = getElement(question,By.className("questiontext"));

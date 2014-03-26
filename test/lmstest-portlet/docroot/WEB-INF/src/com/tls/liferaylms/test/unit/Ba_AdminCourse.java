@@ -101,6 +101,15 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 						butForm1.click();
 
 						Sleep.sleep(4000);
+
+						WebElement bHolder = getElement(By.className("aui-button-holder"));
+						assertNotNull("Not bHolder found", bHolder);
+						List<WebElement> inputs = getElements(bHolder,By.tagName("input"));
+						assertEquals("Menu inputs have size incorrect", inputs.size(),2);
+						
+						inputs.get(1).click();
+						
+						Sleep.sleep(2000);
 						
 						WebElement freetext = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_freetext"));
 						assertNotNull("Freetext not Find", freetext);
