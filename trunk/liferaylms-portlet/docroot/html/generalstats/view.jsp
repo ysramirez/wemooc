@@ -86,7 +86,14 @@ Locale loc = response.getLocale();
 		long modulesCount=ModuleLocalServiceUtil.countByGroupId(course.getGroupCreatedId());
 	%>
 		<liferay-ui:search-container-column-text name="coursestats.name">
-		<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
+		<c:choose>
+			<c:when test="<%= !course.isClosed() && UserLocalServiceUtil.hasGroupUser(course.getGroupCreatedId(), themeDisplay.getUserId()) %>">
+				<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
+			</c:when>
+			<c:otherwise>
+				<%=course.getTitle(themeDisplay.getLocale()) %>
+			</c:otherwise>
+		</c:choose>
 		
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text valign="right" name="coursestats.registered">
