@@ -164,6 +164,9 @@ boolean showExport 	= preferences.getValue("showExport", "true").equals("true");
 boolean showImport	= preferences.getValue("showImport", "true").equals("true");
 boolean showClone 	= preferences.getValue("showClone",  "true").equals("true");
 boolean showGo 		= preferences.getValue("showGo", 	 "true").equals("true");
+boolean showRegistrationType = preferences.getValue("showRegistrationType",  "true").equals("true");
+boolean showMaxUsers = preferences.getValue("showMaxUsers", 	 "true").equals("true");
+
 boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
 
 if(course!=null)
@@ -465,7 +468,7 @@ else
 		</aui:field-wrapper>
 	
 			<c:choose>
-	      		<c:when test="<%=sites!=null&&sites.size()==1%>">
+	      		<c:when test="<%=(!showRegistrationType)||(sites!=null&&sites.size()==1)%>">
 					<aui:input name="type" type="hidden" value="<%= sites.toArray()[0] %>" />
 	      		</c:when>
 	      		<c:otherwise>
@@ -497,8 +500,10 @@ else
 					</aui:select>
 	      		</c:otherwise>
 			</c:choose>
-		
-		<aui:input name="maxUsers" label="num-of-users" type="text" value="<%=maxUsers %>" helpMessage="<%=LanguageUtil.get(pageContext,\"max-users-method-help\")%>" />  
+			
+		<c:if test="<%=showMaxUsers %>">
+			<aui:input name="maxUsers" label="num-of-users" type="text" value="<%=maxUsers %>" helpMessage="<%=LanguageUtil.get(pageContext,\"max-users-method-help\")%>" />
+		</c:if>
 	</liferay-ui:panel>
 	<liferay-ui:panel title="categorization" collapsible="true" defaultState="closed">
 	<liferay-ui:custom-attributes-available className="<%= Course.class.getName() %>">

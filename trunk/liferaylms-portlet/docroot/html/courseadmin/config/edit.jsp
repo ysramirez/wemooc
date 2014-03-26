@@ -52,6 +52,8 @@
 	</aui:field-wrapper>
 	
 	<aui:field-wrapper label="course-fields" >
+		<aui:input type="checkbox" label="registration-type" name="showRegistrationType" value="<%=preferences.getValue(\"showRegistrationType\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
+		<aui:input type="checkbox" label="num-of-users" name="showMaxUsers" value="<%=preferences.getValue(\"showMaxUsers\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 		<aui:input type="checkbox" helpMessage="help-inscription-date" label="inscription-date" name="inscriptionDate" value="<%=preferences.getValue(\"showInscriptionDate\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 		<aui:input type="checkbox" helpMessage="help-published-in-catalog" label="published-in-catalog" name="showcatalog" value="<%=preferences.getValue(\"showcatalog\", StringPool.TRUE) %>" ignoreRequestValue="true"/>
 	</aui:field-wrapper>

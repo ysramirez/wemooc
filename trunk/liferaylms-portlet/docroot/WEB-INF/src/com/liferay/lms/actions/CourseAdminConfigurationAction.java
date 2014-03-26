@@ -48,6 +48,8 @@ public class CourseAdminConfigurationAction implements ConfigurationAction {
 		portletPreferences.setValue("showClone",	Boolean.toString(ParamUtil.getBoolean(actionRequest, "showClone",	true)));
 		portletPreferences.setValue("showGo",		Boolean.toString(ParamUtil.getBoolean(actionRequest, "showGo",		true)));
 		portletPreferences.setValue("showPermission",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showPermission",	true)));
+		portletPreferences.setValue("showRegistrationType", Boolean.toString(ParamUtil.getBoolean(actionRequest, "showRegistrationType",	true)));
+		portletPreferences.setValue("showMaxUsers", Boolean.toString(ParamUtil.getBoolean(actionRequest, "showMaxUsers",	true)));
 		
 		portletPreferences.setValue("showSearchTags",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showSearchTags",	false)));
 		
