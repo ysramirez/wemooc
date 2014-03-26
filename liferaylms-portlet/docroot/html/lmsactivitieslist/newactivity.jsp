@@ -30,7 +30,7 @@ AUI().ready(
 	int currentLearningActivityType=0;
 	for(LearningActivityType learningActivityType:learningActivityTypeRegistry.getLearningActivityTypesForCreating())
 	{
-		if(!ArrayUtil.contains(invisibleTypes, learningActivityType.getTypeId())) {
+		if(learningActivityType != null && !ArrayUtil.contains(invisibleTypes, learningActivityType.getTypeId())) {
 %>	
 	<liferay-portlet:renderURL var="newactivityURL">
 		<liferay-portlet:param name="editing" value="<%=StringPool.TRUE %>" />
