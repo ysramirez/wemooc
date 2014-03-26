@@ -19,7 +19,7 @@
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <% 
 	long assetId=ParamUtil.getLong(request, "assertId");
-	boolean openWindow = true, editDetails = false, improve = true; 
+	boolean openWindow = false, editDetails = false, improve = true; 
 	String assetTitle=StringPool.BLANK;
 	long typeId=ParamUtil.getLong(request, "type");
 	LearningActivity learningActivity=null;
