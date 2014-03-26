@@ -49,6 +49,7 @@ public class Bb_CheckUsers extends SeleniumTestCase {
 					
 					WebElement freetext = getElement(By.id("_courseadmin_WAR_liferaylmsportlet_freetext"));
 					assertNotNull("Freetext not Find", freetext);
+					if(getLog().isInfoEnabled())getLog().info("CourseId::"+Context.getCourseId());
 					if(!freetext.getText().equals(Context.getCourseId())){
 						for(int i=0;i<40;i++){
 							freetext.sendKeys(Keys.BACK_SPACE);

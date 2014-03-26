@@ -39,6 +39,8 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		if(login.isLogin())
 			login.logout();
 		
+		Sleep.sleep(2000);
+		
 		boolean teacherLogin = login.login();
 		assertTrue("Error login teacher",teacherLogin);
 		
@@ -200,15 +202,9 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 					assertEquals("Not Edit portlet found", 1,asActive.size());
 					
 					//Put activity in context
-					String idenfier = asActive.get(0).getText();					
-					
-					//asActive.get(0).click();
+					String idenfier = asActive.get(0).getText();			
 
 					Context.getActivities().put(idenfier, driver.getCurrentUrl());
-					
-					
-					//assertEquals("Errors in activity"+param, 0, CheckPage.check(driver));
-					
 					
 					//Editamos la actividad
 					changeEditMode();
@@ -268,15 +264,19 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 	}
 	
 	private void sendCkEditorJSId(WebDriver driver,String msg,String id){
-		if (driver instanceof JavascriptExecutor) {
-			StringBuilder sb = new StringBuilder("javascript:CKEDITOR.instances['");
-			sb.append(id);
-			sb.append("'].setData('<p>");
-			sb.append(msg);
-			sb.append(" ");
-			sb.append(Context.getCourseId());
-			sb.append("</p>');");
-		    ((JavascriptExecutor)driver).executeScript(sb.toString());
+		try{
+			if (driver instanceof JavascriptExecutor) {
+				StringBuilder sb = new StringBuilder("javascript:CKEDITOR.instances['");
+				sb.append(id);
+				sb.append("'].setData('<p>");
+				sb.append(msg);
+				sb.append(" ");
+				sb.append(Context.getCourseId());
+				sb.append("</p>');");
+			    ((JavascriptExecutor)driver).executeScript(sb.toString());
+			}
+		}catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 	
@@ -307,14 +307,28 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		aNew.click();
 		
 		Sleep.sleep(1000);
-		
-		WebElement typeId = getElement(By.id("_execactivity_WAR_liferaylmsportlet_typeId"));
-		assertNotNull("Not found select typeId", typeId);
-		
-		Select select = new Select(typeId);
-		select.selectByValue("5");
-		
+				
+		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_newQuestion(5);");
+
+		Sleep.sleep(4000);
+				
 		sendCkEditorJSId(driver,TestProperties.get("act.test.5"),"_execactivity_WAR_liferaylmsportlet_text");
+
+		//Sleep.sleep(4000);
+		try{
+			for(int i=0;i<10;i++){
+				if(i>1){
+					executeJS("_execactivity_WAR_liferaylmsportlet_addNode();");
+				}
+				Sleep.sleep(3000);
+				
+				sendCkEditorJSId(driver,TestProperties.get("act.test.5.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer_new"+(i+1));
+				
+				Sleep.sleep(1000);
+			}
+		}catch(Exception e){
+			e.printStackTrace();
+		}
 		
 		WebElement submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
@@ -325,17 +339,6 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		}catch(Exception e){}
 		
 		Sleep.sleep(1000);
-		
-		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
-		
-		for(int i=0;i<10;i++){
-			sendCkEditorJSId(driver,TestProperties.get("act.test.5.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer");
-			WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
-			assertNotNull("Not form submit response", form);
-			form.submit();
-			
-			Sleep.sleep(1000);
-		}
 		
 		WebElement breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
 		assertNotNull("Not breturn found", breturn);
@@ -356,14 +359,32 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 
 		Sleep.sleep(1000);
 		
-		typeId = getElement(By.id("_execactivity_WAR_liferaylmsportlet_typeId"));
-		assertNotNull("Not found select typeId", typeId);
+		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_newQuestion(4);");
 		
-		select = new Select(typeId);
-		select.selectByValue("4");
+		Sleep.sleep(4000);
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.4"),"_execactivity_WAR_liferaylmsportlet_text");
+
+		Sleep.sleep(4000);
+
+		WebElement check = getElement(By.id("_execactivity_WAR_liferaylmsportlet_correct_new1Checkbox"));
+		check.click();
 		
+		for(int i=0;i<10;i++){
+			if(i>1){
+				executeJS("_execactivity_WAR_liferaylmsportlet_addNode();");
+			}
+
+			Sleep.sleep(3000);
+			
+			sendCkEditorJSId(driver,TestProperties.get("act.test.5.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer_new"+(i+1));
+			
+			if(i==0){
+			}
+			
+			Sleep.sleep(2000);
+		}
+
 		submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
 		//Doubleclick
@@ -371,24 +392,6 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 			submit.click();
 			submit.click();
 		}catch(Exception e){}
-
-		Sleep.sleep(1000);
-
-		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
-		
-		for(int i=0;i<10;i++){
-			sendCkEditorJSId(driver,TestProperties.get("act.test.4.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer");
-			WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
-			assertNotNull("Not form submit response", form);
-			if(i==0){
-				WebElement check = getElement(By.id("_execactivity_WAR_liferaylmsportlet_correctCheckbox"));
-				check.click();
-			}
-			
-			form.submit();
-			
-			Sleep.sleep(2000);
-		}
 		
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
 		assertNotNull("Not breturn found", breturn);
@@ -403,69 +406,100 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		aNew.click();
 
 		Sleep.sleep(1000);
-		
-		typeId = getElement(By.id("_execactivity_WAR_liferaylmsportlet_typeId"));
-		assertNotNull("Not found select typeId", typeId);
-		
-		select = new Select(typeId);
-		select.selectByValue("3");
+
+		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_newQuestion(3);");
+
+		Sleep.sleep(4000);
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.3"),"_execactivity_WAR_liferaylmsportlet_text");
 
-		submit = getElement(By.className("aui-button-input-submit"));
-		assertNotNull("Not submit found", submit);
-		//Doubleclick
-		submit.click();
-		try{
-			submit.click();
-		}catch(Exception e){}
-
-		Sleep.sleep(1000);
-
-		WebElement newitem = getElement(By.className("newitem2"));
-		assertNotNull("Not found submit for answer", newitem);
-		WebElement a = getElement(newitem,By.tagName("a"));
-		assertNotNull("Not found a for answer", a);
-		a.click();
+		Sleep.sleep(4000);
 		
-		sendCkEditorJSId(driver,TestProperties.get("act.test.3.text"),"_execactivity_WAR_liferaylmsportlet_answer");
+		sendCkEditorJSId(driver,TestProperties.get("act.test.3.text"),"_execactivity_WAR_liferaylmsportlet_answer_new1");
 
 		Sleep.sleep(3000);
 		
-		WebElement mainAdd = getElement(By.id("addNewQuestion"));
-		
-		submit = getElement(mainAdd, By.className("aui-button-input-submit"));
+		submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
 		//Doubleclick
-		
 		try{
 			submit.click();
 			submit.click();
 		}catch(Exception e){}
 
-		Sleep.sleep(1000);
+		Sleep.sleep(3000);
 		
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
 		assertNotNull("Not breturn found", breturn);
 		breturn.click();
-
-		Sleep.sleep(1000);
 		//Free text
-		bt_new = getElement(By.className("bt_new"));
-		assertNotNull("Not found button bt_new", bt_new);
-		aNew = getElement(bt_new,By.tagName("a"));
-		assertNotNull("Not found button aNew", aNew);
-		aNew.click();
+		
+		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_newQuestion(2);");
 
-		Sleep.sleep(1000);
-		
-		typeId = getElement(By.id("_execactivity_WAR_liferaylmsportlet_typeId"));
-		assertNotNull("Not found select typeId", typeId);
-		
-		select = new Select(typeId);
-		select.selectByValue("2");
+		Sleep.sleep(4000);
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.2"),"_execactivity_WAR_liferaylmsportlet_text");
+
+
+		bt_new = getElement(By.id("_execactivity_WAR_liferaylmsportlet_includeSolution"));
+		assertNotNull("Not found button bt_new", bt_new);
+		bt_new.click();
+		
+		Sleep.sleep(4000);
+		
+		WebElement tac =getElement(By.className("container-textarea"));
+		assertNotNull("Not found textarea container", tac);
+		
+		WebElement ta =getElement(tac,By.tagName("textarea"));
+		assertNotNull("Not found textarea container", ta);
+		
+		ta.clear();
+		ta.sendKeys(TestProperties.get("act.test.3.answer"));
+
+		
+		submit = getElement(By.className("aui-button-input-submit"));
+		assertNotNull("Not submit found", submit);
+		//Doubleclick
+		try{
+			submit.click();
+			submit.click();
+		}catch(Exception e){}
+
+		
+		Sleep.sleep(1000);
+
+		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
+		assertNotNull("Not breturn found", breturn);
+		breturn.click();
+
+		Sleep.sleep(4000);
+		
+		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_newQuestion(1);");
+		
+		Sleep.sleep(4000);
+
+		sendCkEditorJSId(driver,TestProperties.get("act.test.1"),"_execactivity_WAR_liferaylmsportlet_text");
+
+		Sleep.sleep(1000);
+
+		//executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
+
+		for(int i=0;i<10;i++){
+			if(i>1){
+				executeJS("_execactivity_WAR_liferaylmsportlet_addNode();");
+			}
+			
+			Sleep.sleep(3000);
+		
+			sendCkEditorJSId(driver,TestProperties.get("act.test.1.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer_new"+(i+1));
+			Sleep.sleep(1000);
+			
+			if(i==0){
+				check = getElement(By.id("_execactivity_WAR_liferaylmsportlet_correct_new1Checkbox"));
+				assertNotNull("Not found correct check", check);
+				check.click();
+			}
+		}
 
 		submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
@@ -477,97 +511,10 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 
 		Sleep.sleep(2000);
 
-		//This line not work 
-		//executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
-
-		//WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
-		//assertNotNull("Not form submit response", form);
-		//form.submit();
-		
-		WebElement include = getElement(By.id("includeSolution"));
-		assertNotNull("Not found inclide for free text", include);
-		include.click();
-
-		Sleep.sleep(1000);
-		
-		WebElement tac =getElement(By.className("container-textarea"));
-		assertNotNull("Not found textarea container", tac);
-		
-		WebElement ta =getElement(tac,By.tagName("textarea"));
-		assertNotNull("Not found textarea container", ta);
-		
-		ta.clear();
-		ta.sendKeys(TestProperties.get("act.test.3.answer"));
-		
-
-		WebElement solution = getElement(By.id("solution"));
-		
-		submit = getElement(solution,By.className("aui-button-input-submit"));
-		assertNotNull("Not submit found", submit);
-		//Doubleclick
-		try{
-			submit.click();
-			submit.click();
-		}catch(Exception e){}
-		
-		Sleep.sleep(1000);
-
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
 		assertNotNull("Not breturn found", breturn);
 		breturn.click();
-
-		Sleep.sleep(1000);
-		//Multiple answer
-		bt_new = getElement(By.className("bt_new"));
-		assertNotNull("Not found button bt_new", bt_new);
-		aNew = getElement(bt_new,By.tagName("a"));
-		assertNotNull("Not found button aNew", aNew);
-		aNew.click();
-
-		Sleep.sleep(1000);
 		
-		typeId = getElement(By.id("_execactivity_WAR_liferaylmsportlet_typeId"));
-		assertNotNull("Not found select typeId", typeId);
-
-		select = new Select(typeId);
-		select.selectByValue("1");
-
-		sendCkEditorJSId(driver,TestProperties.get("act.test.1"),"_execactivity_WAR_liferaylmsportlet_text");
-
-		submit = getElement(By.className("aui-button-input-submit"));
-		assertNotNull("Not submit found", submit);
-		//Doubleclick
-		try{
-			submit.click();
-			submit.click();
-		}catch(Exception e){}
-
-		Sleep.sleep(1000);
-
-		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
-
-		for(int i=0;i<10;i++){
-			sendCkEditorJSId(driver,TestProperties.get("act.test.1.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer");
-			Sleep.sleep(1000);
-			if(i==0){
-				WebElement check = getElement(By.id("_execactivity_WAR_liferaylmsportlet_correctCheckbox"));
-				WebDriverWait wait = new WebDriverWait(driver, 300);
-				wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("_execactivity_WAR_liferaylmsportlet_correctCheckbox")));
-				check.click();
-			}
-			WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
-			assertNotNull("Not form submit response", form);
-			
-			form.submit();
-			
-			Sleep.sleep(2000);
-		}
-
-		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
-		assertNotNull("Not breturn found", breturn);
-		breturn.click();
-
-		Sleep.sleep(1000);
 		//Options
 		bt_new = getElement(By.className("bt_new"));
 		assertNotNull("Not found button bt_new", bt_new);
@@ -577,13 +524,32 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 
 		Sleep.sleep(1000);
 		
-		typeId = getElement(By.id("_execactivity_WAR_liferaylmsportlet_typeId"));
-		assertNotNull("Not found select typeId", typeId);
+		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_newQuestion(0);");
 
-		select = new Select(typeId);
-		select.selectByValue("0");
+		Sleep.sleep(4000);
 
 		sendCkEditorJSId(driver,TestProperties.get("act.test.0"),"_execactivity_WAR_liferaylmsportlet_text");
+
+		Sleep.sleep(4000);
+
+		//executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
+
+		for(int i=0;i<10;i++){
+			if(i>1){
+				executeJS("_execactivity_WAR_liferaylmsportlet_addNode();");
+			}
+
+			Sleep.sleep(3000);
+			
+			sendCkEditorJSId(driver,TestProperties.get("act.test.0.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer_new"+(i+1));
+			
+			if(i==0){
+				check = getElement(By.id("_execactivity_WAR_liferaylmsportlet_correct_new1Checkbox"));
+				assertNotNull("Not found correct check", check);
+				check.click();
+			}
+		}
+		
 
 		submit = getElement(By.className("aui-button-input-submit"));
 		assertNotNull("Not submit found", submit);
@@ -593,24 +559,7 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 			submit.click();
 		}catch(Exception e){}
 
-		Sleep.sleep(1000);
-
-		executeJS("javascript:_execactivity_WAR_liferaylmsportlet_divVisibility('addNewQuestion', this);");
-
-		for(int i=0;i<10;i++){
-			sendCkEditorJSId(driver,TestProperties.get("act.test.0.text")+" "+i,"_execactivity_WAR_liferaylmsportlet_answer");
-			WebElement form = getElement(By.id("_execactivity_WAR_liferaylmsportlet_afm"));
-			assertNotNull("Not form submit response", form);
-			
-			if(i==0){
-				WebElement check = getElement(By.id("_execactivity_WAR_liferaylmsportlet_correctCheckbox"));
-				check.click();
-			}
-			
-			form.submit();
-			
-			Sleep.sleep(2000);
-		}
+		Sleep.sleep(2000);
 
 		breturn = getElement(By.id("_execactivity_WAR_liferaylmsportlet_TabsBack"));
 		assertNotNull("Not breturn found", breturn);
@@ -647,11 +596,20 @@ public class Bc_CreateActivity extends SeleniumTestCase {
 		driver.switchTo().frame(0);
 		
 		//3th a
-		List<WebElement> as = getElements(By.tagName("a"));
-		assertNotNull("Not found 'as' in Poll edit", as);
-		assertTrue("Numbers of 'as' in Poll edit not matched",as.size()>=4);
 		
-		as.get(2).click();
+		WebElement menuimport = getElement(By.id("_surveyactivity_WAR_liferaylmsportlet_tiym_menuButton"));
+		assertNotNull("Not found menuimport in Poll edit", menuimport);
+		
+		menuimport.click();
+		
+		Sleep.sleep(2000);
+		
+		menuimport = getElement(By.id("_surveyactivity_WAR_liferaylmsportlet_tiym_menu_surveyactivity.editquestions.importquestions"));
+		
+		assertNotNull("Not found menu button in Poll edit", menuimport);
+		menuimport.click();
+		
+		Sleep.sleep(2000);
 
 		driver.switchTo().defaultContent();
 		driver.switchTo().frame(0);
