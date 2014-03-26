@@ -1,9 +1,0 @@
-/* Los import hay que ponerlos antes que las reglas sino son ignorados y Liferay necesita el ; al final */
-/* no puede contener + de 32 archivos importados */
-/* Includes de vistas compartidas entre portlets: */
-
-@import url(jquery-ui.css);
-
-@import url(shared/layout.css);
-@import url(shared/navigation.css);
-@import url(shared/basic.css);
