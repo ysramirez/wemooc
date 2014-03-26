@@ -109,7 +109,7 @@ Locale loc = response.getLocale();
 	%>
 		<liferay-ui:search-container-column-text>
 		<c:choose>
-			<c:when test="<%= !course.isClosed() %>">
+			<c:when test="<%= !course.isClosed() && UserLocalServiceUtil.hasGroupUser(course.getGroupCreatedId(), themeDisplay.getUserId()) %>">
 				<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
 			</c:when>
 			<c:otherwise>
