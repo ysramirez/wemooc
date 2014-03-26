@@ -163,14 +163,4 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	</liferay-ui:search-container-row>
  	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
-	
-<portlet:renderURL var="volverURL">
-	<portlet:param name="courseId" value="<%=Long.toString(courseId) %>" />
-	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" />
-	<portlet:param name="tabs1" value="<%=tab %>" />
-	<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
-</portlet:renderURL>
-
-
-<aui:button name="volverButton" value="back" onClick="<%= volverURL %>"></aui:button>
 
