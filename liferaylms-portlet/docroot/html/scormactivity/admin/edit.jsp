@@ -117,24 +117,9 @@ function <portlet:namespace />search() {
 		A.one('.portlet-body').append(iframe);
 		A.all('.acticons').each(function(icon){ icon.hide(); });
 		A.one('#<portlet:namespace/>fm').hide();
-		window.messageHandler = A.one(window).on('message', 
-				function(event){
-					var html5Event=event._event;
-					if(html5Event.data.name=='resizeIframe'){
-						var source=iframe.getDOM ();
-						source.height=0;
+		A.one('#<portlet:namespace/>backbutton').scrollIntoView();
 
-					    if (source.Document && source.Document.body.scrollHeight) 
-					        source.height = source.contentWindow.document.body.scrollHeight;
-					    else if (source.contentDocument && source.contentDocument.body.scrollHeight) 
-					        source.height = source.contentDocument.body.scrollHeight + 35;
-					    else if(source.contentDocument && source.contentDocument.body.offsetHeight) 
-					        source.height = source.contentDocument.body.offsetHeight + 35;
-					    else if(source.height < html5Event.data.height)
-					    	source.height = html5Event.data.height;
-					}
-				});
-
+		iframe.plug(A.Plugin.ResizeIframe);
 		iframe.setAttribute('src','<%=selectResource %>');
 	});
 }
