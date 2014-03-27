@@ -1,6 +1,7 @@
 package com.liferay.lms.lar;
 
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -973,9 +974,9 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				
 		//System.out.println("   description         : " + description );
 		
-		String target = "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+oldFile.getTitle()+"/"+oldFile.getUuid();
-		String replacement = "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid();
-			
+		String target 		= "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+URLEncoder.encode(oldFile.getTitle())+"/"+oldFile.getUuid();
+		String replacement 	= "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+URLEncoder.encode(newFile.getTitle())+"/"+newFile.getUuid();
+		
 		//System.out.println("   target      : " + target );	
 		//System.out.println("   replacement : " + replacement );
 		
