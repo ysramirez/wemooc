@@ -51,35 +51,26 @@ vocabularies.addAll(AssetVocabularyLocalServiceUtil.getGroupVocabularies(searchG
 	</div>
 
 	<aui:script use="liferay-asset-categories-selector">
-	
-		Liferay.AssetCategoriesSelector.prototype._getPopupSuper = Liferay.AssetCategoriesSelector.prototype._getPopup;
-	
-		Liferay.AssetCategoriesSelector.prototype._getPopup = function(){
-			var instance = this;
-			var popUp = instance._getPopupSuper();
-			popUp.set('draggable',false);
-			popUp.set('resizable',false);
-			var button_y = instance.icons.get('boundingBox').getY();
-			popUp.before(['dialog:destroy', 'dialog:modalChange', 'dialog:render', 'dialog:visibleChange'], function(event) {
-					this.get('boundingBox').setY(button_y);
-				}
-			);
-			popUp.after(
-				['dialog:destroy', 'dialog:modalChange', 'dialog:render', 'dialog:visibleChange'],function(event) {
-					
-					if ((!!window.postMessage)&&(window.parent != window)) {
-						if (!window.location.origin){
-							window.location.origin = window.location.protocol+"//"+window.location.host;
-						}
-						parent.postMessage({name:'resizeIframe',height:(popUp.get('visible'))?popUp.get('boundingBox').height():0}, window.location.origin);
-					
-					
-					}	
-					this.get('boundingBox').setY(button_y);
+
+		var body = A.one(document.body);
+		A.DialogManager.after(
+			['dialog:contentUpdate', 'dialog:visibleChange'],
+			function(event) {
+				var dialog = event.target;
+
+				dialog.setAttrs({
+					draggable:false,
+					resizable:false
 				});
-			
-			return popUp;	
-		};
+
+				if(dialog.get('visible')){
+					body.setStyle('min-height',dialog.get('contentBox').getComputedStyle('height'));
+				}
+				else{
+					body.setStyle('min-height','');
+				}
+			}
+		);
 
 		var asset = new Liferay.AssetCategoriesSelector(
 			{
