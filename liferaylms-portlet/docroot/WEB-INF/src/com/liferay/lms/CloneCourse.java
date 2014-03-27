@@ -1,6 +1,7 @@
 package com.liferay.lms;
 
 import java.io.InputStream;
+import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -60,6 +61,7 @@ import com.liferay.portlet.announcements.model.AnnouncementsEntry;
 import com.liferay.portlet.announcements.model.AnnouncementsFlagConstants;
 import com.liferay.portlet.announcements.service.AnnouncementsEntryServiceUtil;
 import com.liferay.portlet.announcements.service.AnnouncementsFlagLocalServiceUtil;
+import com.liferay.portlet.asset.NoSuchEntryException;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.DuplicateFileException;
@@ -83,6 +85,8 @@ public class CloneCourse implements MessageListener {
 	
 	Date startDate;
 	Date endDate;
+	
+	private String cloneTraceStr = "--------------- Clone course trace ----------------"; 
 		
 	public CloneCourse(long groupId, String newCourseName, ThemeDisplay themeDisplay, Date startDate, Date endDate, ServiceContext serviceContext) {
 		super();
@@ -131,12 +135,16 @@ public class CloneCourse implements MessageListener {
 	@SuppressWarnings("unchecked")
 	public void doCloneCourse() throws Exception {
 		
+		cloneTraceStr += " Course to clone\n........................." + groupId;
+		
 		System.out.println("  + groupId: "+groupId);
 		
 		Group group = GroupLocalServiceUtil.getGroup(groupId);
 		Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 		
 		System.out.println("  + course: "+course.getTitle(themeDisplay.getLocale()));
+		cloneTraceStr += " course:" + course.getTitle(themeDisplay.getLocale()); 
+		cloneTraceStr += " groupId:" + groupId;
 		
 		Date today=new Date(System.currentTimeMillis());
 
@@ -156,11 +164,15 @@ public class CloneCourse implements MessageListener {
 					break;
 				}
 			}
+		}else if(!"".equals(lmsPrefs.getLmsTemplates())){
+			LayoutSetPrototype layout = LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.valueOf(lmsPrefs.getLmsTemplates()));
+			layoutSetPrototypeId=Long.valueOf(lmsPrefs.getLmsTemplates());
 		}else{
 			layoutSetPrototypeId = LayoutSetLocalServiceUtil.getLayoutSet(groupId, true).getLayoutSetPrototypeId();
 		}
 		
 		System.out.println("  + layoutSetPrototypeId: "+layoutSetPrototypeId);
+		cloneTraceStr += " layoutSetPrototypeId:" + layoutSetPrototypeId;
 		
 		try{
 			AssetEntryLocalServiceUtil.validate(course.getGroupCreatedId(), Course.class.getName(), serviceContext.getAssetCategoryIds(), serviceContext.getAssetTagNames());
@@ -189,6 +201,9 @@ public class CloneCourse implements MessageListener {
 
 		System.out.println("-----------------------\n  From course: "+  group.getName());
 		System.out.println("  + to course: "+  newCourse.getTitle(Locale.getDefault()) +", GroupCreatedId: "+newCourse.getGroupCreatedId()+", GroupId: "+newCourse.getGroupId());
+		cloneTraceStr += "\n New course\n........................." + groupId;
+		cloneTraceStr += " Course: "+  newCourse.getTitle(Locale.getDefault()) +"\n GroupCreatedId: "+newCourse.getGroupCreatedId()+"\n GroupId: "+newCourse.getGroupId();
+		cloneTraceStr += "\n.........................";
 		
 		long days = 0;
 		boolean isFirstModule = true;
@@ -209,6 +224,8 @@ public class CloneCourse implements MessageListener {
 				isFirstModule = false;
 				
 				System.out.println(" Days to add: "+ days +" "+startDate+" "+module.getStartDate()+" "+c.getTime());
+				cloneTraceStr += "\n Days to add: "+ days +" "+startDate+" "+module.getStartDate()+" "+c.getTime();
+				cloneTraceStr += "\n\n";
 			}
 			
 			Module newModule;
@@ -241,6 +258,7 @@ public class CloneCourse implements MessageListener {
 				
 				System.out.println("\n    Module : " + module.getTitle(Locale.getDefault()) +"("+module.getModuleId()+")");
 				System.out.println("    + Module : " + newModule.getTitle(Locale.getDefault()) +"("+newModule.getModuleId()+")" );
+				cloneTraceStr += "  Module: " + newModule.getTitle(Locale.getDefault()) +"("+newModule.getModuleId()+")";
 				
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
@@ -286,6 +304,7 @@ public class CloneCourse implements MessageListener {
 					
 					System.out.println("      Learning Activity : " + activity.getTitle(Locale.getDefault())+ " ("+activity.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(activity.getTypeId()).getName())+")");
 					System.out.println("      + Learning Activity : " + nuevaLarn.getTitle(Locale.getDefault())+ " ("+nuevaLarn.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(nuevaLarn.getTypeId()).getName())+")");
+					cloneTraceStr += "   Learning Activity: " + nuevaLarn.getTitle(Locale.getDefault())+ " ("+nuevaLarn.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(nuevaLarn.getTypeId()).getName())+")";
 					
 					cloneActivityFile(activity, nuevaLarn, themeDisplay.getUserId(), serviceContext);
 					
@@ -310,6 +329,7 @@ public class CloneCourse implements MessageListener {
 						
 						System.out.println("      Test question : " + question.getQuestionId() );
 						System.out.println("      + Test question : " + newTestQuestion.getQuestionId() );
+						cloneTraceStr += "\n   Test question: " + newTestQuestion.getQuestionId();
 						
 					} catch (Exception e) {
 						// TODO Auto-generated catch block
@@ -330,6 +350,7 @@ public class CloneCourse implements MessageListener {
 							
 							System.out.println("        Test answer : " + answer.getAnswerId());
 							System.out.println("        + Test answer : " + newTestAnswer.getAnswerId());
+							cloneTraceStr += "\n     Test answer: " + newTestAnswer.getAnswerId();
 							
 						} catch (Exception e) {
 							// TODO Auto-generated catch block
@@ -398,7 +419,7 @@ public class CloneCourse implements MessageListener {
 								
 								newDescription = descriptionCloneFile(newDescription, file, newFile);
 								
-								System.out.println("   + Description file image : " + file.getTitle() +" ("+file.getMimeType()+")");
+								System.out.println("     + Description file image : " + file.getTitle() +" ("+file.getMimeType()+")");
 								
 							} catch (Exception e) {
 								// TODO Auto-generated catch block
@@ -477,21 +498,20 @@ public class CloneCourse implements MessageListener {
 			return res;
 		}
 		
-		//Formato
 		//<img src="/documents/10808/0/GibbonIndexer.jpg/b24c4a8f-e65c-434a-ba36-3b3e10b21a8d?t=1376472516221"
 		//<a  href="/documents/10808/10884/documento.pdf/32c193ed-16b3-4a83-93da-630501b72ee4">Documento</a></p>
-				
-		//System.out.println("   description         : " + description );
 		
-		String target = "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+oldFile.getTitle()+"/"+oldFile.getUuid();
-		String replacement = "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+newFile.getTitle()+"/"+newFile.getUuid();
-			
-		//System.out.println("   target      : " + target );	
-		//System.out.println("   replacement : " + replacement );
-		
+		String target 		= "/documents/"+oldFile.getRepositoryId()+"/"+oldFile.getFolderId()+"/"+URLEncoder.encode(oldFile.getTitle())+"/"+oldFile.getUuid();
+		String replacement 	= "/documents/"+newFile.getRepositoryId()+"/"+newFile.getFolderId()+"/"+URLEncoder.encode(newFile.getTitle())+"/"+newFile.getUuid();
+
 		res = description.replace(target, replacement);
 		
 		//System.out.println("   res         : " + res );
+		if(res.equals(description)){
+			System.out.println("   :: description         : " + description );
+			System.out.println("   :: target      : " + target );	
+			System.out.println("   :: replacement : " + replacement );
+		}
 				
 		String changed = (!res.equals(description))?" changed":" not changed";
 		
@@ -553,6 +573,8 @@ public class CloneCourse implements MessageListener {
 
 			return asset.getEntryId();
 			
+		} catch (NoSuchEntryException nsee) {
+			System.out.println(" asset not exits ");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -625,7 +647,6 @@ public class CloneCourse implements MessageListener {
         //Create main folder if not exist
         if(!dlMainFolderFound){
         	Folder newDocumentMainFolder = DLAppLocalServiceUtil.addFolder(userId, repositoryId,DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, DOCUMENTLIBRARY_MAINFOLDER, DOCUMENTLIBRARY_MAINFOLDER, serviceContext);
-        	dlMainFolderFound = true;
         	dlMainFolderId = newDocumentMainFolder.getFolderId();
         }//Create portlet folder if not exist
      
@@ -644,7 +665,7 @@ public class CloneCourse implements MessageListener {
 
         	long repositoryId = DLFolderConstants.getDataRepositoryId(groupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
         	//mountPoint -> Si es carpeta ra�z.
-        	mainFolder = DLFolderLocalServiceUtil.addFolder(userId, groupId, repositoryId, true, 0, "ResourceUploads", "ResourceUploads", serviceContext);
+        	mainFolder = DLFolderLocalServiceUtil.addFolder(userId, groupId, repositoryId, false, 0, "ResourceUploads", "ResourceUploads", serviceContext);
         }
   
         return mainFolder;
