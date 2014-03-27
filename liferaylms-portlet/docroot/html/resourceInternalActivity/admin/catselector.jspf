@@ -57,6 +57,12 @@ vocabularies.addAll(AssetVocabularyLocalServiceUtil.getGroupVocabularies(searchG
 			['dialog:contentUpdate', 'dialog:visibleChange'],
 			function(event) {
 				var dialog = event.target;
+
+				dialog.setAttrs({
+					draggable:false,
+					resizable:false
+				});
+
 				if(dialog.get('visible')){
 					body.setStyle('min-height',dialog.get('contentBox').getComputedStyle('height'));
 				}
