@@ -305,15 +305,15 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 							<div class="access"><liferay-ui:message key="module-closed"/><!-- En LMS esta etiqueta es vacía --></div>
 <%
 						}else if(!ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()) || canAccessLock){
-							if(!allowAccessWhenFinishedButNotClosed && ModuleLocalServiceUtil.isUserPassed(theModule.getModuleId(),themeDisplay.getUserId())){
+							if(allowEditionMode && moduleEditing){
+								%>
+								<div class="iconsedit"><%@ include file="/JSPs/module/edit_actions.jspf" %></div>
+								<%							
+							}else if(!allowAccessWhenFinishedButNotClosed && ModuleLocalServiceUtil.isUserPassed(theModule.getModuleId(),themeDisplay.getUserId())){
 %>
 								<div class="access"><a href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="module-finissed" /></a></div>
 <%
-							}else if(allowEditionMode && moduleEditing){
-%>
-								<div class="iconsedit"><%@ include file="/JSPs/module/edit_actions.jspf" %></div>
-<%							
-							}else{ 
+							}else { 
 %>
 								<div class="access"><a class="module-list-button-access" href="<%=gotoModuleURL.toString() %>"><liferay-ui:message key="module-access" /></a></div>
 <%
