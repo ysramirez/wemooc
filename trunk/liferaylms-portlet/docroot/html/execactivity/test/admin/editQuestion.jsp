@@ -254,10 +254,15 @@
 			    			feedbackCorrect = A.one('input[name=<portlet:namespace />feedbackCorrect_'+id+']');
 			    			feedbackNoCorrect = A.one('input[name=<portlet:namespace />feedbackNoCorrect_'+id+']');
 			    			correct = A.one('input[name=<portlet:namespace />correct_'+id+'Checkbox]');
+			    			correctVal = (correct != null && correct._node.checked);
+			    			if (correct == null) {
+			    				correct = A.one('input[name=<portlet:namespace />correct_'+id+']');
+			    				correctVal = (correct != null && correct.val() === 'true');
+			    			}
 
 			    			var otherFieldsWithValue = (feedbackCorrect != null && feedbackCorrect.val() !="") || 
 			    										(feedbackNoCorrect != null && feedbackNoCorrect.val() != "") || 
-			    										(correct != null && correct._node.checked);
+			    										(correctVal);
 			    			if(otherFieldsWithValue){
 			    				answer = A.one('textarea[name=<portlet:namespace />answer_'+id+']');
 				    			if (answer != null && answer.val() == "") {
