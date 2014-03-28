@@ -139,6 +139,9 @@
 		div.id = "file"+append;
 		div.className = "row_file";
 		var input = document.createElement("input");
+		input.type = "file";
+		input.name = "<portlet:namespace />additionalFile"+append;
+		input.id = "<portlet:namespace />additionalFile"+append;
 		div.appendChild(input);
 		var a = document.createElement("a");
 		a.onclick = function() { deleteFile(append); return false; };
@@ -149,11 +152,7 @@
 		img.alt="<%=LanguageUtil.get(pageContext,"delete") %>";
 		img.src="<%= themeDisplay.getPathThemeImages() %>/common/delete.png";
 		a.appendChild(img);
-		input.type = "file";
-		input.name = "<portlet:namespace />additionalFile"+append;
-		input.id = "<portlet:namespace />additionalFile"+append;
 
-		div.appendChild(input);
 		div.appendChild(a);
 		divfiles.appendChild(div);
 	}
