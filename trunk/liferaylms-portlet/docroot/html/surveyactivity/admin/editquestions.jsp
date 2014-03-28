@@ -152,7 +152,10 @@ Liferay.provide(
 	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
 
-<aui:button-row>
+<aui:button-row cssClass="buttons_content">
+<%
+List<TestQuestion> lista = TestQuestionLocalServiceUtil.getQuestions(learningActivity.getActId());
+if(lista.size()>=2){ %>	
 <liferay-portlet:renderURL var="orderURL" portletName="execactivity_WAR_liferaylmsportlet">
 		<liferay-portlet:param name="mvcPath" value="/html/execactivity/test/admin/orderQuestions.jsp" />
 		<liferay-portlet:param name="resId" value="<%=String.valueOf(learningActivity.getActId()) %>" />
@@ -160,5 +163,6 @@ Liferay.provide(
 		<liferay-portlet:param name="backUrl" value="<%= currentURL %>"/>
 	</liferay-portlet:renderURL>
 	<aui:button name="order" href="<%=orderURL%>" value="execativity.editquestions.orderquestions"></aui:button>
+	<% } %>
 	<liferay-util:include page="/html/execactivity/test/admin/editFooter.jsp" servletContext="<%=this.getServletContext() %>" />
 </aui:button-row>
