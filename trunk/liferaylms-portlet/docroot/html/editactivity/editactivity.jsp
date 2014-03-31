@@ -214,15 +214,15 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 			parent.postMessage({name:'setTitleActivity',
 				                moduleId:<%=Long.toString(moduleId)%>,
 				                actId:<%=Long.toString(actId)%>,
-				                title:'<%=LanguageUtil.get(pageContext, actId==0?"activity.creation":"activity.edition")+" "+ 
-				                	LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(typeId).getName())%>'}, window.location.origin);
+				                title:'<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, actId==0?"activity.creation":"activity.edition"))+" "+ 
+				                	UnicodeFormatter.toString(LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(typeId).getName()))%>'}, window.location.origin);
 		}
 		else {
 			parent.postMessage(JSON.stringify({name:'setTitleActivity',
                 							   moduleId:<%=Long.toString(moduleId)%>,
                 							   actId:<%=Long.toString(actId)%>,
-                							   title:'<%=LanguageUtil.get(pageContext,actId==0?"activity.creation":"activity.edition")+" "+ 
-                							   		LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(typeId).getName())%>'}), window.location.origin);
+                							   title:'<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext,actId==0?"activity.creation":"activity.edition"))+" "+ 
+                								   UnicodeFormatter.toString(LanguageUtil.get(pageContext, new LearningActivityTypeRegistry().getLearningActivityType(typeId).getName()))%>'}), window.location.origin);
 		}
 	}
 
