@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.ModuleLocalService"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
 <%@page import="java.util.HashMap"%>
@@ -43,7 +45,13 @@ if(actId == 0){
 	for(LearningActivityTry larntry:triesList){
 		java.text.SimpleDateFormat sdf=new java.text.SimpleDateFormat("dd/MM/yyyy");
 		sdf.setTimeZone(timeZone);
-		String fecha = sdf.format(larntry.getEndDate());
+		String fecha ="";
+		if(larntry.getEndDate()!=null){
+			fecha = sdf.format(larntry.getEndDate());
+		}
+		else{ //just in case of the learningActivity hasn't got end date
+			fecha = sdf.format(ModuleLocalServiceUtil.getModule(LearningActivityLocalServiceUtil.getLearningActivity(larntry.getActId()).getModuleId()).getEndDate());
+		}
 		String title = learningActivity.getTitle(themeDisplay.getLocale())  + " (" + fecha + ")";
 		%>
 		<liferay-ui:panel id="<%=Long.toString(larntry.getLatId()) %>" title="<%=title %>" collapsible="true" extended="true" defaultState="collapsed">
