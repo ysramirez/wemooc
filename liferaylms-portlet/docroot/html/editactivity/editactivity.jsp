@@ -270,22 +270,22 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 
 	var fieldStrings = {			
         	<portlet:namespace />title_<%=renderRequest.getLocale().toString()%>: {
-        		required: '<liferay-ui:message key="activity-title-required" />'
+        		required: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "activity-title-required")) %>'
             },
         	<portlet:namespace />description: {
-        		required: '<liferay-ui:message key="description-required" />'
+        		required: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "description-required")) %>'
             }
 			<% if(larntype.isTriesConfigurable()) { %>
         	,<portlet:namespace />tries: {
-        		required: '<liferay-ui:message key="editActivity.tries.required" />',
-        		number: '<liferay-ui:message key="editActivity.tries.number" />',
-        		range: '<liferay-ui:message key="editActivity.tries.range" />',       		
+        		required: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "editActivity.tries.required")) %>',
+        		number: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "editActivity.tries.number")) %>',
+        		range: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "editActivity.tries.range")) %>',       		
             }
 			<% } if(larntype.isScoreConfigurable()) { %>
         	,<portlet:namespace />passpuntuation: {
-        		required: '<liferay-ui:message key="editActivity.passpuntuation.required" />',
-        		number: '<liferay-ui:message key="editActivity.passpuntuation.number" />',
-        		range: '<liferay-ui:message key="editActivity.passpuntuation.range" />',       		
+        		required: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "editActivity.passpuntuation.required")) %>',
+        		number: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "editActivity.passpuntuation.number")) %>',
+        		range: '<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "editActivity.passpuntuation.range")) %>',       		
             }
 			<% } %> 
 		};
@@ -348,7 +348,7 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 			var end = getEndDate();
 					
 			if(start.getTime()>=end.getTime()){
-				alert("<liferay-ui:message key="please-enter-a-start-date-that-comes-before-the-end-date" />");
+				alert("<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "please-enter-a-start-date-that-comes-before-the-end-date")) %>");
 				return;
 			}
 // 			else{
