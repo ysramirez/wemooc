@@ -1,39 +1,12 @@
-<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
-<%@page import="com.liferay.lms.model.LmsPrefs"%>
-<%@page import="com.liferay.portal.model.RoleConstants"%>
-<%@page import="com.liferay.portal.model.Role"%>
-<%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
-<%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
-<%@include file="/init.jsp" %>
-<%@page import="com.liferay.portal.service.permission.PortalPermissionUtil"%>
-<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
-<%@page import="com.liferay.lms.model.Course"%>
-<% 
-String toolbarItem = ParamUtil.getString(request, "toolbarItem", "view");
-long courseId=ParamUtil.getLong(request, "courseId",0);
-long roleId=ParamUtil.getLong(request, "roleId",0);
-Course course=CourseLocalServiceUtil.getCourse(courseId);
-long createdGroupId=course.getGroupCreatedId();
-
-
-LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
-Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
-String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
-String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
-String tab="";
-if(roleId==commmanager.getRoleId()){
-	tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
-}else if(roleId==prefs.getEditorRole()){
-	tab = editorName;
-}else{
-	tab = teacherName;
-}
-%>
 <liferay-portlet:actionURL name="removeAll" var="removeAllURL">
 		<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" /> 
 		<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
 		<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
 		<liferay-portlet:param name="tabs1" value="<%=tab %>"></liferay-portlet:param>
+		<portlet:param name="backToEdit" value="<%=Boolean.toString(backToEdit) %>" />
+		<c:if test="<%=backToEdit %>">
+			<portlet:param name="redirectOfEdit" value='<%=redirectOfEdit %>'/>
+		</c:if>
 	</liferay-portlet:actionURL>
 <script type="text/javascript">
 	function areyousure(){
@@ -54,6 +27,10 @@ if(roleId==commmanager.getRoleId()){
 			<portlet:param name="jspPage" value="/html/courseadmin/usersresults.jsp" />
 			<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
 			<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
+			<portlet:param name="backToEdit" value="<%=Boolean.toString(backToEdit) %>" />
+			<c:if test="<%=backToEdit %>">
+				<portlet:param name="redirectOfEdit" value='<%=redirectOfEdit %>'/>
+			</c:if>
 		</portlet:renderURL>		
 		<liferay-ui:icon
 			message="add-user"
@@ -126,10 +103,7 @@ if(roleId==commmanager.getRoleId()){
 	            destroyOnClose: true,
 	            after: {   
 		          	close: function(event){ 
-		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0,
-			          																   '<portlet:namespace />courseId':'<%=Long.toString(courseId) %>',
-			          																   '<portlet:namespace />roleId':'<%=Long.toString(roleId) %>',
-			          																   '<portlet:namespace />jspPage':'/html/courseadmin/rolememberstab.jsp'});	
+		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0});	
 	            	}
 	            }
 	        }).plug(A.Plugin.IO, {

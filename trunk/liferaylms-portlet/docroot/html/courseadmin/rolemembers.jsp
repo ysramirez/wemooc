@@ -20,10 +20,22 @@
 LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 long courseId=ParamUtil.getLong(request, "courseId",0);
 long roleId=ParamUtil.getLong(request, "roleId",0);
+boolean backToEdit = ParamUtil.getBoolean(request, "backToEdit");
+String redirectOfEdit = ParamUtil.getString(request, "redirectOfEdit");
 Course course=CourseLocalServiceUtil.getCourse(courseId);
 long createdGroupId=course.getGroupCreatedId();
 Role role=RoleLocalServiceUtil.getRole(roleId);
 Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
+String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
+String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
+String tab=StringPool.BLANK;
+if(roleId==commmanager.getRoleId()){
+	tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
+}else if(roleId==prefs.getEditorRole()){
+	tab = editorName;
+}else{
+	tab = teacherName;
+}
 java.util.List<User> users=new java.util.ArrayList<User>();
 
 if(roleId!=commmanager.getRoleId())
@@ -57,33 +69,17 @@ else
 	}
 }
 %>
-<liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
-
-<liferay-util:buffer var="toolbar">
-	<jsp:include page="toolbar.jsp"/>
-</liferay-util:buffer>
-
-
-<% if(!toolbar.trim().isEmpty()){ %>
-	<div class="container-toolbar" >
-		<%=toolbar %>
-	</div>
-<% } %>
+<div class="container-toolbar" >
+	<%@ include file="inc/toolbar.jspf" %>
+</div>
 <%
-	String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
-	String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
-	String tab="";
-	if(roleId==commmanager.getRoleId()){
-		tab =  LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
-	}else if(roleId==prefs.getEditorRole()){
-		tab = editorName;
-	}else{
-		tab = teacherName;
-	}
-	
 PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("jspPage","/html/courseadmin/rolememberstab.jsp");
 portletURL.setParameter("courseId",Long.toString(courseId));
+portletURL.setParameter("backToEdit",Boolean.toString(backToEdit));
+if(backToEdit){
+	portletURL.setParameter("redirectOfEdit",redirectOfEdit);
+}
 portletURL.setParameter("roleId",Long.toString(roleId));
 portletURL.setParameter("tabs1",tab);
 %>
@@ -123,12 +119,15 @@ modelVar="user">
 
 
 <liferay-portlet:actionURL name="removeUserRole" var="removeUserRoleURL">
-<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"></liferay-portlet:param>
-<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
-<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
-<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
-<liferay-portlet:param name="tabs1" value="<%=tab %>"></liferay-portlet:param>
-
+	<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"/>
+	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"/>
+	<portlet:param name="backToEdit" value="<%=Boolean.toString(backToEdit) %>" />
+	<c:if test="<%=backToEdit %>">
+		<portlet:param name="redirectOfEdit" value='<%=redirectOfEdit %>'/>
+	</c:if>
+	<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+	<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"/>
+	<liferay-portlet:param name="tabs1" value="<%=tab %>"/>
 </liferay-portlet:actionURL>
 <liferay-ui:icon-delete url="<%=removeUserRoleURL+\"&cur=\"+searchContainer.getCur() %>" label="delete"></liferay-ui:icon-delete>
 </liferay-ui:search-container-column-text>

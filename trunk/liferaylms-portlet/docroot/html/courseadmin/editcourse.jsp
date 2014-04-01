@@ -228,6 +228,8 @@ else
 		<%if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), Course.class.getName(), courseId, "ASSIGN_MEMBERS") && ! course.isClosed() && showMembers){%>
 			<portlet:renderURL var="memebersURL">
 				<portlet:param name="courseId" value="<%=String.valueOf(courseId) %>" />
+				<portlet:param name="backToEdit" value="<%=StringPool.TRUE %>" />
+				<portlet:param name="redirectOfEdit" value='<%=ParamUtil.getString(request, "redirect", currentURL) %>'/>
 				<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
 			</portlet:renderURL>
 			<liferay-ui:icon image="group" message="assign-member" url="<%=memebersURL.toString() %>" />

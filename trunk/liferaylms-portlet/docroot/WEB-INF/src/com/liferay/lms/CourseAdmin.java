@@ -25,7 +25,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.portlet.WindowState;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -55,7 +54,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
-import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexer;
@@ -90,7 +88,6 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
-import com.liferay.portal.service.persistence.GroupUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.announcements.EntryDisplayDateException;
@@ -621,13 +618,7 @@ public class CourseAdmin extends MVCPortlet {
 
 	public void addUserRole(ActionRequest actionRequest,
 			ActionResponse actionResponse) throws Exception {
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-				Course.class.getName(), actionRequest);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
-				.getAttribute(WebKeys.THEME_DISPLAY);
-
-		User user = themeDisplay.getUser();
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		long roleId = ParamUtil.getLong(actionRequest, "roleId", 0);
 		long userId = ParamUtil.getLong(actionRequest, "userId", 0);

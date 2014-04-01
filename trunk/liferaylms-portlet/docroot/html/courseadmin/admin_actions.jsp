@@ -28,9 +28,9 @@ count = countGroup + countParentGroup;
 %>
 <liferay-ui:icon-menu>
 <portlet:renderURL var="editURL">
-<portlet:param name="courseId" value="<%=primKey %>" />
-<portlet:param name="jspPage" value="/html/courseadmin/editcourse.jsp" />
-<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
+	<portlet:param name="courseId" value="<%=primKey %>" />
+	<portlet:param name="jspPage" value="/html/courseadmin/editcourse.jsp" />
+	<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
 </portlet:renderURL>
 <%
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)&& ! myCourse.isClosed())
@@ -71,8 +71,9 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 }
 %>
 <portlet:renderURL var="memebersURL">
-<portlet:param name="courseId" value="<%=primKey %>" />
-<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
+	<portlet:param name="courseId" value="<%=primKey %>" />
+	<portlet:param name="backToEdit" value="<%=StringPool.FALSE %>" />
+	<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
 </portlet:renderURL>
 <%
 if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,"ASSIGN_MEMBERS")&& ! myCourse.isClosed())
