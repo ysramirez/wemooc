@@ -441,7 +441,7 @@ public class ExecActivity extends MVCPortlet
 				for(TestQuestion question:questions){
 					if(question.getQuestionType() == 0) questionsTitle.add(question);
 				}
-				//A�adimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
+				//Anadimos x columnas para mostrar otros datos que no sean las preguntas como nombre de usuario, fecha, etc.
 				int numExtraCols = 3;
 				String[] cabeceras = new String[questionsTitle.size()+numExtraCols];
 
@@ -459,7 +459,7 @@ public class ExecActivity extends MVCPortlet
 				}
 				writer.writeNext(cabeceras);
 
-				//Partiremos del usuario para crear el csv para que sea m�s facil ver los intentos.
+				//Partiremos del usuario para crear el csv para que sea mas facil ver los intentos.
 				List<User> users = LearningActivityTryLocalServiceUtil.getUsersByLearningActivity(actId);
 
 				for(User user:users){
@@ -528,7 +528,7 @@ public class ExecActivity extends MVCPortlet
 			}else if(action.equals("exportXml")){
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.xml");
 				response.setContentType("text/xml; charset=UTF-8");
-				PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"));
+				PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(response.getPortletOutputStream(),"UTF-8"));
 				Element quizXML=SAXReaderUtil.createElement("quiz");
 				Document quizXMLDoc=SAXReaderUtil.createDocument(quizXML);
 				
