@@ -718,7 +718,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 
 				// TODO Auto-generated catch block
 				//e.printStackTrace();
-				System.out.println("ERROR! descriptionfile: " + entryElement.element("descriptionfile").attributeValue("path") +"\n        "+e.getMessage());
+				System.out.println("ERROR! descriptionfile: " + actElementFile.attributeValue("file") +"\n        "+e.getMessage());
 			}
 
 			nuevaLarn.setDescription(description);
@@ -1033,9 +1033,9 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 		
 		//System.out.println("   res         : " + res );
 		if(res.equals(description)){
-			//System.out.println("   :: description         : " + description );
-			System.out.println("   :: target      : " + target );	
-			System.out.println("   :: replacement : " + replacement );
+			System.out.println("   :: description         : " + description );
+			//System.out.println("   :: target      : " + target );	
+			//System.out.println("   :: replacement : " + replacement );
 		}
 				
 		String changed = (!res.equals(description))?" changed":" not changed";
