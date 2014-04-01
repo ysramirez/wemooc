@@ -25,7 +25,8 @@
 String students = LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
 String tabs1 = ParamUtil.getString(request, "tabs1", students);
 Long roleId = ParamUtil.getLong(request, "roleId",0);
-
+boolean backToEdit = ParamUtil.getBoolean(request, "backToEdit");
+String redirectOfEdit = ParamUtil.getString(request, "redirectOfEdit");
 LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle(locale);
 String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
@@ -43,13 +44,17 @@ if(roleId!=null&&!roleId.equals(0L)){
 }
 
 long primKey=ParamUtil.getLong(request, "courseId",0);
-String sPrimKey=ParamUtil.getString(request, "courseId","0");
-
 Course course=CourseLocalServiceUtil.getCourse(primKey);
 long createdGroupId=course.getGroupCreatedId();
 
 %>
-<liferay-portlet:renderURL var="backURL"></liferay-portlet:renderURL>
+<liferay-portlet:renderURL var="backURL">
+	<c:if test="<%=backToEdit %>">
+		<liferay-portlet:param name="courseId" value="<%=String.valueOf(primKey) %>" />
+		<liferay-portlet:param name="jspPage" value="/html/courseadmin/editcourse.jsp" />
+		<liferay-portlet:param name="redirect" value='<%= redirectOfEdit %>'/>	
+	</c:if>
+</liferay-portlet:renderURL>
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>" backURL="<%=backURL %>"></liferay-ui:header>
 
 <%
@@ -62,27 +67,43 @@ long createdGroupId=course.getGroupCreatedId();
 
 <portlet:renderURL var="memebersURL">
 	<portlet:param name="courseId" value="<%=String.valueOf(primKey) %>" />
+	<portlet:param name="backToEdit" value="<%=Boolean.toString(backToEdit) %>" />
+	<c:if test="<%=backToEdit %>">
+		<portlet:param name="redirectOfEdit" value='<%=redirectOfEdit %>'/>
+	</c:if>
 	<portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp" />
 </portlet:renderURL>
 
 <liferay-ui:tabs names="<%=menu.toString() %>" url="<%=memebersURL %>" />
 <c:if test='<%= tabs1.equals(students) %>'>
   <liferay-util:include page="/html/courseadmin/rolemembers.jsp" servletContext="<%=this.getServletContext() %>">
-	<liferay-util:param value="<%=sPrimKey %>" name="courseId"/>
+	<liferay-util:param value="<%=String.valueOf(primKey) %>" name="courseId"/>
+	<liferay-util:param value="<%=Boolean.toString(backToEdit) %>" name="backToEdit" />
+	<c:if test="<%=backToEdit %>">
+		<liferay-util:param value='<%=redirectOfEdit %>' name="redirectOfEdit"/>
+	</c:if>
 	<liferay-util:param value="<%=Long.toString(commmanager.getRoleId()) %>" name="roleId"/>
 	<liferay-util:param value="1" name="tab"/>
   </liferay-util:include>
 </c:if>
 <c:if test='<%= tabs1.equals(editorName) %>'>
   <liferay-util:include page="/html/courseadmin/rolemembers.jsp" servletContext="<%=this.getServletContext() %>">
-	<liferay-util:param value="<%=sPrimKey %>" name="courseId"/>
+	<liferay-util:param value="<%=String.valueOf(primKey) %>" name="courseId"/>
+	<liferay-util:param value="<%=Boolean.toString(backToEdit) %>" name="backToEdit" />
+	<c:if test="<%=backToEdit %>">
+		<liferay-util:param value='<%=redirectOfEdit %>' name="redirectOfEdit"/>
+	</c:if>	
 	<liferay-util:param value="<%=Long.toString(prefs.getEditorRole()) %>" name="roleId"/>
 	<liferay-util:param value="2" name="tab"/>
   </liferay-util:include>
 </c:if>
 <c:if test='<%= tabs1.equals(teacherName) %>'>
   <liferay-util:include page="/html/courseadmin/rolemembers.jsp" servletContext="<%=this.getServletContext() %>">
-	<liferay-util:param value="<%=sPrimKey %>" name="courseId"/>
+	<liferay-util:param value="<%=String.valueOf(primKey) %>" name="courseId"/>
+	<liferay-util:param value="<%=Boolean.toString(backToEdit) %>" name="backToEdit" />
+	<c:if test="<%=backToEdit %>">
+		<liferay-util:param value='<%=redirectOfEdit %>' name="redirectOfEdit"/>
+	</c:if>
 	<liferay-util:param value="<%=Long.toString(prefs.getTeacherRole()) %>" name="roleId"/>
 	<liferay-util:param value="3" name="tab"/>
   </liferay-util:include>

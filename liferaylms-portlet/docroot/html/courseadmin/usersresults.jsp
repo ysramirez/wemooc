@@ -1,11 +1,9 @@
-
-
+<%@include file="/init.jsp" %>
 <%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LmsPrefs"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
 <%@page import="com.liferay.portal.util.comparator.UserFirstNameComparator"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.CustomSQLParam"%>
-<%@include file="/init.jsp" %>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.CourseServiceUtil"%>
@@ -16,33 +14,19 @@
 <%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
-
-
-
-
-<%!
-public static String addWildcards(String value)
-{
-	if (value == null) return null;
-	if (value.length() == 1) return "%" + value + "%";
-	if (value.charAt(0) != '%') value = "%" + value;
-	if (value.charAt(value.length() - 1) != '%') value = value + "%";
-	return value;
-}
-%>
-
-
 <%
 
 long courseId=ParamUtil.getLong(request, "courseId",0);
 long roleId=ParamUtil.getLong(request, "roleId",0);
 Role role=RoleLocalServiceUtil.getRole(roleId);
 Course course=CourseLocalServiceUtil.getCourse(courseId);
-String firstName = request.getParameter("firstName");
-String lastName = request.getParameter("lastName");
-String screenName = request.getParameter("screenName");	
-String emailAddress = request.getParameter("emailAddress");
-String andSearchStr = request.getParameter("andSearch");
+boolean backToEdit = ParamUtil.getBoolean(request, "backToEdit");
+String redirectOfEdit = ParamUtil.getString(request, "redirectOfEdit");
+String firstName = ParamUtil.getString(request,"firstName");
+String lastName = ParamUtil.getString(request,"lastName");
+String screenName = ParamUtil.getString(request,"screenName");	
+String emailAddress = ParamUtil.getString(request,"emailAddress");
+boolean andSearch = ParamUtil.getBoolean(request,"andSearch",true);
 
 LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
@@ -57,14 +41,6 @@ if(roleId==commmanager.getRoleId()){
 	tab = teacherName;
 }
 
-
-if (firstName == null) firstName = "";	
-if (lastName == null) lastName = "";
-if (screenName == null) screenName = "";
-if (emailAddress == null) emailAddress = "";	
-if (andSearchStr == null) andSearchStr = "true";
-
-
 PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("jspPage","/html/courseadmin/usersresults.jsp");
 //portletURL.setParameter("paginator","true");	
@@ -72,9 +48,13 @@ portletURL.setParameter("firstName", firstName);
 portletURL.setParameter("lastName", lastName);
 portletURL.setParameter("screenName", screenName);
 portletURL.setParameter("emailAddress", emailAddress);
-portletURL.setParameter("andSearch", andSearchStr);
+portletURL.setParameter("andSearch",Boolean.toString(andSearch));
 portletURL.setParameter("courseId",Long.toString(courseId));
 portletURL.setParameter("roleId",Long.toString(roleId));
+portletURL.setParameter("backToEdit",Boolean.toString(backToEdit));
+if(backToEdit) {
+	portletURL.setParameter("backToEdit",redirectOfEdit);
+}
 
 %>
 
@@ -84,6 +64,10 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 	<portlet:param name="courseId" value="<%=Long.toString(courseId) %>" />
 	<portlet:param name="roleId" value="<%=Long.toString(roleId) %>" />
 	<portlet:param name="tabs1" value="<%=tab %>" />
+	<portlet:param name="backToEdit" value="<%=Boolean.toString(backToEdit) %>" />
+	<c:if test="<%=backToEdit %>">
+		<portlet:param name="redirectOfEdit" value='<%=redirectOfEdit %>'/>
+	</c:if>
 </liferay-portlet:renderURL>
 <liferay-ui:header title="<%=course.getTitle(themeDisplay.getLocale()) %>" backURL="<%=backURL %>"></liferay-ui:header>
 <h2><%=role.getTitle(themeDisplay.getLocale()) %></h2>
@@ -98,21 +82,33 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 <%
 	String middleName = null;
 
-	if (firstName != null && firstName.equals("")) firstName = null;
-	firstName = addWildcards(firstName);
+	if (Validator.isNull(firstName)) {
+		firstName = null;
+	}
+	else {
+		firstName = addWildcards(firstName);
+	}
 	
-	if (lastName != null && lastName.equals("")) lastName = null;
-	lastName = addWildcards(lastName);
+	if (Validator.isNull(lastName)) {
+		lastName = null;
+	}
+	else {
+		lastName = addWildcards(lastName);
+	}
 	
-	if (screenName != null && screenName.equals("")) screenName = null;
-	screenName = addWildcards(screenName);
+	if (Validator.isNull(screenName)) {
+		screenName = null;
+	}
+	else {
+		screenName = addWildcards(screenName);
+	}
 	
-	if (emailAddress != null && emailAddress.equals("")) emailAddress = null;
-	emailAddress = addWildcards(emailAddress);
-	
-	if (andSearchStr == null) andSearchStr = "true";
-	boolean andSearch = Boolean.parseBoolean(andSearchStr);	
-
+	if (Validator.isNull(emailAddress)) {
+		emailAddress = null;
+	}
+	else {
+		emailAddress = addWildcards(emailAddress);
+	}
 	
 	LinkedHashMap<String,Object> params=new LinkedHashMap<String,Object>();			
 	
@@ -151,16 +147,28 @@ portletURL.setParameter("roleId",Long.toString(roleId));
 
 
 <liferay-portlet:actionURL name="addUserRole" var="addUserRoleURL">
-<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"></liferay-portlet:param>
-<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"></liferay-portlet:param>
-<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
-<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"></liferay-portlet:param>
-<liferay-portlet:param name="tabs1" value="<%=tab %>"></liferay-portlet:param>
-
+	<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"/>
+	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"/>
+	<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+	<liferay-portlet:param name="roleId" value="<%=Long.toString(roleId) %>"/>
+	<liferay-portlet:param name="tabs1" value="<%=tab %>"/>
+	<liferay-portlet:param name="backToEdit" value="<%=Boolean.toString(backToEdit) %>" />
+	<c:if test="<%=backToEdit %>">
+		<liferay-portlet:param name="redirectOfEdit" value='<%=redirectOfEdit %>'/>
+	</c:if>
 </liferay-portlet:actionURL>
 <a class="newitem2" href="<%=addUserRoleURL %>" ><liferay-ui:message key="assign-member" /></a>
 </liferay-ui:search-container-column-text>
 	</liferay-ui:search-container-row>
  	<liferay-ui:search-iterator />
 </liferay-ui:search-container>
-
+<%!
+	public static String addWildcards(String value)
+	{
+		if (value == null) return null;
+		if (value.length() == 1) return "%" + value + "%";
+		if (value.charAt(0) != '%') value = "%" + value;
+		if (value.charAt(value.length() - 1) != '%') value = value + "%";
+		return value;
+	}
+%>
