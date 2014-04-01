@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.BasePortletDataHandler;
 import com.liferay.portal.kernel.lar.PortletDataContext;
+import com.liferay.portal.kernel.lar.PortletDataException;
 import com.liferay.portal.kernel.lar.PortletDataHandlerBoolean;
 import com.liferay.portal.kernel.lar.PortletDataHandlerControl;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -501,7 +502,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 				folderId=createDLFolders(userId,repositoryId, serviceContext);
 											
-				FileEntry image = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , imageName+imageExtension, "contentType", imageName, StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext ) ;
+				FileEntry image = DLAppLocalServiceUtil.addFileEntry(userId, repositoryId , folderId , imageName, "contentType", imageName, StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(input), serviceContext ) ;
 		
 				theModule.setIcon(image.getFileEntryId());	
 				
@@ -690,7 +691,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 				long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 				folderId=createDLFolders(userId,repositoryId,serviceContext);
 				
-				String ficheroStr = actElement.attributeValue("file");	
+				String ficheroStr = actElementFile.attributeValue("file");	
 				String ficheroExtStr = "";
 				String extension[] = ficheroStr.split("\\.");
 				if(extension.length > 0){
@@ -710,6 +711,8 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					System.out.println("ERROR! descriptionfile descriptionFileParserLarToDescription : " +e.getMessage());
 					description = nuevaLarn.getDescription();
 				}
+			} catch (PortletDataException e1){
+				System.out.println("ERROR! descriptionfile: ");
 				
 			} catch (Exception e) {
 
@@ -749,7 +752,7 @@ private void importEntry(PortletDataContext context, Element entryElement, Modul
 					long repositoryId = DLFolderConstants.getDataRepositoryId(context.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 					folderId=createDLFolders(userId,repositoryId,serviceContext);
 					
-					String ficheroStr = actElement.attributeValue("file");	
+					String ficheroStr = actElementFile.attributeValue("file");	
 					String ficheroExtStr = "";
 					String extension[] = ficheroStr.split("\\.");
 					if(extension.length > 0){
