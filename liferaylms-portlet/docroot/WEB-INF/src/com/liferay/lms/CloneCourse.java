@@ -563,8 +563,13 @@ public class CloneCourse implements MessageListener {
 
 			long repositoryId = DLFolderConstants.getDataRepositoryId(actNew.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 			
+			String ficheroStr = docfile.getTitle();	
+			if(!docfile.getTitle().endsWith(docfile.getExtension())){
+				ficheroStr = ficheroStr +"."+ docfile.getExtension();
+			}
+			
 			FileEntry newFile = DLAppLocalServiceUtil.addFileEntry(
-					serviceContext.getUserId(), repositoryId , dlFolder.getFolderId() , docfile.getTitle(), docfile.getMimeType(), 
+					serviceContext.getUserId(), repositoryId , dlFolder.getFolderId() , ficheroStr, docfile.getMimeType(), 
 					docfile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
 			
 			AssetEntry asset = AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), newFile.getPrimaryKey());
@@ -598,12 +603,12 @@ public class CloneCourse implements MessageListener {
 			//long repId = DLFolderConstants.getDataRepositoryId(file.getGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 			long repositoryId = DLFolderConstants.getDataRepositoryId(serviceContext.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 			
-			//System.out.println(" repId : " +  repId);
-			//System.out.println(" repositoryId : " +  repositoryId);
-			//System.out.println(" serviceContext.getScopeGroupId() : " +  serviceContext.getScopeGroupId());
-			
+			String ficheroStr = file.getTitle();	
+			if(!file.getTitle().endsWith(file.getExtension())){
+				ficheroStr = ficheroStr +"."+ file.getExtension();
+			}
 			return  DLAppLocalServiceUtil.addFileEntry(
-					serviceContext.getUserId(), repositoryId , folderId , file.getTitle(), file.getMimeType(), 
+					serviceContext.getUserId(), repositoryId , folderId , ficheroStr, file.getMimeType(), 
 					file.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
 			
 			
