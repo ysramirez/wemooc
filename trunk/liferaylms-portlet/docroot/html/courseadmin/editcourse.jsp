@@ -271,7 +271,7 @@ else
 			<liferay-ui:icon image="tag" message="competence.label" url="<%=competenceURL %>" />
 		<%}%>
 		<%if(showGo && groupsel != null && permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(),course.getCourseId(), ActionKeys.VIEW) && 
-																			!course.isClosed() && UserLocalServiceUtil.hasGroupUser(course.getGroupCreatedId(), themeDisplay.getUserId()) ) {%>
+				!course.isClosed() && ( PortalUtil.isOmniadmin(themeDisplay.getUserId()) || UserLocalServiceUtil.hasGroupUser(course.getGroupCreatedId(), themeDisplay.getUserId()))) {%>
 			<liferay-ui:icon image="submit" message="courseadmin.adminactions.gotocourse" url="<%=themeDisplay.getPortalURL() +\"/\"+ response.getLocale().getLanguage() +\"/web/\"+ groupsel.getFriendlyURL()%>" />
 		<%}%>
 		
