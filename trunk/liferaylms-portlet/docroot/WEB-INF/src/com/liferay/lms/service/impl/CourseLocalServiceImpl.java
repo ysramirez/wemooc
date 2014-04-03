@@ -60,6 +60,7 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -140,7 +141,15 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setCourseEvalId(CourseEvalId);
 			course.setCalificationType(calificationType);
 			course.setMaxusers(maxUsers);
+			
+			//creating group
+			Group group = groupLocalService.addGroup(userLocalService.getDefaultUser(serviceContext.getCompanyId()).getUserId(),
+					null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
+			course.setGroupCreatedId(group.getGroupId());
+			course.setFriendlyURL(group.getFriendlyURL());
+
 			coursePersistence.update(course, true);
+			
 			resourceLocalService.addResources(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), userId,Course.class.getName(), course.getPrimaryKey(), false,true, true);
 			AssetEntry assetEntry=assetEntryLocalService.updateEntry(userId, course.getGroupId(), Course.class.getName(),
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
@@ -149,20 +158,26 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			assetLinkLocalService.updateLinks(
 					userId, assetEntry.getEntryId(), serviceContext.getAssetLinkEntryIds(),
 					AssetLinkConstants.TYPE_RELATED);
-			//creating group
-			Group group = groupLocalService.addGroup(getAdministratorUser(serviceContext.getCompanyId()).getUserId(),
-					null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
-			
 			
 			//A�adimos el rol Teacher al usuario que crea el blog
-			long[] usuarios = new long[1];
-			usuarios[0] = userId;
-			userLocalService.addRoleUsers(lmsPrefs.getTeacherRole(), usuarios);
-			userLocalService.addRoleUsers(lmsPrefs.getEditorRole(), usuarios);
-			course.setGroupCreatedId(group.getGroupId());
-			groupLocalService.addUserGroups(userId, new long[] { group.getGroupId() });
-			course.setFriendlyURL(group.getFriendlyURL());
-			coursePersistence.update(course, true);
+			long[] usuarios = new long[]{userId};
+			boolean teacherRoleToCreator = GetterUtil.getBoolean(PropsUtil.get("lms.course.add.teacherRoleToCreator"));
+			boolean editorRoleToCreator = GetterUtil.getBoolean(PropsUtil.get("lms.course.add.editorRoleToCreator"));
+
+			if(teacherRoleToCreator||editorRoleToCreator){
+				groupLocalService.addUserGroups(userId, new long[] { group.getGroupId() });
+			}
+
+			if(teacherRoleToCreator){
+				userGroupRoleLocalService.addUserGroupRoles(usuarios,
+						course.getGroupCreatedId(), lmsPrefs.getTeacherRole());
+			}
+
+			if(editorRoleToCreator){
+				userGroupRoleLocalService.addUserGroupRoles(usuarios,
+						course.getGroupCreatedId(), lmsPrefs.getEditorRole());
+			}			
+
 			LayoutSetPrototype lsProto=layoutSetPrototypeLocalService.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
 			
@@ -170,12 +185,13 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			{
 				int defaultEvaluations =  GetterUtil.getInteger(PropsUtil.get("lms.course.default.evaluations"),DEFAULT_EVALUATIONS);
 				
+				ServiceContext evaluationServiceContext = ServiceContextFactory.getInstance(serviceContext.getRequest());
 				for(int currentEvaluation=1;currentEvaluation<=defaultEvaluations;currentEvaluation++) {
 
 					Map<Locale,String> evaluationTitle = new HashMap<Locale, String>(1);
 					evaluationTitle.put(locale, LanguageUtil.format(locale, "evaluation.number", new Object[]{currentEvaluation}));
 					learningActivityLocalService.addLearningActivity(userId, group.getGroupId(), WorkflowConstants.STATUS_APPROVED, 
-							evaluationTitle, evaluationTitle, 8 /* Evaluation */, null, null, 0, 0, 0, 0, null, null, null, 0, 0, serviceContext);
+							evaluationTitle, evaluationTitle, 8 /* Evaluation */, null, null, 0, 0, 0, 0, null, null, null, 0, 0, evaluationServiceContext);
 					}
 			}
 			
