@@ -4,29 +4,37 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnmodifiableList;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.support.tomcat.loader.PortalClassLoader;
 
 public class LearningActivityTypeRegistry {
-
+	
+	protected static final String LMS_ACTIVITIES_LIST_PORTLET_ID =  PortalUtil.getJsSafePortletId("lmsactivitieslist"+PortletConstants.WAR_SEPARATOR+ClpSerializer.getServletContextName());
+	
 	private static LearningActivityType[] _getLearningActivityTypes(){
 		Properties properties = PropsUtil.getProperties("lms.learningactivity.type", true);
 		LearningActivityType[] learningActivityTypes = new LearningActivityType[properties.size()];
 		int currentLearningActivityType = 0;
 		for (Object key:properties.keySet()) {
 			String type=properties.getProperty(key.toString());
-			try {			
-				LearningActivityType learningActivityType = (LearningActivityType)Class.forName(type).newInstance();
+			try {	
+				LearningActivityType learningActivityType = (LearningActivityType)getPortletClassLoader().loadClass(type).newInstance();
 				learningActivityTypes[currentLearningActivityType++]=learningActivityType;
 			} catch (ClassNotFoundException e) {
 				try {
@@ -36,8 +44,10 @@ public class LearningActivityTypeRegistry {
 						PortletClassLoaderUtil.getClassLoader(context[1]));
 					learningActivityTypes[currentLearningActivityType++]=new LearningActivityTypeClp(classLoaderProxy);
 				} catch (Throwable throwable) {
+					throwable.printStackTrace();
 				}
 			} catch (Throwable throwable) {
+				throwable.printStackTrace();
 			}
 		}
 		
@@ -47,6 +57,20 @@ public class LearningActivityTypeRegistry {
 		else {
 			return Arrays.copyOf(learningActivityTypes,currentLearningActivityType);
 		}
+	}
+	
+	private static ClassLoader _portletClassLoader;
+	private static ClassLoader getPortletClassLoader() {
+		if(_portletClassLoader==null) {
+			ClassLoader currentClassLoader = Thread.currentThread().getContextClassLoader();
+			if(currentClassLoader.equals(PortalClassLoaderUtil.getClassLoader())) {
+				_portletClassLoader=PortletClassLoaderUtil.getClassLoader(LMS_ACTIVITIES_LIST_PORTLET_ID);
+			}
+			else {
+				_portletClassLoader=currentClassLoader;
+			}
+		}
+		return _portletClassLoader;
 	}
 	
 	public LearningActivityTypeRegistry() {
@@ -73,12 +97,7 @@ public class LearningActivityTypeRegistry {
 				} catch(NestableException e){}
 			_learningActivityTypes=new UnmodifiableList<LearningActivityType>(Arrays.asList(learningActivityTypes));
 			_learningActivityTypeThreadLocal.set(_learningActivityTypes);
-			if(orderedIdsSize==0) {
-				_learningActivityTypesForCreating = _learningActivityTypes;
-			}
-			else {
-				_learningActivityTypesForCreating = new UnmodifiableList<LearningActivityType>(Arrays.asList(Arrays.copyOf(learningActivityTypes, orderedIdsSize)));
-			}
+			_learningActivityTypesForCreating = new UnmodifiableList<LearningActivityType>(Arrays.asList(Arrays.copyOf(learningActivityTypes, orderedIdsSize)));
 			_learningActivityTypeForCreatingThreadLocal.set(_learningActivityTypesForCreating);
 			
 		}
