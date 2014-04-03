@@ -92,7 +92,6 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.announcements.EntryDisplayDateException;
 import com.liferay.portlet.asset.AssetCategoryException;
-import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetVocabulary;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
@@ -366,6 +365,8 @@ public class CourseAdmin extends MVCPortlet {
 				actionResponse.setRenderParameter("jspPage", "/html/courseadmin/editcourse.jsp");
 				return;
 			}
+			
+			/*
 			if(course != null){
 				try{
 					long[] groupIds = new long[1];
@@ -379,7 +380,7 @@ public class CourseAdmin extends MVCPortlet {
 					UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(),
 							course.getGroupCreatedId(), roles);
 	
-					/* activamos el social equity */
+					/* activamos el social equity *
 					AssetEntry aEntryCourse = AssetEntryLocalServiceUtil.getEntry(
 							Course.class.getName(), course.getCourseId());
 				}catch(Exception e){
@@ -389,6 +390,7 @@ public class CourseAdmin extends MVCPortlet {
 					return;
 				}
 			}
+			*/
 
 		}
 		// Estamos editando un curso existente.
@@ -597,19 +599,28 @@ public class CourseAdmin extends MVCPortlet {
 
 		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
 				.getAttribute(WebKeys.THEME_DISPLAY);
-		Role commmanager = RoleLocalServiceUtil.getRole(
-				themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+		Role siteMember = RoleLocalServiceUtil.getRole(
+				themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER),
+			 siteOwner = RoleLocalServiceUtil.getRole(
+				themeDisplay.getCompanyId(), RoleConstants.SITE_OWNER);
 
-		User user = themeDisplay.getUser();
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		long roleId = ParamUtil.getLong(actionRequest, "roleId", 0);
 		long userId = ParamUtil.getLong(actionRequest, "userId", 0);
 		Course course = CourseLocalServiceUtil.getCourse(courseId);
-		if (roleId != commmanager.getRoleId()) {
+		if (roleId != siteMember.getRoleId()) {
 			UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(
-					new long[] { userId }, course.getGroupCreatedId(), roleId);
+					userId,course.getGroupCreatedId(),new long[]{roleId,siteOwner.getRoleId()});
+			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(userId,course.getGroupCreatedId());
+			if((userGroupRoles.isEmpty())||
+				((userGroupRoles.size()==1)&&
+				 (siteMember.getRoleId()==userGroupRoles.get(0).getRoleId()))){
+				GroupLocalServiceUtil.unsetUserGroups(userId,
+						new long[] { course.getGroupCreatedId() });
+			}
+		
+			
 		} else {
-
 			GroupLocalServiceUtil.unsetUserGroups(userId,
 					new long[] { course.getGroupCreatedId() });
 		}
