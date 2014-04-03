@@ -73,8 +73,14 @@ public class LearningActivityTypeRegistry {
 				} catch(NestableException e){}
 			_learningActivityTypes=new UnmodifiableList<LearningActivityType>(Arrays.asList(learningActivityTypes));
 			_learningActivityTypeThreadLocal.set(_learningActivityTypes);
-			_learningActivityTypesForCreating = new UnmodifiableList<LearningActivityType>(Arrays.asList(Arrays.copyOf(learningActivityTypes, orderedIdsSize)));
+			if(orderedIdsSize==0) {
+				_learningActivityTypesForCreating = _learningActivityTypes;
+			}
+			else {
+				_learningActivityTypesForCreating = new UnmodifiableList<LearningActivityType>(Arrays.asList(Arrays.copyOf(learningActivityTypes, orderedIdsSize)));
+			}
 			_learningActivityTypeForCreatingThreadLocal.set(_learningActivityTypesForCreating);
+			
 		}
 	}
 		
