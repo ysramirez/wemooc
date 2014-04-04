@@ -29,6 +29,7 @@
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <%
 	long actId = ParamUtil.getLong(request,"actId",0);
+	boolean showPassPuntuation = ParamUtil.getBoolean(renderRequest, "showPassPuntuation");
 	LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 	LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
 
@@ -244,7 +245,11 @@
 	function <portlet:namespace />doSaveActivities(){
 		AUI().use('node-base','json-stringify','<portlet:namespace />eval-model','aui-io-request', function(A) {
 			if(!window.<portlet:namespace />validateActivities.hasErrors()){
-                var output= new Object();			
+                var output= new Object();	
+				<% if(showPassPuntuation) { %>
+				   output['passPuntuation']=A.one('#<portlet:namespace />passPuntuation').get('value');
+				<% }%>
+
 				var outputActivities= new Array();
 				var itrOutputActivities=0;
 				window.<portlet:namespace />selectedActivities.each(
@@ -349,6 +354,18 @@
 </script>
 
 <aui:form name="activities">
+	<% if(showPassPuntuation) {
+	%>
+		<aui:fieldset>
+		    <aui:input type="text" name="passPuntuation" label="evaluationtaskactivity.passPuntuation"
+		               value='<%= learningActivity.getPasspuntuation() %>' disabled='<%=hasFiredDate %>' />
+		    <div id="<portlet:namespace />passPuntuationError" class="<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.passPuntuation.result-bad-format"))?
+		    														"portlet-msg-error":StringPool.BLANK %>">
+		    	<%=(SessionErrors.contains(renderRequest, "evaluationtaskactivity.passPuntuation.result-bad-format"))?
+		    			LanguageUtil.get(pageContext,"evaluationAvg.passPuntuation.result-bad-format"):StringPool.BLANK %>
+		    </div>
+		</aui:fieldset>
+	<% } %>
 	<div id="moduleTabs"></div>
 	
 	<liferay-util:buffer var="weightHelp">

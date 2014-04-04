@@ -67,6 +67,9 @@ if(actId==0){
 			%>
 				<portlet:renderURL var="viewEvaluationsURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
 		        	<portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>     
+		        	<c:if test="<%=WindowState.MAXIMIZED.equals(renderRequest.getWindowState()) %>">
+		        		<portlet:param name="showPassPuntuation" value="<%=StringPool.TRUE %>" /> 
+		        	</c:if>
 		            <portlet:param name="jspPage" value="/html/evaluationtaskactivity/popups/activities.jsp" />           
 		        </portlet:renderURL>
 		        <portlet:renderURL var="setGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
