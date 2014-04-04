@@ -287,7 +287,13 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
         		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.courseModel")});  
         		return;
 			}
-			
+
+			if((jsonObjectModel.has("passPuntuation"))&&(!Validator.isNumber(jsonObjectModel.getString("passPuntuation")))) {
+        		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
+        		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationAvg.error.PassPuntuationNumber")}); 
+        		return;
+			}
+
     		if(!jsonObjectModel.has("activities")){
         		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
         		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.noActivities")}); 
@@ -325,23 +331,27 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 	    		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    
 	    		return;
 			}
-			
-			List<Long> actIdsInDatabase = 
-					LearningActivityLocalServiceUtil.dynamicQuery(
-					DynamicQueryFactoryUtil.forClass(LearningActivity.class)
-					.add(PropertyFactoryUtil.forName("typeId").ne(8))
-					.add(PropertyFactoryUtil.forName("actId").in((Collection<Object>)(Collection<?>)activitiesMap.keySet()))
-					.setProjection(ProjectionFactoryUtil.property("actId")));
-				
-			Iterator<Map.Entry<Long,Long>> evaluationMapIterator = activitiesMap.entrySet().iterator();
-			while (evaluationMapIterator.hasNext()) {
-				Map.Entry<Long,Long> evaluationEntry = evaluationMapIterator.next();
-				if(!actIdsInDatabase.contains(evaluationEntry.getKey())){
-					errors.add(LanguageUtil.format(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.idNumberNotInDatabase",new Object[]{evaluationEntry.getKey()},false));
-					evaluationMapIterator.remove();
-			    }
+
+			if(!activitiesMap.isEmpty()) {
+
+				List<Long> actIdsInDatabase = 
+						LearningActivityLocalServiceUtil.dynamicQuery(
+						DynamicQueryFactoryUtil.forClass(LearningActivity.class)
+						.add(PropertyFactoryUtil.forName("typeId").ne(8))
+						.add(PropertyFactoryUtil.forName("actId").in((Collection<Object>)(Collection<?>)activitiesMap.keySet()))
+						.setProjection(ProjectionFactoryUtil.property("actId")));
+
+				Iterator<Map.Entry<Long,Long>> evaluationMapIterator = activitiesMap.entrySet().iterator();
+				while (evaluationMapIterator.hasNext()) {
+					Map.Entry<Long,Long> evaluationEntry = evaluationMapIterator.next();
+					if(!actIdsInDatabase.contains(evaluationEntry.getKey())){
+						errors.add(LanguageUtil.format(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.idNumberNotInDatabase",new Object[]{evaluationEntry.getKey()},false));
+						evaluationMapIterator.remove();
+				    }
+				}
+
 			}
-			
+
 			if(activitiesMap.isEmpty()){
         		actionResponse.setRenderParameter("responseCode",StringPool.ASCII_TABLE[48]); //0    		
         		actionResponse.setRenderParameter("message",new String[]{LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(), "evaluationtaskactivity.error.noActivities")}); 
@@ -390,6 +400,10 @@ public class EvaluationActivity extends MVCPortlet implements MessageListener{
 					activityElement.addAttribute("id", Long.toString(activity.getKey()));
 					activityElement.setText(Long.toString(activity.getValue()));
 				}
+    			
+    			if(jsonObjectModel.has("passPuntuation")) {
+    				learningActivity.setPasspuntuation(jsonObjectModel.getInt("passPuntuation"));
+    			}
     			
     			learningActivity.setExtracontent(document.formattedString());
 				LearningActivityLocalServiceUtil.updateLearningActivity(learningActivity);
