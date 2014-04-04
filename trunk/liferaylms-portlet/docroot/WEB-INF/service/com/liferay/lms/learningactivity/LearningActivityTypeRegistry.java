@@ -6,7 +6,6 @@ import java.util.Properties;
 
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
-import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
@@ -21,7 +20,6 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.PortletConstants;
 import com.liferay.portal.security.auth.CompanyThreadLocal;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.support.tomcat.loader.PortalClassLoader;
 
 public class LearningActivityTypeRegistry {
 	
@@ -44,10 +42,8 @@ public class LearningActivityTypeRegistry {
 						PortletClassLoaderUtil.getClassLoader(context[1]));
 					learningActivityTypes[currentLearningActivityType++]=new LearningActivityTypeClp(classLoaderProxy);
 				} catch (Throwable throwable) {
-					throwable.printStackTrace();
 				}
 			} catch (Throwable throwable) {
-				throwable.printStackTrace();
 			}
 		}
 		
