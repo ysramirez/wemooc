@@ -119,7 +119,9 @@ if(actId == 0){
 		for(TestQuestion question:questions){
 			QuestionType qt = new QuestionTypeRegistry().getQuestionType(question.getQuestionType());
 			qt.setLocale(themeDisplay.getLocale());
+			if(Validator.isNotNull(larntry.getTryResultData())){
 			%><%=qt.getHtmlFeedback(SAXReaderUtil.read(larntry.getTryResultData()), question.getQuestionId(), themeDisplay)%><%
+			}
 		}
 		
 		if(tries==0 || userTries < tries ||permissionChecker.hasPermission(learningActivity.getGroupId(),LearningActivity.class.getName(),learningActivity.getActId(), ActionKeys.UPDATE)) {
