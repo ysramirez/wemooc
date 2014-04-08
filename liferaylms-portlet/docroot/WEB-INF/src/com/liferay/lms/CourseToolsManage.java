@@ -7,6 +7,8 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.ResourceConstants;
+import com.liferay.portal.model.ResourcePermission;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
@@ -29,31 +31,32 @@ public class CourseToolsManage extends MVCPortlet
 				String layoutid = ParamUtil.getString(request, "layoutid");
 				Layout ellayout = LayoutLocalServiceUtil.getLayout(Long
 						.parseLong(layoutid));
-				if (ellayout.getHidden()) {
-					ellayout.setHidden(false);
+
+				Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+				boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), Layout.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	layoutid,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+				//if (ellayout.getHidden()) {
+				if(!visible){	
+					//ellayout.setHidden(false);
+					
 					ResourcePermissionLocalServiceUtil.setResourcePermissions(
 							themeDisplay.getCompanyId(),
 							Layout.class.getName(),
 							ResourceConstants.SCOPE_INDIVIDUAL,
 							layoutid,
-							RoleLocalServiceUtil.getRole(
-									themeDisplay.getCompanyId(),
-									RoleConstants.SITE_MEMBER).getRoleId(),
+							siteMemberRole.getRoleId(),
 							new String[] { ActionKeys.VIEW });
 				} else {
-					ellayout.setHidden(true);
+					//ellayout.setHidden(true);
 					ResourcePermissionLocalServiceUtil
 							.removeResourcePermission(
 									themeDisplay.getCompanyId(),
 									Layout.class.getName(),
 									ResourceConstants.SCOPE_INDIVIDUAL,
 									layoutid,
-									RoleLocalServiceUtil.getRole(
-											themeDisplay.getCompanyId(),
-											RoleConstants.SITE_MEMBER)
-											.getRoleId(), ActionKeys.VIEW);					
+									siteMemberRole.getRoleId(), ActionKeys.VIEW);					
 				}
-				LayoutLocalServiceUtil.updateLayout(ellayout);
+				//LayoutLocalServiceUtil.updateLayout(ellayout);
 			} catch (Exception e) {
 				e.printStackTrace();
 			}

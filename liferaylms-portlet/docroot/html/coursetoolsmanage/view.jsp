@@ -1,4 +1,8 @@
 
+<%@page import="com.liferay.portal.model.RoleConstants"%>
+<%@page import="com.liferay.portal.model.Role"%>
+<%@page import="com.liferay.portal.service.ResourcePermissionLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.ResourceConstants"%>
 <%@page import="java.util.StringTokenizer"%>
 <%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@include file="/init.jsp"%>
@@ -61,12 +65,15 @@ else
 			<tr><td></td></tr>
 <%
 
-	
+		Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
 		for(int i=1;i<(loslayouts.size()-1);i++) // Evitamos la primera, que no es optativa, y la última que es la del tutor y la que contiene este portlet de administración 
 		{
 			Layout ellayout=loslayouts.get(i);	
 			if(!hiddenLayouts.contains(ellayout.getFriendlyURL()))
 			{
+				boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), Layout.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(ellayout.getPlid()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+
 							
 	%>
 			<tr><td width="95%"><b><%=ellayout.getHTMLTitle(themeDisplay.getLocale()) %></b></td>
@@ -76,7 +83,7 @@ else
 			</portlet:actionURL>
 	
 	<%
-				if(ellayout.isHidden())
+				if(!visible)
 				{
 	%>
 					<liferay-ui:icon  image="deactivate" label="add" url="<%=changeLayoutURL %>" message="<%=LanguageUtil.get(pageContext,\"test.activate\")%>" />
