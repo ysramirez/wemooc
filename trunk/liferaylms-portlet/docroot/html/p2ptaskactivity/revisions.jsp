@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.liferay.portal.kernel.util.Constants"%>
 <%@page import="com.liferay.lms.service.P2pActivityLocalServiceUtil"%>
@@ -72,14 +73,20 @@
 		<liferay-ui:search-container-column-text value="<%=user.getFullName()%>" name="<%=nameTit %>"  />
 		<%
 		boolean existP2p = P2pActivityLocalServiceUtil.existP2pAct(Long.valueOf(actId), Long.valueOf(user.getUserId()));
+		boolean correctionCompleted = P2pActivityCorrectionsLocalServiceUtil.areAllCorrectionsDoneByUserInP2PActivity(actId, user.getUserId());
+		
 		String textTaks = "";
 		
 		String textTaksTit = LanguageUtil.get(pageContext, "state");
 		
-		if(existP2p)
+		//Si se ha entregado la tarea
+		if(existP2p && !correctionCompleted ){
+			textTaks = LanguageUtil.get(pageContext, "p2ptask-incompleta");
+		} else if(existP2p && correctionCompleted){
 			textTaks = LanguageUtil.get(pageContext, "p2ptask-superada");
-		else
+		}else{
 			textTaks = LanguageUtil.get(pageContext, "p2ptask-nosuperada");
+		}
 		%>
 		<liferay-ui:search-container-column-text value="<%=textTaks %>" name="<%=textTaksTit %>" />
 		<%
