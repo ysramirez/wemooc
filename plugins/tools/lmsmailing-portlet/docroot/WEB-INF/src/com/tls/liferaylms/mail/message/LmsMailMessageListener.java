@@ -97,10 +97,13 @@ public class LmsMailMessageListener implements MessageListener {
 		else if(toMail != null && userName != null && !toMail.contains("all")){
 			
 			if(UserLocalServiceUtil.getUserById(userId).isActive()){
+				
 				InternetAddress to = new InternetAddress(toMail, userName);
 				
-				String calculatedBody = createMessage(body, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
-	
+				String calculatedBody = LanguageUtil.get(Locale.getDefault(),"mail.header");
+				calculatedBody += createMessage(body, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+				calculatedBody += LanguageUtil.get(Locale.getDefault(),"mail.footer");
+				
 				String calculatedsubject = createMessage(subject, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 				
 				// System.out.println("\n----------------------");
@@ -140,7 +143,9 @@ public class LmsMailMessageListener implements MessageListener {
 					
 					InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
 					
-					String calculatedBody = createMessage(body, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+					String calculatedBody = LanguageUtil.get(Locale.getDefault(),"mail.header");
+					calculatedBody += createMessage(body, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
+					calculatedBody += LanguageUtil.get(Locale.getDefault(),"mail.footer");
 	
 					String calculatedsubject = createMessage(subject, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 					
