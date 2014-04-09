@@ -21,7 +21,7 @@
 		<instanceable>false</instanceable>
 		<header-portlet-css>/css/main.css</header-portlet-css>
 		<header-portlet-javascript>/js/main.js</header-portlet-javascript>
-		<header-portlet-javascript>/js/testjq.js</header-portlet-javascript>
+		<header-portlet-javascript>/js/test.js</header-portlet-javascript>
 		<css-class-wrapper>execactivity-portlet</css-class-wrapper>
 		<add-default-resource>true</add-default-resource>
 	</portlet>
