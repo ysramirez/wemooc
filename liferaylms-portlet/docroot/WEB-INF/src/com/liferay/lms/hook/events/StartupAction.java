@@ -108,8 +108,12 @@ public class StartupAction extends SimpleAction {
 	public void createDefaultSiteTemplate(long companyId) throws PortalException, SystemException 
 	{
 		boolean exists = false;
+		long layoutSetPrototypeId = 0;
 		for(LayoutSetPrototype lay:LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypes(0, LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototypesCount())){
-			if("course".equals(lay.getName())) exists=true;
+			if(lay.getCompanyId() == companyId && "course".equals(lay.getName(LocaleUtil.getDefault()))) {
+				exists=true;
+				layoutSetPrototypeId = lay.getLayoutSetPrototypeId();
+			}
 		}
 		if(!exists){
 			long defaultUserId = UserLocalServiceUtil.getDefaultUserId(companyId);
@@ -119,6 +123,8 @@ public class StartupAction extends SimpleAction {
 			InputStream larStream=this.getClass().getClassLoader().getResourceAsStream("/course.lar");
 			LayoutLocalServiceUtil.importLayouts(defaultUserId,layoutSetPrototype.getGroup().getGroupId() , 
 					layoutSetPrototype.getLayoutSet().isPrivateLayout(), getLayoutSetPrototypeParameters(), larStream);
+		} else {
+			layoutSetPrototype = LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(layoutSetPrototypeId);
 		}
 		
 	}
