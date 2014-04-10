@@ -227,7 +227,7 @@ extends LearningActivityLocalServiceBaseImpl {
 		Role siteMemberRole = RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER);
 		
 		if(Validator.isNull(teamId)){
-			if((typeId!=8)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
+			if((moduleId!=0)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
 				resourcePermissionLocalService.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
 					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
 			}
@@ -239,7 +239,7 @@ extends LearningActivityLocalServiceBaseImpl {
 		else{
 			Team team = teamLocalService.getTeam(teamId);
 			Role teamMemberRole = roleLocalService.getTeamRole(team.getCompanyId(), team.getTeamId());
-			if((typeId!=8)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
+			if((moduleId!=0)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
 				resourcePermissionLocalService.removeResourcePermission(team.getCompanyId(), LearningActivity.class.getName(), 
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
 			}else {
