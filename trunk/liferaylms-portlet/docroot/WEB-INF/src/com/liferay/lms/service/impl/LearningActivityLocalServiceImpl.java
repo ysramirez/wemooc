@@ -251,7 +251,6 @@ extends LearningActivityLocalServiceBaseImpl {
 					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
 			}
 			else { 
-				System.out.println("Le añado permiso a la actividad");
 				resourcePermissionLocalService.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
 			}
@@ -263,7 +262,6 @@ extends LearningActivityLocalServiceBaseImpl {
 				resourcePermissionLocalService.removeResourcePermission(team.getCompanyId(), LearningActivity.class.getName(), 
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
 			}else {
-				System.out.println("Le añado permiso a la actividad");
 				resourcePermissionLocalService.setResourcePermissions(team.getCompanyId(), LearningActivity.class.getName(), 
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
 			}
