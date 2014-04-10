@@ -327,7 +327,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			boolean hideStr = Boolean.parseBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", "false"));
 			Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
 			if(teamId==0){
-				if(hideStr)
+				if((moduleId!=0)&&(hideStr))
 				{
 						ResourcePermissionLocalServiceUtil.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(larn.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
@@ -338,7 +338,7 @@ public class LmsActivitiesList extends MVCPortlet {
 			else{
 				Team t = TeamLocalServiceUtil.getTeam(teamId);
 				Role teamMemberRole = RoleLocalServiceUtil.getTeamRole(t.getCompanyId(), t.getTeamId());
-				if(hideStr)
+				if((moduleId!=0)&&(hideStr))
 				{
 					ResourcePermissionLocalServiceUtil.removeResourcePermission(t.getCompanyId(), LearningActivity.class.getName(), 
 							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
