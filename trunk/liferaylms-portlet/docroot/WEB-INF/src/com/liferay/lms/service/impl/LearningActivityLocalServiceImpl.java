@@ -223,31 +223,7 @@ extends LearningActivityLocalServiceBaseImpl {
 		learningActivity.setFeedbackNoCorrect(feedbackNoCorrect);
 		learningActivity.setWeightinmodule(weightinmodule);
 		learningActivity.setExpandoBridgeAttributes(serviceContext);
-		
-		Role siteMemberRole = RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER);
-		
-		if(Validator.isNull(teamId)){
-			if((moduleId!=0)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
-				resourcePermissionLocalService.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
-			}
-			else { 
-				resourcePermissionLocalService.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
-			}
-		}
-		else{
-			Team team = teamLocalService.getTeam(teamId);
-			Role teamMemberRole = roleLocalService.getTeamRole(team.getCompanyId(), team.getTeamId());
-			if((moduleId!=0)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
-				resourcePermissionLocalService.removeResourcePermission(team.getCompanyId(), LearningActivity.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
-			}else {
-				resourcePermissionLocalService.setResourcePermissions(team.getCompanyId(), LearningActivity.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
-			}
-		}
-		
+
 		learningActivityPersistence.update(learningActivity, true);
 		resourceLocalService.addModelResources(learningActivity, serviceContext);
 
@@ -265,6 +241,34 @@ extends LearningActivityLocalServiceBaseImpl {
 				learningActivity.getUserId(), learningActivity.getGroupId(),
 				LearningActivity.class.getName(), learningActivity.getActId(),
 				0, StringPool.BLANK, 0);
+
+		
+		Role siteMemberRole = RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER);
+		
+		if(Validator.isNull(teamId)){
+			if((moduleId!=0)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
+				resourcePermissionLocalService.removeResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+					ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}
+			else { 
+				System.out.println("Le añado permiso a la actividad");
+				resourcePermissionLocalService.setResourcePermissions(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
+			}
+		}
+		else{
+			Team team = teamLocalService.getTeam(teamId);
+			Role teamMemberRole = roleLocalService.getTeamRole(team.getCompanyId(), team.getTeamId());
+			if((moduleId!=0)&&(GetterUtil.getBoolean(PrefsPropsUtil.getString("learningactivity.default.hidenewactivity", StringPool.FALSE)))){
+				resourcePermissionLocalService.removeResourcePermission(team.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), ActionKeys.VIEW);	
+			}else {
+				System.out.println("Le añado permiso a la actividad");
+				resourcePermissionLocalService.setResourcePermissions(team.getCompanyId(), LearningActivity.class.getName(), 
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
+			}
+		}
+		
 		//auditing
 		AuditingLogFactory.audit(learningActivity.getCompanyId(), learningActivity.getGroupId(), LearningActivity.class.getName(), learningActivity.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
 
