@@ -5,7 +5,7 @@
 <%@ include file="/init.jsp" %>
 <%
 Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW))
+if(course!=null && (permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.VIEW) || permissionChecker.hasOwnerPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),themeDisplay.getUserId(),ActionKeys.VIEW)))
 {
 %>
 

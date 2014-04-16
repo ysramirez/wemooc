@@ -91,7 +91,8 @@ else
 				String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
 				
 			%>
-				<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
+			<!-- <%=path%> -->
+				<liferay-util:include  page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
 				<%
 				
 			}
