@@ -47,11 +47,17 @@ import com.liferay.portal.model.CacheModel;
 import com.liferay.portal.model.ModelListener;
 import com.liferay.portal.security.permission.InlineSQLHelperUtil;
 import com.liferay.portal.service.persistence.BatchSessionUtil;
+import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.LayoutPersistence;
+import com.liferay.portal.service.persistence.LayoutSetPersistence;
+import com.liferay.portal.service.persistence.LayoutSetPrototypePersistence;
 import com.liferay.portal.service.persistence.ResourcePersistence;
+import com.liferay.portal.service.persistence.UserGroupRolePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
 import com.liferay.portal.service.persistence.impl.BasePersistenceImpl;
 
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
+import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
 import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
 
 import java.io.Serializable;
@@ -5861,12 +5867,24 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 	protected TestQuestionPersistence testQuestionPersistence;
 	@BeanReference(type = UserCompetencePersistence.class)
 	protected UserCompetencePersistence userCompetencePersistence;
+	@BeanReference(type = GroupPersistence.class)
+	protected GroupPersistence groupPersistence;
+	@BeanReference(type = LayoutPersistence.class)
+	protected LayoutPersistence layoutPersistence;
+	@BeanReference(type = LayoutSetPersistence.class)
+	protected LayoutSetPersistence layoutSetPersistence;
+	@BeanReference(type = LayoutSetPrototypePersistence.class)
+	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
 	@BeanReference(type = ResourcePersistence.class)
 	protected ResourcePersistence resourcePersistence;
 	@BeanReference(type = UserPersistence.class)
 	protected UserPersistence userPersistence;
+	@BeanReference(type = UserGroupRolePersistence.class)
+	protected UserGroupRolePersistence userGroupRolePersistence;
 	@BeanReference(type = AssetEntryPersistence.class)
 	protected AssetEntryPersistence assetEntryPersistence;
+	@BeanReference(type = AssetLinkPersistence.class)
+	protected AssetLinkPersistence assetLinkPersistence;
 	@BeanReference(type = RatingsStatsPersistence.class)
 	protected RatingsStatsPersistence ratingsStatsPersistence;
 	private static final String _SQL_SELECT_COURSE = "SELECT course FROM Course course";

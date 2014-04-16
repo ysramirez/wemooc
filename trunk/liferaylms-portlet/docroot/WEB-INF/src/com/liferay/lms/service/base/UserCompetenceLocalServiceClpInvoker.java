@@ -115,6 +115,18 @@ public class UserCompetenceLocalServiceClpInvoker {
 		_methodName140 = "findByUserIdCompetenceId";
 
 		_methodParameterTypes140 = new String[] { "long", "long" };
+
+		_methodName141 = "findBuUserId";
+
+		_methodParameterTypes141 = new String[] { "long" };
+
+		_methodName142 = "findBuUserId";
+
+		_methodParameterTypes142 = new String[] { "long", "int", "int" };
+
+		_methodName143 = "countByUserId";
+
+		_methodParameterTypes143 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -224,6 +236,23 @@ public class UserCompetenceLocalServiceClpInvoker {
 				((Long)arguments[1]).longValue());
 		}
 
+		if (_methodName141.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes141, parameterTypes)) {
+			return UserCompetenceLocalServiceUtil.findBuUserId(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName142.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes142, parameterTypes)) {
+			return UserCompetenceLocalServiceUtil.findBuUserId(((Long)arguments[0]).longValue(),
+				((Integer)arguments[1]).intValue(),
+				((Integer)arguments[2]).intValue());
+		}
+
+		if (_methodName143.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes143, parameterTypes)) {
+			return UserCompetenceLocalServiceUtil.countByUserId(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -265,4 +294,10 @@ public class UserCompetenceLocalServiceClpInvoker {
 	private String[] _methodParameterTypes135;
 	private String _methodName140;
 	private String[] _methodParameterTypes140;
+	private String _methodName141;
+	private String[] _methodParameterTypes141;
+	private String _methodName142;
+	private String[] _methodParameterTypes142;
+	private String _methodName143;
+	private String[] _methodParameterTypes143;
 }

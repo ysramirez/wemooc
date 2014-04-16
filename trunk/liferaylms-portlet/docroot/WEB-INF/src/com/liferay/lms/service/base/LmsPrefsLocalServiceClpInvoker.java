@@ -109,6 +109,10 @@ public class LmsPrefsLocalServiceClpInvoker {
 		_methodName140 = "getLmsPrefsIni";
 
 		_methodParameterTypes140 = new String[] { "long" };
+
+		_methodName141 = "getStrictLmsPrefsIni";
+
+		_methodParameterTypes141 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -217,6 +221,11 @@ public class LmsPrefsLocalServiceClpInvoker {
 			return LmsPrefsLocalServiceUtil.getLmsPrefsIni(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName141.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes141, parameterTypes)) {
+			return LmsPrefsLocalServiceUtil.getStrictLmsPrefsIni(((Long)arguments[0]).longValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -258,4 +267,6 @@ public class LmsPrefsLocalServiceClpInvoker {
 	private String[] _methodParameterTypes135;
 	private String _methodName140;
 	private String[] _methodParameterTypes140;
+	private String _methodName141;
+	private String[] _methodParameterTypes141;
 }

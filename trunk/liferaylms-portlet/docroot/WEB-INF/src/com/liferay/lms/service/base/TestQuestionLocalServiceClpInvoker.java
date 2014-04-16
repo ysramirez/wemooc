@@ -131,6 +131,46 @@ public class TestQuestionLocalServiceClpInvoker {
 		_methodName145 = "initializeQuestionType";
 
 		_methodParameterTypes145 = new String[] { "long" };
+
+		_methodName146 = "updateQuestionWithoutWeight";
+
+		_methodParameterTypes146 = new String[] { "long" };
+
+		_methodName147 = "getPreviusTestQuestion";
+
+		_methodParameterTypes147 = new String[] { "long" };
+
+		_methodName148 = "getPreviusTestQuestion";
+
+		_methodParameterTypes148 = new String[] {
+				"com.liferay.lms.model.TestQuestion"
+			};
+
+		_methodName149 = "getNextTestQuestion";
+
+		_methodParameterTypes149 = new String[] { "long" };
+
+		_methodName150 = "getNextTestQuestion";
+
+		_methodParameterTypes150 = new String[] {
+				"com.liferay.lms.model.TestQuestion"
+			};
+
+		_methodName151 = "goUpTestQuestion";
+
+		_methodParameterTypes151 = new String[] { "long" };
+
+		_methodName152 = "goDownTestQuestion";
+
+		_methodParameterTypes152 = new String[] { "long" };
+
+		_methodName153 = "moveQuestion";
+
+		_methodParameterTypes153 = new String[] { "long", "long", "long" };
+
+		_methodName154 = "checkWeights";
+
+		_methodParameterTypes154 = new String[] { "long" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -258,6 +298,61 @@ public class TestQuestionLocalServiceClpInvoker {
 			return TestQuestionLocalServiceUtil.initializeQuestionType(((Long)arguments[0]).longValue());
 		}
 
+		if (_methodName146.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes146, parameterTypes)) {
+			return TestQuestionLocalServiceUtil.updateQuestionWithoutWeight(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName147.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes147, parameterTypes)) {
+			return TestQuestionLocalServiceUtil.getPreviusTestQuestion(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName148.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes148, parameterTypes)) {
+			return TestQuestionLocalServiceUtil.getPreviusTestQuestion((com.liferay.lms.model.TestQuestion)arguments[0]);
+		}
+
+		if (_methodName149.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes149, parameterTypes)) {
+			return TestQuestionLocalServiceUtil.getNextTestQuestion(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName150.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes150, parameterTypes)) {
+			return TestQuestionLocalServiceUtil.getNextTestQuestion((com.liferay.lms.model.TestQuestion)arguments[0]);
+		}
+
+		if (_methodName151.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes151, parameterTypes)) {
+			TestQuestionLocalServiceUtil.goUpTestQuestion(((Long)arguments[0]).longValue());
+
+			return null;
+		}
+
+		if (_methodName152.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes152, parameterTypes)) {
+			TestQuestionLocalServiceUtil.goDownTestQuestion(((Long)arguments[0]).longValue());
+
+			return null;
+		}
+
+		if (_methodName153.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes153, parameterTypes)) {
+			TestQuestionLocalServiceUtil.moveQuestion(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				((Long)arguments[2]).longValue());
+
+			return null;
+		}
+
+		if (_methodName154.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes154, parameterTypes)) {
+			TestQuestionLocalServiceUtil.checkWeights(((Long)arguments[0]).longValue());
+
+			return null;
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -305,4 +400,22 @@ public class TestQuestionLocalServiceClpInvoker {
 	private String[] _methodParameterTypes144;
 	private String _methodName145;
 	private String[] _methodParameterTypes145;
+	private String _methodName146;
+	private String[] _methodParameterTypes146;
+	private String _methodName147;
+	private String[] _methodParameterTypes147;
+	private String _methodName148;
+	private String[] _methodParameterTypes148;
+	private String _methodName149;
+	private String[] _methodParameterTypes149;
+	private String _methodName150;
+	private String[] _methodParameterTypes150;
+	private String _methodName151;
+	private String[] _methodParameterTypes151;
+	private String _methodName152;
+	private String[] _methodParameterTypes152;
+	private String _methodName153;
+	private String[] _methodParameterTypes153;
+	private String _methodName154;
+	private String[] _methodParameterTypes154;
 }

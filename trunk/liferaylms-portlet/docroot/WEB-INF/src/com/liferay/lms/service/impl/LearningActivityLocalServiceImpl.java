@@ -357,6 +357,10 @@ extends LearningActivityLocalServiceBaseImpl {
 	{
 		return learningActivityPersistence.findByg(groupId);
 	}
+	public java.util.List<LearningActivity> getMandatoryLearningActivitiesOfGroup(long groupId) throws SystemException
+	{
+		return learningActivityPersistence.findByg_m(groupId, 1);
+	}
 	public long countLearningActivitiesOfGroup(long groupId) throws SystemException
 	{
 		return learningActivityPersistence.countByg(groupId);

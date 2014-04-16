@@ -65,9 +65,10 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 			{ "questionId", Types.BIGINT },
 			{ "actId", Types.BIGINT },
 			{ "text_", Types.VARCHAR },
-			{ "questionType", Types.BIGINT }
+			{ "questionType", Types.BIGINT },
+			{ "weight", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_TestQuestion (uuid_ VARCHAR(75) null,questionId LONG not null primary key,actId LONG,text_ TEXT null,questionType LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_TestQuestion (uuid_ VARCHAR(75) null,questionId LONG not null primary key,actId LONG,text_ TEXT null,questionType LONG,weight LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_TestQuestion";
 	public static final String ORDER_BY_JPQL = " ORDER BY testQuestion.questionId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_TestQuestion.questionId ASC";
@@ -104,6 +105,7 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		model.setActId(soapModel.getActId());
 		model.setText(soapModel.getText());
 		model.setQuestionType(soapModel.getQuestionType());
+		model.setWeight(soapModel.getWeight());
 
 		return model;
 	}
@@ -167,6 +169,7 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		attributes.put("actId", getActId());
 		attributes.put("text", getText());
 		attributes.put("questionType", getQuestionType());
+		attributes.put("weight", getWeight());
 
 		return attributes;
 	}
@@ -201,6 +204,12 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 
 		if (questionType != null) {
 			setQuestionType(questionType);
+		}
+
+		Long weight = (Long)attributes.get("weight");
+
+		if (weight != null) {
+			setWeight(weight);
 		}
 	}
 
@@ -276,6 +285,14 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		_questionType = questionType;
 	}
 
+	public long getWeight() {
+		return _weight;
+	}
+
+	public void setWeight(long weight) {
+		_weight = weight;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -313,6 +330,7 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		testQuestionImpl.setActId(getActId());
 		testQuestionImpl.setText(getText());
 		testQuestionImpl.setQuestionType(getQuestionType());
+		testQuestionImpl.setWeight(getWeight());
 
 		testQuestionImpl.resetOriginalValues();
 
@@ -408,12 +426,14 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 
 		testQuestionCacheModel.questionType = getQuestionType();
 
+		testQuestionCacheModel.weight = getWeight();
+
 		return testQuestionCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -425,13 +445,15 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 		sb.append(getText());
 		sb.append(", questionType=");
 		sb.append(getQuestionType());
+		sb.append(", weight=");
+		sb.append(getWeight());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(22);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.TestQuestion");
@@ -457,6 +479,10 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 			"<column><column-name>questionType</column-name><column-value><![CDATA[");
 		sb.append(getQuestionType());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>weight</column-name><column-value><![CDATA[");
+		sb.append(getWeight());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -475,6 +501,7 @@ public class TestQuestionModelImpl extends BaseModelImpl<TestQuestion>
 	private boolean _setOriginalActId;
 	private String _text;
 	private long _questionType;
+	private long _weight;
 	private long _columnBitmask;
 	private TestQuestion _escapedModelProxy;
 }

@@ -286,6 +286,7 @@
 		<property name="actId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="text" type="com.liferay.portal.dao.orm.hibernate.StringType" column="text_" />
 		<property name="questionType" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="weight" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.UserCompetenceImpl" table="Lms_UserCompetence">
 		<cache usage="read-write" />

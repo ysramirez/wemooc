@@ -84,10 +84,19 @@ import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
 import com.liferay.portal.service.ResourceLocalService;
+import com.liferay.portal.service.ResourcePermissionLocalService;
+import com.liferay.portal.service.ResourcePermissionService;
 import com.liferay.portal.service.ResourceService;
+import com.liferay.portal.service.RoleLocalService;
+import com.liferay.portal.service.RoleService;
+import com.liferay.portal.service.TeamLocalService;
+import com.liferay.portal.service.TeamService;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.service.UserService;
+import com.liferay.portal.service.persistence.ResourcePermissionPersistence;
 import com.liferay.portal.service.persistence.ResourcePersistence;
+import com.liferay.portal.service.persistence.RolePersistence;
+import com.liferay.portal.service.persistence.TeamPersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
 
 import com.liferay.portlet.asset.service.AssetEntryLocalService;
@@ -95,6 +104,8 @@ import com.liferay.portlet.asset.service.AssetEntryService;
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
 import com.liferay.portlet.ratings.service.RatingsStatsLocalService;
 import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
+import com.liferay.portlet.social.service.SocialActivityLocalService;
+import com.liferay.portlet.social.service.persistence.SocialActivityPersistence;
 
 import java.io.Serializable;
 
@@ -1372,6 +1383,171 @@ public abstract class LearningActivityLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the resource permission local service.
+	 *
+	 * @return the resource permission local service
+	 */
+	public ResourcePermissionLocalService getResourcePermissionLocalService() {
+		return resourcePermissionLocalService;
+	}
+
+	/**
+	 * Sets the resource permission local service.
+	 *
+	 * @param resourcePermissionLocalService the resource permission local service
+	 */
+	public void setResourcePermissionLocalService(
+		ResourcePermissionLocalService resourcePermissionLocalService) {
+		this.resourcePermissionLocalService = resourcePermissionLocalService;
+	}
+
+	/**
+	 * Returns the resource permission remote service.
+	 *
+	 * @return the resource permission remote service
+	 */
+	public ResourcePermissionService getResourcePermissionService() {
+		return resourcePermissionService;
+	}
+
+	/**
+	 * Sets the resource permission remote service.
+	 *
+	 * @param resourcePermissionService the resource permission remote service
+	 */
+	public void setResourcePermissionService(
+		ResourcePermissionService resourcePermissionService) {
+		this.resourcePermissionService = resourcePermissionService;
+	}
+
+	/**
+	 * Returns the resource permission persistence.
+	 *
+	 * @return the resource permission persistence
+	 */
+	public ResourcePermissionPersistence getResourcePermissionPersistence() {
+		return resourcePermissionPersistence;
+	}
+
+	/**
+	 * Sets the resource permission persistence.
+	 *
+	 * @param resourcePermissionPersistence the resource permission persistence
+	 */
+	public void setResourcePermissionPersistence(
+		ResourcePermissionPersistence resourcePermissionPersistence) {
+		this.resourcePermissionPersistence = resourcePermissionPersistence;
+	}
+
+	/**
+	 * Returns the role local service.
+	 *
+	 * @return the role local service
+	 */
+	public RoleLocalService getRoleLocalService() {
+		return roleLocalService;
+	}
+
+	/**
+	 * Sets the role local service.
+	 *
+	 * @param roleLocalService the role local service
+	 */
+	public void setRoleLocalService(RoleLocalService roleLocalService) {
+		this.roleLocalService = roleLocalService;
+	}
+
+	/**
+	 * Returns the role remote service.
+	 *
+	 * @return the role remote service
+	 */
+	public RoleService getRoleService() {
+		return roleService;
+	}
+
+	/**
+	 * Sets the role remote service.
+	 *
+	 * @param roleService the role remote service
+	 */
+	public void setRoleService(RoleService roleService) {
+		this.roleService = roleService;
+	}
+
+	/**
+	 * Returns the role persistence.
+	 *
+	 * @return the role persistence
+	 */
+	public RolePersistence getRolePersistence() {
+		return rolePersistence;
+	}
+
+	/**
+	 * Sets the role persistence.
+	 *
+	 * @param rolePersistence the role persistence
+	 */
+	public void setRolePersistence(RolePersistence rolePersistence) {
+		this.rolePersistence = rolePersistence;
+	}
+
+	/**
+	 * Returns the team local service.
+	 *
+	 * @return the team local service
+	 */
+	public TeamLocalService getTeamLocalService() {
+		return teamLocalService;
+	}
+
+	/**
+	 * Sets the team local service.
+	 *
+	 * @param teamLocalService the team local service
+	 */
+	public void setTeamLocalService(TeamLocalService teamLocalService) {
+		this.teamLocalService = teamLocalService;
+	}
+
+	/**
+	 * Returns the team remote service.
+	 *
+	 * @return the team remote service
+	 */
+	public TeamService getTeamService() {
+		return teamService;
+	}
+
+	/**
+	 * Sets the team remote service.
+	 *
+	 * @param teamService the team remote service
+	 */
+	public void setTeamService(TeamService teamService) {
+		this.teamService = teamService;
+	}
+
+	/**
+	 * Returns the team persistence.
+	 *
+	 * @return the team persistence
+	 */
+	public TeamPersistence getTeamPersistence() {
+		return teamPersistence;
+	}
+
+	/**
+	 * Sets the team persistence.
+	 *
+	 * @param teamPersistence the team persistence
+	 */
+	public void setTeamPersistence(TeamPersistence teamPersistence) {
+		this.teamPersistence = teamPersistence;
+	}
+
+	/**
 	 * Returns the user local service.
 	 *
 	 * @return the user local service
@@ -1517,6 +1693,44 @@ public abstract class LearningActivityLocalServiceBaseImpl
 	public void setRatingsStatsPersistence(
 		RatingsStatsPersistence ratingsStatsPersistence) {
 		this.ratingsStatsPersistence = ratingsStatsPersistence;
+	}
+
+	/**
+	 * Returns the social activity local service.
+	 *
+	 * @return the social activity local service
+	 */
+	public SocialActivityLocalService getSocialActivityLocalService() {
+		return socialActivityLocalService;
+	}
+
+	/**
+	 * Sets the social activity local service.
+	 *
+	 * @param socialActivityLocalService the social activity local service
+	 */
+	public void setSocialActivityLocalService(
+		SocialActivityLocalService socialActivityLocalService) {
+		this.socialActivityLocalService = socialActivityLocalService;
+	}
+
+	/**
+	 * Returns the social activity persistence.
+	 *
+	 * @return the social activity persistence
+	 */
+	public SocialActivityPersistence getSocialActivityPersistence() {
+		return socialActivityPersistence;
+	}
+
+	/**
+	 * Sets the social activity persistence.
+	 *
+	 * @param socialActivityPersistence the social activity persistence
+	 */
+	public void setSocialActivityPersistence(
+		SocialActivityPersistence socialActivityPersistence) {
+		this.socialActivityPersistence = socialActivityPersistence;
 	}
 
 	public void afterPropertiesSet() {
@@ -1689,6 +1903,24 @@ public abstract class LearningActivityLocalServiceBaseImpl
 	protected ResourceService resourceService;
 	@BeanReference(type = ResourcePersistence.class)
 	protected ResourcePersistence resourcePersistence;
+	@BeanReference(type = ResourcePermissionLocalService.class)
+	protected ResourcePermissionLocalService resourcePermissionLocalService;
+	@BeanReference(type = ResourcePermissionService.class)
+	protected ResourcePermissionService resourcePermissionService;
+	@BeanReference(type = ResourcePermissionPersistence.class)
+	protected ResourcePermissionPersistence resourcePermissionPersistence;
+	@BeanReference(type = RoleLocalService.class)
+	protected RoleLocalService roleLocalService;
+	@BeanReference(type = RoleService.class)
+	protected RoleService roleService;
+	@BeanReference(type = RolePersistence.class)
+	protected RolePersistence rolePersistence;
+	@BeanReference(type = TeamLocalService.class)
+	protected TeamLocalService teamLocalService;
+	@BeanReference(type = TeamService.class)
+	protected TeamService teamService;
+	@BeanReference(type = TeamPersistence.class)
+	protected TeamPersistence teamPersistence;
 	@BeanReference(type = UserLocalService.class)
 	protected UserLocalService userLocalService;
 	@BeanReference(type = UserService.class)
@@ -1705,6 +1937,10 @@ public abstract class LearningActivityLocalServiceBaseImpl
 	protected RatingsStatsLocalService ratingsStatsLocalService;
 	@BeanReference(type = RatingsStatsPersistence.class)
 	protected RatingsStatsPersistence ratingsStatsPersistence;
+	@BeanReference(type = SocialActivityLocalService.class)
+	protected SocialActivityLocalService socialActivityLocalService;
+	@BeanReference(type = SocialActivityPersistence.class)
+	protected SocialActivityPersistence socialActivityPersistence;
 	private String _beanIdentifier;
 	private LearningActivityLocalServiceClpInvoker _clpInvoker = new LearningActivityLocalServiceClpInvoker();
 }
