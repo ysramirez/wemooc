@@ -420,6 +420,7 @@
 				<column name="TEXT_" />
 			</basic>
 			<basic name="questionType" />
+			<basic name="weight" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

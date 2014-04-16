@@ -396,6 +396,7 @@ public class TestQuestionPersistenceImpl extends BasePersistenceImpl<TestQuestio
 		testQuestionImpl.setActId(testQuestion.getActId());
 		testQuestionImpl.setText(testQuestion.getText());
 		testQuestionImpl.setQuestionType(testQuestion.getQuestionType());
+		testQuestionImpl.setWeight(testQuestion.getWeight());
 
 		return testQuestionImpl;
 	}

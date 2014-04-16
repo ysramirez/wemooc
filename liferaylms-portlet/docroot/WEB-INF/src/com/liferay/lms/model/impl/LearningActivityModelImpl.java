@@ -119,6 +119,7 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 	public static long MODULEID_COLUMN_BITMASK = 2L;
 	public static long TYPEID_COLUMN_BITMASK = 4L;
 	public static long UUID_COLUMN_BITMASK = 8L;
+	public static long WEIGHTINMODULE_COLUMN_BITMASK = 16L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -870,7 +871,19 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 	}
 
 	public void setWeightinmodule(long weightinmodule) {
+		_columnBitmask |= WEIGHTINMODULE_COLUMN_BITMASK;
+
+		if (!_setOriginalWeightinmodule) {
+			_setOriginalWeightinmodule = true;
+
+			_originalWeightinmodule = _weightinmodule;
+		}
+
 		_weightinmodule = weightinmodule;
+	}
+
+	public long getOriginalWeightinmodule() {
+		return _originalWeightinmodule;
 	}
 
 	/**
@@ -1107,6 +1120,10 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 		learningActivityModelImpl._originalModuleId = learningActivityModelImpl._moduleId;
 
 		learningActivityModelImpl._setOriginalModuleId = false;
+
+		learningActivityModelImpl._originalWeightinmodule = learningActivityModelImpl._weightinmodule;
+
+		learningActivityModelImpl._setOriginalWeightinmodule = false;
 
 		learningActivityModelImpl._columnBitmask = 0;
 	}
@@ -1472,6 +1489,8 @@ public class LearningActivityModelImpl extends BaseModelImpl<LearningActivity>
 	private String _feedbackCorrect;
 	private String _feedbackNoCorrect;
 	private long _weightinmodule;
+	private long _originalWeightinmodule;
+	private boolean _setOriginalWeightinmodule;
 	private long _columnBitmask;
 	private LearningActivity _escapedModelProxy;
 }

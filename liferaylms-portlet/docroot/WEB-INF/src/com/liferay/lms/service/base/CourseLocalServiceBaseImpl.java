@@ -82,17 +82,34 @@ import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.PersistedModel;
 import com.liferay.portal.service.BaseLocalServiceImpl;
+import com.liferay.portal.service.GroupLocalService;
+import com.liferay.portal.service.GroupService;
+import com.liferay.portal.service.LayoutLocalService;
+import com.liferay.portal.service.LayoutService;
+import com.liferay.portal.service.LayoutSetLocalService;
+import com.liferay.portal.service.LayoutSetPrototypeLocalService;
+import com.liferay.portal.service.LayoutSetPrototypeService;
+import com.liferay.portal.service.LayoutSetService;
 import com.liferay.portal.service.PersistedModelLocalServiceRegistryUtil;
 import com.liferay.portal.service.ResourceLocalService;
 import com.liferay.portal.service.ResourceService;
+import com.liferay.portal.service.UserGroupRoleLocalService;
+import com.liferay.portal.service.UserGroupRoleService;
 import com.liferay.portal.service.UserLocalService;
 import com.liferay.portal.service.UserService;
+import com.liferay.portal.service.persistence.GroupPersistence;
+import com.liferay.portal.service.persistence.LayoutPersistence;
+import com.liferay.portal.service.persistence.LayoutSetPersistence;
+import com.liferay.portal.service.persistence.LayoutSetPrototypePersistence;
 import com.liferay.portal.service.persistence.ResourcePersistence;
+import com.liferay.portal.service.persistence.UserGroupRolePersistence;
 import com.liferay.portal.service.persistence.UserPersistence;
 
 import com.liferay.portlet.asset.service.AssetEntryLocalService;
 import com.liferay.portlet.asset.service.AssetEntryService;
+import com.liferay.portlet.asset.service.AssetLinkLocalService;
 import com.liferay.portlet.asset.service.persistence.AssetEntryPersistence;
+import com.liferay.portlet.asset.service.persistence.AssetLinkPersistence;
 import com.liferay.portlet.ratings.service.RatingsStatsLocalService;
 import com.liferay.portlet.ratings.service.persistence.RatingsStatsPersistence;
 
@@ -1310,6 +1327,227 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the group local service.
+	 *
+	 * @return the group local service
+	 */
+	public GroupLocalService getGroupLocalService() {
+		return groupLocalService;
+	}
+
+	/**
+	 * Sets the group local service.
+	 *
+	 * @param groupLocalService the group local service
+	 */
+	public void setGroupLocalService(GroupLocalService groupLocalService) {
+		this.groupLocalService = groupLocalService;
+	}
+
+	/**
+	 * Returns the group remote service.
+	 *
+	 * @return the group remote service
+	 */
+	public GroupService getGroupService() {
+		return groupService;
+	}
+
+	/**
+	 * Sets the group remote service.
+	 *
+	 * @param groupService the group remote service
+	 */
+	public void setGroupService(GroupService groupService) {
+		this.groupService = groupService;
+	}
+
+	/**
+	 * Returns the group persistence.
+	 *
+	 * @return the group persistence
+	 */
+	public GroupPersistence getGroupPersistence() {
+		return groupPersistence;
+	}
+
+	/**
+	 * Sets the group persistence.
+	 *
+	 * @param groupPersistence the group persistence
+	 */
+	public void setGroupPersistence(GroupPersistence groupPersistence) {
+		this.groupPersistence = groupPersistence;
+	}
+
+	/**
+	 * Returns the layout local service.
+	 *
+	 * @return the layout local service
+	 */
+	public LayoutLocalService getLayoutLocalService() {
+		return layoutLocalService;
+	}
+
+	/**
+	 * Sets the layout local service.
+	 *
+	 * @param layoutLocalService the layout local service
+	 */
+	public void setLayoutLocalService(LayoutLocalService layoutLocalService) {
+		this.layoutLocalService = layoutLocalService;
+	}
+
+	/**
+	 * Returns the layout remote service.
+	 *
+	 * @return the layout remote service
+	 */
+	public LayoutService getLayoutService() {
+		return layoutService;
+	}
+
+	/**
+	 * Sets the layout remote service.
+	 *
+	 * @param layoutService the layout remote service
+	 */
+	public void setLayoutService(LayoutService layoutService) {
+		this.layoutService = layoutService;
+	}
+
+	/**
+	 * Returns the layout persistence.
+	 *
+	 * @return the layout persistence
+	 */
+	public LayoutPersistence getLayoutPersistence() {
+		return layoutPersistence;
+	}
+
+	/**
+	 * Sets the layout persistence.
+	 *
+	 * @param layoutPersistence the layout persistence
+	 */
+	public void setLayoutPersistence(LayoutPersistence layoutPersistence) {
+		this.layoutPersistence = layoutPersistence;
+	}
+
+	/**
+	 * Returns the layout set local service.
+	 *
+	 * @return the layout set local service
+	 */
+	public LayoutSetLocalService getLayoutSetLocalService() {
+		return layoutSetLocalService;
+	}
+
+	/**
+	 * Sets the layout set local service.
+	 *
+	 * @param layoutSetLocalService the layout set local service
+	 */
+	public void setLayoutSetLocalService(
+		LayoutSetLocalService layoutSetLocalService) {
+		this.layoutSetLocalService = layoutSetLocalService;
+	}
+
+	/**
+	 * Returns the layout set remote service.
+	 *
+	 * @return the layout set remote service
+	 */
+	public LayoutSetService getLayoutSetService() {
+		return layoutSetService;
+	}
+
+	/**
+	 * Sets the layout set remote service.
+	 *
+	 * @param layoutSetService the layout set remote service
+	 */
+	public void setLayoutSetService(LayoutSetService layoutSetService) {
+		this.layoutSetService = layoutSetService;
+	}
+
+	/**
+	 * Returns the layout set persistence.
+	 *
+	 * @return the layout set persistence
+	 */
+	public LayoutSetPersistence getLayoutSetPersistence() {
+		return layoutSetPersistence;
+	}
+
+	/**
+	 * Sets the layout set persistence.
+	 *
+	 * @param layoutSetPersistence the layout set persistence
+	 */
+	public void setLayoutSetPersistence(
+		LayoutSetPersistence layoutSetPersistence) {
+		this.layoutSetPersistence = layoutSetPersistence;
+	}
+
+	/**
+	 * Returns the layout set prototype local service.
+	 *
+	 * @return the layout set prototype local service
+	 */
+	public LayoutSetPrototypeLocalService getLayoutSetPrototypeLocalService() {
+		return layoutSetPrototypeLocalService;
+	}
+
+	/**
+	 * Sets the layout set prototype local service.
+	 *
+	 * @param layoutSetPrototypeLocalService the layout set prototype local service
+	 */
+	public void setLayoutSetPrototypeLocalService(
+		LayoutSetPrototypeLocalService layoutSetPrototypeLocalService) {
+		this.layoutSetPrototypeLocalService = layoutSetPrototypeLocalService;
+	}
+
+	/**
+	 * Returns the layout set prototype remote service.
+	 *
+	 * @return the layout set prototype remote service
+	 */
+	public LayoutSetPrototypeService getLayoutSetPrototypeService() {
+		return layoutSetPrototypeService;
+	}
+
+	/**
+	 * Sets the layout set prototype remote service.
+	 *
+	 * @param layoutSetPrototypeService the layout set prototype remote service
+	 */
+	public void setLayoutSetPrototypeService(
+		LayoutSetPrototypeService layoutSetPrototypeService) {
+		this.layoutSetPrototypeService = layoutSetPrototypeService;
+	}
+
+	/**
+	 * Returns the layout set prototype persistence.
+	 *
+	 * @return the layout set prototype persistence
+	 */
+	public LayoutSetPrototypePersistence getLayoutSetPrototypePersistence() {
+		return layoutSetPrototypePersistence;
+	}
+
+	/**
+	 * Sets the layout set prototype persistence.
+	 *
+	 * @param layoutSetPrototypePersistence the layout set prototype persistence
+	 */
+	public void setLayoutSetPrototypePersistence(
+		LayoutSetPrototypePersistence layoutSetPrototypePersistence) {
+		this.layoutSetPrototypePersistence = layoutSetPrototypePersistence;
+	}
+
+	/**
 	 * Returns the resource local service.
 	 *
 	 * @return the resource local service
@@ -1419,6 +1657,63 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	}
 
 	/**
+	 * Returns the user group role local service.
+	 *
+	 * @return the user group role local service
+	 */
+	public UserGroupRoleLocalService getUserGroupRoleLocalService() {
+		return userGroupRoleLocalService;
+	}
+
+	/**
+	 * Sets the user group role local service.
+	 *
+	 * @param userGroupRoleLocalService the user group role local service
+	 */
+	public void setUserGroupRoleLocalService(
+		UserGroupRoleLocalService userGroupRoleLocalService) {
+		this.userGroupRoleLocalService = userGroupRoleLocalService;
+	}
+
+	/**
+	 * Returns the user group role remote service.
+	 *
+	 * @return the user group role remote service
+	 */
+	public UserGroupRoleService getUserGroupRoleService() {
+		return userGroupRoleService;
+	}
+
+	/**
+	 * Sets the user group role remote service.
+	 *
+	 * @param userGroupRoleService the user group role remote service
+	 */
+	public void setUserGroupRoleService(
+		UserGroupRoleService userGroupRoleService) {
+		this.userGroupRoleService = userGroupRoleService;
+	}
+
+	/**
+	 * Returns the user group role persistence.
+	 *
+	 * @return the user group role persistence
+	 */
+	public UserGroupRolePersistence getUserGroupRolePersistence() {
+		return userGroupRolePersistence;
+	}
+
+	/**
+	 * Sets the user group role persistence.
+	 *
+	 * @param userGroupRolePersistence the user group role persistence
+	 */
+	public void setUserGroupRolePersistence(
+		UserGroupRolePersistence userGroupRolePersistence) {
+		this.userGroupRolePersistence = userGroupRolePersistence;
+	}
+
+	/**
 	 * Returns the asset entry local service.
 	 *
 	 * @return the asset entry local service
@@ -1472,6 +1767,44 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	public void setAssetEntryPersistence(
 		AssetEntryPersistence assetEntryPersistence) {
 		this.assetEntryPersistence = assetEntryPersistence;
+	}
+
+	/**
+	 * Returns the asset link local service.
+	 *
+	 * @return the asset link local service
+	 */
+	public AssetLinkLocalService getAssetLinkLocalService() {
+		return assetLinkLocalService;
+	}
+
+	/**
+	 * Sets the asset link local service.
+	 *
+	 * @param assetLinkLocalService the asset link local service
+	 */
+	public void setAssetLinkLocalService(
+		AssetLinkLocalService assetLinkLocalService) {
+		this.assetLinkLocalService = assetLinkLocalService;
+	}
+
+	/**
+	 * Returns the asset link persistence.
+	 *
+	 * @return the asset link persistence
+	 */
+	public AssetLinkPersistence getAssetLinkPersistence() {
+		return assetLinkPersistence;
+	}
+
+	/**
+	 * Sets the asset link persistence.
+	 *
+	 * @param assetLinkPersistence the asset link persistence
+	 */
+	public void setAssetLinkPersistence(
+		AssetLinkPersistence assetLinkPersistence) {
+		this.assetLinkPersistence = assetLinkPersistence;
 	}
 
 	/**
@@ -1676,6 +2009,30 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected UserCompetencePersistence userCompetencePersistence;
 	@BeanReference(type = CounterLocalService.class)
 	protected CounterLocalService counterLocalService;
+	@BeanReference(type = GroupLocalService.class)
+	protected GroupLocalService groupLocalService;
+	@BeanReference(type = GroupService.class)
+	protected GroupService groupService;
+	@BeanReference(type = GroupPersistence.class)
+	protected GroupPersistence groupPersistence;
+	@BeanReference(type = LayoutLocalService.class)
+	protected LayoutLocalService layoutLocalService;
+	@BeanReference(type = LayoutService.class)
+	protected LayoutService layoutService;
+	@BeanReference(type = LayoutPersistence.class)
+	protected LayoutPersistence layoutPersistence;
+	@BeanReference(type = LayoutSetLocalService.class)
+	protected LayoutSetLocalService layoutSetLocalService;
+	@BeanReference(type = LayoutSetService.class)
+	protected LayoutSetService layoutSetService;
+	@BeanReference(type = LayoutSetPersistence.class)
+	protected LayoutSetPersistence layoutSetPersistence;
+	@BeanReference(type = LayoutSetPrototypeLocalService.class)
+	protected LayoutSetPrototypeLocalService layoutSetPrototypeLocalService;
+	@BeanReference(type = LayoutSetPrototypeService.class)
+	protected LayoutSetPrototypeService layoutSetPrototypeService;
+	@BeanReference(type = LayoutSetPrototypePersistence.class)
+	protected LayoutSetPrototypePersistence layoutSetPrototypePersistence;
 	@BeanReference(type = ResourceLocalService.class)
 	protected ResourceLocalService resourceLocalService;
 	@BeanReference(type = ResourceService.class)
@@ -1688,12 +2045,22 @@ public abstract class CourseLocalServiceBaseImpl extends BaseLocalServiceImpl
 	protected UserService userService;
 	@BeanReference(type = UserPersistence.class)
 	protected UserPersistence userPersistence;
+	@BeanReference(type = UserGroupRoleLocalService.class)
+	protected UserGroupRoleLocalService userGroupRoleLocalService;
+	@BeanReference(type = UserGroupRoleService.class)
+	protected UserGroupRoleService userGroupRoleService;
+	@BeanReference(type = UserGroupRolePersistence.class)
+	protected UserGroupRolePersistence userGroupRolePersistence;
 	@BeanReference(type = AssetEntryLocalService.class)
 	protected AssetEntryLocalService assetEntryLocalService;
 	@BeanReference(type = AssetEntryService.class)
 	protected AssetEntryService assetEntryService;
 	@BeanReference(type = AssetEntryPersistence.class)
 	protected AssetEntryPersistence assetEntryPersistence;
+	@BeanReference(type = AssetLinkLocalService.class)
+	protected AssetLinkLocalService assetLinkLocalService;
+	@BeanReference(type = AssetLinkPersistence.class)
+	protected AssetLinkPersistence assetLinkPersistence;
 	@BeanReference(type = RatingsStatsLocalService.class)
 	protected RatingsStatsLocalService ratingsStatsLocalService;
 	@BeanReference(type = RatingsStatsPersistence.class)

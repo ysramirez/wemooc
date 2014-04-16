@@ -130,45 +130,55 @@ public class LearningActivityResultLocalServiceClpInvoker {
 				"long", "java.lang.String", "long"
 			};
 
-		_methodName143 = "existsLearningActivityResult";
+		_methodName143 = "update";
 
-		_methodParameterTypes143 = new String[] { "long", "long" };
+		_methodParameterTypes143 = new String[] {
+				"long", "java.lang.String", "java.lang.String", "long"
+			};
 
-		_methodName144 = "userPassed";
+		_methodName144 = "existsLearningActivityResult";
 
 		_methodParameterTypes144 = new String[] { "long", "long" };
 
-		_methodName145 = "countPassed";
+		_methodName145 = "userPassed";
 
-		_methodParameterTypes145 = new String[] { "long" };
+		_methodParameterTypes145 = new String[] { "long", "long" };
 
-		_methodName146 = "countNotPassed";
+		_methodName146 = "countPassed";
 
 		_methodParameterTypes146 = new String[] { "long" };
 
-		_methodName147 = "avgResult";
+		_methodName147 = "countNotPassed";
 
 		_methodParameterTypes147 = new String[] { "long" };
 
-		_methodName148 = "countStarted";
+		_methodName148 = "avgResult";
 
 		_methodParameterTypes148 = new String[] { "long" };
 
-		_methodName149 = "triesPerUser";
+		_methodName149 = "countStarted";
 
 		_methodParameterTypes149 = new String[] { "long" };
 
-		_methodName150 = "getByActIdAndUserId";
+		_methodName150 = "triesPerUser";
 
-		_methodParameterTypes150 = new String[] { "long", "long" };
+		_methodParameterTypes150 = new String[] { "long" };
 
-		_methodName151 = "getByActId";
+		_methodName151 = "getByActIdAndUserId";
 
-		_methodParameterTypes151 = new String[] { "long" };
+		_methodParameterTypes151 = new String[] { "long", "long" };
 
-		_methodName152 = "translateResult";
+		_methodName152 = "getLastEndDateByUserId";
 
-		_methodParameterTypes152 = new String[] {
+		_methodParameterTypes152 = new String[] { "long" };
+
+		_methodName153 = "getByActId";
+
+		_methodParameterTypes153 = new String[] { "long" };
+
+		_methodName154 = "translateResult";
+
+		_methodParameterTypes154 = new String[] {
 				"java.util.Locale", "double", "long"
 			};
 	}
@@ -294,54 +304,66 @@ public class LearningActivityResultLocalServiceClpInvoker {
 
 		if (_methodName143.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes143, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.existsLearningActivityResult(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
+			return LearningActivityResultLocalServiceUtil.update(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1], (java.lang.String)arguments[2],
+				((Long)arguments[3]).longValue());
 		}
 
 		if (_methodName144.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes144, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.userPassed(((Long)arguments[0]).longValue(),
+			return LearningActivityResultLocalServiceUtil.existsLearningActivityResult(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName145.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes145, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.countPassed(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.userPassed(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName146.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes146, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.countNotPassed(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.countPassed(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName147.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes147, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.avgResult(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.countNotPassed(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName148.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes148, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.countStarted(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.avgResult(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName149.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes149, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.triesPerUser(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.countStarted(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName150.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes150, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.getByActIdAndUserId(((Long)arguments[0]).longValue(),
-				((Long)arguments[1]).longValue());
+			return LearningActivityResultLocalServiceUtil.triesPerUser(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName151.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes151, parameterTypes)) {
-			return LearningActivityResultLocalServiceUtil.getByActId(((Long)arguments[0]).longValue());
+			return LearningActivityResultLocalServiceUtil.getByActIdAndUserId(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue());
 		}
 
 		if (_methodName152.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes152, parameterTypes)) {
+			return LearningActivityResultLocalServiceUtil.getLastEndDateByUserId(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName153.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes153, parameterTypes)) {
+			return LearningActivityResultLocalServiceUtil.getByActId(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName154.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes154, parameterTypes)) {
 			return LearningActivityResultLocalServiceUtil.translateResult((java.util.Locale)arguments[0],
 				((Double)arguments[1]).doubleValue(),
 				((Long)arguments[2]).longValue());
@@ -412,4 +434,8 @@ public class LearningActivityResultLocalServiceClpInvoker {
 	private String[] _methodParameterTypes151;
 	private String _methodName152;
 	private String[] _methodParameterTypes152;
+	private String _methodName153;
+	private String[] _methodParameterTypes153;
+	private String _methodName154;
+	private String[] _methodParameterTypes154;
 }

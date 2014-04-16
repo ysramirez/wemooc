@@ -54,6 +54,10 @@
 			<finder-column name="groupId" />
 			<finder-column name="typeId" />
 		</finder>
+		<finder name="g_m" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="weightinmodule" />
+		</finder>
 		<finder name="m" return-type="Collection">
 			<finder-column name="moduleId" />
 		</finder>
