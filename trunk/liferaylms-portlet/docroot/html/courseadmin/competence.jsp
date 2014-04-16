@@ -33,11 +33,11 @@
 			has.put(competence.getCompetenceId(), competence);
 		}
 	}
-	
+	/*
 	for(Long competenceId : competencesSet){
 		competencesList.add(competences.get(competenceId));
 	}
-	
+	*/
 	
 	PortletURL portletURL = renderResponse.createRenderURL();
 	portletURL.setParameter("jspPage","/html/courseadmin/competencetab.jsp");
