@@ -59,7 +59,29 @@ String resultString = LearningActivityLocalServiceUtil.getExtraContentValue(actI
 if(resultString.equals("true")){
 	result = true;
 }
+
+Date date = new Date();
+SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+dFormat.setTimeZone(themeDisplay.getTimeZone());
+
+if(activity.getEnddate() == null){
+ date = ModuleLocalServiceUtil.fetchModule(activity.getModuleId()).getEndDate();
+} else {
+	date = activity.getEnddate();
+}
+
 %>
+
+<c:if test="<%=date.after(new Date()) %>">
+ <div class="description">
+  <span class="date-destacado"><liferay-ui:message key="p2ptaskactivity.dateexpire" arguments="<%=dFormat.format(date)%>" /></span>
+ </div>
+</c:if>
+<c:if test="<%=date.before(new Date()) %>">
+ <div class="description">
+  <p class="color_tercero"><liferay-ui:message key="p2ptaskactivity.dateexpired.message" arguments="<%=dFormat.format(date)%>" /></p>
+ </div>
+</c:if>
 
 <script type="text/javascript">
 	var noFile ='<liferay-ui:message key="p2ptaskactivity.inc.nofileselected" />';
