@@ -67,6 +67,8 @@ dFormat.setTimeZone(themeDisplay.getTimeZone());
 
 if(activity.getEnddate() == null){
 	date = ModuleLocalServiceUtil.fetchModule(activity.getModuleId()).getEndDate();
+}else{
+	date = activity.getEnddate();
 }
 
 %>
