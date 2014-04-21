@@ -28,15 +28,15 @@
 	String dateUpload = "";
 
 	SimpleDateFormat formatDay = new SimpleDateFormat("dd");
-	formatDay.setTimeZone(timeZone);
+	formatDay.setTimeZone(themeDisplay.getTimeZone());
 	SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
-	formatMonth.setTimeZone(timeZone);
+	formatMonth.setTimeZone(themeDisplay.getTimeZone());
 	SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
-	formatYear.setTimeZone(timeZone);
+	formatYear.setTimeZone(themeDisplay.getTimeZone());
 	SimpleDateFormat formatHour = new SimpleDateFormat("HH");
-	formatHour.setTimeZone(timeZone);
+	formatHour.setTimeZone(themeDisplay.getTimeZone());
 	SimpleDateFormat formatMin = new SimpleDateFormat("mm");
-	formatMin.setTimeZone(timeZone);
+	formatMin.setTimeZone(themeDisplay.getTimeZone());
 
 	Date today = new Date(System.currentTimeMillis());
 
@@ -65,7 +65,7 @@
 
 		if (!dateUpload.equals("")) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			dateFormat.setTimeZone(timeZone);
+			dateFormat.setTimeZone(themeDisplay.getTimeZone());
 			Date date = dateFormat.parse(dateUpload);
 			uploadDay = Integer.parseInt(formatDay.format(date));
 			uploadMonth = Integer.parseInt(formatMonth.format(date)) - 1;

@@ -60,6 +60,17 @@ String resultString = LearningActivityLocalServiceUtil.getExtraContentValue(actI
 if(resultString.equals("true")){
 	result = true;
 }
+
+Date date = new Date();
+SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+dFormat.setTimeZone(themeDisplay.getTimeZone());
+
+if(activity.getEnddate() == null){
+ date = ModuleLocalServiceUtil.fetchModule(activity.getModuleId()).getEndDate();
+} else {
+	date = activity.getEnddate();
+}
+
 %>
 
 <script type="text/javascript">
