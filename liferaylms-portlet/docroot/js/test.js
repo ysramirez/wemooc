@@ -8,11 +8,8 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable','dd-const
 		});
 	});
 	
-    //Listen for all drag:start events
     A.DD.DDM.on('drag:start', function(e) {
-        //Get our drag object
         var drag = e.target;
-        //Set some styles here
         drag.get('node').setStyle('opacity', '.25');
         drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
         drag.get('dragNode').setStyles({
@@ -21,10 +18,8 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable','dd-const
             backgroundColor: drag.get('node').getStyle('backgroundColor')
         });
     });
-    //Listen for a drag:end events
     A.DD.DDM.on('drag:end', function(e) {
         var drag = e.target;
-        //Put our styles back
         drag.get('node').setStyles({
             visibility: '',
             opacity: '1'
@@ -91,12 +86,9 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable','dd-const
 				var padre = drag.get('parentNode');
 				if (drag.attr('tagName').toLowerCase() === 'div' && padre.hasClass('drop-containers')) {
 					drop.append(drag);
-					padre.text(
-						Liferay.Language.get(
-							'drop',
-							(padre.attr('id')).replace(/[^\d]/g, '')
-						)
-					);
+					var idPadre = padre.attr('id');
+					var textoPadre = idPadre.replace(/[^\d]/g, '');
+					padre.text(Liferay.Language.get('drop', textoPadre));
 					padre.removeClass('occupied');
 					padre.addClass('base');
 					A.one('input[name="' + padre.attr("name")+'hidden"]').val(-1);
@@ -107,87 +99,3 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable','dd-const
 	});
 	
 });
-/*
-(function ($) {
-		   $.fn.liveDraggable = function (opts) {
-			  this.on("mouseover", function() {
-				 if (!$(this).data("init")) {
-					$(this).data("init", true).draggable(opts);
-				 }
-			  });
-			  return this;
-		   };
-		}(jQuery));
-  
-$(document).ready(function() {
-		$('.draganddrop').each(function() {
-			var elem = '#'+$(this).attr('id');
-			$(elem + ' > .items > div').liveDraggable({
-				helper: function(event) {
-					var $this = $(this);
-					var helperList = $('<ul class="draggable-helper">');
-					helperList.append($this.clone());
-					return helperList;
-				},
-				drag: function( event, ui ) {
-					ui.offset = {"top" : "0", "left" : "0"};
-					$(ui.helper).html(ui.draggable);        
-				},
-				cursorAt: { top: 0, left: 0 }
-			});
-			
-			$(elem + ' > .drop > .drop-containers > div').liveDraggable({
-				helper: function(event) {
-					var $this = $(this);
-					if(!$this.hasClass('base')){
-						var helperList = $('<ul class="draggable-helper">');
-						helperList.append($this.clone());
-						return helperList;
-					}
-				},
-				drag: function( event, ui ) {
-					var $this = $(this).parent();
-					if(!$this.hasClass('base')){
-						ui.offset = {"top" : "0", "left" : "0"};
-						$(ui.helper).html(ui.draggable); 
-					}
-				},
-				cursorAt: { top: 0, left: 0 }
-			});
-			
-			$(elem + ' > .drop > .drop-containers').droppable({
-				tolerance : 'pointer',
-				accept: elem + ' > .items > div',
-				drop: function(event, ui) {
-					var $this = $(this);
-					if (!$this.hasClass('occupied')){
-						$this.text('');
-						$this.append(ui.draggable);
-						$this.addClass('occupied');
-						$this.removeClass('base');
-						$('input[name="' + $this.attr("name")+'hidden"]').val(ui.draggable.attr('id'));
-					}
-				}
-			});
-			$(elem + ' > .items').droppable({
-				tolerance : 'pointer',
-				accept: elem + ' > .drop > .drop-containers > div',
-				drop: function(event, ui) {
-					var $this = $(this);
-					var padre = ui.draggable.parent();
-					$this.append(ui.draggable);
-					padre.text(
-						Liferay.Language.get(
-							'drop',
-							(padre.attr('id')).replace(/[^\d]/g, '')
-						)
-					);
-					padre.removeClass('occupied');
-					padre.addClass('base');
-					$('input[name="' + padre.attr("name")+'hidden"]').val(-1);
-				}
-			});
-			
-		});
-	});
-*/
