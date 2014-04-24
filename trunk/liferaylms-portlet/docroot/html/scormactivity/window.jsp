@@ -32,7 +32,7 @@ if(entryId != 0) {
 <script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
 <script type="text/javascript">
 	localStorage.removeItem('scormpool');
-	var tryResultDataOld = '<%= learningTry.getTryResultData() %>';
+	var tryResultDataOld = '<%= HtmlUtil.escapeJS(learningTry.getTryResultData()) %>';
 	if (tryResultDataOld != '') {
 		localStorage.setItem('scormpool', tryResultDataOld);
 	}
