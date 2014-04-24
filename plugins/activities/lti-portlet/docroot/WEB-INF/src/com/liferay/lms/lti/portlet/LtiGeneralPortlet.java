@@ -54,7 +54,10 @@ public class LtiGeneralPortlet extends MVCPortlet {
 		if(mode!=null&&mode.equals("edit")){
 			if(log.isDebugEnabled())log.debug("go:"+editJSP);
 			Long actId = ParamUtil.getLong(renderRequest, "actId", 0);
-			renderRequest.setAttribute("actId", renderRequest.getParameter("actId"));
+			if(actId==0){
+				actId = ParamUtil.getLong(renderRequest, "resId", 0);
+			}
+			renderRequest.setAttribute("actId", actId);
 			LearningActivity learningActivity = null;
 			try {
 				learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);

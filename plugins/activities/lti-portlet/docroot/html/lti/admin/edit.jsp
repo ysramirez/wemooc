@@ -1,6 +1,32 @@
+<%@page import="com.liferay.lms.lti.util.LtiItem"%>
+<%@page import="com.liferay.lms.lti.util.LtiItemLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.exception.SystemException"%>
+<%@page import="com.liferay.portal.kernel.exception.PortalException"%>
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@ include file="/html/init.jsp" %>
 
 <portlet:actionURL name="save" var="save" />
+
+
+<%
+	Long actId = ParamUtil.getLong(renderRequest, "actId", 0);
+	if(actId==0){
+		actId = ParamUtil.getLong(renderRequest, "resId", 0);
+	}
+	
+	LearningActivity learningActivity = null;
+	try {
+		learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+	} catch (PortalException e) {
+	} catch (SystemException e) {
+	}
+	if(learningActivity!=null){
+		renderRequest.setAttribute("learningActivity", learningActivity);
+		LtiItem ltiItem = LtiItemLocalServiceUtil.fetchByactId(actId);
+		renderRequest.setAttribute("ltiItem", ltiItem);
+	}
+%>
 
 <script type="text/javascript">
 	function check(){
