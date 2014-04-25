@@ -131,17 +131,20 @@
 	   	<liferay-ui:search-container-results>
 			<%
 			
-				String middleName = null;
-		
-				LinkedHashMap<String,Object> params=null;			
-				
-				OrderByComparator obc = new UserFirstNameComparator(true);
+			OrderByComparator obc = new UserFirstNameComparator(true);
 			
-				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria,  WorkflowConstants.STATUS_ANY, params);
-						
-				pageContext.setAttribute("results", userListPage);
-			    pageContext.setAttribute("total", userCount);
+			LinkedHashMap<String,Object> params = new LinkedHashMap<String,Object>();
+			
+			Group guest = GroupLocalServiceUtil.getGroup(themeDisplay.getCompanyId(), GroupConstants.GUEST);
+			if(themeDisplay.getScopeGroup().getGroupId()!=guest.getGroupId()){
+				params.put("usersGroups", new Long(themeDisplay.getScopeGroupId()));
+			}
+			
+			List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, 0, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+			int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, params);
+					
+			pageContext.setAttribute("results", userListPage);
+		    pageContext.setAttribute("total", userCount);
 			
 			%>
 		</liferay-ui:search-container-results>
