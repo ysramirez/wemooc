@@ -262,6 +262,7 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 	<%
 	}
 	%>
+		<%--
 			<c:if test="<%=permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),ActionKeys.PERMISSIONS) %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
@@ -273,9 +274,10 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 				/>
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
 			</c:if>
-		<%--
+ 		--%>
 		<c:choose>
-			<c:when test="<%=permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),ActionKeys.PERMISSIONS) %>">
+			<c:when test="<%=permissionChecker.isOmniadmin() || permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),ActionKeys.PERMISSIONS) 
+					&& !permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),\"SOFT_PERMISSIONS\") %>">
 				<portlet:renderURL var="redirectURL" windowState="<%=WindowState.NORMAL.toString() %>"/>
 				<liferay-security:permissionsURL
 					modelResource="<%=Module.class.getName() %>"
@@ -287,7 +289,8 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 				<liferay-ui:icon image="permissions" message="permissions" url="<%=permissionsURL %>" />	
 			</c:when>
 			<c:otherwise>
-				<c:if test="<%= permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),\"SOFT_PERMISSIONS\") %>">
+				<c:if test="<%=	permissionChecker.hasPermission(groupId, name, Long.parseLong(primKey),ActionKeys.PERMISSIONS) && 
+					permissionChecker.hasPermission(groupId,name,Long.parseLong(primKey),\"SOFT_PERMISSIONS\") %>">
 					<liferay-security:permissionsURL
 						windowState="<%=LiferayWindowState.POP_UP.toString() %>"
 						modelResource="<%=Module.class.getName() %>"
@@ -297,7 +300,7 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 					/>
 	
 					<script type="text/javascript">
-						function showPopupUsers()
+						function showPopupUsersM<%=theModule.getPrimaryKey()%>()
 					    {
 							permissionPopUp = Liferay.Util.openWindow(
 									{
@@ -317,10 +320,9 @@ Course coursetmp = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId);
 		
 					    }
 					</script>
-					<liferay-ui:icon image="permissions" message="permissionsbasics" url="javascript:showPopupUsers()" />	
+					<liferay-ui:icon image="permissions" message="permissionsbasics" url='<%="javascript:showPopupUsersM"+String.valueOf(theModule.getPrimaryKey())+"()" %>' />
 				</c:if>
 			</c:otherwise>
 			
 		</c:choose>
- 		--%>
 
