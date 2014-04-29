@@ -277,7 +277,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 									if(showModuleStartDate){
 %>
 										<liferay-ui:message key="fecha-inicio"/><br />
-										<%=	dateFormatDateTime.format(theModule.getStartDate())%><br /><br />
+										<%=	dateFormatDateTime.format(theModule.getStartDate())%><br />
 <%
 									}
 									if(showModuleEndDate){
