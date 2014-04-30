@@ -1,3 +1,6 @@
+<%@page import="java.util.Locale"%>
+<%@page import="com.liferay.portal.kernel.util.LocalizationUtil"%>
+<%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.portal.model.PublicRenderParameter"%>
@@ -214,7 +217,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 <ul id="myActivities">
 			<%
 			for (LearningActivity activity : activities) {
-				
+				String title = activity.getTitle(themeDisplay.getLocale());				
 				String moduletitle = "";
 				if (activity.getModuleId() != 0) {
 					Module theModule = ModuleLocalServiceUtil
@@ -272,7 +275,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 							id="<portlet:namespace/><%=activity.getActId()%>">
 						
 							<a href="<%=assetRendererFactory.getAssetRenderer(activity.getActId()).
-									getURLViewInContext(liferayPortletRequest, liferayPortletResponse, StringPool.BLANK) %>"  ><%=activity.getTitle(themeDisplay.getLocale())%></a>
+									getURLViewInContext(liferayPortletRequest, liferayPortletResponse, StringPool.BLANK) %>"  ><%=title%></a>
 							
 					<%
 					}
@@ -281,7 +284,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 					%>
 						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%> locked"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> 
 							id="<portlet:namespace/><%=activity.getActId()%>">
-							<span><%=activity.getTitle(themeDisplay.getLocale())%></span>
+							<span><%=title%></span>
 					<%
 					}
 				if ((actionEditing)&&(Validator.isNotNull(learningActivityType))

@@ -1,3 +1,5 @@
+<%@page import="java.util.Locale"%>
+<%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="com.liferay.lms.asset.LearningActivityBaseAssetRenderer"%>
 <%@page import="com.liferay.portal.service.ResourcePermissionServiceUtil"%>
 <%@page import="com.liferay.portal.model.Role"%>
@@ -392,6 +394,27 @@ AUI().ready('node-base' ,'aui-form-validator', 'aui-overlay-context-panel', 'wid
 // 				}
 // 			}
  		}
+
+
+		var form = document.getElementById('<portlet:namespace />fm');
+		var inputsform = form.getElementsByTagName("input");
+		var selector = document.getElementById('dpcqlanguageSelector');
+		if(selector){
+			var parents = selector.getElementsByClassName("lfr-form-row");
+			for (var i=0; i < parents.length; i++){
+				if(!parents[i].className.match(/.*hidden.*/)){
+					var inputs = parents[i].getElementsByTagName("input");
+					for (var j=0; j < inputs.length; j++){
+						var input = document.createElement('input');
+					    input.type = 'hidden';
+					    input.name = inputs[j].name;
+					    input.id = inputs[j].id;
+					    input.value = inputs[j].value;
+					    form.appendChild(input);
+					}
+				}
+			}
+		}
 		
 		document.getElementById('<portlet:namespace />fm').submit();
 	}

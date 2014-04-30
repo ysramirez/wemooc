@@ -43,6 +43,8 @@ import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
@@ -52,6 +54,7 @@ import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.util.LmsLocaleUtil;
 
 /**
  * The implementation of the module local service.
@@ -72,8 +75,8 @@ import com.liferay.portal.service.UserLocalServiceUtil;
  * @see com.liferay.lms.service.base.moduleLocalServiceBaseImpl
  * @see com.liferay.lms.service.moduleLocalServiceUtil
  */
-public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl 
-{
+public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
+	Log log = LogFactoryUtil.getLog(ModuleLocalServiceImpl.class);
 
 	@SuppressWarnings("unchecked")
 	public List findAllInUser(long userId)throws SystemException {
@@ -247,9 +250,13 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 			Module.class.getName(), validmodule.getPrimaryKey(), false,
 			true, true);
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
 			throw new SystemException(e);
 		}
+
+	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "title");
+	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "description");
 
 	    Module module = ModuleUtil.update(fileobj, false);
 
@@ -273,15 +280,20 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 	    fileobj.setTitle(title);
 	    fileobj.setDescription(description);
 	    fileobj.setOrdern(ordern != null ? ordern : fileobj.getModuleId());
+	    
 	    try {
 			resourceLocalService.addResources(
 					companyId, courseId, userId,
 					Module.class.getName(), fileobj.getPrimaryKey(), 
 					false, true, true);
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
 			throw new SystemException(e);
 		}
+
+	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "title");
+	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "description");
 		
 	    Module module = ModuleUtil.update(fileobj, false);
 	    
@@ -300,7 +312,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 					fileobj.getCompanyId(), Module.class.getName(),
 					ResourceConstants.SCOPE_INDIVIDUAL, fileobj.getPrimaryKey());
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
 			throw new SystemException(e);
 		}
 		modulePersistence.remove(fileobj);
@@ -312,7 +325,10 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 
 	@Override
 	public Module updateModule(Module module) throws SystemException {
-		// TODO Auto-generated method stub
+		
+		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "title");
+		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "description");
+		
 		try {
 			if(resourceLocalService.getResource(module.getCompanyId(), Module.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL,Long.toString( module.getPrimaryKey()))==null)
 					{
@@ -322,7 +338,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 				true, true);
 					}
 		} catch (PortalException e) {
-			// TODO Auto-generated catch block
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
 			throw new SystemException(e);
 		}
 		module = super.updateModule(module);
@@ -335,9 +352,10 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl
 	}
 
 	@Override
-	public Module updateModule(Module module, boolean merge)
-			throws SystemException {
-		// TODO Auto-generated method stub
+	public Module updateModule(Module module, boolean merge) throws SystemException {
+		
+		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "title");
+		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "description");
 		module = super.updateModule(module, merge);
 
 		//auditing
