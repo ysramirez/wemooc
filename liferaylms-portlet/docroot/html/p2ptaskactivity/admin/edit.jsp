@@ -68,7 +68,7 @@
 		if (!dateUpload.equals("")) {
 
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			dateFormat.setTimeZone(themeDisplay.getTimeZone());
+			//dateFormat.setTimeZone(themeDisplay.getTimeZone());
 
 			Date date = dateFormat.parse(dateUpload);
 
