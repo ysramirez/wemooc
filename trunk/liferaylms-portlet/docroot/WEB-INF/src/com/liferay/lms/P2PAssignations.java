@@ -12,11 +12,14 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.model.User;
 
 public class P2PAssignations implements MessageListener {
+	Log log = LogFactoryUtil.getLog(P2PAssignations.class);
 
 	@Override
 	public void receive(Message arg0) {
@@ -63,6 +66,7 @@ public class P2PAssignations implements MessageListener {
 	}
 	
 	public void asignCorrectionsToP2PActivities(){
+		if(log.isDebugEnabled())log.debug("Check P2P asign corrections");
 
 		try {
 			Calendar day = Calendar.getInstance();
@@ -96,6 +100,13 @@ public class P2PAssignations implements MessageListener {
 				if( activityAsignations < numAsigns && !activity.isAsignationsCompleted()){
 
 					List<P2pActivity> activitiesToAsign = P2pActivityLocalServiceUtil.getP2pActivitiesToCorrect(actId, activity.getP2pActivityId(), numAsigns - activityAsignations);
+
+					if(log.isDebugEnabled()){
+						log.debug("P2P assign corrections to activity::"+activity.getActId()+"::"+activity.getUserId());
+						for(P2pActivity p2pactivity : activitiesToAsign){
+							log.debug("assign::"+p2pactivity.getUserId());
+						}
+					}
 					
 					//Asignar al usuario que entrega sus correctores.
 					P2pActivityCorrectionsLocalServiceUtil.asignCorrectionsToP2PActivities(actId, activity.getP2pActivityId(),numAsigns - activityAsignations, activitiesToAsign, activity.getUserId());

@@ -152,9 +152,17 @@ public class LmsActivitiesList extends MVCPortlet {
 		
 		
 	}
-	public void saveActivity(ActionRequest actionRequest, ActionResponse actionResponse)
-		throws Exception {
+	public void saveActivity(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
 		UploadRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+
+		if(log.isDebugEnabled()){
+			Enumeration<String> parNames= uploadRequest.getParameterNames();
+			while(parNames.hasMoreElements()){
+				String paramName=parNames.nextElement();
+				log.debug(paramName+"::"+uploadRequest.getParameter(paramName));
+			}
+		}
+		
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivity.class.getName(), actionRequest);
 		
 		List<Long> assetCategoryIdsList = new ArrayList<Long>();
@@ -399,7 +407,7 @@ public class LmsActivitiesList extends MVCPortlet {
 		{
 		  String paramName=parNames.nextElement();
 		  if(paramName.startsWith("title_")&&paramName.length()>6)
-		  {
+		  { 
 			  String language=paramName.substring(6);
 			  Locale locale=LocaleUtil.fromLanguageId(language);
 			  larn.setTitle( uploadRequest.getParameter(paramName),locale);
