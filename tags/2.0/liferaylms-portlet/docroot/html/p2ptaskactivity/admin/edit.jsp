@@ -65,7 +65,7 @@
 
 		if (!dateUpload.equals("")) {
 			SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			dateFormat.setTimeZone(themeDisplay.getTimeZone());
+			//dateFormat.setTimeZone(themeDisplay.getTimeZone());
 			Date date = dateFormat.parse(dateUpload);
 			uploadDay = Integer.parseInt(formatDay.format(date));
 			uploadMonth = Integer.parseInt(formatMonth.format(date)) - 1;
