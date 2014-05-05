@@ -24,7 +24,7 @@
 		</liferay-ui:search-container-results>
 		<liferay-ui:search-container-row className="com.liferay.lms.views.CompetenceView" keyProperty="competenceId" modelVar="cc">
 			<liferay-ui:search-container-column-text name="competence.label" >
-				<%=cc.getTitle(themeDisplay.getLocale()) %>
+				<a target="_blank" href="/liferaylms-portlet/certificate/cert?userId=<%=themeDisplay.getUserId()%>&competenceId=<%=cc.getCompetenceId()%>"><%=cc.getTitle(themeDisplay.getLocale()) %></a>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="review-date" >
 				<%=cc.getFormatDate() %>
