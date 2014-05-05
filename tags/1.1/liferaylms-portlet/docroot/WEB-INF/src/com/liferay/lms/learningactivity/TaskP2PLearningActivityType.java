@@ -202,10 +202,10 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 					uploadHour += 12;
 				}
 				
-				Date uploadDate = PortalUtil.getDate(uploadMonth, uploadDay, uploadYear, uploadHour, uploadMinute, (Class<? extends PortalException>)null);
+				Date uploadDate = PortalUtil.getDate(uploadMonth, uploadDay, uploadYear, uploadHour, uploadMinute, themeDisplay.getTimeZone(), (Class<? extends PortalException>)null);
 	
 				SimpleDateFormat formatUploadDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-				formatUploadDate.setTimeZone(themeDisplay.getTimeZone());
+				//formatUploadDate.setTimeZone(themeDisplay.getTimeZone());
 					
 				Element dateUpload=rootElement.element("dateupload");
 				if(dateUpload!=null)
