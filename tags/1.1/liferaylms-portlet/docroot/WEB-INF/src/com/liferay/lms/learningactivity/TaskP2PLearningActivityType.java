@@ -93,12 +93,14 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			validate=false;
 		}
 		
+		/*
 		if(start && stop && upload != null && end != null && upload.after(end))
 		{
 			SessionErrors.add(actionRequest, "p2ptaskactivity.editActivity.dateupload.afteractivity");
 			validate=false;
 			System.out.println(" ERROR EN FECHA");
 		}
+		*/
 		
 		return validate;
 	}
@@ -158,7 +160,7 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 			anonimous.setText(Boolean.toString(ParamUtil.get(uploadRequest,"anonimous",false)));		
 			rootElement.add(anonimous);	
 			
-			if(P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))==0){
+			if(P2pActivityLocalServiceUtil.dynamicQueryCount(DynamicQueryFactoryUtil.forClass(P2pActivity.class).add(PropertyFactoryUtil.forName("actId").eq(learningActivity.getActId())))==0 || themeDisplay.getPermissionChecker().isOmniadmin()){
 			
 				Element numValidaciones=rootElement.element("validaciones");
 				if(numValidaciones!=null)
