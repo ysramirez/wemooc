@@ -264,7 +264,7 @@ public class SurveyActivity extends MVCPortlet {
 		}
 		else{ 
 			String contentType = uploadRequest.getContentType("fileName");	
-			if (!ContentTypes.TEXT_CSV.equals(contentType) && !ContentTypes.TEXT_CSV_UTF8.equals(contentType) &&!ContentTypes.APPLICATION_VND_MS_EXCEL.equals(contentType) ) {
+			if (!ContentTypes.TEXT_CSV.equals(contentType) && !ContentTypes.TEXT_CSV_UTF8.equals(contentType) &&!ContentTypes.APPLICATION_VND_MS_EXCEL.equals(contentType)&&!ContentTypes.APPLICATION_TEXT.equals(contentType) ) {
 				SessionErrors.add(actionRequest, "surveyactivity.csvError.bad-format");	
 				actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/importquestions.jsp");
 			}

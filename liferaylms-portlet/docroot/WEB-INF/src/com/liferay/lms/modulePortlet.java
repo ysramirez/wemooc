@@ -668,7 +668,7 @@ public static String SEPARATOR = "_";
         {
         	module=new ModuleImpl();
         }
-        
+        module.setTitle(StringPool.BLANK); 
 		Enumeration<String> parNames= request.getParameterNames();
 		while(parNames.hasMoreElements())
 		{
@@ -680,6 +680,7 @@ public static String SEPARATOR = "_";
 			  module.setTitle(request.getParameter(paramName),locale);
 		  }
 		}
+        module.setDescription(StringPool.BLANK);
 		module.setDescription(ParamUtil.getString(request, "description"),themeDisplay.getLocale());
       
         try {

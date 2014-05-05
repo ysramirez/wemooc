@@ -398,6 +398,18 @@ public class CourseAdmin extends MVCPortlet {
 
 			try{
 				course = CourseLocalServiceUtil.getCourse(courseId);
+				course.setTitle("");
+				
+				parNam = uploadRequest.getParameterNames();
+				while (parNam.hasMoreElements()) {
+					String paramName = parNam.nextElement();
+					if (paramName.startsWith("title_") && paramName.length() > 6) {
+						  String language=paramName.substring(6);
+						  Locale locale=LocaleUtil.fromLanguageId(language);
+						  course.setTitle(uploadRequest.getParameter(paramName),locale);
+					}
+				}
+				
 				course.setDescription( description,themeDisplay.getLocale());
 				course.setStartDate(startDate); 
 				course.setEndDate(stopDate);

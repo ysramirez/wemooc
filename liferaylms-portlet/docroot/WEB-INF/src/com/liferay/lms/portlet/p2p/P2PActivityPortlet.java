@@ -220,6 +220,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 				_log.error("Error P2pActivityPortlet.addP2PActivity");
 				_log.error(e.getMessage());
 			}
+			if(_log.isDebugEnabled())e.printStackTrace();
 			SessionErrors.add(request, "error-subir-p2p");
 		}
 	}
@@ -782,5 +783,5 @@ public class P2PActivityPortlet extends MVCPortlet {
 		}
 	}
 	
-	private static Log _log = LogFactoryUtil.getLog(P2pActivity.class);
+	private static Log _log = LogFactoryUtil.getLog(P2PActivityPortlet.class);
 }
