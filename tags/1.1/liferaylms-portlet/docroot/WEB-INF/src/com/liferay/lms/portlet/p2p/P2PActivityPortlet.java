@@ -34,6 +34,7 @@ import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -542,6 +543,10 @@ public class P2PActivityPortlet extends MVCPortlet {
 		learningActivityResult.setEndDate(new java.util.Date(System.currentTimeMillis()));
 		
 		LearningActivityResultLocalServiceUtil.updateLearningActivityResult(learningActivityResult);
+		
+		if(learningActivityResult.getPassed()){
+			ModuleResultLocalServiceUtil.update(learningActivityResult);
+		}
 	}
 	
 	private static void sendMailCorrection(User user, long actId, 
