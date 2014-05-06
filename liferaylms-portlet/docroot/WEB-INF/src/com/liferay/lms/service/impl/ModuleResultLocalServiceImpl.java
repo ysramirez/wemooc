@@ -231,10 +231,20 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 		
 		//Actualizar el resultado del modulo en bd.
 		
+		System.out.println("User::"+userId+"::moduleId"+moduleId);
 		//Obtenemos el moduleResult que tiene el usuario.Si no lo tiene, no lo creamos.
 		if (moduleResultPersistence.countBymu(userId, moduleId) > 0) {
-			
 			moduleResult = moduleResultPersistence.findBymu(userId, moduleId);
+		}else{
+			moduleResult = moduleResultPersistence.create(counterLocalService.increment(ModuleResult.class.getName()));
+			moduleResult.setModuleId(moduleId);
+			moduleResult.setPassed(false);
+			moduleResult.setUserId(userId);
+			moduleResult.setResult(0);
+		}
+
+		if(moduleResult!=null){
+			System.out.println("Update!");
 			
 			List<LearningActivity> learnActList = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(moduleId);
 
