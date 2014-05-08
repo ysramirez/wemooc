@@ -514,7 +514,7 @@ Liferay.provide(
 					}
 				}
 				%>
-					<aui:option value="<%=theModule.getModuleId() %>" selected="<%=selected %>"><%=theModule.getTitle() %></aui:option>
+					<aui:option value="<%=theModule.getModuleId() %>" selected="<%=selected %>"><%=theModule.getTitle(themeDisplay.getLocale()) %></aui:option>
 				<% 
 			}
 		%>
