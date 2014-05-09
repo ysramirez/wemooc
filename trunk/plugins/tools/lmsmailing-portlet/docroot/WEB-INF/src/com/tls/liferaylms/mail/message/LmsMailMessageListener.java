@@ -143,9 +143,9 @@ public class LmsMailMessageListener implements MessageListener {
 					
 					InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
 					
-					String calculatedBody = LanguageUtil.get(Locale.getDefault(),"mail.header");
+					String calculatedBody = LanguageUtil.get(user.getLocale(),"mail.header");
 					calculatedBody += createMessage(body, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
-					calculatedBody += LanguageUtil.get(Locale.getDefault(),"mail.footer");
+					calculatedBody += LanguageUtil.get(user.getLocale(),"mail.footer");
 	
 					String calculatedsubject = createMessage(subject, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 					
