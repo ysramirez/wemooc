@@ -275,6 +275,16 @@ public class CourseResultLocalServiceWrapper implements CourseResultLocalService
 		return _courseResultLocalService.countByCourseId(courseId, passed);
 	}
 
+	public java.lang.Double avgResult(long courseId, boolean passed)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _courseResultLocalService.avgResult(courseId, passed);
+	}
+
+	public java.lang.Double avgResult(long courseId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _courseResultLocalService.avgResult(courseId);
+	}
+
 	public com.liferay.lms.model.CourseResult create(long courseId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _courseResultLocalService.create(courseId, userId);
@@ -301,6 +311,12 @@ public class CourseResultLocalServiceWrapper implements CourseResultLocalService
 	public java.lang.String translateResult(java.util.Locale locale,
 		double result, long groupId) {
 		return _courseResultLocalService.translateResult(locale, result, groupId);
+	}
+
+	public void softInitializeByGroupIdAndUserId(long groupId, long userId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_courseResultLocalService.softInitializeByGroupIdAndUserId(groupId,
+			userId);
 	}
 
 	/**

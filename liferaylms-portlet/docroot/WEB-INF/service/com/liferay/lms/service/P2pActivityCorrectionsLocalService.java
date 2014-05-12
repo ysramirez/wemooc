@@ -264,6 +264,10 @@ public interface P2pActivityCorrectionsLocalService extends BaseLocalService,
 		java.lang.Long actId, java.lang.Long userId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public java.util.List<com.liferay.lms.model.P2pActivityCorrections> findByActIdAndUserIdOrderById(
+		java.lang.Long actId, java.lang.Long userId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.lms.model.P2pActivityCorrections addorUpdateP2pActivityCorrections(
 		com.liferay.lms.model.P2pActivityCorrections p2pActCor);
 

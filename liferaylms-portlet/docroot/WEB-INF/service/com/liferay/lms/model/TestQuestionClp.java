@@ -70,6 +70,7 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 		attributes.put("actId", getActId());
 		attributes.put("text", getText());
 		attributes.put("questionType", getQuestionType());
+		attributes.put("weight", getWeight());
 
 		return attributes;
 	}
@@ -104,6 +105,12 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 
 		if (questionType != null) {
 			setQuestionType(questionType);
+		}
+
+		Long weight = (Long)attributes.get("weight");
+
+		if (weight != null) {
+			setWeight(weight);
 		}
 	}
 
@@ -147,6 +154,14 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 		_questionType = questionType;
 	}
 
+	public long getWeight() {
+		return _weight;
+	}
+
+	public void setWeight(long weight) {
+		_weight = weight;
+	}
+
 	public BaseModel<?> getTestQuestionRemoteModel() {
 		return _testQuestionRemoteModel;
 	}
@@ -179,6 +194,7 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 		clone.setActId(getActId());
 		clone.setText(getText());
 		clone.setQuestionType(getQuestionType());
+		clone.setWeight(getWeight());
 
 		return clone;
 	}
@@ -235,7 +251,7 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -247,13 +263,15 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 		sb.append(getText());
 		sb.append(", questionType=");
 		sb.append(getQuestionType());
+		sb.append(", weight=");
+		sb.append(getWeight());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(22);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.TestQuestion");
@@ -279,6 +297,10 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 			"<column><column-name>questionType</column-name><column-value><![CDATA[");
 		sb.append(getQuestionType());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>weight</column-name><column-value><![CDATA[");
+		sb.append(getWeight());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -290,5 +312,6 @@ public class TestQuestionClp extends BaseModelImpl<TestQuestion>
 	private long _actId;
 	private String _text;
 	private long _questionType;
+	private long _weight;
 	private BaseModel<?> _testQuestionRemoteModel;
 }

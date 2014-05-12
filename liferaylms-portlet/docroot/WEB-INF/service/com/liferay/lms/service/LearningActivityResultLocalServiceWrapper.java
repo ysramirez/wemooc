@@ -295,6 +295,15 @@ public class LearningActivityResultLocalServiceWrapper
 			userId);
 	}
 
+	public com.liferay.lms.model.LearningActivityResult update(long latId,
+		java.lang.String tryResultData, java.lang.String imsmanifest,
+		long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _learningActivityResultLocalService.update(latId, tryResultData,
+			imsmanifest, userId);
+	}
+
 	public boolean existsLearningActivityResult(long actId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _learningActivityResultLocalService.existsLearningActivityResult(actId,
@@ -336,6 +345,11 @@ public class LearningActivityResultLocalServiceWrapper
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _learningActivityResultLocalService.getByActIdAndUserId(actId,
 			userId);
+	}
+
+	public java.util.Date getLastEndDateByUserId(long userId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _learningActivityResultLocalService.getLastEndDateByUserId(userId);
 	}
 
 	public java.util.List<com.liferay.lms.model.LearningActivityResult> getByActId(

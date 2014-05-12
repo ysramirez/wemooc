@@ -93,4 +93,9 @@ public interface LearningActivityResultService extends BaseService,
 		java.lang.String tryResultData)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.lms.model.LearningActivityResult update(long latId,
+		java.lang.String tryResultData, java.lang.String imsmanifest)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 }

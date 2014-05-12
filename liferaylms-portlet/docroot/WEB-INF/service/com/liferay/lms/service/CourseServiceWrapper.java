@@ -145,6 +145,15 @@ public class CourseServiceWrapper implements CourseService,
 		_courseService.unsetTutor(parentLogin, studentLogin);
 	}
 
+	public boolean existsCourseName(java.lang.Long companyId,
+		java.lang.Long groupId, java.lang.String groupName) {
+		return _courseService.existsCourseName(companyId, groupId, groupName);
+	}
+
+	public java.lang.String getLogoUrl(java.lang.Long courseId) {
+		return _courseService.getLogoUrl(courseId);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

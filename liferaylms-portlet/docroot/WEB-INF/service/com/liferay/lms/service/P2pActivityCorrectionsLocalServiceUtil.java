@@ -303,6 +303,12 @@ public class P2pActivityCorrectionsLocalServiceUtil {
 		return getService().findByActIdAndUserIdOrderByDate(actId, userId);
 	}
 
+	public static java.util.List<com.liferay.lms.model.P2pActivityCorrections> findByActIdAndUserIdOrderById(
+		java.lang.Long actId, java.lang.Long userId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findByActIdAndUserIdOrderById(actId, userId);
+	}
+
 	public static com.liferay.lms.model.P2pActivityCorrections addorUpdateP2pActivityCorrections(
 		com.liferay.lms.model.P2pActivityCorrections p2pActCor) {
 		return getService().addorUpdateP2pActivityCorrections(p2pActCor);

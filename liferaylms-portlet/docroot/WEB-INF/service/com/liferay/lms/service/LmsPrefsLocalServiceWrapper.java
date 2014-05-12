@@ -265,9 +265,14 @@ public class LmsPrefsLocalServiceWrapper implements LmsPrefsLocalService,
 	}
 
 	public com.liferay.lms.model.LmsPrefs getLmsPrefsIni(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _lmsPrefsLocalService.getLmsPrefsIni(companyId);
+	}
+
+	public com.liferay.lms.model.LmsPrefs getStrictLmsPrefsIni(long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _lmsPrefsLocalService.getLmsPrefsIni(companyId);
+		return _lmsPrefsLocalService.getStrictLmsPrefsIni(companyId);
 	}
 
 	/**

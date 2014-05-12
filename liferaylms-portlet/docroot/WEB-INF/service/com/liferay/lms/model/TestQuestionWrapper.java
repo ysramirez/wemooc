@@ -50,6 +50,7 @@ public class TestQuestionWrapper implements TestQuestion,
 		attributes.put("actId", getActId());
 		attributes.put("text", getText());
 		attributes.put("questionType", getQuestionType());
+		attributes.put("weight", getWeight());
 
 		return attributes;
 	}
@@ -83,6 +84,12 @@ public class TestQuestionWrapper implements TestQuestion,
 
 		if (questionType != null) {
 			setQuestionType(questionType);
+		}
+
+		Long weight = (Long)attributes.get("weight");
+
+		if (weight != null) {
+			setWeight(weight);
 		}
 	}
 
@@ -192,6 +199,24 @@ public class TestQuestionWrapper implements TestQuestion,
 	*/
 	public void setQuestionType(long questionType) {
 		_testQuestion.setQuestionType(questionType);
+	}
+
+	/**
+	* Returns the weight of this test question.
+	*
+	* @return the weight of this test question
+	*/
+	public long getWeight() {
+		return _testQuestion.getWeight();
+	}
+
+	/**
+	* Sets the weight of this test question.
+	*
+	* @param weight the weight of this test question
+	*/
+	public void setWeight(long weight) {
+		_testQuestion.setWeight(weight);
 	}
 
 	public boolean isNew() {

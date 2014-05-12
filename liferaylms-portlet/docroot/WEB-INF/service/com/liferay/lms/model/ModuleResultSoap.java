@@ -17,6 +17,7 @@ package com.liferay.lms.model;
 import java.io.Serializable;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -36,6 +37,7 @@ public class ModuleResultSoap implements Serializable {
 		soapModel.setUserId(model.getUserId());
 		soapModel.setPassed(model.getPassed());
 		soapModel.setMrId(model.getMrId());
+		soapModel.setPassedDate(model.getPassedDate());
 
 		return soapModel;
 	}
@@ -140,10 +142,19 @@ public class ModuleResultSoap implements Serializable {
 		_mrId = mrId;
 	}
 
+	public Date getPassedDate() {
+		return _passedDate;
+	}
+
+	public void setPassedDate(Date passedDate) {
+		_passedDate = passedDate;
+	}
+
 	private long _moduleId;
 	private long _result;
 	private String _comments;
 	private long _userId;
 	private boolean _passed;
 	private long _mrId;
+	private Date _passedDate;
 }

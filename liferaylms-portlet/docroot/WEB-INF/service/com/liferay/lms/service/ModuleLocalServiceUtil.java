@@ -352,6 +352,11 @@ public class ModuleLocalServiceUtil {
 		getService().goDownModule(moduleId);
 	}
 
+	public static void moveModule(long modId, long previusMod, long nextMod)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().moveModule(modId, previusMod, nextMod);
+	}
+
 	public static com.liferay.lms.model.Module addmodule(
 		com.liferay.lms.model.Module validmodule)
 		throws com.liferay.portal.kernel.exception.SystemException {

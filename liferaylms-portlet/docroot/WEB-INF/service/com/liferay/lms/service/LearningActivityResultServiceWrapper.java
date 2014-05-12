@@ -98,6 +98,14 @@ public class LearningActivityResultServiceWrapper
 		return _learningActivityResultService.update(latId, tryResultData);
 	}
 
+	public com.liferay.lms.model.LearningActivityResult update(long latId,
+		java.lang.String tryResultData, java.lang.String imsmanifest)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _learningActivityResultService.update(latId, tryResultData,
+			imsmanifest);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

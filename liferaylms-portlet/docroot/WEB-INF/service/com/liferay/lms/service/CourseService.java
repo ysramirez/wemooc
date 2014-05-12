@@ -118,4 +118,10 @@ public interface CourseService extends BaseService, InvokableService {
 
 	public void unsetTutor(java.lang.String parentLogin,
 		java.lang.String studentLogin);
+
+	public boolean existsCourseName(java.lang.Long companyId,
+		java.lang.Long groupId, java.lang.String groupName);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String getLogoUrl(java.lang.Long courseId);
 }

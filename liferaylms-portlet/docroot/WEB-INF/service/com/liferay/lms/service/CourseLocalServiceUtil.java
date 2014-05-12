@@ -335,6 +335,22 @@ public class CourseLocalServiceUtil {
 		java.lang.String summary, java.lang.String friendlyURL,
 		java.util.Locale locale, java.util.Date createDate,
 		java.util.Date startDate, java.util.Date endDate,
+		long layoutSetPrototypeId, int typesite, long CourseEvalId,
+		long calificationType, int maxUsers,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addCourse(title, description, summary, friendlyURL, locale,
+			createDate, startDate, endDate, layoutSetPrototypeId, typesite,
+			CourseEvalId, calificationType, maxUsers, serviceContext);
+	}
+
+	public static com.liferay.lms.model.Course addCourse(
+		java.lang.String title, java.lang.String description,
+		java.lang.String summary, java.lang.String friendlyURL,
+		java.util.Locale locale, java.util.Date createDate,
+		java.util.Date startDate, java.util.Date endDate,
 		com.liferay.portal.service.ServiceContext serviceContext,
 		long calificationType)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -386,6 +402,12 @@ public class CourseLocalServiceUtil {
 		return getService().closeCourse(courseId);
 	}
 
+	public static com.liferay.lms.model.Course openCourse(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().openCourse(courseId);
+	}
+
 	public static boolean existsCourseName(long companyId, long classNameId,
 		long liveGroupId, java.lang.String name) {
 		return getService()
@@ -403,6 +425,12 @@ public class CourseLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().existsCourseName(companyId, courseId, groupName);
+	}
+
+	public static java.util.List<com.liferay.lms.model.Course> findByCompanyId(
+		java.lang.Long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().findByCompanyId(companyId);
 	}
 
 	public static void clearService() {

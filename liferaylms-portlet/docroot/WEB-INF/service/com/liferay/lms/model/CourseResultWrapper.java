@@ -16,6 +16,7 @@ package com.liferay.lms.model;
 
 import com.liferay.portal.model.ModelWrapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +52,7 @@ public class CourseResultWrapper implements CourseResult,
 		attributes.put("comments", getComments());
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
+		attributes.put("passedDate", getPassedDate());
 
 		return attributes;
 	}
@@ -90,6 +92,12 @@ public class CourseResultWrapper implements CourseResult,
 
 		if (passed != null) {
 			setPassed(passed);
+		}
+
+		Date passedDate = (Date)attributes.get("passedDate");
+
+		if (passedDate != null) {
+			setPassedDate(passedDate);
 		}
 	}
 
@@ -246,6 +254,24 @@ public class CourseResultWrapper implements CourseResult,
 	*/
 	public void setPassed(boolean passed) {
 		_courseResult.setPassed(passed);
+	}
+
+	/**
+	* Returns the passed date of this course result.
+	*
+	* @return the passed date of this course result
+	*/
+	public java.util.Date getPassedDate() {
+		return _courseResult.getPassedDate();
+	}
+
+	/**
+	* Sets the passed date of this course result.
+	*
+	* @param passedDate the passed date of this course result
+	*/
+	public void setPassedDate(java.util.Date passedDate) {
+		_courseResult.setPassedDate(passedDate);
 	}
 
 	public boolean isNew() {

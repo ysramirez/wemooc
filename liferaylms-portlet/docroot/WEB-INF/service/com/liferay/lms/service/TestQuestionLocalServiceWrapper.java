@@ -290,6 +290,59 @@ public class TestQuestionLocalServiceWrapper implements TestQuestionLocalService
 		return _testQuestionLocalService.initializeQuestionType(questionType);
 	}
 
+	public com.liferay.lms.model.TestQuestion updateQuestionWithoutWeight(
+		long questionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _testQuestionLocalService.updateQuestionWithoutWeight(questionId);
+	}
+
+	public com.liferay.lms.model.TestQuestion getPreviusTestQuestion(
+		long questionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _testQuestionLocalService.getPreviusTestQuestion(questionId);
+	}
+
+	public com.liferay.lms.model.TestQuestion getPreviusTestQuestion(
+		com.liferay.lms.model.TestQuestion theQuestion)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _testQuestionLocalService.getPreviusTestQuestion(theQuestion);
+	}
+
+	public com.liferay.lms.model.TestQuestion getNextTestQuestion(
+		long testQuestionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _testQuestionLocalService.getNextTestQuestion(testQuestionId);
+	}
+
+	public com.liferay.lms.model.TestQuestion getNextTestQuestion(
+		com.liferay.lms.model.TestQuestion theTestQuestion)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _testQuestionLocalService.getNextTestQuestion(theTestQuestion);
+	}
+
+	public void goUpTestQuestion(long testQuestionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_testQuestionLocalService.goUpTestQuestion(testQuestionId);
+	}
+
+	public void goDownTestQuestion(long testQuestionId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_testQuestionLocalService.goDownTestQuestion(testQuestionId);
+	}
+
+	public void moveQuestion(long questionId, long previusQuestion,
+		long nextQuestion)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_testQuestionLocalService.moveQuestion(questionId, previusQuestion,
+			nextQuestion);
+	}
+
+	public void checkWeights(long actId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_testQuestionLocalService.checkWeights(actId);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

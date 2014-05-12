@@ -630,6 +630,200 @@ public interface LearningActivityPersistence extends BasePersistence<LearningAct
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns all the learning activities where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @return the matching learning activities
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.LearningActivity> findByg_m(
+		long groupId, long weightinmodule)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the learning activities where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param start the lower bound of the range of learning activities
+	* @param end the upper bound of the range of learning activities (not inclusive)
+	* @return the range of matching learning activities
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.LearningActivity> findByg_m(
+		long groupId, long weightinmodule, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the learning activities where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param start the lower bound of the range of learning activities
+	* @param end the upper bound of the range of learning activities (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching learning activities
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.LearningActivity> findByg_m(
+		long groupId, long weightinmodule, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first learning activity in the ordered set where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching learning activity
+	* @throws com.liferay.lms.NoSuchLearningActivityException if a matching learning activity could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.LearningActivity findByg_m_First(
+		long groupId, long weightinmodule,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchLearningActivityException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first learning activity in the ordered set where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching learning activity, or <code>null</code> if a matching learning activity could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.LearningActivity fetchByg_m_First(
+		long groupId, long weightinmodule,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last learning activity in the ordered set where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching learning activity
+	* @throws com.liferay.lms.NoSuchLearningActivityException if a matching learning activity could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.LearningActivity findByg_m_Last(long groupId,
+		long weightinmodule,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchLearningActivityException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last learning activity in the ordered set where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching learning activity, or <code>null</code> if a matching learning activity could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.LearningActivity fetchByg_m_Last(
+		long groupId, long weightinmodule,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the learning activities before and after the current learning activity in the ordered set where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param actId the primary key of the current learning activity
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next learning activity
+	* @throws com.liferay.lms.NoSuchLearningActivityException if a learning activity with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.LearningActivity[] findByg_m_PrevAndNext(
+		long actId, long groupId, long weightinmodule,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchLearningActivityException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns all the learning activities that the user has permission to view where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @return the matching learning activities that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.LearningActivity> filterFindByg_m(
+		long groupId, long weightinmodule)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the learning activities that the user has permission to view where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param start the lower bound of the range of learning activities
+	* @param end the upper bound of the range of learning activities (not inclusive)
+	* @return the range of matching learning activities that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.LearningActivity> filterFindByg_m(
+		long groupId, long weightinmodule, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the learning activities that the user has permissions to view where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param start the lower bound of the range of learning activities
+	* @param end the upper bound of the range of learning activities (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching learning activities that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.LearningActivity> filterFindByg_m(
+		long groupId, long weightinmodule, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the learning activities before and after the current learning activity in the ordered set of learning activities that the user has permission to view where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param actId the primary key of the current learning activity
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next learning activity
+	* @throws com.liferay.lms.NoSuchLearningActivityException if a learning activity with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.LearningActivity[] filterFindByg_m_PrevAndNext(
+		long actId, long groupId, long weightinmodule,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchLearningActivityException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns all the learning activities where moduleId = &#63;.
 	*
 	* @param moduleId the module ID
@@ -830,6 +1024,16 @@ public interface LearningActivityPersistence extends BasePersistence<LearningAct
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Removes all the learning activities where groupId = &#63; and weightinmodule = &#63; from the database.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @throws SystemException if a system exception occurred
+	*/
+	public void removeByg_m(long groupId, long weightinmodule)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Removes all the learning activities where moduleId = &#63; from the database.
 	*
 	* @param moduleId the module ID
@@ -907,6 +1111,28 @@ public interface LearningActivityPersistence extends BasePersistence<LearningAct
 	* @throws SystemException if a system exception occurred
 	*/
 	public int filterCountByg_t(long groupId, int typeId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of learning activities where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @return the number of matching learning activities
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByg_m(long groupId, long weightinmodule)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of learning activities that the user has permission to view where groupId = &#63; and weightinmodule = &#63;.
+	*
+	* @param groupId the group ID
+	* @param weightinmodule the weightinmodule
+	* @return the number of matching learning activities that the user has permission to view
+	* @throws SystemException if a system exception occurred
+	*/
+	public int filterCountByg_m(long groupId, long weightinmodule)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**

@@ -270,9 +270,15 @@ public class LmsPrefsLocalServiceUtil {
 	}
 
 	public static com.liferay.lms.model.LmsPrefs getLmsPrefsIni(long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getLmsPrefsIni(companyId);
+	}
+
+	public static com.liferay.lms.model.LmsPrefs getStrictLmsPrefsIni(
+		long companyId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService().getLmsPrefsIni(companyId);
+		return getService().getStrictLmsPrefsIni(companyId);
 	}
 
 	public static void clearService() {

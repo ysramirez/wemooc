@@ -30,7 +30,9 @@ Liferay.Service.registerClass(
 		setParent: true,
 		unsetParent: true,
 		setTutor: true,
-		unsetTutor: true
+		unsetTutor: true,
+		existsCourseName: true,
+		getLogoUrl: true
 	}
 );
 

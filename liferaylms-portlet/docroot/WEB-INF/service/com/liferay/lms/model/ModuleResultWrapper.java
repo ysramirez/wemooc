@@ -16,6 +16,7 @@ package com.liferay.lms.model;
 
 import com.liferay.portal.model.ModelWrapper;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +52,7 @@ public class ModuleResultWrapper implements ModuleResult,
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
 		attributes.put("mrId", getMrId());
+		attributes.put("passedDate", getPassedDate());
 
 		return attributes;
 	}
@@ -90,6 +92,12 @@ public class ModuleResultWrapper implements ModuleResult,
 
 		if (mrId != null) {
 			setMrId(mrId);
+		}
+
+		Date passedDate = (Date)attributes.get("passedDate");
+
+		if (passedDate != null) {
+			setPassedDate(passedDate);
 		}
 	}
 
@@ -246,6 +254,24 @@ public class ModuleResultWrapper implements ModuleResult,
 	*/
 	public void setMrId(long mrId) {
 		_moduleResult.setMrId(mrId);
+	}
+
+	/**
+	* Returns the passed date of this module result.
+	*
+	* @return the passed date of this module result
+	*/
+	public java.util.Date getPassedDate() {
+		return _moduleResult.getPassedDate();
+	}
+
+	/**
+	* Sets the passed date of this module result.
+	*
+	* @param passedDate the passed date of this module result
+	*/
+	public void setPassedDate(java.util.Date passedDate) {
+		_moduleResult.setPassedDate(passedDate);
 	}
 
 	public boolean isNew() {
