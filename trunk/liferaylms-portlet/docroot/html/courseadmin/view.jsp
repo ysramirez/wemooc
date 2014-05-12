@@ -106,10 +106,11 @@ Locale loc = response.getLocale();
 	<%
 		
 		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+		Layout initCourseLayout = LayoutLocalServiceUtil.fetchFirstLayout(course.getGroupCreatedId(), false, 0);
 	%>
 		<liferay-ui:search-container-column-text>
 		<c:choose>
-			<c:when test="<%= !course.isClosed() && UserLocalServiceUtil.hasGroupUser(course.getGroupCreatedId(), themeDisplay.getUserId()) %>">
+			<c:when test="<%= !course.isClosed() && initCourseLayout != null && permissionChecker.hasPermission(course.getGroupCreatedId(), Layout.class.getName(), initCourseLayout.getPrimaryKey(), ActionKeys.VIEW) %>">
 				<a href='<%=themeDisplay.getPortalURL() +"/"+ loc.getLanguage() +"/web/"+ groupsel.getFriendlyURL()%>'><%=course.getTitle(themeDisplay.getLocale()) %></a>
 			</c:when>
 			<c:otherwise>
