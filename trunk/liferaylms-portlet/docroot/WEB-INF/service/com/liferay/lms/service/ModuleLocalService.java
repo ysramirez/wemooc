@@ -302,6 +302,9 @@ public interface ModuleLocalService extends BaseLocalService,
 	public void goDownModule(long moduleId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public void moveModule(long modId, long previusMod, long nextMod)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.lms.model.Module addmodule(
 		com.liferay.lms.model.Module validmodule)
 		throws com.liferay.portal.kernel.exception.SystemException;

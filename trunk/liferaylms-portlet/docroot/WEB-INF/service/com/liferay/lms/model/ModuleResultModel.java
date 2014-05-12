@@ -24,6 +24,8 @@ import com.liferay.portlet.expando.model.ExpandoBridge;
 
 import java.io.Serializable;
 
+import java.util.Date;
+
 /**
  * The base model interface for the ModuleResult service. Represents a row in the &quot;Lms_ModuleResult&quot; database table, with each column mapped to a property of this class.
  *
@@ -164,6 +166,20 @@ public interface ModuleResultModel extends BaseModel<ModuleResult> {
 	 * @param mrId the mr ID of this module result
 	 */
 	public void setMrId(long mrId);
+
+	/**
+	 * Returns the passed date of this module result.
+	 *
+	 * @return the passed date of this module result
+	 */
+	public Date getPassedDate();
+
+	/**
+	 * Sets the passed date of this module result.
+	 *
+	 * @param passedDate the passed date of this module result
+	 */
+	public void setPassedDate(Date passedDate);
 
 	public boolean isNew();
 

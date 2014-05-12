@@ -324,6 +324,21 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 		java.lang.String description, java.lang.String summary,
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
+		java.util.Date endDate, long layoutSetPrototypeId, int typesite,
+		long CourseEvalId, long calificationType, int maxUsers,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _courseLocalService.addCourse(title, description, summary,
+			friendlyURL, locale, createDate, startDate, endDate,
+			layoutSetPrototypeId, typesite, CourseEvalId, calificationType,
+			maxUsers, serviceContext);
+	}
+
+	public com.liferay.lms.model.Course addCourse(java.lang.String title,
+		java.lang.String description, java.lang.String summary,
+		java.lang.String friendlyURL, java.util.Locale locale,
+		java.util.Date createDate, java.util.Date startDate,
 		java.util.Date endDate,
 		com.liferay.portal.service.ServiceContext serviceContext,
 		long calificationType)
@@ -375,6 +390,12 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 		return _courseLocalService.closeCourse(courseId);
 	}
 
+	public com.liferay.lms.model.Course openCourse(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _courseLocalService.openCourse(courseId);
+	}
+
 	public boolean existsCourseName(long companyId, long classNameId,
 		long liveGroupId, java.lang.String name) {
 		return _courseLocalService.existsCourseName(companyId, classNameId,
@@ -393,6 +414,12 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 			com.liferay.portal.kernel.exception.SystemException {
 		return _courseLocalService.existsCourseName(companyId, courseId,
 			groupName);
+	}
+
+	public java.util.List<com.liferay.lms.model.Course> findByCompanyId(
+		java.lang.Long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _courseLocalService.findByCompanyId(companyId);
 	}
 
 	/**

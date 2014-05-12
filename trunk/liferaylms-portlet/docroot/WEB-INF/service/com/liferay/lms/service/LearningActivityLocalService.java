@@ -280,6 +280,18 @@ public interface LearningActivityLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.lms.model.LearningActivity addLearningActivity(
+		long userId, long groupId, int status,
+		java.util.Map<java.util.Locale, java.lang.String> title,
+		java.util.Map<java.util.Locale, java.lang.String> description,
+		int typeId, java.util.Date startdate, java.util.Date enddate,
+		long precedence, long tries, int passpuntuation, long moduleId,
+		java.lang.String extracontent, java.lang.String feedbackCorrect,
+		java.lang.String feedbackNoCorrect, long weightinmodule, long teamId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.lms.model.LearningActivity modLearningActivity(
 		long actId, java.lang.String title, java.lang.String description,
 		java.util.Date createDate, java.util.Date startDate,
@@ -304,6 +316,14 @@ public interface LearningActivityLocalService extends BaseLocalService,
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<com.liferay.lms.model.LearningActivity> getLearningActivitiesOfGroup(
 		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.lms.model.LearningActivity> getMandatoryLearningActivitiesOfGroup(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public long countLearningActivitiesOfGroup(long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
@@ -341,6 +361,9 @@ public interface LearningActivityLocalService extends BaseLocalService,
 	public void goDownLearningActivity(long actId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public void moveActivity(long actId, long previusAct, long nextAct)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.lms.model.LearningActivity getNextLearningActivity(
 		long actId) throws com.liferay.portal.kernel.exception.SystemException;
@@ -372,4 +395,23 @@ public interface LearningActivityLocalService extends BaseLocalService,
 		java.util.HashMap<java.lang.String, java.lang.String> map)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public boolean isLearningActivityDeleteTries(long typeId);
+
+	public boolean canBeView(com.liferay.lms.model.LearningActivity activity,
+		long userId) throws java.lang.Exception;
+
+	public boolean canBeView(com.liferay.lms.model.LearningActivity activity,
+		com.liferay.portal.security.permission.PermissionChecker permissionChecker)
+		throws java.lang.Exception;
+
+	public boolean canBeEdited(
+		com.liferay.lms.model.LearningActivity activity, long userId)
+		throws java.lang.Exception;
+
+	public boolean canBeEdited(
+		com.liferay.lms.model.LearningActivity activity,
+		com.liferay.portal.security.permission.PermissionChecker permissionChecker)
+		throws java.lang.Exception;
 }

@@ -163,6 +163,15 @@ public class CourseServiceUtil {
 		getService().unsetTutor(parentLogin, studentLogin);
 	}
 
+	public static boolean existsCourseName(java.lang.Long companyId,
+		java.lang.Long groupId, java.lang.String groupName) {
+		return getService().existsCourseName(companyId, groupId, groupName);
+	}
+
+	public static java.lang.String getLogoUrl(java.lang.Long courseId) {
+		return getService().getLogoUrl(courseId);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

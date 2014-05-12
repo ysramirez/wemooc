@@ -35,6 +35,7 @@ public class TestQuestionSoap implements Serializable {
 		soapModel.setActId(model.getActId());
 		soapModel.setText(model.getText());
 		soapModel.setQuestionType(model.getQuestionType());
+		soapModel.setWeight(model.getWeight());
 
 		return soapModel;
 	}
@@ -127,9 +128,18 @@ public class TestQuestionSoap implements Serializable {
 		_questionType = questionType;
 	}
 
+	public long getWeight() {
+		return _weight;
+	}
+
+	public void setWeight(long weight) {
+		_weight = weight;
+	}
+
 	private String _uuid;
 	private long _questionId;
 	private long _actId;
 	private String _text;
 	private long _questionType;
+	private long _weight;
 }

@@ -343,6 +343,11 @@ public class ModuleLocalServiceWrapper implements ModuleLocalService,
 		_moduleLocalService.goDownModule(moduleId);
 	}
 
+	public void moveModule(long modId, long previusMod, long nextMod)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		_moduleLocalService.moveModule(modId, previusMod, nextMod);
+	}
+
 	public com.liferay.lms.model.Module addmodule(
 		com.liferay.lms.model.Module validmodule)
 		throws com.liferay.portal.kernel.exception.SystemException {

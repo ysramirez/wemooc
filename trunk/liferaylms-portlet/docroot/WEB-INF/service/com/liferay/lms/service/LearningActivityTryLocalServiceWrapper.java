@@ -329,6 +329,12 @@ public class LearningActivityTryLocalServiceWrapper
 			userId);
 	}
 
+	public int getTriesCountByActivity(long actId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _learningActivityTryLocalService.getTriesCountByActivity(actId);
+	}
+
 	public java.util.HashMap<java.lang.Long, java.lang.Long> getMapTryResultData(
 		long actId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,
@@ -340,6 +346,12 @@ public class LearningActivityTryLocalServiceWrapper
 	public boolean canUserDoANewTry(long actId, long userId)
 		throws java.lang.Exception {
 		return _learningActivityTryLocalService.canUserDoANewTry(actId, userId);
+	}
+
+	public boolean areThereTriesNotFromEditors(
+		com.liferay.lms.model.LearningActivity activity)
+		throws java.lang.Exception {
+		return _learningActivityTryLocalService.areThereTriesNotFromEditors(activity);
 	}
 
 	/**

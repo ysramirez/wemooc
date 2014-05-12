@@ -289,11 +289,20 @@ public interface LearningActivityTryLocalService extends BaseLocalService,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public int getTriesCountByActivity(long actId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.HashMap<java.lang.Long, java.lang.Long> getMapTryResultData(
 		long actId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	public boolean canUserDoANewTry(long actId, long userId)
+		throws java.lang.Exception;
+
+	public boolean areThereTriesNotFromEditors(
+		com.liferay.lms.model.LearningActivity activity)
 		throws java.lang.Exception;
 }

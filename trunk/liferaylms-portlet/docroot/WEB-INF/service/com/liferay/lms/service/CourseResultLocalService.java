@@ -251,6 +251,12 @@ public interface CourseResultLocalService extends BaseLocalService,
 	public long countByCourseId(long courseId, boolean passed)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public java.lang.Double avgResult(long courseId, boolean passed)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.lang.Double avgResult(long courseId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.lms.model.CourseResult create(long courseId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
@@ -268,4 +274,7 @@ public interface CourseResultLocalService extends BaseLocalService,
 
 	public java.lang.String translateResult(java.util.Locale locale,
 		double result, long groupId);
+
+	public void softInitializeByGroupIdAndUserId(long groupId, long userId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

@@ -316,6 +316,24 @@ public class LearningActivityLocalServiceUtil {
 			extracontent, feedbackCorrect, feedbackNoCorrect, serviceContext);
 	}
 
+	public static com.liferay.lms.model.LearningActivity addLearningActivity(
+		long userId, long groupId, int status,
+		java.util.Map<java.util.Locale, java.lang.String> title,
+		java.util.Map<java.util.Locale, java.lang.String> description,
+		int typeId, java.util.Date startdate, java.util.Date enddate,
+		long precedence, long tries, int passpuntuation, long moduleId,
+		java.lang.String extracontent, java.lang.String feedbackCorrect,
+		java.lang.String feedbackNoCorrect, long weightinmodule, long teamId,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addLearningActivity(userId, groupId, status, title,
+			description, typeId, startdate, enddate, precedence, tries,
+			passpuntuation, moduleId, extracontent, feedbackCorrect,
+			feedbackNoCorrect, weightinmodule, teamId, serviceContext);
+	}
+
 	public static com.liferay.lms.model.LearningActivity modLearningActivity(
 		long actId, java.lang.String title, java.lang.String description,
 		java.util.Date createDate, java.util.Date startDate,
@@ -350,6 +368,17 @@ public class LearningActivityLocalServiceUtil {
 		long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getLearningActivitiesOfGroup(groupId);
+	}
+
+	public static java.util.List<com.liferay.lms.model.LearningActivity> getMandatoryLearningActivitiesOfGroup(
+		long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getMandatoryLearningActivitiesOfGroup(groupId);
+	}
+
+	public static long countLearningActivitiesOfGroup(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().countLearningActivitiesOfGroup(groupId);
 	}
 
 	public static java.util.List<com.liferay.lms.model.LearningActivity> getLearningActivitiesOfGroupAndType(
@@ -398,6 +427,11 @@ public class LearningActivityLocalServiceUtil {
 		getService().goDownLearningActivity(actId);
 	}
 
+	public static void moveActivity(long actId, long previusAct, long nextAct)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService().moveActivity(actId, previusAct, nextAct);
+	}
+
 	public static com.liferay.lms.model.LearningActivity getNextLearningActivity(
 		long actId) throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getNextLearningActivity(actId);
@@ -439,6 +473,36 @@ public class LearningActivityLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		getService().saveHashMapToXMLExtraContent(actId, map);
+	}
+
+	public static boolean isLearningActivityDeleteTries(long typeId) {
+		return getService().isLearningActivityDeleteTries(typeId);
+	}
+
+	public static boolean canBeView(
+		com.liferay.lms.model.LearningActivity activity, long userId)
+		throws java.lang.Exception {
+		return getService().canBeView(activity, userId);
+	}
+
+	public static boolean canBeView(
+		com.liferay.lms.model.LearningActivity activity,
+		com.liferay.portal.security.permission.PermissionChecker permissionChecker)
+		throws java.lang.Exception {
+		return getService().canBeView(activity, permissionChecker);
+	}
+
+	public static boolean canBeEdited(
+		com.liferay.lms.model.LearningActivity activity, long userId)
+		throws java.lang.Exception {
+		return getService().canBeEdited(activity, userId);
+	}
+
+	public static boolean canBeEdited(
+		com.liferay.lms.model.LearningActivity activity,
+		com.liferay.portal.security.permission.PermissionChecker permissionChecker)
+		throws java.lang.Exception {
+		return getService().canBeEdited(activity, permissionChecker);
 	}
 
 	public static void clearService() {

@@ -129,6 +129,20 @@ public interface TestQuestionModel extends BaseModel<TestQuestion> {
 	 */
 	public void setQuestionType(long questionType);
 
+	/**
+	 * Returns the weight of this test question.
+	 *
+	 * @return the weight of this test question
+	 */
+	public long getWeight();
+
+	/**
+	 * Sets the weight of this test question.
+	 *
+	 * @param weight the weight of this test question
+	 */
+	public void setWeight(long weight);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);

@@ -282,6 +282,16 @@ public class CourseResultLocalServiceUtil {
 		return getService().countByCourseId(courseId, passed);
 	}
 
+	public static java.lang.Double avgResult(long courseId, boolean passed)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().avgResult(courseId, passed);
+	}
+
+	public static java.lang.Double avgResult(long courseId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().avgResult(courseId);
+	}
+
 	public static com.liferay.lms.model.CourseResult create(long courseId,
 		long userId) throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().create(courseId, userId);
@@ -307,6 +317,11 @@ public class CourseResultLocalServiceUtil {
 	public static java.lang.String translateResult(java.util.Locale locale,
 		double result, long groupId) {
 		return getService().translateResult(locale, result, groupId);
+	}
+
+	public static void softInitializeByGroupIdAndUserId(long groupId,
+		long userId) throws com.liferay.portal.kernel.exception.SystemException {
+		getService().softInitializeByGroupIdAndUserId(groupId, userId);
 	}
 
 	public static void clearService() {

@@ -27,6 +27,7 @@ import java.io.Serializable;
 
 import java.lang.reflect.Proxy;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -72,6 +73,7 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
 		attributes.put("mrId", getMrId());
+		attributes.put("passedDate", getPassedDate());
 
 		return attributes;
 	}
@@ -112,6 +114,12 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 
 		if (mrId != null) {
 			setMrId(mrId);
+		}
+
+		Date passedDate = (Date)attributes.get("passedDate");
+
+		if (passedDate != null) {
+			setPassedDate(passedDate);
 		}
 	}
 
@@ -175,6 +183,14 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 		_mrId = mrId;
 	}
 
+	public Date getPassedDate() {
+		return _passedDate;
+	}
+
+	public void setPassedDate(Date passedDate) {
+		_passedDate = passedDate;
+	}
+
 	public BaseModel<?> getModuleResultRemoteModel() {
 		return _moduleResultRemoteModel;
 	}
@@ -208,6 +224,7 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 		clone.setUserId(getUserId());
 		clone.setPassed(getPassed());
 		clone.setMrId(getMrId());
+		clone.setPassedDate(getPassedDate());
 
 		return clone;
 	}
@@ -264,7 +281,7 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(13);
+		StringBundler sb = new StringBundler(15);
 
 		sb.append("{moduleId=");
 		sb.append(getModuleId());
@@ -278,13 +295,15 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 		sb.append(getPassed());
 		sb.append(", mrId=");
 		sb.append(getMrId());
+		sb.append(", passedDate=");
+		sb.append(getPassedDate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(22);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.ModuleResult");
@@ -314,6 +333,10 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 			"<column><column-name>mrId</column-name><column-value><![CDATA[");
 		sb.append(getMrId());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>passedDate</column-name><column-value><![CDATA[");
+		sb.append(getPassedDate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -327,5 +350,6 @@ public class ModuleResultClp extends BaseModelImpl<ModuleResult>
 	private String _userUuid;
 	private boolean _passed;
 	private long _mrId;
+	private Date _passedDate;
 	private BaseModel<?> _moduleResultRemoteModel;
 }

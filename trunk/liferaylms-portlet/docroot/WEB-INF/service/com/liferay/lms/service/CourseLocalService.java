@@ -293,6 +293,16 @@ public interface CourseLocalService extends BaseLocalService,
 		java.lang.String description, java.lang.String summary,
 		java.lang.String friendlyURL, java.util.Locale locale,
 		java.util.Date createDate, java.util.Date startDate,
+		java.util.Date endDate, long layoutSetPrototypeId, int typesite,
+		long CourseEvalId, long calificationType, int maxUsers,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	public com.liferay.lms.model.Course addCourse(java.lang.String title,
+		java.lang.String description, java.lang.String summary,
+		java.lang.String friendlyURL, java.util.Locale locale,
+		java.util.Date createDate, java.util.Date startDate,
 		java.util.Date endDate,
 		com.liferay.portal.service.ServiceContext serviceContext,
 		long calificationType)
@@ -328,6 +338,10 @@ public interface CourseLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.lms.model.Course openCourse(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public boolean existsCourseName(long companyId, long classNameId,
 		long liveGroupId, java.lang.String name);
 
@@ -340,4 +354,8 @@ public interface CourseLocalService extends BaseLocalService,
 		java.lang.Long courseId, java.lang.String groupName)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	public java.util.List<com.liferay.lms.model.Course> findByCompanyId(
+		java.lang.Long companyId)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

@@ -55,6 +55,12 @@ public class LearningActivityResultServiceClp
 		_methodName8 = "update";
 
 		_methodParameterTypes8 = new String[] { "long", "java.lang.String" };
+
+		_methodName9 = "update";
+
+		_methodParameterTypes9 = new String[] {
+				"long", "java.lang.String", "java.lang.String"
+			};
 	}
 
 	public java.lang.String getBeanIdentifier() {
@@ -313,6 +319,46 @@ public class LearningActivityResultServiceClp
 		return (com.liferay.lms.model.LearningActivityResult)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public com.liferay.lms.model.LearningActivityResult update(long latId,
+		java.lang.String tryResultData, java.lang.String imsmanifest)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName9,
+					_methodParameterTypes9,
+					new Object[] {
+						latId,
+						
+					ClpSerializer.translateInput(tryResultData),
+						
+					ClpSerializer.translateInput(imsmanifest)
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (com.liferay.lms.model.LearningActivityResult)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableService _invokableService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -330,4 +376,6 @@ public class LearningActivityResultServiceClp
 	private String[] _methodParameterTypes7;
 	private String _methodName8;
 	private String[] _methodParameterTypes8;
+	private String _methodName9;
+	private String[] _methodParameterTypes9;
 }
