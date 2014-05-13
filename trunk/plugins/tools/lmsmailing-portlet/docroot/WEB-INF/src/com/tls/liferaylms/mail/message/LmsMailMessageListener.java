@@ -95,14 +95,14 @@ public class LmsMailMessageListener implements MessageListener {
 			MailServiceUtil.sendEmail(mailm);
 		} 
 		else if(toMail != null && userName != null && !toMail.contains("all")){
-			
-			if(UserLocalServiceUtil.getUserById(userId).isActive()){
+			User user = UserLocalServiceUtil.getUserById(userId);
+			if(user!=null && user.isActive()){
 				
 				InternetAddress to = new InternetAddress(toMail, userName);
 				
-				String calculatedBody = LanguageUtil.get(Locale.getDefault(),"mail.header");
+				String calculatedBody = LanguageUtil.get(user.getLocale(),"mail.header");
 				calculatedBody += createMessage(body, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
-				calculatedBody += LanguageUtil.get(Locale.getDefault(),"mail.footer");
+				calculatedBody += LanguageUtil.get(user.getLocale(),"mail.footer");
 				
 				String calculatedsubject = createMessage(subject, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 				
