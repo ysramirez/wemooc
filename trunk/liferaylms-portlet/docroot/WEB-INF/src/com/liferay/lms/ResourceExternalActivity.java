@@ -101,7 +101,7 @@ public class ResourceExternalActivity extends MVCPortlet {
 	}
 
 	@Override
-	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 			throws PortletException, IOException {
 
 		long actId=0;
@@ -135,7 +135,7 @@ public class ResourceExternalActivity extends MVCPortlet {
 
 				if(typeId==2)
 				{
-					super.doView(renderRequest, renderResponse);
+					super.render(renderRequest, renderResponse);
 				}
 				else
 				{
