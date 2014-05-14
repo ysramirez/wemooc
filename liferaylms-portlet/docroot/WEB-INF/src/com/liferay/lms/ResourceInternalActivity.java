@@ -212,7 +212,7 @@ public class ResourceInternalActivity extends MVCPortlet {
 }
 
 	@Override
-	public void doView(RenderRequest renderRequest, RenderResponse renderResponse)
+	public void render(RenderRequest renderRequest, RenderResponse renderResponse)
 	throws PortletException, IOException {
 
 if(ParamUtil.getLong(renderRequest, "actId", 0)==0)// TODO Auto-generated method stub
@@ -234,7 +234,7 @@ else
 			
 			if(typeId==7)
 			{
-				super.doView(renderRequest, renderResponse);
+				super.render(renderRequest, renderResponse);
 			}
 			else
 			{
