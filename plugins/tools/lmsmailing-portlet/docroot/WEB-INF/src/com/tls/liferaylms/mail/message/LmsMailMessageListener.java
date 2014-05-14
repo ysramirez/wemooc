@@ -79,7 +79,7 @@ public class LmsMailMessageListener implements MessageListener {
 		//System.out.print("toMail: "+toMail+", userName: "+userName);
 		
 		if ("true".equals(testing)) {
-			
+			if(_log.isDebugEnabled())_log.debug("Test");
 			InternetAddress to = new InternetAddress(sender.getEmailAddress(),
 					sender.getFullName());
 			
@@ -95,11 +95,14 @@ public class LmsMailMessageListener implements MessageListener {
 			MailServiceUtil.sendEmail(mailm);
 		} 
 		else if(toMail != null && userName != null && !toMail.contains("all")){
-			User user = UserLocalServiceUtil.getUserById(userId);
+			if(_log.isDebugEnabled())_log.debug("User");
+			User userSender = UserLocalServiceUtil.getUserById(userId);
+			User user = UserLocalServiceUtil.getUserByEmailAddress(userSender.getCompanyId(), toMail);
 			if(user!=null && user.isActive()){
 				
 				InternetAddress to = new InternetAddress(toMail, userName);
-				
+
+				if(_log.isDebugEnabled())_log.debug("Language::"+user.getLocale());
 				String calculatedBody = LanguageUtil.get(user.getLocale(),"mail.header");
 				calculatedBody += createMessage(body, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 				calculatedBody += LanguageUtil.get(user.getLocale(),"mail.footer");
@@ -119,6 +122,7 @@ public class LmsMailMessageListener implements MessageListener {
 			}
 		}
 		else if(toMail.contains("all")){
+			if(_log.isDebugEnabled())_log.debug("All");
 			
 			
 			java.util.List<User> users = UserLocalServiceUtil.getGroupUsers(groupId);
@@ -142,7 +146,8 @@ public class LmsMailMessageListener implements MessageListener {
 					}
 					
 					InternetAddress to = new InternetAddress(user.getEmailAddress(), user.getFullName());
-					
+
+					if(_log.isDebugEnabled())_log.debug("Language::"+user.getLocale());
 					String calculatedBody = LanguageUtil.get(user.getLocale(),"mail.header");
 					calculatedBody += createMessage(body, portal, community, user.getFullName(), UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 					calculatedBody += LanguageUtil.get(user.getLocale(),"mail.footer");
