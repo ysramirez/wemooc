@@ -142,7 +142,7 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 			String noSuchEntryRedirect) throws Exception {
 		ThemeDisplay themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		Group courseGroup= GroupLocalServiceUtil.getGroup(_course.getGroupCreatedId());
-		return themeDisplay.getPortalURL() +"/"+ themeDisplay.getLocale().getLanguage() +PortalUtil.getGroupFriendlyURL(courseGroup, false, themeDisplay);
+		return PortalUtil.getGroupFriendlyURL(courseGroup, false, themeDisplay);
 	}
 
 	@Override
