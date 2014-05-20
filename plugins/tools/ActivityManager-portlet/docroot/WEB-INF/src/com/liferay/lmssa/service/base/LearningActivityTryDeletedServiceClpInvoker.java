@@ -42,6 +42,8 @@ public class LearningActivityTryDeletedServiceClpInvoker {
 		if (_methodName29.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
 			LearningActivityTryDeletedServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		throw new UnsupportedOperationException();

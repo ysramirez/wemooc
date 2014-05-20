@@ -56,6 +56,8 @@ public class ActManAuditServiceClpInvoker {
 		if (_methodName29.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
 			ActManAuditServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName34.equals(name) &&
