@@ -216,6 +216,8 @@ public class LearningActivityTryDeletedLocalServiceClpInvoker {
 		if (_methodName45.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
 			LearningActivityTryDeletedLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
+
+			return null;
 		}
 
 		if (_methodName50.equals(name) &&
