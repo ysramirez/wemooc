@@ -178,6 +178,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 			long priority=theModule.getOrdern();
 			theModule.setOrdern(previusModule.getOrdern());
 			previusModule.setOrdern(priority);
+			theModule.setModifiedDate(new Date(System.currentTimeMillis()));
+			previusModule.setModifiedDate(new Date(System.currentTimeMillis()));
 			modulePersistence.update(theModule, true);
 			modulePersistence.update(previusModule, true);
 
@@ -197,7 +199,9 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 			long priority=theModule.getOrdern();
 			theModule.setOrdern(nextModule.getOrdern());
 			nextModule.setOrdern(priority);
-			modulePersistence.update(theModule, true);
+			theModule.setModifiedDate(new Date(System.currentTimeMillis()));
+			nextModule.setModifiedDate(new Date(System.currentTimeMillis()));
+			modulePersistence.update(theModule, true);			
 			modulePersistence.update(nextModule, true);
 
 			//auditing
@@ -238,6 +242,15 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 	    fileobj.setCompanyId(validmodule.getCompanyId());
 	    fileobj.setGroupId(validmodule.getGroupId());
 	    fileobj.setUserId(validmodule.getUserId());
+	    try {
+	    	fileobj.setUserName(userLocalService.getUser(validmodule.getUserId()).getFullName());
+	    } catch (PortalException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			throw new SystemException(e);
+		}
+	    fileobj.setCreateDate(new java.util.Date(System.currentTimeMillis()));
+	    fileobj.setModifiedDate(new java.util.Date(System.currentTimeMillis()));
 	    fileobj.setStartDate(validmodule.getStartDate());
 	    fileobj.setEndDate(validmodule.getEndDate());
 	    fileobj.setTitle(validmodule.getTitle());
@@ -275,6 +288,15 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 	    fileobj.setCompanyId(companyId);
 	    fileobj.setGroupId(courseId);
 	    fileobj.setUserId(userId);
+	    try {
+	    	fileobj.setUserName(userLocalService.getUser(userId).getFullName());
+	    } catch (PortalException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isInfoEnabled())log.info(e.getMessage());
+			throw new SystemException(e);
+		}
+	    fileobj.setCreateDate(new java.util.Date(System.currentTimeMillis()));
+	    fileobj.setModifiedDate(new java.util.Date(System.currentTimeMillis()));
 	    fileobj.setStartDate(startDate);
 	    fileobj.setEndDate(endDate);
 	    fileobj.setTitle(title);
@@ -328,7 +350,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		
 		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "title");
 		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "description");
-		
+		module.setModifiedDate(new java.util.Date(System.currentTimeMillis()));
 		try {
 			if(resourceLocalService.getResource(module.getCompanyId(), Module.class.getName(), ResourceConstants.SCOPE_INDIVIDUAL,Long.toString( module.getPrimaryKey()))==null)
 					{
@@ -356,6 +378,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		
 		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "title");
 		module = LmsLocaleUtil.checkDefaultLocale(Module.class, module, "description");
+		module.setModifiedDate(new java.util.Date(System.currentTimeMillis()));
 		module = super.updateModule(module, merge);
 
 		//auditing
