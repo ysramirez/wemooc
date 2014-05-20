@@ -126,14 +126,17 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			throws SystemException, PortalException {
 		LmsPrefs lmsPrefs=lmsPrefsLocalService.getLmsPrefsIni(serviceContext.getCompanyId());
 		long userId=serviceContext.getUserId();
-		Course course = coursePersistence.create(counterLocalService.increment(Course.class.getName()));		
+		Course course = coursePersistence.create(counterLocalService.increment(Course.class.getName()));
 		try{
 			course.setCompanyId(serviceContext.getCompanyId());
 			course.setGroupId(serviceContext.getScopeGroupId());
 			course.setUserId(userId);
+			course.setUserName(userLocalService.getUser(userId).getFullName());
 			course.setFriendlyURL(friendlyURL);
 			course.setDescription(description,locale);
 			course.setTitle(title,locale);
+			course.setCreateDate(createDate);
+			course.setModifiedDate(createDate);
 			course.setStartDate(startDate);
 			course.setEndDate(endDate);
 			course.setStatus(WorkflowConstants.STATUS_APPROVED);
@@ -375,6 +378,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 				throw new PortalException("maxUsers "+numberUsers);
 			}
 		
+			course.setModifiedDate(new java.util.Date(System.currentTimeMillis()));
 			course.setExpandoBridgeAttributes(serviceContext);
 			Locale locale=new Locale(serviceContext.getLanguageId());
 			coursePersistence.update(course, true);
