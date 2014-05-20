@@ -6,6 +6,8 @@ import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.security.Key;
 import java.sql.SQLException;
+import java.text.Format;
+import java.util.Date;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.Cookie;
@@ -19,6 +21,8 @@ import com.liferay.lms.service.CompetenceLocalServiceUtil;
 import com.liferay.lms.service.UserCompetenceLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Company;
@@ -32,6 +36,7 @@ import com.liferay.util.Encryptor;
 import com.lowagie.text.BadElementException;
 import com.lowagie.text.Document;
 import com.lowagie.text.DocumentException;
+import com.lowagie.text.Element;
 import com.lowagie.text.Font;
 import com.lowagie.text.FontFactory;
 import com.lowagie.text.Image;
@@ -131,21 +136,48 @@ public class CompetenceCertificateServlet extends HttpServlet {
 			PdfWriter writer=PdfWriter.getInstance(documento, ouputStream);
 			writer.setPageEvent(new PDFBackground("http://telefonica.telefonica/img/es/be_more_tv_05.jpg"));
 			documento.open();
-			documento.add(new Paragraph(user.getFullName(),
+			Paragraph userName=new Paragraph(user.getFullName(),
 	                FontFactory.getFont("arial",   // fuente
-	                22,                            // tamaño
-	                Font.ITALIC)));
-			documento.add(new Paragraph(competence.getTitle(user.getLocale(), true),
-	                FontFactory.getFont("arial",   // fuente
-	                22,                            // tamaño
-	                Font.ITALIC)));
+	                20,                            // tamaño
+	                Font.BOLD));
 			
-			documento.add(new Paragraph(ucomp.getCompDate().toString(),
+			userName.setAlignment(Element.ALIGN_CENTER);
+			userName.setSpacingAfter(10);
+			documento.add(userName);
+			Paragraph competenceText=new Paragraph(LanguageUtil.get(user.getLocale(), "competence.text"),
 	                FontFactory.getFont("arial",   // fuente
-	                22,                            // tamaño
-	                Font.ITALIC)));
+	                18,                            // tamaño
+	                Font.BOLD));
+			competenceText.setAlignment(Element.ALIGN_CENTER);
+			documento.add(competenceText);
+			
+			Paragraph competenceName=new Paragraph(competence.getTitle(user.getLocale(), true),
+	                FontFactory.getFont("arial",   // fuente
+	                26,                            // tamaño
+	                Font.BOLD));
+			competenceName.setAlignment(Element.ALIGN_CENTER);
+			
+			documento.add(competenceName);
+			Date compDate=ucomp.getCompDate();
+			Format dateFormatDate = FastDateFormatFactoryUtil.getDate(user.getLocale(), user.getTimeZone());
+			String dateString=dateFormatDate.format(compDate);
+			Paragraph datecompetence=new Paragraph(dateString,
+	                FontFactory.getFont("arial",   // fuente
+	                14,                            // tamaño
+	                Font.ITALIC));
+			datecompetence.setAlignment(Element.ALIGN_CENTER);
+			
+			documento.add(datecompetence);
+			Paragraph UUID=new Paragraph(ucomp.getUuid(),
+	                FontFactory.getFont("arial",   // fuente
+	                10,                            // tamaño
+	                Font.NORMAL));
+			UUID.setAlignment(Element.ALIGN_RIGHT);
+			UUID.setSpacingBefore(60);
+			
+			documento.add(UUID);
 			documento.close();
-			documento.close();
+			
 		}
 		
 		}
