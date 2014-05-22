@@ -32,8 +32,7 @@ String teacherName=RoleLocalServiceUtil.getRole(prefs.getTeacherRole()).getTitle
 String editorName=RoleLocalServiceUtil.getRole(prefs.getEditorRole()).getTitle(locale);
 Role commmanager=RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER) ;
 
-
-if(roleId!=null&&!roleId.equals(0L)){
+if(Validator.isNotNull(roleId)){
 	if(roleId==commmanager.getRoleId()){
 		tabs1 = LanguageUtil.get(pageContext,"courseadmin.adminactions.students");
 	}else if(roleId==prefs.getEditorRole()){
