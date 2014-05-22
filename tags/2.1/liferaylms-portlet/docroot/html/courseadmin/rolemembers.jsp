@@ -38,10 +38,9 @@ if(roleId==commmanager.getRoleId()){
 }
 java.util.List<User> users=new java.util.ArrayList<User>();
 
-/*
+
 if(roleId!=commmanager.getRoleId())
 {
-*/
 List<UserGroupRole> ugrs=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(createdGroupId, roleId);
 
 users=new java.util.ArrayList<User>();
@@ -49,7 +48,6 @@ for(UserGroupRole ugr:ugrs)
 {
 	users.add(ugr.getUser());
 }
-/*
 }
 else
 {
@@ -70,7 +68,7 @@ else
 		}
 	}
 }
-*/
+
 %>
 <div class="container-toolbar" >
 	<%@ include file="inc/toolbar.jspf" %>
