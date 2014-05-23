@@ -116,6 +116,7 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class
 	/>
 	<liferay-ui:icon image="permissions" message="courseadmin.adminactions.permissions" url="<%=permissionsURL %>" />			
 	<%}%>
+	</c:if>
 	<%if(showExport){%>	
 	<portlet:renderURL var="exportURL">
 		<portlet:param name="groupId" value="<%=String.valueOf(myCourse.getGroupCreatedId()) %>" />
@@ -137,7 +138,7 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class
 	</portlet:renderURL>
 	<liferay-ui:icon image="copy" message="courseadmin.adminactions.clone" url="<%=cloneURL%>" />	
 	<%}%>			
-</c:if>
+
 
 <c:if test="<%=count>0 && permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE) && ! myCourse.isClosed()%>">
 	<portlet:renderURL var="competenceURL">
