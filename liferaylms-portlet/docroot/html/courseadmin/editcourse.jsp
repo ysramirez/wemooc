@@ -204,6 +204,7 @@ else
 %>
 
 <c:if test="<%=course != null %>">
+<div class="aui-tab-back">
 	<liferay-ui:icon-menu>
 		<%if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), Course.class.getName(), courseId, ActionKeys.UPDATE) && ! course.isClosed() && showClose){%>
 			<portlet:actionURL name="closeCourse" var="closeURL">
@@ -276,6 +277,7 @@ else
 		<%}%>
 		
 	</liferay-ui:icon-menu>
+	</div>
 </c:if>
 
 <aui:form name="fm" action="<%=savecourseURL%>"  method="post" enctype="multipart/form-data">
