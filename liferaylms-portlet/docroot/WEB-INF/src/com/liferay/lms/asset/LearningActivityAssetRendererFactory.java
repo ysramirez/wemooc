@@ -187,39 +187,50 @@ public class LearningActivityAssetRendererFactory extends BaseAssetRendererFacto
 			}
 			
 			if(filterCourses.isEmpty()) {
+				if(themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(),
+						"com.liferay.lms.learningactivitymodel", themeDisplay.getScopeGroupId(), "ADD_ACTIVITY"))
+				{
+				 PortletURL portletURL= 
+		    			  PortletURLFactoryUtil.create(liferayPortletRequest,"lmsactivitieslist_WAR_liferaylmsportlet",getControlPanelPlid(themeDisplay), PortletRequest.RENDER_PHASE);
+				 portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/newactivity.jsp");
+				 portletURL.setParameter("resModuleId", "0");
+				 return portletURL;
+				}
 				return null;
 			}
-
-			long plid = getPlid(filterCourses.get(0).getCourseId(),themeDisplay);
-			
-			if(Validator.isNull(plid)) {
-				return null;
-			}			
-
-			long resModuleId = GetterUtil.getLong(liferayPortletRequest.getAttribute("resModuleId"));
-	  	  	PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,PORTLET_ID,plid,PortletRequest.RENDER_PHASE);
-
-	  	  	if(filterCourses.size()>1) {
-	  	  		portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/selectCourse.jsp");
-	  	  		portletURL.setParameter("assetRendererId",themeDisplay.getPortletDisplay().getId());
-	  	  		portletURL.setParameter("assetRendererPlid",Long.toString(themeDisplay.getPlid()));
-	  	  		if(Validator.isNotNull(typeAttribute)){
-	  	  			portletURL.setParameter("type", Long.toString(type));
-	  	  		}
-	  	  	}
-	  	  	else if(typeAttribute==null) {
-				portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/newactivity.jsp");
+			else
+			{
+				long plid = getPlid(filterCourses.get(0).getCourseId(),themeDisplay);
+				
+				if(Validator.isNull(plid)) {
+					return null;
+				}			
+	
+				long resModuleId = GetterUtil.getLong(liferayPortletRequest.getAttribute("resModuleId"));
+		  	  	PortletURL portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,PORTLET_ID,plid,PortletRequest.RENDER_PHASE);
+	
+		  	  	if(filterCourses.size()>1) {
+		  	  		portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/selectCourse.jsp");
+		  	  		portletURL.setParameter("assetRendererId",themeDisplay.getPortletDisplay().getId());
+		  	  		portletURL.setParameter("assetRendererPlid",Long.toString(themeDisplay.getPlid()));
+		  	  		if(Validator.isNotNull(typeAttribute)){
+		  	  			portletURL.setParameter("type", Long.toString(type));
+		  	  		}
+		  	  	}
+		  	  	else if(typeAttribute==null) {
+					portletURL.setParameter("mvcPath", "/html/lmsactivitieslist/newactivity.jsp");
+				}
+				else {
+					portletURL.setParameter("mvcPath", "/html/editactivity/editactivity.jsp");
+					portletURL.setParameter("type", Long.toString(type));
+				}
+	
+				if(Validator.isNotNull(resModuleId)) {
+					portletURL.setParameter("resModuleId", Long.toString(resModuleId));
+				}
+	
+				return portletURL;
 			}
-			else {
-				portletURL.setParameter("mvcPath", "/html/editactivity/editactivity.jsp");
-				portletURL.setParameter("type", Long.toString(type));
-			}
-
-			if(Validator.isNotNull(resModuleId)) {
-				portletURL.setParameter("resModuleId", Long.toString(resModuleId));
-			}
-
-			return portletURL;
 		}
 		catch(Throwable t) {
 			return null;

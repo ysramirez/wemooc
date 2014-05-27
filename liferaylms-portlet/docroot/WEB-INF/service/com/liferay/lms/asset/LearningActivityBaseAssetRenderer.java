@@ -200,8 +200,9 @@ public abstract class LearningActivityBaseAssetRenderer extends BaseAssetRendere
 				return portletURL;
 			}
 		}
-		
-		portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,LMS_ACTIVITIES_LIST_PORTLET_ID,_layout.getPlid(),PortletRequest.RENDER_PHASE);
+		ThemeDisplay themeDisplay = (ThemeDisplay)liferayPortletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+		portletURL = PortletURLFactoryUtil.create(liferayPortletRequest,LMS_ACTIVITIES_LIST_PORTLET_ID,getControlPanelPlid(themeDisplay),PortletRequest.RENDER_PHASE);
 		portletURL.setParameter("editing", StringPool.TRUE);
 		portletURL.setParameter("resId",Long.toString( _learningactivity.getActId()));
 		portletURL.setParameter("resModuleId",Long.toString( _learningactivity.getModuleId())); 
