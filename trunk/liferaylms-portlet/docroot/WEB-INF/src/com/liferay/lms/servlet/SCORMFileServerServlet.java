@@ -13,6 +13,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.io.FileUtils;
+
+import com.liferay.lms.learningactivity.LearningActivityType;
+import com.liferay.lms.learningactivity.SCORMLearningActivityType;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.SCORMContent;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
@@ -63,6 +67,7 @@ public class SCORMFileServerServlet extends HttpServlet {
 			HttpServletResponse response) throws ServletException,
 			java.io.IOException {
 		String mime_type;
+		String charset;
 		String patharchivo;
 		String uri;
 		
@@ -132,7 +137,7 @@ public class SCORMFileServerServlet extends HttpServlet {
 			if (!allowed) {
 				AssetEntry scormAsset = AssetEntryLocalServiceUtil.getEntry(SCORMContent.class.getName(), scormContent.getPrimaryKey());
 				long scormAssetId = scormAsset.getEntryId();
-				int typeId = 9;
+				int typeId = new Long((new SCORMLearningActivityType()).getTypeId()).intValue();
 				long[] groupIds = user.getGroupIds();
 				for (long gId : groupIds) {
 					List<LearningActivity> acts = LearningActivityLocalServiceUtil.getLearningActivitiesOfGroupAndType(gId, typeId);
@@ -161,9 +166,13 @@ public class SCORMFileServerServlet extends HttpServlet {
 
 					// El content type siempre antes del printwriter
 					mime_type = MimeTypesUtil.getContentType(archivo);
+					charset = "";
 					if (archivo.getName().toLowerCase().endsWith(".html")
 							|| archivo.getName().toLowerCase().endsWith(".htm")) {
 						mime_type = "text/html";
+						if (isISO(FileUtils.readFileToString(archivo))) {
+							charset = "ISO-8859-1";
+						}
 					}
 					if (archivo.getName().toLowerCase().endsWith(".swf")) {
 						mime_type = "application/x-shockwave-flash";
@@ -172,7 +181,10 @@ public class SCORMFileServerServlet extends HttpServlet {
 						mime_type = "video/x-flv";
 					}
 					response.setContentType(mime_type);
-					response.addHeader("Content-Type", mime_type);
+					if (Validator.isNotNull(charset)) {
+						response.setCharacterEncoding(charset);
+					}
+					response.addHeader("Content-Type", mime_type + (Validator.isNotNull(charset) ? "; "+ charset : ""));
 					if (archivo.getName().toLowerCase().endsWith(".swf")
 							|| archivo.getName().toLowerCase().endsWith(".flv")) {
 						response.addHeader("Content-Length",
@@ -208,6 +220,13 @@ public class SCORMFileServerServlet extends HttpServlet {
 					.println("Error en el processRequest() de ServidorArchivos: "
 							+ e.getMessage());
 		}
+	}
+	
+	private boolean isISO(String testString) {
+		if (Validator.isNotNull(testString)) {
+			return testString.substring(0, 1024).contains("ISO-8859-1");
+		}
+		return false;
 	}
 
 	/**
