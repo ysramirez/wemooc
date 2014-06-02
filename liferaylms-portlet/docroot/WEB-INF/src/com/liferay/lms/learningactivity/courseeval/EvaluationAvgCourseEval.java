@@ -37,7 +37,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
-public class EvaluationAvgCourseEval implements CourseEval {
+public class EvaluationAvgCourseEval extends BaseCourseEval {
 	
 	private static DateFormat _dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:sszzz",Locale.US);

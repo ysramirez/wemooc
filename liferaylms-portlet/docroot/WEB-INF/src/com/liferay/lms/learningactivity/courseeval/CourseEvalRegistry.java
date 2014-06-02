@@ -49,7 +49,7 @@ public class CourseEvalRegistry
 					String [] context = ((String) key).split("\\.");
 					Class<?> c = Class.forName(type, true, PortletClassLoaderUtil.getClassLoader(context[1]));
 					ClassLoaderProxy clp = new ClassLoaderProxy(c.newInstance(), type, PortletClassLoaderUtil.getClassLoader(context[1]));
-					CouseEvalClp courseEvalClp = new CouseEvalClp(clp);
+					CourseEvalClp courseEvalClp = new CourseEvalClp(clp);
 					long typeId=courseEvalClp.getTypeId();
 					types.put(typeId,courseEvalClp);
 					typesList.add(courseEvalClp);
