@@ -26,7 +26,7 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
-public class CompleteModulesCourseEval implements CourseEval {
+public class CompleteModulesCourseEval extends BaseCourseEval {
 
 	@Override
 	@SuppressWarnings("unchecked")
