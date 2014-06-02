@@ -1,7 +1,6 @@
 package com.liferay.lms.learningactivity.courseeval;
 
 import java.io.IOException;
-import java.lang.reflect.Method;
 import java.util.Locale;
 import java.util.Map;
 
@@ -15,6 +14,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.MethodHandler;
+import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.xml.DocumentException;
 
 public class CouseEvalClp implements CourseEval {
@@ -72,12 +72,11 @@ public class CouseEvalClp implements CourseEval {
 	}
 	
 	@Override
-	@SuppressWarnings("deprecation")
 	public String getName(Locale locale) {
 		Object returnObj = null;
 
 		try {
-			Method getNameMethod = CourseEval.class.getMethod("getName", Locale.class); 
+			MethodKey getNameMethod = new MethodKey(clp.getClassName(), "getName", Locale.class);
 			returnObj = clp.invoke(new MethodHandler(getNameMethod, locale));
 		}
 		catch (Throwable t) {
@@ -151,12 +150,11 @@ public class CouseEvalClp implements CourseEval {
 			throws SystemException {
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			
-			Class courseEvalClass = Class.forName(CourseEval.class.getName(),true, classLoader);
+
 			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
 			Class moduleResultClass = Class.forName(ModuleResult.class.getName(),true, classLoader);
 			
-			Method updateCourseMethod = courseEvalClass.getMethod("updateCourse",courseClass,moduleResultClass);    
+			MethodKey updateCourseMethod = new MethodKey(clp.getClassName(), "updateCourse",courseClass,moduleResultClass);
 			Object courseObj = translateCourse(course);
 			Object moduleResultObj = translateModuleResult(moduleResult);
 			clp.invoke(new MethodHandler(updateCourseMethod, courseObj, moduleResultObj));
@@ -190,13 +188,12 @@ public class CouseEvalClp implements CourseEval {
 		
 		try {
 			Object returnObj = null;
-			
+
 			ClassLoader classLoader = clp.getClassLoader();
-			
-			Class courseEvalClass = Class.forName(CourseEval.class.getName(),true, classLoader);
+
 			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
-			
-			Method updateCourseMethod = courseEvalClass.getMethod("updateCourse",courseClass,Long.class);    
+
+			MethodKey updateCourseMethod = new MethodKey(clp.getClassName(), "updateCourse",courseClass,Long.class);
 			Object courseObj = translateCourse(course);
 			returnObj = clp.invoke(new MethodHandler(updateCourseMethod, courseObj, userId));
 			ClassLoaderProxy courseClassLoaderProxy = new ClassLoaderProxy(courseObj, clp.getClassLoader());
@@ -228,13 +225,10 @@ public class CouseEvalClp implements CourseEval {
 		
 		try {
 			Object returnObj = null;
-			
 			ClassLoader classLoader = clp.getClassLoader();
-			
-			Class courseEvalClass = Class.forName(CourseEval.class.getName(),true, classLoader);
 			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
-			
-			Method updateCourseMethod = courseEvalClass.getMethod("updateCourse",courseClass,Long.class);    
+
+			MethodKey updateCourseMethod = new MethodKey(clp.getClassName(), "updateCourse",courseClass);
 			Object courseObj = translateCourse(course);
 			returnObj = clp.invoke(new MethodHandler(updateCourseMethod, courseObj));
 			ClassLoaderProxy courseClassLoaderProxy = new ClassLoaderProxy(courseObj, clp.getClassLoader());
@@ -306,16 +300,15 @@ public class CouseEvalClp implements CourseEval {
 	}
 	
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked"})
+	@SuppressWarnings({ "rawtypes"})
 	public long getPassPuntuation(Course course)
 			throws DocumentException {
 		Object returnObj = null;
 		
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			Class courseEvalClass = Class.forName(CourseEval.class.getName(),true, classLoader);
 			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
-			Method getPassPuntuationMethod = courseEvalClass.getMethod("getPassPuntuation",courseClass);    
+			MethodKey getPassPuntuationMethod = new MethodKey(clp.getClassName(), "getPassPuntuation",courseClass); 
 			Object courseObj = translateCourse(course);
 			returnObj = clp.invoke(new MethodHandler(getPassPuntuationMethod, courseObj));
 
@@ -340,18 +333,16 @@ public class CouseEvalClp implements CourseEval {
 	}
 	
 	@Override
-	@SuppressWarnings({ "rawtypes", "unchecked" })
+	@SuppressWarnings({"rawtypes"})
 	public JSONObject getEvaluationModel(Course course)
 			throws SystemException {
 		Object returnObj = null;
 		
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			
-			Class courseEvalClass = Class.forName(CourseEval.class.getName(),true, classLoader);
 			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
-			
-			Method getEvaluationModelMethod = courseEvalClass.getMethod("getEvaluationModel",courseClass);    
+
+			MethodKey getEvaluationModelMethod = new MethodKey(clp.getClassName(), "getEvaluationModel",courseClass);   
 			Object courseObj = translateCourse(course);
 			returnObj = clp.invoke(new MethodHandler(getEvaluationModelMethod, courseObj));
 		}
@@ -380,10 +371,9 @@ public class CouseEvalClp implements CourseEval {
 			throws PortalException,SystemException,DocumentException,IOException {
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			Class courseEvalClass = Class.forName(CourseEval.class.getName(),true, classLoader);
 			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
-			
-			Method setEvaluationModelMethod = courseEvalClass.getMethod("setEvaluationModel",courseClass,JSONObject.class);    
+
+			MethodKey setEvaluationModelMethod = new MethodKey(clp.getClassName(), "setEvaluationModel",courseClass,JSONObject.class);     
 			Object courseObj = translateCourse(course);
 			clp.invoke(new MethodHandler(setEvaluationModelMethod, courseObj, model));
 			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(courseObj, clp.getClassLoader());
