@@ -36,6 +36,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
 
 public class EvaluationAvgCourseEval extends BaseCourseEval {
 	
@@ -308,5 +309,8 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 		
 	}
 
-
+	@Override
+	public String getExpecificContentPage() {
+		return PortalUtil.getPathContext()+"/html/evaluationAvg/courseeval/edit.jsp";
+	}
 }
