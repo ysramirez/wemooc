@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.service.ServiceContext;
 
 public interface CourseEval 
 {
@@ -26,9 +27,8 @@ public interface CourseEval
 	public long getPassPuntuation(Course course) throws DocumentException;
 
 	public String getExpecificContentPage();
-	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,Course course) 
-			throws PortalException, SystemException, DocumentException,
-			IOException;
+	public void setExtraContent(Course course, String actionId, ServiceContext serviceContext) 
+			throws PortalException, SystemException;
 	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse);
 	String getPortletId();
 
