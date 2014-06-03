@@ -5,7 +5,7 @@
 <%@ include file="/init.jsp" %>
 <c:if test="<%=Validator.isNull(ParamUtil.getLong(renderRequest, \"courseId\")) %>">
 <% 
-	int defaultEvaluations =  GetterUtil.getInteger(PropsUtil.get("lms.course.default.evaluations"));
+	long defaultEvaluations =  GetterUtil.getLong(PropsUtil.get("lms.course.default.evaluations"));
 	boolean numOfEvaluationsRequired = SessionErrors.contains(renderRequest, "num-of-evaluations-required");
 	boolean numOfEvaluationsNumber = SessionErrors.contains(renderRequest, "num-of-evaluations-number");
 %>
