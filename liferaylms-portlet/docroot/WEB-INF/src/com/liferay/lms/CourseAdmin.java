@@ -34,6 +34,8 @@ import au.com.bytecode.opencsv.CSVWriter;
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.learningactivity.courseeval.CourseEval;
+import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseCompetence;
 import com.liferay.lms.model.LmsPrefs;
@@ -230,6 +232,24 @@ public class CourseAdmin extends MVCPortlet {
 		int maxusers = ParamUtil.getInteger(uploadRequest, "maxUsers");
 		
 		long courseEvalId=ParamUtil.getLong(uploadRequest, "courseEvalId", 0);
+		CourseEval courseEval = new CourseEvalRegistry().getCourseEval(courseEvalId);
+		
+		//course eval Validation
+		if(Validator.isNull(courseEval)) {
+			SessionErrors.add(actionRequest, "error-course-eval");
+			actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+			actionResponse.setRenderParameter("redirect", redirect);
+			actionResponse.setRenderParameter("jspPage",
+					"/html/courseadmin/editcourse.jsp");
+			return;			
+		}
+
+		if(!courseEval.especificValidations(uploadRequest, actionResponse)) {
+			actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
+			actionResponse.setRenderParameter("redirect", redirect);
+			actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+			return;					
+		}
 
 		if (friendlyURL.equals("") && !title.equals("")) {
 			friendlyURL = StringPool.BLANK;
