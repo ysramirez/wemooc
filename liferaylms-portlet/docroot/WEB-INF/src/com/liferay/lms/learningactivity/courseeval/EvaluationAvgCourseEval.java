@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletResponse;
+
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LearningActivity;
@@ -27,14 +30,25 @@ import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.upload.UploadRequest;
+import com.liferay.portal.kernel.util.AutoResetThreadLocal;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.JavaConstants;
+import com.liferay.portal.kernel.util.LocaleThreadLocal;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
 import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.util.PortalUtil;
 
@@ -310,7 +324,59 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 	}
 
 	@Override
+	public boolean especificValidations(UploadRequest uploadRequest,
+			PortletResponse portletResponse) {
+		PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
+		String numOfEvaluations = uploadRequest.getParameter("numOfEvaluations");
+		
+		if(Validator.isNumber(numOfEvaluations)){
+			_numOfEvaluations.set(GetterUtil.getLong(numOfEvaluations));
+			return true;
+		}
+
+		if(Validator.isNull(numOfEvaluations)) {
+			SessionErrors.add(portletRequest, "num-of-evaluations-required");
+		}
+		else {
+			SessionErrors.add(portletRequest, "num-of-evaluations-number");
+		}
+
+		return false;
+	}
+	
+	@Override
+	public void setExtraContent(Course course, String actionId, ServiceContext serviceContext)
+			throws PortalException, SystemException {
+		if(Constants.ADD.equals(actionId)) {
+			ServiceContext evaluationServiceContext = ServiceContextFactory.getInstance(serviceContext.getRequest());
+			long numOfEvaluations = _numOfEvaluations.get();
+			Locale locale = LocaleThreadLocal.getThemeDisplayLocale();
+			if(locale==null) {
+				if(Validator.isNotNull(serviceContext.getLanguageId())){
+					locale = LocaleUtil.fromLanguageId(serviceContext.getLanguageId());
+				}
+				else {
+					locale = LocaleUtil.getDefault();
+				}
+			}
+	
+			for(int currentEvaluation=1;currentEvaluation<=numOfEvaluations;currentEvaluation++) {
+	
+				Map<Locale,String> evaluationTitle = new HashMap<Locale, String>(1);
+				evaluationTitle.put(locale, LanguageUtil.format(locale, "evaluation.number", new Object[]{currentEvaluation}));
+				LearningActivityLocalServiceUtil.addLearningActivity(course.getUserId(), course.getGroupCreatedId(), WorkflowConstants.STATUS_APPROVED, 
+						evaluationTitle, evaluationTitle, 8 /* Evaluation */, null, null, 0, 0, 0, 0, null, null, null, 0, 0, evaluationServiceContext);
+			}		
+		}
+	}
+	
+	@Override
 	public String getExpecificContentPage() {
 		return PortalUtil.getPathContext()+"/html/evaluationAvg/courseeval/edit.jsp";
 	}
+	
+	private static ThreadLocal<Long> _numOfEvaluations =
+			new AutoResetThreadLocal<Long>(
+				EvaluationAvgCourseEval.class + "._numOfEvaluations", GetterUtil.DEFAULT_LONG);
+
 }
