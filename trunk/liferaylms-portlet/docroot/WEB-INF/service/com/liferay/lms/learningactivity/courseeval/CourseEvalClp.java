@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.util.ClassLoaderProxy;
 import com.liferay.portal.kernel.util.MethodHandler;
 import com.liferay.portal.kernel.util.MethodKey;
 import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.service.ServiceContext;
 
 public class CourseEvalClp implements CourseEval {
 
@@ -359,16 +360,15 @@ public class CourseEvalClp implements CourseEval {
 	}
 
 	@Override
-	@SuppressWarnings("unchecked")
-	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,Course course) 
-			throws PortalException, SystemException, DocumentException,
-			IOException{
+	@SuppressWarnings({ "unchecked", "deprecation" })
+	public void setExtraContent(Course course,String actionId,ServiceContext serviceContext) 
+			throws PortalException, SystemException {
 		try {
 			ClassLoader classLoader = clp.getClassLoader();
-			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
-			MethodKey setExtraContentMethod = new MethodKey(clp.getClassName(), "setExtraContent", UploadRequest.class, PortletResponse.class, courseClass);
+			Class<?> courseClass = Class.forName(Course.class.getName(),true, classLoader);
+			MethodKey setExtraContentMethod = new MethodKey(clp.getClassName(), "setExtraContent", courseClass, String.class, ServiceContext.class);
 			Object courseObj = translateCourse(course);
-			clp.invoke(new MethodHandler(setExtraContentMethod, uploadRequest, portletResponse, courseObj));
+			clp.invoke(new MethodHandler(setExtraContentMethod, courseObj, actionId, serviceContext));
 			ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(courseObj, clp.getClassLoader());
 			course.setModelAttributes((Map<String, Object>) classLoaderProxy.invoke("getModelAttributes", new Object[]{}));
 		}
@@ -378,15 +378,7 @@ public class CourseEvalClp implements CourseEval {
 			if (t instanceof PortalException) {
 				throw (PortalException)t;
 			}
-			
-			if (t instanceof IOException) {
-				throw (IOException)t;
-			}
-			
-			if (t instanceof DocumentException) {
-				throw (DocumentException)t;
-			}
-			
+
 			if (t instanceof SystemException) {
 				throw (SystemException)t;
 			}

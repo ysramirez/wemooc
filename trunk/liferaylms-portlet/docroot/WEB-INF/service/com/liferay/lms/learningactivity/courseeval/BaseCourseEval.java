@@ -1,7 +1,5 @@
 package com.liferay.lms.learningactivity.courseeval;
 
-import java.io.IOException;
-
 import javax.portlet.PortletResponse;
 
 import com.liferay.lms.model.Course;
@@ -10,8 +8,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.util.StringPool;
-import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.model.PortletConstants;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.util.PortalUtil;
 
 public abstract class BaseCourseEval implements CourseEval {
@@ -26,10 +24,8 @@ public abstract class BaseCourseEval implements CourseEval {
 	}
 
 	@Override
-	public void setExtraContent(UploadRequest uploadRequest,
-			PortletResponse portletResponse, Course course)
-			throws PortalException, SystemException, DocumentException,
-			IOException {
+	public void setExtraContent(Course course, String actionId, ServiceContext serviceContext)
+			throws PortalException, SystemException {
 	}
 
 	@Override
