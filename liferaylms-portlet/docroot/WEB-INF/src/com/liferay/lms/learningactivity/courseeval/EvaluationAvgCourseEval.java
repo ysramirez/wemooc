@@ -39,6 +39,8 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
@@ -347,7 +349,7 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 	@Override
 	public void setExtraContent(Course course, String actionId, ServiceContext serviceContext)
 			throws PortalException, SystemException {
-		if(Constants.ADD.equals(actionId)) {
+		if((Validator.isNumber(PropsUtil.get("lms.course.default.evaluations")))&&(Constants.ADD.equals(actionId))) {
 			ServiceContext evaluationServiceContext = ServiceContextFactory.getInstance(serviceContext.getRequest());
 			long numOfEvaluations = _numOfEvaluations.get();
 			Locale locale = LocaleThreadLocal.getThemeDisplayLocale();
@@ -372,7 +374,8 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 	
 	@Override
 	public String getExpecificContentPage() {
-		return PortalUtil.getPathContext()+"/html/evaluationAvg/courseeval/edit.jsp";
+		return (Validator.isNumber(PropsUtil.get("lms.course.default.evaluations")))?
+				PortalUtil.getPathContext()+"/html/evaluationAvg/courseeval/edit.jsp":StringPool.BLANK;
 	}
 	
 	private static ThreadLocal<Long> _numOfEvaluations =
