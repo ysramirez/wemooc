@@ -15,7 +15,6 @@
 package com.liferay.lms.service.impl;
 
 import java.io.File;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -23,6 +22,8 @@ import java.util.Map;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.learningactivity.courseeval.CourseEval;
+import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LmsPrefs;
@@ -35,7 +36,6 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.lar.PortletDataHandlerKeys;
 import com.liferay.portal.kernel.lar.UserIdStrategy;
 import com.liferay.portal.kernel.log.Log;
@@ -44,6 +44,7 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -60,7 +61,6 @@ import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
@@ -183,21 +183,12 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 
 			LayoutSetPrototype lsProto=layoutSetPrototypeLocalService.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
-			
-			if(CourseEvalId==1) //EvaluationAvgCourseEval
-			{
-				int defaultEvaluations =  GetterUtil.getInteger(PropsUtil.get("lms.course.default.evaluations"),DEFAULT_EVALUATIONS);
-				
-				ServiceContext evaluationServiceContext = ServiceContextFactory.getInstance(serviceContext.getRequest());
-				for(int currentEvaluation=1;currentEvaluation<=defaultEvaluations;currentEvaluation++) {
 
-					Map<Locale,String> evaluationTitle = new HashMap<Locale, String>(1);
-					evaluationTitle.put(locale, LanguageUtil.format(locale, "evaluation.number", new Object[]{currentEvaluation}));
-					learningActivityLocalService.addLearningActivity(userId, group.getGroupId(), WorkflowConstants.STATUS_APPROVED, 
-							evaluationTitle, evaluationTitle, 8 /* Evaluation */, null, null, 0, 0, 0, 0, null, null, null, 0, 0, evaluationServiceContext);
-					}
+			CourseEval courseEval = new CourseEvalRegistry().getCourseEval(CourseEvalId);
+			if(courseEval!=null) {
+				courseEval.setExtraContent(course, Constants.ADD, serviceContext);
 			}
-			
+
 			/* activamos social activity para la comunidad creada */ 		
 			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);	
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(Course.class);
@@ -396,8 +387,13 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			}
 			
 			theGroup.setType(type);
-			GroupLocalServiceUtil.updateGroup(theGroup);
-						
+			groupLocalService.updateGroup(theGroup);
+
+			CourseEval courseEval = new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
+			if(courseEval!=null) {
+				courseEval.setExtraContent(course, Constants.UPDATE, serviceContext);
+			}
+
 			AssetEntry assetEntry=assetEntryLocalService.updateEntry(
 					userId, course.getGroupId(), Course.class.getName(),
 					course.getCourseId(), course.getUuid(),0, serviceContext.getAssetCategoryIds(),
