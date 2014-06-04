@@ -764,10 +764,11 @@ public class CourseAdmin extends MVCPortlet {
 					reader = new CSVReader(new InputStreamReader(new FileInputStream(file), "ISO-8859-1"), ';');
 
 					String[] currLine;
+					int line = 0;
 
 					while ((currLine = reader.readNext()) != null) {
 
-						if(currLine.length>0){
+						if(currLine.length > 0 && (line++ > 0 || (Validator.isNotNull(currLine[0]) && Validator.isNumber(currLine[0])))) {
 							String userIdStr = currLine[0];
 						
 							if (!userIdStr.equals("")){
