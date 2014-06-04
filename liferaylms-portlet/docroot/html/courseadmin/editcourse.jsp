@@ -355,38 +355,100 @@ else
 	<%
 	List<Long> courseEvalIds = ListUtil.toList(StringUtil.split(LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals(),",",0L));
 	CourseEvalRegistry cer=new CourseEvalRegistry();
+	CourseEval courseEval = null;
 	if(courseEvalIds.size()>1)
 	{%>
-		<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>">
+		<aui:select name="courseEvalId" label="course-correction-method" helpMessage="<%=LanguageUtil.get(pageContext,\"course-correction-method-help\")%>" 
+					onChange="<%=\"javascript:AUI().use('aui-io-request','aui-parse-content','querystring',function(A){ \"+
+							\"	var courseCombo = document.getElementById('\"+renderResponse.getNamespace()+\"courseEvalId'), \"+
+							\"		currentCourseEvalId = courseCombo.options[courseCombo.selectedIndex].value, \"+
+							\"		params = {}, \"+
+							\"		urlPieces = '\"+
+										UnicodeFormatter.toString(renderResponse.createRenderURL().toString()) +\"'.split('?'); \"+
+							\"	if (urlPieces.length > 1) { \"+
+							\"		params = A.QueryString.parse(urlPieces[1]); \"+
+							\"		params.p_p_state='\"+LiferayWindowState.EXCLUSIVE.toString() +\"'; \"+
+							((course==null)?StringPool.BLANK:
+								\"	params.\"+renderResponse.getNamespace()+\"courseId=\"+course.getCourseId()+\"; \")+
+							\"		params.\"+renderResponse.getNamespace()+\"courseEvalId=currentCourseEvalId; \"+
+							\"		params.\"+renderResponse.getNamespace()+\"mvcPath='/html/courseadmin/editcourseeval.jsp'; \"+
+							\"	} \"+
+							\"	A.io.request( \"+
+							\"		urlPieces[0], \"+
+							\"		{ \"+
+							\"			data: params, \"+
+							\"			dataType: 'html', \"+
+							\"			on: { \"+
+							\"				failure: function(event, id, obj) { \"+
+							\"					var portlet = A.one('#p_p_id\"+renderResponse.getNamespace()+\"'); \"+
+							\"					portlet.hide(); \"+
+							\"					portlet.placeAfter('<div class=\\\\'portlet-msg-error\\\\'>\"+
+													UnicodeFormatter.toString(LanguageUtil.get(pageContext, 
+													\"there-was-an-unexpected-error.-please-refresh-the-current-page\")) +\"</div>'); \"+
+							\"				}, \"+
+							\"				success: function(event, id, obj) { \"+
+							\"					var courseEvalDetailsDiv = A.one('#\"+
+														renderResponse.getNamespace()+\"courseEvalDetails'); \"+
+							\"					courseEvalDetailsDiv.plug(A.Plugin.ParseContent); \"+ 
+							\"					courseEvalDetailsDiv.html(this.get('responseData')); \"+ 
+							\"				} \"+
+							\"			} \"+
+							\"		} \"+
+							\"	); \"+
+							\"}); \"%>">
 		<%
-		//String[]courseEvals = LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getCourseevals().split(",");
+		long courseEvalId = 0;
+		if(Validator.isNull(renderRequest.getParameter("courseEvalId"))) {
+			if((course!=null)&&(courseEvalIds.contains(course.getCourseEvalId()))) {
+				courseEvalId = course.getCourseEvalId();
+			}
+			else {
+				courseEvalId = courseEvalIds.get(0);
+			}
+		}
+		else {
+			courseEvalId = ParamUtil.getLong(renderRequest, "courseEvalId");
+		}
+
 		for(Long ce:courseEvalIds)
 		{
 			CourseEval cel = cer.getCourseEval(ce);
-			boolean selected=false;
-			if(course!=null&&course.getCourseEvalId()==ce)
-			{
-				selected=true;
+			if(ce == courseEvalId) {
+				courseEval = cel;
+				%>
+				<aui:option value="<%=String.valueOf(ce)%>" selected="<%=true %>"><liferay-ui:message key="<%=cel.getName() %>" /></aui:option>
+				<%				
 			}
-			
-			%>
-			<aui:option value="<%=String.valueOf(ce)%>" selected="<%=selected %>"><liferay-ui:message key="<%=cel.getName() %>" /></aui:option>
-			<%
+			else {
+				%>
+				<aui:option value="<%=String.valueOf(ce)%>" selected="<%=false %>"><liferay-ui:message key="<%=cel.getName() %>" /></aui:option>
+				<%				
+			}
 		}
 		%>
 		</aui:select>
 	<%
 	}
 	else{
-		CourseEval cel = null;
 		try{
-			if(courseEvalIds.size()>0){
-				cel = cer.getCourseEval(courseEvalIds.get(0));
+			if(courseEvalIds.isEmpty()){
+				courseEval = cer.getCourseEval(0);
 			}
-		}catch(Exception e){}
+			else {
+				courseEval = cer.getCourseEval(courseEvalIds.get(0));
+			}
+		}catch(Exception e){
+			courseEval = cer.getCourseEval(0);
+		}
 		%>
-		<aui:input name="courseEvalId" value="<%=cel==null?\"0\":cel.getTypeId()%>" type="hidden"/>
-	<%}
+		<aui:input name="courseEvalId" value="<%=courseEval.getTypeId()%>" type="hidden"/>
+	<%}%>
+	<div id="<portlet:namespace/>courseEvalDetails" >
+		<liferay-util:include page="/html/courseadmin/editcourseeval.jsp" servletContext="<%=getServletContext() %>">
+			<liferay-util:param name="courseId" value="<%=String.valueOf((course==null)?0:course.getCourseId())%>" />
+			<liferay-util:param name="courseEvalId" value="<%=String.valueOf(courseEval.getTypeId())%>" />
+		</liferay-util:include>
+	</div>
 	if(course==null)
 	{
 		String[] layusprsel=null;

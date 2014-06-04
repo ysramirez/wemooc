@@ -3,12 +3,16 @@ package com.liferay.lms.learningactivity.courseeval;
 import java.io.IOException;
 import java.util.Locale;
 
+import javax.portlet.PortletResponse;
+
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.upload.UploadRequest;
 import com.liferay.portal.kernel.xml.DocumentException;
+import com.liferay.portal.service.ServiceContext;
 
 public interface CourseEval 
 {
@@ -22,6 +26,12 @@ public interface CourseEval
 	public boolean getNeedPassPuntuation();
 	public long getPassPuntuation(Course course) throws DocumentException;
 
+	public String getExpecificContentPage();
+	public void setExtraContent(Course course, String actionId, ServiceContext serviceContext) 
+			throws PortalException, SystemException;
+	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse);
+	String getPortletId();
+
 	public JSONObject getEvaluationModel(Course course)
 			throws PortalException, SystemException, DocumentException,
 			IOException;
@@ -29,6 +39,5 @@ public interface CourseEval
 	public void setEvaluationModel(Course course, JSONObject model)
 				throws PortalException, SystemException, DocumentException,
 				IOException;
-
 
 }
