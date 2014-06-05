@@ -76,6 +76,9 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			{ "companyId", Types.BIGINT },
 			{ "groupId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
+			{ "userName", Types.VARCHAR },
+			{ "createDate", Types.TIMESTAMP },
+			{ "modifiedDate", Types.TIMESTAMP },
 			{ "title", Types.VARCHAR },
 			{ "description", Types.VARCHAR },
 			{ "ordern", Types.BIGINT },
@@ -84,7 +87,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 			{ "icon", Types.BIGINT },
 			{ "precedence", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Module (uuid_ VARCHAR(75) null,moduleId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,title STRING null,description STRING null,ordern LONG,startDate DATE null,endDate DATE null,icon LONG,precedence LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Module (uuid_ VARCHAR(75) null,moduleId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,title STRING null,description STRING null,ordern LONG,startDate DATE null,endDate DATE null,icon LONG,precedence LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Module";
 	public static final String ORDER_BY_JPQL = " ORDER BY module.ordern ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_Module.ordern ASC";
@@ -122,6 +125,9 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 		model.setCompanyId(soapModel.getCompanyId());
 		model.setGroupId(soapModel.getGroupId());
 		model.setUserId(soapModel.getUserId());
+		model.setUserName(soapModel.getUserName());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
 		model.setTitle(soapModel.getTitle());
 		model.setDescription(soapModel.getDescription());
 		model.setOrdern(soapModel.getOrdern());
@@ -192,6 +198,9 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 		attributes.put("companyId", getCompanyId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("ordern", getOrdern());
@@ -233,6 +242,24 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 		if (userId != null) {
 			setUserId(userId);
+		}
+
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
 		}
 
 		String title = (String)attributes.get("title");
@@ -361,6 +388,35 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	public long getOriginalUserId() {
 		return _originalUserId;
+	}
+
+	public String getUserName() {
+		if (_userName == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _userName;
+		}
+	}
+
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		_modifiedDate = modifiedDate;
 	}
 
 	public String getTitle() {
@@ -632,6 +688,9 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 		moduleImpl.setCompanyId(getCompanyId());
 		moduleImpl.setGroupId(getGroupId());
 		moduleImpl.setUserId(getUserId());
+		moduleImpl.setUserName(getUserName());
+		moduleImpl.setCreateDate(getCreateDate());
+		moduleImpl.setModifiedDate(getModifiedDate());
 		moduleImpl.setTitle(getTitle());
 		moduleImpl.setDescription(getDescription());
 		moduleImpl.setOrdern(getOrdern());
@@ -732,6 +791,32 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 		moduleCacheModel.userId = getUserId();
 
+		moduleCacheModel.userName = getUserName();
+
+		String userName = moduleCacheModel.userName;
+
+		if ((userName != null) && (userName.length() == 0)) {
+			moduleCacheModel.userName = null;
+		}
+
+		Date createDate = getCreateDate();
+
+		if (createDate != null) {
+			moduleCacheModel.createDate = createDate.getTime();
+		}
+		else {
+			moduleCacheModel.createDate = Long.MIN_VALUE;
+		}
+
+		Date modifiedDate = getModifiedDate();
+
+		if (modifiedDate != null) {
+			moduleCacheModel.modifiedDate = modifiedDate.getTime();
+		}
+		else {
+			moduleCacheModel.modifiedDate = Long.MIN_VALUE;
+		}
+
 		moduleCacheModel.title = getTitle();
 
 		String title = moduleCacheModel.title;
@@ -777,7 +862,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -789,6 +874,12 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 		sb.append(getGroupId());
 		sb.append(", userId=");
 		sb.append(getUserId());
+		sb.append(", userName=");
+		sb.append(getUserName());
+		sb.append(", createDate=");
+		sb.append(getCreateDate());
+		sb.append(", modifiedDate=");
+		sb.append(getModifiedDate());
 		sb.append(", title=");
 		sb.append(getTitle());
 		sb.append(", description=");
@@ -809,7 +900,7 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(49);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Module");
@@ -834,6 +925,18 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 		sb.append(
 			"<column><column-name>userId</column-name><column-value><![CDATA[");
 		sb.append(getUserId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>userName</column-name><column-value><![CDATA[");
+		sb.append(getUserName());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>createDate</column-name><column-value><![CDATA[");
+		sb.append(getCreateDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>modifiedDate</column-name><column-value><![CDATA[");
+		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>title</column-name><column-value><![CDATA[");
@@ -884,6 +987,9 @@ public class ModuleModelImpl extends BaseModelImpl<Module>
 	private String _userUuid;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
+	private String _userName;
+	private Date _createDate;
+	private Date _modifiedDate;
 	private String _title;
 	private String _titleCurrentLanguageId;
 	private String _description;

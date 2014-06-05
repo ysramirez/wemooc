@@ -58,9 +58,7 @@ else
 			
 			//auditing
 			ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-			AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
-					activity.getActId(), themeDisplay.getUserId(), AuditConstants.VIEW, null);
-			
+		
 			long typeId=activity.getTypeId();
 			
 			if(typeId==9)

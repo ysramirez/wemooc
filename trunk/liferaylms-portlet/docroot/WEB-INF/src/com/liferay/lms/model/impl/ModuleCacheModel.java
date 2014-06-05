@@ -34,7 +34,7 @@ import java.util.Date;
 public class ModuleCacheModel implements CacheModel<Module>, Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -46,6 +46,12 @@ public class ModuleCacheModel implements CacheModel<Module>, Serializable {
 		sb.append(groupId);
 		sb.append(", userId=");
 		sb.append(userId);
+		sb.append(", userName=");
+		sb.append(userName);
+		sb.append(", createDate=");
+		sb.append(createDate);
+		sb.append(", modifiedDate=");
+		sb.append(modifiedDate);
 		sb.append(", title=");
 		sb.append(title);
 		sb.append(", description=");
@@ -79,6 +85,27 @@ public class ModuleCacheModel implements CacheModel<Module>, Serializable {
 		moduleImpl.setCompanyId(companyId);
 		moduleImpl.setGroupId(groupId);
 		moduleImpl.setUserId(userId);
+
+		if (userName == null) {
+			moduleImpl.setUserName(StringPool.BLANK);
+		}
+		else {
+			moduleImpl.setUserName(userName);
+		}
+
+		if (createDate == Long.MIN_VALUE) {
+			moduleImpl.setCreateDate(null);
+		}
+		else {
+			moduleImpl.setCreateDate(new Date(createDate));
+		}
+
+		if (modifiedDate == Long.MIN_VALUE) {
+			moduleImpl.setModifiedDate(null);
+		}
+		else {
+			moduleImpl.setModifiedDate(new Date(modifiedDate));
+		}
 
 		if (title == null) {
 			moduleImpl.setTitle(StringPool.BLANK);
@@ -123,6 +150,9 @@ public class ModuleCacheModel implements CacheModel<Module>, Serializable {
 	public long companyId;
 	public long groupId;
 	public long userId;
+	public String userName;
+	public long createDate;
+	public long modifiedDate;
 	public String title;
 	public String description;
 	public long ordern;

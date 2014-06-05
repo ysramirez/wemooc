@@ -76,7 +76,14 @@
 			<basic name="companyId" />
 			<basic name="groupId" />
 			<basic name="userId" />
+			<basic name="userName" />
 			<basic name="groupCreatedId" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<basic name="status" />
 			<basic name="statusByUserId" />
 			<basic name="statusByUserName" />
@@ -264,6 +271,13 @@
 			<basic name="companyId" />
 			<basic name="groupId" />
 			<basic name="userId" />
+			<basic name="userName" />
+			<basic name="createDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="modifiedDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<basic name="title" />
 			<basic name="description" />
 			<basic name="ordern" />

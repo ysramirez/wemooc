@@ -77,7 +77,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			{ "companyId", Types.BIGINT },
 			{ "groupId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
+			{ "userName", Types.VARCHAR },
 			{ "groupCreatedId", Types.BIGINT },
+			{ "createDate", Types.TIMESTAMP },
+			{ "modifiedDate", Types.TIMESTAMP },
 			{ "status", Types.INTEGER },
 			{ "statusByUserId", Types.BIGINT },
 			{ "statusByUserName", Types.VARCHAR },
@@ -94,7 +97,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			{ "maxusers", Types.BIGINT },
 			{ "calificationType", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,groupCreatedId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null,closed BOOLEAN,maxusers LONG,calificationType LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,userName VARCHAR(75) null,groupCreatedId LONG,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null,closed BOOLEAN,maxusers LONG,calificationType LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Course";
 	public static final String ORDER_BY_JPQL = " ORDER BY course.courseId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_Course.courseId ASC";
@@ -135,7 +138,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		model.setCompanyId(soapModel.getCompanyId());
 		model.setGroupId(soapModel.getGroupId());
 		model.setUserId(soapModel.getUserId());
+		model.setUserName(soapModel.getUserName());
 		model.setGroupCreatedId(soapModel.getGroupCreatedId());
+		model.setCreateDate(soapModel.getCreateDate());
+		model.setModifiedDate(soapModel.getModifiedDate());
 		model.setStatus(soapModel.getStatus());
 		model.setStatusByUserId(soapModel.getStatusByUserId());
 		model.setStatusByUserName(soapModel.getStatusByUserName());
@@ -214,7 +220,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		attributes.put("companyId", getCompanyId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
 		attributes.put("groupCreatedId", getGroupCreatedId());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("status", getStatus());
 		attributes.put("statusByUserId", getStatusByUserId());
 		attributes.put("statusByUserName", getStatusByUserName());
@@ -266,10 +275,28 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			setUserId(userId);
 		}
 
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
 		Long groupCreatedId = (Long)attributes.get("groupCreatedId");
 
 		if (groupCreatedId != null) {
 			setGroupCreatedId(groupCreatedId);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
 		}
 
 		Integer status = (Integer)attributes.get("status");
@@ -462,6 +489,19 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		return _originalUserId;
 	}
 
+	public String getUserName() {
+		if (_userName == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _userName;
+		}
+	}
+
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
 	public long getGroupCreatedId() {
 		return _groupCreatedId;
 	}
@@ -480,6 +520,22 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 	public long getOriginalGroupCreatedId() {
 		return _originalGroupCreatedId;
+	}
+
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		_modifiedDate = modifiedDate;
 	}
 
 	public int getStatus() {
@@ -933,7 +989,10 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		courseImpl.setCompanyId(getCompanyId());
 		courseImpl.setGroupId(getGroupId());
 		courseImpl.setUserId(getUserId());
+		courseImpl.setUserName(getUserName());
 		courseImpl.setGroupCreatedId(getGroupCreatedId());
+		courseImpl.setCreateDate(getCreateDate());
+		courseImpl.setModifiedDate(getModifiedDate());
 		courseImpl.setStatus(getStatus());
 		courseImpl.setStatusByUserId(getStatusByUserId());
 		courseImpl.setStatusByUserName(getStatusByUserName());
@@ -1054,7 +1113,33 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 		courseCacheModel.userId = getUserId();
 
+		courseCacheModel.userName = getUserName();
+
+		String userName = courseCacheModel.userName;
+
+		if ((userName != null) && (userName.length() == 0)) {
+			courseCacheModel.userName = null;
+		}
+
 		courseCacheModel.groupCreatedId = getGroupCreatedId();
+
+		Date createDate = getCreateDate();
+
+		if (createDate != null) {
+			courseCacheModel.createDate = createDate.getTime();
+		}
+		else {
+			courseCacheModel.createDate = Long.MIN_VALUE;
+		}
+
+		Date modifiedDate = getModifiedDate();
+
+		if (modifiedDate != null) {
+			courseCacheModel.modifiedDate = modifiedDate.getTime();
+		}
+		else {
+			courseCacheModel.modifiedDate = Long.MIN_VALUE;
+		}
 
 		courseCacheModel.status = getStatus();
 
@@ -1142,7 +1227,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(43);
+		StringBundler sb = new StringBundler(49);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -1154,8 +1239,14 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		sb.append(getGroupId());
 		sb.append(", userId=");
 		sb.append(getUserId());
+		sb.append(", userName=");
+		sb.append(getUserName());
 		sb.append(", groupCreatedId=");
 		sb.append(getGroupCreatedId());
+		sb.append(", createDate=");
+		sb.append(getCreateDate());
+		sb.append(", modifiedDate=");
+		sb.append(getModifiedDate());
 		sb.append(", status=");
 		sb.append(getStatus());
 		sb.append(", statusByUserId=");
@@ -1192,7 +1283,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(67);
+		StringBundler sb = new StringBundler(76);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -1219,8 +1310,20 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>userName</column-name><column-value><![CDATA[");
+		sb.append(getUserName());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>groupCreatedId</column-name><column-value><![CDATA[");
 		sb.append(getGroupCreatedId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>createDate</column-name><column-value><![CDATA[");
+		sb.append(getCreateDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>modifiedDate</column-name><column-value><![CDATA[");
+		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>status</column-name><column-value><![CDATA[");
@@ -1305,9 +1408,12 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	private String _userUuid;
 	private long _originalUserId;
 	private boolean _setOriginalUserId;
+	private String _userName;
 	private long _groupCreatedId;
 	private long _originalGroupCreatedId;
 	private boolean _setOriginalGroupCreatedId;
+	private Date _createDate;
+	private Date _modifiedDate;
 	private int _status;
 	private long _statusByUserId;
 	private String _statusByUserUuid;

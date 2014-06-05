@@ -50,6 +50,9 @@ public class ModuleWrapper implements Module, ModelWrapper<Module> {
 		attributes.put("companyId", getCompanyId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("ordern", getOrdern());
@@ -90,6 +93,24 @@ public class ModuleWrapper implements Module, ModelWrapper<Module> {
 
 		if (userId != null) {
 			setUserId(userId);
+		}
+
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
 		}
 
 		String title = (String)attributes.get("title");
@@ -261,6 +282,60 @@ public class ModuleWrapper implements Module, ModelWrapper<Module> {
 	*/
 	public void setUserUuid(java.lang.String userUuid) {
 		_module.setUserUuid(userUuid);
+	}
+
+	/**
+	* Returns the user name of this module.
+	*
+	* @return the user name of this module
+	*/
+	public java.lang.String getUserName() {
+		return _module.getUserName();
+	}
+
+	/**
+	* Sets the user name of this module.
+	*
+	* @param userName the user name of this module
+	*/
+	public void setUserName(java.lang.String userName) {
+		_module.setUserName(userName);
+	}
+
+	/**
+	* Returns the create date of this module.
+	*
+	* @return the create date of this module
+	*/
+	public java.util.Date getCreateDate() {
+		return _module.getCreateDate();
+	}
+
+	/**
+	* Sets the create date of this module.
+	*
+	* @param createDate the create date of this module
+	*/
+	public void setCreateDate(java.util.Date createDate) {
+		_module.setCreateDate(createDate);
+	}
+
+	/**
+	* Returns the modified date of this module.
+	*
+	* @return the modified date of this module
+	*/
+	public java.util.Date getModifiedDate() {
+		return _module.getModifiedDate();
+	}
+
+	/**
+	* Sets the modified date of this module.
+	*
+	* @param modifiedDate the modified date of this module
+	*/
+	public void setModifiedDate(java.util.Date modifiedDate) {
+		_module.setModifiedDate(modifiedDate);
 	}
 
 	/**

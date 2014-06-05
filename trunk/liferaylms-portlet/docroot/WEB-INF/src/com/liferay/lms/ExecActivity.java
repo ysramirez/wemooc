@@ -397,9 +397,7 @@ public class ExecActivity extends MVCPortlet
 
 				//auditing
 				ThemeDisplay themeDisplay = (ThemeDisplay) renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
-				AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(), 
-						actId, themeDisplay.getUserId(), AuditConstants.VIEW, null);
-
+			
 				activity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 				long typeId = activity.getTypeId();
 

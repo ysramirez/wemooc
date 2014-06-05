@@ -65,7 +65,6 @@ else
 	}
 	else
 	{
-		AuditingLogFactory.getAuditLog().audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(),actId, themeDisplay.getUserId(), AuditConstants.VIEW, Long.toString(learnact.getTypeId()));
 		if(!LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId()))
 		{
 			if(!permissionChecker.hasPermission(learnact.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE) ||
