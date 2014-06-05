@@ -67,7 +67,7 @@ else
 <liferay-ui:error key="scormadmin.error.nozip" message="scormadmin.error.nozip"/>
 <liferay-ui:error key="scormadmin.error.nomanifest" message="scormadmin.error.nomanifest"/>
 <liferay-ui:error key="scormadmin.error.requiredcategories" message="scormadmin.error.requiredcategories"/>
-<aui:form name="fm" action="<%=savescormURL%>"  method="post" enctype="multipart/form-data">
+<aui:form name="fm" action="<%=savescormURL%>"  method="post" enctype="multipart/form-data" >
 
 	<aui:input type="hidden" name="scormId" value="<%=scormId %>" />
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
@@ -77,11 +77,9 @@ else
 	<aui:input name="title" label="title" value="<%= title %>">
 		<aui:validator name="required"></aui:validator>
 	</aui:input>
-	<aui:field-wrapper label="description">
-			<liferay-ui:input-editor name="description" width="100%" />
-			<aui:input name="description" type="hidden" >
-				<aui:validator name="required"></aui:validator>
-			</aui:input>
+
+	<aui:field-wrapper label="description" required="true">
+			<liferay-ui:input-editor cssClass="aui-field-element" name="description" width="100%" onChangeMethod="onChangeDescription"/>
 				<script type="text/javascript">
         function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
     </script>
@@ -153,5 +151,30 @@ if(scormId > 0 && permissionChecker.hasPermission(themeDisplay.getScopeGroupId()
 		
 		
 	</aui:form>
-
-	
+<script type="text/javascript">
+<!--
+Liferay.provide(
+        window,
+        '<portlet:namespace />onChangeDescription',
+        function(val) {
+        	var A = AUI();
+			A.one('#<portlet:namespace />description').set('value',val);
+        },
+        ['node']
+    );
+-->
+</script>
+<aui:script use="liferay-form">
+	Liferay.Form.register(
+	     {
+	        id: '<portlet:namespace />fm',
+	        
+	        fieldRules: [
+	        	{
+	        		fieldName: '<portlet:namespace />description',
+	        		validatorName: 'required'
+	        	}
+	        ]
+	    }
+	);
+</aui:script>

@@ -466,6 +466,7 @@
 		
 		<indexer-class>com.liferay.lms.indexer.SCORMContentIndexer</indexer-class>
 		<portlet-data-handler-class>com.liferay.lms.lar.ScormDataHandlerImpl</portlet-data-handler-class>
+		<social-activity-interpreter-class>com.liferay.lms.social.ScormContentActivityInterpreter</social-activity-interpreter-class>
 		<control-panel-entry-category>
 			content
 		</control-panel-entry-category>
