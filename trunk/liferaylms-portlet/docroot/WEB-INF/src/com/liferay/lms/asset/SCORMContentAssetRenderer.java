@@ -181,7 +181,7 @@ public class SCORMContentAssetRenderer extends BaseAssetRenderer implements Invo
 			@Override
 			public boolean hasViewPermission(PermissionChecker permissionChecker)
 				throws PortalException, SystemException {
-
+				
 				return permissionChecker.hasPermission(_scorm.getGroupId(), SCORMContent.class.getName(), _scorm.getScormId(),ActionKeys.VIEW);
 			}
 			
