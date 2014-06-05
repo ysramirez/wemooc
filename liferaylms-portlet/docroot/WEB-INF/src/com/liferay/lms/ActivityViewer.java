@@ -32,6 +32,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import com.liferay.lms.auditing.AuditConstants;
+import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.LearningActivityType;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.LearningActivity;
@@ -178,7 +180,7 @@ public class ActivityViewer extends MVCPortlet
 						HttpServletRequest renderHttpServletRequest = PortalUtil.getHttpServletRequest(renderRequest);
 						PortletPreferencesFactoryUtil.getLayoutPortletSetup(themeDisplay.getLayout(), portlet.getPortletId());
 						
-						if(isWidget) {
+						if(isWidget){
 							Map<String, String[]> publicParameters = getPublicParameters(renderHttpServletRequest, themeDisplay.getPlid());
 							for(PublicRenderParameter publicRenderParameter:portlet.getPublicRenderParameters()) {
 								String[] parameterValues = renderRequest.getParameterValues(publicRenderParameter.getIdentifier());
@@ -226,7 +228,8 @@ public class ActivityViewer extends MVCPortlet
 								
 								pageTopStringBundler.append(renderResponseWrapper.toString());
 							}
-						}							
+						}
+						AuditingLogFactory.getAuditLog().audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(),actId, themeDisplay.getUserId(), AuditConstants.VIEW, Long.toString(learningActivityType.getTypeId()));
 
 						String activityContent = renderPortlet(renderRequest, renderResponse, 
 								themeDisplay, themeDisplay.getScopeGroupId(), portlet, isWidget, true);

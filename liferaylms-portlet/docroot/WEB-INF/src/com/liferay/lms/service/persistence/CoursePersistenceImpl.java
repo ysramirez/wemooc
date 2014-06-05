@@ -692,7 +692,10 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 		courseImpl.setCompanyId(course.getCompanyId());
 		courseImpl.setGroupId(course.getGroupId());
 		courseImpl.setUserId(course.getUserId());
+		courseImpl.setUserName(course.getUserName());
 		courseImpl.setGroupCreatedId(course.getGroupCreatedId());
+		courseImpl.setCreateDate(course.getCreateDate());
+		courseImpl.setModifiedDate(course.getModifiedDate());
 		courseImpl.setStatus(course.getStatus());
 		courseImpl.setStatusByUserId(course.getStatusByUserId());
 		courseImpl.setStatusByUserName(course.getStatusByUserName());

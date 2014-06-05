@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.model.WorkflowedModel;
 import com.liferay.portal.service.ServiceContext;
 
@@ -43,7 +44,8 @@ import java.util.Map;
  * @see com.liferay.lms.model.impl.CourseModelImpl
  * @generated
  */
-public interface CourseModel extends BaseModel<Course>, WorkflowedModel {
+public interface CourseModel extends BaseModel<Course>, GroupedModel,
+	WorkflowedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -151,6 +153,21 @@ public interface CourseModel extends BaseModel<Course>, WorkflowedModel {
 	public void setUserUuid(String userUuid);
 
 	/**
+	 * Returns the user name of this course.
+	 *
+	 * @return the user name of this course
+	 */
+	@AutoEscape
+	public String getUserName();
+
+	/**
+	 * Sets the user name of this course.
+	 *
+	 * @param userName the user name of this course
+	 */
+	public void setUserName(String userName);
+
+	/**
 	 * Returns the group created ID of this course.
 	 *
 	 * @return the group created ID of this course
@@ -163,6 +180,34 @@ public interface CourseModel extends BaseModel<Course>, WorkflowedModel {
 	 * @param groupCreatedId the group created ID of this course
 	 */
 	public void setGroupCreatedId(long groupCreatedId);
+
+	/**
+	 * Returns the create date of this course.
+	 *
+	 * @return the create date of this course
+	 */
+	public Date getCreateDate();
+
+	/**
+	 * Sets the create date of this course.
+	 *
+	 * @param createDate the create date of this course
+	 */
+	public void setCreateDate(Date createDate);
+
+	/**
+	 * Returns the modified date of this course.
+	 *
+	 * @return the modified date of this course
+	 */
+	public Date getModifiedDate();
+
+	/**
+	 * Sets the modified date of this course.
+	 *
+	 * @param modifiedDate the modified date of this course
+	 */
+	public void setModifiedDate(Date modifiedDate);
 
 	/**
 	 * Returns the status of this course.

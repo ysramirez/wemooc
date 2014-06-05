@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.bean.AutoEscape;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.BaseModel;
 import com.liferay.portal.model.CacheModel;
+import com.liferay.portal.model.GroupedModel;
 import com.liferay.portal.service.ServiceContext;
 
 import com.liferay.portlet.expando.model.ExpandoBridge;
@@ -42,7 +43,7 @@ import java.util.Map;
  * @see com.liferay.lms.model.impl.ModuleModelImpl
  * @generated
  */
-public interface ModuleModel extends BaseModel<Module> {
+public interface ModuleModel extends BaseModel<Module>, GroupedModel {
 	/*
 	 * NOTE FOR DEVELOPERS:
 	 *
@@ -148,6 +149,49 @@ public interface ModuleModel extends BaseModel<Module> {
 	 * @param userUuid the user uuid of this module
 	 */
 	public void setUserUuid(String userUuid);
+
+	/**
+	 * Returns the user name of this module.
+	 *
+	 * @return the user name of this module
+	 */
+	@AutoEscape
+	public String getUserName();
+
+	/**
+	 * Sets the user name of this module.
+	 *
+	 * @param userName the user name of this module
+	 */
+	public void setUserName(String userName);
+
+	/**
+	 * Returns the create date of this module.
+	 *
+	 * @return the create date of this module
+	 */
+	public Date getCreateDate();
+
+	/**
+	 * Sets the create date of this module.
+	 *
+	 * @param createDate the create date of this module
+	 */
+	public void setCreateDate(Date createDate);
+
+	/**
+	 * Returns the modified date of this module.
+	 *
+	 * @return the modified date of this module
+	 */
+	public Date getModifiedDate();
+
+	/**
+	 * Sets the modified date of this module.
+	 *
+	 * @param modifiedDate the modified date of this module
+	 */
+	public void setModifiedDate(Date modifiedDate);
 
 	/**
 	 * Returns the title of this module.

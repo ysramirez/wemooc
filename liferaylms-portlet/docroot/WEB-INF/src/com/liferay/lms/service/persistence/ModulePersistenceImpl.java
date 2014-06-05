@@ -519,6 +519,9 @@ public class ModulePersistenceImpl extends BasePersistenceImpl<Module>
 		moduleImpl.setCompanyId(module.getCompanyId());
 		moduleImpl.setGroupId(module.getGroupId());
 		moduleImpl.setUserId(module.getUserId());
+		moduleImpl.setUserName(module.getUserName());
+		moduleImpl.setCreateDate(module.getCreateDate());
+		moduleImpl.setModifiedDate(module.getModifiedDate());
 		moduleImpl.setTitle(module.getTitle());
 		moduleImpl.setDescription(module.getDescription());
 		moduleImpl.setOrdern(module.getOrdern());

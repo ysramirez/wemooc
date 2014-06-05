@@ -281,6 +281,12 @@ public class LearningActivityLocalServiceClpInvoker {
 				"com.liferay.lms.model.LearningActivity",
 				"com.liferay.portal.security.permission.PermissionChecker"
 			};
+
+		_methodName205 = "updateLearningActivity";
+
+		_methodParameterTypes205 = new String[] {
+				"com.liferay.lms.model.LearningActivity"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -609,6 +615,11 @@ public class LearningActivityLocalServiceClpInvoker {
 				(com.liferay.portal.security.permission.PermissionChecker)arguments[1]);
 		}
 
+		if (_methodName205.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes205, parameterTypes)) {
+			return LearningActivityLocalServiceUtil.updateLearningActivity((com.liferay.lms.model.LearningActivity)arguments[0]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -712,4 +723,6 @@ public class LearningActivityLocalServiceClpInvoker {
 	private String[] _methodParameterTypes203;
 	private String _methodName204;
 	private String[] _methodParameterTypes204;
+	private String _methodName205;
+	private String[] _methodParameterTypes205;
 }

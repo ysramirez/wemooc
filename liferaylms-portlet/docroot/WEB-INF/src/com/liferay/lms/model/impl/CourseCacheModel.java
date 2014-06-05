@@ -34,7 +34,7 @@ import java.util.Date;
 public class CourseCacheModel implements CacheModel<Course>, Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(43);
+		StringBundler sb = new StringBundler(49);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -46,8 +46,14 @@ public class CourseCacheModel implements CacheModel<Course>, Serializable {
 		sb.append(groupId);
 		sb.append(", userId=");
 		sb.append(userId);
+		sb.append(", userName=");
+		sb.append(userName);
 		sb.append(", groupCreatedId=");
 		sb.append(groupCreatedId);
+		sb.append(", createDate=");
+		sb.append(createDate);
+		sb.append(", modifiedDate=");
+		sb.append(modifiedDate);
 		sb.append(", status=");
 		sb.append(status);
 		sb.append(", statusByUserId=");
@@ -97,7 +103,30 @@ public class CourseCacheModel implements CacheModel<Course>, Serializable {
 		courseImpl.setCompanyId(companyId);
 		courseImpl.setGroupId(groupId);
 		courseImpl.setUserId(userId);
+
+		if (userName == null) {
+			courseImpl.setUserName(StringPool.BLANK);
+		}
+		else {
+			courseImpl.setUserName(userName);
+		}
+
 		courseImpl.setGroupCreatedId(groupCreatedId);
+
+		if (createDate == Long.MIN_VALUE) {
+			courseImpl.setCreateDate(null);
+		}
+		else {
+			courseImpl.setCreateDate(new Date(createDate));
+		}
+
+		if (modifiedDate == Long.MIN_VALUE) {
+			courseImpl.setModifiedDate(null);
+		}
+		else {
+			courseImpl.setModifiedDate(new Date(modifiedDate));
+		}
+
 		courseImpl.setStatus(status);
 		courseImpl.setStatusByUserId(statusByUserId);
 
@@ -174,7 +203,10 @@ public class CourseCacheModel implements CacheModel<Course>, Serializable {
 	public long companyId;
 	public long groupId;
 	public long userId;
+	public String userName;
 	public long groupCreatedId;
+	public long createDate;
+	public long modifiedDate;
 	public int status;
 	public long statusByUserId;
 	public String statusByUserName;

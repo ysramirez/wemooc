@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.auditing.AuditConstants"%>
+<%@page import="com.liferay.lms.auditing.AuditingLogFactory"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
@@ -39,6 +41,8 @@ if(actId==0)
 		String primKey = String.valueOf(theModule.getPrimaryKey());
 		if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE)||!ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()))
 		{
+			AuditingLogFactory.getAuditLog().audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
+					Module.class.getName(),theModule.getModuleId(), themeDisplay.getUserId(), AuditConstants.VIEW,"");
 			
 		%>
 		

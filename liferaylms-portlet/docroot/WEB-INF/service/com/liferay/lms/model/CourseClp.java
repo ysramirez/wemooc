@@ -79,7 +79,10 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		attributes.put("companyId", getCompanyId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
 		attributes.put("groupCreatedId", getGroupCreatedId());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("status", getStatus());
 		attributes.put("statusByUserId", getStatusByUserId());
 		attributes.put("statusByUserName", getStatusByUserName());
@@ -131,10 +134,28 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 			setUserId(userId);
 		}
 
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
 		Long groupCreatedId = (Long)attributes.get("groupCreatedId");
 
 		if (groupCreatedId != null) {
 			setGroupCreatedId(groupCreatedId);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
 		}
 
 		Integer status = (Integer)attributes.get("status");
@@ -276,12 +297,36 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		_userUuid = userUuid;
 	}
 
+	public String getUserName() {
+		return _userName;
+	}
+
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
 	public long getGroupCreatedId() {
 		return _groupCreatedId;
 	}
 
 	public void setGroupCreatedId(long groupCreatedId) {
 		_groupCreatedId = groupCreatedId;
+	}
+
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		_modifiedDate = modifiedDate;
 	}
 
 	public int getStatus() {
@@ -724,7 +769,10 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		clone.setCompanyId(getCompanyId());
 		clone.setGroupId(getGroupId());
 		clone.setUserId(getUserId());
+		clone.setUserName(getUserName());
 		clone.setGroupCreatedId(getGroupCreatedId());
+		clone.setCreateDate(getCreateDate());
+		clone.setModifiedDate(getModifiedDate());
 		clone.setStatus(getStatus());
 		clone.setStatusByUserId(getStatusByUserId());
 		clone.setStatusByUserName(getStatusByUserName());
@@ -796,7 +844,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(43);
+		StringBundler sb = new StringBundler(49);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -808,8 +856,14 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		sb.append(getGroupId());
 		sb.append(", userId=");
 		sb.append(getUserId());
+		sb.append(", userName=");
+		sb.append(getUserName());
 		sb.append(", groupCreatedId=");
 		sb.append(getGroupCreatedId());
+		sb.append(", createDate=");
+		sb.append(getCreateDate());
+		sb.append(", modifiedDate=");
+		sb.append(getModifiedDate());
 		sb.append(", status=");
 		sb.append(getStatus());
 		sb.append(", statusByUserId=");
@@ -846,7 +900,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(67);
+		StringBundler sb = new StringBundler(76);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -873,8 +927,20 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		sb.append(getUserId());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>userName</column-name><column-value><![CDATA[");
+		sb.append(getUserName());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>groupCreatedId</column-name><column-value><![CDATA[");
 		sb.append(getGroupCreatedId());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>createDate</column-name><column-value><![CDATA[");
+		sb.append(getCreateDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>modifiedDate</column-name><column-value><![CDATA[");
+		sb.append(getModifiedDate());
 		sb.append("]]></column-value></column>");
 		sb.append(
 			"<column><column-name>status</column-name><column-value><![CDATA[");
@@ -948,7 +1014,10 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 	private long _groupId;
 	private long _userId;
 	private String _userUuid;
+	private String _userName;
 	private long _groupCreatedId;
+	private Date _createDate;
+	private Date _modifiedDate;
 	private int _status;
 	private long _statusByUserId;
 	private String _statusByUserUuid;

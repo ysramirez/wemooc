@@ -36,7 +36,10 @@ public class CourseSoap implements Serializable {
 		soapModel.setCompanyId(model.getCompanyId());
 		soapModel.setGroupId(model.getGroupId());
 		soapModel.setUserId(model.getUserId());
+		soapModel.setUserName(model.getUserName());
 		soapModel.setGroupCreatedId(model.getGroupCreatedId());
+		soapModel.setCreateDate(model.getCreateDate());
+		soapModel.setModifiedDate(model.getModifiedDate());
 		soapModel.setStatus(model.getStatus());
 		soapModel.setStatusByUserId(model.getStatusByUserId());
 		soapModel.setStatusByUserName(model.getStatusByUserName());
@@ -144,12 +147,36 @@ public class CourseSoap implements Serializable {
 		_userId = userId;
 	}
 
+	public String getUserName() {
+		return _userName;
+	}
+
+	public void setUserName(String userName) {
+		_userName = userName;
+	}
+
 	public long getGroupCreatedId() {
 		return _groupCreatedId;
 	}
 
 	public void setGroupCreatedId(long groupCreatedId) {
 		_groupCreatedId = groupCreatedId;
+	}
+
+	public Date getCreateDate() {
+		return _createDate;
+	}
+
+	public void setCreateDate(Date createDate) {
+		_createDate = createDate;
+	}
+
+	public Date getModifiedDate() {
+		return _modifiedDate;
+	}
+
+	public void setModifiedDate(Date modifiedDate) {
+		_modifiedDate = modifiedDate;
 	}
 
 	public int getStatus() {
@@ -281,7 +308,10 @@ public class CourseSoap implements Serializable {
 	private long _companyId;
 	private long _groupId;
 	private long _userId;
+	private String _userName;
 	private long _groupCreatedId;
+	private Date _createDate;
+	private Date _modifiedDate;
 	private int _status;
 	private long _statusByUserId;
 	private String _statusByUserName;

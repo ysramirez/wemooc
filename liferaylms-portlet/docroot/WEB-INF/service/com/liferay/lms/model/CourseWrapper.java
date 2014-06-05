@@ -50,7 +50,10 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 		attributes.put("companyId", getCompanyId());
 		attributes.put("groupId", getGroupId());
 		attributes.put("userId", getUserId());
+		attributes.put("userName", getUserName());
 		attributes.put("groupCreatedId", getGroupCreatedId());
+		attributes.put("createDate", getCreateDate());
+		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("status", getStatus());
 		attributes.put("statusByUserId", getStatusByUserId());
 		attributes.put("statusByUserName", getStatusByUserName());
@@ -101,10 +104,28 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 			setUserId(userId);
 		}
 
+		String userName = (String)attributes.get("userName");
+
+		if (userName != null) {
+			setUserName(userName);
+		}
+
 		Long groupCreatedId = (Long)attributes.get("groupCreatedId");
 
 		if (groupCreatedId != null) {
 			setGroupCreatedId(groupCreatedId);
+		}
+
+		Date createDate = (Date)attributes.get("createDate");
+
+		if (createDate != null) {
+			setCreateDate(createDate);
+		}
+
+		Date modifiedDate = (Date)attributes.get("modifiedDate");
+
+		if (modifiedDate != null) {
+			setModifiedDate(modifiedDate);
 		}
 
 		Integer status = (Integer)attributes.get("status");
@@ -327,6 +348,24 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 	}
 
 	/**
+	* Returns the user name of this course.
+	*
+	* @return the user name of this course
+	*/
+	public java.lang.String getUserName() {
+		return _course.getUserName();
+	}
+
+	/**
+	* Sets the user name of this course.
+	*
+	* @param userName the user name of this course
+	*/
+	public void setUserName(java.lang.String userName) {
+		_course.setUserName(userName);
+	}
+
+	/**
 	* Returns the group created ID of this course.
 	*
 	* @return the group created ID of this course
@@ -342,6 +381,42 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 	*/
 	public void setGroupCreatedId(long groupCreatedId) {
 		_course.setGroupCreatedId(groupCreatedId);
+	}
+
+	/**
+	* Returns the create date of this course.
+	*
+	* @return the create date of this course
+	*/
+	public java.util.Date getCreateDate() {
+		return _course.getCreateDate();
+	}
+
+	/**
+	* Sets the create date of this course.
+	*
+	* @param createDate the create date of this course
+	*/
+	public void setCreateDate(java.util.Date createDate) {
+		_course.setCreateDate(createDate);
+	}
+
+	/**
+	* Returns the modified date of this course.
+	*
+	* @return the modified date of this course
+	*/
+	public java.util.Date getModifiedDate() {
+		return _course.getModifiedDate();
+	}
+
+	/**
+	* Sets the modified date of this course.
+	*
+	* @param modifiedDate the modified date of this course
+	*/
+	public void setModifiedDate(java.util.Date modifiedDate) {
+		_course.setModifiedDate(modifiedDate);
 	}
 
 	/**
