@@ -91,12 +91,9 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable','dd-const
 				var padre = drag.get('parentNode');
 				if (drag.attr('tagName').toLowerCase() === 'div' && padre.hasClass('drop-containers')) {
 					drop.append(drag);
-					padre.text(
-						Liferay.Language.get(
-							'drop',
-							(padre.attr('id')).replace(/[^\d]/g, '')
-						)
-					);
+					var idPadre = padre.attr('id');
+					var textoPadre = idPadre.replace(/[^\d]/g, '');
+					padre.text(Liferay.Language.get('drop', textoPadre));
 					padre.removeClass('occupied');
 					padre.addClass('base');
 					A.one('input[name="' + padre.attr("name")+'hidden"]').val(-1);

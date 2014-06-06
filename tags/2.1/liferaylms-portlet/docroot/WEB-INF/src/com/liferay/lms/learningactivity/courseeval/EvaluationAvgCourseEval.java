@@ -39,6 +39,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocaleThreadLocal;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -330,6 +331,11 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 			PortletResponse portletResponse) {
 		PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
 		String numOfEvaluations = uploadRequest.getParameter("numOfEvaluations");
+		Long courseId = ParamUtil.getLong(uploadRequest, "courseId");
+		
+		if (Validator.isNotNull(courseId)) {
+			return true;
+		}
 		
 		if(Validator.isNumber(numOfEvaluations)){
 			_numOfEvaluations.set(GetterUtil.getLong(numOfEvaluations));
