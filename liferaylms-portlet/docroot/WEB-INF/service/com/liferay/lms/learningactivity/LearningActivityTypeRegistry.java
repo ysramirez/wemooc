@@ -37,6 +37,9 @@ public class LearningActivityTypeRegistry {
 			} catch (ClassNotFoundException e) {
 				try {
 					String [] context = ((String) key).split("\\.");
+					if (Validator.isNotNull(context) && context.length == 2) {
+						context[1] = LMS_ACTIVITIES_LIST_PORTLET_ID;
+					}
 					ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(Class.forName(type, true, 
 						PortletClassLoaderUtil.getClassLoader(context[1])).newInstance(), type, 
 						PortletClassLoaderUtil.getClassLoader(context[1]));

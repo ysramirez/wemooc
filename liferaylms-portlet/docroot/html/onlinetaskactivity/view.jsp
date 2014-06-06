@@ -271,7 +271,6 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 					Team team = TeamLocalServiceUtil.getTeam(Long.parseLong(teamId));
 					params.put("usersTeams", team.getTeamId());
 				}
-				else{
 				if ((GetterUtil.getInteger(PropsUtil.get(PropsKeys.PERMISSIONS_USER_CHECK_ALGORITHM))==6)&&(!ResourceBlockLocalServiceUtil.isSupported("com.liferay.lms.model"))){		
 				
 					params.put("notTeacher",new CustomSQLParam(OnlineActivity.NOT_TEACHER_SQL,themeDisplay.getScopeGroupId()));
@@ -295,7 +294,6 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 				pageContext.setAttribute("results", ListUtil.subList(userLists, searchContainer.getStart(), searchContainer.getEnd()));
 				pageContext.setAttribute("total", userLists.size());	
 				}
-			}
 			%>
 		</liferay-ui:search-container-results>
 		
