@@ -683,7 +683,7 @@ extends LearningActivityLocalServiceBaseImpl {
 				//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
 				if(
 					((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
-					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
+					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) ||
 					((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
 					(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
 				){
@@ -738,7 +738,7 @@ extends LearningActivityLocalServiceBaseImpl {
 					//Si estoy fuera del intervalo de fechas de la actividad, o del módulo en caso de no estar alguna definida en la actividad, es editable
 					if(
 							((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
-							(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
+							(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) ||
 							((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
 							(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
 					){return true;}
