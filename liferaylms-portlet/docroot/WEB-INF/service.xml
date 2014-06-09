@@ -490,6 +490,26 @@
 		<column name="action" type="String" />
 		<column name="extradata" type="String" />
         <column name="classPK" type="long"></column>
+        <order by="desc">
+			<order-column name="auditDate" />
+		</order>
+        <finder name="GroupId" return-type="Collection">
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="CompanyId" return-type="Collection">
+			<finder-column name="companyId" />
+		</finder>
+		<finder name="UserId" return-type="Collection">
+			<finder-column name="userId" />
+		</finder>
+		<finder name="U_G" return-type="Collection">
+			<finder-column name="userId" />
+			<finder-column name="groupId" />
+		</finder>
+		<finder name="CN_CP" return-type="Collection">
+			<finder-column name="classname" />
+			<finder-column name="classPK" />
+		</finder>
     </entity>   
 	<exceptions>
 		<exception>NoSuchModule</exception>
