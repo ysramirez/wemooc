@@ -694,7 +694,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 				//Si estoy fuera del intervalo de fechas de la actividad, o del m�dulo en caso de no estar alguna definida en la actividad, es editable
 				if(
 					((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
-					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
+					(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) ||
 					((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
 					(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
 				){
@@ -737,22 +737,33 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 	public boolean canBeEdited(LearningActivity activity, PermissionChecker permissionChecker) throws Exception{
 		//Si tengo permiso de editar bloqueados, es editable
 		if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),"UPDATE_ACTIVE")){
+			System.out.println("canBeEdited - UPDATE_ACTIVE");
 			return true;
 		//Si tengo permiso de edici�n
 		}else if(permissionChecker.hasPermission(activity.getGroupId(),LearningActivity.class.getName(),activity.getActId(),ActionKeys.UPDATE)||
 				permissionChecker.hasOwnerPermission(activity.getCompanyId(),LearningActivity.class.getName(),activity.getActId(),activity.getUserId(),ActionKeys.UPDATE)){
 			//y no hay intentos de la actividad por parte de alumnos
+			System.out.println("canBeEdited - UPDATE");
 			if(!LearningActivityTryLocalServiceUtil.areThereTriesNotFromEditors(activity)){
+				System.out.println("canBeEdited - UPDATE 0");
 				Date today = new Date();
 				Module module = ModuleLocalServiceUtil.getModule(activity.getModuleId());
 				if(module.getStartDate() != null && module.getEndDate() != null){//xq la fecha en los modulos es obligatoria
+					System.out.println("canBeEdited - UPDATE 00");
 					//Si estoy fuera del intervalo de fechas de la actividad, o del m�dulo en caso de no estar alguna definida en la actividad, es editable
 					if(
-							((activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0))||
-							(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))) &&
-							((activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))||
-							(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0)))
-					){return true;}
+							(
+									(activity.getStartdate()==null && (today.compareTo(module.getStartDate())<0)) 
+									||
+									(activity.getStartdate()!=null && (today.compareTo(activity.getStartdate())<0))
+							) 
+							||
+							(
+									(activity.getEnddate()==null && (today.compareTo(module.getEndDate())>0))
+									||
+									(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())>0))
+							)
+					){System.out.println("canBeEdited - 2");return true;}
 					//Si estoy dentro del intervalo de fechas de la actividad, o del m�dulo en caso de no estar definida en la actividad, compruebo si existe ojo y si este est� cerrado, entonces es editable
 					if(
 							((activity.getStartdate()==null && (today.compareTo(module.getStartDate())>=0))||
@@ -760,11 +771,14 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 							((activity.getEnddate()==null && (today.compareTo(module.getEndDate())<=0))||
 							(activity.getEnddate()!=null && (today.compareTo(activity.getEnddate())<=0)))
 					){
+						System.out.println("canBeEdited - UPDATE 000");
 						if(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity")!=null &&
 								Boolean.valueOf(PropsUtil.getProperties().getProperty("learningactivity.show.hideactivity"))){
+							System.out.println("canBeEdited - UPDATE 0000");
 							Role siteMemberRole = RoleLocalServiceUtil.getRole(activity.getCompanyId(), RoleConstants.SITE_MEMBER);
 							if(!ResourcePermissionLocalServiceUtil.hasResourcePermission(activity.getCompanyId(), LearningActivity.class.getName(), 
 									ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(activity.getActId()),siteMemberRole.getRoleId(), ActionKeys.VIEW)){
+								System.out.println("canBeEdited - 3");
 								return true;
 							}
 						}
