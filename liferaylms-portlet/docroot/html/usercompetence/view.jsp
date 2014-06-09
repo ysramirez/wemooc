@@ -9,6 +9,12 @@
 <% 
 	PortletURL viewURL = renderResponse.createRenderURL(); 
 	viewURL.setParameter("delta", delta);
+	if(competences==null|| competences.size()==0)
+		{
+			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+		}
+	else
+	{
 %>
 <div id="user_competences">
 	<liferay-ui:search-container curParam="act" emptyResultsMessage="there-are-no-competences" delta="10" deltaConfigurable="true" iteratorURL="<%=viewURL%>"  >
@@ -33,3 +39,6 @@
 		<liferay-ui:search-iterator />
 	</liferay-ui:search-container>
 </div>
+<%
+}
+%>

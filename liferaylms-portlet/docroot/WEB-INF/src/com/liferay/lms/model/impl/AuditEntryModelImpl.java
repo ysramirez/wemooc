@@ -19,6 +19,7 @@ import com.liferay.lms.model.AuditEntryModel;
 
 import com.liferay.portal.kernel.bean.AutoEscapeBeanHandler;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ProxyUtil;
 import com.liferay.portal.kernel.util.StringBundler;
@@ -73,6 +74,8 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 		};
 	public static final String TABLE_SQL_CREATE = "create table Lms_AuditEntry (auditId LONG not null primary key,auditDate DATE null,companyId LONG,groupId LONG,userId LONG,classname VARCHAR(75) null,action VARCHAR(75) null,extradata VARCHAR(75) null,classPK LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_AuditEntry";
+	public static final String ORDER_BY_JPQL = " ORDER BY auditEntry.auditDate DESC";
+	public static final String ORDER_BY_SQL = " ORDER BY Lms_AuditEntry.auditDate DESC";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
 	public static final String TX_MANAGER = "liferayTransactionManager";
@@ -82,7 +85,14 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	public static final boolean FINDER_CACHE_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
 				"value.object.finder.cache.enabled.com.liferay.lms.model.AuditEntry"),
 			true);
-	public static final boolean COLUMN_BITMASK_ENABLED = false;
+	public static final boolean COLUMN_BITMASK_ENABLED = GetterUtil.getBoolean(com.liferay.util.service.ServiceProps.get(
+				"value.object.column.bitmask.enabled.com.liferay.lms.model.AuditEntry"),
+			true);
+	public static long CLASSPK_COLUMN_BITMASK = 1L;
+	public static long CLASSNAME_COLUMN_BITMASK = 2L;
+	public static long COMPANYID_COLUMN_BITMASK = 4L;
+	public static long GROUPID_COLUMN_BITMASK = 8L;
+	public static long USERID_COLUMN_BITMASK = 16L;
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.liferay.lms.model.AuditEntry"));
 
@@ -200,6 +210,8 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	}
 
 	public void setAuditDate(Date auditDate) {
+		_columnBitmask = -1L;
+
 		_auditDate = auditDate;
 	}
 
@@ -208,7 +220,19 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	}
 
 	public void setCompanyId(long companyId) {
+		_columnBitmask |= COMPANYID_COLUMN_BITMASK;
+
+		if (!_setOriginalCompanyId) {
+			_setOriginalCompanyId = true;
+
+			_originalCompanyId = _companyId;
+		}
+
 		_companyId = companyId;
+	}
+
+	public long getOriginalCompanyId() {
+		return _originalCompanyId;
 	}
 
 	public long getGroupId() {
@@ -216,7 +240,19 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	}
 
 	public void setGroupId(long groupId) {
+		_columnBitmask |= GROUPID_COLUMN_BITMASK;
+
+		if (!_setOriginalGroupId) {
+			_setOriginalGroupId = true;
+
+			_originalGroupId = _groupId;
+		}
+
 		_groupId = groupId;
+	}
+
+	public long getOriginalGroupId() {
+		return _originalGroupId;
 	}
 
 	public long getUserId() {
@@ -224,6 +260,14 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	}
 
 	public void setUserId(long userId) {
+		_columnBitmask |= USERID_COLUMN_BITMASK;
+
+		if (!_setOriginalUserId) {
+			_setOriginalUserId = true;
+
+			_originalUserId = _userId;
+		}
+
 		_userId = userId;
 	}
 
@@ -233,6 +277,10 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 
 	public void setUserUuid(String userUuid) {
 		_userUuid = userUuid;
+	}
+
+	public long getOriginalUserId() {
+		return _originalUserId;
 	}
 
 	public String getClassname() {
@@ -245,7 +293,17 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	}
 
 	public void setClassname(String classname) {
+		_columnBitmask |= CLASSNAME_COLUMN_BITMASK;
+
+		if (_originalClassname == null) {
+			_originalClassname = _classname;
+		}
+
 		_classname = classname;
+	}
+
+	public String getOriginalClassname() {
+		return GetterUtil.getString(_originalClassname);
 	}
 
 	public String getAction() {
@@ -279,7 +337,23 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	}
 
 	public void setClassPK(long classPK) {
+		_columnBitmask |= CLASSPK_COLUMN_BITMASK;
+
+		if (!_setOriginalClassPK) {
+			_setOriginalClassPK = true;
+
+			_originalClassPK = _classPK;
+		}
+
 		_classPK = classPK;
+	}
+
+	public long getOriginalClassPK() {
+		return _originalClassPK;
+	}
+
+	public long getColumnBitmask() {
+		return _columnBitmask;
 	}
 
 	@Override
@@ -326,17 +400,17 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	}
 
 	public int compareTo(AuditEntry auditEntry) {
-		long primaryKey = auditEntry.getPrimaryKey();
+		int value = 0;
 
-		if (getPrimaryKey() < primaryKey) {
-			return -1;
+		value = DateUtil.compareTo(getAuditDate(), auditEntry.getAuditDate());
+
+		value = value * -1;
+
+		if (value != 0) {
+			return value;
 		}
-		else if (getPrimaryKey() > primaryKey) {
-			return 1;
-		}
-		else {
-			return 0;
-		}
+
+		return 0;
 	}
 
 	@Override
@@ -371,6 +445,27 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 
 	@Override
 	public void resetOriginalValues() {
+		AuditEntryModelImpl auditEntryModelImpl = this;
+
+		auditEntryModelImpl._originalCompanyId = auditEntryModelImpl._companyId;
+
+		auditEntryModelImpl._setOriginalCompanyId = false;
+
+		auditEntryModelImpl._originalGroupId = auditEntryModelImpl._groupId;
+
+		auditEntryModelImpl._setOriginalGroupId = false;
+
+		auditEntryModelImpl._originalUserId = auditEntryModelImpl._userId;
+
+		auditEntryModelImpl._setOriginalUserId = false;
+
+		auditEntryModelImpl._originalClassname = auditEntryModelImpl._classname;
+
+		auditEntryModelImpl._originalClassPK = auditEntryModelImpl._classPK;
+
+		auditEntryModelImpl._setOriginalClassPK = false;
+
+		auditEntryModelImpl._columnBitmask = 0;
 	}
 
 	@Override
@@ -506,12 +601,22 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	private long _auditId;
 	private Date _auditDate;
 	private long _companyId;
+	private long _originalCompanyId;
+	private boolean _setOriginalCompanyId;
 	private long _groupId;
+	private long _originalGroupId;
+	private boolean _setOriginalGroupId;
 	private long _userId;
 	private String _userUuid;
+	private long _originalUserId;
+	private boolean _setOriginalUserId;
 	private String _classname;
+	private String _originalClassname;
 	private String _action;
 	private String _extradata;
 	private long _classPK;
+	private long _originalClassPK;
+	private boolean _setOriginalClassPK;
+	private long _columnBitmask;
 	private AuditEntry _escapedModelProxy;
 }
