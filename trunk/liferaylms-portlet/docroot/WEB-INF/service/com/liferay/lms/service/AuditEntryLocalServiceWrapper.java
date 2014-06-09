@@ -272,6 +272,23 @@ public class AuditEntryLocalServiceWrapper implements AuditEntryLocalService,
 			classPK, userId, action, extraData);
 	}
 
+	public java.util.List<com.liferay.lms.model.AuditEntry> search(
+		long companyId, long groupId, java.lang.String className, long classPK,
+		long userId, java.util.Date startDate, java.util.Date endDate,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _auditEntryLocalService.search(companyId, groupId, className,
+			classPK, userId, startDate, endDate, start, end);
+	}
+
+	public long searchCount(long companyId, long groupId,
+		java.lang.String className, long classPK, long userId,
+		java.util.Date startDate, java.util.Date endDate, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _auditEntryLocalService.searchCount(companyId, groupId,
+			className, classPK, userId, startDate, endDate, start, end);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

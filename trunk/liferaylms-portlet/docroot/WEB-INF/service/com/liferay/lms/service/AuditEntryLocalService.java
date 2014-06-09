@@ -247,4 +247,17 @@ public interface AuditEntryLocalService extends BaseLocalService,
 		java.lang.String className, long classPK, long userId,
 		java.lang.String action, java.lang.String extraData)
 		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.liferay.lms.model.AuditEntry> search(
+		long companyId, long groupId, java.lang.String className, long classPK,
+		long userId, java.util.Date startDate, java.util.Date endDate,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public long searchCount(long companyId, long groupId,
+		java.lang.String className, long classPK, long userId,
+		java.util.Date startDate, java.util.Date endDate, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException;
 }

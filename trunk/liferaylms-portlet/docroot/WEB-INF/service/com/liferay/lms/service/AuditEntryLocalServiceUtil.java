@@ -280,6 +280,25 @@ public class AuditEntryLocalServiceUtil {
 			action, extraData);
 	}
 
+	public static java.util.List<com.liferay.lms.model.AuditEntry> search(
+		long companyId, long groupId, java.lang.String className, long classPK,
+		long userId, java.util.Date startDate, java.util.Date endDate,
+		int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .search(companyId, groupId, className, classPK, userId,
+			startDate, endDate, start, end);
+	}
+
+	public static long searchCount(long companyId, long groupId,
+		java.lang.String className, long classPK, long userId,
+		java.util.Date startDate, java.util.Date endDate, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .searchCount(companyId, groupId, className, classPK, userId,
+			startDate, endDate, start, end);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

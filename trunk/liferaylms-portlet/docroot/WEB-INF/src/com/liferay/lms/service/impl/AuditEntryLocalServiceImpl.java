@@ -14,8 +14,14 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.Date;
+import java.util.List;
+
 import com.liferay.lms.model.AuditEntry;
 import com.liferay.lms.service.base.AuditEntryLocalServiceBaseImpl;
+import com.liferay.portal.kernel.dao.orm.Criterion;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 
 /**
@@ -50,5 +56,80 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 		auditEntry.setExtradata(extraData);
 		auditEntry.setClassPK(classPK);
 		auditEntryPersistence.update(auditEntry, true);
+		
+	}
+	public List<AuditEntry> search(long companyId, long groupId,String className,long classPK, long userId, Date startDate,Date endDate, int start, int end) throws SystemException
+	{
+		DynamicQuery dq=auditEntryLocalService.dynamicQuery();
+		Criterion criterion=PropertyFactoryUtil.forName("companyId").eq(companyId);
+		dq.add(criterion);
+		if(groupId>0)
+		{
+			criterion=PropertyFactoryUtil.forName("groupId").eq(groupId);
+			dq.add(criterion);
+		}
+		if(userId>0)
+		{
+			criterion=PropertyFactoryUtil.forName("userId").eq(groupId);
+			dq.add(criterion);
+		}
+		if(startDate!=null)
+		{
+			criterion=PropertyFactoryUtil.forName("auditDate").ge(startDate);
+			dq.add(criterion);
+		}
+		if(endDate!=null)
+		{
+			criterion=PropertyFactoryUtil.forName("auditDate").le(endDate);
+			dq.add(criterion);
+		}
+		if(className!=null)
+		{
+			criterion=PropertyFactoryUtil.forName("className").eq(className);
+			dq.add(criterion);
+			if(classPK>0)
+			{
+				criterion=PropertyFactoryUtil.forName("classPK").eq(classPK);
+				dq.add(criterion);
+			}
+		}
+		return ((List<AuditEntry>)auditEntryLocalService.dynamicQuery(dq, start, end));
+	}
+	public long searchCount(long companyId, long groupId,String className,long classPK, long userId, Date startDate,Date endDate, int start, int end) throws SystemException
+	{
+		DynamicQuery dq=auditEntryLocalService.dynamicQuery();
+		Criterion criterion=PropertyFactoryUtil.forName("companyId").eq(companyId);
+		dq.add(criterion);
+		if(groupId>0)
+		{
+			criterion=PropertyFactoryUtil.forName("groupId").eq(groupId);
+			dq.add(criterion);
+		}
+		if(userId>0)
+		{
+			criterion=PropertyFactoryUtil.forName("userId").eq(groupId);
+			dq.add(criterion);
+		}
+		if(startDate!=null)
+		{
+			criterion=PropertyFactoryUtil.forName("auditDate").ge(startDate);
+			dq.add(criterion);
+		}
+		if(endDate!=null)
+		{
+			criterion=PropertyFactoryUtil.forName("auditDate").le(endDate);
+			dq.add(criterion);
+		}
+		if(className!=null)
+		{
+			criterion=PropertyFactoryUtil.forName("className").eq(className);
+			dq.add(criterion);
+			if(classPK>0)
+			{
+				criterion=PropertyFactoryUtil.forName("classPK").eq(classPK);
+				dq.add(criterion);
+			}
+		}
+		return auditEntryLocalService.dynamicQueryCount(dq);
 	}
 }
