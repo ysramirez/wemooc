@@ -556,80 +556,82 @@ public class LearningActivityResultLocalServiceImpl
 			}
 		}
 		
-		if (manifestItems.size() <= 1) {
-			if (completion_statuses.size() == 1) {
-				total_completion_status = completion_statuses.get(0);
-			}
-			if (success_statuses.size() == 1) {
-				total_lesson_status = success_statuses.get(0);
-			}
-		} else {
-			if (success_statuses.size() < manifestItems.size()) {
-				total_lesson_status = "unknown";
-			} else if (success_statuses.size() == manifestItems.size()) {
-				for (int i = 0; i < success_statuses.size(); i++) {
-					if ("unknown".equals(success_statuses.get(i))) {
-						total_lesson_status = "unknown";
-						break;
-					}
-					if ("passed".equals(success_statuses.get(i))) {
-						if ("passed".equals(total_lesson_status)) {
-							total_lesson_status = "passed";
-						}
-						if ("failed".equals(total_lesson_status)) {
+		if (!isPureAsset) {
+			if (manifestItems.size() <= 1) {
+				if (completion_statuses.size() == 1) {
+					total_completion_status = completion_statuses.get(0);
+				}
+				if (success_statuses.size() == 1) {
+					total_lesson_status = success_statuses.get(0);
+				}
+			} else {
+				if (success_statuses.size() < manifestItems.size()) {
+					total_lesson_status = "unknown";
+				} else if (success_statuses.size() == manifestItems.size()) {
+					for (int i = 0; i < success_statuses.size(); i++) {
+						if ("unknown".equals(success_statuses.get(i))) {
 							total_lesson_status = "unknown";
 							break;
 						}
-					}
-					if ("failed".equals(success_statuses.get(i))) {
-						if ("passed".equals(total_lesson_status)) {
-							total_lesson_status = "unknown";
-							break;
+						if ("passed".equals(success_statuses.get(i))) {
+							if ("passed".equals(total_lesson_status)) {
+								total_lesson_status = "passed";
+							}
+							if ("failed".equals(total_lesson_status)) {
+								total_lesson_status = "unknown";
+								break;
+							}
 						}
-						if ("failed".equals(total_lesson_status)) {
-							total_lesson_status = "failed";
+						if ("failed".equals(success_statuses.get(i))) {
+							if ("passed".equals(total_lesson_status)) {
+								total_lesson_status = "unknown";
+								break;
+							}
+							if ("failed".equals(total_lesson_status)) {
+								total_lesson_status = "failed";
+							}
 						}
 					}
 				}
-			}
-			if (completion_statuses.size() < manifestItems.size()) {
-				if (completion_statuses.size() <= 1) {
-					total_completion_status = completion_statuses.get(0).equals("completed") ? "incomplete" : completion_statuses.get(0);
-				} else {
-					total_completion_status = "incomplete";
-				}
-			} else if (completion_statuses.size() == manifestItems.size()) {
-				for (int i = 0; i < completion_statuses.size(); i++) {
-					total_score += scores.get(i);
-					if ("incomplete".equals(completion_statuses.get(i))) {
+				if (completion_statuses.size() < manifestItems.size()) {
+					if (completion_statuses.size() <= 1) {
+						total_completion_status = completion_statuses.get(0).equals("completed") ? "incomplete" : completion_statuses.get(0);
+					} else {
 						total_completion_status = "incomplete";
-						break;
 					}
-					if ("completed".equals(completion_statuses.get(i))) {
-						if ("not attempted".equals(total_completion_status)) {
-							total_completion_status = "completed";
-						}
-						if ("unknown".equals(total_completion_status)) {
+				} else if (completion_statuses.size() == manifestItems.size()) {
+					for (int i = 0; i < completion_statuses.size(); i++) {
+						total_score += scores.get(i);
+						if ("incomplete".equals(completion_statuses.get(i))) {
 							total_completion_status = "incomplete";
 							break;
 						}
-					}
-					if ("not attempted".equals(completion_statuses.get(i))) {
-						if ("completed".equals(total_completion_status)) {
-							total_completion_status = "incomplete";
-							break;
+						if ("completed".equals(completion_statuses.get(i))) {
+							if ("not attempted".equals(total_completion_status)) {
+								total_completion_status = "completed";
+							}
+							if ("unknown".equals(total_completion_status)) {
+								total_completion_status = "incomplete";
+								break;
+							}
 						}
-						if ("unknown".equals(total_completion_status)) {
-							total_completion_status = "unknown";
+						if ("not attempted".equals(completion_statuses.get(i))) {
+							if ("completed".equals(total_completion_status)) {
+								total_completion_status = "incomplete";
+								break;
+							}
+							if ("unknown".equals(total_completion_status)) {
+								total_completion_status = "unknown";
+							}
 						}
-					}
-					if ("unknown".equals(completion_statuses.get(i))) {
-						if ("completed".equals(total_completion_status)) {
-							total_completion_status = "incomplete";
-							break;
-						}
-						if ("unknown".equals(total_completion_status) || "not attempted".equals(total_completion_status)) {
-							total_completion_status = "unknown";
+						if ("unknown".equals(completion_statuses.get(i))) {
+							if ("completed".equals(total_completion_status)) {
+								total_completion_status = "incomplete";
+								break;
+							}
+							if ("unknown".equals(total_completion_status) || "not attempted".equals(total_completion_status)) {
+								total_completion_status = "unknown";
+							}
 						}
 					}
 				}

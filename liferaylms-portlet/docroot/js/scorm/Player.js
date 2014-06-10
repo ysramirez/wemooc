@@ -143,7 +143,7 @@ Player.ContentPlayer = function(manifestPath, imsmanifest, isStorage,
 	var $1 = $0[0];
 	$0 = this.$0.getElementsByTagName('schemaversion');
 	if (!isNullOrUndefined($0) && $0.length === 1) {
-		if (API_BASE.BaseUtils.getText($0[0]) === '1.2') {
+		if (API_BASE.BaseUtils.getText($0[0]) === '1.2' || API_BASE.BaseUtils.getText($0[0]).startsWith('1.1')) {
 			this.$2 = 1;
 		} else if (API_BASE.BaseUtils.getText($0[0]).toLowerCase().indexOf(
 				'1.3') >= 0
