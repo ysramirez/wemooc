@@ -224,7 +224,7 @@ public class SCORMFileServerServlet extends HttpServlet {
 	
 	private boolean isISO(String testString) {
 		if (Validator.isNotNull(testString)) {
-			return testString.substring(0, 1024).contains("ISO-8859-1");
+			return testString.substring(0, (testString.length() >= 1024 ? 1024 : testString.length())).contains("ISO-8859-1");
 		}
 		return false;
 	}
