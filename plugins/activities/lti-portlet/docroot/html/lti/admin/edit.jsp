@@ -31,23 +31,23 @@
 <script type="text/javascript">
 	function check(){
 		if(document.getElementById('url').value==null||document.getElementById('url').value==""){
-			alert('<liferay-ui:message key="learningactivity.lti.error.url" />');
+			alert("<liferay-ui:message key='learningactivity.lti.error.url' />");
 			return;
 		}
 		if(document.getElementById('secret').value==null||document.getElementById('secret').value==""){
-			alert('<liferay-ui:message key="learningactivity.lti.error.secret" />');
+			alert("<liferay-ui:message key='learningactivity.lti.error.secret' />");
 			return;
 		}
 		if(document.getElementById('rol').value==null||document.getElementById('rol').value==""){
-			alert('<liferay-ui:message key="learningactivity.lti.error.rol" />');
+			alert("<liferay-ui:message key='learningactivity.lti.error.rol' />");
 			return;
 		}
 		if(document.getElementById('note').value==null||document.getElementById('note').value==""){
-			alert('<liferay-ui:message key="learningactivity.lti.error.note" />');
+			alert("<liferay-ui:message key='learningactivity.lti.error.note' />");
 			return;
 		}
 		if(!isInt(document.getElementById('note').value)){
-			alert('<liferay-ui:message key="learningactivity.lti.error.note.nan" />');
+			alert("<liferay-ui:message key='learningactivity.lti.error.note.nan' />");
 			return;
 		}
 		document.getElementById("sabeform").submit();
