@@ -2,7 +2,6 @@ package com.liferay.lms.lti;
 
 import com.liferay.lms.learningactivity.BaseLearningActivityType;
 import com.liferay.lms.lti.asset.LTIAssetRenderer;
-import com.liferay.lms.lti.service.ClpSerializer;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -13,7 +12,7 @@ import com.liferay.portlet.asset.model.AssetRenderer;
 public class LTILearningActivityType extends BaseLearningActivityType {
 	public static String PORTLET_ID = 
 			PortalUtil.getJsSafePortletId(
-					"lti" + PortletConstants.WAR_SEPARATOR + ClpSerializer.getServletContextName());
+					"lti" + PortletConstants.WAR_SEPARATOR + "ltiportlet");
 
 	
 
