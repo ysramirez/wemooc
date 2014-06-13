@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.model.ModelHintsUtil"%>
 <%@page import="java.util.Locale"%>
 <%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="com.liferay.lms.asset.LearningActivityBaseAssetRenderer"%>
@@ -681,7 +682,7 @@ Liferay.provide(
 				feedbacCorrect=learnact.getFeedbackCorrect();
 			}
 		%>	
-		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" helpMessage="feedbackCorrect.helpMessage" type="text"></aui:input>	
+		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" helpMessage="feedbackCorrect.helpMessage" type="text" maxLength="<%=ModelHintsUtil.getHints(LearningActivity.class.getName(), \"feedbackCorrect\").get(\"max-length\") %>" ></aui:input>	
 		<%
 		}
 		else
