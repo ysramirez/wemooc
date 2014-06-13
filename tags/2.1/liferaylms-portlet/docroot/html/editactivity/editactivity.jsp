@@ -42,6 +42,7 @@
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
+<%@page import="com.liferay.portal.model.ModelHintsUtil"%>
 <link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <%@ include file="/init.jsp" %>
  <liferay-ui:success key="activity-saved-successfully" message="activity-saved-successfully" />
@@ -658,7 +659,7 @@ Liferay.provide(
 				feedbacCorrect=learnact.getFeedbackCorrect();
 			}
 		%>	
-		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" helpMessage="feedbackCorrect.helpMessage" type="text"></aui:input>	
+		<aui:input name="feedbackCorrect" label="feedbackCorrect" value="<%=feedbacCorrect %>" helpMessage="feedbackCorrect.helpMessage" type="text" maxLength="<%=ModelHintsUtil.getHints(LearningActivity.class.getName(), \"feedbackCorrect\").get(\"max-length\") %>" ></aui:input>
 		<%
 		}
 		else
@@ -675,7 +676,7 @@ Liferay.provide(
 				feedbacNoCorrect=learnact.getFeedbackCorrect();
 			}
 		%>
-		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage" type="text"></aui:input>	
+		  <aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage" type="text"  maxLength="<%=ModelHintsUtil.getHints(LearningActivity.class.getName(), \"feedbackNoCorrect\").get(\"max-length\") %>" ></aui:input>
 		<%
 		}
 		else
