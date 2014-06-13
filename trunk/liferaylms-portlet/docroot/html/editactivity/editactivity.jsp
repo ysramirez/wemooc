@@ -699,7 +699,7 @@ Liferay.provide(
 				feedbacNoCorrect=learnact.getFeedbackCorrect();
 			}
 		%>
-		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage" type="text"></aui:input>	
+		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage" type="text"  maxLength="<%=ModelHintsUtil.getHints(LearningActivity.class.getName(), \"feedbackNoCorrect\").get(\"max-length\") %>" ></aui:input>	
 		<%
 		}
 		else
