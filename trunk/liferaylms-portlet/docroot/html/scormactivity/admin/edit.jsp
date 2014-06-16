@@ -16,7 +16,6 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 <%@ include file="/init.jsp" %>
-<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <% 
 	long assetId=ParamUtil.getLong(request, "assertId");
 	boolean openWindow = false, editDetails = false, improve = true; 
