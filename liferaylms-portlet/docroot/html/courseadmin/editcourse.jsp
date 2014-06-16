@@ -37,6 +37,7 @@
 
 <portlet:actionURL var="savecourseURL" name="saveCourse" />
 <portlet:renderURL var="cancel" />
+<liferay-ui:success key="course-saved-successfully" message="successfully-saved" />
 <liferay-ui:error key="title-required" message="title-required" />
 <liferay-ui:error key="title-empty" message="title-empty" />
 <liferay-ui:error key="title-repeated" message="title-repeated" />
