@@ -5,8 +5,6 @@
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@ include file="/init.jsp"%>
 
-<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
-
 <script type="text/javascript">
 <!--
 AUI().ready(

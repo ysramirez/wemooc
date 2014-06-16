@@ -57,7 +57,6 @@
 //-->
 </script>
 
-<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 <liferay-ui:icon image="back" message="back" url="<%=backUrl.toString() %>" label="true" onClick="<%=renderResponse.getNamespace()+\"back(this)\" %>" />
 <liferay-ui:header title="<%=AssetRendererFactoryRegistryUtil.
 								getAssetRendererFactoryByClassName(LearningActivity.class.getName()).

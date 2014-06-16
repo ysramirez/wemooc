@@ -37,7 +37,6 @@
     
     
 %>
-<link href='http://fonts.googleapis.com/css?family=Nunito:400,300,700' rel='stylesheet' type='text/css'>
 
 <liferay-ui:search-container id="tutorized" emptyResultsMessage="there-are-no-results" iteratorURL="<%=selectCourseUrl %>" delta="10" >
 	<liferay-ui:search-container-results>
