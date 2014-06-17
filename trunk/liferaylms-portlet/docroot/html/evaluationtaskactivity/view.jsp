@@ -44,7 +44,18 @@ if(actId==0){
 		
 		if(result!=null)	
 			arguments =  new Long[]{result.getResult()};
-		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");	
+		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");
+		boolean hasFiredDate=false;
+		boolean hasPublishDate=false;
+		boolean hasActivities=false;
+		try{
+			if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)) {	
+				Element rootElement = SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement();
+				hasFiredDate = rootElement.element("firedDate")!=null;
+				hasPublishDate = rootElement.element("publishDate")!=null;
+				hasActivities = rootElement.element("activities")!=null;
+			}
+		}catch(Throwable e){}
 %>
 			<div class="evaluationAvg view">
 				<liferay-ui:header title="<%=learningActivity.getTitle(themeDisplay.getLocale()) %>" />
@@ -52,18 +63,7 @@ if(actId==0){
 					<h3><liferay-ui:message key="description" /></h3>
 					<div class="description"><%=learningActivity.getDescription(themeDisplay.getLocale()) %></div>
 				</c:if>
-			<%if(isTeacher){ 
-				boolean hasFiredDate=false;
-				boolean hasPublishDate=false;
-				boolean hasActivities=false;
-				try{
-					if((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().length()!=0)) {	
-						Element rootElement = SAXReaderUtil.read(learningActivity.getExtracontent()).getRootElement();
-						hasFiredDate = rootElement.element("firedDate")!=null;
-						hasPublishDate = rootElement.element("publishDate")!=null;
-						hasActivities = rootElement.element("activities")!=null;
-					}
-				}catch(Throwable e){}
+		<%if(isTeacher){ 
 			%>
 				<portlet:renderURL var="viewEvaluationsURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
 		        	<portlet:param name="<%=WebKeys.PORTLET_CONFIGURATOR_VISIBILITY %>" value="<%=StringPool.TRUE %>"/>     
@@ -384,7 +384,7 @@ if(actId==0){
 			<div class="nota"> 
 			<%
 			if(!isTeacher){ 
-				if (result!=null){ %>
+				if((result!=null)&&(hasPublishDate)){ %>
 					<h2 class="description-title"><liferay-ui:message key="evaluationtaskactivity.result.title" /></h2>
 					<p><liferay-ui:message key="evaluationtaskactivity.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? LearningActivityResultLocalServiceUtil.translateResult(locale, arguments[0], themeDisplay.getScopeGroupId()):"" %></span></p>
 					<% 
