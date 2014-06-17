@@ -449,7 +449,7 @@ else
 			<liferay-util:param name="courseEvalId" value="<%=String.valueOf(courseEval.getTypeId())%>" />
 		</liferay-util:include>
 	</div>
-	if(course==null)
+   <% if(course==null)
 	{
 		String[] layusprsel=null;
 		if(renderRequest.getPreferences().getValue("courseTemplates", null)!=null&&renderRequest.getPreferences().getValue("courseTemplates", null).length()>0)
