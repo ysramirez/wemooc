@@ -47,8 +47,6 @@ import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -168,6 +166,9 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		larn.setPriority(larn.getActId());
 		larn.setFeedbackCorrect(feedbackCorrect);
 		larn.setFeedbackNoCorrect(feedbackNoCorrect);
+		
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "title");
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "description");
 		learningActivityPersistence.update(larn, true);
 
 		resourceLocalService.addModelResources(larn, serviceContext);
@@ -230,7 +231,8 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		learningActivity.setFeedbackNoCorrect(feedbackNoCorrect);
 		learningActivity.setWeightinmodule(weightinmodule);
 		learningActivity.setExpandoBridgeAttributes(serviceContext);
-
+		learningActivity = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, learningActivity, "title");
+		learningActivity = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, learningActivity, "description");
 		learningActivityPersistence.update(learningActivity, true);
 		resourceLocalService.addModelResources(learningActivity, serviceContext);
 
@@ -301,6 +303,8 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		larn.setExtracontent(extracontent);
 		larn.setFeedbackCorrect(feedbackCorrect);
 		larn.setFeedbackNoCorrect(feedbackNoCorrect);
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "title");
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "description");
 		learningActivityPersistence.update(larn, true);
 		try
 		{
@@ -331,6 +335,8 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 			ServiceContext serviceContext)
 					throws SystemException, PortalException {
 
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "title");
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "description");
 		learningActivityPersistence.update(larn, false);
 		long userId=serviceContext.getUserId();
 
@@ -355,6 +361,8 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 
 	public LearningActivity modLearningActivity (LearningActivity larn) throws SystemException, PortalException {
 
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "title");
+		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "description");
 		learningActivityPersistence.update(larn, false);
 
 		return larn;
