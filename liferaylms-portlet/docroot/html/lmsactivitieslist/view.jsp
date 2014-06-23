@@ -21,7 +21,9 @@
 	boolean actualModuleMode = viewMode.compareTo("1") == 0;
 	
 	if(actualModuleMode && (moduleId>0 || ModuleLocalServiceUtil.countInGroup(themeDisplay.getScopeGroupId())!=0)){
-		moduleId = ModuleLocalServiceUtil.findFirstInGroup(themeDisplay.getScopeGroupId()).getModuleId();
+		if(moduleId==0) {
+			moduleId = ModuleLocalServiceUtil.findFirstInGroup(themeDisplay.getScopeGroupId()).getModuleId();
+		}
 %>
 		<div class="lms-desplegable" style="overflow: hidden;" >
 			<jsp:include page="/html/lmsactivitieslist/viewactivities.jsp"></jsp:include>
