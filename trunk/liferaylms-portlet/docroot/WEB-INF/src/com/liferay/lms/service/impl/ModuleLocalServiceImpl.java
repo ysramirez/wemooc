@@ -22,7 +22,6 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
-import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
@@ -31,7 +30,6 @@ import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.base.ModuleLocalServiceBaseImpl;
-import com.liferay.lms.service.persistence.ModuleUtil;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
@@ -51,8 +49,6 @@ import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.service.ServiceContext;
-import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.util.LmsLocaleUtil;
 
@@ -78,39 +74,53 @@ import com.liferay.util.LmsLocaleUtil;
 public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 	Log log = LogFactoryUtil.getLog(ModuleLocalServiceImpl.class);
 
-	@SuppressWarnings("unchecked")
-	public List findAllInUser(long userId)throws SystemException {
-		List<Module> list = (List<Module>) ModuleUtil.findByUserId(userId);
+	public List<Module> findAllInUser(long userId)throws SystemException {
+		List<Module> list = (List<Module>) modulePersistence.findByUserId(userId);
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List findAllInUser(long userId, OrderByComparator orderByComparator) throws SystemException {
-		List<Module> list = (List<Module>) ModuleUtil.findByUserId(userId, QueryUtil.ALL_POS,QueryUtil.ALL_POS, orderByComparator);
+	public List<Module> findAllInUser(long userId, OrderByComparator orderByComparator) throws SystemException {
+		List<Module> list = (List<Module>) modulePersistence.findByUserId(userId, QueryUtil.ALL_POS,QueryUtil.ALL_POS, orderByComparator);
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List findAllInGroup(long groupId) throws SystemException {
-		List<Module> list = (List<Module>) ModuleUtil.findByGroupId(groupId);
+	public List<Module> findAllInGroup(long groupId) throws SystemException {
+		List<Module> list = (List<Module>) modulePersistence.findByGroupId(groupId);
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List findAllInGroup(long groupId, OrderByComparator orderByComparator) throws SystemException{
-		List <Module> list = (List<Module>) ModuleUtil.findByGroupId(groupId,QueryUtil.ALL_POS,QueryUtil.ALL_POS, orderByComparator);
+	public List<Module> findAllInGroup(long groupId, OrderByComparator orderByComparator) throws SystemException{
+		List <Module> list = (List<Module>) modulePersistence.findByGroupId(groupId,QueryUtil.ALL_POS,QueryUtil.ALL_POS, orderByComparator);
+		return list;
+	}
+	
+	public Module findFirstInGroup(long groupId) throws SystemException {
+		List<Module> list = (List<Module>) modulePersistence.findByGroupId(groupId,0,1);
+		if(list.isEmpty()) {
+			return null;
+		}
+		return list.get(0);
+	}
+
+	public Module findFirstInGroup(long groupId, OrderByComparator orderByComparator) throws SystemException{
+		List <Module> list = (List<Module>) modulePersistence.findByGroupId(groupId,0,1,orderByComparator);
+		if(list.isEmpty()) {
+			return null;
+		}
+		return list.get(0);
+	}
+
+	public int countInGroup(long groupId) throws SystemException{
+		return modulePersistence.countByGroupId(groupId);
+	}
+
+	public List<Module> findAllInUserAndGroup(long userId, long groupId) throws SystemException {
+		List<Module> list = (List<Module>) modulePersistence.findByUserIdGroupId(userId, groupId);
 		return list;
 	}
 
-	@SuppressWarnings("unchecked")
-	public List findAllInUserAndGroup(long userId, long groupId) throws SystemException {
-		List<Module> list = (List<Module>) ModuleUtil.findByUserIdGroupId(userId, groupId);
-		return list;
-	}
-
-	@SuppressWarnings("unchecked")
-	public List findAllInUserAndGroup(long userId, long groupId, OrderByComparator orderByComparator) throws SystemException {
-		List<Module> list = (List<Module>) ModuleUtil.findByUserIdGroupId(userId, groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
+	public List<Module> findAllInUserAndGroup(long userId, long groupId, OrderByComparator orderByComparator) throws SystemException {
+		List<Module> list = (List<Module>) modulePersistence.findByUserIdGroupId(userId, groupId, QueryUtil.ALL_POS, QueryUtil.ALL_POS, orderByComparator);
 		return list;
 	}
 
@@ -131,7 +141,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		Order createOrder=OrderFactoryUtil.getOrderFactory().desc("ordern");
 		dq.addOrder(createOrder);
 
-		java.util.List<Module> modulesp=(java.util.List<Module>)moduleLocalService.dynamicQuery(dq,0,1);
+		@SuppressWarnings("unchecked")
+		List<Module> modulesp=(List<Module>)moduleLocalService.dynamicQuery(dq,0,1);
 		if(modulesp!=null&& modulesp.size()>0)
 		{
 			return modulesp.get(0);
@@ -157,7 +168,8 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		Order createOrder=OrderFactoryUtil.getOrderFactory().asc("ordern");
 		dq.addOrder(createOrder);
 
-		java.util.List<Module> modulesp=(java.util.List<Module>)moduleLocalService.dynamicQuery(dq,0,1);
+		@SuppressWarnings("unchecked")
+		List<Module> modulesp=(List<Module>)moduleLocalService.dynamicQuery(dq,0,1);
 		if(modulesp!=null&& modulesp.size()>0)
 		{
 			return modulesp.get(0);
@@ -237,7 +249,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 	}
 	
 	public Module addmodule (Module validmodule) throws SystemException {
-	    Module fileobj = ModuleUtil.create(CounterLocalServiceUtil.increment(Module.class.getName()));
+	    Module fileobj = modulePersistence.create(CounterLocalServiceUtil.increment(Module.class.getName()));
 
 	    fileobj.setCompanyId(validmodule.getCompanyId());
 	    fileobj.setGroupId(validmodule.getGroupId());
@@ -271,7 +283,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "title");
 	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "description");
 
-	    Module module = ModuleUtil.update(fileobj, false);
+	    Module module = modulePersistence.update(fileobj, false);
 
 		//auditing
 		AuditingLogFactory.audit(module.getCompanyId(), module.getGroupId(), Module.class.getName(), 
@@ -283,7 +295,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 	public Module addModule(Long companyId, Long courseId, Long userId, 
 			String title, String description,
 			Date startDate, Date endDate, Long ordern) throws SystemException {
-		Module fileobj = ModuleUtil.create(CounterLocalServiceUtil.increment(Module.class.getName()));
+		Module fileobj = modulePersistence.create(CounterLocalServiceUtil.increment(Module.class.getName()));
 
 	    fileobj.setCompanyId(companyId);
 	    fileobj.setGroupId(courseId);
@@ -317,7 +329,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "title");
 	    fileobj = LmsLocaleUtil.checkDefaultLocale(Module.class, fileobj, "description");
 		
-	    Module module = ModuleUtil.update(fileobj, false);
+	    Module module = modulePersistence.update(fileobj, false);
 	    
 		//auditing
 		AuditingLogFactory.audit(module.getCompanyId(), module.getGroupId(), Module.class.getName(), 
