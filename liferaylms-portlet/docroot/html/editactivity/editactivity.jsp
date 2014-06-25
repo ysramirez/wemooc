@@ -120,20 +120,22 @@ if(learnact!=null)
 	actId=learnact.getActId();
 	description=learnact.getDescription(themeDisplay.getLocale());
 	
-	if(learnact.getStartdate() != null){
-		startDay=Integer.parseInt(formatDay.format(learnact.getStartdate()));
-		startMonth=Integer.parseInt(formatMonth.format(learnact.getStartdate()))-1;
-		startYear=Integer.parseInt(formatYear.format(learnact.getStartdate()));
-		startHour=Integer.parseInt(formatHour.format(learnact.getStartdate()));
-		startMin=Integer.parseInt(formatMin.format(learnact.getStartdate()));
+	if(!learnact.isNullStartDate()){
+		Date startDate = learnact.getStartdate();
+		startDay=Integer.parseInt(formatDay.format(startDate));
+		startMonth=Integer.parseInt(formatMonth.format(startDate))-1;
+		startYear=Integer.parseInt(formatYear.format(startDate));
+		startHour=Integer.parseInt(formatHour.format(startDate));
+		startMin=Integer.parseInt(formatMin.format(startDate));
 	}
 	
-	if(learnact.getEnddate() != null){
-		endDay=Integer.parseInt(formatDay.format(learnact.getEnddate()));
-		endMonth=Integer.parseInt(formatMonth.format(learnact.getEnddate()))-1;
-		endYear=Integer.parseInt(formatYear.format(learnact.getEnddate()));
-		endHour=Integer.parseInt(formatHour.format(learnact.getEnddate()));
-		endMin=Integer.parseInt(formatMin.format(learnact.getEnddate()));
+	if(!learnact.isNullEndDate()){
+		Date endDate = learnact.getEnddate();
+		endDay=Integer.parseInt(formatDay.format(endDate));
+		endMonth=Integer.parseInt(formatMonth.format(endDate))-1;
+		endYear=Integer.parseInt(formatYear.format(endDate));
+		endHour=Integer.parseInt(formatHour.format(endDate));
+		endMin=Integer.parseInt(formatMin.format(endDate));
 	}
 	%>
 	
@@ -776,22 +778,22 @@ Liferay.provide(
 	    </script>
 		<div id="startDate">
 			<aui:field-wrapper label="start-date">
-				<aui:input id="startdate-enabled" name="startdate-enabled" checked="<%=learnact != null && learnact.getStartdate() != null  %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
+				<aui:input id="startdate-enabled" name="startdate-enabled" checked="<%=learnact != null && !learnact.isNullStartDate() %>" type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
 				<div id="startDateSpan" class="aui-helper-hidden">
-					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"
+					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon" disabled="<%=learnact == null || learnact.isNullStartDate() %>"
 					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
-					 <liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>" disabled="<%=learnact == null || learnact.getStartdate() == null  %>"></liferay-ui:input-time>
+					 <liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>" disabled="<%=learnact == null || learnact.isNullStartDate() %>"></liferay-ui:input-time>
 				</div>
 			</aui:field-wrapper>
 		</div>
 		
 		<div id="endDate">
 			<aui:field-wrapper label="end-date">
-				<aui:input id="stopdate-enabled" name="stopdate-enabled" checked="<%=learnact != null && learnact.getEnddate()!= null  %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
+				<aui:input id="stopdate-enabled" name="stopdate-enabled" checked="<%=learnact != null && !learnact.isNullEndDate() %>" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
 				<div id="endDateSpan" class="aui-helper-hidden">
-					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="stopDay" monthParam="stopMon" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"
+					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="stopDay" monthParam="stopMon" disabled="<%=learnact == null || learnact.isNullEndDate() %>"
 					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
-					 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.getEnddate() == null  %>"></liferay-ui:input-time></br>
+					 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>" disabled="<%=learnact == null || learnact.isNullEndDate() %>"></liferay-ui:input-time></br>
 				</div>
 			</aui:field-wrapper>
 		</div>
