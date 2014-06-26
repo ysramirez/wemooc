@@ -400,24 +400,25 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 <div class="nota"> 
 
 <% if (result!=null){ %>
-	<h3><a href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h3>
+	<p class="doc_descarga"><a class="verMas" href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></p>
 	<%
 	if(result.getEndDate()!= null){
-		%><h4><liferay-ui:message key="your-result-activity" /><%=arguments[0] %></h4><%
+		%><p><liferay-ui:message key="your-result-activity" /><%=arguments[0] %></p><%
 		if(LearningActivityResultLocalServiceUtil.userPassed(actId,themeDisplay.getUserId())){
-			%><h4><liferay-ui:message key="your-result-pass-activity" /> </h4><%
+			%><p><liferay-ui:message key="your-result-pass-activity" /> </p><%
 		}else{
 			Object  [] arg =  new Object[]{activity.getPasspuntuation()};
-			%><h4><liferay-ui:message key="your-result-dont-pass-activity"  arguments="<%=arg %>" /> </h4><%
+			%><p><liferay-ui:message key="your-result-dont-pass-activity"  arguments="<%=arg %>" /> </p><%
 		}
 		if (!result.getComments().trim().equals("")){ %>
-			<h4><liferay-ui:message key="comment-teacher" /><%=result.getComments() %></h4>
+			<h3><liferay-ui:message key="comment-teacher" /></h3>
+			<p><span class="destacado"><%=result.getComments() %></span></p>
 		<%}
 	}
 }else {
 	if(activity.getTries()!=0) {
 %>
-	<h4><liferay-ui:message key="onlinetaskactivity.not.qualificated.activity" /> <a href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></h4>
+	<p class="doc_descarga"><span><liferay-ui:message key="onlinetaskactivity.not.qualificated.activity" /></span> <a class="verMas" href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></p>
 <% 
 	}	
 }%>
