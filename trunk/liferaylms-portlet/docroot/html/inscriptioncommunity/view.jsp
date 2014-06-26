@@ -1,4 +1,4 @@
-<%@page import="com.liferay.lms.model.CourseResult"%>
+.<%@page import="com.liferay.lms.model.CourseResult"%>
 <%@page import="com.liferay.lms.service.CourseResultLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Competence"%>
 <%@page import="com.liferay.lms.service.CompetenceLocalServiceUtil"%>
@@ -77,14 +77,16 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 					if(groupC.getType()==GroupConstants.TYPE_SITE_OPEN){
 					%>
 						<portlet:actionURL name="inscribir"  var="inscribirURL" windowState="NORMAL"/>
-						<div class="boton_inscibirse ">
 							<%if(pass){ %>
 								<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.noinscrito" /></div>
-								<a href="<%=inscribirURL %>"><liferay-ui:message key="inscripcion.inscribete" /></a>
+								<div class="boton_inscibirse ">
+									<a href="<%=inscribirURL %>"><liferay-ui:message key="inscripcion.inscribete" /></a>
+								</div>
 							<%}else{ %>
-								<liferay-ui:message key="competence.block" />
+								<div class="boton_inscibirse ">
+									<liferay-ui:message key="competence.block" />
+								</div>
 							<%} %>
-						</div>			
 					<%
 					}else if(groupC.getType()==GroupConstants.TYPE_SITE_RESTRICTED){
 						List<MembershipRequest> pending = MembershipRequestLocalServiceUtil.getMembershipRequests(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), MembershipRequestConstants.STATUS_PENDING);
@@ -99,14 +101,16 @@ if(course!=null && permissionChecker.hasPermission(course.getGroupId(),  Course.
 							}else{
 								%>
 								<portlet:actionURL name="member"  var="memberURL" windowState="NORMAL"/>
-								<div class="boton_inscibirse ">
 									<%if(pass){ %>
 										<div class="mensaje_marcado"><liferay-ui:message key="inscripcion.surveillance" /></div>
-										<a href="<%=memberURL %>"><liferay-ui:message key="inscripcion.request" /></a>
+										<div class="boton_inscibirse ">
+											<a href="<%=memberURL %>"><liferay-ui:message key="inscripcion.request" /></a>
+										</div>
 									<%}else{ %>
-										<liferay-ui:message key="competence.block" />
+										<div class="boton_inscibirse ">
+											<liferay-ui:message key="competence.block" />
+										</div>
 									<%} %>
-								</div>	
 								<%	
 							}
 						}
