@@ -1,4 +1,4 @@
-.<%@page import="com.liferay.lms.model.CourseResult"%>
+<%@page import="com.liferay.lms.model.CourseResult"%>
 <%@page import="com.liferay.lms.service.CourseResultLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Competence"%>
 <%@page import="com.liferay.lms.service.CompetenceLocalServiceUtil"%>
