@@ -161,7 +161,7 @@ public class CourseAssetRenderer extends BaseAssetRenderer {
 	public boolean hasViewPermission(PermissionChecker permissionChecker)
 			throws PortalException, SystemException {
 		return ((!_course.isClosed())&&
-				(UserLocalServiceUtil.hasGroupUser(_course.getGroupCreatedId(), permissionChecker.getUserId())));
+				(permissionChecker.hasPermission(_course.getGroupId(),  Course.class.getName(),_course.getCourseId(),ActionKeys.VIEW)));
 	}
 
 }
