@@ -51,6 +51,7 @@ public class UserCompetenceWrapper implements UserCompetence,
 		attributes.put("userId", getUserId());
 		attributes.put("competenceId", getCompetenceId());
 		attributes.put("compDate", getCompDate());
+		attributes.put("courseId", getCourseId());
 
 		return attributes;
 	}
@@ -84,6 +85,12 @@ public class UserCompetenceWrapper implements UserCompetence,
 
 		if (compDate != null) {
 			setCompDate(compDate);
+		}
+
+		Long courseId = (Long)attributes.get("courseId");
+
+		if (courseId != null) {
+			setCourseId(courseId);
 		}
 	}
 
@@ -213,6 +220,24 @@ public class UserCompetenceWrapper implements UserCompetence,
 	*/
 	public void setCompDate(java.util.Date compDate) {
 		_userCompetence.setCompDate(compDate);
+	}
+
+	/**
+	* Returns the course ID of this user competence.
+	*
+	* @return the course ID of this user competence
+	*/
+	public long getCourseId() {
+		return _userCompetence.getCourseId();
+	}
+
+	/**
+	* Sets the course ID of this user competence.
+	*
+	* @param courseId the course ID of this user competence
+	*/
+	public void setCourseId(long courseId) {
+		_userCompetence.setCourseId(courseId);
 	}
 
 	public boolean isNew() {

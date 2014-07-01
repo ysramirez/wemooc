@@ -21,7 +21,7 @@ if (Validator.isNotNull(course.getIcon())) {
 	long logoId = course.getIcon();
 	FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(logoId);
 	%>
-	<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK) %>">
+	<img class="courselogo" src="<%= DLUtil.getPreviewURL(fileEntry, fileEntry.getFileVersion(), themeDisplay, StringPool.BLANK) %>" />
 	
 	<%
 } 
@@ -32,7 +32,7 @@ else
 	{
 		long logoId = generatedGroup.getPublicLayoutSet().getLogoId();
 		%>
-		<img class="courselogo" src="/image/layout_set_logo?img_id=<%=logoId%>">
+		<img class="courselogo" src="/image/layout_set_logo?img_id=<%=logoId%>" />
 		
 		<%
 	}
@@ -49,7 +49,10 @@ else
 	}
 %>
 </div>
-<div class="description"><%=asset.getSummary() %></div>
+
+<div class="description">
+<%=asset.getSummary() %>
+</div>
 <%
 String uniurl="#";
 if(university.getPublicLayoutsPageCount()>0)
@@ -58,5 +61,4 @@ uniurl=themeDisplay.getPortalURL() +"/"+ themeDisplay.getLocale().getLanguage()+
 }
 %>
 <a class="university" href="<%=uniurl%>"><%=university.getName() %></a>
-
 </div>

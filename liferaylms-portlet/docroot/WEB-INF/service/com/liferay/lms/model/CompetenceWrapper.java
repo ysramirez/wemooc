@@ -56,6 +56,7 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 		attributes.put("statusDate", getStatusDate());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
+		attributes.put("generateCertificate", getGenerateCertificate());
 
 		return attributes;
 	}
@@ -125,6 +126,13 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 
 		if (description != null) {
 			setDescription(description);
+		}
+
+		Boolean generateCertificate = (Boolean)attributes.get(
+				"generateCertificate");
+
+		if (generateCertificate != null) {
+			setGenerateCertificate(generateCertificate);
 		}
 	}
 
@@ -600,6 +608,33 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.util.Locale defaultLocale) {
 		_competence.setDescriptionMap(descriptionMap, defaultLocale);
+	}
+
+	/**
+	* Returns the generate certificate of this competence.
+	*
+	* @return the generate certificate of this competence
+	*/
+	public boolean getGenerateCertificate() {
+		return _competence.getGenerateCertificate();
+	}
+
+	/**
+	* Returns <code>true</code> if this competence is generate certificate.
+	*
+	* @return <code>true</code> if this competence is generate certificate; <code>false</code> otherwise
+	*/
+	public boolean isGenerateCertificate() {
+		return _competence.isGenerateCertificate();
+	}
+
+	/**
+	* Sets whether this competence is generate certificate.
+	*
+	* @param generateCertificate the generate certificate of this competence
+	*/
+	public void setGenerateCertificate(boolean generateCertificate) {
+		_competence.setGenerateCertificate(generateCertificate);
 	}
 
 	/**

@@ -146,6 +146,20 @@ public interface UserCompetenceModel extends BaseModel<UserCompetence> {
 	 */
 	public void setCompDate(Date compDate);
 
+	/**
+	 * Returns the course ID of this user competence.
+	 *
+	 * @return the course ID of this user competence
+	 */
+	public long getCourseId();
+
+	/**
+	 * Sets the course ID of this user competence.
+	 *
+	 * @param courseId the course ID of this user competence
+	 */
+	public void setCourseId(long courseId);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);

@@ -423,6 +423,27 @@ public interface CompetenceModel extends BaseModel<Competence>, WorkflowedModel 
 		Locale defaultLocale);
 
 	/**
+	 * Returns the generate certificate of this competence.
+	 *
+	 * @return the generate certificate of this competence
+	 */
+	public boolean getGenerateCertificate();
+
+	/**
+	 * Returns <code>true</code> if this competence is generate certificate.
+	 *
+	 * @return <code>true</code> if this competence is generate certificate; <code>false</code> otherwise
+	 */
+	public boolean isGenerateCertificate();
+
+	/**
+	 * Sets whether this competence is generate certificate.
+	 *
+	 * @param generateCertificate the generate certificate of this competence
+	 */
+	public void setGenerateCertificate(boolean generateCertificate);
+
+	/**
 	 * @deprecated Renamed to {@link #isApproved()}
 	 */
 	public boolean getApproved();

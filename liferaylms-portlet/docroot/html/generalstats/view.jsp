@@ -47,6 +47,20 @@ Locale loc = response.getLocale();
 <%@ include file="/html/courseadmin/coursesearchform.jsp" %>
 <liferay-ui:success key="courseadmin.clone.confirmation.success" message="courseadmin.clone.confirmation.success" />
 <liferay-ui:error ></liferay-ui:error>
+<%
+if(courses!=null&&courses.size()>0)
+{
+
+String scourseIds=ListUtil.toString(courses,"courseId");
+%>
+<liferay-portlet:resourceURL var="exportURL" >
+				<portlet:param name="action" value="export"/>
+				<portlet:param name="courseIds" value="<%=scourseIds %>"/>
+			</liferay-portlet:resourceURL>
+			<liferay-ui:icon image="export" label="<%= true %>" message="offlinetaskactivity.csv.export" method="get" url="<%=exportURL%>" />
+<%
+}
+%>
 <liferay-ui:search-container  deltaConfigurable="true" emptyResultsMessage="there-are-no-courses" delta="10">
 	<liferay-ui:search-container-results>
 	<%
@@ -85,6 +99,7 @@ Locale loc = response.getLocale();
 		long activitiesCount=LearningActivityLocalServiceUtil.countLearningActivitiesOfGroup(course.getGroupCreatedId());
 		long modulesCount=ModuleLocalServiceUtil.countByGroupId(course.getGroupCreatedId());
 	%>
+
 		<liferay-ui:search-container-column-text name="coursestats.name">
 		<c:choose>
 			<c:when test="<%= !course.isClosed() && UserLocalServiceUtil.hasGroupUser(course.getGroupCreatedId(), themeDisplay.getUserId()) %>">
