@@ -288,6 +288,7 @@
 		<column name="statusDate" type="Date" />	
 		<column name="title" type="String" localized="true"/>
 		<column name="description" type="String" localized="true"/>
+        <column name="generateCertificate" type="boolean"></column>
 		<finder name="GroupId" return-type="Collection">
 			<finder-column name="groupId" />
 		</finder>
@@ -300,6 +301,7 @@
 			<column name="userId" type="long"  />
 			<column name="competenceId" type="long" />
 			<column name="compDate" type="Date" />
+        <column name="courseId" type="long"></column>
 			<finder name="UserId" return-type="Collection">
 				<finder-column name="userId" />
 			</finder>
