@@ -58,6 +58,7 @@
 		<property name="statusDate" type="org.hibernate.type.TimestampType" />
 		<property name="title" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="description" type="com.liferay.portal.dao.orm.hibernate.StringType" />
+		<property name="generateCertificate" type="com.liferay.portal.dao.orm.hibernate.BooleanType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CourseImpl" table="Lms_Course">
 		<cache usage="read-write" />
@@ -303,5 +304,6 @@
 		<property name="userId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="competenceId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 		<property name="compDate" type="org.hibernate.type.TimestampType" />
+		<property name="courseId" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 </hibernate-mapping>

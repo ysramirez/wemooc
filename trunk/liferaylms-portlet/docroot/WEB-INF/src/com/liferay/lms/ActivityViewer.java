@@ -73,6 +73,8 @@ import com.liferay.portlet.PortletConfigFactoryUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portlet.PortletQName;
 import com.liferay.portlet.PortletQNameUtil;
+import com.liferay.portlet.social.model.SocialActivityConstants;
+import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
 /**
@@ -233,6 +235,10 @@ public class ActivityViewer extends MVCPortlet
 
 						String activityContent = renderPortlet(renderRequest, renderResponse, 
 								themeDisplay, themeDisplay.getScopeGroupId(), portlet, isWidget, true);
+						SocialActivityLocalServiceUtil.addActivity(
+								learningActivity.getUserId(), learningActivity.getGroupId(),
+								LearningActivity.class.getName(), learningActivity.getActId(),
+								SocialActivityConstants.TYPE_VIEW, StringPool.BLANK, 0);
 						renderResponse.setContentType(ContentTypes.TEXT_HTML_UTF8);
 						renderResponse.getWriter().print(activityContent);
 						

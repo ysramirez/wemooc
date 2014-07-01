@@ -22,7 +22,10 @@ public class CompetenceView {
 	public String getTitle(Locale locale) {
 		return competence.getTitle(locale);
 	}
-
+    public boolean getGenerateCertificate()
+    {
+    	return competence.getGenerateCertificate();
+    }
 	public String getFormatDate() {
 		if(userCompetence.getCompDate()==null)
 			return "";

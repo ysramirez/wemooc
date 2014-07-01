@@ -56,6 +56,7 @@
 			</basic>
 			<basic name="title" />
 			<basic name="description" />
+			<basic name="generateCertificate" />
 			<transient name="descriptionCurrentLanguageId" />
 			<transient name="descriptionMap" />
 			<transient name="modelAttributes" />
@@ -451,6 +452,7 @@
 			<basic name="compDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="courseId" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

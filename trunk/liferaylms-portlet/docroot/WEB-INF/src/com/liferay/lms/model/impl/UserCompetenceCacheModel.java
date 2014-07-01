@@ -35,7 +35,7 @@ public class UserCompetenceCacheModel implements CacheModel<UserCompetence>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -47,6 +47,8 @@ public class UserCompetenceCacheModel implements CacheModel<UserCompetence>,
 		sb.append(competenceId);
 		sb.append(", compDate=");
 		sb.append(compDate);
+		sb.append(", courseId=");
+		sb.append(courseId);
 		sb.append("}");
 
 		return sb.toString();
@@ -73,6 +75,8 @@ public class UserCompetenceCacheModel implements CacheModel<UserCompetence>,
 			userCompetenceImpl.setCompDate(new Date(compDate));
 		}
 
+		userCompetenceImpl.setCourseId(courseId);
+
 		userCompetenceImpl.resetOriginalValues();
 
 		return userCompetenceImpl;
@@ -83,4 +87,5 @@ public class UserCompetenceCacheModel implements CacheModel<UserCompetence>,
 	public long userId;
 	public long competenceId;
 	public long compDate;
+	public long courseId;
 }

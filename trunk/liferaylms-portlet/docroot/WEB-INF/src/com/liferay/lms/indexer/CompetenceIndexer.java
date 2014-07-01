@@ -64,10 +64,10 @@ public class CompetenceIndexer extends BaseIndexer {
 		String content=entry.getDescription();
 
 		long[] assetCategoryIds = AssetCategoryLocalServiceUtil.getCategoryIds(
-			Course.class.getName(), entryId);
+				Competence.class.getName(), entryId);
 
 		String[] assetTagNames = AssetTagLocalServiceUtil.getTagNames(
-			Course.class.getName(), entryId);
+				Competence.class.getName(), entryId);
 
 		Document document = new DocumentImpl();
 		document.addUID(PORTLET_ID, entryId);

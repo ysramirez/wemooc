@@ -82,9 +82,10 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 			{ "statusByUserName", Types.VARCHAR },
 			{ "statusDate", Types.TIMESTAMP },
 			{ "title", Types.VARCHAR },
-			{ "description", Types.VARCHAR }
+			{ "description", Types.VARCHAR },
+			{ "generateCertificate", Types.BOOLEAN }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Competence (uuid_ VARCHAR(75) null,competenceId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Competence (uuid_ VARCHAR(75) null,competenceId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,generateCertificate BOOLEAN)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Competence";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -126,6 +127,7 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		model.setStatusDate(soapModel.getStatusDate());
 		model.setTitle(soapModel.getTitle());
 		model.setDescription(soapModel.getDescription());
+		model.setGenerateCertificate(soapModel.getGenerateCertificate());
 
 		return model;
 	}
@@ -195,6 +197,7 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		attributes.put("statusDate", getStatusDate());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
+		attributes.put("generateCertificate", getGenerateCertificate());
 
 		return attributes;
 	}
@@ -265,6 +268,13 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 
 		if (description != null) {
 			setDescription(description);
+		}
+
+		Boolean generateCertificate = (Boolean)attributes.get(
+				"generateCertificate");
+
+		if (generateCertificate != null) {
+			setGenerateCertificate(generateCertificate);
 		}
 	}
 
@@ -580,6 +590,18 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		}
 	}
 
+	public boolean getGenerateCertificate() {
+		return _generateCertificate;
+	}
+
+	public boolean isGenerateCertificate() {
+		return _generateCertificate;
+	}
+
+	public void setGenerateCertificate(boolean generateCertificate) {
+		_generateCertificate = generateCertificate;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -712,6 +734,7 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		competenceImpl.setStatusDate(getStatusDate());
 		competenceImpl.setTitle(getTitle());
 		competenceImpl.setDescription(getDescription());
+		competenceImpl.setGenerateCertificate(getGenerateCertificate());
 
 		competenceImpl.resetOriginalValues();
 
@@ -836,12 +859,14 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 			competenceCacheModel.description = null;
 		}
 
+		competenceCacheModel.generateCertificate = getGenerateCertificate();
+
 		return competenceCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(23);
+		StringBundler sb = new StringBundler(25);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -865,13 +890,15 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		sb.append(getTitle());
 		sb.append(", description=");
 		sb.append(getDescription());
+		sb.append(", generateCertificate=");
+		sb.append(getGenerateCertificate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(37);
+		StringBundler sb = new StringBundler(40);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Competence");
@@ -921,6 +948,10 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 			"<column><column-name>description</column-name><column-value><![CDATA[");
 		sb.append(getDescription());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>generateCertificate</column-name><column-value><![CDATA[");
+		sb.append(getGenerateCertificate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -951,6 +982,7 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 	private String _titleCurrentLanguageId;
 	private String _description;
 	private String _descriptionCurrentLanguageId;
+	private boolean _generateCertificate;
 	private long _columnBitmask;
 	private Competence _escapedModelProxy;
 }
