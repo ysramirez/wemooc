@@ -123,6 +123,7 @@ public class CompetenceCertificateServlet extends HttpServlet {
 			}
 		}
 		PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(user);
+		
 		long userId=ParamUtil.getLong(request, "userId");
 		long competenceId=ParamUtil.getLong(request, "competenceId");
 		Competence competence=CompetenceLocalServiceUtil.getCompetence(competenceId);
@@ -134,20 +135,38 @@ public class CompetenceCertificateServlet extends HttpServlet {
 			OutputStream ouputStream=response.getOutputStream();
 			Document documento = new Document(PageSize.A4.rotate());
 			PdfWriter writer=PdfWriter.getInstance(documento, ouputStream);
-			writer.setPageEvent(new PDFBackground("http://telefonica.telefonica/img/es/be_more_tv_05.jpg"));
+			String imageurl =CompetenceLocalServiceUtil.getBGImageURL( competence, request);
+			writer.setPageEvent(new PDFBackground(imageurl));
 			documento.open();
+			Paragraph spaceparagraf=new Paragraph(" ",
+	                FontFactory.getFont("arial",   // fuente
+	                14,                            // tamaño
+	                Font.ITALIC));
+			spaceparagraf.setAlignment(Element.ALIGN_CENTER);
+			spaceparagraf.setSpacingAfter(55);
+			documento.add(spaceparagraf);
+			Date compDate=ucomp.getCompDate();
+			Format dateFormatDate = FastDateFormatFactoryUtil.getDate(user.getLocale(), user.getTimeZone());
+			String dateString=dateFormatDate.format(compDate);
+			Paragraph datecompetence=new Paragraph(dateString,
+	                FontFactory.getFont("arial",   // fuente
+	                12,                            // tamaño
+	                Font.NORMAL));
+			datecompetence.setAlignment(Element.ALIGN_CENTER);
+			datecompetence.setSpacingAfter(50);
+			documento.add(datecompetence);
 			Paragraph userName=new Paragraph(user.getFullName(),
 	                FontFactory.getFont("arial",   // fuente
-	                20,                            // tamaño
+	                20,                           // tamaño
 	                Font.BOLD));
 			
 			userName.setAlignment(Element.ALIGN_CENTER);
 			userName.setSpacingAfter(10);
 			documento.add(userName);
-			Paragraph competenceText=new Paragraph(LanguageUtil.get(user.getLocale(), "competence.text"),
+			Paragraph competenceText=new Paragraph(LanguageUtil.get(user.getLocale(), "competences.text"),
 	                FontFactory.getFont("arial",   // fuente
 	                18,                            // tamaño
-	                Font.BOLD));
+	                Font.NORMAL));
 			competenceText.setAlignment(Element.ALIGN_CENTER);
 			documento.add(competenceText);
 			
@@ -158,22 +177,13 @@ public class CompetenceCertificateServlet extends HttpServlet {
 			competenceName.setAlignment(Element.ALIGN_CENTER);
 			
 			documento.add(competenceName);
-			Date compDate=ucomp.getCompDate();
-			Format dateFormatDate = FastDateFormatFactoryUtil.getDate(user.getLocale(), user.getTimeZone());
-			String dateString=dateFormatDate.format(compDate);
-			Paragraph datecompetence=new Paragraph(dateString,
-	                FontFactory.getFont("arial",   // fuente
-	                14,                            // tamaño
-	                Font.ITALIC));
-			datecompetence.setAlignment(Element.ALIGN_CENTER);
 			
-			documento.add(datecompetence);
-			Paragraph UUID=new Paragraph(ucomp.getUuid(),
+			Paragraph UUID=new Paragraph(LanguageUtil.get(user.getLocale(), "competences.identifier")+ucomp.getUuid(),
 	                FontFactory.getFont("arial",   // fuente
 	                10,                            // tamaño
 	                Font.NORMAL));
-			UUID.setAlignment(Element.ALIGN_RIGHT);
-			UUID.setSpacingBefore(60);
+			UUID.setAlignment(Element.ALIGN_CENTER);
+			UUID.setSpacingBefore(115);
 			
 			documento.add(UUID);
 			documento.close();

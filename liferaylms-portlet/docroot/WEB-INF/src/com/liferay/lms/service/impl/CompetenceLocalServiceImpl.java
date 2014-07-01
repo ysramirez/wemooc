@@ -14,8 +14,14 @@
 
 package com.liferay.lms.service.impl;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 import java.util.Locale;
+
+import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.Competence;
 import com.liferay.lms.service.base.CompetenceLocalServiceBaseImpl;
@@ -26,6 +32,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
@@ -56,10 +63,19 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 	public Competence addCompetence (String title, String description,ServiceContext serviceContext)
 			throws SystemException, PortalException 
 			{
+		       return addCompetence ( title,description,false, serviceContext);
+		    			
+			}
+	
+	@Indexable(type=IndexableType.REINDEX)
+	public Competence addCompetence (String title, String description,boolean generateCertificate,ServiceContext serviceContext)
+			throws SystemException, PortalException 
+			{
 		long userId=serviceContext.getUserId();
 		Competence competence = competencePersistence.create(counterLocalService.increment(Competence.class.getName()));	
 			competence.setCompanyId(serviceContext.getCompanyId());
 			competence.setGroupId(serviceContext.getScopeGroupId());
+			competence.setGenerateCertificate(generateCertificate);
 			competence.setUserId(userId);
 			competence.setDescription(description,serviceContext.getLocale());
 			competence.setTitle(title,serviceContext.getLocale());
@@ -141,7 +157,82 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 		}
 		return competence;
 	}
+	public String getBGImageURL(long groupId,HttpServletRequest request)
+	{
 	
+		String imageurl = request.getScheme()
+			      + "://"
+			      + request.getServerName()
+			      + ":"
+			      + request.getServerPort()+request.getContextPath()+"/default-cert.jpg";
+		String baseDir=PropsUtil.get("liferay.home")+"/data/compimages";
+		File baseDirFile=new File(baseDir);
+		if(baseDirFile.exists())
+		{
+		File imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+".png");
+		if(imageFile.exists())
+		{
+			try {
+				return imageFile.toURL().toString();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+".jpeg");
+		if(imageFile.exists())
+		{
+			try {
+				return imageFile.toURL().toString();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+".jpg");
+		if(imageFile.exists())
+		{
+			try {
+				return imageFile.toURL().toString();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+".gif");
+		if(imageFile.exists())
+		{
+			try {
+				return imageFile.toURL().toString();
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		}
+	    return imageurl;
+	}
+	
+	public String getBGImageURL(Competence competence,HttpServletRequest request)
+	{
+		return getBGImageURL(competence.getGroupId(), request);
+	}
+	
+	public void setBGImage(byte[] data,long groupId, String name) throws IOException
+	{
+		String baseDir=PropsUtil.get("liferay.home")+"/data/compimages";
+		File baseDirFile=new File(baseDir);
+		if(!baseDirFile.exists())
+		{
+			baseDirFile.mkdir();
+		}
+		String fileExtension=name.substring(name.lastIndexOf('.'));
+		File imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+fileExtension.toLowerCase());
+		imageFile.createNewFile();
+		FileOutputStream fos=new FileOutputStream(imageFile);
+		fos.write(data);
+		fos.close();
+	}
 	public long countAll() throws SystemException{
 		return competencePersistence.countAll();
 	}

@@ -33,6 +33,7 @@
 		<field name="description" type="String" localized="true">
 			<hint name="max-length">500000</hint>
 		</field>
+		<field name="generateCertificate" type="boolean" />
 	</model>
 	<model name="com.liferay.lms.model.Course">
 		<field name="uuid" type="String" />
@@ -273,5 +274,6 @@
 		<field name="userId" type="long" />
 		<field name="competenceId" type="long" />
 		<field name="compDate" type="Date" />
+		<field name="courseId" type="long" />
 	</model>
 </model-hints>

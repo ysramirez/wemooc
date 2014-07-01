@@ -464,6 +464,7 @@ public class UserCompetencePersistenceImpl extends BasePersistenceImpl<UserCompe
 		userCompetenceImpl.setUserId(userCompetence.getUserId());
 		userCompetenceImpl.setCompetenceId(userCompetence.getCompetenceId());
 		userCompetenceImpl.setCompDate(userCompetence.getCompDate());
+		userCompetenceImpl.setCourseId(userCompetence.getCourseId());
 
 		return userCompetenceImpl;
 	}

@@ -68,9 +68,10 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 			{ "usercompId", Types.BIGINT },
 			{ "userId", Types.BIGINT },
 			{ "competenceId", Types.BIGINT },
-			{ "compDate", Types.TIMESTAMP }
+			{ "compDate", Types.TIMESTAMP },
+			{ "courseId", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_UserCompetence (uuid_ VARCHAR(75) null,usercompId LONG not null primary key,userId LONG,competenceId LONG,compDate DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_UserCompetence (uuid_ VARCHAR(75) null,usercompId LONG not null primary key,userId LONG,competenceId LONG,compDate DATE null,courseId LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_UserCompetence";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -106,6 +107,7 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 		model.setUserId(soapModel.getUserId());
 		model.setCompetenceId(soapModel.getCompetenceId());
 		model.setCompDate(soapModel.getCompDate());
+		model.setCourseId(soapModel.getCourseId());
 
 		return model;
 	}
@@ -169,6 +171,7 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 		attributes.put("userId", getUserId());
 		attributes.put("competenceId", getCompetenceId());
 		attributes.put("compDate", getCompDate());
+		attributes.put("courseId", getCourseId());
 
 		return attributes;
 	}
@@ -203,6 +206,12 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 
 		if (compDate != null) {
 			setCompDate(compDate);
+		}
+
+		Long courseId = (Long)attributes.get("courseId");
+
+		if (courseId != null) {
+			setCourseId(courseId);
 		}
 	}
 
@@ -291,6 +300,14 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 		_compDate = compDate;
 	}
 
+	public long getCourseId() {
+		return _courseId;
+	}
+
+	public void setCourseId(long courseId) {
+		_courseId = courseId;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -328,6 +345,7 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 		userCompetenceImpl.setUserId(getUserId());
 		userCompetenceImpl.setCompetenceId(getCompetenceId());
 		userCompetenceImpl.setCompDate(getCompDate());
+		userCompetenceImpl.setCourseId(getCourseId());
 
 		userCompetenceImpl.resetOriginalValues();
 
@@ -422,12 +440,14 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 			userCompetenceCacheModel.compDate = Long.MIN_VALUE;
 		}
 
+		userCompetenceCacheModel.courseId = getCourseId();
+
 		return userCompetenceCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -439,13 +459,15 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 		sb.append(getCompetenceId());
 		sb.append(", compDate=");
 		sb.append(getCompDate());
+		sb.append(", courseId=");
+		sb.append(getCourseId());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(22);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.UserCompetence");
@@ -471,6 +493,10 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 			"<column><column-name>compDate</column-name><column-value><![CDATA[");
 		sb.append(getCompDate());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>courseId</column-name><column-value><![CDATA[");
+		sb.append(getCourseId());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -492,6 +518,7 @@ public class UserCompetenceModelImpl extends BaseModelImpl<UserCompetence>
 	private long _originalCompetenceId;
 	private boolean _setOriginalCompetenceId;
 	private Date _compDate;
+	private long _courseId;
 	private long _columnBitmask;
 	private UserCompetence _escapedModelProxy;
 }

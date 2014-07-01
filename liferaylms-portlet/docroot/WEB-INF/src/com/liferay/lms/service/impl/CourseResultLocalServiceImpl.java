@@ -122,10 +122,10 @@ public class CourseResultLocalServiceImpl
 					userCompetence.setUserId(cresult.getUserId());
 					userCompetence.setCompetenceId(cc.getCompetenceId());
 					userCompetence.setCompDate(new Date());
+					userCompetence.setCourseId(cc.getCourseId());
 					userCompetencePersistence.update(userCompetence, false);
 				}
-			}
-			
+			}	
 		}
 		
 		courseResultPersistence.update(cresult, false);

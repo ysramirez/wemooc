@@ -15,6 +15,8 @@
 package com.liferay.lms.service.impl;
 
 import com.liferay.lms.service.base.CourseCompetenceServiceBaseImpl;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
+import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 
 /**
  * The implementation of the course competence remote service.
@@ -30,6 +32,7 @@ import com.liferay.lms.service.base.CourseCompetenceServiceBaseImpl;
  * @see com.liferay.lms.service.base.CourseCompetenceServiceBaseImpl
  * @see com.liferay.lms.service.CourseCompetenceServiceUtil
  */
+@JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class CourseCompetenceServiceImpl extends CourseCompetenceServiceBaseImpl {
 	/*
 	 * NOTE FOR DEVELOPERS:
