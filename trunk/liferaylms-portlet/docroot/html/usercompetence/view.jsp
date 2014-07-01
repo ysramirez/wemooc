@@ -7,6 +7,7 @@
 <jsp:useBean id="delta" class="java.lang.String" scope="request" />
 
 <% 
+//QQQ esto hay que revisarlo, esta raro.
 	PortletURL viewURL = renderResponse.createRenderURL(); 
 	viewURL.setParameter("delta", delta);
 	if(competences==null|| competences.size()==0)
@@ -30,9 +31,22 @@
 		</liferay-ui:search-container-results>
 		<liferay-ui:search-container-row className="com.liferay.lms.views.CompetenceView" keyProperty="competenceId" modelVar="cc">
 			<liferay-ui:search-container-column-text name="competence.label" >
+			
+			    <%if(cc.getGenerateCertificate())
+			    	{
+			    	%>
 				<a target="_blank" href="/liferaylms-portlet/certificate/cert?userId=<%=themeDisplay.getUserId()%>&competenceId=<%=cc.getCompetenceId()%>"><%=cc.getTitle(themeDisplay.getLocale()) %></a>
+				<%
+				}
+			    else
+			    {
+			    	%>
+			    	<%=cc.getTitle(themeDisplay.getLocale())%>
+			    	<%
+			    }
+				%>
 			</liferay-ui:search-container-column-text>
-			<liferay-ui:search-container-column-text name="review-date" >
+			<liferay-ui:search-container-column-text name="date" >
 				<%=cc.getFormatDate() %>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
