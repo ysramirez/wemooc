@@ -49,6 +49,9 @@ else
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="competenceId" type="hidden" value="<%=competenceId %>"/>
 	<aui:input name="title" label="title">
+	<aui:validator name="required" errorMessage="title-required"></aui:validator>
+	</aui:input>
+	<aui:input name="generateCertificate" label="competence.generatecertificate">
 	</aui:input>
 	<aui:field-wrapper label="description">
 			<liferay-ui:input-editor name="description" width="100%" />

@@ -5,15 +5,23 @@
 <portlet:renderURL var="newcompetenceURL">
 <portlet:param name="jspPage" value="/html/competencesadmin/editcompetence.jsp"></portlet:param>
 </portlet:renderURL>
-
+<portlet:renderURL var="editcompimageURL">
+<portlet:param name="jspPage" value="/html/competencesadmin/editimage.jsp"></portlet:param>
+</portlet:renderURL>
 <div class="newitem2">
 
 <%
-	if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Competence.class.getName(),0L,ActionKeys.UPDATE)){
+	if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Competence.class.getName(),0L,ActionKeys.UPDATE))
+	{
 %>
+<liferay-ui:icon-list>
 <liferay-ui:icon image="add" label="<%= true %>"
 message="new-competence"
 url='<%= newcompetenceURL %>' />
+<liferay-ui:icon image="edit" label="<%= true %>"
+message="edit-image"
+url='<%= editcompimageURL %>' />
+</liferay-ui:icon-list>
 <%
 	}
 %>
@@ -22,6 +30,7 @@ url='<%= newcompetenceURL %>' />
 <liferay-ui:search-container emptyResultsMessage="there-are-no-competences" delta="10">
 	<liferay-ui:search-container-results>
 <%
+
 long groupId=themeDisplay.getScopeGroupId();
 results=CompetenceServiceUtil.getCompetencesOfGroup(groupId,searchContainer.getStart(), searchContainer.getEnd());
 total=CompetenceServiceUtil.getCountCompetencesOfGroup(groupId);
