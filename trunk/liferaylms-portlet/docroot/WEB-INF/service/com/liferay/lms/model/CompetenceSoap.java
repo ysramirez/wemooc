@@ -42,6 +42,7 @@ public class CompetenceSoap implements Serializable {
 		soapModel.setStatusDate(model.getStatusDate());
 		soapModel.setTitle(model.getTitle());
 		soapModel.setDescription(model.getDescription());
+		soapModel.setGenerateCertificate(model.getGenerateCertificate());
 
 		return soapModel;
 	}
@@ -182,6 +183,18 @@ public class CompetenceSoap implements Serializable {
 		_description = description;
 	}
 
+	public boolean getGenerateCertificate() {
+		return _generateCertificate;
+	}
+
+	public boolean isGenerateCertificate() {
+		return _generateCertificate;
+	}
+
+	public void setGenerateCertificate(boolean generateCertificate) {
+		_generateCertificate = generateCertificate;
+	}
+
 	private String _uuid;
 	private long _competenceId;
 	private long _companyId;
@@ -193,4 +206,5 @@ public class CompetenceSoap implements Serializable {
 	private Date _statusDate;
 	private String _title;
 	private String _description;
+	private boolean _generateCertificate;
 }

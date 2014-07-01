@@ -297,6 +297,17 @@ public class CompetenceLocalServiceUtil {
 		return getService().addCompetence(title, description, serviceContext);
 	}
 
+	public static com.liferay.lms.model.Competence addCompetence(
+		java.lang.String title, java.lang.String description,
+		boolean generateCertificate,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .addCompetence(title, description, generateCertificate,
+			serviceContext);
+	}
+
 	public static com.liferay.lms.model.Competence updateCompetence(
 		com.liferay.lms.model.Competence competence,
 		com.liferay.portal.service.ServiceContext serviceContext)
@@ -311,6 +322,22 @@ public class CompetenceLocalServiceUtil {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		return getService().modCompetence(competence, serviceContext);
+	}
+
+	public static java.lang.String getBGImageURL(long groupId,
+		javax.servlet.http.HttpServletRequest request) {
+		return getService().getBGImageURL(groupId, request);
+	}
+
+	public static java.lang.String getBGImageURL(
+		com.liferay.lms.model.Competence competence,
+		javax.servlet.http.HttpServletRequest request) {
+		return getService().getBGImageURL(competence, request);
+	}
+
+	public static void setBGImage(byte[] data, long groupId,
+		java.lang.String name) throws java.io.IOException {
+		getService().setBGImage(data, groupId, name);
 	}
 
 	public static long countAll()

@@ -36,6 +36,7 @@ public class UserCompetenceSoap implements Serializable {
 		soapModel.setUserId(model.getUserId());
 		soapModel.setCompetenceId(model.getCompetenceId());
 		soapModel.setCompDate(model.getCompDate());
+		soapModel.setCourseId(model.getCourseId());
 
 		return soapModel;
 	}
@@ -128,9 +129,18 @@ public class UserCompetenceSoap implements Serializable {
 		_compDate = compDate;
 	}
 
+	public long getCourseId() {
+		return _courseId;
+	}
+
+	public void setCourseId(long courseId) {
+		_courseId = courseId;
+	}
+
 	private String _uuid;
 	private long _usercompId;
 	private long _userId;
 	private long _competenceId;
 	private Date _compDate;
+	private long _courseId;
 }

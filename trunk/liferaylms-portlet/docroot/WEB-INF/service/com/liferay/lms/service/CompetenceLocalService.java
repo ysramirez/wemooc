@@ -264,6 +264,13 @@ public interface CompetenceLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.lms.model.Competence addCompetence(
+		java.lang.String title, java.lang.String description,
+		boolean generateCertificate,
+		com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public com.liferay.lms.model.Competence updateCompetence(
 		com.liferay.lms.model.Competence competence,
 		com.liferay.portal.service.ServiceContext serviceContext)
@@ -275,6 +282,18 @@ public interface CompetenceLocalService extends BaseLocalService,
 		com.liferay.portal.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String getBGImageURL(long groupId,
+		javax.servlet.http.HttpServletRequest request);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.lang.String getBGImageURL(
+		com.liferay.lms.model.Competence competence,
+		javax.servlet.http.HttpServletRequest request);
+
+	public void setBGImage(byte[] data, long groupId, java.lang.String name)
+		throws java.io.IOException;
 
 	public long countAll()
 		throws com.liferay.portal.kernel.exception.SystemException;

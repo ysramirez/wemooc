@@ -72,6 +72,7 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 		attributes.put("userId", getUserId());
 		attributes.put("competenceId", getCompetenceId());
 		attributes.put("compDate", getCompDate());
+		attributes.put("courseId", getCourseId());
 
 		return attributes;
 	}
@@ -106,6 +107,12 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 
 		if (compDate != null) {
 			setCompDate(compDate);
+		}
+
+		Long courseId = (Long)attributes.get("courseId");
+
+		if (courseId != null) {
+			setCourseId(courseId);
 		}
 	}
 
@@ -157,6 +164,14 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 		_compDate = compDate;
 	}
 
+	public long getCourseId() {
+		return _courseId;
+	}
+
+	public void setCourseId(long courseId) {
+		_courseId = courseId;
+	}
+
 	public BaseModel<?> getUserCompetenceRemoteModel() {
 		return _userCompetenceRemoteModel;
 	}
@@ -191,6 +206,7 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 		clone.setUserId(getUserId());
 		clone.setCompetenceId(getCompetenceId());
 		clone.setCompDate(getCompDate());
+		clone.setCourseId(getCourseId());
 
 		return clone;
 	}
@@ -241,7 +257,7 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(11);
+		StringBundler sb = new StringBundler(13);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -253,13 +269,15 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 		sb.append(getCompetenceId());
 		sb.append(", compDate=");
 		sb.append(getCompDate());
+		sb.append(", courseId=");
+		sb.append(getCourseId());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(22);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.UserCompetence");
@@ -285,6 +303,10 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 			"<column><column-name>compDate</column-name><column-value><![CDATA[");
 		sb.append(getCompDate());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>courseId</column-name><column-value><![CDATA[");
+		sb.append(getCourseId());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -297,5 +319,6 @@ public class UserCompetenceClp extends BaseModelImpl<UserCompetence>
 	private String _userUuid;
 	private long _competenceId;
 	private Date _compDate;
+	private long _courseId;
 	private BaseModel<?> _userCompetenceRemoteModel;
 }

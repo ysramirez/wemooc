@@ -598,7 +598,8 @@ else
 <script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
-function <portlet:namespace />checkduplicate(val, field) {
+function <portlet:namespace />checkduplicate(val, field)
+{
 	var courseId = document.getElementById('<portlet:namespace />courseId').value;
    	return !Liferay.Service.Lms.Course.existsCourseName(
    		{
