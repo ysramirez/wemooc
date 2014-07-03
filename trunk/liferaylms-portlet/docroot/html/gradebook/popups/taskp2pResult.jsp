@@ -62,7 +62,7 @@ if(actId!=0){
 		}
 	User owner = UserLocalServiceUtil.getUser(userId);%>
 	
-	<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+	<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
 	<h3 class="description-h3"><liferay-ui:message key="description" /></h3>
 	<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
 	<p class="sub-title"><liferay-ui:message key="p2ptask-done-by" /> <%=owner.getFullName()%></p>
