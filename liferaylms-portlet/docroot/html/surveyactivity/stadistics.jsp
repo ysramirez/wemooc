@@ -30,8 +30,8 @@
 	%>
 		<div class="surveyactivity stadistics">
 		
-			<h2><%=LearningActivityLocalServiceUtil.getLearningActivity(actId).getTitle(themeDisplay.getLocale()) %></h2>
-			<h3><liferay-ui:message key="description" /></h3>
+			<h2  class="description-title"><%=LearningActivityLocalServiceUtil.getLearningActivity(actId).getTitle(themeDisplay.getLocale()) %></h2>
+			<h3 class="description-h3"><liferay-ui:message key="description" /></h3>
 			<div class="description"><%=LearningActivityLocalServiceUtil.getLearningActivity(actId).getDescription(themeDisplay.getLocale()) %></div>
 		
 			<portlet:renderURL var="backToQuestionsURL">
