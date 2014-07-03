@@ -277,34 +277,55 @@ public class ModuleLocalServiceWrapper implements ModuleLocalService,
 		return _moduleLocalService.invokeMethod(name, parameterTypes, arguments);
 	}
 
-	public java.util.List findAllInUser(long userId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+	public java.util.List<com.liferay.lms.model.Module> findAllInUser(
+		long userId) throws com.liferay.portal.kernel.exception.SystemException {
 		return _moduleLocalService.findAllInUser(userId);
 	}
 
-	public java.util.List findAllInUser(long userId,
+	public java.util.List<com.liferay.lms.model.Module> findAllInUser(
+		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _moduleLocalService.findAllInUser(userId, orderByComparator);
 	}
 
-	public java.util.List findAllInGroup(long groupId)
+	public java.util.List<com.liferay.lms.model.Module> findAllInGroup(
+		long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _moduleLocalService.findAllInGroup(groupId);
 	}
 
-	public java.util.List findAllInGroup(long groupId,
+	public java.util.List<com.liferay.lms.model.Module> findAllInGroup(
+		long groupId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _moduleLocalService.findAllInGroup(groupId, orderByComparator);
 	}
 
-	public java.util.List findAllInUserAndGroup(long userId, long groupId)
+	public com.liferay.lms.model.Module findFirstInGroup(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _moduleLocalService.findFirstInGroup(groupId);
+	}
+
+	public com.liferay.lms.model.Module findFirstInGroup(long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _moduleLocalService.findFirstInGroup(groupId, orderByComparator);
+	}
+
+	public int countInGroup(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _moduleLocalService.countInGroup(groupId);
+	}
+
+	public java.util.List<com.liferay.lms.model.Module> findAllInUserAndGroup(
+		long userId, long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _moduleLocalService.findAllInUserAndGroup(userId, groupId);
 	}
 
-	public java.util.List findAllInUserAndGroup(long userId, long groupId,
+	public java.util.List<com.liferay.lms.model.Module> findAllInUserAndGroup(
+		long userId, long groupId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return _moduleLocalService.findAllInUserAndGroup(userId, groupId,

@@ -69,14 +69,27 @@ public class ModuleServiceUtil {
 		return getService().findAllInGroup(groupId);
 	}
 
+	public static java.util.List<com.liferay.lms.model.Module> findAllInCourse(
+		long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().findAllInCourse(courseId);
+	}
+
 	public static boolean isLocked(long moduleId) throws java.lang.Exception {
 		return getService().isLocked(moduleId);
 	}
 
-	public static boolean isUserPassed(long moduleId)
+	public static boolean PassedByMe(long moduleId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return getService().isUserPassed(moduleId);
+		return getService().PassedByMe(moduleId);
+	}
+
+	public static boolean isUserPassed(long moduleId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().isUserPassed(moduleId, login);
 	}
 
 	public static void clearService() {

@@ -676,6 +676,14 @@ public class LearningActivityClp extends BaseModelImpl<LearningActivity>
 		_weightinmodule = weightinmodule;
 	}
 
+	public boolean isNullStartDate() {
+		throw new UnsupportedOperationException();
+	}
+
+	public boolean isNullEndDate() {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */

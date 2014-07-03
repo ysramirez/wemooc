@@ -64,7 +64,8 @@ public class LearningActivityTryServiceUtil {
 
 	public static com.liferay.lms.model.LearningActivityTry createLearningActivityTry(
 		long actId, long userId)
-		throws com.liferay.portal.kernel.exception.SystemException {
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return getService().createLearningActivityTry(actId, userId);
 	}
 

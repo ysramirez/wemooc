@@ -257,24 +257,39 @@ public interface ModuleLocalService extends BaseLocalService,
 		java.lang.String[] parameterTypes, java.lang.Object[] arguments)
 		throws java.lang.Throwable;
 
-	public java.util.List findAllInUser(long userId)
-		throws com.liferay.portal.kernel.exception.SystemException;
+	public java.util.List<com.liferay.lms.model.Module> findAllInUser(
+		long userId) throws com.liferay.portal.kernel.exception.SystemException;
 
-	public java.util.List findAllInUser(long userId,
+	public java.util.List<com.liferay.lms.model.Module> findAllInUser(
+		long userId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public java.util.List findAllInGroup(long groupId)
+	public java.util.List<com.liferay.lms.model.Module> findAllInGroup(
+		long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public java.util.List findAllInGroup(long groupId,
+	public java.util.List<com.liferay.lms.model.Module> findAllInGroup(
+		long groupId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public java.util.List findAllInUserAndGroup(long userId, long groupId)
+	public com.liferay.lms.model.Module findFirstInGroup(long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public java.util.List findAllInUserAndGroup(long userId, long groupId,
+	public com.liferay.lms.model.Module findFirstInGroup(long groupId,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public int countInGroup(long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.util.List<com.liferay.lms.model.Module> findAllInUserAndGroup(
+		long userId, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	public java.util.List<com.liferay.lms.model.Module> findAllInUserAndGroup(
+		long userId, long groupId,
 		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
 		throws com.liferay.portal.kernel.exception.SystemException;
 

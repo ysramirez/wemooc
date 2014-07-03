@@ -1137,6 +1137,14 @@ public class LearningActivityWrapper implements LearningActivity,
 		_learningActivity.persist();
 	}
 
+	public boolean isNullStartDate() {
+		return _learningActivity.isNullStartDate();
+	}
+
+	public boolean isNullEndDate() {
+		return _learningActivity.isNullEndDate();
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedModel}
 	 */

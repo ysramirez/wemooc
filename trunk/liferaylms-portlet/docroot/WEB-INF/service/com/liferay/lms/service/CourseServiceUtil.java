@@ -68,11 +68,6 @@ public class CourseServiceUtil {
 		return getService().getCoursesOfGroup(groupId);
 	}
 
-	public static com.liferay.lms.model.Course createCourse(
-		java.lang.String name) {
-		return getService().createCourse(name);
-	}
-
 	public static java.util.List<java.lang.String> getCourseStudents(
 		long courseId) {
 		return getService().getCourseStudents(courseId);
@@ -88,34 +83,49 @@ public class CourseServiceUtil {
 		return getService().getCourseEditors(courseId);
 	}
 
-	public static void addStudentToCourse(long courseId, java.lang.String login) {
+	public static void addStudentToCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		getService().addStudentToCourse(courseId, login);
 	}
 
-	public static void addTeacherToCourse(long courseId, java.lang.String login) {
+	public static void addTeacherToCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		getService().addTeacherToCourse(courseId, login);
 	}
 
-	public static void addEditorToCourse(long courseId, java.lang.String login) {
+	public static void addEditorToCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		getService().addEditorToCourse(courseId, login);
 	}
 
 	public static void removeStudentFromCourse(long courseId,
-		java.lang.String login) {
+		java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.security.auth.PrincipalException {
 		getService().removeStudentFromCourse(courseId, login);
 	}
 
 	public static void removeTeacherFromCourse(long courseId,
-		java.lang.String login) {
+		java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		getService().removeTeacherFromCourse(courseId, login);
 	}
 
 	public static void removeEditorFromCourse(long courseId,
-		java.lang.String login) {
+		java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		getService().removeEditorFromCourse(courseId, login);
 	}
 
-	public static long getUserResult(long courseId, java.lang.String login) {
+	public static long getUserResult(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		return getService().getUserResult(courseId, login);
 	}
 
@@ -127,40 +137,18 @@ public class CourseServiceUtil {
 
 	public static void addUser(java.lang.String login,
 		java.lang.String firstName, java.lang.String lastName,
-		java.lang.String email, boolean isStudent, boolean isTeacher,
-		boolean isParent) {
-		getService()
-			.addUser(login, firstName, lastName, email, isStudent, isTeacher,
-			isParent);
+		java.lang.String email)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().addUser(login, firstName, lastName, email);
 	}
 
 	public static void updateUser(java.lang.String login,
 		java.lang.String firstName, java.lang.String lastName,
-		java.lang.String email, boolean isStudent, boolean isTeacher,
-		boolean isParent) {
-		getService()
-			.updateUser(login, firstName, lastName, email, isStudent,
-			isTeacher, isParent);
-	}
-
-	public static void setParent(java.lang.String parentLogin,
-		java.lang.String studentLogin) {
-		getService().setParent(parentLogin, studentLogin);
-	}
-
-	public static void unsetParent(java.lang.String parentLogin,
-		java.lang.String studentLogin) {
-		getService().unsetParent(parentLogin, studentLogin);
-	}
-
-	public static void setTutor(java.lang.String tutorLogin,
-		java.lang.String studentLogin) {
-		getService().setTutor(tutorLogin, studentLogin);
-	}
-
-	public static void unsetTutor(java.lang.String parentLogin,
-		java.lang.String studentLogin) {
-		getService().unsetTutor(parentLogin, studentLogin);
+		java.lang.String email)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService().updateUser(login, firstName, lastName, email);
 	}
 
 	public static boolean existsCourseName(java.lang.Long companyId,
