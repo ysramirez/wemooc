@@ -31,4 +31,11 @@ public interface LearningActivity extends LearningActivityModel, PersistedModel 
 	 *
 	 * Never modify this interface directly. Add methods to {@link com.liferay.lms.model.impl.LearningActivityImpl} and rerun ServiceBuilder to automatically copy the method declarations to this interface.
 	 */
+	public java.util.Date getStartdate();
+
+	public boolean isNullStartDate();
+
+	public java.util.Date getEnddate();
+
+	public boolean isNullEndDate();
 }

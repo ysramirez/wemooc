@@ -35,13 +35,21 @@ public class ModuleServiceClp implements ModuleService {
 
 		_methodParameterTypes3 = new String[] { "long" };
 
-		_methodName4 = "isLocked";
+		_methodName4 = "findAllInCourse";
 
 		_methodParameterTypes4 = new String[] { "long" };
 
-		_methodName5 = "isUserPassed";
+		_methodName5 = "isLocked";
 
 		_methodParameterTypes5 = new String[] { "long" };
+
+		_methodName6 = "PassedByMe";
+
+		_methodParameterTypes6 = new String[] { "long" };
+
+		_methodName7 = "isUserPassed";
+
+		_methodParameterTypes7 = new String[] { "long", "java.lang.String" };
 	}
 
 	public java.lang.String getBeanIdentifier() {
@@ -124,12 +132,45 @@ public class ModuleServiceClp implements ModuleService {
 		return (java.util.List<com.liferay.lms.model.Module>)ClpSerializer.translateOutput(returnObj);
 	}
 
-	public boolean isLocked(long moduleId) throws java.lang.Exception {
+	public java.util.List<com.liferay.lms.model.Module> findAllInCourse(
+		long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		try {
 			returnObj = _invokableService.invokeMethod(_methodName4,
-					_methodParameterTypes4, new Object[] { moduleId });
+					_methodParameterTypes4, new Object[] { courseId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.liferay.lms.model.Module>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public boolean isLocked(long moduleId) throws java.lang.Exception {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName5,
+					_methodParameterTypes5, new Object[] { moduleId });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -150,14 +191,47 @@ public class ModuleServiceClp implements ModuleService {
 		return ((Boolean)returnObj).booleanValue();
 	}
 
-	public boolean isUserPassed(long moduleId)
+	public boolean PassedByMe(long moduleId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableService.invokeMethod(_methodName5,
-					_methodParameterTypes5, new Object[] { moduleId });
+			returnObj = _invokableService.invokeMethod(_methodName6,
+					_methodParameterTypes6, new Object[] { moduleId });
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.PortalException) {
+				throw (com.liferay.portal.kernel.exception.PortalException)t;
+			}
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Boolean)returnObj).booleanValue();
+	}
+
+	public boolean isUserPassed(long moduleId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableService.invokeMethod(_methodName7,
+					_methodParameterTypes7,
+					new Object[] { moduleId, ClpSerializer.translateInput(login) });
 		}
 		catch (Throwable t) {
 			t = ClpSerializer.translateThrowable(t);
@@ -193,4 +267,8 @@ public class ModuleServiceClp implements ModuleService {
 	private String[] _methodParameterTypes4;
 	private String _methodName5;
 	private String[] _methodParameterTypes5;
+	private String _methodName6;
+	private String[] _methodParameterTypes6;
+	private String _methodName7;
+	private String[] _methodParameterTypes7;
 }

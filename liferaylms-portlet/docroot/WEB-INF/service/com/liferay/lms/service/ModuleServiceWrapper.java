@@ -62,14 +62,27 @@ public class ModuleServiceWrapper implements ModuleService,
 		return _moduleService.findAllInGroup(groupId);
 	}
 
+	public java.util.List<com.liferay.lms.model.Module> findAllInCourse(
+		long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _moduleService.findAllInCourse(courseId);
+	}
+
 	public boolean isLocked(long moduleId) throws java.lang.Exception {
 		return _moduleService.isLocked(moduleId);
 	}
 
-	public boolean isUserPassed(long moduleId)
+	public boolean PassedByMe(long moduleId)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {
-		return _moduleService.isUserPassed(moduleId);
+		return _moduleService.PassedByMe(moduleId);
+	}
+
+	public boolean isUserPassed(long moduleId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _moduleService.isUserPassed(moduleId, login);
 	}
 
 	/**

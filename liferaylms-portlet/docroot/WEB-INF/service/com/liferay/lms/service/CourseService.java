@@ -69,8 +69,6 @@ public interface CourseService extends BaseService, InvokableService {
 		long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	public com.liferay.lms.model.Course createCourse(java.lang.String name);
-
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<java.lang.String> getCourseStudents(long courseId);
 
@@ -80,44 +78,49 @@ public interface CourseService extends BaseService, InvokableService {
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public java.util.List<java.lang.String> getCourseEditors(long courseId);
 
-	public void addStudentToCourse(long courseId, java.lang.String login);
+	public void addStudentToCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
-	public void addTeacherToCourse(long courseId, java.lang.String login);
+	public void addTeacherToCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
-	public void addEditorToCourse(long courseId, java.lang.String login);
+	public void addEditorToCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
-	public void removeStudentFromCourse(long courseId, java.lang.String login);
+	public void removeStudentFromCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException,
+			com.liferay.portal.security.auth.PrincipalException;
 
-	public void removeTeacherFromCourse(long courseId, java.lang.String login);
+	public void removeTeacherFromCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
-	public void removeEditorFromCourse(long courseId, java.lang.String login);
+	public void removeEditorFromCourse(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public long getUserResult(long courseId, java.lang.String login);
+	public long getUserResult(long courseId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	public java.util.List<com.liferay.lms.model.Course> myCourses()
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
 	public void addUser(java.lang.String login, java.lang.String firstName,
-		java.lang.String lastName, java.lang.String email, boolean isStudent,
-		boolean isTeacher, boolean isParent);
+		java.lang.String lastName, java.lang.String email)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	public void updateUser(java.lang.String login, java.lang.String firstName,
-		java.lang.String lastName, java.lang.String email, boolean isStudent,
-		boolean isTeacher, boolean isParent);
-
-	public void setParent(java.lang.String parentLogin,
-		java.lang.String studentLogin);
-
-	public void unsetParent(java.lang.String parentLogin,
-		java.lang.String studentLogin);
-
-	public void setTutor(java.lang.String tutorLogin,
-		java.lang.String studentLogin);
-
-	public void unsetTutor(java.lang.String parentLogin,
-		java.lang.String studentLogin);
+		java.lang.String lastName, java.lang.String email)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	public boolean existsCourseName(java.lang.Long companyId,
 		java.lang.Long groupId, java.lang.String groupName);
