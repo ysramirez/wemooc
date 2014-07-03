@@ -50,7 +50,6 @@ AUI().ready('domready','event','liferay-portlet-url',function(A) {
 	A.one(window).on('message', 
 		function(event){
 			var activity=event._event.data,
-				eventOrigin=event._event.origin,
 				iframeContainer = A.one('#<portlet:namespace/>container'),
 				renderUrl = Liferay.PortletURL.createRenderURL(),
 				interval;							
@@ -75,7 +74,7 @@ AUI().ready('domready','event','liferay-portlet-url',function(A) {
 									});
 									anchor.on('click', 
 										function(event){
-											window.parent.postMessage({actId:activity.actId,moduleId:activity.moduleId,typeId:activity.typeId,href:href}, eventOrigin);
+											window.parent.postMessage({actId:activity.actId,moduleId:activity.moduleId,typeId:activity.typeId,href:href}, '*');
 									});
 							});
 					}, 100);

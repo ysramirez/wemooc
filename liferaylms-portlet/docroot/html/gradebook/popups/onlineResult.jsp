@@ -30,7 +30,7 @@ if(renderRequest.getParameter("actId")!=null){
 	LearningActivity learningActivity=LearningActivityLocalServiceUtil.getLearningActivity(actId);	
 	User owner = UserLocalServiceUtil.getUser(studentId);
 	%><h2><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
-	<h3><liferay-ui:message key="description" /></h3>
+	<h3 class="description-h3"><liferay-ui:message key="description" /></h3>
 	<div class="description"><%=learningActivity.getDescription(themeDisplay.getLocale()) %></div>
 	<%
 	if(renderRequest.getParameter("studentId")!=null){
