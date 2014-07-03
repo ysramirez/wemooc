@@ -16,6 +16,7 @@ package com.liferay.lms.service.impl;
 
 import java.util.List;
 
+import com.liferay.lms.model.Course;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.service.base.ModuleServiceBaseImpl;
 import com.liferay.lms.service.persistence.ModuleUtil;
@@ -24,6 +25,9 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.model.User;
+import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
  * The implementation of the module remote service.
@@ -53,16 +57,39 @@ public class ModuleServiceImpl extends ModuleServiceBaseImpl {
 		return list;
 	}
 	@JSONWebService
+	public List<Module> findAllInCourse(long courseId) throws SystemException, PortalException {
+		User usuario= this.getUser();
+		Course course=courseLocalService.getCourse(courseId);
+		List<Module> list = (List<Module>) modulePersistence.filterFindByGroupId(course.getGroupCreatedId());
+		return list;
+	}
+	@JSONWebService
 	public boolean isLocked(long moduleId) throws Exception
 	{
 		User usuario= this.getUser();
 		return moduleLocalService.isLocked(moduleId, usuario.getUserId());
 	}
 	@JSONWebService
-	public boolean isUserPassed(long moduleId) throws SystemException, PortalException
+	public boolean PassedByMe(long moduleId) throws SystemException, PortalException
 	{
 		User usuario= this.getUser();
 		return moduleLocalService.isUserPassed(moduleId, usuario.getUserId());
+	
+	}
+	@JSONWebService
+	public boolean isUserPassed(long moduleId,String login) throws SystemException, PortalException
+	{
+		User usuario= this.getUser();
+		Module module=moduleLocalService.getModule(moduleId);
+		Course course=courseLocalService.getCourseByGroupCreatedId(module.getGroupId());
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ASSIGN_MEMBERS"))
+		{
+			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);	
+			return moduleLocalService.isUserPassed(moduleId, user.getUserId());
+			
+		}
+		return false;
 	
 	}
 }

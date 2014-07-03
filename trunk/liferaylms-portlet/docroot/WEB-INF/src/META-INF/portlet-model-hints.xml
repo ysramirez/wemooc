@@ -116,10 +116,10 @@
 			<hint name="display-width">200</hint>
 			<hint name="max-length">500000</hint>
 		</field>
-		<field name="feedbackCorrect" type="String" >
+		<field name="feedbackCorrect" type="String">
 			<hint name="max-length">75</hint>
 		</field>
-		<field name="feedbackNoCorrect" type="String" >
+		<field name="feedbackNoCorrect" type="String">
 			<hint name="max-length">75</hint>
 		</field>
 		<field name="weightinmodule" type="long" />

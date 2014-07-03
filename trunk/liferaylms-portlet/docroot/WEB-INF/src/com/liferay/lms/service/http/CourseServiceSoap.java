@@ -79,20 +79,6 @@ public class CourseServiceSoap {
 		}
 	}
 
-	public static com.liferay.lms.model.CourseSoap createCourse(
-		java.lang.String name) throws RemoteException {
-		try {
-			com.liferay.lms.model.Course returnValue = CourseServiceUtil.createCourse(name);
-
-			return com.liferay.lms.model.CourseSoap.toSoapModel(returnValue);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
 	public static java.lang.String[] getCourseStudents(long courseId)
 		throws RemoteException {
 		try {
@@ -237,11 +223,9 @@ public class CourseServiceSoap {
 
 	public static void addUser(java.lang.String login,
 		java.lang.String firstName, java.lang.String lastName,
-		java.lang.String email, boolean isStudent, boolean isTeacher,
-		boolean isParent) throws RemoteException {
+		java.lang.String email) throws RemoteException {
 		try {
-			CourseServiceUtil.addUser(login, firstName, lastName, email,
-				isStudent, isTeacher, isParent);
+			CourseServiceUtil.addUser(login, firstName, lastName, email);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -252,59 +236,9 @@ public class CourseServiceSoap {
 
 	public static void updateUser(java.lang.String login,
 		java.lang.String firstName, java.lang.String lastName,
-		java.lang.String email, boolean isStudent, boolean isTeacher,
-		boolean isParent) throws RemoteException {
+		java.lang.String email) throws RemoteException {
 		try {
-			CourseServiceUtil.updateUser(login, firstName, lastName, email,
-				isStudent, isTeacher, isParent);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static void setParent(java.lang.String parentLogin,
-		java.lang.String studentLogin) throws RemoteException {
-		try {
-			CourseServiceUtil.setParent(parentLogin, studentLogin);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static void unsetParent(java.lang.String parentLogin,
-		java.lang.String studentLogin) throws RemoteException {
-		try {
-			CourseServiceUtil.unsetParent(parentLogin, studentLogin);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static void setTutor(java.lang.String tutorLogin,
-		java.lang.String studentLogin) throws RemoteException {
-		try {
-			CourseServiceUtil.setTutor(tutorLogin, studentLogin);
-		}
-		catch (Exception e) {
-			_log.error(e, e);
-
-			throw new RemoteException(e.getMessage());
-		}
-	}
-
-	public static void unsetTutor(java.lang.String parentLogin,
-		java.lang.String studentLogin) throws RemoteException {
-		try {
-			CourseServiceUtil.unsetTutor(parentLogin, studentLogin);
+			CourseServiceUtil.updateUser(login, firstName, lastName, email);
 		}
 		catch (Exception e) {
 			_log.error(e, e);

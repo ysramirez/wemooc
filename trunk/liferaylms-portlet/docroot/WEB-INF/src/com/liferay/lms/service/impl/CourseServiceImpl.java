@@ -24,6 +24,7 @@ import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
@@ -45,6 +46,8 @@ import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
+import com.liferay.portal.security.auth.PrincipalException;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -52,15 +55,15 @@ import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.service.UserGroupLocalServiceUtil;
 import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.service.UserServiceUtil;
+import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
 import com.liferay.portlet.social.model.SocialRelationConstants;
 import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
-import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
-import com.liferay.lms.learningactivity.calificationtype.CalificationType;
-import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistry;;
+
 
 /**
  * The implementation of the course remote service.
@@ -83,60 +86,10 @@ import com.liferay.lms.learningactivity.calificationtype.CalificationTypeRegistr
  */
 @JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class CourseServiceImpl extends CourseServiceBaseImpl {
+	@JSONWebService
 	public java.util.List<Course> getCoursesOfGroup(long groupId) throws SystemException
 	{
 		return coursePersistence.filterFindByGroupId(groupId);
-		
-	
-	}
-	
-	@JSONWebService
-	public Course createCourse(String name)
-	{
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		
-		Course course = null;
-		
-		try {
-			if (CourseLocalServiceUtil.existsCourseName(serviceContext.getCompanyId(), null, name)) {
-				throw new DuplicateGroupException(LanguageUtil.get(LocaleUtil.getDefault(), "title-repeated"));
-			}
-			
-			String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(serviceContext.getCompanyId()).getLmsTemplates().split(",");
-			Date now = new Date();
-			long guestId = GroupLocalServiceUtil.getGroup(serviceContext.getCompanyId(), GroupConstants.GUEST).getGroupId();
-			List<Long> assetCategoryIds = new ArrayList<Long>();
-									
-			User user = getUser();
-			serviceContext.setUserId(user.getUserId());
-			serviceContext.setScopeGroupId(user.getGroupId());
-			
-			serviceContext.setLanguageId(LocaleUtil.toLanguageId(LocaleUtil.getDefault()));
-			
-			serviceContext.setAssetCategoryIds(ArrayUtil.toArray(assetCategoryIds.toArray(new Long[assetCategoryIds.size()])));
-			
-			
-			course = CourseLocalServiceUtil.addCourse(
-					name, StringPool.BLANK, StringPool.BLANK, StringPool.BLANK,
-					LocaleUtil.getDefault(), now, now, now,Long.parseLong(lspist[0]),GroupConstants.TYPE_SITE_PRIVATE,
-					serviceContext, Long.parseLong("0"),0);
-			course.setCourseEvalId(1); // EvaluationAvgCourseEval.getTypeId();
-			com.liferay.lms.service.CourseLocalServiceUtil.modCourse(course,
-					serviceContext);
-			
-			course.setGroupId(guestId);
-			CourseLocalServiceUtil.updateCourse(course);
-			AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
-			assetEntry.setGroupId(guestId);
-
-			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.ADD, null);
-			
-			AssetEntryLocalServiceUtil.updateAssetEntry(assetEntry);
-		} catch (NestableException e) {
-		}
-		
-		return course;
 	}
 	@JSONWebService
 	public java.util.List<String> getCourseStudents(long courseId)
@@ -154,13 +107,13 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		return null;
 	}
 	@JSONWebService
-	public void addStudentToCourse(long courseId,String login)
+	public void addStudentToCourse(long courseId,String login) throws PortalException, SystemException
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		
-		try {
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
-			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
 			}
@@ -171,17 +124,18 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			//auditing
 			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 			
-		} catch (NestableException e) {
-		} 
+		 
+		}
 	}
 	@JSONWebService
-	public void addTeacherToCourse(long courseId,String login)
-	{
+	public void addTeacherToCourse(long courseId,String login) throws PortalException, SystemException
+	{ 
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
 		
-		try {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
-			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
 			}
@@ -191,17 +145,18 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			//auditing
 			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 			
-		} catch (NestableException e) {
-		} 	
+		
+		}
 	}
 	@JSONWebService
-	public void addEditorToCourse(long courseId,String login)
+	public void addEditorToCourse(long courseId,String login) throws PortalException, SystemException
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
 		
-		try {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
-			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
 			}
@@ -210,63 +165,74 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 
 			//auditing
 			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
-			
-		} catch (NestableException e) {
+		
 		}
 	}
 	@JSONWebService
-	public void removeStudentFromCourse(long courseId,String login)
+	public void removeStudentFromCourse(long courseId,String login) throws PrincipalException, PortalException, SystemException
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
 		
-		try {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
-			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			GroupLocalServiceUtil.unsetUserGroups(user.getUserId(),new long[] { course.getGroupCreatedId() });
 
 			//auditing
 			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 			
-		} catch (NestableException e) {
+		
 		}
 	}
 	@JSONWebService
-	public void removeTeacherFromCourse(long courseId,String login)
+	public void removeTeacherFromCourse(long courseId,String login) throws PortalException, SystemException
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
 		
-		try {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
-			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
 
 			//auditing
 			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 			
-		} catch (NestableException e) {
+		
 		}
 	}
 	@JSONWebService
-	public void removeEditorFromCourse(long courseId,String login)
+	public void removeEditorFromCourse(long courseId,String login) throws PortalException, SystemException
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
 		
-		try {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
-			Course course = CourseLocalServiceUtil.getCourse(courseId);
 			UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
 
 			//auditing
 			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 			
-		} catch (NestableException e) {
-		} 
+		
+		}
 	}
 	@JSONWebService
-	public long getUserResult(long courseId,String login)
-	{
+	public long getUserResult(long courseId,String login) throws PortalException, SystemException
+	{ 
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);	
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS"))
+		{
+			
+		   CourseResult courseResult=courseResultLocalService.getCourseResultByCourseAndUser(courseId, user.getUserId());
+		   return courseResult.getResult();
+		}
 		return 0;
 	}
 	@JSONWebService
@@ -291,7 +257,8 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	}
 	
 	
-	private long [] getGruposFromExpando(Long companyId, String [] userGroupNames) throws PortalException, SystemException {
+	private long [] getGruposFromExpando(Long companyId, String [] userGroupNames) throws PortalException, SystemException
+	{
 		List<Long> userGroupIds = new ArrayList<Long>();
 		if (userGroupNames != null) {
 			for (String ugn : userGroupNames) {
@@ -303,79 +270,25 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	}
 	
 	@JSONWebService
-	public void addUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
+	public void addUser(String login, String firstName,String lastName,String email) throws PortalException, SystemException
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		int rolesItr=0;
-		long[] roles = new long[((isStudent)?1:0)+((isTeacher)?1:0)+((isParent)?1:0)];
-		
-		try {
-			if(isStudent){
-				roles[rolesItr++]=UserGroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(), PropsUtil.get("weclass.grupo.estudiante")).getUserGroupId();
-			}
-			
-			if(isTeacher){
-				roles[rolesItr++]=UserGroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(), PropsUtil.get("weclass.grupo.profesor")).getUserGroupId();
-			}
-			
-			if(isParent){
-				roles[rolesItr]=UserGroupLocalServiceUtil.getUserGroup(serviceContext.getCompanyId(), PropsUtil.get("weclass.grupo.padre")).getUserGroupId();
-			}
-			
-			Date birthday = new Date(0);
-					
-			User creatorUser=getUser();
-			
-
-			UserLocalServiceUtil.addUser(creatorUser.getUserId(), serviceContext.getCompanyId(), false, /*password1*/login, /*password2*/login, false, login, 
+		int rolesItr=0;	
+		Date birthday = new Date(0);					
+		User creatorUser=getUser();		
+		long[] roles=new long[0];
+		UserServiceUtil.addUser(serviceContext.getCompanyId(), false, /*password1*/login, /*password2*/login, false, login, 
 					email, new Long(0), "", creatorUser.getLocale(), firstName, StringPool.BLANK, lastName, -1, -1, 
 					creatorUser.isMale(), birthday.getMonth(), birthday.getDay(), birthday.getYear()+1900 , StringPool.BLANK, null, null, null, roles, 
 					false, ServiceContextThreadLocal.getServiceContext());
-		} catch (PortalException e) {
-		} catch (SystemException e) {
-		}
+		
+		
 	}
 	@JSONWebService
-	public void updateUser(String login, String firstName,String lastName,String email,boolean isStudent, boolean isTeacher,boolean isParent)
+	public void updateUser(String login, String firstName,String lastName,String email) throws PortalException, SystemException
 	{
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		long[] rolesToRemove = new long[((isStudent)?0:1)+((isTeacher)?0:1)+((isParent)?0:1)];
-		List<Long> rolesToAdd = new ArrayList<Long>(3-rolesToRemove.length);
-		int rolesAddItr=0,rolesRemoveItr=0;
 		
-		try {
-			if (isStudent) {
-				rolesToAdd.add(UserGroupLocalServiceUtil.getUserGroup(
-						serviceContext.getCompanyId(),
-						PropsUtil.get("weclass.grupo.estudiante"))
-						.getUserGroupId());
-			} else {
-				rolesToRemove[rolesRemoveItr++] = UserGroupLocalServiceUtil
-						.getUserGroup(serviceContext.getCompanyId(),
-								PropsUtil.get("weclass.grupo.estudiante"))
-						.getUserGroupId();
-			}
-			if (isTeacher) {
-				rolesToAdd.add(UserGroupLocalServiceUtil.getUserGroup(
-						serviceContext.getCompanyId(),
-						PropsUtil.get("weclass.grupo.profesor"))
-						.getUserGroupId());
-			} else {
-				rolesToRemove[rolesRemoveItr++] = UserGroupLocalServiceUtil
-						.getUserGroup(serviceContext.getCompanyId(),
-								PropsUtil.get("weclass.grupo.profesor"))
-						.getUserGroupId();
-			}
-			if (isParent) {
-				rolesToAdd.add(UserGroupLocalServiceUtil.getUserGroup(
-						serviceContext.getCompanyId(),
-						PropsUtil.get("weclass.grupo.padre")).getUserGroupId());
-			} else {
-				rolesToRemove[rolesRemoveItr] = UserGroupLocalServiceUtil
-						.getUserGroup(serviceContext.getCompanyId(),
-								PropsUtil.get("weclass.grupo.padre"))
-						.getUserGroupId();
-			}
 			User user = UserLocalServiceUtil.getUserByScreenName(
 					serviceContext.getCompanyId(), login);
 			user.setFirstName(firstName);
@@ -383,81 +296,14 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			user.setEmailAddress(email);
 			List<UserGroup> userGroups = user.getUserGroups();
 			long[] userArray = new long[] { user.getUserId() };
-			for (long roleToRemove : rolesToRemove) {
-				for (UserGroup userGroup : userGroups) {
-					if (userGroup.getUserGroupId() == roleToRemove) {
-						UserLocalServiceUtil.unsetUserGroupUsers(
-								userGroup.getUserGroupId(), userArray);
-					}
-				}
+			if(PortalPermissionUtil.contains(
+					getPermissionChecker(), ActionKeys.ADD_USER))
+			{
+				UserLocalServiceUtil.updateUser(user);
 			}
-			for (Iterator<Long> iterator = rolesToAdd.iterator(); iterator
-					.hasNext();) {
-				long roleToAdd = iterator.next();
-				for (UserGroup userGroup : userGroups) {
-					if (userGroup.getUserGroupId() == roleToAdd) {
-						iterator.remove();
-					}
-				}
-			}
-			for (long roleToAdd : rolesToAdd) {
-				UserLocalServiceUtil.setUserGroupUsers(roleToAdd, userArray);
-			}
-			UserLocalServiceUtil.updateUser(user);
-		} catch (Exception e) {
-		}
 	
 	}
-	@JSONWebService
-	public void setParent(String parentLogin,String studentLogin)
-	{
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		try {
-			User parent = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), parentLogin);
-			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);				
-			SocialRelationLocalServiceUtil.addRelation(parent.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_PARENT);
-			SocialRelationLocalServiceUtil.addRelation(student.getUserId(), parent.getUserId(), SocialRelationConstants.TYPE_UNI_CHILD);
-		} catch (PortalException e) {
-		} catch (SystemException e) {
-		}
-	}
-	@JSONWebService
-	public void unsetParent(String parentLogin,String studentLogin)
-	{
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		try {
-			User parent = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), parentLogin);
-			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);
-			SocialRelationLocalServiceUtil.deleteRelation(parent.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_PARENT);
-			SocialRelationLocalServiceUtil.deleteRelation(student.getUserId(), parent.getUserId(), SocialRelationConstants.TYPE_UNI_CHILD);
-		} catch (Exception e) {
-		}		
-	}
-	@JSONWebService
-	public void setTutor(String tutorLogin,String studentLogin)
-	{
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		try {
-			User tutor = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), tutorLogin);
-			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);	
-			SocialRelationLocalServiceUtil.addRelation(tutor.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_SUPERVISOR);
-			SocialRelationLocalServiceUtil.addRelation(student.getUserId(), tutor.getUserId(), SocialRelationConstants.TYPE_UNI_SUBORDINATE);
-		} catch (PortalException e) {
-		} catch (SystemException e) {
-		}
-	}
-	@JSONWebService
-	public void unsetTutor(String parentLogin,String studentLogin)
-	{
-		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
-		try {
-			User tutor = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), parentLogin);
-			User student = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), studentLogin);
-			SocialRelationLocalServiceUtil.deleteRelation(tutor.getUserId(), student.getUserId(), SocialRelationConstants.TYPE_UNI_SUPERVISOR);
-			SocialRelationLocalServiceUtil.deleteRelation(student.getUserId(), tutor.getUserId(), SocialRelationConstants.TYPE_UNI_SUBORDINATE);
-		} catch (Exception e) {
-		}		
-	}
+	
 	@JSONWebService
 	public boolean existsCourseName(Long companyId, Long groupId, String groupName) {
 		

@@ -75,7 +75,7 @@ public class LearningActivityResultServiceImpl
 		User user=this.getUser();
 		return learningActivityResultLocalService.userPassed(actId, user.getUserId());
 	}
-	@JSONWebService
+	
 	public LearningActivityResult update(long latId, long result, String tryResultData) throws PortalException, SystemException
 	{
 		User user=this.getUser();
@@ -98,7 +98,7 @@ public class LearningActivityResultServiceImpl
 		
 		return lar;
 	}
-	@JSONWebService
+	
 	public LearningActivityResult update(long latId, String tryResultData) throws PortalException, SystemException
 	{
 		User user=this.getUser();
@@ -121,7 +121,7 @@ public class LearningActivityResultServiceImpl
 		
 		return lar;
 	}
-	@JSONWebService
+	
 	public LearningActivityResult update(long latId, String tryResultData, String imsmanifest) throws PortalException, SystemException
 	{
 		User user=this.getUser();
