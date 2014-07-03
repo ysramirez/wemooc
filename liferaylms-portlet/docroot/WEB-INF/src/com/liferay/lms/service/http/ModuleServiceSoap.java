@@ -79,6 +79,20 @@ public class ModuleServiceSoap {
 		}
 	}
 
+	public static com.liferay.lms.model.ModuleSoap[] findAllInCourse(
+		long courseId) throws RemoteException {
+		try {
+			java.util.List<com.liferay.lms.model.Module> returnValue = ModuleServiceUtil.findAllInCourse(courseId);
+
+			return com.liferay.lms.model.ModuleSoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static boolean isLocked(long moduleId) throws RemoteException {
 		try {
 			boolean returnValue = ModuleServiceUtil.isLocked(moduleId);
@@ -92,9 +106,23 @@ public class ModuleServiceSoap {
 		}
 	}
 
-	public static boolean isUserPassed(long moduleId) throws RemoteException {
+	public static boolean PassedByMe(long moduleId) throws RemoteException {
 		try {
-			boolean returnValue = ModuleServiceUtil.isUserPassed(moduleId);
+			boolean returnValue = ModuleServiceUtil.PassedByMe(moduleId);
+
+			return returnValue;
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static boolean isUserPassed(long moduleId, java.lang.String login)
+		throws RemoteException {
+		try {
+			boolean returnValue = ModuleServiceUtil.isUserPassed(moduleId, login);
 
 			return returnValue;
 		}

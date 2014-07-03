@@ -402,6 +402,7 @@
 			<site-member-defaults>
 				<action-key>VIEW</action-key>
 				<action-key>REGISTER</action-key>
+				<action-key>ACCESS</action-key>
 			</site-member-defaults>
 			<guest-defaults>
 			</guest-defaults>

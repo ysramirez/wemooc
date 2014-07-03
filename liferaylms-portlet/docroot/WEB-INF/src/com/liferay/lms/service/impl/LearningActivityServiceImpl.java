@@ -98,12 +98,12 @@ public class LearningActivityServiceImpl extends LearningActivityServiceBaseImpl
 	@JSONWebService
 	public LearningActivity getLearningActivity(long actId) throws PortalException, SystemException 
 	{
-		
-	    LearningActivity lernact=learningActivityLocalService.getLearningActivity(actId);
-		if( getPermissionChecker().hasPermission(lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(),
+   		LearningActivity lernact=learningActivityLocalService.getLearningActivity(actId);	 	
+
+	   	if( getPermissionChecker().hasPermission(lernact.getGroupId(), LearningActivity.class.getName(), lernact.getActId(),
 				ActionKeys.VIEW))
 		{
-			return lernact;
+	   	 	return lernact;
 		}
 		else
 		{

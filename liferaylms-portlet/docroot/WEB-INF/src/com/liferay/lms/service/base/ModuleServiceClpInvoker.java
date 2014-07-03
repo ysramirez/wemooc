@@ -35,13 +35,21 @@ public class ModuleServiceClpInvoker {
 
 		_methodParameterTypes124 = new String[] { "long" };
 
-		_methodName125 = "isLocked";
+		_methodName125 = "findAllInCourse";
 
 		_methodParameterTypes125 = new String[] { "long" };
 
-		_methodName126 = "isUserPassed";
+		_methodName126 = "isLocked";
 
 		_methodParameterTypes126 = new String[] { "long" };
+
+		_methodName127 = "PassedByMe";
+
+		_methodParameterTypes127 = new String[] { "long" };
+
+		_methodName128 = "isUserPassed";
+
+		_methodParameterTypes128 = new String[] { "long", "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -65,12 +73,23 @@ public class ModuleServiceClpInvoker {
 
 		if (_methodName125.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes125, parameterTypes)) {
-			return ModuleServiceUtil.isLocked(((Long)arguments[0]).longValue());
+			return ModuleServiceUtil.findAllInCourse(((Long)arguments[0]).longValue());
 		}
 
 		if (_methodName126.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes126, parameterTypes)) {
-			return ModuleServiceUtil.isUserPassed(((Long)arguments[0]).longValue());
+			return ModuleServiceUtil.isLocked(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName127.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes127, parameterTypes)) {
+			return ModuleServiceUtil.PassedByMe(((Long)arguments[0]).longValue());
+		}
+
+		if (_methodName128.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes128, parameterTypes)) {
+			return ModuleServiceUtil.isUserPassed(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1]);
 		}
 
 		throw new UnsupportedOperationException();
@@ -86,4 +105,8 @@ public class ModuleServiceClpInvoker {
 	private String[] _methodParameterTypes125;
 	private String _methodName126;
 	private String[] _methodParameterTypes126;
+	private String _methodName127;
+	private String[] _methodParameterTypes127;
+	private String _methodName128;
+	private String[] _methodParameterTypes128;
 }

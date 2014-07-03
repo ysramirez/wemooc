@@ -19,9 +19,11 @@ import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.base.LearningActivityTryServiceBaseImpl;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
+import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
 
@@ -49,9 +51,11 @@ public class LearningActivityTryServiceImpl
 	extends LearningActivityTryServiceBaseImpl 
 	{
 	@JSONWebService
-	public LearningActivityTry createLearningActivityTry(long actId,long userId) throws SystemException
+	public LearningActivityTry createLearningActivityTry(long actId,long userId) throws SystemException, PortalException
 	{
-		
+		User user=this.getUser();
+		if(user.getUserId()==userId)
+		{
 		LearningActivityTry lat=learningActivityTryPersistence.create(counterLocalService.increment(
 				LearningActivityTry.class.getName()));
 		lat.setActId(actId);
@@ -79,5 +83,7 @@ public class LearningActivityTryServiceImpl
 		}
 		
 		return lat;
+		}
+		return null;
 	}
 }
