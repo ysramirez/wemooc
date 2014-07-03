@@ -122,7 +122,7 @@
 			
 								if (activity.getPasspuntuation()>0){ 
 %>
-									<h3><liferay-ui:message key="execativity.test.try.pass.puntuation" arguments="<%=arg %>" /></h3>
+									<p class="msg_pass"><liferay-ui:message key="execativity.test.try.pass.puntuation" arguments="<%=arg %>" /></p>
 <% 
 								} 
 %>
