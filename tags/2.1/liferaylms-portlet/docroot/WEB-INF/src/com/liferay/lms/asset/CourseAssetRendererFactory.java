@@ -61,9 +61,6 @@ public class CourseAssetRendererFactory extends BaseAssetRendererFactory
 	@Override
 	public boolean hasPermission(PermissionChecker permissionChecker,
 			long classPK, String actionId) throws Exception {
-		if(ActionKeys.VIEW.equals(actionId)){
-			return true;
-		}
 		Course course=CourseLocalServiceUtil.getCourse(classPK);
 		return permissionChecker.hasPermission(course.getGroupId(), Course.class.getName(), classPK,actionId);
 	}
