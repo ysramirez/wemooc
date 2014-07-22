@@ -2,6 +2,7 @@ package com.liferay.lms;
 
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.charset.Charset;
 import java.text.DecimalFormat;
 
 import javax.portlet.PortletException;
@@ -18,7 +19,9 @@ import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -40,12 +43,19 @@ public class GeneralStats extends MVCPortlet {
 		if(action.equals("export")){
 			try
 			{
-			resourceResponse.setCharacterEncoding("ISO-8859-1");
-			resourceResponse.setContentType("text/csv;charset=ISO-8859-1");
+			String charset = LanguageUtil.getCharset(themeDisplay.getLocale());
+			if (Validator.isNull(charset)) {
+				charset = LanguageUtil.getCharset(LocaleUtil.getDefault());
+			}
+			charset="ISO-8859-1";
+			resourceResponse.setCharacterEncoding(charset);
+			resourceResponse.setContentType("text/csv;charset="+charset);
 			resourceResponse.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=generalstats."+Long.toString(System.currentTimeMillis())+".csv");
-	        byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
-	        resourceResponse.getPortletOutputStream().write(b);   
-	        CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),"ISO-8859-1"),';');
+			if ("UTF-8".equals(charset)) {
+		        byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
+		        resourceResponse.getPortletOutputStream().write(b);
+			}
+	        CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),charset),';');
 	        String[] linea=new String[8];
 	        linea[0]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.name");
 	        linea[1]=LanguageUtil.get(themeDisplay.getLocale(),"coursestats.registered");
@@ -84,7 +94,7 @@ public class GeneralStats extends MVCPortlet {
 			linea[6]=Long.toString(modulesCount);
 			linea[7]=Long.toString(activitiesCount);
 	        writer.writeNext(linea);
-	        resourceResponse.getPortletOutputStream().write(b);
+	        //resourceResponse.getPortletOutputStream().write(b);
 	        }
 	        writer.flush();
 			writer.close();
