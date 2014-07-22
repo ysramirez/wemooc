@@ -34,6 +34,7 @@ public interface LearningActivityType extends InvokableService
 	String getMesageEditDetails();
 	public boolean hasEditDetails();
 	public boolean hasDeleteTries();
+	public boolean hasMandatoryDates();
 	
 	public String getExpecificContentPage();
 	public void setExtraContent(UploadRequest uploadRequest,PortletResponse portletResponse,LearningActivity learningActivity) throws PortalException,SystemException,DocumentException,IOException, NumberFormatException, Exception;

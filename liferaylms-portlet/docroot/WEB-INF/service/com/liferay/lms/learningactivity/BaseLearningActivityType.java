@@ -91,6 +91,11 @@ public abstract class BaseLearningActivityType implements LearningActivityType, 
 	}
 	
 	@Override
+	public boolean hasMandatoryDates() {
+		return false;
+	}
+	
+	@Override
 	public String getExpecificContentPage() {
 		return null;
 	}
