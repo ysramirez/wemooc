@@ -91,7 +91,7 @@
     
 	function <portlet:namespace/>showPopupImportUsers()
     {
-		AUI().use('aui-dialog', function(A){
+		AUI().use('node','aui-dialog', function(A){
 			new A.Dialog({
 				id:'<portlet:namespace />showPopupImportUsers',
 	            title: '<liferay-ui:message key="import" />',
@@ -100,10 +100,10 @@
 	            resizable: true,
 	            width: 700,
 	            height: 530,
-	            destroyOnClose: true,
+	            destroyOnClose: false,
 	            after: {   
-		          	close: function(event){ 
-		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0});	
+		          	close: function(event){
+		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0});
 	            	}
 	            }
 	        }).plug(A.Plugin.IO, {
