@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portal.service.ServiceContextFactory"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
 <%@page import="com.liferay.portal.model.ResourcePermission"%>
@@ -100,9 +101,14 @@ else
 		</liferay-ui:input-permissions>
 	</aui:field-wrapper>
 	</c:if>
+	<% String cipheredMode = GetterUtil.getString(PropsUtil.get("lms.scorm.cipheredmode"), "ask"); 
+	if ("always".equals(cipheredMode) || "never".equals(cipheredMode)) { %>
+		<aui:input name="ciphered" id="ciphered" type="hidden" value='<%= "always".equals(cipheredMode) %>' ignoreRequestValue="true"/>
+	<% } else { %>
 	<aui:field-wrapper label="ciphered.options">
 		<aui:input inlineLabel="right" inlineField="true" name="ciphered" label="ciphered" id="ciphered" type="checkbox" value="<%= scormId == 0 ? false : scorm.getCiphered() %>"/>
 	</aui:field-wrapper>
+	<% } %>
 	
 		<liferay-ui:custom-attributes-available className="<%= SCORMContent.class.getName() %>">
 		<liferay-ui:custom-attribute-list 
