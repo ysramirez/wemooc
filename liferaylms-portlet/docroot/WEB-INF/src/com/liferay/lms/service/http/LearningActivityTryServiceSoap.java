@@ -80,5 +80,21 @@ public class LearningActivityTryServiceSoap {
 		}
 	}
 
+	public static com.liferay.lms.model.LearningActivityTrySoap[] getLearningActivityTries(
+		long actId, java.lang.String login) throws RemoteException {
+		try {
+			java.util.List<com.liferay.lms.model.LearningActivityTry> returnValue =
+				LearningActivityTryServiceUtil.getLearningActivityTries(actId,
+					login);
+
+			return com.liferay.lms.model.LearningActivityTrySoap.toSoapModels(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	private static Log _log = LogFactoryUtil.getLog(LearningActivityTryServiceSoap.class);
 }

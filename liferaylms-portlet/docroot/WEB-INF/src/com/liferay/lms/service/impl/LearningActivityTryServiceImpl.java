@@ -14,8 +14,11 @@
 
 package com.liferay.lms.service.impl;
 
+import java.util.List;
+
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
+import com.liferay.lms.model.Course;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.service.base.LearningActivityTryServiceBaseImpl;
@@ -26,6 +29,7 @@ import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextThreadLocal;
+import com.liferay.portal.service.UserLocalServiceUtil;
 
 /**
  * The implementation of the learning activity try remote service.
@@ -86,4 +90,20 @@ public class LearningActivityTryServiceImpl
 		}
 		return null;
 	}
+	@JSONWebService
+	public List<LearningActivityTry> getLearningActivityTries(long actId,String login) throws SystemException, PortalException
+	{
+		
+		User user=this.getUser();
+		LearningActivity learnact=learningActivityLocalService.getLearningActivity(actId);
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		User usuario = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);	
+		Course course=courseLocalService.getCourseByGroupCreatedId(learnact.getGroupId());
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),"ASSIGN_MEMBERS"))
+		{
+			return learningActivityTryLocalService.getLearningActivityTryByActUser(actId, usuario.getUserId());
+		}
+		return null;
+	}
+	
 }
