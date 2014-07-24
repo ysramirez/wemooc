@@ -554,6 +554,8 @@ public class CloneCourse implements MessageListener {
 	
 	private long cloneFile(long entryId, LearningActivity actNew, long userId, ServiceContext serviceContext){
 		
+		long assetEntryId = 0;
+		boolean addGroupPermissions = serviceContext.isAddGroupPermissions();
 		try {
 			
 			AssetEntry docAsset = AssetEntryLocalServiceUtil.getAssetEntry(entryId);
@@ -570,6 +572,7 @@ public class CloneCourse implements MessageListener {
 				ficheroStr = ficheroStr +"."+ docfile.getExtension();
 			}
 			
+			serviceContext.setAddGroupPermissions(true);
 			FileEntry newFile = DLAppLocalServiceUtil.addFileEntry(
 					serviceContext.getUserId(), repositoryId , dlFolder.getFolderId() , ficheroStr, docfile.getMimeType(), 
 					docfile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
@@ -577,17 +580,19 @@ public class CloneCourse implements MessageListener {
 			AssetEntry asset = AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), newFile.getPrimaryKey());
 			
 			System.out.println(" asset : " + asset.getEntryId());
-
-			return asset.getEntryId();
+			
+			assetEntryId = asset.getEntryId();
 			
 		} catch (NoSuchEntryException nsee) {
 			System.out.println(" asset not exits ");
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		} finally {
+			serviceContext.setAddGroupPermissions(addGroupPermissions);
 		}
 		
-		return 0;
+		return assetEntryId;
 	}
 	
 	private FileEntry cloneFileDescription(FileEntry file, long actId, long userId, ServiceContext serviceContext){
