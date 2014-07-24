@@ -414,6 +414,7 @@ public class CloneCourse implements MessageListener {
 								serviceContext.setScopeGroupId(groupId);
 								serviceContext.setUserId(userId);
 								serviceContext.setCompanyId(file.getCompanyId());
+								serviceContext.setAddGroupPermissions(true);
 								
 								FileEntry newFile = cloneFileDescription(file, actId, file.getUserId(), serviceContext);
 								
@@ -455,6 +456,7 @@ public class CloneCourse implements MessageListener {
 								serviceContext.setScopeGroupId(groupId);
 								serviceContext.setUserId(userId);
 								serviceContext.setCompanyId(file.getCompanyId());
+								serviceContext.setAddGroupPermissions(true);
 								
 								FileEntry newFile = cloneFileDescription(file, actId, file.getUserId(), serviceContext);
 								
@@ -661,7 +663,7 @@ public class CloneCourse implements MessageListener {
 	private DLFolder getMainDLFolder(Long userId, Long groupId, ServiceContext serviceContext) throws PortalException, SystemException{
 
 		DLFolder mainFolder = null;
-
+		boolean addGroupPermissions = serviceContext.isAddGroupPermissions();
 		try {
 
 			mainFolder = DLFolderLocalServiceUtil.getFolder(groupId,0,"ResourceUploads");
@@ -669,8 +671,11 @@ public class CloneCourse implements MessageListener {
         } catch (Exception ex){
 
         	long repositoryId = DLFolderConstants.getDataRepositoryId(groupId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-        	//mountPoint -> Si es carpeta ra�z.
+        	//mountPoint -> Si es carpeta raiz.
+        	serviceContext.setAddGroupPermissions(true);
         	mainFolder = DLFolderLocalServiceUtil.addFolder(userId, groupId, repositoryId, false, 0, "ResourceUploads", "ResourceUploads", serviceContext);
+        } finally {
+        	serviceContext.setAddGroupPermissions(addGroupPermissions);
         }
   
         return mainFolder;

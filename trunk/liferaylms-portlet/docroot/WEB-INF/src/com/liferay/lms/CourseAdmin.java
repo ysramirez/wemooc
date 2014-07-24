@@ -902,7 +902,7 @@ public class CourseAdmin extends MVCPortlet {
 		if (startAMPM > 0) {
 			startHour += 12;
 		}
-		Date startDate = PortalUtil.getDate(startMonth, startDay, startYear, startHour, startMinute, themeDisplay.getTimeZone(), new EntryDisplayDateException());
+		Date startDate = PortalUtil.getDate(startMonth, startDay, startYear, startHour, startMinute, themeDisplay.getTimeZone(), EntryDisplayDateException.class);
 		
 		int stopMonth = 	ParamUtil.getInteger(actionRequest, "stopMon");
 		int stopYear = 		ParamUtil.getInteger(actionRequest, "stopYear");
@@ -913,7 +913,7 @@ public class CourseAdmin extends MVCPortlet {
 		if (stopAMPM > 0) {
 			stopHour += 12;
 		}
-		Date endDate = PortalUtil.getDate(stopMonth, stopDay, stopYear, stopHour, stopMinute, themeDisplay.getTimeZone(), new EntryDisplayDateException());
+		Date endDate = PortalUtil.getDate(stopMonth, stopDay, stopYear, stopHour, stopMinute, themeDisplay.getTimeZone(), EntryDisplayDateException.class);
 		
 		//CloneCourseThread cloneThread = new CloneCourseThread(groupId, newCourseName, themeDisplay, startDate, endDate, serviceContext);
 		//Thread thread = new Thread(cloneThread);
