@@ -25,6 +25,7 @@ import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
+import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
@@ -43,9 +44,11 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
+import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.GroupLocalServiceUtil;
@@ -57,6 +60,7 @@ import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.service.permission.PortalPermissionUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
@@ -90,20 +94,90 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	public java.util.List<Course> getCoursesOfGroup(long groupId) throws SystemException
 	{
 		return coursePersistence.filterFindByGroupId(groupId);
+		
 	}
 	@JSONWebService
-	public java.util.List<String> getCourseStudents(long courseId)
+	public java.util.List<Course> getCourses() throws SystemException, PortalException
 	{
+		String groupName = GroupConstants.GUEST;
+		 long companyId = PortalUtil.getDefaultCompanyId();
+		 long guestGroupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
+		 return coursePersistence.filterFindByGroupId(guestGroupId);
+			
+		
+	}
+	@JSONWebService
+	public java.util.List<String> getCourseStudents(long courseId) throws PortalException, SystemException
+	{
+		User user=getUser();
+		
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(course.getCompanyId()==user.getCompanyId())
+		{
+			LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(course.getCompanyId());
+		
+		Role commmanager=RoleLocalServiceUtil.getRole(course.getCompanyId(), RoleConstants.SITE_MEMBER) ;
+		java.util.List<String> users=new java.util.ArrayList<String>();
+		long createdGroupId=course.getGroupCreatedId();
+		java.util.List<User> userst=UserLocalServiceUtil.getGroupUsers(createdGroupId);
+		
+		for(User usert:userst)
+		{
+			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(usert.getUserId(),createdGroupId);
+			boolean remove =false;
+			for(UserGroupRole ugr:userGroupRoles){
+				if(ugr.getRoleId()==prefs.getEditorRole()||ugr.getRoleId()==prefs.getTeacherRole()){
+					remove = true;
+					break;
+				}
+			}
+			if(!remove){
+				users.add(usert.getScreenName());
+			}
+		}
+		return users;
+		}
 		return null;
 	}
 	@JSONWebService
-	public java.util.List<String> getCourseTeachers(long courseId)
+	public java.util.List<String> getCourseTeachers(long courseId) throws PortalException, SystemException
 	{
+		User user=getUser();
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		long createdGroupId=course.getGroupCreatedId();
+		if(course.getCompanyId()==user.getCompanyId())
+		{
+			LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(course.getCompanyId());
+			List<UserGroupRole> ugrs=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(createdGroupId, prefs.getTeacherRole());
+			List<String> users=new java.util.ArrayList<String>();
+			for(UserGroupRole ugr:ugrs)
+			{
+				users.add(ugr.getUser().getScreenName());
+			}
+			return users;
+		}
 		return null;
 	}
 	@JSONWebService
-	public java.util.List<String> getCourseEditors(long courseId)
+	public java.util.List<String> getCourseEditors(long courseId) throws PortalException, SystemException
 	{
+		User user=getUser();
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		long createdGroupId=course.getGroupCreatedId();
+		if(course.getCompanyId()==user.getCompanyId())
+		{
+			LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(course.getCompanyId());
+			List<UserGroupRole> ugrs=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(createdGroupId, prefs.getEditorRole());
+			List<String> users=new java.util.ArrayList<String>();
+			for(UserGroupRole ugr:ugrs)
+			{
+				users.add(ugr.getUser().getScreenName());
+			}
+			return users;
+		}
 		return null;
 	}
 	@JSONWebService
