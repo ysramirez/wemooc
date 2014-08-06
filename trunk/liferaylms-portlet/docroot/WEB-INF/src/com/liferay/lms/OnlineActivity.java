@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.Element;
@@ -184,12 +185,19 @@ public class OnlineActivity extends MVCPortlet {
 				String fileName = uploadRequest.getFileName("fileName");
 				File file = uploadRequest.getFile("fileName");
 				String mimeType = uploadRequest.getContentType("fileName");
+				if (Validator.isNull(fileName)) {
+					SessionErrors.add(actionRequest, "onlineActivity.mandatory.file");
+					actionRequest.setAttribute("actId", actId);
+					actionResponse.setRenderParameter("text", text);
+					return;
+				}
 				if(	file.getName().endsWith(".bat") 
 						|| file.getName().endsWith(".com")
 						|| file.getName().endsWith(".exe")
 						|| file.getName().endsWith(".msi") ){
 
 					SessionErrors.add(actionRequest, "onlineActivity.not.allowed.file.type");
+					actionResponse.setRenderParameter("text", text);
 					actionRequest.setAttribute("actId", actId);
 					return;
 				}
