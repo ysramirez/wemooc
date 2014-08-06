@@ -213,6 +213,7 @@ public class CloneCourse implements MessageListener {
 
 		for(Module module:modules){
 			
+			/*
 			if(isFirstModule){
 				Calendar c = Calendar.getInstance();
 				c.setTimeInMillis(startDate.getTime() - module.getStartDate().getTime());
@@ -227,6 +228,7 @@ public class CloneCourse implements MessageListener {
 				cloneTraceStr += "\n Days to add: "+ days +" "+startDate+" "+module.getStartDate()+" "+c.getTime();
 				cloneTraceStr += "\n\n";
 			}
+			*/
 			
 			Module newModule;
 			try {
@@ -241,16 +243,18 @@ public class CloneCourse implements MessageListener {
 				newModule.setUserId(newCourse.getUserId());
 				newModule.setOrdern(newModule.getModuleId());
 				
+				/*
 				Calendar start = Calendar.getInstance();
 				start.setTimeInMillis(module.getStartDate().getTime() + TimeUnit.MILLISECONDS.convert(days, TimeUnit.DAYS));
 				Calendar stop = Calendar.getInstance();
 				stop.setTimeInMillis(module.getEndDate().getTime() + TimeUnit.MILLISECONDS.convert(days, TimeUnit.DAYS));
+				*/
 				
 				//System.out.println(" startDate: "+ start.getTime() +"   -> "+module.getStartDate());
 				//System.out.println(" stopDate : "+ stop.getTime()  +"   -> "+module.getEndDate());
 				
-				newModule.setStartDate(start.getTime());
-				newModule.setEndDate(stop.getTime());
+				newModule.setStartDate(startDate);
+				newModule.setEndDate(endDate);
 				
 				newModule.setDescription(descriptionFilesClone(module.getDescription(),newCourse.getGroupCreatedId(), newModule.getModuleId(),themeDisplay.getUserId()));
 				
@@ -284,6 +288,10 @@ public class CloneCourse implements MessageListener {
 					newLearnActivity.setGroupId(newModule.getGroupId());
 					newLearnActivity.setModuleId(newModule.getModuleId());
 					
+					newLearnActivity.setStartdate(startDate);
+					newLearnActivity.setEnddate(endDate);
+					
+					/*
 					if(activity.getStartdate() != null){
 						Calendar start = Calendar.getInstance();
 						start.setTimeInMillis(activity.getStartdate().getTime() + TimeUnit.MILLISECONDS.convert(days, TimeUnit.DAYS));
@@ -297,6 +305,7 @@ public class CloneCourse implements MessageListener {
 						newLearnActivity.setEnddate(stop.getTime());
 						//System.out.println(" stopDate : "+ stop.getTime()  +"   -> "+activity.getEnddate());
 					}
+					*/
 
 					newLearnActivity.setDescription(descriptionFilesClone(activity.getDescription(),newModule.getGroupId(), newLearnActivity.getActId(),themeDisplay.getUserId()));
 					
@@ -576,7 +585,7 @@ public class CloneCourse implements MessageListener {
 			serviceContext.setAddGroupPermissions(true);
 			FileEntry newFile = DLAppLocalServiceUtil.addFileEntry(
 					serviceContext.getUserId(), repositoryId , dlFolder.getFolderId() , ficheroStr, docfile.getMimeType(), 
-					docfile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
+					docfile.getTitle(), StringPool.BLANK, StringPool.BLANK, is, docfile.getSize() , serviceContext ) ;
 			
 			AssetEntry asset = AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), newFile.getPrimaryKey());
 			
@@ -617,7 +626,7 @@ public class CloneCourse implements MessageListener {
 			}
 			return  DLAppLocalServiceUtil.addFileEntry(
 					serviceContext.getUserId(), repositoryId , folderId , ficheroStr, file.getMimeType(), 
-					file.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
+					file.getTitle(), StringPool.BLANK, StringPool.BLANK, is, file.getSize() , serviceContext ) ;
 			
 			
 		}catch(DuplicateFileException dfl){

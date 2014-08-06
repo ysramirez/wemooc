@@ -339,9 +339,9 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	<aui:form name="fm" action="<%=setActivity%>"  method="post" enctype="multipart/form-data" cssClass='<%=(result!=null)?((result.getEndDate()!= null)?"aui-helper-hidden":""):""%>' >
 		<aui:fieldset>
 		<% if(isSetTextoEnr){ %>
-		<aui:input type="hidden" name="text" value=''/>
+		<aui:input type="hidden" name="text" value='<%= ParamUtil.getString(request,"text", StringPool.BLANK) %>'/>
 		<aui:field-wrapper label="text" name="DescripcionRichTxt" >
-			<div id="<portlet:namespace/>DescripcionRichTxt" ></div>
+			<div id="<portlet:namespace/>DescripcionRichTxt" ><%= ParamUtil.getString(request,"text", StringPool.BLANK) %></div>
 		</aui:field-wrapper>
 		<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initEditor"  />
 		<script type="text/javascript">
@@ -366,7 +366,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<% } 
 		   else { %>
 		<aui:field-wrapper label="text" name="text" >
-			<aui:input type="textarea" cols="100" rows="5" name="text" label="" value=''/>
+			<aui:input type="textarea" cols="100" rows="5" name="text" label="" value='<%= ParamUtil.getString(request,"text", StringPool.BLANK) %>'/>
 		</aui:field-wrapper>
 		<% }
 		   if(isSetFichero){ %>
@@ -387,6 +387,10 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	
 			<liferay-ui:message arguments="<%= fileMaxSize %>" key="onlineActivity.enter.valid.file" />
 		</liferay-ui:error>
+		<liferay-ui:error exception="<%= com.liferay.portlet.documentlibrary.FileExtensionException.class %>">
+			<liferay-ui:message key="onlineActivity.not.allowed.file.type"/>
+		</liferay-ui:error>
+		<liferay-ui:error key="onlineActivity.mandatory.file" message="onlineActivity.mandatory.file" />
 		<liferay-ui:error key="onlineActivity-error-file-type" message="onlineActivity.not.allowed.file.type" />
 		<% } %>
 		</aui:fieldset>

@@ -18,6 +18,7 @@ Liferay.provide(
 			renderUrl.setPortletId("lmsactivitieslist_WAR_liferaylmsportlet");
 			renderUrl.setParameter('actionEditing', <%=ParamUtil.getBoolean(request, "actionEditing", false)%>);
 			renderUrl.setParameter('moduleId', modId);
+			renderUrl.setParameter('actId', 0);
 			renderUrl.setParameter('themeId', i);
 			renderUrl.setParameter('<%=ActionRequest.ACTION_NAME%>', "goToModule");
 			location.href=renderUrl.toString();
