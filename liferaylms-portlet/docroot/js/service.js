@@ -14,6 +14,7 @@ Liferay.Service.registerClass(
 	{
 		getCoursesOfGroup: true,
 		createCourse: true,
+		getCourses: true,
 		getCourseStudents: true,
 		getCourseTeachers: true,
 		getCourseEditors: true,
@@ -27,10 +28,6 @@ Liferay.Service.registerClass(
 		myCourses: true,
 		addUser: true,
 		updateUser: true,
-		setParent: true,
-		unsetParent: true,
-		setTutor: true,
-		unsetTutor: true,
 		existsCourseName: true,
 		getLogoUrl: true
 	}
@@ -63,7 +60,8 @@ Liferay.Service.registerClass(
 Liferay.Service.registerClass(
 	Liferay.Service.Lms, "LearningActivityTry",
 	{
-		createLearningActivityTry: true
+		createLearningActivityTry: true,
+		getLearningActivityTries: true
 	}
 );
 
@@ -71,7 +69,9 @@ Liferay.Service.registerClass(
 	Liferay.Service.Lms, "Module",
 	{
 		findAllInGroup: true,
+		findAllInCourse: true,
 		isLocked: true,
+		PassedByMe: true,
 		isUserPassed: true
 	}
 );

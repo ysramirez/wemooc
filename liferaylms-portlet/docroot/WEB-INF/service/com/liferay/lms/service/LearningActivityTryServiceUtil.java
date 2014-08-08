@@ -69,6 +69,13 @@ public class LearningActivityTryServiceUtil {
 		return getService().createLearningActivityTry(actId, userId);
 	}
 
+	public static java.util.List<com.liferay.lms.model.LearningActivityTry> getLearningActivityTries(
+		long actId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().getLearningActivityTries(actId, login);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

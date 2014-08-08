@@ -69,14 +69,33 @@ public interface CourseService extends BaseService, InvokableService {
 		long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
-	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<java.lang.String> getCourseStudents(long courseId);
+	public com.liferay.lms.model.Course createCourse(java.lang.String title,
+		java.lang.String description, boolean published,
+		java.lang.String summary, int evaluationmethod, int calificationType,
+		int template, int registermethod, int maxusers,
+		java.util.Date startregistrationdate, java.util.Date endregistrationdate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<java.lang.String> getCourseTeachers(long courseId);
+	public java.util.List<com.liferay.lms.model.Course> getCourses()
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public java.util.List<java.lang.String> getCourseEditors(long courseId);
+	public java.util.List<java.lang.String> getCourseStudents(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<java.lang.String> getCourseTeachers(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<java.lang.String> getCourseEditors(long courseId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
 
 	public void addStudentToCourse(long courseId, java.lang.String login)
 		throws com.liferay.portal.kernel.exception.PortalException,
