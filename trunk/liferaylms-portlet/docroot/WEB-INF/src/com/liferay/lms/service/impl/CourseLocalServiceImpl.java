@@ -65,7 +65,11 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetLinkConstants;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.social.model.SocialActivityCounterDefinition;
+import com.liferay.portlet.social.model.SocialActivityDefinition;
+import com.liferay.portlet.social.model.SocialActivitySetting;
 import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
+import com.liferay.portlet.social.service.SocialActivitySettingServiceUtil;
 
 
 
@@ -190,7 +194,26 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			}
 
 			/* activamos social activity para la comunidad creada */ 		
-			SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), Group.class.getName(), true);	
+			List<SocialActivitySetting> actSettings=SocialActivitySettingLocalServiceUtil.getActivitySettings(lsProto.getGroup().getGroupId());
+			for(SocialActivitySetting actSetting:actSettings)
+			{
+			
+			//Activamos las activity settings que estén activadas en la plantilla
+				SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), actSetting.getClassName(), true);	
+				List<SocialActivityDefinition> sads=SocialActivitySettingServiceUtil.getActivityDefinitions(lsProto.getGroup().getGroupId(), actSetting.getClassName());
+				for(SocialActivityDefinition sad:sads)
+				{
+				
+					java.util.Collection<SocialActivityCounterDefinition> sacdl=sad.getActivityCounterDefinitions();
+					List<SocialActivityCounterDefinition> sacdlnew=new java.util.ArrayList<SocialActivityCounterDefinition>();
+					for(SocialActivityCounterDefinition sacd:sacdl)
+					{
+						SocialActivityCounterDefinition sacdn=sacd.clone();
+						sacdlnew.add(sacdn);
+					}
+					SocialActivitySettingServiceUtil.updateActivitySettings(group.getGroupId(), actSetting.getClassName(), sad.getActivityType(), sacdlnew);
+				}
+			}
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(Course.class);
 			indexer.reindex(course);
 		}catch(Exception e){

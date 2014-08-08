@@ -66,6 +66,13 @@ public class LearningActivityTryServiceWrapper
 			userId);
 	}
 
+	public java.util.List<com.liferay.lms.model.LearningActivityTry> getLearningActivityTries(
+		long actId, java.lang.String login)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _learningActivityTryService.getLearningActivityTries(actId, login);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */
