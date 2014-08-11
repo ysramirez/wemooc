@@ -7,7 +7,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Layout;
 import com.liferay.portal.model.ResourceConstants;
-import com.liferay.portal.model.ResourcePermission;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.security.permission.ActionKeys;
@@ -33,8 +32,9 @@ public class CourseToolsManage extends MVCPortlet
 						.parseLong(layoutid));
 
 				Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+				Role userRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.USER);
 				boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), Layout.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	layoutid,siteMemberRole.getRoleId(), ActionKeys.VIEW);
+						ResourceConstants.SCOPE_INDIVIDUAL, layoutid, new long[] {siteMemberRole.getRoleId(), userRole.getRoleId()}, ActionKeys.VIEW);
 				//if (ellayout.getHidden()) {
 				if(!visible){	
 					//ellayout.setHidden(false);
@@ -46,15 +46,27 @@ public class CourseToolsManage extends MVCPortlet
 							layoutid,
 							siteMemberRole.getRoleId(),
 							new String[] { ActionKeys.VIEW });
+					ResourcePermissionLocalServiceUtil.setResourcePermissions(
+							themeDisplay.getCompanyId(),
+							Layout.class.getName(),
+							ResourceConstants.SCOPE_INDIVIDUAL,
+							layoutid,
+							userRole.getRoleId(),
+							new String[] { ActionKeys.VIEW });
 				} else {
 					//ellayout.setHidden(true);
-					ResourcePermissionLocalServiceUtil
-							.removeResourcePermission(
-									themeDisplay.getCompanyId(),
-									Layout.class.getName(),
-									ResourceConstants.SCOPE_INDIVIDUAL,
-									layoutid,
-									siteMemberRole.getRoleId(), ActionKeys.VIEW);					
+					ResourcePermissionLocalServiceUtil.removeResourcePermission(
+							themeDisplay.getCompanyId(),
+							Layout.class.getName(),
+							ResourceConstants.SCOPE_INDIVIDUAL,
+							layoutid,
+							siteMemberRole.getRoleId(), ActionKeys.VIEW);
+					ResourcePermissionLocalServiceUtil.removeResourcePermission(
+							themeDisplay.getCompanyId(),
+							Layout.class.getName(),
+							ResourceConstants.SCOPE_INDIVIDUAL,
+							layoutid,
+							userRole.getRoleId(), ActionKeys.VIEW);
 				}
 				//LayoutLocalServiceUtil.updateLayout(ellayout);
 			} catch (Exception e) {
