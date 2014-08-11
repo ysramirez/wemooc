@@ -50,6 +50,7 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.LmsLocaleUtil;
 
 /**
@@ -416,13 +417,13 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		Module theModule=ModuleLocalServiceUtil.getModule(moduleId);
 		java.util.Date now=new java.util.Date(System.currentTimeMillis());
 		Course course=courseLocalService.fetchByGroupCreatedId(theModule.getGroupId());
-		if(!UserLocalServiceUtil.hasGroupUser(theModule.getGroupId(), userId))
+		if(!UserLocalServiceUtil.hasGroupUser(theModule.getGroupId(), userId) && !PortalUtil.isOmniadmin(userId))
 		{
 			return true;
 		}
 		User user=UserLocalServiceUtil.getUser(userId);
 		
-		PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(user, true);
+		PermissionChecker permissionChecker=PermissionCheckerFactoryUtil.create(user);
 		if(!permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.ACCESS))
 		{
 			return true;
