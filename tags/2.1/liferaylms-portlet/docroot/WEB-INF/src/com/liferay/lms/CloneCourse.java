@@ -575,7 +575,7 @@ public class CloneCourse implements MessageListener {
 			serviceContext.setAddGroupPermissions(true);
 			FileEntry newFile = DLAppLocalServiceUtil.addFileEntry(
 					serviceContext.getUserId(), repositoryId , dlFolder.getFolderId() , ficheroStr, docfile.getMimeType(), 
-					docfile.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
+					docfile.getTitle(), StringPool.BLANK, StringPool.BLANK, is, docfile.getSize(), serviceContext ) ;
 			
 			AssetEntry asset = AssetEntryLocalServiceUtil.getEntry(DLFileEntry.class.getName(), newFile.getPrimaryKey());
 			
@@ -616,7 +616,7 @@ public class CloneCourse implements MessageListener {
 			}
 			return  DLAppLocalServiceUtil.addFileEntry(
 					serviceContext.getUserId(), repositoryId , folderId , ficheroStr, file.getMimeType(), 
-					file.getTitle(), StringPool.BLANK, StringPool.BLANK, IOUtils.toByteArray(is) , serviceContext ) ;
+					file.getTitle(), StringPool.BLANK, StringPool.BLANK, is, file.getSize(), serviceContext ) ;
 			
 			
 		}catch(DuplicateFileException dfl){
