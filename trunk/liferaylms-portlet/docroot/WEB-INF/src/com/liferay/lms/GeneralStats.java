@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
@@ -47,11 +48,11 @@ public class GeneralStats extends MVCPortlet {
 			if (Validator.isNull(charset)) {
 				charset = LanguageUtil.getCharset(LocaleUtil.getDefault());
 			}
-			charset="ISO-8859-1";
+			charset = StringPool.UTF8;
 			resourceResponse.setCharacterEncoding(charset);
 			resourceResponse.setContentType("text/csv;charset="+charset);
 			resourceResponse.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=generalstats."+Long.toString(System.currentTimeMillis())+".csv");
-			if ("UTF-8".equals(charset)) {
+			if (StringPool.UTF8.equals(charset)) {
 		        byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 		        resourceResponse.getPortletOutputStream().write(b);
 			}

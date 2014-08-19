@@ -47,6 +47,7 @@ import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -421,14 +422,14 @@ public class ExecActivity extends MVCPortlet
 		String action = ParamUtil.getString(request, "action");
 		long actId = ParamUtil.getLong(request, "resId",0);
 		
-		response.setCharacterEncoding("ISO-8859-1");
+		response.setCharacterEncoding(StringPool.UTF8);
 		try {
 			if(action.equals("exportResultsCsv")){
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
-				response.setContentType("text/csv;charset=ISO-8859-1");
+				response.setContentType(ContentTypes.TEXT_CSV_UTF8);
 				byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 				response.getPortletOutputStream().write(b);
-				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),StringPool.UTF8),CharPool.SEMICOLON);
 
 				//Crear la cabecera con las preguntas.
 				List<TestQuestion> questiones=TestQuestionLocalServiceUtil.getQuestions(actId);
@@ -525,8 +526,8 @@ public class ExecActivity extends MVCPortlet
 					
 			}else if(action.equals("exportXml")){
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.xml");
-				response.setContentType("text/xml; charset=UTF-8");
-				PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(response.getPortletOutputStream(),"UTF-8"));
+				response.setContentType(ContentTypes.TEXT_XML_UTF8);
+				PrintWriter printWriter = new PrintWriter(new OutputStreamWriter(response.getPortletOutputStream(),StringPool.UTF8));
 				Element quizXML=SAXReaderUtil.createElement("quiz");
 				Document quizXMLDoc=SAXReaderUtil.createDocument(quizXML);
 				

@@ -30,6 +30,8 @@ import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -322,14 +324,14 @@ public class CourseStats extends MVCPortlet {
 	private CSVWriter initCsv(ResourceResponse resourceResponse)
 			throws IOException, UnsupportedEncodingException {
 		//Necesario para crear el fichero csv.
-		resourceResponse.setCharacterEncoding("ISO-8859-1");
-		resourceResponse.setContentType("text/csv;charset=ISO-8859-1");
+		resourceResponse.setCharacterEncoding(StringPool.UTF8);
+		resourceResponse.setContentType(ContentTypes.TEXT_CSV_UTF8);
 		resourceResponse.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
 		byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 		
 		resourceResponse.getPortletOutputStream().write(b);
 		
-		CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),"ISO-8859-1"),';');
+		CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),StringPool.UTF8),CharPool.SEMICOLON);
 		return writer;
 	}
 	

@@ -49,6 +49,7 @@ import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -273,7 +274,7 @@ public class SurveyActivity extends MVCPortlet {
 				CSVReader reader = null;
 				try {
 					boolean allCorrect=true;
-					reader = new CSVReader(new InputStreamReader(csvFile, "ISO-8859-1"), ';');
+					reader = new CSVReader(new InputStreamReader(csvFile, StringPool.UTF8),CharPool.SEMICOLON);
 					int line = 0;
 					String questionText="";
 					String[] currLine; 
@@ -461,14 +462,14 @@ public class SurveyActivity extends MVCPortlet {
 			try {
 
 				//Necesario para crear el fichero csv.
-				response.setCharacterEncoding("ISO-8859-1");
-				response.setContentType("text/csv;charset=ISO-8859-1");
+				response.setCharacterEncoding(StringPool.UTF8);
+				response.setContentType(ContentTypes.TEXT_CSV_UTF8);
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
 				byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 
 				response.getPortletOutputStream().write(b);
 
-				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),StringPool.UTF8),CharPool.SEMICOLON);
 
 
 				//Crear la cabecera con las preguntas.
@@ -567,14 +568,14 @@ public class SurveyActivity extends MVCPortlet {
 			try {
 
 				//Necesario para crear el fichero csv.
-				response.setCharacterEncoding("ISO-8859-1");
-				response.setContentType("text/csv;charset=ISO-8859-1");
+				response.setCharacterEncoding(StringPool.UTF8);
+				response.setContentType(ContentTypes.TEXT_CSV_UTF8);
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
 				byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 
 				response.getPortletOutputStream().write(b);
 
-				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),"ISO-8859-1"),';');
+				CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream(),StringPool.UTF8),CharPool.SEMICOLON);
 				
 				String[] cabeceras = new String[2];
 				
