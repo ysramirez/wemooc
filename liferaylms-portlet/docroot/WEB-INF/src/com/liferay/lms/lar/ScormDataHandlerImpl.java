@@ -41,15 +41,11 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 
 	private static final boolean _PUBLISH_TO_LIVE_BY_DEFAULT = true;
 	
-	private static PortletDataHandlerBoolean _foldersAndDocuments =
-			new PortletDataHandlerBoolean(
-				_NAMESPACE, "folders-and-documents", true, true);
-
 	private static PortletDataHandlerBoolean _categories = new PortletDataHandlerBoolean(
 			_NAMESPACE, "categories", true, true);
 
 	private static PortletDataHandlerBoolean _entries = new PortletDataHandlerBoolean(
-			_NAMESPACE, "entries", true, true);
+			_NAMESPACE, "entries", true, false);
 
 	private static PortletDataHandlerBoolean _tags = new PortletDataHandlerBoolean(
 			_NAMESPACE, "tags", true, true);
@@ -72,12 +68,12 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 	
 	@Override
 	public PortletDataHandlerControl[] getExportControls() {
-		return new PortletDataHandlerControl[] { _entries, _foldersAndDocuments};
+		return new PortletDataHandlerControl[] { _entries};
 	}
 
 	@Override
 	public PortletDataHandlerControl[] getImportControls() {
-		return new PortletDataHandlerControl[] { _entries, _foldersAndDocuments};
+		return new PortletDataHandlerControl[] { _entries};
 	}
 	
 	@Override
@@ -148,13 +144,15 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 		rootElement.addAttribute("group-id",
 				String.valueOf(context.getScopeGroupId()));
 
-		List<SCORMContent> entries = SCORMContentLocalServiceUtil
-				.getSCORMContentOfGroup(context.getScopeGroupId());
-
-		System.out.println(" entries : " + entries.size());
-
-		for (SCORMContent entry : entries) {
-			exportEntry(context, rootElement, entry);
+		if (context.getBooleanParameter(_NAMESPACE, "entries")) {
+			List<SCORMContent> entries = SCORMContentLocalServiceUtil
+					.getSCORMContentOfGroup(context.getScopeGroupId());
+	
+			System.out.println(" entries : " + entries.size());
+	
+			for (SCORMContent entry : entries) {
+				exportEntry(context, rootElement, entry);
+			}
 		}
 
 		return document.formattedString();
@@ -202,25 +200,29 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 		if (context.getBooleanParameter(_NAMESPACE, "tags")) {
 			context.addAssetTags(SCORMContent.class, entry.getScormId());
 		}
+		
+		
 
 		// Exportamos zip
-		String scormPath = SCORMContentLocalServiceUtil
-				.getDirScormzipPath(entry) + "/" + entry.getUuid() + ".zip";
-		String pathFile = getFilePath(context, entry.getScormId());
-
-		entryElement.addAttribute("file", pathFile + entry.getUuid() + ".zip");
-
-		// Guardar el fichero en el zip.
-		File fileScorm = new File(scormPath);
-		try {
-			InputStream input = new FileInputStream(fileScorm);
-			context.addZipEntry(getFilePath(context, entry.getScormId())
-					+ entry.getUuid() + ".zip", input);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-			throw new SystemException(e);
+		if (context.getBooleanParameter(_NAMESPACE, "documents-and-folders")) {
+			String scormPath = SCORMContentLocalServiceUtil
+					.getDirScormzipPath(entry) + "/" + entry.getUuid() + ".zip";
+			String pathFile = getFilePath(context, entry.getScormId());
+	
+			entryElement.addAttribute("file", pathFile + entry.getUuid() + ".zip");
+	
+			// Guardar el fichero en el zip.
+			File fileScorm = new File(scormPath);
+			try {
+				InputStream input = new FileInputStream(fileScorm);
+				context.addZipEntry(getFilePath(context, entry.getScormId())
+						+ entry.getUuid() + ".zip", input);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+				throw new SystemException(e);
+			}
+			context.addZipEntry(path, entry);
 		}
-		context.addZipEntry(path, entry);
 
 	}
 
@@ -257,20 +259,22 @@ public class ScormDataHandlerImpl extends BasePortletDataHandler {
 
 		Element rootElement = document.getRootElement();
 
-		for (Element entryElement : rootElement.elements("scormentry")) {
-			String path = entryElement.attributeValue("path");
-
-			System.out.println(" entry : " + path);
-
-			if (!context.isPathNotProcessed(path)) {
-				continue;
+		if (context.getBooleanParameter(_NAMESPACE, "entries")) {
+			for (Element entryElement : rootElement.elements("scormentry")) {
+				String path = entryElement.attributeValue("path");
+	
+				System.out.println(" entry : " + path);
+	
+				if (!context.isPathNotProcessed(path)) {
+					continue;
+				}
+				SCORMContent entry = (SCORMContent) context
+						.getZipEntryAsObject(path);
+	
+				System.out.println(" Scorm : " + entry.getScormId());
+	
+				importEntry(context, entryElement, entry);
 			}
-			SCORMContent entry = (SCORMContent) context
-					.getZipEntryAsObject(path);
-
-			System.out.println(" Scorm : " + entry.getScormId());
-
-			importEntry(context, entryElement, entry);
 		}
 
 		return null;

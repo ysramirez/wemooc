@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -45,12 +46,17 @@ import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
+import com.liferay.portal.kernel.cache.MultiVMPoolUtil;
+import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
+import com.liferay.portal.kernel.cluster.ClusterNode;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -65,6 +71,8 @@ import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MimeTypesUtil;
@@ -81,9 +89,11 @@ import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -761,7 +771,7 @@ public class CourseAdmin extends MVCPortlet {
 				try {
 					File file = request.getFile("fileName");
 					System.out.println("----------------------------\n  Import users ::"+roleId);
-					reader = new CSVReader(new InputStreamReader(new FileInputStream(file), "ISO-8859-1"), ';');
+					reader = new CSVReader(new InputStreamReader(new FileInputStream(file), StringPool.UTF8), CharPool.SEMICOLON);
 
 					String[] currLine;
 					int line = 0;
@@ -931,20 +941,59 @@ public class CourseAdmin extends MVCPortlet {
 		SessionMessages.add(actionRequest, "courseadmin.clone.confirmation.success");
 
 	}
+	
+	public void exportCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+		
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);	
+		ServiceContext serviceContext = ServiceContextFactory.getInstance(Course.class.getName(), actionRequest);
+		
+		long groupId  = ParamUtil.getLong(actionRequest, "groupId", 0);
+	
+		String fileName  = ParamUtil.getString(actionRequest, "exportFileName", "New course exported");
+
+		Message message = new Message();
+		message.put("groupId", groupId);
+		message.put("fileName", fileName);
+		message.put("themeDisplay", themeDisplay);
+		message.put("serviceContext", serviceContext);
+		MessageBusUtil.sendMessage("liferay/lms/courseExport", message);
+		
+		SessionMessages.add(actionRequest, "courseadmin.export.confirmation.success");
+
+	}
+	
+	public void deleteExportedCourse(ActionRequest actionRequest, ActionResponse actionResponse) throws IOException {
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		long groupId  = ParamUtil.getLong(actionRequest, "groupId", 0);
+		String fileName = ParamUtil.getString(actionRequest, "fileName", StringPool.BLANK);
+		String redirect = ParamUtil.getString(actionRequest, "redirect", StringPool.BLANK);
+		File f = new File(PropsUtil.get("liferay.home")+"/data/lms_exports/courses/"+themeDisplay.getCompanyId()+"/"+groupId+"/"+fileName);
+		if (themeDisplay.getPermissionChecker().hasPermission(groupId, Course.class.getName(), groupId, ActionKeys.DELETE) && f != null && f.isFile()) {
+			FileUtil.delete(f);
+			SessionMessages.add(actionRequest, "courseadmin.delete.exported.confirmation.success");
+		} else {
+			SessionMessages.add(actionRequest, "courseadmin.delete.exported.confirmation.error");
+		}
+		if (Validator.isNotNull(redirect)) {
+			actionResponse.sendRedirect(redirect);
+		}
+	}
+
 	public void serveResource(ResourceRequest request, ResourceResponse response)throws PortletException, IOException {
 		ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 		
 		String action = ParamUtil.getString(request, "action");
 		
 		if(action.equals("exportCourse")){
-			
+			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 			try {	
 
+				/*
 				long groupId = ParamUtil.getLong(request, "groupId");
 				String fileName = ParamUtil.getString(request, "exportFileName");
 
-				File file = LayoutServiceUtil.exportPortletInfoAsFile(themeDisplay.getLayout().getPlid(), groupId, themeDisplay.getPortletDisplay().getId(), request.getParameterMap(), null, null);
-
+				File file = LayoutLocalServiceUtil.exportPortletInfoAsFile(themeDisplay.getLayout().getPlid(), groupId, themeDisplay.getPortletDisplay().getId(), request.getParameterMap(), null, null);
+				
 				HttpServletRequest httpRequest = PortalUtil.getHttpServletRequest(request);
 				HttpServletResponse httpResponse = PortalUtil.getHttpServletResponse(response);
 
@@ -953,12 +1002,58 @@ public class CourseAdmin extends MVCPortlet {
 				String contentType = MimeTypesUtil.getContentType(file);
 
 				ServletResponseUtil.sendFile(httpRequest, httpResponse, fileName, is, contentType);
-
+				*/
+				
+				ServiceContext serviceContext = ServiceContextFactory.getInstance(Course.class.getName(), request);
+				
+				long groupId  = ParamUtil.getLong(request, "groupId", 0);
+				if (themeDisplay.getPermissionChecker().hasPermission(groupId, Course.class.getName(), groupId, ActionKeys.UPDATE)) {
+					String fileName  = ParamUtil.getString(request, "exportFileName", "New course exported");
+					
+					ClusterNode nodo = ClusterExecutorUtil.getLocalClusterNode();
+					String clusterNodoId = nodo == null ? StringPool.DASH : nodo.getClusterNodeId();
+					
+					String key = ParamUtil.getString(request, "key", null);
+					String newKey = clusterNodoId + StringPool.UNDERLINE + themeDisplay.getCompanyId() + StringPool.UNDERLINE + groupId;
+					
+					if (!StringPool.DASH.equals(clusterNodoId) && !ClusterExecutorUtil.isClusterNodeAlive(clusterNodoId)) {
+						jsonObject.put("error", "deadnode");
+					} else {
+						if (Validator.isNull(key) && MultiVMPoolUtil.get("exportCourseCache", key) != null) { // Pide exportacion pero ya hay una en curso
+							jsonObject.put("status", "generating");
+							jsonObject.put("key", newKey);
+						} else if (Validator.isNull(key) && MultiVMPoolUtil.get("exportCourseCache", key) == null) { // Pide exportacion y no hay ninguna en curso
+							Message message = new Message();
+							message.put("groupId", groupId);
+							message.put("fileName", fileName);
+							message.put("key", key);
+							message.put("themeDisplay", themeDisplay);
+							message.put("serviceContext", serviceContext);
+							MessageBusUtil.sendMessage("liferay/lms/courseExport", message);
+							jsonObject.put("status", "generating");
+							jsonObject.put("key", newKey);
+						} else if (Validator.isNotNull(key) && MultiVMPoolUtil.get("exportCourseCache", key) == null){ // Ha pedido exportacion y ya ha acabado
+							SessionMessages.add(request, "courseadmin.export.confirmation.success");
+							jsonObject.put("status", "ready");
+							jsonObject.put("key", key);
+						} else { // Ha pedido una exportacion y aun esta trabajando
+							jsonObject.put("status", "generating");
+							jsonObject.put("key", key);
+						}
+					}
+				} else {
+					jsonObject.put("error", "bad-permission");
+				}
 			}catch(Exception e){
-
 				//System.out.println(" Error: "+e.getMessage());
 				e.printStackTrace();
-
+				jsonObject.put("error", e.getMessage());
+			} finally {
+				response.setCharacterEncoding("UTF-8");
+				response.setContentType("application/json;charset=UTF-8");
+				
+				PrintWriter writer = response.getWriter();
+				writer.write(jsonObject.toString());
 			}
 
 		} 

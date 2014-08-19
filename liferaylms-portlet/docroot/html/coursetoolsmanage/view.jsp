@@ -66,13 +66,14 @@ else
 <%
 
 		Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
+		Role userRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.USER);
 		for(int i=1;i<(loslayouts.size()-1);i++) // Evitamos la primera, que no es optativa, y la última que es la del tutor y la que contiene este portlet de administración 
 		{
 			Layout ellayout=loslayouts.get(i);	
 			if(!hiddenLayouts.contains(ellayout.getFriendlyURL()))
 			{
 				boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), Layout.class.getName(), 
-						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(ellayout.getPlid()),siteMemberRole.getRoleId(), ActionKeys.VIEW);
+						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(ellayout.getPlid()),new long[] {siteMemberRole.getRoleId(), userRole.getRoleId()}, ActionKeys.VIEW);
 
 							
 	%>

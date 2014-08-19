@@ -49,6 +49,8 @@ import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
@@ -103,14 +105,14 @@ public class OfflineActivity extends MVCPortlet {
 			
 			try {
 				//Necesario para crear el fichero csv.
-				resourceResponse.setCharacterEncoding("ISO-8859-1");
-				resourceResponse.setContentType("text/csv;charset=ISO-8859-1");
+				resourceResponse.setCharacterEncoding(StringPool.UTF8);
+				resourceResponse.setContentType(ContentTypes.TEXT_CSV_UTF8);
 				resourceResponse.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
 		        byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 		        
 		        resourceResponse.getPortletOutputStream().write(b);
 		        
-		        CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),"ISO-8859-1"),';');
+		        CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),StringPool.UTF8),CharPool.SEMICOLON);
 		        String[] cabeceras = new String[4];
 		        
 		        
@@ -172,7 +174,7 @@ public class OfflineActivity extends MVCPortlet {
 		}else{
 			CSVReader reader=null;
 			try {
-				reader = new CSVReader(new InputStreamReader(csvFile, "ISO-8859-1"), ';');
+				reader = new CSVReader(new InputStreamReader(csvFile, StringPool.UTF8),CharPool.SEMICOLON);
 				int line=0;
 				String[] currLine;
 				while ((currLine = reader.readNext()) != null) {

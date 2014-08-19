@@ -28,6 +28,8 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -57,19 +59,19 @@ public class GradeBook extends MVCPortlet {
 						.getLearningActivitiesOfModule(moduleId);
 
 				//Necesario para crear el fichero csv.
-				resourceResponse.setCharacterEncoding("ISO-8859-1");
-				resourceResponse.setContentType("text/csv;charset=ISO-8859-1");
+				resourceResponse.setCharacterEncoding(StringPool.UTF8);
+				resourceResponse.setContentType(ContentTypes.TEXT_CSV_UTF8);
 				resourceResponse.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
 		        byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 		        
 		        resourceResponse.getPortletOutputStream().write(b);
 		        
-		        CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),"ISO-8859-1"),';');
+		        CSVWriter writer = new CSVWriter(new OutputStreamWriter(resourceResponse.getPortletOutputStream(),StringPool.UTF8),CharPool.SEMICOLON);
 	
 		        //Comunidad
 		        writer.writeNext(new String[]{themeDisplay.getScopeGroupName()});
 		        
-		        //Módulo
+		        //Mï¿½dulo
 		        writer.writeNext(new String[]{module.getTitle(themeDisplay.getLocale())});
 		        
 		        String[] cabeceras = new String[learningActivities.size()+1];
