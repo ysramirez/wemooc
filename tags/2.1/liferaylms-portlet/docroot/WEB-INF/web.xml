@@ -56,6 +56,10 @@
         <filter-name>Auto Login Filter</filter-name>
         <url-pattern>/scormzip/*</url-pattern>
     </filter-mapping>
+    <filter-mapping>
+        <filter-name>ServletContext JSON Web Service Servlet Filter</filter-name>
+        <url-pattern>/scormzip/*</url-pattern>
+    </filter-mapping>
      <servlet>
         <servlet-name>scormfileservlet</servlet-name>
         <servlet-class>com.liferay.lms.servlet.SCORMFileServerServlet</servlet-class>
