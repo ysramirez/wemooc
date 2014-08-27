@@ -830,13 +830,17 @@ public class LmsActivitiesList extends MVCPortlet {
 	public void doView(RenderRequest renderRequest,
 			RenderResponse renderResponse) throws IOException, PortletException {
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		if((themeDisplay!=null)&&(themeDisplay.isWidget())) {
-			include("/html/lmsactivitieslist/widget/view.jsp",renderRequest,renderResponse);
-		}
-		else if(ParamUtil.getBoolean(renderRequest,"editing"))
+        /*
+			ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(
+					WebKeys.THEME_DISPLAY);
+	
+			if((themeDisplay!=null)&&(themeDisplay.isWidget())) {
+				include("/html/lmsactivitieslist/widget/view.jsp",renderRequest,renderResponse);
+			}
+			else
+		*/
+		
+		if(ParamUtil.getBoolean(renderRequest,"editing"))
 		{
 			
 			Integer maxfile = ResourceExternalLearningActivityType.DEFAULT_FILENUMBER;
