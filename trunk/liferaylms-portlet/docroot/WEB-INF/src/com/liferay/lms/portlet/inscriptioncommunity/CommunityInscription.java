@@ -115,9 +115,9 @@ public class CommunityInscription extends MVCPortlet {
     	long userId = themeDisplay.getUserId();
 		GroupLocalServiceUtil.addUserGroups(userId, groupId);
 
-		//auditing
-		AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
-				course.getCourseId(), themeDisplay.getUserId(), AuditConstants.REGISTER, null);
+		//auditing -> GroupListener
+		//AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
+		//		course.getCourseId(), themeDisplay.getUserId(), AuditConstants.REGISTER, null);
 		SocialActivityLocalServiceUtil.addActivity(userId, course.getGroupId(), Course.class.getName(), course.getCourseId(), com.liferay.portlet.social.model.SocialActivityConstants.TYPE_SUBSCRIBE, "", course.getUserId());
 		// Informamos que se ha inscrito.
 		Date hoy = new Date();
@@ -206,10 +206,10 @@ public class CommunityInscription extends MVCPortlet {
 		long userId = themeDisplay.getUserId();
 		GroupLocalServiceUtil.unsetUserGroups(userId, groupId);
 
-		//auditing
+		//auditing -> GroupListener
     	Course course = CourseLocalServiceUtil.getCourseByGroupCreatedId(groupId[0]);
-		AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
-				course.getCourseId(), themeDisplay.getUserId(), AuditConstants.UNREGISTER, null);
+		//AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
+		//		course.getCourseId(), themeDisplay.getUserId(), AuditConstants.UNREGISTER, null);
 		SocialActivityLocalServiceUtil.addActivity(userId, course.getGroupId(), Course.class.getName(), course.getCourseId(), com.liferay.portlet.social.model.SocialActivityConstants.TYPE_UNSUBSCRIBE, "", course.getUserId());
 		
 		// Informamos de que lo ha dejado.
