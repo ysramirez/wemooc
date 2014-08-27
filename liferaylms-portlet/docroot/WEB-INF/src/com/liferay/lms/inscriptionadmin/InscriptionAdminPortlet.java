@@ -123,10 +123,10 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 				msr.setReplyDate(new Date());
 				MembershipRequestLocalServiceUtil.updateMembershipRequest(msr);
 				
-				//auditing
-				ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-				AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
-						course.getCourseId(), themeDisplay.getUserId(), AuditConstants.REGISTER, null);
+				//auditing -> GroupListener
+				//ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+				//AuditingLogFactory.audit(themeDisplay.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
+				//		course.getCourseId(), themeDisplay.getUserId(), AuditConstants.REGISTER, null);
 	    	}
 		} catch (NumberFormatException e) {
 			if(log.isDebugEnabled()){
