@@ -191,7 +191,7 @@ if(actId==0){
 				String criteria = ParamUtil.get(request,"criteria",StringPool.BLANK);
 				String gradeFilter = ParamUtil.get(request,"gradeFilter",StringPool.BLANK);
 				PortletURL portletURL = renderResponse.createRenderURL();
-				portletURL.setParameter("jspPage","/html/evaluationAvg/view.jsp");
+				portletURL.setParameter("jspPage","/html/evaluationtaskactivity/view.jsp");
 				portletURL.setParameter("criteria", criteria); 
 				portletURL.setParameter("gradeFilter", gradeFilter);
 				if(Validator.isNotNull(returnToFullPageURL)){
