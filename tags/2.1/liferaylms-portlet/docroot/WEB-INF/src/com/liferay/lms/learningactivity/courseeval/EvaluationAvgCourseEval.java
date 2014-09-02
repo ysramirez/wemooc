@@ -138,7 +138,7 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 		}
 		
 		courseResult.setResult((long) calculateMean(values,weights));
-		courseResult.setPassed(courseResult.getResult()>passPuntuation);
+		courseResult.setPassed(courseResult.getResult()>=passPuntuation);
 		if(courseResult.getPassed() && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
 		CourseResultLocalServiceUtil.update(courseResult);
 	}
