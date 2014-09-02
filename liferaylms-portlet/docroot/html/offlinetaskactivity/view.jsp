@@ -353,12 +353,12 @@
 		<p><liferay-ui:message key="offlinetaskactivity.no-teacher-comments-yet" /></p>
 	<%}else {%>
 		<p><liferay-ui:message key="offlinetaskactivity.no-teacher-comments" /></p>
-	<%} %>
-</div>
-			</div>
-			<%
+	<%}
 		}
-	}
+	} %>
+	</div>
+	</div>
+	<%
 	}
 %>
 </div>
