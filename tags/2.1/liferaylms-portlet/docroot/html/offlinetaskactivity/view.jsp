@@ -276,6 +276,7 @@
 								Team team = TeamLocalServiceUtil.getTeam(Long.parseLong(teamId));
 								params.put("usersTeams", team.getTeamId());
 							}
+							/*
 							if ((GetterUtil.getInteger(PropsUtil.get(PropsKeys.PERMISSIONS_USER_CHECK_ALGORITHM))==6)&&(!ResourceBlockLocalServiceUtil.isSupported("com.liferay.lms.model"))){		
 								
 								params.put("notTeacher",new CustomSQLParam(OfflineActivity.NOT_TEACHER_SQL,themeDisplay.getScopeGroupId()));
@@ -286,7 +287,7 @@
 							    
 							}
 							else{
-						
+						*/
 								List<User> userListsOfCourse = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
 								List<User> userLists =  new ArrayList<User>(userListsOfCourse.size());
 								
@@ -298,7 +299,7 @@
 								
 								pageContext.setAttribute("results", ListUtil.subList(userLists, searchContainer.getStart(), searchContainer.getEnd()));
 							    pageContext.setAttribute("total", userLists.size());	
-							}
+							/*}*/
 						%>
 					</liferay-ui:search-container-results>
 					
