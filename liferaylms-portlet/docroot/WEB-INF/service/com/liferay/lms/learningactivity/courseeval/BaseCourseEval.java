@@ -38,5 +38,13 @@ public abstract class BaseCourseEval implements CourseEval {
 	public String getPortletId(){
 		return PORTLET_ID;
 	}
+	
+	@Override
+	public void onOpenCourse(Course course) throws SystemException {
+	}
+	
+	@Override
+	public void onCloseCourse(Course course) throws SystemException {
+	}
 
 }
