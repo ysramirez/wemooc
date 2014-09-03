@@ -31,6 +31,9 @@ public interface CourseEval
 			throws PortalException, SystemException;
 	public boolean especificValidations(UploadRequest uploadRequest,PortletResponse portletResponse);
 	String getPortletId();
+	
+	public void onOpenCourse(Course course) throws SystemException;
+	public void onCloseCourse(Course course) throws SystemException;
 
 	public JSONObject getEvaluationModel(Course course)
 			throws PortalException, SystemException, DocumentException,

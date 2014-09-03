@@ -441,6 +441,72 @@ public class CourseEvalClp implements CourseEval {
 	}
 
 	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	public void onOpenCourse(Course course)
+			throws SystemException {
+		
+		try {
+			ClassLoader classLoader = clp.getClassLoader();
+			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
+
+			MethodKey updateCourseMethod = new MethodKey(clp.getClassName(), "onOpenCourse",courseClass);
+			Object courseObj = translateCourse(course);
+			clp.invoke(new MethodHandler(updateCourseMethod, courseObj));
+			ClassLoaderProxy courseClassLoaderProxy = new ClassLoaderProxy(courseObj, clp.getClassLoader());
+			course.setModelAttributes((Map<String, Object>) courseClassLoaderProxy.invoke("getModelAttributes", new Object[]{}));
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+						
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+		
+	}
+
+	@Override
+	@SuppressWarnings({ "rawtypes", "unchecked", "deprecation" })
+	public void onCloseCourse(Course course)
+			throws SystemException {
+		
+		try {
+			ClassLoader classLoader = clp.getClassLoader();
+			Class courseClass = Class.forName(Course.class.getName(),true, classLoader);
+
+			MethodKey updateCourseMethod = new MethodKey(clp.getClassName(), "onCloseCourse",courseClass);
+			Object courseObj = translateCourse(course);
+			clp.invoke(new MethodHandler(updateCourseMethod, courseObj));
+			ClassLoaderProxy courseClassLoaderProxy = new ClassLoaderProxy(courseObj, clp.getClassLoader());
+			course.setModelAttributes((Map<String, Object>) courseClassLoaderProxy.invoke("getModelAttributes", new Object[]{}));
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+						
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+		
+	}
+
+	@Override
 	@SuppressWarnings({"rawtypes"})
 	public JSONObject getEvaluationModel(Course course)
 			throws SystemException {
