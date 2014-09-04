@@ -138,8 +138,14 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 		}
 		
 		courseResult.setResult((long) calculateMean(values,weights));
-		courseResult.setPassed(courseResult.getResult()>passPuntuation);
-		if(courseResult.getPassed() && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
+		boolean passed = courseResult.getResult()>=passPuntuation;
+
+		if((courseResult.getPassedDate()==null)||
+				(courseResult.getPassed()!=passed)) {
+			courseResult.setPassedDate(new Date());
+		}
+		courseResult.setPassed(passed);
+
 		CourseResultLocalServiceUtil.update(courseResult);
 	}
 
@@ -229,6 +235,11 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 	}
 
 	@Override
+	public boolean getFailOnCourseCloseAndNotQualificated() {
+		return false;
+	}
+
+	@Override
 	public boolean getNeedPassPuntuation() {
 		return true;
 	}
@@ -250,6 +261,10 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 	@Override
 	public JSONObject getEvaluationModel(Course course) throws PortalException,
 			SystemException, DocumentException, IOException {
+		if(Validator.isNull(course.getCourseExtraData())) {
+			return JSONFactoryUtil.createJSONObject();
+		}
+		
 		Document document=SAXReaderUtil.read(course.getCourseExtraData());
 		Element rootElement =document.getRootElement();
 		JSONObject model = JSONFactoryUtil.createJSONObject();
@@ -268,7 +283,7 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 		if(!evaluations.isEmpty()){
 			JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 		    model.put("evaluations", jsonArray);
-			for (Element evaluation : rootElement.elements("evaluation")) {
+			for (Element evaluation : evaluations) {
 				long id = GetterUtil.getLong(evaluation.elementText("id"));
 				if(id!=0){
 					JSONObject jsonObject = JSONFactoryUtil.createJSONObject();

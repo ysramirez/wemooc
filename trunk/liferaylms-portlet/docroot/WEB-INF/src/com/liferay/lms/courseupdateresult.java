@@ -1,6 +1,5 @@
 package com.liferay.lms;
 
-import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -12,12 +11,12 @@ import javax.portlet.ProcessAction;
 import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
-import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.model.Module;
+import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
-import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -113,8 +112,8 @@ public class courseupdateresult extends MVCPortlet {
 								//Asignamos los nuevos valores.
 								courseResult.setResult(result);
 								courseResult.setPassed(passed);
-								if(passed && courseResult.getPassedDate()==null) courseResult.setPassedDate(new Date()); 
-								
+								courseResult.setPassedDate(new Date());
+
 								CourseResultLocalServiceUtil.update(courseResult);
 								
 								changes++;

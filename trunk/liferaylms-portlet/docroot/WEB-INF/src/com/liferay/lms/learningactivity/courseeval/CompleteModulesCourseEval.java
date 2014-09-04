@@ -13,6 +13,7 @@ import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -29,7 +30,6 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 public class CompleteModulesCourseEval extends BaseCourseEval {
 
 	@Override
-	@SuppressWarnings("unchecked")
 	public void updateCourse(Course course, ModuleResult mresult) throws SystemException 
 	{
 		
@@ -64,19 +64,21 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 			{
 				result=100*cuantospasados/modules.size();
 			}
-			
-			
-				courseResult.setResult(result);
-				courseResult.setPassed(passed);
-				if(passed && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
-				CourseResultLocalServiceUtil.update(courseResult);
-			
+
+			courseResult.setResult(result);
+
+			if(courseResult.getPassed()!=passed) {
+				courseResult.setPassedDate(new Date());
+			}
+			courseResult.setPassed(passed);
+
+			CourseResultLocalServiceUtil.update(courseResult);
+
 		}
 
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean updateCourse(Course course, long userId) throws SystemException {
 		
 		CourseResult courseResult=CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), userId);
@@ -105,17 +107,20 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 		{
 			result=100*cuantospasados/modules.size();
 		}
-		
-		
-			courseResult.setResult(result);
-			courseResult.setPassed(passed);
-			if(passed && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
-			CourseResultLocalServiceUtil.update(courseResult);
-			return true;	
+
+		courseResult.setResult(result);
+		courseResult.setPassed(passed);
+
+		if(courseResult.getPassed()!=passed) {
+			courseResult.setPassedDate(new Date());
+		}
+		courseResult.setPassed(passed);
+
+		CourseResultLocalServiceUtil.update(courseResult);
+		return true;	
 	}
 	
 	@Override
-	@SuppressWarnings("unchecked")
 	public boolean updateCourse(Course course) throws SystemException {
 		
 		List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
@@ -153,8 +158,12 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 				}
 			
 				courseResult.setResult(result);
+
+				if(courseResult.getPassed()!=passed) {
+					courseResult.setPassedDate(new Date());
+				}
 				courseResult.setPassed(passed);
-				if(passed && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
+
 				CourseResultLocalServiceUtil.update(courseResult);
 				
 				}				
@@ -186,6 +195,11 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 	}
 
 	@Override
+	public boolean getFailOnCourseCloseAndNotQualificated() {
+		return true;
+	}
+
+	@Override
 	public boolean getNeedPassPuntuation() {
 		return false;
 	}
@@ -194,7 +208,33 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 	public long getPassPuntuation(Course course) throws DocumentException {
 		throw new RuntimeException();
 	}
-	
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onOpenCourse(Course course) throws SystemException {
+		for(CourseResult courseResult:
+			(List<CourseResult>)CourseResultLocalServiceUtil.dynamicQuery(
+				CourseResultLocalServiceUtil.dynamicQuery().
+					add(PropertyFactoryUtil.forName("courseId").eq(course.getCourseId())).
+					add(PropertyFactoryUtil.forName("passed").eq(false)))){
+			courseResult.setPassedDate(null);
+			CourseResultLocalServiceUtil.update(courseResult);
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onCloseCourse(Course course) throws SystemException {
+		for(CourseResult courseResult:
+			(List<CourseResult>)CourseResultLocalServiceUtil.dynamicQuery(
+				CourseResultLocalServiceUtil.dynamicQuery().
+					add(PropertyFactoryUtil.forName("courseId").eq(course.getCourseId())).
+					add(PropertyFactoryUtil.forName("passedDate").isNull()))){
+			courseResult.setPassedDate(course.getModifiedDate());
+			CourseResultLocalServiceUtil.update(courseResult);
+		}
+	}
+
 	@Override
 	public JSONObject getEvaluationModel(Course course) throws PortalException,
 			SystemException, DocumentException, IOException {

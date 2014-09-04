@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import com.liferay.lms.NoSuchLearningActivityException;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.LearningActivity;
@@ -35,6 +36,7 @@ import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
@@ -143,19 +145,25 @@ public class LearningActivityTryLocalServiceImpl
 
 	public LearningActivityTry createLearningActivityTry(long actId,ServiceContext serviceContext) throws SystemException, PortalException
 	{
+		LearningActivity learningActivity = learningActivityPersistence.fetchByPrimaryKey(actId);
+		
+		if(Validator.isNull(learningActivity)) {
+			throw new NoSuchLearningActivityException();
+		}
+		
 		LearningActivityTry larnt =
 			learningActivityTryPersistence.create(counterLocalService.increment(
 					LearningActivityTry.class.getName()));
 		larnt.setUserId(serviceContext.getUserId());
 		larnt.setActId(actId);
-		larnt.setStartDate(new java.util.Date(System.currentTimeMillis()));
+		larnt.setStartDate(serviceContext.getCreateDate(null));
 		learningActivityTryPersistence.update(larnt, true);
-		LearningActivityResultLocalServiceUtil.update(larnt);
+		learningActivityResultLocalService.update(larnt);
 		
-		courseResultLocalService.softInitializeByGroupIdAndUserId(serviceContext.getScopeGroupId(), serviceContext.getUserId());
+		courseResultLocalService.softInitializeByGroupIdAndUserId(learningActivity.getGroupId(), serviceContext.getUserId());
 
 		//auditing
-		AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), LearningActivityTry.class.getName(), 
+		AuditingLogFactory.audit(learningActivity.getCompanyId(), learningActivity.getGroupId(), LearningActivityTry.class.getName(), 
 				actId, serviceContext.getUserId(), AuditConstants.ADD, null);
 		
 		return larnt;
