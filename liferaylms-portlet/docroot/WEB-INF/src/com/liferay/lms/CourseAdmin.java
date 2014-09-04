@@ -375,7 +375,7 @@ public class CourseAdmin extends MVCPortlet {
 						courseCalificationType,maxusers,serviceContext);
 			}catch(PortalException pe){
 				if(log.isDebugEnabled())log.debug("Error:"+pe.getMessage());
-				if(pe.getMessage().startsWith("maxUsers ")){					
+				if((Validator.isNotNull(pe.getMessage()))&&(pe.getMessage().startsWith("maxUsers "))){					
 					
 					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", ""))));
 					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
