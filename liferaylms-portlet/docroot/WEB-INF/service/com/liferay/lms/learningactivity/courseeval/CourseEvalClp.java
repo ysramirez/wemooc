@@ -282,6 +282,29 @@ public class CourseEvalClp implements CourseEval {
 
 	@Override
 	@SuppressWarnings("deprecation")
+	public boolean getFailOnCourseCloseAndNotQualificated() {
+		Object returnObj = null;
+
+		try {
+			returnObj = clp.invoke("getFailOnCourseCloseAndNotQualificated",	new Object[] {});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return ((Boolean)returnObj).booleanValue();
+	}
+
+	@Override
+	@SuppressWarnings("deprecation")
 	public boolean getNeedPassPuntuation() {
 		Object returnObj = null;
 
@@ -302,7 +325,7 @@ public class CourseEvalClp implements CourseEval {
 
 		return ((Boolean)returnObj).booleanValue();
 	}
-	
+
 	@Override
 	@SuppressWarnings({ "rawtypes"})
 	public long getPassPuntuation(Course course)

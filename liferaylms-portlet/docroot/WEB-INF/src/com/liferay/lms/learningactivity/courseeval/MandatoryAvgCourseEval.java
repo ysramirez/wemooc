@@ -1,14 +1,9 @@
 package com.liferay.lms.learningactivity.courseeval;
 
 import java.io.IOException;
-import java.text.DateFormat;
-import java.util.Collection;
 import java.util.Date;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
@@ -22,18 +17,12 @@ import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
-import com.liferay.lms.service.ModuleResultLocalServiceUtil;
-import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
-import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
-import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
 import com.liferay.portal.kernel.xml.Element;
@@ -43,30 +32,6 @@ import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 
 public class MandatoryAvgCourseEval extends BaseCourseEval {
-	
-	private static DateFormat _dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
-			"yyyy-MM-dd'T'HH:mm:sszzz",Locale.US);
-		
-	
-	
-	private double calculateMean(double[] values) {
-		int i;
-		double sumWeight=values.length;
-		
-		
-		double mean=0;
-		for (i = 0; i < values.length; i++) {
-			mean+=values[i];
-		}
-		mean/=sumWeight;
-		
-		//Correction factor
-		
-		
-		return mean;
-	}
-	
-	
 
 	@Override
 	public void updateCourse(Course course, ModuleResult mresult) throws SystemException 
@@ -82,7 +47,7 @@ public class MandatoryAvgCourseEval extends BaseCourseEval {
 			if(courseResult==null)
 			{
 				courseResult=CourseResultLocalServiceUtil.create(course.getCourseId(), userId);
-			
+
 				//auditing
 				AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), CourseResult.class.getName(), courseResult.getPrimaryKey(), userId, AuditConstants.CREATE, null);
 			}
@@ -116,8 +81,10 @@ public class MandatoryAvgCourseEval extends BaseCourseEval {
 				result=result/learningActivities.size();
 			}
 				courseResult.setResult(result);
+				if(courseResult.getPassed()!=passed) {
+					courseResult.setPassedDate(new Date());
+				}
 				courseResult.setPassed(passed);
-				if(passed && courseResult.getPassedDate()==null)courseResult.setPassedDate(new Date());
 				CourseResultLocalServiceUtil.update(courseResult);
 				return true;
 	}
@@ -125,15 +92,6 @@ public class MandatoryAvgCourseEval extends BaseCourseEval {
 	@Override
 	public boolean updateCourse(Course course) throws SystemException {
 		try {
-			if((course.getCourseExtraData()==null)&&(course.getCourseExtraData().trim().length()==0)) {
-				return false;
-			}
-			
-			Document document=SAXReaderUtil.read(course.getCourseExtraData());
-			Element rootElement =document.getRootElement();
-			
-			
-			
 			for(User userOfCourse:UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId())){
 				if(!PermissionCheckerFactoryUtil.create(userOfCourse).hasPermission(course.getGroupCreatedId(), "com.liferay.lms.model",course.getGroupCreatedId(), "VIEW_RESULTS")){
 					updateCourse(course,  userOfCourse.getUserId());	
@@ -167,6 +125,11 @@ public class MandatoryAvgCourseEval extends BaseCourseEval {
 	}
 
 	@Override
+	public boolean getFailOnCourseCloseAndNotQualificated() {
+		return true;
+	}
+
+	@Override
 	public boolean getNeedPassPuntuation() {
 		return false;
 	}
@@ -175,7 +138,32 @@ public class MandatoryAvgCourseEval extends BaseCourseEval {
 	public long getPassPuntuation(Course course) throws DocumentException {
 		throw new RuntimeException();
 	}
-	
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onOpenCourse(Course course) throws SystemException {
+		for(CourseResult courseResult:
+			(List<CourseResult>)CourseResultLocalServiceUtil.dynamicQuery(
+				CourseResultLocalServiceUtil.dynamicQuery().
+					add(PropertyFactoryUtil.forName("courseId").eq(course.getCourseId())).
+					add(PropertyFactoryUtil.forName("passed").eq(false)))){
+			courseResult.setPassedDate(null);
+			CourseResultLocalServiceUtil.update(courseResult);
+		}
+	}
+
+	@Override
+	@SuppressWarnings("unchecked")
+	public void onCloseCourse(Course course) throws SystemException {
+		for(CourseResult courseResult:
+			(List<CourseResult>)CourseResultLocalServiceUtil.dynamicQuery(
+				CourseResultLocalServiceUtil.dynamicQuery().
+					add(PropertyFactoryUtil.forName("courseId").eq(course.getCourseId())).
+					add(PropertyFactoryUtil.forName("passedDate").isNull()))){
+			courseResult.setPassedDate(course.getModifiedDate());
+			CourseResultLocalServiceUtil.update(courseResult);
+		}
+	}
 	
 	@Override
 	public JSONObject getEvaluationModel(Course course) throws PortalException,

@@ -23,6 +23,7 @@ public interface CourseEval
 	public String getName(Locale locale);
 	public long getTypeId();
 	public boolean getNeedPassAllModules();
+	public boolean getFailOnCourseCloseAndNotQualificated();
 	public boolean getNeedPassPuntuation();
 	public long getPassPuntuation(Course course) throws DocumentException;
 
