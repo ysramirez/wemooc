@@ -15,6 +15,7 @@
 package com.liferay.lms.service.impl;
 
 import java.io.File;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +51,7 @@ import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
@@ -216,6 +218,11 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			}
 			Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(Course.class);
 			indexer.reindex(course);
+		}catch(PortalException e){
+			if(log.isInfoEnabled()){
+				log.info("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
+			}
+			throw e;
 		}catch(Exception e){
 			if(log.isInfoEnabled()){
 				log.info("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
@@ -453,15 +460,24 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 	PortalException {
 	
 		Course course=CourseLocalServiceUtil.getCourse(courseId);
-		course.setClosed(true);
-		Group courseGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
-		courseGroup.setActive(false);
-		GroupLocalServiceUtil.updateGroup(courseGroup);
-		coursePersistence.update(course, true);		
-		AssetEntry courseAsset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
-		courseAsset.setVisible(false);
-		AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
-		
+		if(!course.getClosed()){
+			course.setClosed(true);
+			course.setModifiedDate(new Date());
+			Group courseGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
+			courseGroup.setActive(false);
+			GroupLocalServiceUtil.updateGroup(courseGroup);
+			coursePersistence.update(course, true);		
+			AssetEntry courseAsset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
+			courseAsset.setVisible(false);
+			AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
+
+			CourseEval courseEval=new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
+			if(Validator.isNotNull(courseEval)) {
+				courseEval.onCloseCourse(course);
+			}
+
+		}
+
 		return course;
 	}
 
@@ -471,6 +487,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		Course course=CourseLocalServiceUtil.getCourse(courseId);
 		if(course.getClosed()){
 			course.setClosed(false);
+			course.setModifiedDate(new Date());
 			Group courseGroup=GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 			courseGroup.setActive(true);
 			GroupLocalServiceUtil.updateGroup(courseGroup);
@@ -478,8 +495,14 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			AssetEntry courseAsset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
 			courseAsset.setVisible(true);
 			AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
-		}	
-		
+
+			CourseEval courseEval=new CourseEvalRegistry().getCourseEval(course.getCourseEvalId());
+			if(Validator.isNotNull(courseEval)) {
+				courseEval.onOpenCourse(course);
+			}
+
+		}
+
 		return course;
 	}
 	
