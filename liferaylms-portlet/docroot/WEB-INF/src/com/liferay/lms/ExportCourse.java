@@ -129,8 +129,12 @@ public class ExportCourse implements MessageListener {
 			PermissionThreadLocal.setPermissionChecker(permissionChecker);
 		
 			MultiVMPoolUtil.put("exportCourseCache", key, true);
-			doExportCourse();
-			MultiVMPoolUtil.remove("exportCourseCache", key);
+			try {
+				doExportCourse();
+			} finally {
+				MultiVMPoolUtil.remove("exportCourseCache", key);
+			}
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();

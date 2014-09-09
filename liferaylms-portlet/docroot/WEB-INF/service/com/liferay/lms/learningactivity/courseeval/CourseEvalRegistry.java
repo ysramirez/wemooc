@@ -4,6 +4,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Properties;
 
+import com.liferay.lms.learningactivity.calificationtype.CalificationTypeClp;
 import com.liferay.lms.service.ClpSerializer;
 import com.liferay.portal.kernel.portlet.PortletClassLoaderUtil;
 import com.liferay.portal.kernel.util.AutoResetThreadLocal;
@@ -39,6 +40,14 @@ public class CourseEvalRegistry
 					ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(Class.forName(type, true, 
 						PortletClassLoaderUtil.getClassLoader(context[1])).newInstance(), type, 
 						PortletClassLoaderUtil.getClassLoader(context[1]));
+					courseEvals[currentCourseEval++]=new CourseEvalClp(classLoaderProxy);
+				} catch (Throwable throwable) {
+				}
+			} catch (ClassCastException e) {
+				try {
+					ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(Class.forName(type, true, 
+						getPortletClassLoader()).newInstance(), type, 
+						getPortletClassLoader());
 					courseEvals[currentCourseEval++]=new CourseEvalClp(classLoaderProxy);
 				} catch (Throwable throwable) {
 				}

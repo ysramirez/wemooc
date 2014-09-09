@@ -11,6 +11,7 @@ import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.BaseIndexer;
+import com.liferay.portal.kernel.search.BooleanQuery;
 import com.liferay.portal.kernel.search.Document;
 import com.liferay.portal.kernel.search.DocumentImpl;
 import com.liferay.portal.kernel.search.Field;
@@ -23,6 +24,7 @@ import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portlet.asset.model.AssetCategory;
 import com.liferay.portlet.asset.model.AssetEntry;
@@ -144,6 +146,7 @@ public class CourseIndexer extends BaseIndexer {
 
 		document.addKeyword(Field.ENTRY_CLASS_NAME, Course.class.getName());
 		document.addKeyword(Field.ENTRY_CLASS_PK, entryId);
+		document.addKeyword(Field.STATUS, entry.getClosed() ? WorkflowConstants.STATUS_INACTIVE : WorkflowConstants.STATUS_APPROVED);
 		String[] assetCategoryTitles = new String[assetCategoryIds.length];
 		for (int i=0; i<assetCategoryIds.length;i++){
 			AssetCategory categoria = AssetCategoryLocalServiceUtil.getCategory(assetCategoryIds[i]);
@@ -218,4 +221,12 @@ public class CourseIndexer extends BaseIndexer {
 		return getSummary(document, snippet, portletURL);
 	}
 
+	@Override
+	public void postProcessContextQuery(BooleanQuery contextQuery, SearchContext searchContext)
+			throws Exception {
+		int status = GetterUtil.getInteger(searchContext.getAttribute(Field.STATUS), WorkflowConstants.STATUS_APPROVED);
+		if (status != WorkflowConstants.STATUS_ANY) {
+			contextQuery.addRequiredTerm(Field.STATUS, status);
+		}
+	}
 }

@@ -1,4 +1,6 @@
 <!-- <h1 class="taglib-categorization-filter entry-title"> -->
+<%@page import="com.liferay.portal.kernel.search.Field"%>
+<%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.QueryUtil"%>
 <%@page import="com.liferay.portlet.asset.service.AssetTagLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.service.AssetEntryServiceUtil"%>
@@ -97,6 +99,7 @@ boolean scategories = GetterUtil.getBoolean(renderRequest.getPreferences().getVa
 HashMap<Long,Document> lucenes = new HashMap<Long,Document>();
 if(!freetext.isEmpty()){
 	SearchContext scon=new SearchContext();
+	scon.setAttribute(Field.STATUS, WorkflowConstants.STATUS_ANY);
 	if(catId>0){
 		try{
 			BooleanQuery booleanQueryCategoryId = BooleanQueryFactoryUtil.create(scon);
