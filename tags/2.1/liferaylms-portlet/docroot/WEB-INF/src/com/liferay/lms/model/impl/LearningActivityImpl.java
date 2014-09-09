@@ -14,6 +14,13 @@
 
 package com.liferay.lms.model.impl;
 
+import java.util.Date;
+
+import com.liferay.lms.model.Module;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
+import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.Validator;
+
 /**
  * The extended model implementation for the LearningActivity service. Represents a row in the &quot;Lms_LearningActivity&quot; database table, with each column mapped to a property of this class.
  *
@@ -29,6 +36,51 @@ public class LearningActivityImpl extends LearningActivityBaseImpl {
 	 *
 	 * Never reference this class directly. All methods that expect a learning activity model instance should use the {@link com.liferay.lms.model.LearningActivity} interface instead.
 	 */
-	public LearningActivityImpl() {
+	@Override
+	public Date getStartdate() {
+		Date startDate = super.getStartdate();
+		if(Validator.isNull(startDate)) {
+			try {
+				Module module = ModuleLocalServiceUtil.fetchModule(getModuleId());
+				if(Validator.isNotNull(module)) {
+					return module.getStartDate();
+				}
+			}
+			catch(SystemException systemException) {}
+
+			return null;
+		}
+		else {
+			return startDate;
+		}
+	}
+
+	@Override
+	public boolean isNullStartDate() {
+		return Validator.isNull(super.getStartdate());
+	}
+
+	@Override
+	public Date getEnddate() {
+		Date endDate = super.getEnddate();
+		if(Validator.isNull(endDate)) {
+			try {			
+				Module module = ModuleLocalServiceUtil.fetchModule(getModuleId());
+				if(Validator.isNotNull(module)) {
+					return module.getEndDate();
+				}
+			}
+			catch(SystemException systemException) {}
+
+			return null;
+		}
+		else {
+			return endDate;
+		}
+	}
+
+	@Override
+	public boolean isNullEndDate() {
+		return Validator.isNull(super.getEnddate());
 	}
 }

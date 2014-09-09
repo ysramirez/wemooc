@@ -97,6 +97,7 @@ boolean scategories = GetterUtil.getBoolean(renderRequest.getPreferences().getVa
 HashMap<Long,Document> lucenes = new HashMap<Long,Document>();
 if(!freetext.isEmpty()){
 	SearchContext scon=new SearchContext();
+	scon.setAttribute(Field.STATUS, WorkflowConstants.STATUS_ANY);
 	if(catId>0){
 		try{
 			BooleanQuery booleanQueryCategoryId = BooleanQueryFactoryUtil.create(scon);
