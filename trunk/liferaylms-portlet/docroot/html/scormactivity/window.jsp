@@ -91,6 +91,9 @@ if(entryId != 0) {
 	            
 		if (!exception) {
 			// Process Success - A LearningActivityResult returned
+			if (message.passed) {
+				Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+			}
 		} else {
 			// Process Exception
 		}

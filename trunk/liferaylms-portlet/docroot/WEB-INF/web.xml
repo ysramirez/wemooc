@@ -53,10 +53,6 @@
     <filter-name>Auto Login Filter</filter-name>
     <url-pattern>/scormzip/*</url-pattern>
   </filter-mapping>
-  <filter-mapping>
-        <filter-name>Secure JSON Web Service Servlet Filter</filter-name>
-        <url-pattern>/scorm/*</url-pattern>
-    </filter-mapping>
     <filter-mapping>
         <filter-name>Secure JSON Web Service Servlet Filter</filter-name>
         <url-pattern>/scormzip/*</url-pattern>

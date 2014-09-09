@@ -17,6 +17,7 @@ package com.liferay.lms.service.impl;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -328,18 +329,50 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	@JSONWebService
 	public java.util.List<Course> myCourses() throws PortalException, SystemException
 	{
+		/**********************************
+		 * 
+		 * METODO MODIFICADO TEMPORALMENTE
+		 * 
+		 **********************************/
 		User usuario= this.getUser();
-		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
-		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		boolean isProfesor = false;
+		String label = PropsUtil.get("weclass.grupo.profesor");
+		try {
+			UserGroup ug = UserGroupLocalServiceUtil.getUserGroup(usuario.getCompanyId(), label);
+			isProfesor = userLocalService.hasUserGroupUser(ug.getUserGroupId(), usuario.getUserId());
+		} catch(SystemException e) {
+			
+		} catch (PortalException e) {
+			
+		}
 		
+		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
+		java.util.Set<Long> profesorRolesSet = new LinkedHashSet<Long>();
+		LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(usuario.getCompanyId());
+		Role teacher=RoleLocalServiceUtil.getRole(prefs.getTeacherRole());
+		Role editor=RoleLocalServiceUtil.getRole(prefs.getEditorRole());
+		profesorRolesSet.add(teacher.getRoleId());
+		profesorRolesSet.add(editor.getRoleId());
+			
 		for(Group groupCourse:groups)
 		{
+			boolean isProfesorInGroup = false;
+			if (isProfesor) {
+				java.util.List<Role> roles = RoleLocalServiceUtil.getUserGroupRoles(usuario.getUserId(), groupCourse.getGroupId());
+				for (Role rol : roles) {
+					if (profesorRolesSet.contains(rol.getRoleId())) {
+						isProfesorInGroup = true;
+					}
+				}
+			}
 			
-			
-			Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
-			if(course!=null)
-			{
-				results.add(course);
+			if (!isProfesor || isProfesorInGroup) {
+				Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
+				if(course!=null && !course.isClosed())
+				{
+					results.add(course);
+				}
 			}
 		}
 		return results;

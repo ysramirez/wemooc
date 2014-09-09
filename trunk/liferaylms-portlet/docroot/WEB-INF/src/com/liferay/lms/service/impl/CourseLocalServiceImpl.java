@@ -200,7 +200,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			for(SocialActivitySetting actSetting:actSettings)
 			{
 			
-			//Activamos las activity settings que estén activadas en la plantilla
+			//Activamos las activity settings que estï¿½n activadas en la plantilla
 				SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), actSetting.getClassName(), true);	
 				List<SocialActivityDefinition> sads=SocialActivitySettingServiceUtil.getActivityDefinitions(lsProto.getGroup().getGroupId(), actSetting.getClassName());
 				for(SocialActivityDefinition sad:sads)
@@ -456,6 +456,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			return course;
 			}
 	
+	@Indexable(type=IndexableType.REINDEX)
 	public Course closeCourse(long courseId) throws SystemException,
 	PortalException {
 	
@@ -481,6 +482,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return course;
 	}
 
+	@Indexable(type=IndexableType.REINDEX)
 	public Course openCourse(long courseId) throws SystemException,
 	PortalException {
 	
