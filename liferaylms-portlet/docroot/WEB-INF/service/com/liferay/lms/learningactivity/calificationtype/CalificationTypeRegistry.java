@@ -40,6 +40,14 @@ public class CalificationTypeRegistry {
 					calificationTypes[currentCalificationType++]=new CalificationTypeClp(classLoaderProxy);
 				} catch (Throwable throwable) {
 				}
+			} catch (ClassCastException e) {
+				try {
+					ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(Class.forName(type, true, 
+						getPortletClassLoader()).newInstance(), type, 
+						getPortletClassLoader());
+					calificationTypes[currentCalificationType++]=new CalificationTypeClp(classLoaderProxy);
+				} catch (Throwable throwable) {
+				}
 			} catch (Throwable throwable) {
 			}
 		}

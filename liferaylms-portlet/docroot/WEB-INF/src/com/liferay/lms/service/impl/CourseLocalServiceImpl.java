@@ -425,6 +425,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			return course;
 			}
 	
+	@Indexable(type=IndexableType.REINDEX)
 	public Course closeCourse(long courseId) throws SystemException,
 	PortalException {
 	
@@ -441,6 +442,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return course;
 	}
 
+	@Indexable(type=IndexableType.REINDEX)
 	public Course openCourse(long courseId) throws SystemException,
 	PortalException {
 	
@@ -454,7 +456,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			AssetEntry courseAsset=AssetEntryLocalServiceUtil.getEntry(Course.class.getName(), course.getCourseId());
 			courseAsset.setVisible(true);
 			AssetEntryLocalServiceUtil.updateAssetEntry(courseAsset);
-		}	
+		}
 		
 		return course;
 	}

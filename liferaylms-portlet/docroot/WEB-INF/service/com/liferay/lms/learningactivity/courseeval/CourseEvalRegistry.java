@@ -48,6 +48,14 @@ public class CourseEvalRegistry
 					courseEvals[currentCourseEval++]=new CourseEvalClp(classLoaderProxy);
 				} catch (Throwable throwable) {
 				}
+			} catch (ClassCastException e) {
+				try {
+					ClassLoaderProxy classLoaderProxy = new ClassLoaderProxy(Class.forName(type, true, 
+						getPortletClassLoader()).newInstance(), type, 
+						getPortletClassLoader());
+					courseEvals[currentCourseEval++]=new CourseEvalClp(classLoaderProxy);
+				} catch (Throwable throwable) {
+				}
 			} catch (Throwable throwable) {
 			}
 		}

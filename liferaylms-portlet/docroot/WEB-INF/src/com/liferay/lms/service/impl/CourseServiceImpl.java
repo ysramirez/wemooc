@@ -24,6 +24,7 @@ import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
@@ -42,6 +43,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
+import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.model.UserGroup;
@@ -272,18 +274,50 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 	@JSONWebService
 	public java.util.List<Course> myCourses() throws PortalException, SystemException
 	{
+		/***************************************************************
+		 * 
+		 * METODO MODIFICADO TEMPORALMENTE POR EXIGENCIAS DE LA TABLET
+		 * 
+		 ***************************************************************/
 		User usuario= this.getUser();
-		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
-		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		boolean isProfesor = false;
+		String label = PropsUtil.get("weclass.grupo.profesor");
+		try {
+			UserGroup ug = UserGroupLocalServiceUtil.getUserGroup(usuario.getCompanyId(), label);
+			isProfesor = userLocalService.hasUserGroupUser(ug.getUserGroupId(), usuario.getUserId());
+		} catch(SystemException e) {
+			
+		} catch (PortalException e) {
+			
+		}
 		
+		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
+		java.util.Set<Long> profesorRolesSet = new java.util.LinkedHashSet<Long>();
+		LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(usuario.getCompanyId());
+		Role teacher=RoleLocalServiceUtil.getRole(prefs.getTeacherRole());
+		Role editor=RoleLocalServiceUtil.getRole(prefs.getEditorRole());
+		profesorRolesSet.add(teacher.getRoleId());
+		profesorRolesSet.add(editor.getRoleId());
+			
 		for(Group groupCourse:groups)
 		{
+			boolean isProfesorInGroup = false;
+			if (isProfesor) {
+				java.util.List<Role> roles = RoleLocalServiceUtil.getUserGroupRoles(usuario.getUserId(), groupCourse.getGroupId());
+				for (Role rol : roles) {
+					if (profesorRolesSet.contains(rol.getRoleId())) {
+						isProfesorInGroup = true;
+					}
+				}
+			}
 			
-			
-			Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
-			if(course!=null)
-			{
-				results.add(course);
+			if (!isProfesor || isProfesorInGroup) {
+				Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
+				if(course!=null && !course.isClosed())
+				{
+					results.add(course);
+				}
 			}
 		}
 		return results;
