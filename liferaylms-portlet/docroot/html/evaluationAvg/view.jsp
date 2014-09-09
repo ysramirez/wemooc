@@ -44,7 +44,7 @@
 		
 		Long  [] arguments=null;
 		
-		if(result!=null){	
+		if((Validator.isNotNull(result))&&(Validator.isNotNull(result.getPassedDate()))) {	
 			arguments =  new Long[]{result.getResult()};
 		}
 					
@@ -216,16 +216,16 @@
 								}
 							}
 							
-							if ((GetterUtil.getInteger(PropsUtil.get(PropsKeys.PERMISSIONS_USER_CHECK_ALGORITHM))==6)&&(!ResourceBlockLocalServiceUtil.isSupported("com.liferay.lms.model"))){		
+							//if ((GetterUtil.getInteger(PropsUtil.get(PropsKeys.PERMISSIONS_USER_CHECK_ALGORITHM))==6)&&(!ResourceBlockLocalServiceUtil.isSupported("com.liferay.lms.model"))){		
 								
-								params.put("notTeacher",new CustomSQLParam(EvaluationAvgPortlet.NOT_TEACHER_SQL,themeDisplay.getScopeGroupId()));
-								List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-								int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria,  WorkflowConstants.STATUS_ANY, params);
-								pageContext.setAttribute("results", userListPage);
-							    pageContext.setAttribute("total", userCount);
-							    
-							}
-							else{
+							//	params.put("notTeacher",new CustomSQLParam(EvaluationAvgPortlet.NOT_TEACHER_SQL,themeDisplay.getScopeGroupId()));
+							//	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
+							//	int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria,  WorkflowConstants.STATUS_ANY, params);
+							//	pageContext.setAttribute("results", userListPage);
+							//    pageContext.setAttribute("total", userCount);
+							//    
+							//}
+							//else{
 						
 								List<User> userListsOfCourse = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, WorkflowConstants.STATUS_ANY, params, QueryUtil.ALL_POS, QueryUtil.ALL_POS, obc);
 								List<User> userLists =  new ArrayList<User>(userListsOfCourse.size());
@@ -238,7 +238,7 @@
 								
 								pageContext.setAttribute("results", ListUtil.subList(userLists, searchContainer.getStart(), searchContainer.getEnd()));
 							    pageContext.setAttribute("total", userLists.size());	
-							}
+							//}
 															
 
 						%>
@@ -250,7 +250,7 @@
 					</liferay-ui:search-container-column-text>
 					<liferay-ui:search-container-column-text name="calification">
 						<% CourseResult courseResult = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(), user.getUserId()); 
-						   if(courseResult!=null) {	   
+							if((Validator.isNotNull(courseResult))&&(Validator.isNotNull(courseResult.getPassedDate()))) {   	   
 								   if(courseResult.getPassed()){
 									   %><liferay-ui:message key="<%=passedStudentMessageKey %>"  arguments="<%=
 											   new Object[]{courseResult.getResult(),passPuntuation} %>" /><%
@@ -339,7 +339,7 @@
 
 <%
 	if(!isTeacher){ 
-	if (result!=null){ %>
+	if((Validator.isNotNull(result))&&(Validator.isNotNull(result.getPassedDate()))) { %>
 	<h2><liferay-ui:message key="evaluationAvg.result.title" /></h2>
 	<p><liferay-ui:message key="evaluationAvg.result.youresult" /> <span class="destacado"><%= (arguments.length>0) ? LearningActivityResultLocalServiceUtil.translateResult(locale, arguments[0], themeDisplay.getScopeGroupId()):"" %></span></p>
 	<%
