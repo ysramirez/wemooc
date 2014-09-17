@@ -22,7 +22,6 @@ import java.util.Locale;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
-import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.Module;
@@ -166,7 +165,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 			if (passedNumber == activities.size()) {
 				moduleResult.setResult(100);
 				moduleResult.setPassed(true);
-
+				moduleResult.setPassedDate(lactr.getEndDate());
 			}
 			moduleResultPersistence.update(moduleResult, true);
 
