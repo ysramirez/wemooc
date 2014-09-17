@@ -59,6 +59,7 @@ import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
+import com.liferay.portal.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
@@ -476,6 +477,10 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			if(Validator.isNotNull(courseEval)) {
 				courseEval.onCloseCourse(course);
 			}
+			
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), 
+									courseId, PrincipalThreadLocal.getUserId(), AuditConstants.CLOSE, null);
 
 		}
 
@@ -503,6 +508,9 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 				courseEval.onOpenCourse(course);
 			}
 
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), 
+					course.getCourseId(), PrincipalThreadLocal.getUserId(), AuditConstants.OPEN, null);
 		}
 
 		return course;
