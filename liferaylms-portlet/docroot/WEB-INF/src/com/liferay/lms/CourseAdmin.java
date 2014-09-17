@@ -4,7 +4,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
@@ -26,8 +25,6 @@ import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import javax.portlet.ResourceRequest;
 import javax.portlet.ResourceResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 import au.com.bytecode.opencsv.CSVReader;
 import au.com.bytecode.opencsv.CSVWriter;
@@ -67,7 +64,6 @@ import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.search.Indexer;
 import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
-import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
@@ -75,7 +71,6 @@ import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.MimeTypesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
@@ -93,7 +88,6 @@ import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
-import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -165,7 +159,7 @@ public class CourseAdmin extends MVCPortlet {
 		if (courseId > 0) {
 
 			//auditing
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Course.class.getName(), courseId, serviceContext.getUserId(), AuditConstants.CLOSE, null);
+			//AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Course.class.getName(), courseId, serviceContext.getUserId(), AuditConstants.CLOSE, null);
 			
 			CourseLocalServiceUtil.closeCourse(courseId);
 		}
@@ -174,18 +168,19 @@ public class CourseAdmin extends MVCPortlet {
 
 	public void openCourse(ActionRequest actionRequest,ActionResponse actionResponse) throws Exception {
 
-		ServiceContext serviceContext = ServiceContextFactory.getInstance(
-				Course.class.getName(), actionRequest);
+		//ServiceContext serviceContext = ServiceContextFactory.getInstance(
+		//		Course.class.getName(), actionRequest);
 
-		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
-				.getAttribute(WebKeys.THEME_DISPLAY);
-		String redirect = ParamUtil.getString(actionRequest, "redirect");
+		//ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest
+		//		.getAttribute(WebKeys.THEME_DISPLAY);
+		//String redirect = ParamUtil.getString(actionRequest, "redirect");
 
-		User user = themeDisplay.getUser();
+		//User user = themeDisplay.getUser();
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		if (courseId > 0) {
 			//auditing
-			AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), Course.class.getName(), courseId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			//AuditingLogFactory.audit(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(), 
+			//					Course.class.getName(), courseId, serviceContext.getUserId(), AuditConstants.UPDATE, null);
 			
 			CourseLocalServiceUtil.openCourse(courseId);
 		}

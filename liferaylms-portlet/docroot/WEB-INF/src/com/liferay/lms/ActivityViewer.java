@@ -231,7 +231,7 @@ public class ActivityViewer extends MVCPortlet
 								pageTopStringBundler.append(renderResponseWrapper.toString());
 							}
 						}
-						AuditingLogFactory.getAuditLog().audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(),actId, themeDisplay.getUserId(), AuditConstants.VIEW, Long.toString(learningActivityType.getTypeId()));
+						AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), LearningActivity.class.getName(),actId, themeDisplay.getUserId(), AuditConstants.VIEW, Long.toString(learningActivityType.getTypeId()));
 
 						String activityContent = renderPortlet(renderRequest, renderResponse, 
 								themeDisplay, themeDisplay.getScopeGroupId(), portlet, isWidget, true);
