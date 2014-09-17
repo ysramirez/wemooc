@@ -20,6 +20,7 @@
 			<basic name="action" />
 			<basic name="extradata" />
 			<basic name="classPK" />
+			<basic name="associationClassPK" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

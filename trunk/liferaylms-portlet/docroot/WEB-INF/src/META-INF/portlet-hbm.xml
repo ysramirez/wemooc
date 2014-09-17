@@ -34,6 +34,7 @@
 		<property name="action" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="extradata" type="com.liferay.portal.dao.orm.hibernate.StringType" />
 		<property name="classPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
+		<property name="associationClassPK" type="com.liferay.portal.dao.orm.hibernate.LongType" />
 	</class>
 	<class name="com.liferay.lms.model.impl.CheckP2pMailingImpl" table="Lms_CheckP2pMailing">
 		<cache usage="read-write" />

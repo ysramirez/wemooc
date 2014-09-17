@@ -492,6 +492,7 @@
 		<column name="action" type="String" />
 		<column name="extradata" type="String" />
         <column name="classPK" type="long"></column>
+        <column name="associationClassPK" type="long"></column>
         <order by="desc">
 			<order-column name="auditDate" />
 		</order>
