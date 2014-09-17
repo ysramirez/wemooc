@@ -23,6 +23,7 @@ import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.util.GetterUtil;
 
 /**
  * The implementation of the audit entry local service.
@@ -44,7 +45,7 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 	 *
 	 * Never reference this interface directly. Always use {@link com.liferay.lms.service.AuditEntryLocalServiceUtil} to access the audit entry local service.
 	 */
-	public void addAuditEntry(long companyId,long groupId, String className,long classPK,long userId,String action,String extraData) throws SystemException
+	public void addAuditEntry(long companyId,long groupId, String className,long classPK,long associationClassPK,long userId,String action,String extraData) throws SystemException
 	{
 		AuditEntry auditEntry=auditEntryPersistence.create(counterLocalService.increment(AuditEntry.class.getName()));
 		auditEntry.setAuditDate(new java.util.Date(System.currentTimeMillis()));
@@ -55,9 +56,16 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 		auditEntry.setAction(action);
 		auditEntry.setExtradata(extraData);
 		auditEntry.setClassPK(classPK);
+		auditEntry.setAssociationClassPK(associationClassPK);
 		auditEntryPersistence.update(auditEntry, true);
 		
 	}
+
+	public void addAuditEntry(long companyId,long groupId, String className,long classPK,long userId,String action,String extraData) throws SystemException
+	{
+		addAuditEntry(companyId, groupId, className, classPK, GetterUtil.DEFAULT_LONG, userId, action, extraData);
+	}
+
 	public List<AuditEntry> search(long companyId, long groupId,String className,long classPK, long userId, Date startDate,Date endDate, int start, int end) throws SystemException
 	{
 		DynamicQuery dq=auditEntryLocalService.dynamicQuery();

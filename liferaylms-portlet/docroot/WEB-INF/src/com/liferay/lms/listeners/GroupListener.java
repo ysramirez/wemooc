@@ -20,12 +20,13 @@ public class GroupListener extends BaseModelListener<Group> {
 			String associationClassName, Object associationClassPK)
 			throws ModelListenerException {
 		long groupId = GetterUtil.getLong(classPK);
+		long userId = GetterUtil.getLong(associationClassPK);
 		try {
 			Course course = CourseLocalServiceUtil.fetchByGroupCreatedId(groupId);
 			if((User.class.getName().equals(associationClassName))&&
 				(Validator.isNotNull(course))){
 				AuditingLogFactory.audit(course.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
-						course.getCourseId(), PrincipalThreadLocal.getUserId(), AuditConstants.REGISTER, null);
+						course.getCourseId(), userId, PrincipalThreadLocal.getUserId(), AuditConstants.REGISTER, null);
 			}
 		} catch (SystemException e) {
 			throw new ModelListenerException(e);
@@ -38,12 +39,13 @@ public class GroupListener extends BaseModelListener<Group> {
 			String associationClassName, Object associationClassPK)
 			throws ModelListenerException {
 		long groupId = GetterUtil.getLong(classPK);
+		long userId = GetterUtil.getLong(associationClassPK);
 		try {
 			Course course = CourseLocalServiceUtil.fetchByGroupCreatedId(groupId);
 			if((User.class.getName().equals(associationClassName))&&
 				(Validator.isNotNull(course))){
 				AuditingLogFactory.audit(course.getCompanyId(), course.getGroupCreatedId(), Course.class.getName(), 
-						course.getCourseId(), PrincipalThreadLocal.getUserId(), AuditConstants.UNREGISTER, null);
+						course.getCourseId(), userId, PrincipalThreadLocal.getUserId(), AuditConstants.UNREGISTER, null);
 			}
 		} catch (SystemException e) {
 			throw new ModelListenerException(e);

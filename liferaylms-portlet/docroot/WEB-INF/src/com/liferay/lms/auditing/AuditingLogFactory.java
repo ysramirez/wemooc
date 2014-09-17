@@ -3,6 +3,7 @@ package com.liferay.lms.auditing;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 
 public class AuditingLogFactory 
@@ -28,9 +29,16 @@ public class AuditingLogFactory
 	public static void audit(long companyId, long groupId, String className,long classPK,
 			long userId, String action, String extraData)
 			throws SystemException {
+		audit(companyId, groupId, className, classPK, GetterUtil.DEFAULT_LONG, 
+				userId, action, extraData);
+	}
+	
+	public static void audit(long companyId, long groupId, String className,long classPK,long associationClassPK, 
+			long userId, String action, String extraData)
+			throws SystemException {
 		try{
 			if(log.isDebugEnabled())log.debug("audit:"+className+"::"+classPK);
-			getAuditLog().audit(companyId, groupId, className, classPK, userId, action, extraData);
+			getAuditLog().audit(companyId, groupId, className, classPK, userId, associationClassPK, action, extraData);
 		}catch(ClassNotFoundException cnfe){
 			if(log.isDebugEnabled())cnfe.printStackTrace();
 		}catch(IllegalAccessException iae){

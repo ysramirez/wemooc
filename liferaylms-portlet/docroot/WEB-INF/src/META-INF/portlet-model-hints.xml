@@ -9,8 +9,12 @@
 		<field name="userId" type="long" />
 		<field name="classname" type="String" />
 		<field name="action" type="String" />
-		<field name="extradata" type="String" />
+		<field name="extradata" type="String">
+			<hint name="display-width">200</hint>
+			<hint name="max-length">500000</hint>
+		</field>
 		<field name="classPK" type="long" />
+		<field name="associationClassPK" type="long" />
 	</model>
 	<model name="com.liferay.lms.model.CheckP2pMailing">
 		<field name="checkP2pId" type="long" />
