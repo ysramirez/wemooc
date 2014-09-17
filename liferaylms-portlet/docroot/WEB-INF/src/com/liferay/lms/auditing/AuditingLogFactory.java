@@ -38,7 +38,7 @@ public class AuditingLogFactory
 			throws SystemException {
 		try{
 			if(log.isDebugEnabled())log.debug("audit:"+className+"::"+classPK);
-			getAuditLog().audit(companyId, groupId, className, classPK, userId, associationClassPK, action, extraData);
+			getAuditLog().audit(companyId, groupId, className, classPK, associationClassPK, userId, action, extraData);
 		}catch(ClassNotFoundException cnfe){
 			if(log.isDebugEnabled())cnfe.printStackTrace();
 		}catch(IllegalAccessException iae){
