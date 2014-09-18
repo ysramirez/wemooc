@@ -34,7 +34,7 @@ public class Ba_AdminCourse extends SeleniumTestCase {
 		if (loged) {
 			if(Context.isTest()){
 				try{					
-					boolean instance = InstancePortlet.createInstance(driver, "administraci\u00f3n de cursos", "portlet_courseadmin_WAR_liferaylmsportlet");
+					boolean instance = InstancePortlet.createInstance(driver, "administraci\u00f3n de clases", "portlet_courseadmin_WAR_liferaylmsportlet");
 					assertTrue("Error instance portlet portlet_courseadmin_WAR_liferaylmsportlet", instance);
 					if(instance){
 						//Check is visible
