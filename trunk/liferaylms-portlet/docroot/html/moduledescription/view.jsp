@@ -41,7 +41,7 @@ if(actId==0)
 		String primKey = String.valueOf(theModule.getPrimaryKey());
 		if(permissionChecker.hasPermission(groupId, name, primKey, ActionKeys.UPDATE)||!ModuleLocalServiceUtil.isLocked(theModule.getPrimaryKey(),themeDisplay.getUserId()))
 		{
-			AuditingLogFactory.getAuditLog().audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
+			AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(),
 					Module.class.getName(),theModule.getModuleId(), themeDisplay.getUserId(), AuditConstants.VIEW,"");
 			
 		%>
