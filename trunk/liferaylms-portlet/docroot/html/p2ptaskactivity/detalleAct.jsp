@@ -119,6 +119,7 @@ if(actId!=0)
 		int size=0, sizeKb=0; 
 		String title = "";
 		DLFileEntry dlfile = null;
+		String urlFile = null;
 		try{
 			
 			dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myp2pActivity.getFileEntryId());
@@ -127,19 +128,21 @@ if(actId!=0)
 			
 			size = Integer.parseInt(String.valueOf(dlfile.getSize()));
 			sizeKb = size/1024; //Lo paso a Kilobytes
-			
+			urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();	
 		}catch(Exception e){}
 		
-		String urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
+		
 		
 		%>
 		<div class="container-textarea">
 			<textarea rows="6" cols="90" readonly="readonly" ><%=myp2pActivity.getDescription() %></textarea>
 		</div>
-		<div class="doc_descarga">
-			<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
-			<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
-		</div>
+		<c:if test="<%=Validator.isNotNull(urlFile) %>">
+			<div class="doc_descarga">
+				<span><%=title%>&nbsp;(<%= sizeKb%> Kb)&nbsp;</span>
+				<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
+			</div>
+		</c:if>
 	</div>
 	<div class="preg_content" id="capa2" style="display:none">
 	<%
