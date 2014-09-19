@@ -187,10 +187,11 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 			"		A.Plugin.DialogIframe, "+
 			"		{ "+
 			"			uri: '" + JavaScriptUtil.markupToStringLiteral(newactivityURL) + "', "+
-		    "			on: { "+
+			"			on: { "+
 			"    			load: function(evt){ "+
-		    "					var instance = evt.target; "+
-		    "					var	iframeDocument = instance.node.get('contentDocument'); "+
+			"					var instance = evt.target; "+
+			"					var iframe = instance.node; "+
+			"					var	iframeDocument = iframe.get('contentWindow.document') || iframe.get('contentDocument'); "+
 			"					var	iframeBody = iframeDocument.one('body'); "+	
 			"					iframeBody.delegate( "+	
 			"						'click', "+	
