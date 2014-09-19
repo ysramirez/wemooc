@@ -326,60 +326,28 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		}
 		return 0;
 	}
+
 	@JSONWebService
 	public java.util.List<Course> myCourses() throws PortalException, SystemException
 	{
-		/**********************************
-		 * 
-		 * METODO MODIFICADO TEMPORALMENTE
-		 * 
-		 **********************************/
 		User usuario= this.getUser();
-		boolean isProfesor = false;
-		String label = PropsUtil.get("weclass.grupo.profesor");
-		try {
-			UserGroup ug = UserGroupLocalServiceUtil.getUserGroup(usuario.getCompanyId(), label);
-			isProfesor = userLocalService.hasUserGroupUser(ug.getUserGroupId(), usuario.getUserId());
-		} catch(SystemException e) {
-			
-		} catch (PortalException e) {
-			
-		}
-		
-		java.util.List<Course> results=new java.util.ArrayList<Course>();
 		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
-		java.util.Set<Long> profesorRolesSet = new LinkedHashSet<Long>();
-		LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(usuario.getCompanyId());
-		Role teacher=RoleLocalServiceUtil.getRole(prefs.getTeacherRole());
-		Role editor=RoleLocalServiceUtil.getRole(prefs.getEditorRole());
-		profesorRolesSet.add(teacher.getRoleId());
-		profesorRolesSet.add(editor.getRoleId());
-			
+		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		
 		for(Group groupCourse:groups)
 		{
-			boolean isProfesorInGroup = false;
-			if (isProfesor) {
-				java.util.List<Role> roles = RoleLocalServiceUtil.getUserGroupRoles(usuario.getUserId(), groupCourse.getGroupId());
-				for (Role rol : roles) {
-					if (profesorRolesSet.contains(rol.getRoleId())) {
-						isProfesorInGroup = true;
-					}
-				}
-			}
 			
-			if (!isProfesor || isProfesorInGroup) {
-				Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
-				if(course!=null && !course.isClosed())
-				{
-					results.add(course);
-				}
+			
+			Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
+			if(course!=null)
+			{
+				results.add(course);
 			}
 		}
 		return results;
 
 	}
-	
-	
+
 	private long [] getGruposFromExpando(Long companyId, String [] userGroupNames) throws PortalException, SystemException
 	{
 		List<Long> userGroupIds = new ArrayList<Long>();
