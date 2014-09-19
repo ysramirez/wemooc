@@ -88,10 +88,11 @@
 						|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")
 			    		|| improving ){
 						
+						String navigateParam = ParamUtil.getString(renderRequest, "navigate");
 						String passwordParam = ParamUtil.getString(renderRequest, "password",StringPool.BLANK).trim();
 						String password = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "password"),StringPool.BLANK).trim();
 						
-						if((StringPool.BLANK.equals(password))||(passwordParam.equals(password))){
+						if((Validator.isNotNull(navigateParam))||(StringPool.BLANK.equals(password))||(passwordParam.equals(password))){
 							ServiceContext serviceContext = ServiceContextFactory.getInstance(LearningActivityTry.class.getName(), renderRequest);
 							long activityTimestamp=0;
 							long timestamp=0;			
