@@ -49,7 +49,8 @@ String primKey = String.valueOf(myActivity.getActId());
 		
 	StringBuilder editActivityPopup = new StringBuilder("javascript:AUI().use('aui-dialog','aui-dialog-iframe', "+
 			"	function(A){ "+
-			"	new A.Dialog( "+
+			"	  var interval; "+
+			"	  new A.Dialog( "+
 			"		{ "+
 			"    		id: 'editlesson', "+ 
 			"			title: '"+LanguageUtil.get(pageContext,"activity.edition")+StringPool.SPACE+ LanguageUtil.get(pageContext, learningActivityType.getName())  +"', "+
@@ -59,7 +60,11 @@ String primKey = String.valueOf(myActivity.getActId());
 		    "			x:50, "+
 		    "			y:50, "+
 		    "			on: { "+
-			"    			close: function(evt){ "+
+			"				close: function(evt){ "+
+		    "					if(!!interval){ "+
+			"						A.clearInterval(interval); "+
+			"						delete interval; "+
+			"					} "+
 			"					Liferay.Portlet.refresh(A.one('#p_p_id"+renderResponse.getNamespace()+"')); ");
 			
 	if(myActivity.getActId()==actId) {	
@@ -81,19 +86,28 @@ String primKey = String.valueOf(myActivity.getActId());
 			"		A.Plugin.DialogIframe, "+
 			"		{ "+
 			"			uri: '" + JavaScriptUtil.markupToStringLiteral(editoptionsURL) + "', "+
-		    "			on: { "+
-			"    			load: function(evt){ "+
-		    "					var instance = evt.target; "+
-		    "					var	iframeDocument = instance.node.get('contentDocument'); "+
-			"					var	iframeBody = iframeDocument.one('body'); "+	
-			"					iframeBody.delegate( "+	
-			"						'click', "+	
-			"						function() { "+	
-			"							iframeDocument.purge(true); "+	
-			"							instance.get('host').close(); "+	
-			"						}, "+	
-			"						'.aui-button-input-cancel' "+	
-			"					); "+	
+			"			on: { "+
+			"				load: function(evt){ "+
+			"					var instance = evt.target, "+
+			"						node = instance.node.ancestor(); "+
+			"					interval = A.setInterval(function(){ "+
+			"						if(!!node) { "+
+			"							var	iframe = node.one('iframe'); "+
+			"							if(!!iframe) { "+
+			"								var	iframeDocument = iframe.get('contentWindow.document') || iframe.get('contentDocument'); "+
+			"								if(!!iframeDocument) { "+
+		    "									var	iframeBody = iframeDocument.one('body'); "+	
+		    "									if(!!iframeBody) { "+
+			"									iframeBody.delegate( "+	
+			"										'click', "+	
+			"										function() { "+	
+			"											iframeDocument.purge(true); "+	
+			"											instance.get('host').close(); "+	
+			"										}, "+	
+			"										'.aui-button-input-cancel' "+	
+			"									); "+	
+			"						}}}} "+
+			"					}, 100); "+	
 			"				} "+
 			"			} "+
 			"		} "+
