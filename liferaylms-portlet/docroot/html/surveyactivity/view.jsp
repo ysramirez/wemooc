@@ -1,4 +1,4 @@
-
+<%@page import="com.liferay.util.JavaScriptUtil"%>
 <%@page import="java.util.Collections"%>
 <%@page import="org.apache.commons.beanutils.BeanComparator"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
@@ -80,30 +80,114 @@
 																	
 						<script type="text/javascript">
 						<!--
-							function <%= renderResponse.getNamespace() %>formValidation(e){
-								var returnValue=true;
-								
-								AUI().use('node', function(Y){
-								    var questions = Y.all('div.question')
-				
-								    for(var i=0;i<questions.size();i++){
-								    	if(questions.item(i).one('div.answer input[type="radio"]:checked')==null){
-								        	if(!confirm('<liferay-ui:message key="execativity.test.questions.without.response" />')) {
-			
-												if (e.target) targ = e.target.blur();
-												else if (e.srcElement) targ = e.srcElement.blur();
-										        
-										        returnValue=false;  
-								        	}
-								        	 i=questions.size();
-									    }
+						Liferay.provide(
+						        window,
+						        '<portlet:namespace />questionValidation',
+						        function(question) {
+									var A = AUI();
+									var questionValidators = {
+										questiontype_options : function(question) {
+											return (question.all('div.answer input[type="radio"]:checked').size() > 0);
+										}
+									};
+									
+									var clases = question.getAttribute('class').split(" ");
+									var questiontypevalidator = '';
+									for ( var i = 0; i < clases.length; i++) {
+										var clase = clases[i];
+										if (clase.indexOf('questiontype_') == 0) {
+											questiontypevalidator = clase;
+											break;
+										}
 									}
-								    
-								});
-			
-								return returnValue; 
-												    
+									if (questionValidators[questiontypevalidator] != null) {
+										var resultado = questionValidators[questiontypevalidator](question);
+										return resultado;
+									} else {
+										return true;
+									}
+									
+						        },
+						        ['node', 'aui-dialog', 'event', 'node-event-simulate']
+						        );
+						
+						Liferay.provide(
+						        window,
+						        '<portlet:namespace />popConfirm',
+						        function(content, boton) {
+									var A = AUI();
+								
+									window.<portlet:namespace />confirmDialog = new A.Dialog(
+									    {
+									        title: '<liferay-ui:message key="execativity.test.questions.without.response"/>',
+									        bodyContent: content,
+									        buttons: [
+									                  {
+									                	  label: '<liferay-ui:message key="ok"/>',
+									                	  handler: function() {
+									                		  A.one('#<portlet:namespace/>formulario').detach('submit');
+									                		  document.getElementById('<portlet:namespace/>formulario').submit();
+									                		  <portlet:namespace />confirmDialog.close();
+									                	  }
+									                  },
+									                  {
+									                	  label: '<liferay-ui:message key="cancel"/>',
+									                	  handler: function() {
+									                		  <portlet:namespace />confirmDialog.close();
+									                	  }
+									                  }
+									                  ],
+									        width: 'auto',
+									        height: 'auto',
+									        resizable: false,
+									        draggable: false,
+									        close: true,
+									        destroyOnClose: true,
+									        centered: true,
+									        modal: true
+									    }
+									).render();
+									
+						        },
+						        ['node', 'aui-dialog', 'event', 'node-event-simulate']
+						    );
+						
+						Liferay.provide(
+						        window,
+						        '<portlet:namespace/>formValidation',
+						function(e) {
+							var returnValue = true;
+							
+							var A = AUI();
+						    var questions = A.all('#<portlet:namespace/>formulario div.question');
+						    for (var i = 0; i < questions.size(); i++) {
+						    	var question = questions.item(i);
+						    	var validQuestion = <portlet:namespace />questionValidation(question);
+						    	if (typeof validQuestion == 'undefined') {
+						    		validQuestion = <portlet:namespace />questionValidation(question);
+						    	}
+						    	if (!validQuestion) {
+						    		returnValue = false;
+						    		break;
+						    	}
 							}
+							
+						    if (!returnValue) {
+						    	if (e.target) {
+						    		targ = e.target.blur();
+						    	} else if (e.srcElement) {
+						    		targ = e.srcElement.blur();
+						    	}
+						    	<%= renderResponse.getNamespace() %>popConfirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>', e.srcElement);
+				    		}
+						    
+							if (!returnValue && e.preventDefault) {
+								e.preventDefault();
+							}
+							return returnValue;
+						},
+						['node', 'aui-dialog', 'event', 'node-event-simulate']
+					);
 						//-->
 						</script>
 						
@@ -112,7 +196,7 @@
 						for(TestQuestion question:questions)
 						{
 						%>
-							<div class="question">
+							<div class="question questiontype_options">
 							<div class="questiontext"><%=question.getText() %></div>
 							<%
 							List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
