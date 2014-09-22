@@ -41,6 +41,7 @@
 	long actId=ParamUtil.getLong(request,"actId",0);
 	long userId = themeDisplay.getUserId();
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+	boolean isNewTry = false;
 
 	String openWindow = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "openWindow"), "true");
 	boolean improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "improve"), true);
@@ -133,6 +134,7 @@
 	if(learningTry == null)
 	{
 		learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+		isNewTry = true;
 	}
 	else
 	{
@@ -231,13 +233,25 @@
 			
 				<p style="display:none" class="activity-message"><liferay-ui:message key="activity.openwindow"></liferay-ui:message></p>
 				
-				<span style="display:none" class="newitem2"><a class="newitem2" onclick="<portlet:namespace />abrirActividad(event)" target="scormactivity" href="javascript:void(0)"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<span style="display:none" class="newitem2">
+					<a class="newitem2" onclick="<portlet:namespace />abrirActividad(event)" target="scormactivity" href="javascript:void(0)">
+						<% if (isNewTry) { %>
+						<liferay-ui:message key="activity.go"></liferay-ui:message>
+						<% } else { %>
+						<liferay-ui:message key="activity.continue"></liferay-ui:message>
+						<% } %>
+					</a>
+				</span>
 			
 			<% } else { %>
 				
 				<p class="activity-message"><liferay-ui:message key="activity.openwindow.passed"></liferay-ui:message></p>
 				
-				<span class="newitem2"><a class="newitem2" onclick="<portlet:namespace />abrirActividad(event)" target="scormactivity" href="javascript:void(0)"><liferay-ui:message key="activity.go"></liferay-ui:message></a></span>
+				<span class="newitem2">
+					<a class="newitem2" onclick="<portlet:namespace />abrirActividad(event)" target="scormactivity" href="javascript:void(0)">
+						<liferay-ui:message key="activity.go"></liferay-ui:message>
+					</a>
+				</span>
 				<% }
 			} else {
 				request.setAttribute("learningTry", learningTry);
