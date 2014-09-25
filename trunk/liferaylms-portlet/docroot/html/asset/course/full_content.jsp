@@ -55,10 +55,13 @@ else
 </div>
 <%
 String uniurl="#";
-if(university.getPublicLayoutsPageCount()>0)
+if(university.getPublicLayoutsPageCount()>0&&university.getGroupId()!=themeDisplay.getScopeGroupId())
 {
 uniurl=themeDisplay.getPortalURL() +"/"+ themeDisplay.getLocale().getLanguage()+"/web"+university.getFriendlyURL();
-}
+
 %>
 <a class="university" href="<%=uniurl%>"><%=university.getName() %></a>
+<%
+}
+%>
 </div>
