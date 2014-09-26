@@ -54,6 +54,7 @@ public class AuditEntryWrapper implements AuditEntry, ModelWrapper<AuditEntry> {
 		attributes.put("action", getAction());
 		attributes.put("extradata", getExtradata());
 		attributes.put("classPK", getClassPK());
+		attributes.put("associationClassPK", getAssociationClassPK());
 
 		return attributes;
 	}
@@ -111,6 +112,12 @@ public class AuditEntryWrapper implements AuditEntry, ModelWrapper<AuditEntry> {
 
 		if (classPK != null) {
 			setClassPK(classPK);
+		}
+
+		Long associationClassPK = (Long)attributes.get("associationClassPK");
+
+		if (associationClassPK != null) {
+			setAssociationClassPK(associationClassPK);
 		}
 	}
 
@@ -312,6 +319,24 @@ public class AuditEntryWrapper implements AuditEntry, ModelWrapper<AuditEntry> {
 	*/
 	public void setClassPK(long classPK) {
 		_auditEntry.setClassPK(classPK);
+	}
+
+	/**
+	* Returns the association class p k of this audit entry.
+	*
+	* @return the association class p k of this audit entry
+	*/
+	public long getAssociationClassPK() {
+		return _auditEntry.getAssociationClassPK();
+	}
+
+	/**
+	* Sets the association class p k of this audit entry.
+	*
+	* @param associationClassPK the association class p k of this audit entry
+	*/
+	public void setAssociationClassPK(long associationClassPK) {
+		_auditEntry.setAssociationClassPK(associationClassPK);
 	}
 
 	public boolean isNew() {

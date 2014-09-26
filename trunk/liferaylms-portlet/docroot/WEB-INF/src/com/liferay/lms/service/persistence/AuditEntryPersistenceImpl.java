@@ -513,6 +513,7 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 		auditEntryImpl.setAction(auditEntry.getAction());
 		auditEntryImpl.setExtradata(auditEntry.getExtradata());
 		auditEntryImpl.setClassPK(auditEntry.getClassPK());
+		auditEntryImpl.setAssociationClassPK(auditEntry.getAssociationClassPK());
 
 		return auditEntryImpl;
 	}

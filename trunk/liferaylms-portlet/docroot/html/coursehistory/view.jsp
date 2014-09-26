@@ -26,6 +26,8 @@ for(Group groupCourse:groups)
 	}
 	
 }
+if(courses.size()>0)
+{
 %>
 <liferay-ui:search-container emptyResultsMessage="there-are-no-courses" delta="10">
 	<liferay-ui:search-container-results>
@@ -93,3 +95,10 @@ for(Group groupCourse:groups)
 			<liferay-ui:search-iterator />
 
 </liferay-ui:search-container>
+<%
+}
+else
+{
+	renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+}
+%>

@@ -111,20 +111,27 @@ public class AuditEntryLocalServiceClpInvoker {
 		_methodName140 = "addAuditEntry";
 
 		_methodParameterTypes140 = new String[] {
+				"long", "long", "java.lang.String", "long", "long", "long",
+				"java.lang.String", "java.lang.String"
+			};
+
+		_methodName141 = "addAuditEntry";
+
+		_methodParameterTypes141 = new String[] {
 				"long", "long", "java.lang.String", "long", "long",
 				"java.lang.String", "java.lang.String"
 			};
 
-		_methodName141 = "search";
+		_methodName142 = "search";
 
-		_methodParameterTypes141 = new String[] {
+		_methodParameterTypes142 = new String[] {
 				"long", "long", "java.lang.String", "long", "long",
 				"java.util.Date", "java.util.Date", "int", "int"
 			};
 
-		_methodName142 = "searchCount";
+		_methodName143 = "searchCount";
 
-		_methodParameterTypes142 = new String[] {
+		_methodParameterTypes143 = new String[] {
 				"long", "long", "java.lang.String", "long", "long",
 				"java.util.Date", "java.util.Date", "int", "int"
 			};
@@ -238,13 +245,26 @@ public class AuditEntryLocalServiceClpInvoker {
 				(java.lang.String)arguments[2],
 				((Long)arguments[3]).longValue(),
 				((Long)arguments[4]).longValue(),
-				(java.lang.String)arguments[5], (java.lang.String)arguments[6]);
+				((Long)arguments[5]).longValue(),
+				(java.lang.String)arguments[6], (java.lang.String)arguments[7]);
 
 			return null;
 		}
 
 		if (_methodName141.equals(name) &&
 				Arrays.deepEquals(_methodParameterTypes141, parameterTypes)) {
+			AuditEntryLocalServiceUtil.addAuditEntry(((Long)arguments[0]).longValue(),
+				((Long)arguments[1]).longValue(),
+				(java.lang.String)arguments[2],
+				((Long)arguments[3]).longValue(),
+				((Long)arguments[4]).longValue(),
+				(java.lang.String)arguments[5], (java.lang.String)arguments[6]);
+
+			return null;
+		}
+
+		if (_methodName142.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes142, parameterTypes)) {
 			return AuditEntryLocalServiceUtil.search(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				(java.lang.String)arguments[2],
@@ -255,8 +275,8 @@ public class AuditEntryLocalServiceClpInvoker {
 				((Integer)arguments[8]).intValue());
 		}
 
-		if (_methodName142.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes142, parameterTypes)) {
+		if (_methodName143.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes143, parameterTypes)) {
 			return AuditEntryLocalServiceUtil.searchCount(((Long)arguments[0]).longValue(),
 				((Long)arguments[1]).longValue(),
 				(java.lang.String)arguments[2],
@@ -312,4 +332,6 @@ public class AuditEntryLocalServiceClpInvoker {
 	private String[] _methodParameterTypes141;
 	private String _methodName142;
 	private String[] _methodParameterTypes142;
+	private String _methodName143;
+	private String[] _methodParameterTypes143;
 }

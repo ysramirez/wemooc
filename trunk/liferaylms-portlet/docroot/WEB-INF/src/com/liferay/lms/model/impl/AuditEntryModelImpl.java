@@ -70,9 +70,10 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 			{ "classname", Types.VARCHAR },
 			{ "action", Types.VARCHAR },
 			{ "extradata", Types.VARCHAR },
-			{ "classPK", Types.BIGINT }
+			{ "classPK", Types.BIGINT },
+			{ "associationClassPK", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_AuditEntry (auditId LONG not null primary key,auditDate DATE null,companyId LONG,groupId LONG,userId LONG,classname VARCHAR(75) null,action VARCHAR(75) null,extradata VARCHAR(75) null,classPK LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_AuditEntry (auditId LONG not null primary key,auditDate DATE null,companyId LONG,groupId LONG,userId LONG,classname VARCHAR(75) null,action VARCHAR(75) null,extradata TEXT null,classPK LONG,associationClassPK LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_AuditEntry";
 	public static final String ORDER_BY_JPQL = " ORDER BY auditEntry.auditDate DESC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_AuditEntry.auditDate DESC";
@@ -136,6 +137,7 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 		attributes.put("action", getAction());
 		attributes.put("extradata", getExtradata());
 		attributes.put("classPK", getClassPK());
+		attributes.put("associationClassPK", getAssociationClassPK());
 
 		return attributes;
 	}
@@ -194,6 +196,12 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 
 		if (classPK != null) {
 			setClassPK(classPK);
+		}
+
+		Long associationClassPK = (Long)attributes.get("associationClassPK");
+
+		if (associationClassPK != null) {
+			setAssociationClassPK(associationClassPK);
 		}
 	}
 
@@ -352,6 +360,14 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 		return _originalClassPK;
 	}
 
+	public long getAssociationClassPK() {
+		return _associationClassPK;
+	}
+
+	public void setAssociationClassPK(long associationClassPK) {
+		_associationClassPK = associationClassPK;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -393,6 +409,7 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 		auditEntryImpl.setAction(getAction());
 		auditEntryImpl.setExtradata(getExtradata());
 		auditEntryImpl.setClassPK(getClassPK());
+		auditEntryImpl.setAssociationClassPK(getAssociationClassPK());
 
 		auditEntryImpl.resetOriginalValues();
 
@@ -515,12 +532,14 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 
 		auditEntryCacheModel.classPK = getClassPK();
 
+		auditEntryCacheModel.associationClassPK = getAssociationClassPK();
+
 		return auditEntryCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{auditId=");
 		sb.append(getAuditId());
@@ -540,13 +559,15 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 		sb.append(getExtradata());
 		sb.append(", classPK=");
 		sb.append(getClassPK());
+		sb.append(", associationClassPK=");
+		sb.append(getAssociationClassPK());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(34);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.AuditEntry");
@@ -588,6 +609,10 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 			"<column><column-name>classPK</column-name><column-value><![CDATA[");
 		sb.append(getClassPK());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>associationClassPK</column-name><column-value><![CDATA[");
+		sb.append(getAssociationClassPK());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -617,6 +642,7 @@ public class AuditEntryModelImpl extends BaseModelImpl<AuditEntry>
 	private long _classPK;
 	private long _originalClassPK;
 	private boolean _setOriginalClassPK;
+	private long _associationClassPK;
 	private long _columnBitmask;
 	private AuditEntry _escapedModelProxy;
 }
