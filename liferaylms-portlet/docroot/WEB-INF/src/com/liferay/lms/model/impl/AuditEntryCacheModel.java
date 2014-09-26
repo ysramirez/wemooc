@@ -35,7 +35,7 @@ public class AuditEntryCacheModel implements CacheModel<AuditEntry>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{auditId=");
 		sb.append(auditId);
@@ -55,6 +55,8 @@ public class AuditEntryCacheModel implements CacheModel<AuditEntry>,
 		sb.append(extradata);
 		sb.append(", classPK=");
 		sb.append(classPK);
+		sb.append(", associationClassPK=");
+		sb.append(associationClassPK);
 		sb.append("}");
 
 		return sb.toString();
@@ -98,6 +100,7 @@ public class AuditEntryCacheModel implements CacheModel<AuditEntry>,
 		}
 
 		auditEntryImpl.setClassPK(classPK);
+		auditEntryImpl.setAssociationClassPK(associationClassPK);
 
 		auditEntryImpl.resetOriginalValues();
 
@@ -113,4 +116,5 @@ public class AuditEntryCacheModel implements CacheModel<AuditEntry>,
 	public String action;
 	public String extradata;
 	public long classPK;
+	public long associationClassPK;
 }

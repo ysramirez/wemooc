@@ -112,20 +112,27 @@ public class AuditEntryLocalServiceClp implements AuditEntryLocalService {
 		_methodName19 = "addAuditEntry";
 
 		_methodParameterTypes19 = new String[] {
+				"long", "long", "java.lang.String", "long", "long", "long",
+				"java.lang.String", "java.lang.String"
+			};
+
+		_methodName20 = "addAuditEntry";
+
+		_methodParameterTypes20 = new String[] {
 				"long", "long", "java.lang.String", "long", "long",
 				"java.lang.String", "java.lang.String"
 			};
 
-		_methodName20 = "search";
+		_methodName21 = "search";
 
-		_methodParameterTypes20 = new String[] {
+		_methodParameterTypes21 = new String[] {
 				"long", "long", "java.lang.String", "long", "long",
 				"java.util.Date", "java.util.Date", "int", "int"
 			};
 
-		_methodName21 = "searchCount";
+		_methodName22 = "searchCount";
 
-		_methodParameterTypes21 = new String[] {
+		_methodParameterTypes22 = new String[] {
 				"long", "long", "java.lang.String", "long", "long",
 				"java.util.Date", "java.util.Date", "int", "int"
 			};
@@ -654,12 +661,54 @@ public class AuditEntryLocalServiceClp implements AuditEntryLocalService {
 	}
 
 	public void addAuditEntry(long companyId, long groupId,
-		java.lang.String className, long classPK, long userId,
-		java.lang.String action, java.lang.String extraData)
+		java.lang.String className, long classPK, long associationClassPK,
+		long userId, java.lang.String action, java.lang.String extraData)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		try {
 			_invokableLocalService.invokeMethod(_methodName19,
 				_methodParameterTypes19,
+				new Object[] {
+					companyId,
+					
+				groupId,
+					
+				ClpSerializer.translateInput(className),
+					
+				classPK,
+					
+				associationClassPK,
+					
+				userId,
+					
+				ClpSerializer.translateInput(action),
+					
+				ClpSerializer.translateInput(extraData)
+				});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof com.liferay.portal.kernel.exception.SystemException) {
+				throw (com.liferay.portal.kernel.exception.SystemException)t;
+			}
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+	}
+
+	public void addAuditEntry(long companyId, long groupId,
+		java.lang.String className, long classPK, long userId,
+		java.lang.String action, java.lang.String extraData)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		try {
+			_invokableLocalService.invokeMethod(_methodName20,
+				_methodParameterTypes20,
 				new Object[] {
 					companyId,
 					
@@ -701,8 +750,8 @@ public class AuditEntryLocalServiceClp implements AuditEntryLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName20,
-					_methodParameterTypes20,
+			returnObj = _invokableLocalService.invokeMethod(_methodName21,
+					_methodParameterTypes21,
 					new Object[] {
 						companyId,
 						
@@ -749,8 +798,8 @@ public class AuditEntryLocalServiceClp implements AuditEntryLocalService {
 		Object returnObj = null;
 
 		try {
-			returnObj = _invokableLocalService.invokeMethod(_methodName21,
-					_methodParameterTypes21,
+			returnObj = _invokableLocalService.invokeMethod(_methodName22,
+					_methodParameterTypes22,
 					new Object[] {
 						companyId,
 						
@@ -833,4 +882,6 @@ public class AuditEntryLocalServiceClp implements AuditEntryLocalService {
 	private String[] _methodParameterTypes20;
 	private String _methodName21;
 	private String[] _methodParameterTypes21;
+	private String _methodName22;
+	private String[] _methodParameterTypes22;
 }

@@ -204,6 +204,20 @@ public interface AuditEntryModel extends BaseModel<AuditEntry> {
 	 */
 	public void setClassPK(long classPK);
 
+	/**
+	 * Returns the association class p k of this audit entry.
+	 *
+	 * @return the association class p k of this audit entry
+	 */
+	public long getAssociationClassPK();
+
+	/**
+	 * Sets the association class p k of this audit entry.
+	 *
+	 * @param associationClassPK the association class p k of this audit entry
+	 */
+	public void setAssociationClassPK(long associationClassPK);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);

@@ -39,6 +39,7 @@ public class AuditEntrySoap implements Serializable {
 		soapModel.setAction(model.getAction());
 		soapModel.setExtradata(model.getExtradata());
 		soapModel.setClassPK(model.getClassPK());
+		soapModel.setAssociationClassPK(model.getAssociationClassPK());
 
 		return soapModel;
 	}
@@ -163,6 +164,14 @@ public class AuditEntrySoap implements Serializable {
 		_classPK = classPK;
 	}
 
+	public long getAssociationClassPK() {
+		return _associationClassPK;
+	}
+
+	public void setAssociationClassPK(long associationClassPK) {
+		_associationClassPK = associationClassPK;
+	}
+
 	private long _auditId;
 	private Date _auditDate;
 	private long _companyId;
@@ -172,4 +181,5 @@ public class AuditEntrySoap implements Serializable {
 	private String _action;
 	private String _extradata;
 	private long _classPK;
+	private long _associationClassPK;
 }

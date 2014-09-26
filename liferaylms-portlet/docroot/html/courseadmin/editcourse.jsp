@@ -586,7 +586,13 @@ else
 					classPK="<%= courseId %>" assetEntryId="<%=assetEntryId %>" 	/>
 	</aui:fieldset>
 	</liferay-ui:panel>
+	 <c:if test="<%=courseId==0%>">
+	<liferay-ui:panel title="permissions" collapsible="true" defaultState="closed">
 	
+		<liferay-ui:input-permissions modelName="<%= com.liferay.lms.model.Course.class.getName() %>">
+	    </liferay-ui:input-permissions>
+	</liferay-ui:panel>
+	</c:if>
 	</liferay-ui:panel-container>
 	<aui:button-row>
 		<aui:button type="submit"></aui:button>							

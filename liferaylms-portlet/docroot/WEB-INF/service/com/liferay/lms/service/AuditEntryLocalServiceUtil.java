@@ -272,6 +272,15 @@ public class AuditEntryLocalServiceUtil {
 	}
 
 	public static void addAuditEntry(long companyId, long groupId,
+		java.lang.String className, long classPK, long associationClassPK,
+		long userId, java.lang.String action, java.lang.String extraData)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.addAuditEntry(companyId, groupId, className, classPK,
+			associationClassPK, userId, action, extraData);
+	}
+
+	public static void addAuditEntry(long companyId, long groupId,
 		java.lang.String className, long classPK, long userId,
 		java.lang.String action, java.lang.String extraData)
 		throws com.liferay.portal.kernel.exception.SystemException {

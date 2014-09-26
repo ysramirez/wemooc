@@ -77,6 +77,7 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 		attributes.put("action", getAction());
 		attributes.put("extradata", getExtradata());
 		attributes.put("classPK", getClassPK());
+		attributes.put("associationClassPK", getAssociationClassPK());
 
 		return attributes;
 	}
@@ -135,6 +136,12 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 
 		if (classPK != null) {
 			setClassPK(classPK);
+		}
+
+		Long associationClassPK = (Long)attributes.get("associationClassPK");
+
+		if (associationClassPK != null) {
+			setAssociationClassPK(associationClassPK);
 		}
 	}
 
@@ -218,6 +225,14 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 		_classPK = classPK;
 	}
 
+	public long getAssociationClassPK() {
+		return _associationClassPK;
+	}
+
+	public void setAssociationClassPK(long associationClassPK) {
+		_associationClassPK = associationClassPK;
+	}
+
 	public BaseModel<?> getAuditEntryRemoteModel() {
 		return _auditEntryRemoteModel;
 	}
@@ -254,6 +269,7 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 		clone.setAction(getAction());
 		clone.setExtradata(getExtradata());
 		clone.setClassPK(getClassPK());
+		clone.setAssociationClassPK(getAssociationClassPK());
 
 		return clone;
 	}
@@ -304,7 +320,7 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(19);
+		StringBundler sb = new StringBundler(21);
 
 		sb.append("{auditId=");
 		sb.append(getAuditId());
@@ -324,13 +340,15 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 		sb.append(getExtradata());
 		sb.append(", classPK=");
 		sb.append(getClassPK());
+		sb.append(", associationClassPK=");
+		sb.append(getAssociationClassPK());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(31);
+		StringBundler sb = new StringBundler(34);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.AuditEntry");
@@ -372,6 +390,10 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 			"<column><column-name>classPK</column-name><column-value><![CDATA[");
 		sb.append(getClassPK());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>associationClassPK</column-name><column-value><![CDATA[");
+		sb.append(getAssociationClassPK());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -388,5 +410,6 @@ public class AuditEntryClp extends BaseModelImpl<AuditEntry>
 	private String _action;
 	private String _extradata;
 	private long _classPK;
+	private long _associationClassPK;
 	private BaseModel<?> _auditEntryRemoteModel;
 }
