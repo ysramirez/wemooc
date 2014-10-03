@@ -733,15 +733,22 @@ Liferay.provide(
 
 		
 		<% if(larntype.getExpecificContentPage()!=null) { %>
+		
 			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>" portletId="<%= larntype.getPortletId() %>">
 				<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
 				<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
 			</liferay-util:include>	
 		<% } %>
 	</liferay-ui:panel>
-<%} %>
+<%}
+	String actCondefaultState="closed";
+	if(larntype.hasMandatoryDates())
+	{
+		actCondefaultState="open";
+	}
+	%>
 	 
-	 <liferay-ui:panel title="activity-constraints" collapsible="true" defaultState="closed">
+	 <liferay-ui:panel title="activity-constraints" collapsible="true" defaultState="<%=actCondefaultState %>">
 	   
 	    <script type="text/javascript">
 
@@ -789,10 +796,13 @@ Liferay.provide(
 						 <liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>"></liferay-ui:input-time>
 					</div>
 				<% } else { %>
+				<aui:input id="startdate-enabled" name="startdate-enabled" checked="true" disabled="true"  type="checkbox" label="editActivity.startdate.enabled" onClick="setStarDateState();" helpMessage="editActivity.startdate.enabled.help"  ignoreRequestValue="true" />
+					<div id="startDateSpan" class="aui-helper-hidden">
 					<aui:input id="startdate-enabled" name="startdate-enabled" type="hidden" value="true" ignoreRequestValue="true" />
 					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon" 
 					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
 					 <liferay-ui:input-time minuteParam="startMin" amPmParam="startAMPM" hourParam="startHour" hourValue="<%=startHour %>" minuteValue="<%=startMin %>"></liferay-ui:input-time>
+					 </div>
 				<% } %>
 			</aui:field-wrapper>
 		</div>
@@ -807,10 +817,13 @@ Liferay.provide(
 						 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time>
 					</div>
 				<% } else { %>
+				<aui:input id="stopdate-enabled" name="stopdate-enabled" checked="true" disabled="true" type="checkbox" label="editActivity.stopdate.enabled" onClick="setStopDateState();" helpMessage="editActivity.stopdate.enabled.help"  ignoreRequestValue="true" />
+					<div id="endDateSpan" class="aui-helper-hidden">
 					<aui:input id="stopdate-enabled" name="stopdate-enabled" type="hidden" value="true" ignoreRequestValue="true" />
 					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="stopDay" monthParam="stopMon"
 					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 					 <liferay-ui:input-time minuteParam="stopMin" amPmParam="stopAMPM" hourParam="stopHour"  hourValue="<%=endHour %>" minuteValue="<%=endMin %>"></liferay-ui:input-time>
+					 </div>
 				<% } %>
 			</aui:field-wrapper>
 		</div>
