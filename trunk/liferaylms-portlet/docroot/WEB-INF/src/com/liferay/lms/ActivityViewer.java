@@ -92,6 +92,7 @@ public class ActivityViewer extends MVCPortlet
 	static {
 		reservedAttrs.add(WebKeys.PAGE_TOP);
 		reservedAttrs.add(WebKeys.AUI_SCRIPT_DATA);
+		reservedAttrs.add(WebKeys.RUNTIME_PORTLET_IDS);
 	}
 	
 	
