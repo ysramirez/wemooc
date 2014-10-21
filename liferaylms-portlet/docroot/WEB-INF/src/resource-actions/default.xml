@@ -405,6 +405,8 @@
 				<action-key>ACCESS</action-key>
 			</site-member-defaults>
 			<guest-defaults>
+				<action-key>VIEW</action-key>
+				<action-key>ACCESS</action-key>
 			</guest-defaults>
 			<guest-unsupported>
 				<action-key>DELETE</action-key>
