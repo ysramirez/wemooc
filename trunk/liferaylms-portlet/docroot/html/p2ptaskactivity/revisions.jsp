@@ -27,14 +27,16 @@
 		<portlet:param name="jspPage" value="/html/p2ptaskactivity/revisions.jsp"></portlet:param>
 	</portlet:renderURL>
 
-	<aui:form name="studentsearch" action="<%=buscarURL %>" method="post">
+	<aui:form name="studentsearch" action="<%=buscarURL %>" cssClass="search_lms" method="post">
 		<aui:fieldset>
 			<aui:column>
 				<aui:input label="studentsearch.criteria" name="criteria" size="20" value="<%=criteria %>" />	
+			</aui:column>
+			<aui:column cssClass="search_lms_button">
+				<aui:button-row>
+					<aui:button name="searchUsers" value="search" type="submit" />
+				</aui:button-row>
 			</aui:column>	
-			<aui:button-row>
-				<aui:button name="searchUsers" value="search" type="submit" />
-			</aui:button-row>
 		</aui:fieldset>
 	</aui:form>
 
