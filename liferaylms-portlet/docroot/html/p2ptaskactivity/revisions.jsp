@@ -1,3 +1,4 @@
+<%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.workflow.WorkflowConstants"%>
 <%@page import="com.liferay.portal.kernel.util.Constants"%>
@@ -91,6 +92,21 @@
 		}
 		%>
 		<liferay-ui:search-container-column-text value="<%=textTaks %>" name="<%=textTaksTit %>" />
+		<%
+		P2pActivity myP2PActivity = P2pActivityLocalServiceUtil.findByActIdAndUserId(actId, Long.valueOf(user.getUserId()));
+
+		String dateTit = LanguageUtil.get(pageContext, "date");
+		
+		Date dateDel;
+		SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		dFormat.setTimeZone(themeDisplay.getTimeZone());	
+		String dateDelS = "";
+		if(myP2PActivity != null){
+			dateDel = myP2PActivity.getDate();
+			dateDelS = dFormat.format(dateDel);
+		}
+		%>
+		<liferay-ui:search-container-column-text value="<%=dateDelS %>" name="<%=dateTit %>" />
 		<%
 		if(existP2p){
 			String urlResume = "self.location = '"+verDetalle+"';";

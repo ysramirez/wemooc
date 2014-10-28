@@ -19,6 +19,7 @@
 <%@page import="com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityTryLocalServiceUtil"%>
 <%@page import="com.liferay.lms.portlet.p2p.P2PActivityPortlet"%>
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 
 <%@include file="/init.jsp" %>
 
@@ -90,16 +91,14 @@ if(activity.getEnddate() == null){
 	Liferay.provide(
 	        window,
 	        '<portlet:namespace />checkDataformC',
-	        function (thisForm) {
-				var A = AUI();
+	        function (thisForm, thisEditor) {
 				
-				var selector = 'form[name="'+thisForm+'"]';
-				var descriptionVal = A.one(selector).one('textarea[name="<portlet:namespace />description"]').val();
+				var descriptionVal = CKEDITOR.instances[thisEditor].getData();
 				if (descriptionVal == "" || descriptionVal == "<%= StringEscapeUtils.unescapeHtml(textoCorrecion) %>") {
 					alert('<liferay-ui:message key="p2ptask-no-empty-answer" />');
 				}
 				else {
-					<portlet:namespace />openPopUp(thisForm);
+					<portlet:namespace />openPopUp(thisForm, thisEditor);
 				}
 	        },
 	        ['node']
@@ -109,13 +108,12 @@ if(activity.getEnddate() == null){
 	        window,
 	        '<portlet:namespace />clearText',
 	        function (id) {
-				var A = AUI();
-				
-				var idtext = "#"+id;
+				var desc = CKEDITOR.instances[id].document.getBody().getText();
 				
 				var textReplace = "<%= StringEscapeUtils.unescapeHtml(textoCorrecion)  %>";
-				if (A.one(idtext).val() == textReplace) {
-					A.one(idtext).val("");
+				if (desc == textReplace) {
+					CKEDITOR.instances[id].setData("");
+					CKEDITOR.instances[id].focus();
 				}
 	        },
 	        ['node']
@@ -124,14 +122,17 @@ if(activity.getEnddate() == null){
 	Liferay.provide(
 	        window,
 	        '<portlet:namespace />openPopUp',
-	        function (formName) {
+	        function (formName, thisEditor) {
 				var A = AUI();
-				
 				var selector = 'form[name="'+formName+'"]';
 				var fileName = A.one(selector).one('input[name="<portlet:namespace />fileName"]').val();
-				var textDesc = A.one(selector).one('textarea[name="<portlet:namespace />description"]').val();
+				var textDesc = CKEDITOR.instances[thisEditor].getData();
 				var textResult = ''; 
-					
+
+				//Se copia el atributo para no modificar el servicio
+				AUI().one(selector).get('<portlet:namespace />description').set('value',textDesc);
+				textDesc = CKEDITOR.instances[thisEditor].document.getBody().getText();
+				
 				if(	A.one('select[name="<portlet:namespace />resultuser"]') != null){
 					textResult = A.one('select[name="<portlet:namespace />resultuser"]').val();
 				}
@@ -459,7 +460,7 @@ if(!p2pActList.isEmpty()){
 							<input type="hidden" name="userId" value="<%=userId%>"  />
 							
 							<div class="description">
-								<%=HtmlUtil.escape(descriptionFile).replaceAll("(\r\n|\n)", "<br />") %>
+								<%=descriptionFile %>
 							</div>
 	
 							<c:if test="<%=myP2PActivity.getFileEntryId() != 0 %>">
@@ -468,11 +469,19 @@ if(!p2pActList.isEmpty()){
 									<a href="<%=urlFile%>" class="verMas" target="_blank"><liferay-ui:message key="p2ptask-donwload" /></a>
 								</div>
 							</c:if>
-							
-							<div class="container-textarea">
-								<label for="<portlet:namespace />description_<%=cont%>" />
-								<textarea rows="6" cols="90" name="<portlet:namespace />description" onfocus="javascript:<portlet:namespace />clearText('<portlet:namespace />description_<%=cont%>')" id="<portlet:namespace />description_<%=cont%>"><%=textoCorrecion %></textarea>
-							</div>
+
+							<aui:field-wrapper label="description" name="<%=\"description_\"+cont%>">
+								<liferay-ui:input-editor name="<%=\"description_\"+cont%>" width="100%" />
+								<aui:input name="<%=\"description_\"+cont%>" type="hidden"/>
+								<script type="text/javascript">
+					    		    function <portlet:namespace />initEditor() {
+						    		    return "<%= UnicodeFormatter.toString(textoCorrecion) %>"; 
+						    		};
+						    		AUI().on('domready', function(){CKEDITOR.instances.<portlet:namespace />description_<%=cont %>.on('focus',function(){<portlet:namespace />clearText('<portlet:namespace />description_'+<%=cont %>);});});
+					    		</script>
+							</aui:field-wrapper>
+							<aui:input name="description" type="hidden"/>
+
 							<liferay-ui:error key="p2ptaskactivity-error-file-size" message="p2ptaskactivity.error.file.size" />
 							<div class="container-file">
 								<aui:input inlineLabel="left" inlineField="true"
@@ -489,7 +498,7 @@ if(!p2pActList.isEmpty()){
 								</div>
 							</c:if>
 							<div>
-								<input type="button" class="button floatr" value="<liferay-ui:message key="p2ptask-correction" />" onclick="<portlet:namespace />checkDataformC('<portlet:namespace />f1_<%=cont%>')" />
+								<input type="button" class="button floatr" value="<liferay-ui:message key="p2ptask-correction" />" onclick="<portlet:namespace />checkDataformC('<portlet:namespace />f1_<%=cont%>','<portlet:namespace />description_<%=cont%>')" />
 							</div>
 						</form>
 					</div>
@@ -551,7 +560,7 @@ if(!p2pActList.isEmpty()){
 					<div class="collapsable">
 
 						<div class="description">
-							<%=HtmlUtil.escape(descriptionFile).replaceAll("(\r\n|\n)", "<br />") %>
+							<%=descriptionFile %>
 						</div>
 
 						<c:if test="<%=myP2PActivity.getFileEntryId() != 0 %>">
@@ -564,7 +573,7 @@ if(!p2pActList.isEmpty()){
 							<div class="subtitle"><liferay-ui:message key="p2ptask-your-valoration" /> :</div>
 							<div class="container-textarea">
 								<label for="<portlet:namespace/>readonlydesc" />
-								<textarea id="<portlet:namespace/>readonlydesc" rows="6" cols="80" name="<portlet:namespace />description" readonly="readonly"><%=description %></textarea>
+								<%=description %>
 							</div>
 							<%
 
