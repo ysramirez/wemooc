@@ -135,7 +135,7 @@ if(actId!=0)
 		
 		%>
 		<div class="container-textarea">
-			<textarea rows="6" cols="90" readonly="readonly" ><%=myp2pActivity.getDescription() %></textarea>
+			<%=myp2pActivity.getDescription() %>
 		</div>
 		<c:if test="<%=Validator.isNotNull(urlFile) %>">
 			<div class="doc_descarga">
@@ -203,7 +203,7 @@ if(actId!=0)
 							<div class="degradade">
 								<div class="subtitle"><liferay-ui:message key="p2ptask-valoration" /> :</div>
 								<div class="container-textarea">
-									<textarea rows="6" cols="80" name="description" readonly="readonly"><%=description %></textarea>
+									<%=description %>
 								</div>
 								<%
 								if(myP2PActiCor.getFileEntryId()!=0){
@@ -297,7 +297,7 @@ if(actId!=0)
 				</span>
 					<div class="collapsable" style="padding-left:10px">
 						<div class="container-textarea">
-							<textarea rows="6" cols="90" readonly="readonly" ><%=correctionText %></textarea>
+							<%=correctionText %>
 						</div>
 						<%if(dlfile!=null){%>
 						<div class="doc_descarga">

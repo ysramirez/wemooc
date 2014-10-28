@@ -115,9 +115,10 @@ if(!p2pActCorList.isEmpty()){
 								<div class="color_tercero font_13"><liferay-ui:message key="p2ptask.correction.result" />: <%=myP2PActCor.getResult() %></div>
 							</div>
 						</c:if>
+						<label class="aui-field-label" style="font-size: 14px;"> <liferay-ui:message key="p2ptaskactivity.comment" /> </label>
 						<div class="container-textarea">
 							<label for="<portlet:namespace/>corrected" />
-							<textarea id="<portlet:namespace/>corrected" name="<portlet:namespace/>corrected" rows="6" cols="90" readonly="readonly" ><%=HtmlUtil.escape(correctionText) %></textarea>
+							<%=correctionText %>
 						</div>
 						<%
 						if(dlfile!=null){
