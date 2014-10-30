@@ -1,5 +1,7 @@
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivityResult"%>
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
+<%@page import="javax.portlet.PortletPreferences"%>
 <%@page import="com.liferay.lms.service.LearningActivityResultLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.asset.model.AssetRenderer"%>
 <%@page import="com.liferay.portal.kernel.portlet.LiferayPortletResponse"%>
@@ -14,6 +16,16 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@ include file="/init.jsp" %>
 <%
+
+	PortletPreferences preferences = null;
+	String portletResource = ParamUtil.getString(request, "portletResource");
+	if (Validator.isNotNull(portletResource)) 
+		preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+	else
+		preferences = renderRequest.getPreferences();
+
+	boolean numerateModules = (preferences.getValue("numerateModules", "false")).compareTo("true") == 0;
+	
 	long moduleId=ParamUtil.getLong(request,"moduleId",0);
 	long currentModuleId=0;
 	long actId=ParamUtil.getLong(request,"actId",0);
@@ -43,7 +55,7 @@
 	}
 	if(theModule!=null)
 	{
-		if(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true)) {
+		if(numerateModules) {
 			if(themeId==GetterUtil.DEFAULT_INTEGER) {
 				for(Module module:(List<Module>)ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId())) {
 					themeId++;

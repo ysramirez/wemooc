@@ -60,7 +60,9 @@
 			<hint name="display-width">1024</hint>
 			<hint name="max-length">500000</hint>
 		</field>
-		<field name="friendlyURL" type="String" />
+		<field name="friendlyURL" type="String">
+			<hint name="max-length">100</hint>
+		</field>
 		<field name="startDate" type="Date" />
 		<field name="endDate" type="Date" />
 		<field name="icon" type="long" />

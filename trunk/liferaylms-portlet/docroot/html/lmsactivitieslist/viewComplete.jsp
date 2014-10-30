@@ -1,5 +1,7 @@
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
+<%@page import="javax.portlet.PortletPreferences"%>
 <%@page import="java.net.URL"%>
 <%@page import="com.liferay.portal.kernel.servlet.SessionErrors"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
@@ -28,6 +30,17 @@
 <%@page import="com.liferay.portal.kernel.portlet.LiferayWindowState"%>
 
 <%@ include file="/init.jsp"%>
+
+<%
+PortletPreferences preferences = null;
+String portletResource = ParamUtil.getString(request, "portletResource");
+if (Validator.isNotNull(portletResource)) 
+	preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+else
+	preferences = renderRequest.getPreferences();
+
+boolean numerateModules = (preferences.getValue("numerateModules", "false")).compareTo("true") == 0;
+%>
 
 <%if (SessionErrors.contains(renderRequest, "activities-in-module")) { %>
 	<script type="text/javascript">
@@ -184,7 +197,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 						}
 					}
 					%>
-						<%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+						<%= (numerateModules)?
 								LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}):
 									theModule.getTitle(themeDisplay.getLocale()) %></a>
 						<%if(actionEditing){%>
@@ -192,7 +205,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 						<%}
 					}else
 					{%>
-						<span class="locked"></span><%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+						<span class="locked"></span><%=(numerateModules)?
 															LanguageUtil.format(pageContext, "moduleTitle.chapter", new Object[]{themeId,theModule.getTitle(themeDisplay.getLocale())}):
 																theModule.getTitle(themeDisplay.getLocale())  %> <span class="module-percent"><%=done %>%</span>
 						<%if(actionEditing){}
