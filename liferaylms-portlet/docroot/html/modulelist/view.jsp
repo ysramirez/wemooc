@@ -218,8 +218,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 					gotoModuleURL.setPlid(retoplid);
 					gotoModuleURL.setPortletId("lmsactivitieslist_WAR_liferaylmsportlet");
 					Object[] arg =  new Object[2];
-					if(numerateModules ) arg[0] = themeId;
-					else arg[0] = "";
+					arg[0] = themeId;
 					arg[1] = theModule.getTitle(themeDisplay.getLocale());
 					Date startDate = theModule.getStartDate();
 					boolean canAccess = (startDate != null )?(!today.before(theModule.getStartDate())):true;
@@ -229,13 +228,13 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 <%				
 						if((moduleTitleLinkable || (allowEditionMode && moduleEditing)) && canAccess && (canAccessLock || !ModuleLocalServiceUtil.isLocked(theModule.getModuleId(),themeDisplay.getUserId()))){				 
 %>
-							<a href="<%=gotoModuleURL.toString() %>"><%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+							<a href="<%=gotoModuleURL.toString() %>"><%=(numerateModules)?
 																			LanguageUtil.format(pageContext, "moduleTitle.chapter", arg):
 																				theModule.getTitle(themeDisplay.getLocale()) %></a>
 <%		
 						}else{
 %>
-							<%=(GetterUtil.getBoolean(PropsUtil.get("module.show.number"),true))?
+							<%=(numerateModules)?
 											LanguageUtil.format(pageContext, "moduleTitle.chapter", arg):
 												theModule.getTitle(themeDisplay.getLocale()) %>
 <%

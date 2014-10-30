@@ -32,6 +32,7 @@
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="javax.portlet.PortletPreferences"%>
 <%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
+<%@page import="com.liferay.portal.model.ModelHintsUtil"%>
 
 <%@ include file="/init.jsp" %>
 
@@ -41,9 +42,15 @@
 <liferay-ui:error key="title-required" message="title-required" />
 <liferay-ui:error key="title-empty" message="title-empty" />
 <liferay-ui:error key="title-repeated" message="title-repeated" />
+<liferay-ui:error key="title-too-long" message="title-too-long" />
 <liferay-ui:error key="max-users-violated" message="max-users-violated" />
 	
 	<%
+	
+	int maxLengthTitle = GetterUtil.getInteger(
+			ModelHintsUtil.getHints(Group.class.getName(), "name").get("max-length"),150);
+	
+	
 	String site = PropsUtil.get("lms.site.types");
 	Set<Integer> sites = new HashSet<Integer>();
 	if(Validator.isNotNull(site)){
@@ -631,7 +638,14 @@ function <portlet:namespace />checkduplicate(val, field)
 	                 fieldName: '<portlet:namespace />title_'+Liferay.ThemeDisplay.getLanguageId(),
 	                 validatorName: 'checkduplicate1'
 	            },
-	            
+	            {
+	                body: <%=maxLengthTitle %>,
+	                custom: false,
+	                errorMessage: '<liferay-ui:message key="title-too-long" />',
+	          		fieldName: '<portlet:namespace />title_'+Liferay.ThemeDisplay.getLanguageId(),
+	                validatorName: 'maxLength'
+                }
+                
 	        ]
 	    }
 	);

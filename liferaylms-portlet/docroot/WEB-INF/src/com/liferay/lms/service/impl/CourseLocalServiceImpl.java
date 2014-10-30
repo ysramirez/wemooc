@@ -48,15 +48,19 @@ import com.liferay.portal.kernel.search.IndexerRegistryUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSet;
 import com.liferay.portal.model.LayoutSetPrototype;
+import com.liferay.portal.model.ModelHintsConstants;
+import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
@@ -135,6 +139,36 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		long userId=serviceContext.getUserId();
 		Course course = coursePersistence.create(counterLocalService.increment(Course.class.getName()));
 		try{
+			
+			//Se asegura que la longitud de friendlyURL no supere el maximo
+			int maxLength  = GetterUtil.getInteger(
+								ModelHintsUtil.getHints(Group.class.getName(), "friendlyURL").get("max-length"),
+								GetterUtil.getInteger(ModelHintsConstants.TEXT_MAX_LENGTH));
+			
+			if(Validator.isNull(friendlyURL)) {
+				friendlyURL = StringPool.SLASH + FriendlyURLNormalizerUtil.normalize(title);
+				if(friendlyURL.length()>maxLength) {
+					friendlyURL = friendlyURL.substring(0, maxLength);
+				}
+				for(int i=0;;i++){
+					Group exist = groupLocalService.fetchFriendlyURLGroup(serviceContext.getCompanyId(), friendlyURL);
+					if (Validator.isNotNull(exist)){
+						String iString = String.valueOf(i);
+						if(friendlyURL.length()+iString.length()>maxLength) {
+							if(iString.length()>maxLength) {
+								throw new SystemException();
+							}
+							friendlyURL =friendlyURL.substring(0, maxLength-iString.length())+iString;
+						}
+						else {
+							friendlyURL =friendlyURL+iString;
+						}
+					}else{
+						break;
+					}
+				}				
+			}
+			
 			course.setCompanyId(serviceContext.getCompanyId());
 			course.setGroupId(serviceContext.getScopeGroupId());
 			course.setUserId(userId);
@@ -151,7 +185,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setCourseEvalId(CourseEvalId);
 			course.setCalificationType(calificationType);
 			course.setMaxusers(maxUsers);
-			
+
 			//creating group
 			Group group = groupLocalService.addGroup(userLocalService.getDefaultUser(serviceContext.getCompanyId()).getUserId(),
 					null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);

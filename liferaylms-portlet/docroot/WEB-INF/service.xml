@@ -381,6 +381,10 @@
 			<finder-column name="userId" />
 			<finder-column name="groupId" />
 		</finder>
+		<finder name="FriendlyURL" return-type="Course" unique="true">
+			<finder-column name="companyId" />
+			<finder-column name="friendlyURL" />
+		</finder>
 
 		<reference package-path="com.liferay.portal" entity="User" />
 		<reference package-path="com.liferay.portal" entity="Group" />

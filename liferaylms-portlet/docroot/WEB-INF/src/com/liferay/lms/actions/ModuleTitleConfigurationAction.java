@@ -14,9 +14,9 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 
-public class LmsActivitiesListAction implements ConfigurationAction {
+public class ModuleTitleConfigurationAction implements ConfigurationAction {
 
-	public static final String JSP = "/html/lmsactivitieslist/config/lmsActivitiesListConfig.jsp";
+	public static final String JSP = "/html/moduletitle/config/moduleTitleConfig.jsp";
 
 	public String render(PortletConfig config, RenderRequest renderRequest, RenderResponse renderResponse) throws Exception 
 	{
@@ -38,7 +38,6 @@ public class LmsActivitiesListAction implements ConfigurationAction {
 		} else {
 			prefs = actionRequest.getPreferences();
 		}
-		prefs.setValue("viewMode", actionRequest.getParameter("viewMode"));
 		prefs.setValue("numerateModules", actionRequest.getParameter("numerateModules"));
 		
 		prefs.store();
