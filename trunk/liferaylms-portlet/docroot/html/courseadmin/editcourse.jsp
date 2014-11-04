@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
 <%@page import="com.liferay.lms.service.CompetenceServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
@@ -42,14 +43,13 @@
 <liferay-ui:error key="title-required" message="title-required" />
 <liferay-ui:error key="title-empty" message="title-empty" />
 <liferay-ui:error key="title-repeated" message="title-repeated" />
-<liferay-ui:error key="title-too-long" message="title-too-long" />
 <liferay-ui:error key="max-users-violated" message="max-users-violated" />
 	
 	<%
 	
-	int maxLengthTitle = GetterUtil.getInteger(
-			ModelHintsUtil.getHints(Group.class.getName(), "name").get("max-length"),150);
-	
+	String maxLengthTitle = GetterUtil.getString(
+			ModelHintsUtil.getHints(Group.class.getName(), "name").get("max-length"),"");
+	String courseTitle = "";
 	
 	String site = PropsUtil.get("lms.site.types");
 	Set<Integer> sites = new HashSet<Integer>();
@@ -200,6 +200,7 @@ if(course!=null)
 	endMin=Integer.parseInt(formatMin.format(course.getEndDate()));
 	type=course.getStatus(); //TODO
 	maxUsers=course.getMaxusers();
+	courseTitle = (String)course.getModelAttributes().get("title");
 	%>
 	<aui:model-context bean="<%= course %>" model="<%= Course.class %>" />
 	<%
@@ -295,7 +296,19 @@ else
 	<aui:input name="backURL" type="hidden" value="<%= backURL %>" />
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="courseId" type="hidden" value="<%=courseId %>"/>
-	<aui:input name="title" label="title" id="title"/>
+	<span class="aui-field-content" > 
+		 <label class="aui-field-label" for="<%=renderResponse.getNamespace()+"title"+StringPool.UNDERLINE+LanguageUtil.getLanguageId(LocaleUtil.getDefault()) %>"> 
+		 	<liferay-ui:message key="title" /> 
+		 </label> 
+		 <span class="aui-field-element " > 
+		  <liferay-ui:input-localized 
+		   cssClass="<%=renderResponse.getNamespace()+\"localized lfr-input-text\"%>" 
+		   name="title"
+		   defaultLanguageId="<%=LanguageUtil.getLanguageId(LocaleUtil.getDefault()) %>"
+		   xml="<%=courseTitle %>"
+		   maxLength="<%=maxLengthTitle %>"/>
+		 </span> 
+	</span>
 	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=groupCreated!=null?groupCreated.getFriendlyURL():"" %> </aui:input>
 	
 	<aui:field-wrapper label="description" name="description">
@@ -638,14 +651,6 @@ function <portlet:namespace />checkduplicate(val, field)
 	                 fieldName: '<portlet:namespace />title_'+Liferay.ThemeDisplay.getLanguageId(),
 	                 validatorName: 'checkduplicate1'
 	            },
-	            {
-	                body: <%=maxLengthTitle %>,
-	                custom: false,
-	                errorMessage: '<liferay-ui:message key="title-too-long" />',
-	          		fieldName: '<portlet:namespace />title_'+Liferay.ThemeDisplay.getLanguageId(),
-	                validatorName: 'maxLength'
-                }
-                
 	        ]
 	    }
 	);

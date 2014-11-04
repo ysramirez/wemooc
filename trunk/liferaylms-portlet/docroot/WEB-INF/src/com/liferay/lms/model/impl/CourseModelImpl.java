@@ -97,7 +97,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			{ "maxusers", Types.BIGINT },
 			{ "calificationType", Types.BIGINT }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,userName VARCHAR(75) null,groupCreatedId LONG,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(75) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null,closed BOOLEAN,maxusers LONG,calificationType LONG)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Course (uuid_ VARCHAR(75) null,courseId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,userName VARCHAR(75) null,groupCreatedId LONG,createDate DATE null,modifiedDate DATE null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,friendlyURL VARCHAR(100) null,startDate DATE null,endDate DATE null,icon LONG,CourseEvalId LONG,CourseExtraData TEXT null,closed BOOLEAN,maxusers LONG,calificationType LONG)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Course";
 	public static final String ORDER_BY_JPQL = " ORDER BY course.courseId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_Course.courseId ASC";
@@ -115,10 +115,11 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 			true);
 	public static long CLOSED_COLUMN_BITMASK = 1L;
 	public static long COMPANYID_COLUMN_BITMASK = 2L;
-	public static long GROUPCREATEDID_COLUMN_BITMASK = 4L;
-	public static long GROUPID_COLUMN_BITMASK = 8L;
-	public static long USERID_COLUMN_BITMASK = 16L;
-	public static long UUID_COLUMN_BITMASK = 32L;
+	public static long FRIENDLYURL_COLUMN_BITMASK = 4L;
+	public static long GROUPCREATEDID_COLUMN_BITMASK = 8L;
+	public static long GROUPID_COLUMN_BITMASK = 16L;
+	public static long USERID_COLUMN_BITMASK = 32L;
+	public static long UUID_COLUMN_BITMASK = 64L;
 
 	/**
 	 * Converts the soap model instance into a normal model instance.
@@ -775,7 +776,17 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	}
 
 	public void setFriendlyURL(String friendlyURL) {
+		_columnBitmask |= FRIENDLYURL_COLUMN_BITMASK;
+
+		if (_originalFriendlyURL == null) {
+			_originalFriendlyURL = _friendlyURL;
+		}
+
 		_friendlyURL = friendlyURL;
+	}
+
+	public String getOriginalFriendlyURL() {
+		return GetterUtil.getString(_originalFriendlyURL);
 	}
 
 	public Date getStartDate() {
@@ -1085,6 +1096,8 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 		courseModelImpl._originalGroupCreatedId = courseModelImpl._groupCreatedId;
 
 		courseModelImpl._setOriginalGroupCreatedId = false;
+
+		courseModelImpl._originalFriendlyURL = courseModelImpl._friendlyURL;
 
 		courseModelImpl._originalClosed = courseModelImpl._closed;
 
@@ -1424,6 +1437,7 @@ public class CourseModelImpl extends BaseModelImpl<Course>
 	private String _description;
 	private String _descriptionCurrentLanguageId;
 	private String _friendlyURL;
+	private String _originalFriendlyURL;
 	private Date _startDate;
 	private Date _endDate;
 	private long _icon;

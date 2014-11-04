@@ -20,6 +20,14 @@ public class ModuleTitleConfigurationAction implements ConfigurationAction {
 
 	public String render(PortletConfig config, RenderRequest renderRequest, RenderResponse renderResponse) throws Exception 
 	{
+		PortletPreferences prefs;
+		String portletResource = ParamUtil.getString(renderRequest, "portletResource");	
+		if (Validator.isNotNull(portletResource)){
+			prefs = PortletPreferencesFactoryUtil.getPortletSetup(renderRequest, portletResource);
+		} else {
+			prefs = renderRequest.getPreferences();
+		}
+		System.out.println("NumerateModules: "+prefs.getValue("numerateModules", "false"));
 		return JSP; 
 	}
 	

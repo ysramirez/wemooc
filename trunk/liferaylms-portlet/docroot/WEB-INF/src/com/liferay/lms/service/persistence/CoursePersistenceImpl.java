@@ -249,6 +249,16 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 			CourseModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByUserIdGroupId",
 			new String[] { Long.class.getName(), Long.class.getName() });
+	public static final FinderPath FINDER_PATH_FETCH_BY_FRIENDLYURL = new FinderPath(CourseModelImpl.ENTITY_CACHE_ENABLED,
+			CourseModelImpl.FINDER_CACHE_ENABLED, CourseImpl.class,
+			FINDER_CLASS_NAME_ENTITY, "fetchByFriendlyURL",
+			new String[] { Long.class.getName(), String.class.getName() },
+			CourseModelImpl.COMPANYID_COLUMN_BITMASK |
+			CourseModelImpl.FRIENDLYURL_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_FRIENDLYURL = new FinderPath(CourseModelImpl.ENTITY_CACHE_ENABLED,
+			CourseModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByFriendlyURL",
+			new String[] { Long.class.getName(), String.class.getName() });
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_ALL = new FinderPath(CourseModelImpl.ENTITY_CACHE_ENABLED,
 			CourseModelImpl.FINDER_CACHE_ENABLED, CourseImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findAll", new String[0]);
@@ -274,6 +284,13 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 
 		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_GROUPCREATEDID,
 			new Object[] { Long.valueOf(course.getGroupCreatedId()) }, course);
+
+		FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+			new Object[] {
+				Long.valueOf(course.getCompanyId()),
+				
+			course.getFriendlyURL()
+			}, course);
 
 		course.resetOriginalValues();
 	}
@@ -353,6 +370,13 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 
 		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_GROUPCREATEDID,
 			new Object[] { Long.valueOf(course.getGroupCreatedId()) });
+
+		FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+			new Object[] {
+				Long.valueOf(course.getCompanyId()),
+				
+			course.getFriendlyURL()
+			});
 	}
 
 	/**
@@ -637,6 +661,13 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_GROUPCREATEDID,
 				new Object[] { Long.valueOf(course.getGroupCreatedId()) },
 				course);
+
+			FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+				new Object[] {
+					Long.valueOf(course.getCompanyId()),
+					
+				course.getFriendlyURL()
+				}, course);
 		}
 		else {
 			if ((courseModelImpl.getColumnBitmask() &
@@ -671,6 +702,28 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_GROUPCREATEDID,
 					new Object[] { Long.valueOf(course.getGroupCreatedId()) },
 					course);
+			}
+
+			if ((courseModelImpl.getColumnBitmask() &
+					FINDER_PATH_FETCH_BY_FRIENDLYURL.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(courseModelImpl.getOriginalCompanyId()),
+						
+						courseModelImpl.getOriginalFriendlyURL()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_FRIENDLYURL,
+					args);
+
+				FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+					args);
+
+				FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+					new Object[] {
+						Long.valueOf(course.getCompanyId()),
+						
+					course.getFriendlyURL()
+					}, course);
 			}
 		}
 
@@ -4838,6 +4891,169 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 	}
 
 	/**
+	 * Returns the course where companyId = &#63; and friendlyURL = &#63; or throws a {@link com.liferay.lms.NoSuchCourseException} if it could not be found.
+	 *
+	 * @param companyId the company ID
+	 * @param friendlyURL the friendly u r l
+	 * @return the matching course
+	 * @throws com.liferay.lms.NoSuchCourseException if a matching course could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Course findByFriendlyURL(long companyId, String friendlyURL)
+		throws NoSuchCourseException, SystemException {
+		Course course = fetchByFriendlyURL(companyId, friendlyURL);
+
+		if (course == null) {
+			StringBundler msg = new StringBundler(6);
+
+			msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+			msg.append("companyId=");
+			msg.append(companyId);
+
+			msg.append(", friendlyURL=");
+			msg.append(friendlyURL);
+
+			msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+			if (_log.isWarnEnabled()) {
+				_log.warn(msg.toString());
+			}
+
+			throw new NoSuchCourseException(msg.toString());
+		}
+
+		return course;
+	}
+
+	/**
+	 * Returns the course where companyId = &#63; and friendlyURL = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	 *
+	 * @param companyId the company ID
+	 * @param friendlyURL the friendly u r l
+	 * @return the matching course, or <code>null</code> if a matching course could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Course fetchByFriendlyURL(long companyId, String friendlyURL)
+		throws SystemException {
+		return fetchByFriendlyURL(companyId, friendlyURL, true);
+	}
+
+	/**
+	 * Returns the course where companyId = &#63; and friendlyURL = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	 *
+	 * @param companyId the company ID
+	 * @param friendlyURL the friendly u r l
+	 * @param retrieveFromCache whether to use the finder cache
+	 * @return the matching course, or <code>null</code> if a matching course could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Course fetchByFriendlyURL(long companyId, String friendlyURL,
+		boolean retrieveFromCache) throws SystemException {
+		Object[] finderArgs = new Object[] { companyId, friendlyURL };
+
+		Object result = null;
+
+		if (retrieveFromCache) {
+			result = FinderCacheUtil.getResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+					finderArgs, this);
+		}
+
+		if (result instanceof Course) {
+			Course course = (Course)result;
+
+			if ((companyId != course.getCompanyId()) ||
+					!Validator.equals(friendlyURL, course.getFriendlyURL())) {
+				result = null;
+			}
+		}
+
+		if (result == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_SELECT_COURSE_WHERE);
+
+			query.append(_FINDER_COLUMN_FRIENDLYURL_COMPANYID_2);
+
+			if (friendlyURL == null) {
+				query.append(_FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_1);
+			}
+			else {
+				if (friendlyURL.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_2);
+				}
+			}
+
+			query.append(CourseModelImpl.ORDER_BY_JPQL);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(companyId);
+
+				if (friendlyURL != null) {
+					qPos.add(friendlyURL);
+				}
+
+				List<Course> list = q.list();
+
+				result = list;
+
+				Course course = null;
+
+				if (list.isEmpty()) {
+					FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+						finderArgs, list);
+				}
+				else {
+					course = list.get(0);
+
+					cacheResult(course);
+
+					if ((course.getCompanyId() != companyId) ||
+							(course.getFriendlyURL() == null) ||
+							!course.getFriendlyURL().equals(friendlyURL)) {
+						FinderCacheUtil.putResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+							finderArgs, course);
+					}
+				}
+
+				return course;
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (result == null) {
+					FinderCacheUtil.removeResult(FINDER_PATH_FETCH_BY_FRIENDLYURL,
+						finderArgs);
+				}
+
+				closeSession(session);
+			}
+		}
+		else {
+			if (result instanceof List<?>) {
+				return null;
+			}
+			else {
+				return (Course)result;
+			}
+		}
+	}
+
+	/**
 	 * Returns all the courses.
 	 *
 	 * @return the courses
@@ -5068,6 +5284,21 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 		for (Course course : findByUserIdGroupId(userId, groupId)) {
 			remove(course);
 		}
+	}
+
+	/**
+	 * Removes the course where companyId = &#63; and friendlyURL = &#63; from the database.
+	 *
+	 * @param companyId the company ID
+	 * @param friendlyURL the friendly u r l
+	 * @return the course that was removed
+	 * @throws SystemException if a system exception occurred
+	 */
+	public Course removeByFriendlyURL(long companyId, String friendlyURL)
+		throws NoSuchCourseException, SystemException {
+		Course course = findByFriendlyURL(companyId, friendlyURL);
+
+		return remove(course);
 	}
 
 	/**
@@ -5764,6 +5995,77 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 	}
 
 	/**
+	 * Returns the number of courses where companyId = &#63; and friendlyURL = &#63;.
+	 *
+	 * @param companyId the company ID
+	 * @param friendlyURL the friendly u r l
+	 * @return the number of matching courses
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByFriendlyURL(long companyId, String friendlyURL)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { companyId, friendlyURL };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_FRIENDLYURL,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_COURSE_WHERE);
+
+			query.append(_FINDER_COLUMN_FRIENDLYURL_COMPANYID_2);
+
+			if (friendlyURL == null) {
+				query.append(_FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_1);
+			}
+			else {
+				if (friendlyURL.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_2);
+				}
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(companyId);
+
+				if (friendlyURL != null) {
+					qPos.add(friendlyURL);
+				}
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_FRIENDLYURL,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
 	 * Returns the number of courses.
 	 *
 	 * @return the number of courses
@@ -5911,6 +6213,10 @@ public class CoursePersistenceImpl extends BasePersistenceImpl<Course>
 	private static final String _FINDER_COLUMN_USERID_USERID_2 = "course.userId = ?";
 	private static final String _FINDER_COLUMN_USERIDGROUPID_USERID_2 = "course.userId = ? AND ";
 	private static final String _FINDER_COLUMN_USERIDGROUPID_GROUPID_2 = "course.groupId = ?";
+	private static final String _FINDER_COLUMN_FRIENDLYURL_COMPANYID_2 = "course.companyId = ? AND ";
+	private static final String _FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_1 = "course.friendlyURL IS NULL";
+	private static final String _FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_2 = "course.friendlyURL = ?";
+	private static final String _FINDER_COLUMN_FRIENDLYURL_FRIENDLYURL_3 = "(course.friendlyURL IS NULL OR course.friendlyURL = ?)";
 	private static final String _FILTER_ENTITY_TABLE_FILTER_PK_COLUMN = "course.courseId";
 	private static final String _FILTER_SQL_SELECT_COURSE_WHERE = "SELECT DISTINCT {course.*} FROM Lms_Course course WHERE ";
 	private static final String _FILTER_SQL_SELECT_COURSE_NO_INLINE_DISTINCT_WHERE_1 =
