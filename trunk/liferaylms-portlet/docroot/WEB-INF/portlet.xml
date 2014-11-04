@@ -27,6 +27,12 @@
 			<short-title>LmsActivitiesList</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>numerateModules</name>
+				<value>true</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
@@ -608,6 +614,12 @@
 			<short-title>ModuleTitle</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>numerateModules</name>
+				<value>true</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
@@ -649,6 +661,12 @@
 			<short-title>ModuleList</short-title>
 			<keywords></keywords>
 		</portlet-info>
+		<portlet-preferences>
+			<preference>
+				<name>numerateModules</name>
+				<value>true</value>
+			</preference>
+		</portlet-preferences>
 		<security-role-ref>
 			<role-name>administrator</role-name>
 		</security-role-ref>
