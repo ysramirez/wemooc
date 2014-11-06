@@ -62,7 +62,11 @@ public class TaskP2PLearningActivityType extends BaseLearningActivityType {
 	public long getTypeId() {
 		return 3;
 	}
-	
+	@Override
+	public long getDefaultTries() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
 	@Override
 	public String getExpecificContentPage() {
 		return "/html/p2ptaskactivity/admin/edit.jsp";

@@ -52,6 +52,12 @@ public class TaskOfflineLearningActivityType extends BaseLearningActivityType {
 	}
 	
 	@Override
+	public long getDefaultTries() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
+
+	@Override
 	public long getTypeId() {
 		return 5;
 	}
