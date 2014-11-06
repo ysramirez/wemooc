@@ -344,6 +344,10 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 	@Override
 	public boolean especificValidations(UploadRequest uploadRequest,
 			PortletResponse portletResponse) {
+		if(!Validator.isNumber(PropsUtil.get("lms.course.default.evaluations"))) {
+			return true;
+		}
+
 		PortletRequest portletRequest = (PortletRequest)uploadRequest.getAttribute(JavaConstants.JAVAX_PORTLET_REQUEST);
 		String numOfEvaluations = uploadRequest.getParameter("numOfEvaluations");
 		Long courseId = ParamUtil.getLong(uploadRequest, "courseId");
