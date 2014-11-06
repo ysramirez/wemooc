@@ -102,17 +102,20 @@ public class LearningActivityResultLocalServiceImpl
 		}
 		if(learningActivityTry.getEndDate()!=null)
 		{
-			learningActivityResult.setEndDate(learningActivityTry.getEndDate());
-			if(learningActivityTry.getResult()>learningActivityResult.getResult())
+			long cuantosTryLlevo=LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId, userId);
+			if(learningActivity.getTries()>0&&cuantosTryLlevo>=learningActivity.getTries())
 			{
-				
-			
+				learningActivityResult.setEndDate(learningActivityTry.getEndDate());
+			}
+			if(learningActivityTry.getResult()>learningActivityResult.getResult())
+			{			
 				learningActivityResult.setResult(learningActivityTry.getResult());
 			}
 			if(!learningActivityResult.getPassed())
 			{
 				if(learningActivityTry.getResult()>=learningActivity.getPasspuntuation())
 				{
+					learningActivityResult.setEndDate(learningActivityTry.getEndDate());
 					learningActivityResult.setPassed(true);
 				  
 				}
@@ -641,12 +644,10 @@ public class LearningActivityResultLocalServiceImpl
 		if ("incomplete".equals(total_completion_status) || "completed".equals(total_completion_status)) {
 			learningActivityTry.setTryResultData(tryResultData);
 			learningActivityTry.setResult(Math.round(total_score));
-			
-			if (Math.round(total_score) >= master_score || "passed".equals(total_lesson_status)) {
-				Date endDate = new Date(System.currentTimeMillis());
-				learningActivityTry.setEndDate(endDate);
+			if (Math.round(total_score) >= master_score)
+			{
+				total_lesson_status="passed";
 			}
-			
 			learningActivityTryLocalService.updateLearningActivityTry(learningActivityTry);
 			
 			// If SCO says that the activity has been passed, then the learning activity result has to be marked as passed
