@@ -144,4 +144,13 @@ public class LearningActivityResultServiceImpl
 		
 		return lar;
 	}
+	public LearningActivityResult updateFinishTry(long latId, String tryResultData, String imsmanifest) throws PortalException, SystemException
+	{
+		System.out.println("finiquitando:");
+		LearningActivityTry learningActivityTry = learningActivityTryLocalService.getLearningActivityTry(latId);
+		learningActivityTry.setEndDate(new java.util.Date(System.currentTimeMillis()));
+		learningActivityTryLocalService.updateLearningActivityTry(learningActivityTry);
+		
+		return update( latId,  tryResultData,  imsmanifest);
+	}
 }
