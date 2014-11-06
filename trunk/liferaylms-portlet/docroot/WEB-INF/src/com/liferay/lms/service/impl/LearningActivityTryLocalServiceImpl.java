@@ -206,7 +206,36 @@ public class LearningActivityTryLocalServiceImpl
 		}
 		return null;		
 	}
-	
+	@SuppressWarnings("unchecked")	
+	public LearningActivityTry createOrDuplicateLast(long actId,ServiceContext serviceContext) throws SystemException, PortalException
+	{ 	
+		DynamicQuery consulta = DynamicQueryFactoryUtil.forClass(LearningActivityTry.class, (ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),
+				"portletClassLoader"))
+					.add(PropertyFactoryUtil.forName("actId").eq(new Long(actId)))
+					.add(PropertyFactoryUtil.forName("userId").eq(new Long(serviceContext.getUserId())))
+					.addOrder(PropertyFactoryUtil.forName("startDate").desc());
+					
+		List<LearningActivityTry> activities = (List<LearningActivityTry>)learningActivityTryPersistence.findWithDynamicQuery(consulta);
+		LearningActivityTry  lastTry=null;
+		if(activities!=null && activities.size()>0)
+		{
+		   lastTry=activities.get(0);
+		}
+		if(lastTry==null)
+		{
+			return createLearningActivityTry(actId, serviceContext);
+		}
+		else
+		{
+			LearningActivityTry newTry=createLearningActivityTry(actId, serviceContext);
+			newTry.setResult(lastTry.getResult());
+			newTry.setTryData(lastTry.getTryData());
+			newTry.setTryResultData(lastTry.getTryResultData());
+			updateLearningActivityTry(newTry);
+			return newTry;
+		}
+		
+	}
 	@SuppressWarnings("unchecked")
 	public LearningActivityTry getLearningActivityTryNotFinishedByActUser(long actId,long userId) throws SystemException, PortalException
 	{ 			
