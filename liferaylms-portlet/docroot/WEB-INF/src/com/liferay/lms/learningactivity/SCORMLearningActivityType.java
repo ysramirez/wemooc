@@ -43,6 +43,12 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 	}
 
 	@Override
+	public boolean hasDeleteTries() {
+		
+		return true;
+	}
+
+	@Override
 	public long getDefaultScore() {
 		return 100;
 	}

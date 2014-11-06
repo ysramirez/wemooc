@@ -29,7 +29,11 @@ public class TaskLearningActivityType extends BaseLearningActivityType
 	public boolean isTriesConfigurable() {
 		return true;
 	}
-
+	@Override
+	public long getDefaultTries() {
+		// TODO Auto-generated method stub
+		return 1;
+	}
 	@Override
 	public boolean isFeedbackCorrectConfigurable() {
 		return true;

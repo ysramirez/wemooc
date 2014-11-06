@@ -54,7 +54,11 @@ public class TaskOnlineLearningActivityType extends BaseLearningActivityType {
 	public long getTypeId() {
 		return 6;
 	}
-		
+	@Override
+	public long getDefaultTries() {
+		// TODO Auto-generated method stub
+		return 1;
+	}	
 	@Override
 	public String getExpecificContentPage() {
 		return "/html/onlinetaskactivity/admin/edit.jsp";
