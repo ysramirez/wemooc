@@ -242,9 +242,11 @@ div.bajo_caja {
 }
 
 /*Pie*/
-
+#footer{clear:both;display:block;overflow:hidden;}
+#footer div.logos{background:#fff;width:982px;margin:0 auto;text-align:center;}
 #footer div.powered-by{
 	width:982px;
+	background:#f9f9f9;
 	color:#00b5cb;
 	letter-spacing:0.04em;
 	padding-top:5px;
