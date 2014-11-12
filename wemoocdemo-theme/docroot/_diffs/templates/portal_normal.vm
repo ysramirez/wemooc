@@ -81,14 +81,16 @@
 
 </div>
 <!-- PIE -->
-<footer id="footer" role="contentinfo">
-	<div class="powered-by">
-		<ul class="floatl">
-			<li class="last"><span>&copy; Copyright 2013 Wemooc</span></li>
-		</ul>
-		<a href="http://www.telefonicalearningservices.com" target="_blank" class="floatr"><img src="/wemoocdemo-theme/images/custom/logo_tls.png" /></a>
-	</div>
-</footer>
+	<footer id="footer" role="contentinfo">
+		<div class="logos">
+			<img src="/wemooc-theme/images/custom/logos-pie.png" /></a>
+		</div>
+		<div class="powered-by">
+			<ul>
+				<li class="last"><span>&copy; Copyright 2014 Wemooc</span></li>
+			</ul>
+		</div>
+	</footer>
 	
 <!-- FIN PIE -->
 <!-- FIN CONTENIDO -->
