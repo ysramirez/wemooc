@@ -129,7 +129,18 @@ public class SCORMContentLocalServiceImpl
 		SCORMContent scorm=scormContentPersistence.fetchByPrimaryKey(scormId);
 		Indexer indexer = IndexerRegistryUtil.nullSafeGetIndexer(
 				SCORMContent.class);
-
+		
+		try {
+			//scorm
+			FileUtils.forceDelete( new File(getDirScormPath(scorm)));
+			//zip
+			FileUtils.forceDelete( new File(getDirScormzipPath(scorm)));
+		} catch (IOException e) {
+		 throw new SystemException(e);
+	
+		}
+	
+	
 		indexer.delete(scorm);
 		assetEntryLocalService.deleteEntry(SCORMContent.class.getName(),scormId);
 		resourceLocalService.deleteResource(
