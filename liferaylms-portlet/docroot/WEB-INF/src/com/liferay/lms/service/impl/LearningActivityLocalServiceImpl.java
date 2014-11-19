@@ -531,6 +531,29 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		this.deleteLearningactivity(LearningActivityLocalServiceUtil.getLearningActivity(actId));
 	}
 
+	public String getExtraContentValue(long actId, String key,String defaultValue) throws SystemException
+	{
+		try {
+			LearningActivity activity = learningActivityPersistence.fetchByPrimaryKey(actId);
+
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+
+			if(activity != null){
+
+				hashMap = convertXMLExtraContentToHashMap(actId);
+				//Para evitar que retorne null si no existe la clave.
+				if(hashMap.containsKey(key)){
+					return hashMap.get(key);
+				}
+				else{
+					return defaultValue;
+				}
+			}
+		} catch (Exception e) {
+		}
+
+		return "";
+	}
 	public String getExtraContentValue(long actId, String key) throws SystemException{
 
 		try {

@@ -277,6 +277,11 @@ public interface LearningActivityTryLocalService extends BaseLocalService,
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.lms.model.LearningActivityTry createOrDuplicateLast(
+		long actId, com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public com.liferay.lms.model.LearningActivityTry getLearningActivityTryNotFinishedByActUser(
 		long actId, long userId)

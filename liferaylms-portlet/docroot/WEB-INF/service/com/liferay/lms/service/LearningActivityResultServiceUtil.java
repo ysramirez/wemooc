@@ -109,6 +109,13 @@ public class LearningActivityResultServiceUtil {
 		return getService().update(latId, tryResultData, imsmanifest);
 	}
 
+	public static com.liferay.lms.model.LearningActivityResult updateFinishTry(
+		long latId, java.lang.String tryResultData, java.lang.String imsmanifest)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService().updateFinishTry(latId, tryResultData, imsmanifest);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

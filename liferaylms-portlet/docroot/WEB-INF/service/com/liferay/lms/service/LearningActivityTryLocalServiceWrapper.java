@@ -314,6 +314,14 @@ public class LearningActivityTryLocalServiceWrapper
 			userId);
 	}
 
+	public com.liferay.lms.model.LearningActivityTry createOrDuplicateLast(
+		long actId, com.liferay.portal.service.ServiceContext serviceContext)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _learningActivityTryLocalService.createOrDuplicateLast(actId,
+			serviceContext);
+	}
+
 	public com.liferay.lms.model.LearningActivityTry getLearningActivityTryNotFinishedByActUser(
 		long actId, long userId)
 		throws com.liferay.portal.kernel.exception.PortalException,

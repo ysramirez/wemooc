@@ -115,7 +115,7 @@ public class SCORMAdmin extends MVCPortlet
 						{
 							ZipEntry manifest=zipFile.getEntry("imsmanifest.xml");
 							InputStream manfiestStream=zipFile.getInputStream(manifest);
-							Document imsdocument = SAXReaderUtil.read(manfiestStream, true);
+							Document imsdocument = SAXReaderUtil.read(manfiestStream);
 					
 						}
 					} catch (ZipException e) {

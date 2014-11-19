@@ -53,7 +53,8 @@ Liferay.Service.registerClass(
 		getByActIdAndUser: true,
 		userPassed: true,
 		userLoginPassed: true,
-		update: true
+		update: true,
+		updateFinishTry: true
 	}
 );
 

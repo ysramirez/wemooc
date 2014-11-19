@@ -450,6 +450,12 @@ public class LearningActivityLocalServiceUtil {
 	}
 
 	public static java.lang.String getExtraContentValue(long actId,
+		java.lang.String key, java.lang.String defaultValue)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService().getExtraContentValue(actId, key, defaultValue);
+	}
+
+	public static java.lang.String getExtraContentValue(long actId,
 		java.lang.String key)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getService().getExtraContentValue(actId, key);

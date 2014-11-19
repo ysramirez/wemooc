@@ -106,6 +106,14 @@ public class LearningActivityResultServiceWrapper
 			imsmanifest);
 	}
 
+	public com.liferay.lms.model.LearningActivityResult updateFinishTry(
+		long latId, java.lang.String tryResultData, java.lang.String imsmanifest)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _learningActivityResultService.updateFinishTry(latId,
+			tryResultData, imsmanifest);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */
