@@ -168,6 +168,10 @@ SCORM_1_2.API_LIB.prototype.LMSFinish = function(param) {
 			}
 			API_BASE.LOG.displayMessage('LMSFinish with param: \'' + param
 					+ '\'', this.$23, this.$25(this.$23));
+			if(this.$1F.$2.$1.length==1)
+			{
+				finish_scorm();
+			}
 			return 'true';
 		} else {
 			//this.$23 = '301';
@@ -175,6 +179,7 @@ SCORM_1_2.API_LIB.prototype.LMSFinish = function(param) {
 	} else {
 		this.$23 = '201';
 	}
+	
 	API_BASE.LOG.displayMessage('LMSFinish with param: \'' + param + '\'',
 			this.$23, this.$25(this.$23));
 	return 'false';
@@ -740,11 +745,26 @@ Player.ContentPlayer.prototype.$28 = function($p0) {
 };
 
 Player.ContentPlayer.prototype.adjustPlayer = function() {
-	var iframe = document.getElementById('placeholder_contentIFrame');
-	var iFrameID = document.getElementById('contentIFrame');
-	iFrameID.style.height = "";
-	iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight + 50 : 600) + "px";
-	iframe.style.height = iFrameID.style.height;
+	if(window.name=='scormactivity')
+	{
+		//QQQ ajusta el player
+		 var html = document.documentElement;
+         height=html.clientHeight;
+ 		var nav1=document.getElementById("placeholder_navigationContainer").clientHeight;
+ 		var nav2=document.getElementById("placeholder_navigationContainer2").clientHeight;
+ 		var iframeHeight=height-nav1-nav2-20;
+ 		iframeHeight=iframeHeight+"px";
+ 		document.getElementById("placeholder_contentIFrame").style.height=iframeHeight;
+ 		document.getElementById("contentIFrame").style.height=iframeHeight;
+	}
+	else
+	{
+		var iframe = document.getElementById('placeholder_contentIFrame');
+		var iFrameID = document.getElementById('contentIFrame');
+		iFrameID.style.height = "";
+		iFrameID.style.height = (iFrameID.contentWindow.document.body.scrollHeight > 200 ? iFrameID.contentWindow.document.body.scrollHeight + 50 : 688) + "px";
+		iframe.style.height = iFrameID.style.height;
+	}
 	/*
 	var frameset = iFrameID.contentWindow.document.getElementsByTagName('frameset');
 	if (frameset != null) {

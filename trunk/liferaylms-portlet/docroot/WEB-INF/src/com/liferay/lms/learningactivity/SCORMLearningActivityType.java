@@ -121,6 +121,26 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		openWindow.setText(ParamUtil
 				.getString(uploadRequest, "openWindow", "0"));
 		rootElement.add(openWindow);
+		Element windowWith = rootElement.element("windowWith");
+		if (windowWith != null) {
+			windowWith.detach();
+			rootElement.remove(windowWith);
+		}
+		windowWith = SAXReaderUtil.createElement("windowWith");
+		windowWith.setText(ParamUtil
+				.getString(uploadRequest, "windowWith", "1024"));
+		rootElement.add(windowWith);
+		
+		Element height = rootElement.element("height");
+		if (height != null) {
+			height.detach();
+			rootElement.remove(height);
+		}
+		height = SAXReaderUtil.createElement("height");
+		height.setText(ParamUtil
+				.getString(uploadRequest, "height", "680"));
+		rootElement.add(height);
+		
 		
 		Element improve=rootElement.element("improve");
 		if(improve!=null)

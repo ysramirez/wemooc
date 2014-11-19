@@ -1516,6 +1516,52 @@ public class CourseUtil {
 	}
 
 	/**
+	* Returns the course where companyId = &#63; and friendlyURL = &#63; or throws a {@link com.liferay.lms.NoSuchCourseException} if it could not be found.
+	*
+	* @param companyId the company ID
+	* @param friendlyURL the friendly u r l
+	* @return the matching course
+	* @throws com.liferay.lms.NoSuchCourseException if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.Course findByFriendlyURL(
+		long companyId, java.lang.String friendlyURL)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findByFriendlyURL(companyId, friendlyURL);
+	}
+
+	/**
+	* Returns the course where companyId = &#63; and friendlyURL = &#63; or returns <code>null</code> if it could not be found. Uses the finder cache.
+	*
+	* @param companyId the company ID
+	* @param friendlyURL the friendly u r l
+	* @return the matching course, or <code>null</code> if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.Course fetchByFriendlyURL(
+		long companyId, java.lang.String friendlyURL)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().fetchByFriendlyURL(companyId, friendlyURL);
+	}
+
+	/**
+	* Returns the course where companyId = &#63; and friendlyURL = &#63; or returns <code>null</code> if it could not be found, optionally using the finder cache.
+	*
+	* @param companyId the company ID
+	* @param friendlyURL the friendly u r l
+	* @param retrieveFromCache whether to use the finder cache
+	* @return the matching course, or <code>null</code> if a matching course could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.Course fetchByFriendlyURL(
+		long companyId, java.lang.String friendlyURL, boolean retrieveFromCache)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .fetchByFriendlyURL(companyId, friendlyURL, retrieveFromCache);
+	}
+
+	/**
 	* Returns all the courses.
 	*
 	* @return the courses
@@ -1671,6 +1717,21 @@ public class CourseUtil {
 	public static void removeByUserIdGroupId(long userId, long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		getPersistence().removeByUserIdGroupId(userId, groupId);
+	}
+
+	/**
+	* Removes the course where companyId = &#63; and friendlyURL = &#63; from the database.
+	*
+	* @param companyId the company ID
+	* @param friendlyURL the friendly u r l
+	* @return the course that was removed
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.liferay.lms.model.Course removeByFriendlyURL(
+		long companyId, java.lang.String friendlyURL)
+		throws com.liferay.lms.NoSuchCourseException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().removeByFriendlyURL(companyId, friendlyURL);
 	}
 
 	/**
@@ -1831,6 +1892,20 @@ public class CourseUtil {
 	public static int filterCountByUserIdGroupId(long userId, long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence().filterCountByUserIdGroupId(userId, groupId);
+	}
+
+	/**
+	* Returns the number of courses where companyId = &#63; and friendlyURL = &#63;.
+	*
+	* @param companyId the company ID
+	* @param friendlyURL the friendly u r l
+	* @return the number of matching courses
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countByFriendlyURL(long companyId,
+		java.lang.String friendlyURL)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countByFriendlyURL(companyId, friendlyURL);
 	}
 
 	/**

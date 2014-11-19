@@ -9,7 +9,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-
 long actId = ParamUtil.getLong(request, "actId", 0L);
 LearningActivityTry learningTry = (LearningActivityTry) request.getAttribute("learningTry");
 if (learningTry == null) {
@@ -20,20 +19,21 @@ request.setAttribute("learningTry", learningTry);
 
 long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "assetEntry"), 0);
 			
-if(entryId != 0) {
+if(entryId != 0)
+{
 	AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(entryId);
 	AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
 	AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 	String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT); 
 	themeDisplay.setIncludeServiceJs(true); 
-	
 
 	%>
 <script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
 <script type="text/javascript">
 	localStorage.removeItem('scormpool');
 	var tryResultDataOld = '<%= HtmlUtil.escapeJS(learningTry.getTryResultData()) %>';
-	if (tryResultDataOld != '') {
+	if (tryResultDataOld != '') 
+	{
 		localStorage.setItem('scormpool', tryResultDataOld);
 	}
 </script>
@@ -67,18 +67,18 @@ if(entryId != 0) {
 			// Process Exception
 		}
 	};
-	
+	var finishedscorm=false;
 	var finish_scorm = function(e) {
-    	
+	if(!finishedscorm)
+   	{
 		var scormpool = localStorage['scormpool'];
-		
 		var serviceParameterTypes = [
 	     	'long',
 	    	'java.lang.String',
 	    	'java.lang.String'
 	    ];
 		
-	    var message = Liferay.Service.Lms.LearningActivityResult.update(
+	    var message = Liferay.Service.Lms.LearningActivityResult.updateFinishTry(
 	    	{
 	   			latId: <%= learningTry.getLatId() %>,
 	   			tryResultData: scormpool,
@@ -97,7 +97,13 @@ if(entryId != 0) {
 		} else {
 			// Process Exception
 		}
-	};
-</script>
+		finishedscorm=true;
+    	}
 
+	};
+	window.onbeforeunload= function(e)
+			{ 
+				finish_scorm();
+			};
+</script>
 <% } %>

@@ -62,6 +62,12 @@ public class LearningActivityResultServiceClpInvoker {
 		_methodParameterTypes130 = new String[] {
 				"long", "java.lang.String", "java.lang.String"
 			};
+
+		_methodName131 = "updateFinishTry";
+
+		_methodParameterTypes131 = new String[] {
+				"long", "java.lang.String", "java.lang.String"
+			};
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -118,6 +124,12 @@ public class LearningActivityResultServiceClpInvoker {
 				(java.lang.String)arguments[1], (java.lang.String)arguments[2]);
 		}
 
+		if (_methodName131.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes131, parameterTypes)) {
+			return LearningActivityResultServiceUtil.updateFinishTry(((Long)arguments[0]).longValue(),
+				(java.lang.String)arguments[1], (java.lang.String)arguments[2]);
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -139,4 +151,6 @@ public class LearningActivityResultServiceClpInvoker {
 	private String[] _methodParameterTypes129;
 	private String _methodName130;
 	private String[] _methodParameterTypes130;
+	private String _methodName131;
+	private String[] _methodParameterTypes131;
 }

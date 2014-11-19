@@ -69,9 +69,41 @@ try {
   </div>
 <div id="placeholder_treecontentContainer">
 	
-	<div id="placeholder_contentIFrame" style="height: 670px; width: 99%;">
-          <iframe id="contentIFrame" style="height:100%; width:100%"></iframe>
+	<%
+	if(renderRequest.getWindowState().toString().equals("normal"))
+	{
+		
+	%>
+    	<div id="placeholder_contentIFrame" style="height: 680px; width: 100%;">
+          <iframe id="contentIFrame" style="height:680px; width:100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" ></iframe>
     </div>
+	
+    <%
+	}
+    else
+    {
+    	%>
+    	<script>
+ 
+    	window.onresize=function(event)
+    	{
+    	    var html = document.documentElement;
+            height=html.clientHeight;
+    		var nav1=document.getElementById("placeholder_navigationContainer").clientHeight;
+    		var nav2=document.getElementById("placeholder_navigationContainer2").clientHeight;
+    		var iframeHeight=height-nav1-nav2-20;
+    		iframeHeight=iframeHeight+"px";
+    		document.getElementById("placeholder_contentIFrame").style.height=iframeHeight;
+    		document.getElementById("contentIFrame").style.height=iframeHeight;
+    	}
+    	</script>
+    	<div id="placeholder_contentIFrame" style="width:100%" >
+          <iframe id="contentIFrame" style="height:688px;width:100%" allowfullscreen="true" webkitallowfullscreen="true" mozallowfullscreen="true" ></iframe>
+    </div>
+    
+    	<%
+    	} 
+    	%>
 </div>
 <div id="placeholder_navigationContainer2"></div>
 

@@ -34,7 +34,8 @@
 			assetId=0;
 		}
 	}
-	
+	String windowWith="1024";
+	String height="768";
 	if(request.getAttribute("activity")!=null) {	
 		learningActivity=(LearningActivity)request.getAttribute("activity");
 		typeId=learningActivity.getTypeId();
@@ -50,6 +51,9 @@
 				}	
 				openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
 				String improveString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve");
+				 windowWith=LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"windowWith","1024");
+				 height=LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"height","768");
+				
 				if (improveString != null && !"".equals(improveString)) {
 					improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"), true);
 				}
@@ -215,6 +219,8 @@ function <portlet:namespace />back() {
 </aui:field-wrapper>
 <aui:field-wrapper name="activity.edit.openwindow.options">
 	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
+	<aui:input name="windowWith" label="width" value="<%= windowWith %>" />
+	<aui:input  name="height" label="height" value="<%= height %>" />
 </aui:field-wrapper>
 
 <aui:input type="checkbox" name="improve" label="scormactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 

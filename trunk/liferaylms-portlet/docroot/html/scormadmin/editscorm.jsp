@@ -98,6 +98,7 @@ else
 		<liferay-ui:input-permissions modelName="<%= SCORMContent.class.getName() %>">
 		</liferay-ui:input-permissions>
 	</aui:field-wrapper>
+	
 	</c:if>
 	
 	<% String cipheredMode = GetterUtil.getString(PropsUtil.get("lms.scorm.cipheredmode"), "ask"); 

@@ -320,6 +320,13 @@ public class CourseLocalServiceWrapper implements CourseLocalService,
 			maxUsers);
 	}
 
+	public java.util.List<com.liferay.lms.model.Course> getUserCourses(
+		long userId)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return _courseLocalService.getUserCourses(userId);
+	}
+
 	public com.liferay.lms.model.Course addCourse(java.lang.String title,
 		java.lang.String description, java.lang.String summary,
 		java.lang.String friendlyURL, java.util.Locale locale,
