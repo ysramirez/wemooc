@@ -276,7 +276,7 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 							id="<portlet:namespace/><%=activity.getActId()%>">
 						
 							<a href="<%=assetRendererFactory.getAssetRenderer(activity.getActId()).
-									getURLViewInContext(liferayPortletRequest, liferayPortletResponse, StringPool.BLANK) %>"  ><%=title%></a>
+									getURLView(liferayPortletResponse, WindowState.NORMAL) %>"  ><%=title%></a>
 							
 					<%
 					}
