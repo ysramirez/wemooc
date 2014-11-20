@@ -1,3 +1,4 @@
+<%@page import="java.util.Map"%>
 <%@page import="java.util.Properties"%>
 <%@page import="com.liferay.portlet.PortletURLUtil"%>
 <%@page import="com.liferay.portal.kernel.util.HttpUtil"%>
@@ -29,8 +30,12 @@ if(course!=null)
 
 Properties props = PropsUtil.getProperties("lms.internalresource.assettypes", true);
 List<String> allowedAssetTypes = new ArrayList<String>();
-for (Object key:props.keySet()) {
-	allowedAssetTypes.addAll(ListUtil.toList(props.get(key).toString().split(",")));
+allowedAssetTypes.addAll(ListUtil.toList(StringUtil.split(PropsUtil.get("lms.internalresource.assettypes.liferaylms"))));
+
+for(Map.Entry<Object,Object> entry:props.entrySet()) {
+	if(!".liferaylms".equals(entry.getKey())) {
+		allowedAssetTypes.addAll(ListUtil.toList(StringUtil.split((String)entry.getValue())));
+	}
 }
 
 %>
