@@ -274,9 +274,8 @@ AUI().ready('node','aui-io-request','aui-parse-content','aui-sortable',function(
 
 						<li class="learningActivity <%=activityEnd%> <%=editing %> <%=status%>"  <%=(status=="passed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":(status=="failed")?"title =\""+LanguageUtil.format(pageContext, "activity.result",new Object[]{resultNumberFormat.format(result)})+"\"":StringPool.BLANK %> 
 							id="<portlet:namespace/><%=activity.getActId()%>">
-						
 							<a href="<%=assetRendererFactory.getAssetRenderer(activity.getActId()).
-									getURLViewInContext(liferayPortletRequest, liferayPortletResponse, StringPool.BLANK) %>"  ><%=title%></a>
+									getURLView(liferayPortletResponse, WindowState.NORMAL) %>"  ><%=title%></a>
 							
 					<%
 					}
