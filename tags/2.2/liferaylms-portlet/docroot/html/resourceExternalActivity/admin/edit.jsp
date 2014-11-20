@@ -157,6 +157,7 @@
 		divfiles.appendChild(div);
 	}
 </script>
+<c:if test="<%=GetterUtil.getBoolean(PropsUtil.get(\"learningactivity.resourceExternal.complementaryFile\"),true) %>">
 <aui:field-wrapper label="complementary-file" helpMessage="<%=LanguageUtil.get(pageContext,\"additionalFile-help\")%>" >		  	
 	<div id="files" class="container_files">
 		<% for(int i=0;i<elements.size();i++){ 
@@ -199,4 +200,5 @@
 	<div class="container-buttons">
 		<a href="#" id="add_attachment" style="<%=(elements.size()>=maxfile)?"display:none":"" %>" class="add_attachment bt_new" onclick="addFileInput(); return false;">Añadir otro fichero</a>		
 	</div>	
-</aui:field-wrapper>	
+</aui:field-wrapper>
+</c:if>
