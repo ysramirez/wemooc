@@ -2156,7 +2156,9 @@
 		<security-role-ref>
 			<role-name>user</role-name>
 		</security-role-ref>
-		<supported-public-render-parameter>moduleId</supported-public-render-parameter>
+		<supported-public-render-parameter>actId</supported-public-render-parameter>
+        <supported-public-render-parameter>moduleId</supported-public-render-parameter>
+        <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 	</portlet>
 	<event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
