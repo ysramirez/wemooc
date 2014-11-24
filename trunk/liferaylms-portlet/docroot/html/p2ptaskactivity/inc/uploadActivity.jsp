@@ -39,7 +39,7 @@ Date date = new Date();
 if(!dateUpload.equals("")){
 	
 	Date now = new Date();
-	SimpleDateFormat dateFormatZone = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+	SimpleDateFormat dateFormatZone = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 	dateFormatZone.setTimeZone(themeDisplay.getTimeZone());
 	
@@ -233,7 +233,7 @@ Liferay.provide(
 		textCorrection = myP2PActivity.getDescription();
 		p2pActivityId = myP2PActivity.getP2pActivityId();
 		
-		SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat dFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 		dFormat.setTimeZone(themeDisplay.getTimeZone());
 		%>
 		

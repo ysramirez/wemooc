@@ -63,7 +63,7 @@ if(resultString.equals("true")){
 }
 
 Date date = new Date();
-SimpleDateFormat dFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+SimpleDateFormat dFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 dFormat.setTimeZone(themeDisplay.getTimeZone());
 
 if(activity.getEnddate() == null){
