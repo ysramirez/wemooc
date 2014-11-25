@@ -73,7 +73,7 @@
 %>
 
 <h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale())%></h2>
-<h3 class="description-h3"><liferay-ui:message key="description" /></h3>
+<%--<h3 class="description-h3"><liferay-ui:message key="description" /></h3> --%>
 <div class="description"><%=activity.getDescription(themeDisplay.getLocale())%></div>
 
 <%

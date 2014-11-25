@@ -28,7 +28,7 @@ Long iterator = ParamUtil.getLong(request, "iterator", -1);
 		    <div id="<portlet:namespace />feedBackError_new<%=iterator%>" class="aui-helper-hidden portlet-msg-error">
 				<liferay-ui:message key="feedback-maxlength"/>
 			</div>
-			<aui:input name="<%=\"feedbackCorrect_new\"+iterator %>" label="feedback" value=""/>
+			<aui:input name="<%=\"feedbackCorrect_new\"+iterator %>" label="feedback" value="" size="60"/>
 		</div>
 		<div class="rightSideAnswer">
 			<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_new<%=iterator %>');"><liferay-ui:message key="delete"/></a></span>
