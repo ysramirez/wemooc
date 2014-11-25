@@ -284,8 +284,9 @@
 				    			feedbackCorrect = A.one('input[name=<portlet:namespace />feedbackCorrect_'+id+']');
 				    			feedbackNoCorrect = A.one('input[name=<portlet:namespace />feedbackNoCorrect_'+id+']');
 								
-				    			if((feedbackCorrect != null && feedbackCorrect.val().length > 300) || 
-										(feedbackNoCorrect != null && feedbackNoCorrect.val().length > 300)){
+				    			if((feedbackCorrect != null && feedbackCorrect.val().length > 600) || 
+										(feedbackNoCorrect != null && feedbackNoCorrect.val().length > 600)){
+
 										A.one('#<portlet:namespace />feedBackError_'+id).removeClass('aui-helper-hidden');
 					    				valid=false;
 					    				A.one('#panel_'+id).removeClass('lfr-collapsed');

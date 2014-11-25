@@ -52,7 +52,7 @@
 					        }
 					    </script>
 					</aui:field-wrapper>
-					<aui:input type="hidden" name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"/>
+					<aui:input type="hidden" name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>" size="60"/>
 				</div>
 				<div class="rightSideAnswer">
 					<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_<%=testanswer.getAnswerId() %>');"><liferay-ui:message key="delete"/></a></span>

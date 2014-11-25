@@ -60,7 +60,7 @@ if(actId==0){
 			<div class="evaluationAvg view">
 				<h2 class="description-title"><%=learningActivity.getTitle(themeDisplay.getLocale()) %></h2>
 				<c:if test="<%=Validator.isNotNull(learningActivity.getDescription(themeDisplay.getLocale())) %>">
-					<h3 class="description-h3"><liferay-ui:message key="description" /></h3>
+					<%--<h3 class="description-h3"><liferay-ui:message key="description" /></h3> --%>
 					<div class="description"><%=learningActivity.getDescription(themeDisplay.getLocale()) %></div>
 				</c:if>
 		<%if(isTeacher){ 

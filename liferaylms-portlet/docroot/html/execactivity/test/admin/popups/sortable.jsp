@@ -25,7 +25,7 @@ Long iterator = ParamUtil.getLong(request, "iterator", -1);
 			        }
 			    </script>
 		    </aui:field-wrapper>
-			<aui:input type="hidden" cssClass="input-comment" name="<%=\"feedbackCorrect_new\"+iterator %>" label="feedback">
+			<aui:input type="hidden" cssClass="input-comment" name="<%=\"feedbackCorrect_new\"+iterator %>" label="feedback" size="60">
 			</aui:input>
 		</div>
 		<div class="rightSideAnswer">

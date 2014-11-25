@@ -292,9 +292,9 @@ public class ExecActivity extends MVCPortlet
 						if(Validator.isNotNull(answer)){
 							boolean correct = ParamUtil.getBoolean(actionRequest, "correct_"+newAnswerId);
 							String feedbackCorrect = ParamUtil.getString(actionRequest, "feedbackCorrect_"+newAnswerId, "");
-							if(feedbackCorrect.length()>300) feedbackCorrect = feedbackCorrect.substring(0, 300);
+							if(feedbackCorrect.length()>600) feedbackCorrect = feedbackCorrect.substring(0, 600);
 							String feedbackNoCorrect = ParamUtil.getString(actionRequest, "feedbackNoCorrect_"+newAnswerId, "");
-							if(feedbackNoCorrect.length()>300) feedbackNoCorrect = feedbackNoCorrect.substring(0, 300);
+							if(feedbackNoCorrect.length()>600) feedbackNoCorrect = feedbackNoCorrect.substring(0, 600);
 							if("".equals(feedbackNoCorrect)) feedbackNoCorrect = feedbackCorrect;
 							if(newAnswerId.startsWith("new")){
 								//creo respuesta
