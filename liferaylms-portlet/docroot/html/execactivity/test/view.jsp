@@ -337,7 +337,7 @@
 				
 					Liferay.provide(
 					        window,
-					        '<portlet:namespace/>formValidation',
+					        '<portlet:namespace/>submitForm',
 					function(e, navigate) {
 						var returnValue = true;
 						
@@ -369,6 +369,7 @@
 						
 						if (navigate == 'backward' || navigate == 'forward') {
 							A.one('#<portlet:namespace/>navigate').val(navigate);
+
 							var page = A.one('.question-page-current');
 							var n = page.attr('id').split("-");
 							if (navigate == 'backward') {
@@ -379,12 +380,12 @@
 							var valor = A.one('#'+n.join("-")).one('.question > input').val();
 							A.one('#<portlet:namespace/>currentQuestionId').val(valor);
 						} else {
+							A.one('#<portlet:namespace/>navigate').val("");
 							A.one('#<portlet:namespace/>currentQuestionId').val("0");
 						}
-						if (!returnValue && e.preventDefault) {
-							e.preventDefault();
+						if (returnValue) {
+							submitForm('#<portlet:namespace/>formulario');
 						}
-						return returnValue;
 					},
 					['node', 'aui-dialog', 'event', 'node-event-simulate']
 				);
@@ -485,13 +486,13 @@
 			
 				if (questions.size() > 0){
 					if (questionsPerPage == 0) { %>
-				<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event, null);" %>' ></aui:button>
+					<aui:button type="button" value="submit" onClick='<%=renderResponse.getNamespace() + "submitForm(event, null);" %>' ></aui:button>
 				<% } else { %>
 				
 				<div id="testactivity-navigator" class="taglib-page-iterator">
 				<% if (showPrevious) { %>
 					<div id="testactivity-navigator-previous">
-						<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.previous" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event, \'backward\');" %>' ></aui:button>
+						<aui:button type="button" value="execactivity.editActivity.questionsPerPage.previous" onClick='<%=renderResponse.getNamespace() + "submitForm(event, \'backward\');" %>' ></aui:button>
 					</div>
 					<% }
 				if ((showPrevious || showNext) && currentPage >= 1) { %>
@@ -510,9 +511,9 @@
 				<% } %>
 				<div id="testactivity-navigator-next">
 				<% if (showNext) { %>
-					<aui:button type="submit" value="execactivity.editActivity.questionsPerPage.next" onClick='<%= "return "+renderResponse.getNamespace() + "formValidation(event, \'forward\');" %>' ></aui:button>
+					<aui:button type="button" value="execactivity.editActivity.questionsPerPage.next" onClick='<%=renderResponse.getNamespace() + "submitForm(event, \'forward\');" %>' ></aui:button>
 				<% } else { %>
-					<aui:button type="submit" onClick='<%= "return  "+renderResponse.getNamespace() + "formValidation(event, null);" %>' ></aui:button>
+					<aui:button type="button" value="submit" onClick='<%=renderResponse.getNamespace() + "submitForm(event, null);" %>' ></aui:button>
 				<% } %>
 				</div>
 				</div>
