@@ -79,6 +79,27 @@ public class CourseServiceSoap {
 		}
 	}
 
+	public static com.liferay.lms.model.CourseSoap createCourse(long groupId,
+		java.lang.String title, java.lang.String description,
+		boolean published, java.lang.String summary, int evaluationmethod,
+		int calificationType, int template, int registermethod, int maxusers,
+		java.util.Date startregistrationdate, java.util.Date endregistrationdate)
+		throws RemoteException {
+		try {
+			com.liferay.lms.model.Course returnValue = CourseServiceUtil.createCourse(groupId,
+					title, description, published, summary, evaluationmethod,
+					calificationType, template, registermethod, maxusers,
+					startregistrationdate, endregistrationdate);
+
+			return com.liferay.lms.model.CourseSoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static com.liferay.lms.model.CourseSoap createCourse(
 		java.lang.String title, java.lang.String description,
 		boolean published, java.lang.String summary, int evaluationmethod,
