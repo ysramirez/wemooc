@@ -98,17 +98,17 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		
 	}
 	@JSONWebService
-	public Course createCourse(String title, String description,boolean published,String summary,int evaluationmethod,int calificationType,int template,int registermethod,int maxusers, Date startregistrationdate,Date endregistrationdate) throws PortalException, SystemException
+	public Course createCourse(long groupId,String title, String description,boolean published,String summary,int evaluationmethod,int calificationType,int template,int registermethod,int maxusers, Date startregistrationdate,Date endregistrationdate) throws PortalException, SystemException
 	{
 		User user=getUser();
 		
 		java.util.Date ahora=new java.util.Date(System.currentTimeMillis());
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		serviceContext.setScopeGroupId(groupId);
 		String groupName = GroupConstants.GUEST;
 		long companyId = PortalUtil.getDefaultCompanyId();
-		long guestGroupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
 		
-		if( getPermissionChecker().hasPermission(guestGroupId, "com.liferay.lms.coursemodel",guestGroupId,"ADD_COURSE"))
+		if( getPermissionChecker().hasPermission(groupId, "com.liferay.lms.coursemodel",groupId,"ADD_COURSE"))
 		{
 			Course course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
 					title, description, summary, StringPool.BLANK,
@@ -121,6 +121,15 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		{
 			return null;
 		}
+	}
+	@JSONWebService
+	public Course createCourse(String title, String description,boolean published,String summary,int evaluationmethod,int calificationType,int template,int registermethod,int maxusers, Date startregistrationdate,Date endregistrationdate) throws PortalException, SystemException
+	{
+		String groupName = GroupConstants.GUEST;
+		long companyId = PortalUtil.getDefaultCompanyId();
+		
+		long guestGroupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
+		return createCourse(guestGroupId, title, description, published, summary, evaluationmethod, calificationType, template, registermethod, maxusers, startregistrationdate, endregistrationdate);
 	}
 	@JSONWebService
 	public java.util.List<Course> getCourses() throws SystemException, PortalException

@@ -68,6 +68,19 @@ public class CourseServiceUtil {
 		return getService().getCoursesOfGroup(groupId);
 	}
 
+	public static com.liferay.lms.model.Course createCourse(long groupId,
+		java.lang.String title, java.lang.String description,
+		boolean published, java.lang.String summary, int evaluationmethod,
+		int calificationType, int template, int registermethod, int maxusers,
+		java.util.Date startregistrationdate, java.util.Date endregistrationdate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .createCourse(groupId, title, description, published,
+			summary, evaluationmethod, calificationType, template,
+			registermethod, maxusers, startregistrationdate, endregistrationdate);
+	}
+
 	public static com.liferay.lms.model.Course createCourse(
 		java.lang.String title, java.lang.String description,
 		boolean published, java.lang.String summary, int evaluationmethod,
