@@ -89,8 +89,8 @@ AUI().ready('aui-base',
 					<div id="<portlet:namespace />feedBackError_<%=testanswer.getAnswerId()%>" class="aui-helper-hidden portlet-msg-error">
 						<liferay-ui:message key="feedback-maxlength"/>
 					</div>
-					<aui:input  name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>"/>
-					<aui:input  name="<%=\"feedbackNoCorrect_\"+testanswer.getAnswerId() %>" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>"/>
+					<aui:input  name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedbackCorrect" value="<%=testanswer.getFeedbackCorrect() %>" size="60"/>
+					<aui:input  name="<%=\"feedbackNoCorrect_\"+testanswer.getAnswerId() %>" label="feedbackNoCorrect" value="<%=testanswer.getFeedbacknocorrect() %>" size="60"/>
 				</div>
 			</liferay-ui:panel>
 		</div>
