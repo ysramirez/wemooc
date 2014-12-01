@@ -66,7 +66,7 @@
 					    <div id="<portlet:namespace />feedBackError_<%=testanswer.getAnswerId()%>" class="aui-helper-hidden portlet-msg-error">
 							<liferay-ui:message key="feedback-maxlength"/>
 						</div>
-						<aui:input name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>"/>
+						<aui:input name="<%=\"feedbackCorrect_\"+testanswer.getAnswerId() %>" label="feedback" value="<%=testanswer.getFeedbackCorrect() %>" size="60"/>
 					</div>
 					<div class="rightSideAnswer">
 						<span class="newitem2"><a href="#" class="newitem2" onclick="<portlet:namespace />deleteNode('testAnswer_<%=testanswer.getAnswerId() %>');"><liferay-ui:message key="delete"/></a></span>
