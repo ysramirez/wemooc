@@ -3,6 +3,7 @@ package com.liferay.lms;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.util.Date;
+import java.util.LinkedHashMap;
 import java.util.List;
 
 import javax.portlet.PortletException;
@@ -30,11 +31,14 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.util.CharPool;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Team;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.ServiceContext;
+import com.liferay.portal.service.TeamLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -54,6 +58,13 @@ public class GradeBook extends MVCPortlet {
 		if(action.equals("export")){
 			
 			try {
+				java.util.List<Team> userTeams=TeamLocalServiceUtil.getUserTeams(themeDisplay.getUserId(), themeDisplay.getScopeGroupId());
+				Team theTeam=null;
+				if(userTeams!=null&& userTeams.size()>0)
+				{
+					theTeam=userTeams.get(0);
+					
+				}
 				Module module = ModuleLocalServiceUtil.getModule(moduleId);
 				List<LearningActivity> learningActivities = LearningActivityServiceUtil
 						.getLearningActivitiesOfModule(moduleId);
@@ -83,8 +94,20 @@ public class GradeBook extends MVCPortlet {
 		        }
 		        		    
 		        writer.writeNext(cabeceras);
-		       
-		        for(User usuario:UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId())){
+		        List<User> usus=null;
+				if(theTeam==null)
+				{
+					usus = UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId());
+				}
+				else
+				{
+					LinkedHashMap userParams = new LinkedHashMap();
+					userParams.put("usersGroups", theTeam.getGroupId());
+					userParams.put("usersTeams", theTeam.getTeamId());
+					OrderByComparator obc = null;
+					usus  = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), "", 0, userParams, 0, 1000, obc);	
+				}
+		        for(User usuario:usus){
 		        	String[] resultados = new String[learningActivities.size()+1];
 		        	
 		        	column=1;
