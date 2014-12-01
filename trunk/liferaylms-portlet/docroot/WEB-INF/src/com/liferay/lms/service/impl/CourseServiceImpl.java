@@ -107,14 +107,15 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		String groupName = GroupConstants.GUEST;
 		long companyId = PortalUtil.getDefaultCompanyId();
 		long guestGroupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
+		
 		if( getPermissionChecker().hasPermission(guestGroupId, "com.liferay.lms.coursemodel",guestGroupId,"ADD_COURSE"))
 		{
-		Course course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
-				title, description, summary, StringPool.BLANK,
-				user.getLocale(), ahora, startregistrationdate, endregistrationdate,template,registermethod,evaluationmethod,
-				calificationType,maxusers,serviceContext);
-		
-		return course;
+			Course course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
+					title, description, summary, StringPool.BLANK,
+					user.getLocale(), ahora, startregistrationdate, endregistrationdate,template,registermethod,evaluationmethod,
+					calificationType,maxusers,serviceContext);
+			
+			return course;
 		}
 		else
 		{

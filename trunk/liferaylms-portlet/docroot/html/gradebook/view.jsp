@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
+<%@page import="com.liferay.portal.service.TeamLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.Team"%>
 <%@page import="java.util.Comparator"%>
 <%@page import="java.util.Collections"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
@@ -22,6 +25,14 @@
 <%@ include file="/init.jsp" %>
 <liferay-ui:panel-container >
 <%
+java.util.List<Team> userTeams=TeamLocalServiceUtil.getUserTeams(themeDisplay.getUserId(), themeDisplay.getScopeGroupId());
+Team theTeam=null;
+if(userTeams!=null&& userTeams.size()>0)
+{
+	theTeam=userTeams.get(0);
+	
+}
+
 	java.util.List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 	if(modules != null){
 	for(Module theModule:modules){
@@ -41,7 +52,19 @@
 					<%
 						List<User> onlyStudents=new ArrayList<User>();
 						if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS")){
-							List<User> usus = UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId());
+							List<User> usus=null;
+							if(theTeam==null)
+							{
+								usus = UserLocalServiceUtil.getGroupUsers(themeDisplay.getScopeGroupId());
+							}
+							else
+							{
+								LinkedHashMap userParams = new LinkedHashMap();
+								userParams.put("usersGroups", theTeam.getGroupId());
+								userParams.put("usersTeams", theTeam.getTeamId());
+								OrderByComparator obc = null;
+								usus  = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), "", 0, userParams, searchContainer.getStart(), searchContainer.getEnd(), obc);	
+							}
 							for(User usu:usus)
 								if(!(PermissionCheckerFactoryUtil.create(usu)).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS"))
 									onlyStudents.add(usu);
