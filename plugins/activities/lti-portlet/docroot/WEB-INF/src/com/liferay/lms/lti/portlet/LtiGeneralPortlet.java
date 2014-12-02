@@ -127,10 +127,12 @@ public class LtiGeneralPortlet extends MVCPortlet {
 					postProp.put(BasicLTIConstants.LIS_OUTCOME_SERVICE_URL, PortalUtil.getPortalURL(PortalUtil.getHttpServletRequest(renderRequest))+"/lti-portlet/ltiservice");
 					//This identificator from notification
 					postProp.put(BasicLTIConstants.LIS_RESULT_SOURCEDID, st.toString());
-
 					
-					Map<String,String> props =  BasicLTIUtil.signProperties(postProp, ltiItem.getUrl(), "POST", String.valueOf(ltiItem.getLtiItemId()), ltiItem.getSecret(), 
-							null, null, null,null,null);
+					//TODO change id
+					/*Map<String,String> props =  BasicLTIUtil.signProperties(postProp, ltiItem.getUrl(), "POST", String.valueOf(ltiItem.getLtiItemId()), ltiItem.getSecret(), 
+							null, null, null,null,null);*/
+					Map<String,String> props =  BasicLTIUtil.signProperties(postProp, ltiItem.getUrl(), "POST", ltiItem.getId(), ltiItem.getSecret(), 
+							null, String.valueOf(ltiItem.getLtiItemId()), null,null,null);
 					
 					String postLaunch = BasicLTIUtil.postLaunchHTML(props, ltiItem.getUrl(), false,themeDisplay.getLocale(),ltiItem.getIframe());
 					
@@ -200,6 +202,7 @@ public class LtiGeneralPortlet extends MVCPortlet {
 		LtiItem ltiItem = LtiItemLocalServiceUtil.fetchByactId(actId);
 
 		String url = ParamUtil.getString(actionRequest, "url", "");
+		String id = ParamUtil.getString(actionRequest, "id", "");
 		String secret = ParamUtil.getString(actionRequest, "secret", "");
 		String rol = ParamUtil.getString(actionRequest, "rol", "");
 		Boolean iframe = ParamUtil.getBoolean(actionRequest, "iframe", false);
@@ -211,9 +214,10 @@ public class LtiGeneralPortlet extends MVCPortlet {
 			ltiItem.setRol(rol);
 			ltiItem.setIframe(iframe);
 			ltiItem.setNote(note);
+			ltiItem.setId(id);
 			ltiItem = LtiItemLocalServiceUtil.updateLtiItem(ltiItem);
 		}else{
-			ltiItem = LtiItemLocalServiceUtil.create(actId, url, secret);
+			ltiItem = LtiItemLocalServiceUtil.create(actId, url, secret,id);
 			ltiItem.setRol(rol);
 			ltiItem.setIframe(iframe);
 			ltiItem.setNote(note);

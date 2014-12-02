@@ -16,11 +16,12 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 public class LtiItemLocalServiceUtil {
 	private static Log log = LogFactoryUtil.getLog(LtiItemLocalServiceUtil.class);
 	
-	public static LtiItem create(long actId, String url, String secret){
+	public static LtiItem create(long actId, String url, String secret,String id){
 		LtiItem ltiItem = new LtiItem();
 		ltiItem.setUrl(url);
 		ltiItem.setSecret(secret);
 		ltiItem.setLtiItemId(actId);
+		ltiItem.setId(id);
 		return ltiItem;
 	}
 	
@@ -68,7 +69,7 @@ public class LtiItemLocalServiceUtil {
 		}
 
 		try {
-			LearningActivityLocalServiceUtil.setExtraContentValue(ltiItem.getLtiItemId(), "rol", ltiItem.getRol());
+			LearningActivityLocalServiceUtil.setExtraContentValue(ltiItem.getLtiItemId(), "id", ltiItem.getId());
 		} catch (SystemException e) {
 			if(log.isDebugEnabled())e.printStackTrace();
 			if(log.isErrorEnabled())log.error(e.getMessage());
@@ -133,6 +134,7 @@ public class LtiItemLocalServiceUtil {
 				}
 				ltiItem.setRol(getExtraContentValue(extra, "rol"));
 				ltiItem.setSecret(getExtraContentValue(extra, "secret"));
+				ltiItem.setId(getExtraContentValue(extra, "id"));
 				ltiItem.setUrl(getExtraContentValue(extra, "url"));
 			}
 			return ltiItem;

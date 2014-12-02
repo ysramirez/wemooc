@@ -34,6 +34,10 @@
 			alert("<liferay-ui:message key='learningactivity.lti.error.url' />");
 			return;
 		}
+		if(document.getElementById('id').value==null||document.getElementById('id').value==""){
+			alert("<liferay-ui:message key='learningactivity.lti.error.id' />");
+			return;
+		}
 		if(document.getElementById('secret').value==null||document.getElementById('secret').value==""){
 			alert("<liferay-ui:message key='learningactivity.lti.error.secret' />");
 			return;
@@ -66,6 +70,7 @@
 		<c:choose>
 			<c:when test="${not empty ltiItem}">
 				<liferay-ui:message key="learningactivity.lti.url" />:<br/><input type="text" name="url" id="url" value="${ltiItem.url}" ><br/>
+				<liferay-ui:message key="learningactivity.lti.key" />:<br/><input type="text" name="id" id="id" value="${ltiItem.id}" ><br/>
 				<liferay-ui:message key="learningactivity.lti.secret" />:<br/><input type="text" name="secret" id="secret" value="${ltiItem.secret}" ><br/>
 				<liferay-ui:message key="learningactivity.lti.rol" />:<br/><input type="text" name="rol" id="rol" value="${ltiItem.rol}" ><br/>
 				<liferay-ui:message key="learningactivity.lti.note" />:<br/><input type="text" name="note" id="note" value="${ltiItem.note}" ><br/>
@@ -73,6 +78,7 @@
 			</c:when>
 			<c:otherwise>
 				<liferay-ui:message key="learningactivity.lti.url" />:<br/><input type="text" name="url" id="url" value="" ><br/>
+				<liferay-ui:message key="learningactivity.lti.key" />:<br/><input type="text" name="id" id="id" value="" ><br/>
 				<liferay-ui:message key="learningactivity.lti.secret" />:<br/><input type="text" name="secret" id="secret" value="" ><br/>
 				<liferay-ui:message key="learningactivity.lti.rol" />:<br/><input type="text" name="rol" id="rol" value="Learner" ><br/>
 				<liferay-ui:message key="learningactivity.lti.note" />:<br/><input type="text" name="note" id="note" value="0" ><br/>
