@@ -611,7 +611,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 			String courseTitle = "";
 			String activityTitle = activity.getTitle(themeDisplay.getLocale());
 			String moduleTitle =  module.getTitle(themeDisplay.getLocale());
-			String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
+			String portalUrl = PortalUtil.getPortalURL(themeDisplay);
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
@@ -701,7 +701,7 @@ public class P2PActivityPortlet extends MVCPortlet {
 			String courseTitle = "";
 			String activityTitle = activity.getTitle(themeDisplay.getLocale());
 			String moduleTitle =  module.getTitle(themeDisplay.getLocale());
-			String portalUrl = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(), false);
+			String portalUrl = PortalUtil.getPortalURL(themeDisplay);
 			String pathPublic = PortalUtil.getPathFriendlyURLPublic();
 			
 			if(course != null){
