@@ -10,6 +10,7 @@ public class LtiItem {
 	private String contenType= null;
 	private Boolean iframe= null;
 	private Integer note = null;
+	private String id=null;
 	
 	public String getName() {
 		return name;
@@ -64,6 +65,12 @@ public class LtiItem {
 	}
 	public void setLtiItemId(long ltiItemId) {
 		this.ltiItemId = ltiItemId;
+	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
 	}
 	
 	
