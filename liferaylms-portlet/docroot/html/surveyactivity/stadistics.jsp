@@ -55,7 +55,7 @@
 				List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 				for(TestAnswer answer:testAnswers)
 				{
-					String texto = answer.getAnswer().length() > 50 ? answer.getAnswer().substring(50)+"..." : answer.getAnswer();
+					String texto = answer.getAnswer().length() > 50 ? answer.getAnswer().substring(0,50)+"..." : answer.getAnswer();
 					DecimalFormat df = new DecimalFormat("###.##");
 					String percent = df.format(SurveyResultLocalServiceUtil.getPercentageByQuestionIdAndAnswerId(question.getQuestionId(), answer.getAnswerId()));
 				%>
