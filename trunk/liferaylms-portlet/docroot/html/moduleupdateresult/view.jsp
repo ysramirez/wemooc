@@ -33,9 +33,11 @@
 			<aui:column>
 				<aui:input label="studentsearch.criteria" name="criteria" size="20" value="<%=criteria %>" />	
 			</aui:column>	
-			<aui:button-row>
-				<aui:button name="searchUsers" value="search" type="submit" />
-			</aui:button-row>
+			<aui:column cssClass="search_lms_button">
+				<aui:button-row>
+					<aui:button name="searchUsers" value="search" type="submit" />
+				</aui:button-row>
+			</aui:column>	
 		</aui:fieldset>
 	</aui:form>
 	
