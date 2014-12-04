@@ -1,3 +1,4 @@
+<%@page import="org.apache.commons.lang.StringEscapeUtils"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="com.liferay.lms.model.SurveyResult"%>
 <%@page import="com.liferay.lms.service.SurveyResultLocalServiceUtil"%>
@@ -55,7 +56,9 @@
 				List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 				for(TestAnswer answer:testAnswers)
 				{
-					String texto = answer.getAnswer().length() > 50 ? answer.getAnswer().substring(0,50)+"..." : answer.getAnswer();
+					String textoAux = answer.getAnswer().replaceAll("&lt;.+?&gt;|<.+?>","");
+					textoAux = textoAux.replaceAll("&nbsp;"," ");
+					String texto = textoAux.length() > 50 ? textoAux.substring(0,50)+"..." : textoAux;
 					DecimalFormat df = new DecimalFormat("###.##");
 					String percent = df.format(SurveyResultLocalServiceUtil.getPercentageByQuestionIdAndAnswerId(question.getQuestionId(), answer.getAnswerId()));
 				%>
