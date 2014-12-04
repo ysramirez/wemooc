@@ -34,6 +34,8 @@
 		}
 		for(TestAnswer testanswer:res){
 			String titleAnswer = HtmlUtil.extractText(testanswer.getAnswer());
+			titleAnswer = titleAnswer.replaceAll("&lt;.+?&gt;|<.+?>","");
+			titleAnswer = titleAnswer.replaceAll("&nbsp;"," ");
 			if(titleAnswer.length() > 50) titleAnswer = titleAnswer.substring(0, 50) + " ...";
 			i++;
 %>
