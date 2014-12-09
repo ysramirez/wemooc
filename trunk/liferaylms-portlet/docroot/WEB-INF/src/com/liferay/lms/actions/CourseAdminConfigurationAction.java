@@ -52,6 +52,7 @@ public class CourseAdminConfigurationAction implements ConfigurationAction {
 		portletPreferences.setValue("showMaxUsers", Boolean.toString(ParamUtil.getBoolean(actionRequest, "showMaxUsers",	true)));
 		
 		portletPreferences.setValue("showSearchTags",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showSearchTags",	false)));
+		portletPreferences.setValue("showWelcomeMsg",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showWelcomeMsg",	true)));
 		
 		portletPreferences.store();
 		SessionMessages.add( 

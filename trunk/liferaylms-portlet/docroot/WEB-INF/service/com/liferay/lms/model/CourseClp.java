@@ -98,6 +98,8 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		attributes.put("closed", getClosed());
 		attributes.put("maxusers", getMaxusers());
 		attributes.put("calificationType", getCalificationType());
+		attributes.put("welcome", getWelcome());
+		attributes.put("welcomeMsg", getWelcomeMsg());
 
 		return attributes;
 	}
@@ -246,6 +248,18 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 
 		if (calificationType != null) {
 			setCalificationType(calificationType);
+		}
+
+		Boolean welcome = (Boolean)attributes.get("welcome");
+
+		if (welcome != null) {
+			setWelcome(welcome);
+		}
+
+		String welcomeMsg = (String)attributes.get("welcomeMsg");
+
+		if (welcomeMsg != null) {
+			setWelcomeMsg(welcomeMsg);
 		}
 	}
 
@@ -649,6 +663,26 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		_calificationType = calificationType;
 	}
 
+	public boolean getWelcome() {
+		return _welcome;
+	}
+
+	public boolean isWelcome() {
+		return _welcome;
+	}
+
+	public void setWelcome(boolean welcome) {
+		_welcome = welcome;
+	}
+
+	public String getWelcomeMsg() {
+		return _welcomeMsg;
+	}
+
+	public void setWelcomeMsg(String welcomeMsg) {
+		_welcomeMsg = welcomeMsg;
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -788,6 +822,8 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		clone.setClosed(getClosed());
 		clone.setMaxusers(getMaxusers());
 		clone.setCalificationType(getCalificationType());
+		clone.setWelcome(getWelcome());
+		clone.setWelcomeMsg(getWelcomeMsg());
 
 		return clone;
 	}
@@ -844,7 +880,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(49);
+		StringBundler sb = new StringBundler(53);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -894,13 +930,17 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 		sb.append(getMaxusers());
 		sb.append(", calificationType=");
 		sb.append(getCalificationType());
+		sb.append(", welcome=");
+		sb.append(getWelcome());
+		sb.append(", welcomeMsg=");
+		sb.append(getWelcomeMsg());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(76);
+		StringBundler sb = new StringBundler(82);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Course");
@@ -1002,6 +1042,14 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 			"<column><column-name>calificationType</column-name><column-value><![CDATA[");
 		sb.append(getCalificationType());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>welcome</column-name><column-value><![CDATA[");
+		sb.append(getWelcome());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>welcomeMsg</column-name><column-value><![CDATA[");
+		sb.append(getWelcomeMsg());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -1036,5 +1084,7 @@ public class CourseClp extends BaseModelImpl<Course> implements Course {
 	private boolean _closed;
 	private long _maxusers;
 	private long _calificationType;
+	private boolean _welcome;
+	private String _welcomeMsg;
 	private BaseModel<?> _courseRemoteModel;
 }

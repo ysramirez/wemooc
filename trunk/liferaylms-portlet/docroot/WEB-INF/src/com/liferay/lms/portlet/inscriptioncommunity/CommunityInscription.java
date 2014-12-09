@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
+import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
@@ -153,24 +155,23 @@ public class CommunityInscription extends MVCPortlet {
 			curso = themeDisplay.getCompany().getGroup().getName();
 		}
 
-    	String subject = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.subject", new String[]{curso});
-    	String body = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.body", new String[]{curso});	
-    	
     	String url = themeDisplay.getURLPortal();
-    	String urlcourse = themeDisplay.getURLPortal()+"/web"+themeDisplay.getCompany().getGroup().getFriendlyURL();
-    	
-    	if(body!=null &&!body.equals("")){
+    	String urlcourse = themeDisplay.getURLPortal()+"/web"+course.getFriendlyURL();
+		
+		if(course.isWelcome()&&course.getWelcomeMsg()!=null&&!StringPool.BLANK.equals(course.getWelcomeMsg())){
+	    	String subject = LanguageUtil.format(themeDisplay.getLocale(),"welcome-subject", new String[]{curso});
+	    	String body = StringUtil.replace(
+	    			course.getWelcomeMsg(),
+	    			new String[] {"[$FROM_ADDRESS$]", "[$FROM_NAME$]", "[$PAGE_URL$]","[$PORTAL_URL$]","[$TO_ADDRESS$]","[$TO_NAME$]"},
+	    			new String[] {fromAddress, fromName, urlcourse, url, themeDisplay.getUser().getEmailAddress(), themeDisplay.getUser().getFullName()});
 	    	
-    		body = createMessage(body, portal, curso, user, fromName ,url,urlcourse);
-    		/*
-			System.out.println("\n--------- CommunityInscription. Inscription. -------------");
-			System.out.println(" from: "+from);
-			System.out.println(" to: "+to + " "+user);
-			System.out.println(" subject: "+subject);
-			//System.out.println(" body: \n"+body);
-			System.out.println("----------------------\n\n");
-	    	//*/	
 			try{
+				if(log.isDebugEnabled()){
+					log.debug(from);
+					log.debug(to);
+					log.debug(subject);
+					log.debug(body);
+				}
 				MailMessage mailm = new MailMessage(from, to, subject, body, true);
 				MailServiceUtil.sendEmail(mailm);
 			}
@@ -178,9 +179,33 @@ public class CommunityInscription extends MVCPortlet {
 			{
 				ex.printStackTrace();
 			}		
-    	}else{
-    		System.out.println(" ERROR: No se ha encontrado el contenido del correo.");
-    	}
+		}else{
+	    	String subject = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.subject", new String[]{curso});
+	    	String body = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.body", new String[]{curso});
+	    	
+	    	if(body!=null &&!body.equals(StringPool.BLANK)){
+		    	
+	    		body = createMessage(body, portal, curso, user, fromName ,url,urlcourse);
+	    		/*
+				System.out.println("\n--------- CommunityInscription. Inscription. -------------");
+				System.out.println(" from: "+from);
+				System.out.println(" to: "+to + " "+user);
+				System.out.println(" subject: "+subject);
+				//System.out.println(" body: \n"+body);
+				System.out.println("----------------------\n\n");
+		    	//*/	
+				try{
+					MailMessage mailm = new MailMessage(from, to, subject, body, true);
+					MailServiceUtil.sendEmail(mailm);
+				}
+				catch(Exception ex)
+				{
+					ex.printStackTrace();
+				}		
+	    	}else{
+	    		System.out.println(" ERROR: No se ha encontrado el contenido del correo.");
+	    	}
+		}
 	}
 	
 	private String createMessage(String text, String portal, String community, String student, String teacher, String url, String urlcourse){

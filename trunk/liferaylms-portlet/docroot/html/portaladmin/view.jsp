@@ -68,11 +68,9 @@ List<String> portletIds = new ArrayList<String>();
 
 List<Layout> layoutForPortletName = LayoutLocalServiceUtil.getLayouts(0, LayoutLocalServiceUtil.getLayoutsCount()); 
 
-//System.out.println("\n\nLayouts:  " +layoutForPortletName.size()); 
 
 for(Layout l:layoutForPortletName){
 	
-	//System.out.println("  Layout:  " +l.getName(themeDisplay.getLocale()));
 
 	LayoutTypePortlet layoutTypePortletName = (LayoutTypePortlet)l.getLayoutType(); 
 	LayoutTemplate layoutTemplate=layoutTypePortletName.getLayoutTemplate(); 
@@ -84,8 +82,6 @@ for(Layout l:layoutForPortletName){
 		List<Portlet> portlets = layoutTypePortletName.getAllPortlets(column); 
 
 		for(Portlet portlet : portlets){ 
-			
-			//System.out.println("    portletId = "+portlet.getPortletId()+" "+" Title = " + PortalUtil.getPortletTitle(portlet, application, locale)); 
 			
 			if(!portletIds.contains(portlet.getPortletId()) && portlet.getPortletId().contains("_WAR_liferaylmsportlet")){
 				portletIds.add(portlet.getPortletId());
@@ -103,11 +99,12 @@ for(Layout l:layoutForPortletName){
 
 
 <div class="actions">
-
+	<%--
 	<div class="action">
 		<portlet:actionURL name="checkgroups" var="checkgroupsURL" />
 		<liferay-ui:icon image="unlink" label="<%=true %>" message="checkGroups" url='<%= checkgroupsURL %>'/>
 	</div>
+	 --%>
 
 	<div class="action">
 		<portlet:actionURL name="asignP2pActivity" var="asignP2pActivityURL" />
@@ -146,13 +143,11 @@ for(Layout l:layoutForPortletName){
 				}
 				id=pre.getPortletId();
 				
-				System.out.println(pre.getPortletId());
 				%><h4><%=pre.getPortletId() %></h4><%
 				Document document = SAXReaderUtil.read(pre.getPreferences());
 				Element rootElement = document.getRootElement();
 				for (Element element : rootElement.elements("preference")) {
 					if(element.elementText("name").startsWith("portletSetupTitle")){
-						System.out.println("   " + element.elementText("name") + " - " + element.elementText("value"));
 						%><p><%=element.elementText("name") %> - <%=element.elementText("value") %></p><%
 					}
 				}

@@ -101,6 +101,12 @@ public class StartupAction extends SimpleAction {
 		lmsPrefs.setTeacherRole(courseTeacher.getRoleId());
 		lmsPrefs.setEditorRole(courseEditor.getRoleId());
 		lmsPrefs.setLmsTemplates(Long.toString(layoutSetPrototype.getLayoutSetPrototypeId()));
+		
+		try {
+			LmsPrefsLocalServiceUtil.updateLmsPrefs(lmsPrefs);
+		} catch (SystemException e) {
+			e.printStackTrace();
+		}
 		return lmsPrefs;
 		
 	}
