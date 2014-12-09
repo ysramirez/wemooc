@@ -14,35 +14,38 @@
 
 package com.liferay.lms.service.impl;
 
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.ResourceBundle;
+
+import javax.mail.internet.InternetAddress;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
-import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
-import com.liferay.portal.DuplicateGroupException;
-import com.liferay.portal.kernel.exception.NestableException;
+import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.PrefsPropsUtil;
+import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Role;
@@ -52,6 +55,7 @@ import com.liferay.portal.model.UserGroup;
 import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.auth.PrincipalException;
 import com.liferay.portal.security.permission.ActionKeys;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
@@ -62,12 +66,8 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
-import com.liferay.portlet.social.model.SocialRelationConstants;
-import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
 
 
 /**
@@ -91,6 +91,8 @@ import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
  */
 @JSONWebService(mode = JSONWebServiceMode.MANUAL)
 public class CourseServiceImpl extends CourseServiceBaseImpl {
+	private static Log log = LogFactoryUtil.getLog(CourseServiceImpl.class);
+	
 	@JSONWebService
 	public java.util.List<Course> getCoursesOfGroup(long groupId) throws SystemException
 	{
@@ -225,6 +227,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
+				sendEmail(user,course);
 			}
 			
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
@@ -247,6 +250,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
+				sendEmail(user,course);
 			}
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
@@ -268,6 +272,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
+				sendEmail(user,course);
 			}
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
@@ -454,5 +459,53 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			return "/image/layout_set_logo?img_id="+logoId;
 		}
 		return "";
+	}
+	
+	private void sendEmail(User user, Course course){
+		if(course.isWelcome()&&user!=null&&course!=null){
+			if(course.getWelcomeMsg()!=null&&course.getWelcomeMsg()!=null&&!StringPool.BLANK.equals(course.getWelcomeMsg())){
+				
+				try{
+					String emailTo = user.getEmailAddress();
+					String nameTo = user.getFullName();
+					InternetAddress to = new InternetAddress(emailTo, nameTo);
+
+					String fromName = PrefsPropsUtil.getString(course.getCompanyId(),
+						PropsKeys.ADMIN_EMAIL_FROM_NAME);
+					String fromAddress = PrefsPropsUtil.getString(course.getCompanyId(),
+						PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+					InternetAddress from = new InternetAddress(fromAddress, fromName);
+					
+					Company company = null;
+					try {
+						company = CompanyLocalServiceUtil.getCompany(course.getCompanyId());
+					} catch (PortalException e) {
+						if(log.isErrorEnabled())log.error(e.getMessage());
+						if(log.isDebugEnabled())e.printStackTrace();
+					}
+					
+					if(company!=null){
+						String url = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(false), false);
+						String urlcourse = url+"/web"+course.getFriendlyURL();
+						
+						String subject = LanguageUtil.format(user.getLocale(),"welcome-subject", new String[]{course.getTitle(user.getLocale())});
+				    	String body = StringUtil.replace(
+				    			course.getWelcomeMsg(),
+				    			new String[] {"[$FROM_ADDRESS$]", "[$FROM_NAME$]", "[$PAGE_URL$]","[$PORTAL_URL$]","[$TO_ADDRESS$]","[$TO_NAME$]"},
+				    			new String[] {fromAddress, fromName, urlcourse, url, emailTo, nameTo});
+				    	
+						MailMessage mailm = new MailMessage(from, to, subject, body, true);
+						MailServiceUtil.sendEmail(mailm);
+					}
+					
+				}catch(UnsupportedEncodingException e){
+					if(log.isErrorEnabled())log.error(e.getMessage());
+					if(log.isDebugEnabled())e.printStackTrace();
+				}catch(SystemException e){
+					if(log.isErrorEnabled())log.error(e.getMessage());
+					if(log.isDebugEnabled())e.printStackTrace();
+				}
+			}
+		}
 	}
 }
