@@ -69,6 +69,8 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 		attributes.put("closed", getClosed());
 		attributes.put("maxusers", getMaxusers());
 		attributes.put("calificationType", getCalificationType());
+		attributes.put("welcome", getWelcome());
+		attributes.put("welcomeMsg", getWelcomeMsg());
 
 		return attributes;
 	}
@@ -216,6 +218,18 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 
 		if (calificationType != null) {
 			setCalificationType(calificationType);
+		}
+
+		Boolean welcome = (Boolean)attributes.get("welcome");
+
+		if (welcome != null) {
+			setWelcome(welcome);
+		}
+
+		String welcomeMsg = (String)attributes.get("welcomeMsg");
+
+		if (welcomeMsg != null) {
+			setWelcomeMsg(welcomeMsg);
 		}
 	}
 
@@ -934,6 +948,51 @@ public class CourseWrapper implements Course, ModelWrapper<Course> {
 	*/
 	public void setCalificationType(long calificationType) {
 		_course.setCalificationType(calificationType);
+	}
+
+	/**
+	* Returns the welcome of this course.
+	*
+	* @return the welcome of this course
+	*/
+	public boolean getWelcome() {
+		return _course.getWelcome();
+	}
+
+	/**
+	* Returns <code>true</code> if this course is welcome.
+	*
+	* @return <code>true</code> if this course is welcome; <code>false</code> otherwise
+	*/
+	public boolean isWelcome() {
+		return _course.isWelcome();
+	}
+
+	/**
+	* Sets whether this course is welcome.
+	*
+	* @param welcome the welcome of this course
+	*/
+	public void setWelcome(boolean welcome) {
+		_course.setWelcome(welcome);
+	}
+
+	/**
+	* Returns the welcome msg of this course.
+	*
+	* @return the welcome msg of this course
+	*/
+	public java.lang.String getWelcomeMsg() {
+		return _course.getWelcomeMsg();
+	}
+
+	/**
+	* Sets the welcome msg of this course.
+	*
+	* @param welcomeMsg the welcome msg of this course
+	*/
+	public void setWelcomeMsg(java.lang.String welcomeMsg) {
+		_course.setWelcomeMsg(welcomeMsg);
 	}
 
 	/**

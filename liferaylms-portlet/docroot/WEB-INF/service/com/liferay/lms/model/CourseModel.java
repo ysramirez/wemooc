@@ -617,6 +617,42 @@ public interface CourseModel extends BaseModel<Course>, GroupedModel,
 	public void setCalificationType(long calificationType);
 
 	/**
+	 * Returns the welcome of this course.
+	 *
+	 * @return the welcome of this course
+	 */
+	public boolean getWelcome();
+
+	/**
+	 * Returns <code>true</code> if this course is welcome.
+	 *
+	 * @return <code>true</code> if this course is welcome; <code>false</code> otherwise
+	 */
+	public boolean isWelcome();
+
+	/**
+	 * Sets whether this course is welcome.
+	 *
+	 * @param welcome the welcome of this course
+	 */
+	public void setWelcome(boolean welcome);
+
+	/**
+	 * Returns the welcome msg of this course.
+	 *
+	 * @return the welcome msg of this course
+	 */
+	@AutoEscape
+	public String getWelcomeMsg();
+
+	/**
+	 * Sets the welcome msg of this course.
+	 *
+	 * @param welcomeMsg the welcome msg of this course
+	 */
+	public void setWelcomeMsg(String welcomeMsg);
+
+	/**
 	 * @deprecated Renamed to {@link #isApproved()}
 	 */
 	public boolean getApproved();

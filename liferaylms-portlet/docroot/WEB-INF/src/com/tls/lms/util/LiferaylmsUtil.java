@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Map;
 
 import com.liferay.lms.model.LearningActivity;
-import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.model.Resource;

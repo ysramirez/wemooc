@@ -107,6 +107,8 @@
 			<basic name="closed" />
 			<basic name="maxusers" />
 			<basic name="calificationType" />
+			<basic name="welcome" />
+			<basic name="welcomeMsg" />
 			<transient name="descriptionCurrentLanguageId" />
 			<transient name="descriptionMap" />
 			<transient name="modelAttributes" />

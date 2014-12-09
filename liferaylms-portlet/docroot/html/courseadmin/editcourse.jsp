@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.PropsKeys"%>
+<%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.LocaleUtil"%>
 <%@page import="com.liferay.portal.kernel.util.ArrayUtil"%>
 <%@page import="com.liferay.lms.service.CompetenceServiceUtil"%>
@@ -174,7 +176,8 @@ boolean showImport	= preferences.getValue("showImport", "true").equals("true");
 boolean showClone 	= preferences.getValue("showClone",  "true").equals("true");
 boolean showGo 		= preferences.getValue("showGo", 	 "true").equals("true");
 boolean showRegistrationType = preferences.getValue("showRegistrationType",  "true").equals("true");
-boolean showMaxUsers = preferences.getValue("showMaxUsers", 	 "true").equals("true");
+boolean showMaxUsers = preferences.getValue("showMaxUsers", "true").equals("true");
+boolean showWelcomeMsg = preferences.getValue("showWelcomeMsg", "true").equals("true");
 
 boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
 
@@ -312,10 +315,15 @@ else
 	<aui:input name="friendlyURL" label="FriendlyURL" type="hidden" > <%=groupCreated!=null?groupCreated.getFriendlyURL():"" %> </aui:input>
 	
 	<aui:field-wrapper label="description" name="description">
-			<liferay-ui:input-editor name="description" width="100%" />
-			<aui:input name="description" type="hidden"/>
 			<script type="text/javascript">
-    		    function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
+				function <portlet:namespace />onChangeDescription(val) {
+			    	var A = AUI();
+					A.one('#<portlet:namespace />description').set('value',val);
+	        	}
+			</script>
+			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" initMethod="initEditorDescription" />
+			<script type="text/javascript">
+    		    function <portlet:namespace />initEditorDescription() { return "<%= UnicodeFormatter.toString(description) %>"; }
     		</script>
 	</aui:field-wrapper>
 	
@@ -606,14 +614,84 @@ else
 					classPK="<%= courseId %>" assetEntryId="<%=assetEntryId %>" 	/>
 	</aui:fieldset>
 	</liferay-ui:panel>
-	 <c:if test="<%=courseId==0%>">
-	<liferay-ui:panel title="permissions" collapsible="true" defaultState="closed">
-	
-		<liferay-ui:input-permissions modelName="<%= com.liferay.lms.model.Course.class.getName() %>">
-	    </liferay-ui:input-permissions>
-	</liferay-ui:panel>
+	<c:if test="<%=courseId==0%>">
+		<liferay-ui:panel title="permissions" collapsible="true" defaultState="closed">
+		
+			<liferay-ui:input-permissions modelName="<%= com.liferay.lms.model.Course.class.getName() %>">
+		    </liferay-ui:input-permissions>
+		</liferay-ui:panel>
 	</c:if>
-	</liferay-ui:panel-container>
+		<%
+			boolean active =(course!=null&&course.getWelcome()?true:false);  
+			String welcomeMsg = (course!=null&&course.getWelcomeMsg()!=null?course.getWelcomeMsg():"");
+		%>
+		
+		<c:if test="<%=showWelcomeMsg %>">
+			<liferay-ui:panel title="welcome-msg" collapsible="true" defaultState='<%=active?"open":"closed" %>'>
+				<aui:input type="checkbox" name="welcome" label="enabled" value='<%=active?true:false %>' onChange='<%= renderResponse.getNamespace()+"changeWelcome()" %>'/>
+				
+				<div id="containerWelcomeMsg" style='display:<%=active?"block":"none"%>'>
+				
+				<aui:field-wrapper label="welcome-msg" name="welcome-msg">
+					<script type="text/javascript">
+						function <portlet:namespace />onChangeWelcomeMsg(val) {
+				        	var A = AUI();
+							A.one('#<portlet:namespace />welcomeMsg').set('value',val);
+				        }
+					</script>
+					<liferay-ui:input-editor toolbarSet="slimmer" name="welcomeMsg" width="100%" onChangeMethod="onChangeWelcomeMsg" initMethod="initEditorWelcomeMsg" />
+					<script type="text/javascript">
+	    		    	function <portlet:namespace />initEditorWelcomeMsg() { return "<%= UnicodeFormatter.toString(welcomeMsg) %>"; }
+	    			</script>
+				</aui:field-wrapper>
+				
+				</div>
+				<div class="definition-of-terms">
+				<h4><liferay-ui:message key="definition-of-terms" /></h4>
+
+				<dl>
+					<dt>
+						[$PAGE_URL$]
+					</dt>
+					<dd>
+						<%= themeDisplay.getURLPortal()+"/web"+((course.getFriendlyURL()!=null)?course.getFriendlyURL():StringPool.BLANK) %>
+					</dd>
+					<dt>
+						[$FROM_ADDRESS$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(PrefsPropsUtil.getString(themeDisplay.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS)) %>
+					</dd>
+					<dt>
+						[$FROM_NAME$]
+					</dt>
+					<dd>
+						<%= HtmlUtil.escape(PrefsPropsUtil.getString(themeDisplay.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME)) %>
+					</dd>
+					<dt>
+						[$PORTAL_URL$]
+					</dt>
+					<dd>
+						<%= company.getVirtualHostname() %>
+					</dd>
+					<dt>
+						[$TO_ADDRESS$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-address-of-the-email-recipient" />
+					</dd>
+					<dt>
+						[$TO_NAME$]
+					</dt>
+					<dd>
+						<liferay-ui:message key="the-name-of-the-email-recipient" />
+					</dd>
+				</dl>
+			</div>
+			</liferay-ui:panel>
+		</c:if>
+		
+</liferay-ui:panel-container>
 	<aui:button-row>
 		<aui:button type="submit"></aui:button>							
 		<aui:button onClick="<%=cancel %>" type="cancel" />
@@ -624,6 +702,14 @@ else
 <script src="/liferaylms-portlet/js/service.js" type="text/javascript"></script>
 
 <script type="text/javascript">
+function <portlet:namespace />changeWelcome(){
+	var div = document.getElementById("containerWelcomeMsg");
+	if(div.style.display&&div.style.display=='none'){
+		div.style.display='block';
+	}else{
+		div.style.display='none';
+	}
+}
 function <portlet:namespace />checkduplicate(val, field)
 {
 	var courseId = document.getElementById('<portlet:namespace />courseId').value;

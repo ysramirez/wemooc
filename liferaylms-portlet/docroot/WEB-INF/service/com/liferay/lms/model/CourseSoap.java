@@ -55,6 +55,8 @@ public class CourseSoap implements Serializable {
 		soapModel.setClosed(model.getClosed());
 		soapModel.setMaxusers(model.getMaxusers());
 		soapModel.setCalificationType(model.getCalificationType());
+		soapModel.setWelcome(model.getWelcome());
+		soapModel.setWelcomeMsg(model.getWelcomeMsg());
 
 		return soapModel;
 	}
@@ -303,6 +305,26 @@ public class CourseSoap implements Serializable {
 		_calificationType = calificationType;
 	}
 
+	public boolean getWelcome() {
+		return _welcome;
+	}
+
+	public boolean isWelcome() {
+		return _welcome;
+	}
+
+	public void setWelcome(boolean welcome) {
+		_welcome = welcome;
+	}
+
+	public String getWelcomeMsg() {
+		return _welcomeMsg;
+	}
+
+	public void setWelcomeMsg(String welcomeMsg) {
+		_welcomeMsg = welcomeMsg;
+	}
+
 	private String _uuid;
 	private long _courseId;
 	private long _companyId;
@@ -327,4 +349,6 @@ public class CourseSoap implements Serializable {
 	private boolean _closed;
 	private long _maxusers;
 	private long _calificationType;
+	private boolean _welcome;
+	private String _welcomeMsg;
 }

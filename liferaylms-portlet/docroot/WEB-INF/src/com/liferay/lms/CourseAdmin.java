@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+import javax.mail.internet.InternetAddress;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletException;
@@ -40,6 +42,7 @@ import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseCompetenceLocalServiceUtil;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
+import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
@@ -57,6 +60,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.mail.MailMessage;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -77,8 +81,10 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.Company;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
@@ -87,6 +93,7 @@ import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
+import com.liferay.portal.service.CompanyLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
@@ -117,7 +124,7 @@ public class CourseAdmin extends MVCPortlet {
 	public static String IMAGEGALLERY_MAINFOLDER = "icons";
 	public static String IMAGEGALLERY_PORTLETFOLDER = "course";
 	public static String IMAGEGALLERY_MAINFOLDER_DESCRIPTION = "Course Image Uploads";
-	public static String IMAGEGALLERY_PORTLETFOLDER_DESCRIPTION = "";	
+	public static String IMAGEGALLERY_PORTLETFOLDER_DESCRIPTION = StringPool.BLANK;	
 	
 	private static Log _log = LogFactoryUtil.getLog(CourseAdmin.class);
 	
@@ -204,11 +211,11 @@ public class CourseAdmin extends MVCPortlet {
 
 		User user = themeDisplay.getUser();
 		Enumeration<String> parNam = uploadRequest.getParameterNames();
-		String title = "";
+		String title = StringPool.BLANK;
 		while (parNam.hasMoreElements()) {
 			String paramName = parNam.nextElement();
 			if (paramName.startsWith("title_") && paramName.length() > 6) {
-				if (title.equals("")) {
+				if (title.equals(StringPool.BLANK)) {
 					title = uploadRequest.getParameter(paramName);
 				}
 			}
@@ -223,15 +230,17 @@ public class CourseAdmin extends MVCPortlet {
 		long courseTemplateId=ParamUtil.getLong(uploadRequest,"courseTemplate",0);
 		long courseCalificationType=ParamUtil.getLong(uploadRequest,"calificationType",0);
 		String friendlyURL = ParamUtil.getString(uploadRequest, "friendlyURL",
-				"");
+				StringPool.BLANK);
 		int startMonth = ParamUtil.getInteger(uploadRequest, "startMon");
 		int startYear = ParamUtil.getInteger(uploadRequest, "startYear");
 		int startDay = ParamUtil.getInteger(uploadRequest, "startDay");
 		int startHour = ParamUtil.getInteger(uploadRequest, "startHour");
 		int startMinute = ParamUtil.getInteger(uploadRequest, "startMin");
 		int startAMPM = ParamUtil.getInteger(uploadRequest, "startAMPM");
-		String summary = ParamUtil.getString(uploadRequest, "summary", "");
+		String summary = ParamUtil.getString(uploadRequest, "summary", StringPool.BLANK);
 		boolean visible = ParamUtil.getBoolean(uploadRequest, "visible", false);
+		boolean welcome = ParamUtil.getBoolean(uploadRequest, "welcome", false);
+		String welcomeMsg = ParamUtil.getString(uploadRequest, "welcomeMsg",StringPool.BLANK);
 		
 		int type = ParamUtil.getInteger(uploadRequest, "type", GroupConstants.TYPE_SITE_OPEN);
 		int maxusers = ParamUtil.getInteger(uploadRequest, "maxUsers");
@@ -256,7 +265,7 @@ public class CourseAdmin extends MVCPortlet {
 			return;					
 		}
 
-		if (friendlyURL.equals("") && !title.equals("")) {
+		if (friendlyURL.equals(StringPool.BLANK) && !title.equals(StringPool.BLANK)) {
 			friendlyURL = StringPool.BLANK;
 		}
 
@@ -298,7 +307,7 @@ public class CourseAdmin extends MVCPortlet {
 			String paramName = parNames.nextElement();
 			if (paramName.startsWith("title_")
 					&& paramName.length() > 6
-					&& ParamUtil.getString(uploadRequest, paramName, "")
+					&& ParamUtil.getString(uploadRequest, paramName, StringPool.BLANK)
 					.length() > 0) {
 				noTitle = false;
 			}
@@ -372,7 +381,7 @@ public class CourseAdmin extends MVCPortlet {
 				if(log.isDebugEnabled())log.debug("Error:"+pe.getMessage());
 				if((Validator.isNotNull(pe.getMessage()))&&(pe.getMessage().startsWith("maxUsers "))){					
 					
-					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", ""))));
+					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", StringPool.BLANK))));
 					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
 					actionResponse.setRenderParameter("jspPage", "/html/courseadmin/editcourse.jsp");
 					return;
@@ -384,46 +393,20 @@ public class CourseAdmin extends MVCPortlet {
 				}
 			}catch(SystemException pe){
 				List<String> errors = new ArrayList<String>();
-				errors.add(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", "")));
+				errors.add(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", StringPool.BLANK)));
 				SessionErrors.add(actionRequest, "newCourseErrors", errors);
 				actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
 				actionResponse.setRenderParameter("jspPage", "/html/courseadmin/editcourse.jsp");
 				return;
 			}
 			
-			/*
-			if(course != null){
-				try{
-					long[] groupIds = new long[1];
-					groupIds[0] = course.getGroupCreatedId();
-					GroupLocalServiceUtil.addUserGroups(user.getUserId(), groupIds);
-					long[] roles = new long[2];
-					LmsPrefs prefs = LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay
-							.getCompanyId());
-					roles[0] = prefs.getEditorRole();
-					roles[1] = prefs.getTeacherRole();
-					UserGroupRoleLocalServiceUtil.addUserGroupRoles(user.getUserId(),
-							course.getGroupCreatedId(), roles);
-	
-					/* activamos el social equity *
-					AssetEntry aEntryCourse = AssetEntryLocalServiceUtil.getEntry(
-							Course.class.getName(), course.getCourseId());
-				}catch(Exception e){
-					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
-					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
-					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
-					return;
-				}
-			}
-			*/
-
 		}
 		// Estamos editando un curso existente.
 		else {
 
 			try{
 				course = CourseLocalServiceUtil.getCourse(courseId);
-				course.setTitle("");
+				course.setTitle(StringPool.BLANK);
 				
 				parNam = uploadRequest.getParameterNames();
 				while (parNam.hasMoreElements()) {
@@ -446,7 +429,7 @@ public class CourseAdmin extends MVCPortlet {
 			}catch(PortalException pe){ 
 				if(pe.getMessage().startsWith("maxUsers ")){ 
 					SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
-					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", ""))));
+					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", StringPool.BLANK))));
 					actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
 					actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
 					return;
@@ -466,7 +449,7 @@ public class CourseAdmin extends MVCPortlet {
 
 		if(course!= null){
 			//Cambiar la imagen de la comunidad
-			if(fileName!=null && !fileName.equals(""))
+			if(fileName!=null && !fileName.equals(StringPool.BLANK))
 			{
 				File file = uploadRequest.getFile("fileName");
 				try{
@@ -521,7 +504,7 @@ public class CourseAdmin extends MVCPortlet {
 					Locale locale = LocaleUtil.fromLanguageId(language);
 					course.setTitle(uploadRequest.getParameter(paramName),locale);
 
-					if (!uploadRequest.getParameter(paramName).equals("")) {
+					if (!uploadRequest.getParameter(paramName).equals(StringPool.BLANK)) {
 						oneTitleNotEmpty = true;
 					}
 				}
@@ -534,6 +517,8 @@ public class CourseAdmin extends MVCPortlet {
 				return;
 			}
 			course.setCourseEvalId(courseEvalId);
+			course.setWelcome(welcome);
+			course.setWelcomeMsg(welcomeMsg);
 		
 			try {
 				try{
@@ -542,14 +527,14 @@ public class CourseAdmin extends MVCPortlet {
 				}catch(PortalException pe){ 
 					if(pe.getMessage().startsWith("maxUsers ")){
 						SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
-						actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", ""))));
+						actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", StringPool.BLANK))));
 						actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
 						actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
 						return;
 					}else{
 						SessionErrors.add(actionRequest, "evaluationtaskactivity.error.systemError");
 						actionResponse.setRenderParameter("courseId", String.valueOf(courseId));
-						actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp");
+						actionResponse.setRenderParameter("jspPage","/html/courseadmin/editcourse.jsp"); 
 						return;
 					}
 				}catch(SystemException se){
@@ -576,7 +561,7 @@ public class CourseAdmin extends MVCPortlet {
 				
 				/*
 				WindowState windowState = actionRequest.getWindowState();
-				if (redirect != null && !"".equals(redirect)) {
+				if (redirect != null && !StringPool.BLANK.equals(redirect)) {
 					if (!windowState.equals(LiferayWindowState.POP_UP)) {
 						actionResponse.sendRedirect(redirect);
 					} else {
@@ -673,8 +658,10 @@ public class CourseAdmin extends MVCPortlet {
 		Course course = CourseLocalServiceUtil.getCourse(courseId);
 		if (!GroupLocalServiceUtil.hasUserGroup(userId,
 				course.getGroupCreatedId())) {
-			GroupLocalServiceUtil.addUserGroups(userId,
-					new long[] { course.getGroupCreatedId() });
+			GroupLocalServiceUtil.addUserGroups(userId,	new long[] { course.getGroupCreatedId() });
+			
+			User user = UserLocalServiceUtil.getUser(userId);
+			sendEmail(user, course);
 		}
 		UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { userId },
 				course.getGroupCreatedId(), roleId);
@@ -776,7 +763,7 @@ public class CourseAdmin extends MVCPortlet {
 						if(currLine.length > 0 && (line++ > 0 || (Validator.isNotNull(currLine[0]) && Validator.isNumber(currLine[0])))) {
 							String userIdStr = currLine[0];
 						
-							if (!userIdStr.equals("")){
+							if (!userIdStr.equals(StringPool.BLANK)){
 	
 								long userId=0;
 								System.out.println("    userId : " + userIdStr.trim() );
@@ -790,6 +777,7 @@ public class CourseAdmin extends MVCPortlet {
 										System.out.println("      User Name : " + user.getFullName() );
 										if(!GroupLocalServiceUtil.hasUserGroup(userId, course.getGroupCreatedId())){
 											GroupLocalServiceUtil.addUserGroups(userId, new long[] { course.getGroupCreatedId() });
+											sendEmail(user, course);
 										}
 	
 										users.add(userId);
@@ -1262,4 +1250,52 @@ public class CourseAdmin extends MVCPortlet {
 	    }
 	    return igRecordFolderId;
 	  }
+	
+	private void sendEmail(User user, Course course){
+		if(course.isWelcome()&&user!=null&&course!=null){
+			if(course.getWelcomeMsg()!=null&&course.getWelcomeMsg()!=null&&!StringPool.BLANK.equals(course.getWelcomeMsg())){
+				
+				try{
+					String emailTo = user.getEmailAddress();
+					String nameTo = user.getFullName();
+					InternetAddress to = new InternetAddress(emailTo, nameTo);
+
+					String fromName = PrefsPropsUtil.getString(course.getCompanyId(),
+						PropsKeys.ADMIN_EMAIL_FROM_NAME);
+					String fromAddress = PrefsPropsUtil.getString(course.getCompanyId(),
+						PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
+					InternetAddress from = new InternetAddress(fromAddress, fromName);
+					
+					Company company = null;
+					try {
+						company = CompanyLocalServiceUtil.getCompany(course.getCompanyId());
+					} catch (PortalException e) {
+						if(log.isErrorEnabled())log.error(e.getMessage());
+						if(log.isDebugEnabled())e.printStackTrace();
+					}
+					
+					if(company!=null){
+						String url = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(false), false);
+						String urlcourse = url+"/web"+course.getFriendlyURL();
+						
+						String subject = LanguageUtil.format(user.getLocale(),"welcome-subject", new String[]{course.getTitle(user.getLocale())});
+				    	String body = StringUtil.replace(
+				    			course.getWelcomeMsg(),
+				    			new String[] {"[$FROM_ADDRESS$]", "[$FROM_NAME$]", "[$PAGE_URL$]","[$PORTAL_URL$]","[$TO_ADDRESS$]","[$TO_NAME$]"},
+				    			new String[] {fromAddress, fromName, urlcourse, url, emailTo, nameTo});
+				    	
+						MailMessage mailm = new MailMessage(from, to, subject, body, true);
+						MailServiceUtil.sendEmail(mailm);
+					}
+					
+				}catch(UnsupportedEncodingException e){
+					if(log.isErrorEnabled())log.error(e.getMessage());
+					if(log.isDebugEnabled())e.printStackTrace();
+				}catch(SystemException e){
+					if(log.isErrorEnabled())log.error(e.getMessage());
+					if(log.isDebugEnabled())e.printStackTrace();
+				}
+			}
+		}
+	}
 }
