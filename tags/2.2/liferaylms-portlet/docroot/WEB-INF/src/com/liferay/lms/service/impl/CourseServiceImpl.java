@@ -16,31 +16,22 @@ package com.liferay.lms.service.impl;
 
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.ResourceBundle;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
-import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
-import com.liferay.portal.DuplicateGroupException;
-import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebService;
 import com.liferay.portal.kernel.jsonwebservice.JSONWebServiceMode;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.LocaleUtil;
-import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.Group;
@@ -62,12 +53,8 @@ import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.service.UserServiceUtil;
 import com.liferay.portal.service.permission.PortalPermissionUtil;
 import com.liferay.portal.util.PortalUtil;
-import com.liferay.portlet.asset.model.AssetEntry;
-import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.util.DLUtil;
-import com.liferay.portlet.social.model.SocialRelationConstants;
-import com.liferay.portlet.social.service.SocialRelationLocalServiceUtil;
 
 
 /**
@@ -98,20 +85,38 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		
 	}
 	@JSONWebService
-	public Course createCourse(String title, String description,boolean published,String summary,int evaluationmethod,int calificationType,int template,int registermethod,int maxusers, Date startregistrationdate,Date endregistrationdate) throws PortalException, SystemException
+	public Course createCourse(long groupId,String title, String description,boolean published,String summary,int evaluationmethod,int calificationType,int template,int registermethod,int maxusers, Date startregistrationdate,Date endregistrationdate) throws PortalException, SystemException
 	{
 		User user=getUser();
+		
 		java.util.Date ahora=new java.util.Date(System.currentTimeMillis());
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		serviceContext.setScopeGroupId(groupId);
 		String groupName = GroupConstants.GUEST;
 		long companyId = PortalUtil.getDefaultCompanyId();
+		
+		if( getPermissionChecker().hasPermission(groupId, "com.liferay.lms.coursemodel",groupId,"ADD_COURSE"))
+		{
+			Course course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
+					title, description, summary, StringPool.BLANK,
+					user.getLocale(), ahora, startregistrationdate, endregistrationdate,template,registermethod,evaluationmethod,
+					calificationType,maxusers,serviceContext);
+			
+			return course;
+		}
+		else
+		{
+			return null;
+		}
+	}
+	@JSONWebService
+	public Course createCourse(String title, String description,boolean published,String summary,int evaluationmethod,int calificationType,int template,int registermethod,int maxusers, Date startregistrationdate,Date endregistrationdate) throws PortalException, SystemException
+	{
+		String groupName = GroupConstants.GUEST;
+		long companyId = PortalUtil.getDefaultCompanyId();
+		
 		long guestGroupId = GroupLocalServiceUtil.getGroup(companyId, groupName).getGroupId();
-		Course course = com.liferay.lms.service.CourseLocalServiceUtil.addCourse(
-				title, description, summary, StringPool.BLANK,
-				user.getLocale(), ahora, startregistrationdate, endregistrationdate,template,registermethod,evaluationmethod,
-				calificationType,maxusers,serviceContext);
-
-		return course;
+		return createCourse(guestGroupId, title, description, published, summary, evaluationmethod, calificationType, template, registermethod, maxusers, startregistrationdate, endregistrationdate);
 	}
 	@JSONWebService
 	public java.util.List<Course> getCourses() throws SystemException, PortalException
