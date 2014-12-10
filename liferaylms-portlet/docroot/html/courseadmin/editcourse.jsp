@@ -628,10 +628,9 @@ else
 		
 		<c:if test="<%=showWelcomeMsg %>">
 			<liferay-ui:panel title="welcome-msg" collapsible="true" defaultState='<%=active?"open":"closed" %>'>
-				<aui:input type="checkbox" name="welcome" label="enabled" value='<%=active?true:false %>' onChange='<%= renderResponse.getNamespace()+"changeWelcome()" %>'/>
+				<aui:input type="checkbox" name="welcome" label="enabled" value='<%=active %>' onChange='<%= renderResponse.getNamespace()+"changeWelcome()" %>'/>
 				
 				<div id="containerWelcomeMsg" style='display:<%=active?"block":"none"%>'>
-				
 				<aui:field-wrapper label="welcome-msg" name="welcome-msg">
 					<script type="text/javascript">
 						function <portlet:namespace />onChangeWelcomeMsg(val) {
@@ -654,7 +653,7 @@ else
 						[$PAGE_URL$]
 					</dt>
 					<dd>
-						<%= themeDisplay.getURLPortal()+"/web"+((course.getFriendlyURL()!=null)?course.getFriendlyURL():StringPool.BLANK) %>
+						<%= themeDisplay.getURLPortal()+"/web"+((course!=null&&course.getFriendlyURL()!=null)?course.getFriendlyURL():StringPool.BLANK) %>
 					</dd>
 					<dt>
 						[$FROM_ADDRESS$]
