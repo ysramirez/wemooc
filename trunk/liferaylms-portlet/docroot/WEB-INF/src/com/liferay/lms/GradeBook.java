@@ -54,16 +54,16 @@ public class GradeBook extends MVCPortlet {
 			PortletException {
 		String action = ParamUtil.getString(resourceRequest, "action");
 		long moduleId = ParamUtil.getLong(resourceRequest, "moduleId",0);
+		long teamId=ParamUtil.getLong(resourceRequest, "teamId",0);
 		ThemeDisplay themeDisplay  =(ThemeDisplay)resourceRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		if(action.equals("export")){
 			
 			try {
-				java.util.List<Team> userTeams=TeamLocalServiceUtil.getUserTeams(themeDisplay.getUserId(), themeDisplay.getScopeGroupId());
 				Team theTeam=null;
-				if(userTeams!=null&& userTeams.size()>0)
-				{
-					theTeam=userTeams.get(0);
-					
+				java.util.List<Team> userTeams=TeamLocalServiceUtil.getUserTeams(themeDisplay.getUserId(), themeDisplay.getScopeGroupId());
+				if(teamId>0 && (TeamLocalServiceUtil.hasUserTeam(themeDisplay.getUserId(), teamId)||userTeams.size()==0))
+				{		
+					theTeam=TeamLocalServiceUtil.fetchTeam(teamId);	
 				}
 				Module module = ModuleLocalServiceUtil.getModule(moduleId);
 				List<LearningActivity> learningActivities = LearningActivityServiceUtil
@@ -72,7 +72,7 @@ public class GradeBook extends MVCPortlet {
 				//Necesario para crear el fichero csv.
 				resourceResponse.setCharacterEncoding(StringPool.UTF8);
 				resourceResponse.setContentType(ContentTypes.TEXT_CSV_UTF8);
-				resourceResponse.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
+				resourceResponse.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data_"+Long.toString(System.currentTimeMillis())+".csv");
 		        byte b[] = {(byte)0xEF, (byte)0xBB, (byte)0xBF};
 		        
 		        resourceResponse.getPortletOutputStream().write(b);
