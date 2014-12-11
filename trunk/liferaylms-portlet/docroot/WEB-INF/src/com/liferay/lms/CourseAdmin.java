@@ -119,7 +119,7 @@ import com.liferay.util.bridges.mvc.MVCPortlet;
 public class CourseAdmin extends MVCPortlet {
 	Log log = LogFactoryUtil.getLog(CourseAdmin.class);
 
-	public static String DOCUMENTLIBRARY_MAINFOLDER = "ResourceUploads";
+	public static String DOCUMENTLIBRARY_MAINFOLDER = "ResourceUploads"; 
 	
 	public static String IMAGEGALLERY_MAINFOLDER = "icons";
 	public static String IMAGEGALLERY_PORTLETFOLDER = "course";
@@ -970,22 +970,6 @@ public class CourseAdmin extends MVCPortlet {
 		if(action.equals("exportCourse")){
 			JSONObject jsonObject = JSONFactoryUtil.createJSONObject();
 			try {	
-
-				/*
-				long groupId = ParamUtil.getLong(request, "groupId");
-				String fileName = ParamUtil.getString(request, "exportFileName");
-
-				File file = LayoutLocalServiceUtil.exportPortletInfoAsFile(themeDisplay.getLayout().getPlid(), groupId, themeDisplay.getPortletDisplay().getId(), request.getParameterMap(), null, null);
-				
-				HttpServletRequest httpRequest = PortalUtil.getHttpServletRequest(request);
-				HttpServletResponse httpResponse = PortalUtil.getHttpServletResponse(response);
-
-				InputStream is = new FileInputStream(file);
-
-				String contentType = MimeTypesUtil.getContentType(file);
-
-				ServletResponseUtil.sendFile(httpRequest, httpResponse, fileName, is, contentType);
-				*/
 				
 				ServiceContext serviceContext = ServiceContextFactory.getInstance(Course.class.getName(), request);
 				
