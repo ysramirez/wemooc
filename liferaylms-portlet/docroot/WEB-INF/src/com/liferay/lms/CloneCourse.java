@@ -30,6 +30,8 @@ import com.liferay.lms.service.TestQuestionLocalServiceUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.messaging.Message;
 import com.liferay.portal.kernel.messaging.MessageListener;
 import com.liferay.portal.kernel.messaging.MessageListenerException;
@@ -77,6 +79,7 @@ import com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil;
 import com.liferay.portlet.documentlibrary.service.DLFolderLocalServiceUtil;
 
 public class CloneCourse implements MessageListener {
+	private static Log log = LogFactoryUtil.getLog(CloneCourse.class);
 
 	public static String DOCUMENTLIBRARY_MAINFOLDER = "ResourceUploads";
 
@@ -201,7 +204,12 @@ public class CloneCourse implements MessageListener {
 		Role siteMemberRole = RoleLocalServiceUtil.getRole(themeDisplay.getCompanyId(), RoleConstants.SITE_MEMBER);
 		
 		newCourse.setIcon(course.getIcon());
-		newCourse = CourseLocalServiceUtil.modCourse(newCourse, serviceContext);
+		
+		try{
+			newCourse = CourseLocalServiceUtil.modCourse(newCourse, serviceContext);
+		}catch(Exception e){
+			if(log.isDebugEnabled())e.printStackTrace();
+		}
 		
 		newCourse.setUserId(themeDisplay.getUserId());
 
@@ -280,8 +288,9 @@ public class CloneCourse implements MessageListener {
 			for(LearningActivity activity:activities){
 				
 				LearningActivity newLearnActivity;
+				LearningActivity nuevaLarn = null;
 				try {
-					newLearnActivity = LearningActivityLocalServiceUtil.createLearningActivity(CounterLocalServiceUtil.increment(Module.class.getName()));
+					newLearnActivity = LearningActivityLocalServiceUtil.createLearningActivity(CounterLocalServiceUtil.increment(LearningActivity.class.getName()));
 					
 					newLearnActivity.setTitle(activity.getTitle());
 					newLearnActivity.setDescription(activity.getDescription());
@@ -315,7 +324,7 @@ public class CloneCourse implements MessageListener {
 
 					newLearnActivity.setDescription(descriptionFilesClone(activity.getDescription(),newModule.getGroupId(), newLearnActivity.getActId(),themeDisplay.getUserId()));
 					
-					LearningActivity nuevaLarn=LearningActivityLocalServiceUtil.addLearningActivity(newLearnActivity,serviceContext);
+					nuevaLarn=LearningActivityLocalServiceUtil.addLearningActivity(newLearnActivity,serviceContext);
 					
 					System.out.println("      Learning Activity : " + activity.getTitle(Locale.getDefault())+ " ("+activity.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(activity.getTypeId()).getName())+")");
 					System.out.println("      + Learning Activity : " + nuevaLarn.getTitle(Locale.getDefault())+ " ("+nuevaLarn.getActId()+", " + LanguageUtil.get(Locale.getDefault(),learningActivityTypeRegistry.getLearningActivityType(nuevaLarn.getTypeId()).getName())+")");
@@ -335,7 +344,6 @@ public class CloneCourse implements MessageListener {
 					}
 					
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 					continue;
 				}
@@ -345,10 +353,8 @@ public class CloneCourse implements MessageListener {
 				{
 					TestQuestion newTestQuestion;
 					try {
-						newTestQuestion = TestQuestionLocalServiceUtil.addQuestion(activity.getActId(), question.getText(), question.getQuestionType());
+						newTestQuestion = TestQuestionLocalServiceUtil.addQuestion(nuevaLarn.getActId(), question.getText(), question.getQuestionType());
 						
-						newTestQuestion.setQuestionType(question.getQuestionType());
-						newTestQuestion.setActId(newLearnActivity.getActId());
 						newTestQuestion.setText(descriptionFilesClone(question.getText(),newModule.getGroupId(), newTestQuestion.getActId(),themeDisplay.getUserId()));
 						
 						TestQuestionLocalServiceUtil.updateTestQuestion(newTestQuestion, true);

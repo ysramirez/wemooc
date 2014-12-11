@@ -436,17 +436,24 @@ boolean visibleCalifications = Boolean.parseBoolean(visibleStr);
 			"	new A.Dialog( "+
 			"		{ "+
 			"    		id: 'showCalifications', "+ 
-			"			title: '"+LanguageUtil.get(pageContext,"activity.showcalifications.popup")+"', "+
+			"			title: '"); 
+			showCalificationsPopup.append(LanguageUtil.get(pageContext,"activity.showcalifications.popup"));
+			showCalificationsPopup.append("', "+
 		    "			destroyOnClose: true, "+
 		    "			width: 750, "+
 		    "			modal:true, "+
 		    "			x:50, "+
 		    "			y:50, "+
+		    "			on: { close: function(evt){ console.log('hola'); Liferay.Portlet.refresh(A.one('#p_p_id");
+		    showCalificationsPopup.append(renderResponse.getNamespace());
+		    showCalificationsPopup.append(">'),{'p_t_lifecycle':0}); }},"+	
 			"		} "+
 			"	).plug( "+
 			"		A.Plugin.DialogIframe, "+
 			"		{ "+
-			"			uri: '" + JavaScriptUtil.markupToStringLiteral(showCalificationsURL) + "' "+
+			"			uri: '");
+			showCalificationsPopup.append(JavaScriptUtil.markupToStringLiteral(showCalificationsURL));
+			showCalificationsPopup.append("' "+
 			"		} "+
 			"	).render().show(); "+
 			"});");

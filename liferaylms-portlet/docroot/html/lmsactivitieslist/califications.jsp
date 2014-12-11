@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
+<%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.DynamicQuery"%>
@@ -13,6 +15,9 @@
 	long actId = ParamUtil.getLong(request, "resId", 0);
 	LearningActivity learnActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
 	
+	LearningActivityTypeRegistry learningActivityTypeRegistry = new LearningActivityTypeRegistry();
+	LearningActivityType learningActivityType = learningActivityTypeRegistry.getLearningActivityType(learnActivity.getTypeId());
+	
 	SimpleDateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 	dateFormat.setTimeZone(timeZone);
 	
@@ -27,11 +32,22 @@
 	<portlet:param name="jspPage" value="/html/lmsactivitieslist/califications.jsp"></portlet:param>
 </portlet:renderURL>
 
+<portlet:actionURL name="deleteAllURL" var="deleteAllURL">
+	<portlet:param name="resId" value="<%=String.valueOf(actId)%>"/>
+</portlet:actionURL>
+
+<portlet:actionURL name="deleteURL" var="deleteURL">
+	<portlet:param name="resId" value="<%=String.valueOf(actId)%>"/>
+</portlet:actionURL>
+
+<c:if test="<%=learningActivityType.hasDeleteTries() %>">
+	<liferay-ui:icon image="close" label="true" message="com.liferay.manager.CleanLearningActivityTriesNotPassed" url="<%= deleteAllURL %>"  />
+</c:if>
+
 <liferay-ui:search-container iteratorURL="<%=portletURL%>" deltaConfigurable="true" emptyResultsMessage="there-are-no-results" delta="10">
 
    	<liferay-ui:search-container-results>
 		<%
-			//List<LearningActivityResult> learnResults = LearningActivityResultLocalServiceUtil.getByActId(actId);
 			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LearningActivityResult.class).add(PropertyFactoryUtil.forName("actId").eq(actId));
 
 			pageContext.setAttribute("results", LearningActivityResultLocalServiceUtil.dynamicQuery(dynamicQuery,searchContainer.getStart(),searchContainer.getEnd()));
@@ -61,6 +77,10 @@
 		<liferay-ui:search-container-column-text name="activity.showcalifications.puntuation">	<%=puntuation %> </liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="activity.showcalifications.result">		<%=res %> </liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="activity.showcalifications.startdate">	<%=startdate %> </liferay-ui:search-container-column-text>
+		
+		<c:if test="<%=learningActivityType.hasDeleteTries() %>">
+			<liferay-ui:search-container-column-text name="actions"><liferay-ui:icon image="close" label="true" message="com.liferay.manager.CleanLearningActivityTries" url='<%= deleteURL+"&userId="+usu.getUserId() %>'  /></liferay-ui:search-container-column-text>
+		</c:if>
 		
 	</liferay-ui:search-container-row>
 	

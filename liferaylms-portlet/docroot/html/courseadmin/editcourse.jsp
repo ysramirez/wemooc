@@ -631,62 +631,62 @@ else
 				<aui:input type="checkbox" name="welcome" label="enabled" value='<%=active %>' onChange='<%= renderResponse.getNamespace()+"changeWelcome()" %>'/>
 				
 				<div id="containerWelcomeMsg" style='display:<%=active?"block":"none"%>'>
-				<aui:field-wrapper label="welcome-msg" name="welcome-msg">
-					<script type="text/javascript">
-						function <portlet:namespace />onChangeWelcomeMsg(val) {
-				        	var A = AUI();
-							A.one('#<portlet:namespace />welcomeMsg').set('value',val);
-				        }
-					</script>
-					<liferay-ui:input-editor toolbarSet="slimmer" name="welcomeMsg" width="100%" onChangeMethod="onChangeWelcomeMsg" initMethod="initEditorWelcomeMsg" />
-					<script type="text/javascript">
-	    		    	function <portlet:namespace />initEditorWelcomeMsg() { return "<%= UnicodeFormatter.toString(welcomeMsg) %>"; }
-	    			</script>
-				</aui:field-wrapper>
-				
+					<aui:field-wrapper label="welcome-msg" name="welcome-msg">
+						<script type="text/javascript">
+							function <portlet:namespace />onChangeWelcomeMsg(val) {
+					        	var A = AUI();
+								A.one('#<portlet:namespace />welcomeMsg').set('value',val);
+					        }
+						</script>
+						<liferay-ui:input-editor toolbarSet="slimmer" name="welcomeMsg" width="100%" onChangeMethod="onChangeWelcomeMsg" initMethod="initEditorWelcomeMsg" />
+						<script type="text/javascript">
+		    		    	function <portlet:namespace />initEditorWelcomeMsg() { return "<%= UnicodeFormatter.toString(welcomeMsg) %>"; }
+		    			</script>
+					</aui:field-wrapper>
+					<div class="definition-of-terms">
+						<h4><liferay-ui:message key="definition-of-terms" /></h4>
+		
+						<dl>
+							<dt>
+								[$PAGE_URL$]
+							</dt>
+							<dd>
+								<%= themeDisplay.getURLPortal()+"/web"+((course!=null&&course.getFriendlyURL()!=null)?course.getFriendlyURL():StringPool.BLANK) %>
+							</dd>
+							<dt>
+								[$FROM_ADDRESS$]
+							</dt>
+							<dd>
+								<%= HtmlUtil.escape(PrefsPropsUtil.getString(themeDisplay.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS)) %>
+							</dd>
+							<dt>
+								[$FROM_NAME$]
+							</dt>
+							<dd>
+								<%= HtmlUtil.escape(PrefsPropsUtil.getString(themeDisplay.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME)) %>
+							</dd>
+							<dt>
+								[$PORTAL_URL$]
+							</dt>
+							<dd>
+								<%= company.getVirtualHostname() %>
+							</dd>
+							<dt>
+								[$TO_ADDRESS$]
+							</dt>
+							<dd>
+								<liferay-ui:message key="the-address-of-the-email-recipient" />
+							</dd>
+							<dt>
+								[$TO_NAME$]
+							</dt>
+							<dd>
+								<liferay-ui:message key="the-name-of-the-email-recipient" />
+							</dd>
+						</dl>
+					</div>
 				</div>
-				<div class="definition-of-terms">
-				<h4><liferay-ui:message key="definition-of-terms" /></h4>
-
-				<dl>
-					<dt>
-						[$PAGE_URL$]
-					</dt>
-					<dd>
-						<%= themeDisplay.getURLPortal()+"/web"+((course!=null&&course.getFriendlyURL()!=null)?course.getFriendlyURL():StringPool.BLANK) %>
-					</dd>
-					<dt>
-						[$FROM_ADDRESS$]
-					</dt>
-					<dd>
-						<%= HtmlUtil.escape(PrefsPropsUtil.getString(themeDisplay.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_ADDRESS)) %>
-					</dd>
-					<dt>
-						[$FROM_NAME$]
-					</dt>
-					<dd>
-						<%= HtmlUtil.escape(PrefsPropsUtil.getString(themeDisplay.getCompanyId(),PropsKeys.ADMIN_EMAIL_FROM_NAME)) %>
-					</dd>
-					<dt>
-						[$PORTAL_URL$]
-					</dt>
-					<dd>
-						<%= company.getVirtualHostname() %>
-					</dd>
-					<dt>
-						[$TO_ADDRESS$]
-					</dt>
-					<dd>
-						<liferay-ui:message key="the-address-of-the-email-recipient" />
-					</dd>
-					<dt>
-						[$TO_NAME$]
-					</dt>
-					<dd>
-						<liferay-ui:message key="the-name-of-the-email-recipient" />
-					</dd>
-				</dl>
-			</div>
+				
 			</liferay-ui:panel>
 		</c:if>
 		

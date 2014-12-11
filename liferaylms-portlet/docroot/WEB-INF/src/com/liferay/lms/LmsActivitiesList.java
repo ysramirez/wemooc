@@ -48,6 +48,8 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBusUtil;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.portlet.LiferayPortletResponse;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -79,6 +81,7 @@ import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.service.TeamLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletQNameUtil;
@@ -903,6 +906,53 @@ public class LmsActivitiesList extends MVCPortlet {
 		}
 		SessionMessages.add(actionRequest, "asset-renderer-not-defined");
 
+	}
+	
+	public void deleteAllURL(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+		long actId = ParamUtil.getInteger(actionRequest, "resId");
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);    
+		
+		if(log.isDebugEnabled())log.debug(actId); 
+
+		LearningActivity la = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		
+		if(la!=null){
+			Message message=new Message();
+			message.put("learningActivity",la);
+			message.put("userc",themeDisplay.getUser());
+			MessageBusUtil.sendMessage("liferay/lms/cleanTriesNotPassed", message);
+		}
+
+		actionResponse.setRenderParameter("resId", String.valueOf(actId));
+		actionResponse.setRenderParameter("califications", String.valueOf(true));
+	}
+	
+	public void deleteURL(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception {
+
+		long actId = ParamUtil.getInteger(actionRequest, "resId");
+		long userId = ParamUtil.getInteger(actionRequest, "userId");
+		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);    
+		
+		if(log.isDebugEnabled()){
+			log.debug(actId);
+			log.debug(userId);
+		}
+
+		LearningActivity la = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		User user = UserLocalServiceUtil.getUser(userId);
+		
+		if(la!=null&&user!=null){
+			Message message=new Message();
+			message.put("learningActivity",la);
+			message.put("user",user);
+			message.put("userc",themeDisplay.getUser());
+			MessageBusUtil.sendMessage("liferay/lms/cleanTriesUser", message);
+		}
+		
+		actionResponse.setRenderParameter("resId", String.valueOf(actId));
+		actionResponse.setRenderParameter("userId", String.valueOf(userId));
+		actionResponse.setRenderParameter("califications", String.valueOf(true));
 	}
 
 	public void modactivity(ActionRequest actionRequest, ActionResponse actionResponse)
