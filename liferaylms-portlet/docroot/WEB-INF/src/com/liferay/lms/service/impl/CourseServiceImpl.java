@@ -106,6 +106,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		
 		java.util.Date ahora=new java.util.Date(System.currentTimeMillis());
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		serviceContext.setUserId(user.getUserId());
 		serviceContext.setScopeGroupId(groupId);
 		String groupName = GroupConstants.GUEST;
 		long companyId = PortalUtil.getDefaultCompanyId();
