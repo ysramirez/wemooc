@@ -25,14 +25,92 @@
 <%@ include file="/init.jsp" %>
 <liferay-ui:panel-container >
 <%
+long teamId=ParamUtil.getLong(request, "teamId",0);
+PortletURL portletURL = renderResponse.createRenderURL();
+portletURL.setParameter("jspPage","/html/gradebook/view.jsp");
+portletURL.setParameter("teamId", Long.toString(teamId)); 
+
 java.util.List<Team> userTeams=TeamLocalServiceUtil.getUserTeams(themeDisplay.getUserId(), themeDisplay.getScopeGroupId());
+
 Team theTeam=null;
-if(userTeams!=null&& userTeams.size()>0)
+boolean hasNullTeam=false;
+if(teamId>0 && (TeamLocalServiceUtil.hasUserTeam(themeDisplay.getUserId(), teamId)||userTeams.size()==0))
+{		
+	theTeam=TeamLocalServiceUtil.fetchTeam(teamId);	
+}
+else
 {
-	theTeam=userTeams.get(0);
-	
+	if(userTeams!=null&& userTeams.size()>0)
+	{
+		theTeam=userTeams.get(0);	
+		teamId=theTeam.getTeamId();
+	}
+}
+if(userTeams.size()==0)
+{
+	hasNullTeam=true;
+	userTeams=TeamLocalServiceUtil.getGroupTeams(themeDisplay.getScopeGroupId());
 }
 
+if(userTeams!=null&& userTeams.size()>0)
+	{
+	%>
+	
+<portlet:renderURL var="buscarURL">
+		<portlet:param name="jspPage" value="/html/gradebook/view.jsp"></portlet:param>
+	</portlet:renderURL>
+<aui:form name="studentsearch" action="<%=buscarURL %>" method="post">
+<aui:fieldset>
+	<aui:column>
+		<aui:select name="teamId" id="teamIdSelect" label="team">
+		<%
+		if(hasNullTeam)
+		{
+			if(teamId==0)
+			{
+			%>
+			<aui:option label="--" value="0" selected="true"></aui:option>
+			<%
+			}
+			else
+			{
+				%>
+				<aui:option label="--" value="0"></aui:option>
+				<%
+			}
+		}
+		for(Team team:userTeams)
+		{
+			if(teamId==team.getTeamId())
+			{
+			%>
+			<aui:option label="<%=team.getName() %>" value="<%=team.getTeamId() %>" selected="true"></aui:option>
+			<%
+			}
+			else
+			{
+			%>
+			<aui:option label="<%=team.getName() %>" value="<%=team.getTeamId() %>"></aui:option>
+			<%
+			}
+		}
+		%>
+		</aui:select>
+	</aui:column>	
+	<aui:button-row>
+		<aui:button name="searchUsers" value="select" type="submit" />
+	</aui:button-row>
+</aui:fieldset>
+</aui:form>
+<%
+	}
+
+if(theTeam!=null)
+{ %>
+<liferay-ui:header title="<%=theTeam.getName() %>" showBackURL="false"></liferay-ui:header>
+
+<%
+}
 	java.util.List<Module> modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 	if(modules != null){
 	for(Module theModule:modules){
@@ -41,6 +119,8 @@ if(userTeams!=null&& userTeams.size()>0)
 			<liferay-portlet:resourceURL var="exportURL" >
 				<portlet:param name="action" value="export"/>
 				<portlet:param name="moduleId" value="<%=Long.toString(theModule.getModuleId()) %>"/>
+				<portlet:param name="teamId" value="<%=Long.toString(teamId)%>" />
+				<portlet:param name="random" value="<%=Long.toString(System.currentTimeMillis())%>" />
 			</liferay-portlet:resourceURL>
 			<liferay-ui:icon image="export" label="<%= true %>" message="offlinetaskactivity.csv.export" method="get" url="<%=exportURL%>" />
 
