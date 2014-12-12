@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityType"%>
 <%@page import="com.liferay.lms.learningactivity.LearningActivityTypeRegistry"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil"%>
@@ -24,6 +25,9 @@
 	PortletURL portletURL = renderResponse.createRenderURL();
 	portletURL.setParameter("jspPage","/html/lmsactivitieslist/califications.jsp");
 	portletURL.setParameter("resId",Long.toString(actId));
+	
+
+	boolean delete = PrefsPropsUtil.getBoolean("learningactivity.show.califications.delete");
 %>
 
 <h2 class="table_title"><%=learnActivity.getTitle(themeDisplay.getLocale()) %></h2>
@@ -40,7 +44,7 @@
 	<portlet:param name="resId" value="<%=String.valueOf(actId)%>"/>
 </portlet:actionURL>
 
-<c:if test="<%=learningActivityType.hasDeleteTries() %>">
+<c:if test="<%=delete&&learningActivityType.hasDeleteTries() %>">
 	<liferay-ui:icon image="close" label="true" message="com.liferay.manager.CleanLearningActivityTriesNotPassed" url="<%= deleteAllURL %>"  />
 </c:if>
 
@@ -78,7 +82,7 @@
 		<liferay-ui:search-container-column-text name="activity.showcalifications.result">		<%=res %> </liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text name="activity.showcalifications.startdate">	<%=startdate %> </liferay-ui:search-container-column-text>
 		
-		<c:if test="<%=learningActivityType.hasDeleteTries() %>">
+		<c:if test="<%=delete&&learningActivityType.hasDeleteTries() %>">
 			<liferay-ui:search-container-column-text name="actions"><liferay-ui:icon image="close" label="true" message="com.liferay.manager.CleanLearningActivityTries" url='<%= deleteURL+"&userId="+usu.getUserId() %>'  /></liferay-ui:search-container-column-text>
 		</c:if>
 		
