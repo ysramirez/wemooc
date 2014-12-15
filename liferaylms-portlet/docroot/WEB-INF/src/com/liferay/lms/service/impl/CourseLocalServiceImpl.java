@@ -128,6 +128,26 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		return addCourse(title, description, summary, friendlyURL, locale, createDate, startDate, endDate, layoutSetPrototypeId, typesite, 0, calificationType, maxUsers, serviceContext);
 	}
 	
+	public java.util.List<Course> getUserCourses(long userId) throws PortalException, SystemException
+	{
+		User usuario= userLocalService.getUser(userId);
+		java.util.List<Group> groups= GroupLocalServiceUtil.getUserGroups(usuario.getUserId());
+		java.util.List<Course> results=new java.util.ArrayList<Course>();
+		
+		for(Group groupCourse:groups)
+		{
+			
+			
+			Course course=courseLocalService.fetchByGroupCreatedId(groupCourse.getGroupId());
+			if(course!=null)
+			{
+				results.add(course);
+			}
+		}
+		return results;
+
+	}
+	
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
 			java.util.Date createDate,java.util.Date startDate,java.util.Date endDate,long layoutSetPrototypeId,int typesite, long CourseEvalId, long calificationType, int maxUsers,ServiceContext serviceContext)
 			throws SystemException, PortalException {
