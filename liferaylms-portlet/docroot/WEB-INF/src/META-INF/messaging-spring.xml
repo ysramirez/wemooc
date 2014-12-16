@@ -13,7 +13,13 @@
 	<bean id="messageListener.liferay.lms.courseExport_listener"
 		class="com.liferay.lms.ExportCourse" />
 	<bean id="messageListener.liferay.lms.portalAdmin_listener"
-		class="com.liferay.lms.messagelistener.PortalAdminMessageListener" />
+		class="com.liferay.lms.messagelistener.PortalAdminMessageListener" />	
+	
+	<bean id="messageListener.liferay.lms.cleanTriesUser_listener"
+		class="com.liferay.lms.clean.CleanLearningActivityTriesUser" />
+	
+	<bean id="messageListener.liferay.lms.cleanTriesNotPassed_listener"
+		class="com.liferay.lms.clean.CleanLearningActivityTriesNotPassed" />
 		
 	
 	<!-- Destinations -->
@@ -41,6 +47,16 @@
 		class="com.liferay.portal.kernel.messaging.SerialDestination">
 		<property name="name" value="liferay/lms/portalAdmin" />
 	</bean>
+	
+	<bean id="destination.liferay.lms.cleanTriesUser"
+		class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="liferay/lms/cleanTriesUser" />
+	</bean>
+	
+	<bean id="destination.liferay.lms.cleanTriesNotPassed"
+		class="com.liferay.portal.kernel.messaging.SerialDestination">
+		<property name="name" value="liferay/lms/cleanTriesNotPassed" />
+	</bean>	
 	
 	
 	<!-- Configurator -->
@@ -73,6 +89,16 @@
 						<ref bean="messageListener.liferay.lms.portalAdmin_listener" />
 					</list>
 				</entry>
+				<entry key="liferay/lms/cleanTriesUser">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.liferay.lms.cleanTriesUser_listener" />
+					</list>
+				</entry>
+				<entry key="liferay/lms/cleanTriesNotPassed">
+					<list value-type="com.liferay.portal.kernel.messaging.MessageListener">
+						<ref bean="messageListener.liferay.lms.cleanTriesNotPassed_listener" />
+					</list>
+				</entry>
 			</map>
 		</property>
 		<property name="destinations">
@@ -82,6 +108,8 @@
 				<ref bean="destination.liferay.lms.courseClone" />
 				<ref bean="destination.liferay.lms.courseExport" />
 				<ref bean="destination.liferay.lms.portalAdmin" />
+				<ref bean="destination.liferay.lms.cleanTriesUser" />
+				<ref bean="destination.liferay.lms.cleanTriesNotPassed" />
 			</list>
 		</property>
 	</bean>
