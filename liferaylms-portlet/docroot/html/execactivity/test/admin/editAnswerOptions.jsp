@@ -56,7 +56,7 @@
 					        }
 						</script>
 						<aui:field-wrapper label="">
-							<liferay-ui:input-editor toolbarSet="slimmer" height="15"  name="<%=\"answer_\"+testanswer.getAnswerId() %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_\"+testanswer.getAnswerId() %>" initMethod="<%=\"initEditorAnswer_\"+testanswer.getAnswerId() %>" />
+							<liferay-ui:input-editor toolbarSet="actslimmer" height="15"  name="<%=\"answer_\"+testanswer.getAnswerId() %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_\"+testanswer.getAnswerId() %>" initMethod="<%=\"initEditorAnswer_\"+testanswer.getAnswerId() %>" />
 							<script type="text/javascript">
 						        function <portlet:namespace />initEditorAnswer_<%=testanswer.getAnswerId() %>() { 
 						            return "<%=JavaScriptUtil.markupToStringLiteral(testanswer.getAnswer())%>";

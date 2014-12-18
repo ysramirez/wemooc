@@ -124,3 +124,29 @@ CKEDITOR.config.toolbar_slimmer = [
 	['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
 	['Source', 'Link', 'Image', 'Table']
 ];
+
+
+CKEDITOR.config.toolbar_actslimmer = [
+	['FontSize', 'TextColor'],
+	['Bold', 'Italic', 'Underline', 'Strike'],
+	['Subscript', 'Superscript'],
+	['NumberedList','BulletedList'],
+	['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+	['Source', 'Link', 'Image', 'Table']
+];
+
+
+CKEDITOR.config.toolbar_actliferay = [
+	['Styles', 'FontSize', '-', 'TextColor', 'BGColor'],
+	['Bold', 'Italic', 'Underline', 'Strike'],
+	['Subscript', 'Superscript'],
+	'/',
+	['Undo', 'Redo', '-', 'Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'SelectAll', 'RemoveFormat'],
+	['Find', 'Replace', 'SpellChecker', 'Scayt'],
+	['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent'],
+	['JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock'],
+	'/',
+	['Source'],
+	['Link', 'Unlink', 'Anchor'],
+	['Image', 'Flash', 'Table', '-', 'Smiley', 'SpecialChar']
+];
