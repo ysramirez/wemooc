@@ -91,7 +91,7 @@
 		<liferay-ui:error key="execativity.test.error" message="execativity.test.error"/>
 		
 		<aui:field-wrapper label="execativity.editquestions.editquestion.enunciation">
-			<liferay-ui:input-editor toolbarSet="slimmer" name="text" width="80%" onChangeMethod="onChangeText" initMethod="initEditor"/>
+			<liferay-ui:input-editor toolbarSet="actslimmer" name="text" width="80%" onChangeMethod="onChangeText" initMethod="initEditor"/>
 			<%
 			String qText = "";
 			if(question != null) qText = question.getText();	

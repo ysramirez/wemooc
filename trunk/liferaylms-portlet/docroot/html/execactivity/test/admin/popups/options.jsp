@@ -18,7 +18,7 @@ Long iterator = ParamUtil.getLong(request, "iterator", -1);
 		        }
 			</script>
 			<aui:field-wrapper label="">
-				<liferay-ui:input-editor skipEditorLoading="true" toolbarSet="slimmer" height="15"  name="<%=\"answer_new\"+iterator %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_new\"+iterator %>" initMethod="<%=\"initEditorAnswer_new\"+iterator %>" />
+				<liferay-ui:input-editor skipEditorLoading="true" toolbarSet="actslimmer" height="15"  name="<%=\"answer_new\"+iterator %>" width="80%" onChangeMethod="<%=\"onChangeTextAnswer_new\"+iterator %>" initMethod="<%=\"initEditorAnswer_new\"+iterator %>" />
 				<script type="text/javascript">
 			        function <portlet:namespace />initEditorAnswer_new<%=iterator %>() { 
 			            return "";

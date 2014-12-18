@@ -343,7 +343,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<aui:field-wrapper label="text" name="DescripcionRichTxt" >
 			<div id="<portlet:namespace/>DescripcionRichTxt" ><%= ParamUtil.getString(request,"text", StringPool.BLANK) %></div>
 		</aui:field-wrapper>
-		<liferay-ui:input-editor name="DescripcionRichTxt" initMethod="initEditor"  />
+		<liferay-ui:input-editor toolbarSet="actliferay" name="DescripcionRichTxt" initMethod="initEditor"  />
 		<script type="text/javascript">
 	    <!--
 	

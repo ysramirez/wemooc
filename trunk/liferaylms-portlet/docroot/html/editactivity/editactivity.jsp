@@ -579,7 +579,7 @@ Liferay.provide(
 		</script>
 	    
 		<aui:field-wrapper label="description" name="description">
-			<liferay-ui:input-editor name="description" width="100%" onChangeMethod="onChangeDescription" />
+			<liferay-ui:input-editor toolbarSet="actliferay" name="description" width="100%" onChangeMethod="onChangeDescription" />
 			<script type="text/javascript">
 		        function <portlet:namespace />initEditor() 
 		        { 
