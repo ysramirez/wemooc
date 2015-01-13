@@ -73,7 +73,7 @@
 %>
 
 <h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale())%></h2>
-<h3 class="description-h3"><liferay-ui:message key="description" /></h3>
+<%--<h3 class="description-h3"><liferay-ui:message key="description" /></h3> --%>
 <div class="description"><%=activity.getDescription(themeDisplay.getLocale())%></div>
 
 <%
@@ -128,21 +128,14 @@
 	long activityTimestamp=0;
 	long timestamp=0;
 	
-	LearningActivityTry learningTry = LearningActivityTryLocalServiceUtil.getLearningActivityTryNotFinishedByActUser(actId,userId);
+	LearningActivityTry learningTry = LearningActivityTryLocalServiceUtil.createOrDuplicateLast(actId, serviceContext);
+
+	activityTimestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"timeStamp"));
+	timestamp=activityTimestamp*1000 - (new Date().getTime() - learningTry.getStartDate().getTime());
 	
-	//Comprobar si tenemos un try sin fecha de fin, para continuar en ese try.
-	if(learningTry == null)
-	{
-		learningTry =LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
-		isNewTry = true;
-	}
-	else
-	{
-		activityTimestamp = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"timeStamp"));
-		timestamp=activityTimestamp*1000 - (new Date().getTime() - learningTry.getStartDate().getTime());
-	}
 	
-	if((activityTimestamp!=0)&&(timestamp<0)){
+	if((activityTimestamp!=0)&&(timestamp<0))
+	{
 		request.setAttribute("learningActivity",activity);
 		request.setAttribute("larntry",learningTry);
 %>
@@ -157,7 +150,10 @@
 	Object [] arg =  new Object [] { activity.getPasspuntuation() };
 %>
 
-<% if ("true".equals(openWindow)) { %>
+<% if ("true".equals(openWindow)) { 
+	String windowWith=LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"windowWith","1024");
+	String height=LearningActivityLocalServiceUtil.getExtraContentValue(activity.getActId(),"height","768");
+%>
 				<liferay-portlet:renderURL var="scormwindow" windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 					<liferay-portlet:param name="jspPage" value="/html/scormactivity/window.jsp"/>
 					<liferay-portlet:param name="latId" value="<%= String.valueOf(learningTry.getLatId()) %>"/>
@@ -210,7 +206,7 @@
 						if (e != null && window.<portlet:namespace />ventana != null && !window.<portlet:namespace />ventana.closed) {
 							window.<portlet:namespace />ventana.close();
 						}
-						window.<portlet:namespace />ventana = window.open('','scormactivity','height=768,width=1024,scrollbars=0');
+						window.<portlet:namespace />ventana = window.open('','scormactivity','height=<%=height%>,width=<%=windowWith%>,scrollbars=0,resizable=yes,menubar=no,toolbar=no,location=no,');
 						if (window.<portlet:namespace />ventana != null) {
 							window.<portlet:namespace />ventana.location = '<%= scormwindow %>';
 							_checkPopupBlocker(window.<portlet:namespace />ventana);
