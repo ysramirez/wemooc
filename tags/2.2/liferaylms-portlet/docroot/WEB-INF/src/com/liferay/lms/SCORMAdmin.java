@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.List;
@@ -110,10 +111,22 @@ public class SCORMAdmin extends MVCPortlet
 						if (zipFile.getEntry("imsmanifest.xml") == null) {
 							SessionErrors.add(actRequest, "scormadmin.error.nomanifest");
 						}
+						else
+						{
+							ZipEntry manifest=zipFile.getEntry("imsmanifest.xml");
+							InputStream manfiestStream=zipFile.getInputStream(manifest);
+							Document imsdocument = SAXReaderUtil.read(manfiestStream);
+					
+						}
 					} catch (ZipException e) {
 						e.printStackTrace();
 					} catch (IOException e) {
 						e.printStackTrace();
+					}
+					catch (DocumentException e) {
+						e.printStackTrace();
+						SessionErrors.add(actRequest, "scormadmin.error.nomanifestincorrect");
+						
 					}
 				}
 			} else {
