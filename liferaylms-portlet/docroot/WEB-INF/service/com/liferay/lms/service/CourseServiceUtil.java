@@ -127,6 +127,16 @@ public class CourseServiceUtil {
 		getService().addStudentToCourse(courseId, login);
 	}
 
+	public static void addStudentToCourseWithDates(long courseId,
+		java.lang.String login, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.addStudentToCourseWithDates(courseId, login, allowStartDate,
+			allowFinishDate);
+	}
+
 	public static void addTeacherToCourse(long courseId, java.lang.String login)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {

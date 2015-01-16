@@ -19,6 +19,7 @@ Liferay.Service.registerClass(
 		getCourseTeachers: true,
 		getCourseEditors: true,
 		addStudentToCourse: true,
+		addStudentToCourseWithDates: true,
 		addTeacherToCourse: true,
 		addEditorToCourse: true,
 		removeStudentFromCourse: true,

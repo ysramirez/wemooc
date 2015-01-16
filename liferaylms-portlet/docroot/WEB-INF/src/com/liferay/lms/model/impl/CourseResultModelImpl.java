@@ -70,9 +70,11 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 			{ "comments", Types.VARCHAR },
 			{ "userId", Types.BIGINT },
 			{ "passed", Types.BOOLEAN },
-			{ "passedDate", Types.TIMESTAMP }
+			{ "passedDate", Types.TIMESTAMP },
+			{ "allowStartDate", Types.TIMESTAMP },
+			{ "allowFinishDate", Types.TIMESTAMP }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_CourseResult (crId LONG not null primary key,courseId LONG,result LONG,comments VARCHAR(75) null,userId LONG,passed BOOLEAN,passedDate DATE null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_CourseResult (crId LONG not null primary key,courseId LONG,result LONG,comments VARCHAR(75) null,userId LONG,passed BOOLEAN,passedDate DATE null,allowStartDate DATE null,allowFinishDate DATE null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_CourseResult";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -110,6 +112,8 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		model.setUserId(soapModel.getUserId());
 		model.setPassed(soapModel.getPassed());
 		model.setPassedDate(soapModel.getPassedDate());
+		model.setAllowStartDate(soapModel.getAllowStartDate());
+		model.setAllowFinishDate(soapModel.getAllowFinishDate());
 
 		return model;
 	}
@@ -175,6 +179,8 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
 		attributes.put("passedDate", getPassedDate());
+		attributes.put("allowStartDate", getAllowStartDate());
+		attributes.put("allowFinishDate", getAllowFinishDate());
 
 		return attributes;
 	}
@@ -221,6 +227,18 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 
 		if (passedDate != null) {
 			setPassedDate(passedDate);
+		}
+
+		Date allowStartDate = (Date)attributes.get("allowStartDate");
+
+		if (allowStartDate != null) {
+			setAllowStartDate(allowStartDate);
+		}
+
+		Date allowFinishDate = (Date)attributes.get("allowFinishDate");
+
+		if (allowFinishDate != null) {
+			setAllowFinishDate(allowFinishDate);
 		}
 	}
 
@@ -333,6 +351,22 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		_passedDate = passedDate;
 	}
 
+	public Date getAllowStartDate() {
+		return _allowStartDate;
+	}
+
+	public void setAllowStartDate(Date allowStartDate) {
+		_allowStartDate = allowStartDate;
+	}
+
+	public Date getAllowFinishDate() {
+		return _allowFinishDate;
+	}
+
+	public void setAllowFinishDate(Date allowFinishDate) {
+		_allowFinishDate = allowFinishDate;
+	}
+
 	public long getColumnBitmask() {
 		return _columnBitmask;
 	}
@@ -372,6 +406,8 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		courseResultImpl.setUserId(getUserId());
 		courseResultImpl.setPassed(getPassed());
 		courseResultImpl.setPassedDate(getPassedDate());
+		courseResultImpl.setAllowStartDate(getAllowStartDate());
+		courseResultImpl.setAllowFinishDate(getAllowFinishDate());
 
 		courseResultImpl.resetOriginalValues();
 
@@ -472,12 +508,30 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 			courseResultCacheModel.passedDate = Long.MIN_VALUE;
 		}
 
+		Date allowStartDate = getAllowStartDate();
+
+		if (allowStartDate != null) {
+			courseResultCacheModel.allowStartDate = allowStartDate.getTime();
+		}
+		else {
+			courseResultCacheModel.allowStartDate = Long.MIN_VALUE;
+		}
+
+		Date allowFinishDate = getAllowFinishDate();
+
+		if (allowFinishDate != null) {
+			courseResultCacheModel.allowFinishDate = allowFinishDate.getTime();
+		}
+		else {
+			courseResultCacheModel.allowFinishDate = Long.MIN_VALUE;
+		}
+
 		return courseResultCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{crId=");
 		sb.append(getCrId());
@@ -493,13 +547,17 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 		sb.append(getPassed());
 		sb.append(", passedDate=");
 		sb.append(getPassedDate());
+		sb.append(", allowStartDate=");
+		sb.append(getAllowStartDate());
+		sb.append(", allowFinishDate=");
+		sb.append(getAllowFinishDate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.CourseResult");
@@ -533,6 +591,14 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 			"<column><column-name>passedDate</column-name><column-value><![CDATA[");
 		sb.append(getPassedDate());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>allowStartDate</column-name><column-value><![CDATA[");
+		sb.append(getAllowStartDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>allowFinishDate</column-name><column-value><![CDATA[");
+		sb.append(getAllowFinishDate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -557,6 +623,8 @@ public class CourseResultModelImpl extends BaseModelImpl<CourseResult>
 	private boolean _originalPassed;
 	private boolean _setOriginalPassed;
 	private Date _passedDate;
+	private Date _allowStartDate;
+	private Date _allowFinishDate;
 	private long _columnBitmask;
 	private CourseResult _escapedModelProxy;
 }

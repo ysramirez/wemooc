@@ -297,6 +297,14 @@ public class CourseResultLocalServiceUtil {
 		return getService().create(courseId, userId);
 	}
 
+	public static com.liferay.lms.model.CourseResult create(long courseId,
+		long userId, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getService()
+				   .create(courseId, userId, allowStartDate, allowFinishDate);
+	}
+
 	public static void update(com.liferay.lms.model.CourseResult cresult)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		getService().update(cresult);

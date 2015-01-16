@@ -109,6 +109,12 @@ public interface CourseService extends BaseService, InvokableService {
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;
 
+	public void addStudentToCourseWithDates(long courseId,
+		java.lang.String login, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException;
+
 	public void addTeacherToCourse(long courseId, java.lang.String login)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException;

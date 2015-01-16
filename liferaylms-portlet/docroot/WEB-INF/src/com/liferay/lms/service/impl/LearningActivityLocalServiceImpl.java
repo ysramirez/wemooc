@@ -111,7 +111,6 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		{
 			return true;
 		}
-
 		if(larn.getPrecedence()!=0)
 		{
 			return !LearningActivityResultLocalServiceUtil.userPassed(larn.getPrecedence(), userId);

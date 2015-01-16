@@ -260,6 +260,11 @@ public interface CourseResultLocalService extends BaseLocalService,
 	public com.liferay.lms.model.CourseResult create(long courseId, long userId)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
+	public com.liferay.lms.model.CourseResult create(long courseId,
+		long userId, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
 	public void update(com.liferay.lms.model.CourseResult cresult)
 		throws com.liferay.portal.kernel.exception.SystemException;
 

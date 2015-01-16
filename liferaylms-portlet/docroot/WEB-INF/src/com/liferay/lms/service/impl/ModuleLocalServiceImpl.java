@@ -22,10 +22,12 @@ import com.liferay.counter.service.CounterLocalServiceUtil;
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LearningActivityTry;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.service.ClpSerializer;
+import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
@@ -428,7 +430,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		{
 			return true;
 		}
-
+       
 		if(!((theModule.getEndDate()!=null&&theModule.getEndDate().after(now)) &&(theModule.getStartDate()!=null&&theModule.getStartDate().before(now))))
 		{
 			return true;
@@ -437,6 +439,14 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		{
 			return !isUserPassed(theModule.getPrecedence(), userId);
 		}
+		CourseResult courseResult=CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), userId);
+        if(courseResult!=null)
+        {
+	        if(((courseResult.getAllowFinishDate()!=null&&courseResult.getAllowFinishDate().before(now)) ||(courseResult.getAllowStartDate()!=null&&courseResult.getAllowStartDate().after(now))))
+			{
+				return true;
+			}
+        }
 		return false;
 	}
 	public long countByGroupId(long groupId) throws SystemException

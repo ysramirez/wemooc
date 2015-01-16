@@ -181,6 +181,34 @@ public interface CourseResultModel extends BaseModel<CourseResult> {
 	 */
 	public void setPassedDate(Date passedDate);
 
+	/**
+	 * Returns the allow start date of this course result.
+	 *
+	 * @return the allow start date of this course result
+	 */
+	public Date getAllowStartDate();
+
+	/**
+	 * Sets the allow start date of this course result.
+	 *
+	 * @param allowStartDate the allow start date of this course result
+	 */
+	public void setAllowStartDate(Date allowStartDate);
+
+	/**
+	 * Returns the allow finish date of this course result.
+	 *
+	 * @return the allow finish date of this course result
+	 */
+	public Date getAllowFinishDate();
+
+	/**
+	 * Sets the allow finish date of this course result.
+	 *
+	 * @param allowFinishDate the allow finish date of this course result
+	 */
+	public void setAllowFinishDate(Date allowFinishDate);
+
 	public boolean isNew();
 
 	public void setNew(boolean n);
