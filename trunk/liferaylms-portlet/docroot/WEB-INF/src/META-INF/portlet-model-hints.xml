@@ -94,6 +94,8 @@
 		<field name="userId" type="long" />
 		<field name="passed" type="boolean" />
 		<field name="passedDate" type="Date" />
+		<field name="allowStartDate" type="Date" />
+		<field name="allowFinishDate" type="Date" />
 	</model>
 	<model name="com.liferay.lms.model.LearningActivity">
 		<field name="uuid" type="String" />

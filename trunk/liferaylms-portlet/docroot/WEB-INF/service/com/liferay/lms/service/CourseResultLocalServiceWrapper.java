@@ -290,6 +290,14 @@ public class CourseResultLocalServiceWrapper implements CourseResultLocalService
 		return _courseResultLocalService.create(courseId, userId);
 	}
 
+	public com.liferay.lms.model.CourseResult create(long courseId,
+		long userId, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return _courseResultLocalService.create(courseId, userId,
+			allowStartDate, allowFinishDate);
+	}
+
 	public void update(com.liferay.lms.model.CourseResult cresult)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		_courseResultLocalService.update(cresult);

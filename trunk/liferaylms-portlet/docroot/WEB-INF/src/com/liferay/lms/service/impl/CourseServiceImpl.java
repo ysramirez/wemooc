@@ -225,7 +225,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 		Course course=courseLocalService.getCourse(courseId);
 		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
 		{
-			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
+			User user = userLocalService.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
 				sendEmail(user,course);
@@ -238,6 +238,36 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 			
 		 
+		}
+	}
+	@JSONWebService
+	public void addStudentToCourseWithDates(long courseId,String login,Date allowStartDate,Date allowFinishDate) throws PortalException, SystemException
+	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
+			User user = userLocalService.getUserByScreenName(serviceContext.getCompanyId(), login);
+			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
+				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
+				sendEmail(user,course);
+			}
+			
+			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
+					course.getGroupCreatedId(), RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER).getRoleId());
+			CourseResult courseResult=courseResultLocalService.getCourseResultByCourseAndUser(courseId, user.getUserId());
+			if(courseResult==null)
+			{
+				courseResultLocalService.create(courseId, user.getUserId(), allowStartDate, allowFinishDate);
+			}
+			else
+			{
+				courseResult.setAllowStartDate(allowStartDate);
+				courseResult.setAllowFinishDate(allowFinishDate);
+				courseResultLocalService.updateCourseResult(courseResult);
+			}
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);		 
 		}
 	}
 	@JSONWebService

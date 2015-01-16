@@ -103,7 +103,21 @@ public class CourseResultLocalServiceImpl
 
 		return courseResult;
 	}
-	
+	public CourseResult create(long courseId, long userId,Date allowStartDate,Date allowFinishDate) throws SystemException
+	{
+
+		CourseResult courseResult=courseResultPersistence.create(counterLocalService.increment(CourseResult.class.getName()));
+		courseResult.setUserId(userId);
+		courseResult.setCourseId(courseId);
+		courseResult.setResult(0);
+		courseResult.setPassed(false);
+		courseResult.setPassedDate(null);
+		courseResult.setAllowStartDate(allowStartDate);
+		courseResult.setAllowFinishDate(allowFinishDate);
+		courseResultPersistence.update(courseResult, false);
+
+		return courseResult;
+	}
 	public void update(CourseResult cresult) throws SystemException
 	{
 		if(cresult.getPassed()){

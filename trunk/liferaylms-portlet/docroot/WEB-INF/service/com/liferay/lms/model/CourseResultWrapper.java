@@ -53,6 +53,8 @@ public class CourseResultWrapper implements CourseResult,
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
 		attributes.put("passedDate", getPassedDate());
+		attributes.put("allowStartDate", getAllowStartDate());
+		attributes.put("allowFinishDate", getAllowFinishDate());
 
 		return attributes;
 	}
@@ -98,6 +100,18 @@ public class CourseResultWrapper implements CourseResult,
 
 		if (passedDate != null) {
 			setPassedDate(passedDate);
+		}
+
+		Date allowStartDate = (Date)attributes.get("allowStartDate");
+
+		if (allowStartDate != null) {
+			setAllowStartDate(allowStartDate);
+		}
+
+		Date allowFinishDate = (Date)attributes.get("allowFinishDate");
+
+		if (allowFinishDate != null) {
+			setAllowFinishDate(allowFinishDate);
 		}
 	}
 
@@ -272,6 +286,42 @@ public class CourseResultWrapper implements CourseResult,
 	*/
 	public void setPassedDate(java.util.Date passedDate) {
 		_courseResult.setPassedDate(passedDate);
+	}
+
+	/**
+	* Returns the allow start date of this course result.
+	*
+	* @return the allow start date of this course result
+	*/
+	public java.util.Date getAllowStartDate() {
+		return _courseResult.getAllowStartDate();
+	}
+
+	/**
+	* Sets the allow start date of this course result.
+	*
+	* @param allowStartDate the allow start date of this course result
+	*/
+	public void setAllowStartDate(java.util.Date allowStartDate) {
+		_courseResult.setAllowStartDate(allowStartDate);
+	}
+
+	/**
+	* Returns the allow finish date of this course result.
+	*
+	* @return the allow finish date of this course result
+	*/
+	public java.util.Date getAllowFinishDate() {
+		return _courseResult.getAllowFinishDate();
+	}
+
+	/**
+	* Sets the allow finish date of this course result.
+	*
+	* @param allowFinishDate the allow finish date of this course result
+	*/
+	public void setAllowFinishDate(java.util.Date allowFinishDate) {
+		_courseResult.setAllowFinishDate(allowFinishDate);
 	}
 
 	public boolean isNew() {

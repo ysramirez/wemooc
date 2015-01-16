@@ -74,6 +74,8 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		attributes.put("userId", getUserId());
 		attributes.put("passed", getPassed());
 		attributes.put("passedDate", getPassedDate());
+		attributes.put("allowStartDate", getAllowStartDate());
+		attributes.put("allowFinishDate", getAllowFinishDate());
 
 		return attributes;
 	}
@@ -120,6 +122,18 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 
 		if (passedDate != null) {
 			setPassedDate(passedDate);
+		}
+
+		Date allowStartDate = (Date)attributes.get("allowStartDate");
+
+		if (allowStartDate != null) {
+			setAllowStartDate(allowStartDate);
+		}
+
+		Date allowFinishDate = (Date)attributes.get("allowFinishDate");
+
+		if (allowFinishDate != null) {
+			setAllowFinishDate(allowFinishDate);
 		}
 	}
 
@@ -191,6 +205,22 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		_passedDate = passedDate;
 	}
 
+	public Date getAllowStartDate() {
+		return _allowStartDate;
+	}
+
+	public void setAllowStartDate(Date allowStartDate) {
+		_allowStartDate = allowStartDate;
+	}
+
+	public Date getAllowFinishDate() {
+		return _allowFinishDate;
+	}
+
+	public void setAllowFinishDate(Date allowFinishDate) {
+		_allowFinishDate = allowFinishDate;
+	}
+
 	public BaseModel<?> getCourseResultRemoteModel() {
 		return _courseResultRemoteModel;
 	}
@@ -225,6 +255,8 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		clone.setUserId(getUserId());
 		clone.setPassed(getPassed());
 		clone.setPassedDate(getPassedDate());
+		clone.setAllowStartDate(getAllowStartDate());
+		clone.setAllowFinishDate(getAllowFinishDate());
 
 		return clone;
 	}
@@ -275,7 +307,7 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(15);
+		StringBundler sb = new StringBundler(19);
 
 		sb.append("{crId=");
 		sb.append(getCrId());
@@ -291,13 +323,17 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 		sb.append(getPassed());
 		sb.append(", passedDate=");
 		sb.append(getPassedDate());
+		sb.append(", allowStartDate=");
+		sb.append(getAllowStartDate());
+		sb.append(", allowFinishDate=");
+		sb.append(getAllowFinishDate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(31);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.CourseResult");
@@ -331,6 +367,14 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 			"<column><column-name>passedDate</column-name><column-value><![CDATA[");
 		sb.append(getPassedDate());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>allowStartDate</column-name><column-value><![CDATA[");
+		sb.append(getAllowStartDate());
+		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>allowFinishDate</column-name><column-value><![CDATA[");
+		sb.append(getAllowFinishDate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -345,5 +389,7 @@ public class CourseResultClp extends BaseModelImpl<CourseResult>
 	private String _userUuid;
 	private boolean _passed;
 	private Date _passedDate;
+	private Date _allowStartDate;
+	private Date _allowFinishDate;
 	private BaseModel<?> _courseResultRemoteModel;
 }

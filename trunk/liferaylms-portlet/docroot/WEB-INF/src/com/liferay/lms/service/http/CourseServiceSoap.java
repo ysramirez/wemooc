@@ -189,6 +189,20 @@ public class CourseServiceSoap {
 		}
 	}
 
+	public static void addStudentToCourseWithDates(long courseId,
+		java.lang.String login, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate) throws RemoteException {
+		try {
+			CourseServiceUtil.addStudentToCourseWithDates(courseId, login,
+				allowStartDate, allowFinishDate);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static void addTeacherToCourse(long courseId, java.lang.String login)
 		throws RemoteException {
 		try {

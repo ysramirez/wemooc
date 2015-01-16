@@ -147,6 +147,12 @@
 			<basic name="passedDate">
 				<temporal>TIMESTAMP</temporal>
 			</basic>
+			<basic name="allowStartDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
+			<basic name="allowFinishDate">
+				<temporal>TIMESTAMP</temporal>
+			</basic>
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />
