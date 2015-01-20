@@ -1443,6 +1443,8 @@ public class AuditSendMailsPersistenceImpl extends BasePersistenceImpl<AuditSend
 
 	@BeanReference(type = AuditSendMailsPersistence.class)
 	protected AuditSendMailsPersistence auditSendMailsPersistence;
+	@BeanReference(type = MailJobPersistence.class)
+	protected MailJobPersistence mailJobPersistence;
 	@BeanReference(type = MailTemplatePersistence.class)
 	protected MailTemplatePersistence mailTemplatePersistence;
 	@BeanReference(type = ResourcePersistence.class)
