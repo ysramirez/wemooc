@@ -117,7 +117,21 @@ modelVar="user">
 </liferay-ui:search-container-column-text>
 <liferay-ui:search-container-column-text>
 
+<liferay-ui:icon-menu>
+<%if(roleId==commmanager.getRoleId())
+{%>
+<liferay-portlet:renderURL  var="editInscriptionDatesURL"  windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+	<liferay-portlet:param name="jspPage" value="/html/courseadmin/editinscriptiondates.jsp"/>
+	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"/>
+	<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>
+</liferay-portlet:renderURL>
 
+<%
+String inscrURL="javascript:"+renderResponse.getNamespace() + "showPopupInsctiptionDates('"+editInscriptionDatesURL+"');";
+%>
+<liferay-ui:icon image="calendar" url='<%=inscrURL %>' label="dates"></liferay-ui:icon>
+<%}
+%>
 <liferay-portlet:actionURL name="removeUserRole" var="removeUserRoleURL">
 	<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"/>
 	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"/>
@@ -130,8 +144,39 @@ modelVar="user">
 	<liferay-portlet:param name="tabs1" value="<%=tab %>"/>
 </liferay-portlet:actionURL>
 <liferay-ui:icon-delete url="<%=removeUserRoleURL+\"&cur=\"+searchContainer.getCur() %>" label="delete"></liferay-ui:icon-delete>
+</liferay-ui:icon-menu>
 </liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
 <liferay-ui:search-iterator />
 
 </liferay-ui:search-container>
+<script type="text/javascript">
+<!--
+
+	function <portlet:namespace/>showPopupInsctiptionDates(inscurl)
+    {
+		AUI().use('node','aui-dialog', function(A){
+			new A.Dialog({
+				id:'<portlet:namespace />showPopupInsctiptionDates',
+	            title: '<liferay-ui:message key="dates" />',
+	            modal: true,
+	            centered: true,
+	            resizable: true,
+	            width: 600,
+	            height: 400,
+	            destroyOnClose: false,
+	            after: {   
+		          	close: function(event){
+		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0});
+	            	}
+	            }
+	        }).plug(A.Plugin.IO, {
+	            uri: inscurl,
+	            parseContent: true
+	        }).render().show();   
+		}); 
+
+    }
+    
+//-->
+</script>

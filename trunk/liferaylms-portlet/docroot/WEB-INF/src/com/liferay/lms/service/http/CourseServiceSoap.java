@@ -203,6 +203,34 @@ public class CourseServiceSoap {
 		}
 	}
 
+	public static void editUserInscriptionDates(long courseId,
+		java.lang.String login, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate) throws RemoteException {
+		try {
+			CourseServiceUtil.editUserInscriptionDates(courseId, login,
+				allowStartDate, allowFinishDate);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static void editUserInscriptionDates(long courseId, long userId,
+		java.util.Date allowStartDate, java.util.Date allowFinishDate)
+		throws RemoteException {
+		try {
+			CourseServiceUtil.editUserInscriptionDates(courseId, userId,
+				allowStartDate, allowFinishDate);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
 	public static void addTeacherToCourse(long courseId, java.lang.String login)
 		throws RemoteException {
 		try {
