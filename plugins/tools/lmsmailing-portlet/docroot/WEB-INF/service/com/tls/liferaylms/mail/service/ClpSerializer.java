@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.model.BaseModel;
 
 import com.tls.liferaylms.mail.model.AuditSendMailsClp;
+import com.tls.liferaylms.mail.model.MailJobClp;
 import com.tls.liferaylms.mail.model.MailTemplateClp;
 
 import java.io.ObjectInputStream;
@@ -107,6 +108,10 @@ public class ClpSerializer {
 			return translateInputAuditSendMails(oldModel);
 		}
 
+		if (oldModelClassName.equals(MailJobClp.class.getName())) {
+			return translateInputMailJob(oldModel);
+		}
+
 		if (oldModelClassName.equals(MailTemplateClp.class.getName())) {
 			return translateInputMailTemplate(oldModel);
 		}
@@ -130,6 +135,16 @@ public class ClpSerializer {
 		AuditSendMailsClp oldClpModel = (AuditSendMailsClp)oldModel;
 
 		BaseModel<?> newModel = oldClpModel.getAuditSendMailsRemoteModel();
+
+		newModel.setModelAttributes(oldClpModel.getModelAttributes());
+
+		return newModel;
+	}
+
+	public static Object translateInputMailJob(BaseModel<?> oldModel) {
+		MailJobClp oldClpModel = (MailJobClp)oldModel;
+
+		BaseModel<?> newModel = oldClpModel.getMailJobRemoteModel();
 
 		newModel.setModelAttributes(oldClpModel.getModelAttributes());
 
@@ -166,6 +181,11 @@ public class ClpSerializer {
 		if (oldModelClassName.equals(
 					"com.tls.liferaylms.mail.model.impl.AuditSendMailsImpl")) {
 			return translateOutputAuditSendMails(oldModel);
+		}
+
+		if (oldModelClassName.equals(
+					"com.tls.liferaylms.mail.model.impl.MailJobImpl")) {
+			return translateOutputMailJob(oldModel);
 		}
 
 		if (oldModelClassName.equals(
@@ -258,6 +278,10 @@ public class ClpSerializer {
 			return new com.tls.liferaylms.mail.NoSuchAuditSendMailsException();
 		}
 
+		if (className.equals("com.tls.liferaylms.mail.NoSuchMailJobException")) {
+			return new com.tls.liferaylms.mail.NoSuchMailJobException();
+		}
+
 		if (className.equals(
 					"com.tls.liferaylms.mail.NoSuchMailTemplateException")) {
 			return new com.tls.liferaylms.mail.NoSuchMailTemplateException();
@@ -272,6 +296,16 @@ public class ClpSerializer {
 		newModel.setModelAttributes(oldModel.getModelAttributes());
 
 		newModel.setAuditSendMailsRemoteModel(oldModel);
+
+		return newModel;
+	}
+
+	public static Object translateOutputMailJob(BaseModel<?> oldModel) {
+		MailJobClp newModel = new MailJobClp();
+
+		newModel.setModelAttributes(oldModel.getModelAttributes());
+
+		newModel.setMailJobRemoteModel(oldModel);
 
 		return newModel;
 	}
