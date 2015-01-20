@@ -124,6 +124,22 @@ public class CourseServiceWrapper implements CourseService,
 			allowStartDate, allowFinishDate);
 	}
 
+	public void editUserInscriptionDates(long courseId, java.lang.String login,
+		java.util.Date allowStartDate, java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_courseService.editUserInscriptionDates(courseId, login,
+			allowStartDate, allowFinishDate);
+	}
+
+	public void editUserInscriptionDates(long courseId, long userId,
+		java.util.Date allowStartDate, java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		_courseService.editUserInscriptionDates(courseId, userId,
+			allowStartDate, allowFinishDate);
+	}
+
 	public void addTeacherToCourse(long courseId, java.lang.String login)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {

@@ -235,7 +235,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					course.getGroupCreatedId(), RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER).getRoleId());
 
 			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.REGISTER, null);
 			
 		 
 		}
@@ -255,6 +255,39 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER).getRoleId());
+			CourseResult courseResult=courseResultLocalService.getCourseResultByCourseAndUser(courseId, user.getUserId());
+			if(courseResult==null)
+			{
+				courseResultLocalService.create(courseId, user.getUserId(), allowStartDate, allowFinishDate);
+			}
+			else
+			{
+				courseResult.setAllowStartDate(allowStartDate);
+				courseResult.setAllowFinishDate(allowFinishDate);
+				courseResultLocalService.updateCourseResult(courseResult);
+			}
+			//auditing
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.REGISTER, null);		 
+		}
+	}
+	@JSONWebService
+	public void editUserInscriptionDates(long courseId,String login,Date allowStartDate,Date allowFinishDate) throws PortalException, SystemException
+	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		
+		User user=userLocalService.getUserByScreenName(serviceContext.getCompanyId(), login);
+		editUserInscriptionDates(courseId, user.getUserId(), allowStartDate, allowFinishDate);
+	}
+	public void editUserInscriptionDates(long courseId,long userId,Date allowStartDate,Date allowFinishDate) throws PortalException, SystemException
+	{
+		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
+		Course course=courseLocalService.getCourse(courseId);
+		if(getPermissionChecker().hasPermission(course.getGroupId(),  Course.class.getName(),courseId,"ASSIGN_MEMBERS")&& ! course.isClosed())
+		{
+			User user = userLocalService.getUser(userId);
+			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
+				return;
+			}		
 			CourseResult courseResult=courseResultLocalService.getCourseResultByCourseAndUser(courseId, user.getUserId());
 			if(courseResult==null)
 			{
@@ -287,7 +320,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
 
 			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.REGISTER, null);
 			
 		
 		}
@@ -309,7 +342,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
 
 			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.REGISTER, null);
 		
 		}
 	}
@@ -325,7 +358,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			GroupLocalServiceUtil.unsetUserGroups(user.getUserId(),new long[] { course.getGroupCreatedId() });
 
 			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UNREGISTER, null);
 			
 		
 		}
@@ -343,7 +376,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
 
 			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UNREGISTER, null);
 			
 		
 		}
@@ -361,7 +394,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
 
 			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
+			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), Course.class.getName(), course.getCourseId(), serviceContext.getUserId(), AuditConstants.UNREGISTER, null);
 			
 		
 		}

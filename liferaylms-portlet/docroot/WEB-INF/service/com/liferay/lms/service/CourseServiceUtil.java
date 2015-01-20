@@ -137,6 +137,25 @@ public class CourseServiceUtil {
 			allowFinishDate);
 	}
 
+	public static void editUserInscriptionDates(long courseId,
+		java.lang.String login, java.util.Date allowStartDate,
+		java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.editUserInscriptionDates(courseId, login, allowStartDate,
+			allowFinishDate);
+	}
+
+	public static void editUserInscriptionDates(long courseId, long userId,
+		java.util.Date allowStartDate, java.util.Date allowFinishDate)
+		throws com.liferay.portal.kernel.exception.PortalException,
+			com.liferay.portal.kernel.exception.SystemException {
+		getService()
+			.editUserInscriptionDates(courseId, userId, allowStartDate,
+			allowFinishDate);
+	}
+
 	public static void addTeacherToCourse(long courseId, java.lang.String login)
 		throws com.liferay.portal.kernel.exception.PortalException,
 			com.liferay.portal.kernel.exception.SystemException {

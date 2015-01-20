@@ -41,6 +41,7 @@ import com.liferay.lms.model.CourseCompetence;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseCompetenceLocalServiceUtil;
 import com.liferay.lms.service.CourseLocalServiceUtil;
+import com.liferay.lms.service.CourseServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.LARFileException;
@@ -650,7 +651,8 @@ public class CourseAdmin extends MVCPortlet {
 	}
 
 	public void addUserRole(ActionRequest actionRequest,
-			ActionResponse actionResponse) throws Exception {
+			ActionResponse actionResponse) throws Exception 
+		{
 
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		long roleId = ParamUtil.getLong(actionRequest, "roleId", 0);
@@ -667,7 +669,43 @@ public class CourseAdmin extends MVCPortlet {
 				course.getGroupCreatedId(), roleId);
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 	}
+	
 
+	public void editInscriptionDates(ActionRequest actionRequest,
+			ActionResponse actionResponse) throws Exception 
+	{
+
+		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
+		long userId = ParamUtil.getLong(actionRequest, "userId", 0);
+		User user = UserLocalServiceUtil.getUser(userId);
+		Course course = CourseLocalServiceUtil.getCourse(courseId);
+		int startMonth = ParamUtil.getInteger(actionRequest, "startMon");
+		int startYear = ParamUtil.getInteger(actionRequest, "startYear");
+		int startDay = ParamUtil.getInteger(actionRequest, "startDay");
+		int stopMonth = ParamUtil.getInteger(actionRequest, "stopMon");
+		int stopYear = ParamUtil.getInteger(actionRequest, "stopYear");
+		int stopDay = ParamUtil.getInteger(actionRequest, "stopDay");
+		boolean startDateEnabled=ParamUtil.getBoolean(actionRequest,"startdate",false);
+		boolean stopDateEnabled=ParamUtil.getBoolean(actionRequest,"stopdate",false);
+		Date allowStartDate = PortalUtil.getDate(startMonth, startDay, startYear,
+				0, 0, user.getTimeZone(),
+				new EntryDisplayDateException());
+		
+		if(!startDateEnabled)
+	    {
+			allowStartDate=null;
+	    }
+		
+		Date allowFinishDate = PortalUtil.getDate(stopMonth, stopDay, stopYear,
+				0, 0, user.getTimeZone(),
+				new EntryDisplayDateException());
+		if(!stopDateEnabled)
+	    {
+			allowFinishDate=null;
+	    }
+		CourseServiceUtil.editUserInscriptionDates(courseId,userId,allowStartDate,allowFinishDate);
+		actionResponse.setRenderParameters(actionRequest.getParameterMap());
+	}
 	public void removeAll(ActionRequest actionRequest,ActionResponse actionResponse) throws Exception {
 		if(log.isDebugEnabled())log.debug("removeAll");
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
@@ -696,6 +734,7 @@ public class CourseAdmin extends MVCPortlet {
 				UserGroupRoleLocalServiceUtil.deleteUserGroupRoles(
 						new long[] { userGroupRole.getUserId() }, course.getGroupCreatedId(), roleId);
 			}
+			
 			actionResponse.setRenderParameters(actionRequest.getParameterMap());
 		}else{
 			long[] users = UserLocalServiceUtil.getGroupUserIds(course.getGroupCreatedId());
@@ -1283,3 +1322,4 @@ public class CourseAdmin extends MVCPortlet {
 		}
 	}
 }
+
