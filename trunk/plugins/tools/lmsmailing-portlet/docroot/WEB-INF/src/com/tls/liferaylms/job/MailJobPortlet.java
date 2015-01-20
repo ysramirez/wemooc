@@ -153,12 +153,12 @@ public class MailJobPortlet extends MVCPortlet {
 				include(editJSP, renderRequest, renderResponse);
 			}
 		}else{
-			ProcessMailJob pmj = new ProcessMailJob();
+			/*ProcessMailJob pmj = new ProcessMailJob();
 			try {
 				pmj.receive(null);
 			} catch (MessageListenerException e) {
 				e.printStackTrace();
-			}
+			}*/
 			
 			Integer delta = ParamUtil.getInteger(renderRequest, MailStringPool.DELTA_MAIL_JOB_PAG, 10);
 			Integer pag = ParamUtil.getInteger(renderRequest, MailStringPool.MAIL_JOB_PAG, 1);
