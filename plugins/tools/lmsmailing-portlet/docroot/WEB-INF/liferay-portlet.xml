@@ -25,6 +25,25 @@
 		</footer-portlet-javascript>
 		<css-class-wrapper>managetemplates-portlet</css-class-wrapper>
 	</portlet>
+	<portlet>
+		<portlet-name>mailjob</portlet-name>
+		<icon>/icon.png</icon>
+		<scheduler-entry>
+			<scheduler-description>Process Mail Jobs</scheduler-description>
+			<scheduler-event-listener-class>com.tls.liferaylms.job.ProcessMailJob</scheduler-event-listener-class>
+			<trigger>
+				<cron>
+					<cron-trigger-value>0 0 7 * * ?</cron-trigger-value>
+				</cron>
+			</trigger>
+		</scheduler-entry>
+		<instanceable>false</instanceable>
+		<header-portlet-css>/css/main.css</header-portlet-css>
+		<footer-portlet-javascript>
+			/js/main.js
+		</footer-portlet-javascript>
+		<css-class-wrapper>mailjob-portlet</css-class-wrapper>
+	</portlet>
 	<role-mapper>
 		<role-name>administrator</role-name>
 		<role-link>Administrator</role-link>

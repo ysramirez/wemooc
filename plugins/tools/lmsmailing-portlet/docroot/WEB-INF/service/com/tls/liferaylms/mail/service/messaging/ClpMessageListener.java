@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.messaging.Message;
 import com.tls.liferaylms.mail.service.AuditSendMailsLocalServiceUtil;
 import com.tls.liferaylms.mail.service.AuditSendMailsServiceUtil;
 import com.tls.liferaylms.mail.service.ClpSerializer;
+import com.tls.liferaylms.mail.service.MailJobLocalServiceUtil;
 import com.tls.liferaylms.mail.service.MailTemplateLocalServiceUtil;
 import com.tls.liferaylms.mail.service.MailTemplateServiceUtil;
 
@@ -41,6 +42,8 @@ public class ClpMessageListener extends BaseMessageListener {
 			AuditSendMailsLocalServiceUtil.clearService();
 
 			AuditSendMailsServiceUtil.clearService();
+			MailJobLocalServiceUtil.clearService();
+
 			MailTemplateLocalServiceUtil.clearService();
 
 			MailTemplateServiceUtil.clearService();

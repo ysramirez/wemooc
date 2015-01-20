@@ -19,10 +19,12 @@ import com.liferay.portal.model.Group;
 import com.liferay.portal.model.User;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.tls.liferaylms.job.ProcessMailJob;
 import com.tls.liferaylms.mail.model.AuditSendMails;
 import com.tls.liferaylms.mail.service.AuditSendMailsLocalServiceUtil;
 
 public class LmsMailMessageListener implements MessageListener {
+	private static Log log = LogFactoryUtil.getLog(LmsMailMessageListener.class);
 
 	@Override
 	public void receive(Message message) {
@@ -109,12 +111,14 @@ public class LmsMailMessageListener implements MessageListener {
 				
 				String calculatedsubject = createMessage(subject, portal, community, userName, UserLocalServiceUtil.getUserById(userId).getFullName(),url,urlcourse);
 				
-				// System.out.println("\n----------------------");
-				// System.out.println(" from: "+from);
-				// System.out.println(" to: "+toMail + " "+userName);
-				// System.out.println(" subject: "+subject);
-				// System.out.println(" body: \n"+body);
-				// System.out.println("----------------------");
+				if(log.isDebugEnabled()){
+					log.debug("\n----------------------");
+					log.debug(" from: "+from);
+					log.debug(" to: "+toMail + " "+userName);
+					log.debug(" subject: "+calculatedsubject);
+					log.debug(" body: \n"+calculatedBody);
+					log.debug("----------------------");
+				}
 	
 				
 				MailMessage mailm = new MailMessage(from, to, calculatedsubject, calculatedBody ,true);

@@ -108,13 +108,13 @@ public class AuditSendMailsLocalServiceClpInvoker {
 				"com.tls.liferaylms.mail.model.AuditSendMails", "boolean"
 			};
 
-		_methodName45 = "getBeanIdentifier";
+		_methodName49 = "getBeanIdentifier";
 
-		_methodParameterTypes45 = new String[] {  };
+		_methodParameterTypes49 = new String[] {  };
 
-		_methodName46 = "setBeanIdentifier";
+		_methodName50 = "setBeanIdentifier";
 
-		_methodParameterTypes46 = new String[] { "java.lang.String" };
+		_methodParameterTypes50 = new String[] { "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -212,13 +212,13 @@ public class AuditSendMailsLocalServiceClpInvoker {
 				((Boolean)arguments[1]).booleanValue());
 		}
 
-		if (_methodName45.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes45, parameterTypes)) {
+		if (_methodName49.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes49, parameterTypes)) {
 			return AuditSendMailsLocalServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName46.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes46, parameterTypes)) {
+		if (_methodName50.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes50, parameterTypes)) {
 			AuditSendMailsLocalServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
@@ -261,8 +261,8 @@ public class AuditSendMailsLocalServiceClpInvoker {
 	private String[] _methodParameterTypes15;
 	private String _methodName16;
 	private String[] _methodParameterTypes16;
-	private String _methodName45;
-	private String[] _methodParameterTypes45;
-	private String _methodName46;
-	private String[] _methodParameterTypes46;
+	private String _methodName49;
+	private String[] _methodParameterTypes49;
+	private String _methodName50;
+	private String[] _methodParameterTypes50;
 }

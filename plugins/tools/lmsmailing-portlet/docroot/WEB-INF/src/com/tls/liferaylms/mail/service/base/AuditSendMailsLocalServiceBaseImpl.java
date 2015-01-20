@@ -40,9 +40,11 @@ import com.liferay.portal.service.persistence.UserPersistence;
 import com.tls.liferaylms.mail.model.AuditSendMails;
 import com.tls.liferaylms.mail.service.AuditSendMailsLocalService;
 import com.tls.liferaylms.mail.service.AuditSendMailsService;
+import com.tls.liferaylms.mail.service.MailJobLocalService;
 import com.tls.liferaylms.mail.service.MailTemplateLocalService;
 import com.tls.liferaylms.mail.service.MailTemplateService;
 import com.tls.liferaylms.mail.service.persistence.AuditSendMailsPersistence;
+import com.tls.liferaylms.mail.service.persistence.MailJobPersistence;
 import com.tls.liferaylms.mail.service.persistence.MailTemplatePersistence;
 
 import java.io.Serializable;
@@ -348,6 +350,42 @@ public abstract class AuditSendMailsLocalServiceBaseImpl
 	}
 
 	/**
+	 * Returns the mail job local service.
+	 *
+	 * @return the mail job local service
+	 */
+	public MailJobLocalService getMailJobLocalService() {
+		return mailJobLocalService;
+	}
+
+	/**
+	 * Sets the mail job local service.
+	 *
+	 * @param mailJobLocalService the mail job local service
+	 */
+	public void setMailJobLocalService(MailJobLocalService mailJobLocalService) {
+		this.mailJobLocalService = mailJobLocalService;
+	}
+
+	/**
+	 * Returns the mail job persistence.
+	 *
+	 * @return the mail job persistence
+	 */
+	public MailJobPersistence getMailJobPersistence() {
+		return mailJobPersistence;
+	}
+
+	/**
+	 * Sets the mail job persistence.
+	 *
+	 * @param mailJobPersistence the mail job persistence
+	 */
+	public void setMailJobPersistence(MailJobPersistence mailJobPersistence) {
+		this.mailJobPersistence = mailJobPersistence;
+	}
+
+	/**
 	 * Returns the mail template local service.
 	 *
 	 * @return the mail template local service
@@ -596,6 +634,10 @@ public abstract class AuditSendMailsLocalServiceBaseImpl
 	protected AuditSendMailsService auditSendMailsService;
 	@BeanReference(type = AuditSendMailsPersistence.class)
 	protected AuditSendMailsPersistence auditSendMailsPersistence;
+	@BeanReference(type = MailJobLocalService.class)
+	protected MailJobLocalService mailJobLocalService;
+	@BeanReference(type = MailJobPersistence.class)
+	protected MailJobPersistence mailJobPersistence;
 	@BeanReference(type = MailTemplateLocalService.class)
 	protected MailTemplateLocalService mailTemplateLocalService;
 	@BeanReference(type = MailTemplateService.class)

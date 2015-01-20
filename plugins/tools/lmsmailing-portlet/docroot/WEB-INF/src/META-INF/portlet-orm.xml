@@ -25,6 +25,31 @@
 			<transient name="userUuid" />
 		</attributes>
 	</mapped-superclass>
+	<mapped-superclass class="com.tls.liferaylms.mail.model.impl.MailJobModelImpl">
+		<attributes>
+			<id name="idJob" />
+			<basic name="uuid">
+				<column name="UUID_" />
+			</basic>
+			<basic name="companyId" />
+			<basic name="groupId" />
+			<basic name="userId" />
+			<basic name="idTemplate" />
+			<basic name="conditionClassName" />
+			<basic name="conditionClassPK" />
+			<basic name="conditionStatus" />
+			<basic name="dateClassName" />
+			<basic name="dateClassPK" />
+			<basic name="dateReferenceDate" />
+			<basic name="dateShift" />
+			<basic name="teamId" />
+			<basic name="processed" />
+			<transient name="modelAttributes" />
+			<transient name="primaryKey" />
+			<transient name="primaryKeyObj" />
+			<transient name="userUuid" />
+		</attributes>
+	</mapped-superclass>
 	<mapped-superclass class="com.tls.liferaylms.mail.model.impl.MailTemplateModelImpl">
 		<attributes>
 			<id name="idTemplate" />
@@ -44,6 +69,10 @@
 	</mapped-superclass>
 	<entity class="com.tls.liferaylms.mail.model.impl.AuditSendMailsImpl" name="AuditSendMails">
 		<table name="lmsmail_AuditSendMails" />
+		<attributes />
+	</entity>
+	<entity class="com.tls.liferaylms.mail.model.impl.MailJobImpl" name="MailJob">
+		<table name="lmsmail_MailJob" />
 		<attributes />
 	</entity>
 	<entity class="com.tls.liferaylms.mail.model.impl.MailTemplateImpl" name="MailTemplate">

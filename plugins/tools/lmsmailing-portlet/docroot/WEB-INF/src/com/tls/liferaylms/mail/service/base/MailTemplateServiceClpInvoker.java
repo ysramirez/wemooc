@@ -23,24 +23,24 @@ import java.util.Arrays;
  */
 public class MailTemplateServiceClpInvoker {
 	public MailTemplateServiceClpInvoker() {
-		_methodName28 = "getBeanIdentifier";
+		_methodName32 = "getBeanIdentifier";
 
-		_methodParameterTypes28 = new String[] {  };
+		_methodParameterTypes32 = new String[] {  };
 
-		_methodName29 = "setBeanIdentifier";
+		_methodName33 = "setBeanIdentifier";
 
-		_methodParameterTypes29 = new String[] { "java.lang.String" };
+		_methodParameterTypes33 = new String[] { "java.lang.String" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
 		Object[] arguments) throws Throwable {
-		if (_methodName28.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes28, parameterTypes)) {
+		if (_methodName32.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes32, parameterTypes)) {
 			return MailTemplateServiceUtil.getBeanIdentifier();
 		}
 
-		if (_methodName29.equals(name) &&
-				Arrays.deepEquals(_methodParameterTypes29, parameterTypes)) {
+		if (_methodName33.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes33, parameterTypes)) {
 			MailTemplateServiceUtil.setBeanIdentifier((java.lang.String)arguments[0]);
 
 			return null;
@@ -49,8 +49,8 @@ public class MailTemplateServiceClpInvoker {
 		throw new UnsupportedOperationException();
 	}
 
-	private String _methodName28;
-	private String[] _methodParameterTypes28;
-	private String _methodName29;
-	private String[] _methodParameterTypes29;
+	private String _methodName32;
+	private String[] _methodParameterTypes32;
+	private String _methodName33;
+	private String[] _methodParameterTypes33;
 }
