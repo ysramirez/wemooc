@@ -1,6 +1,8 @@
 package com.tls.liferaylms.job.condition;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +21,7 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.tls.liferaylms.util.MailStringPool;
 
 public class ActivityCondition extends MainCondition{
 	Log log = LogFactoryUtil.getLog(ActivityCondition.class);
@@ -62,8 +65,16 @@ public class ActivityCondition extends MainCondition{
 			String[] ids = getMailJob().getConditionStatus().split(StringPool.COMMA);
 			
 			for(String sid : ids){
+				
+				int id = -1;
+				try{
+					id = (int)Integer.valueOf(sid);
+				}catch(NumberFormatException nfe){
+					if(log.isDebugEnabled())nfe.printStackTrace();
+					if(log.isErrorEnabled())log.error(nfe.getMessage());
+				}
 			
-				switch ((int)Integer.valueOf(sid)) {
+				switch (id) {
 					//not started
 					case 0:
 						if(lar==null){
@@ -267,6 +278,60 @@ public class ActivityCondition extends MainCondition{
 			}else{
 				return null;
 			}
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public String getFormatDate() {
+		if(getDate()!=null){
+			SimpleDateFormat sdf = new SimpleDateFormat(MailStringPool.DATE_FORMAT);
+			return sdf.format(getDate());
+		}else{
+			return null;
+		}
+	}
+
+	@Override
+	public Date getDate() {
+		LearningActivity la = null;
+		
+		try {
+			la = LearningActivityLocalServiceUtil.getLearningActivity(getMailJob().getDateClassPK());
+		} catch (PortalException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
+		} catch (SystemException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
+		}
+
+		if(la!=null){
+			GregorianCalendar dateSend = new GregorianCalendar();
+			
+			switch ((int)getMailJob().getDateReferenceDate()) {
+				//start date
+				case 0:
+					dateSend.setTime(la.getStartdate());
+					break;
+				//end date
+				case 1:
+					dateSend.setTime(la.getEnddate());
+					break;
+				//inscription date
+				case 2:
+					dateSend.setTime(la.getStartdate());
+					break;
+			}
+			
+			dateSend.set(Calendar.HOUR_OF_DAY, 0);
+			dateSend.set(Calendar.MINUTE, 0);
+			dateSend.set(Calendar.SECOND, 0);
+			dateSend.set(Calendar.MILLISECOND, 0);
+			dateSend.add(Calendar.DAY_OF_MONTH, (int)getMailJob().getDateShift());
+			
+			return dateSend.getTime();
 		}else{
 			return null;
 		}

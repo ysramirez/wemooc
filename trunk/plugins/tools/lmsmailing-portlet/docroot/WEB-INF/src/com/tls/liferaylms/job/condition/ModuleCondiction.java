@@ -1,5 +1,6 @@
 package com.tls.liferaylms.job.condition;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
@@ -67,6 +68,18 @@ public class ModuleCondiction extends MainCondition{
 
 	@Override
 	public Long getModConditionPK() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public Date getDate() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public String getFormatDate() {
 		// TODO Auto-generated method stub
 		return null;
 	}

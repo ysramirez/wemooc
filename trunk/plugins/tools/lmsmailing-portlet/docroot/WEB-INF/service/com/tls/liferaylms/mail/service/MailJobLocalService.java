@@ -275,4 +275,11 @@ public interface MailJobLocalService extends BaseLocalService,
 		java.lang.Long groupId, int start, int end);
 
 	public java.lang.Integer countByGroup(java.lang.Long groupId);
+
+	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
+	public java.util.List<com.tls.liferaylms.mail.model.MailJob> getMailJobsInGroupIdAndProcessed(
+		java.lang.Long groupId, boolean processed, int start, int end);
+
+	public java.lang.Integer countByGroupAndProcessed(java.lang.Long groupId,
+		boolean processed);
 }

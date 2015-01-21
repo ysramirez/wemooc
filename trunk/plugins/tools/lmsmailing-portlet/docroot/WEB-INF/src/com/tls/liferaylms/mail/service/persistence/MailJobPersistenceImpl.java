@@ -143,6 +143,25 @@ public class MailJobPersistenceImpl extends BasePersistenceImpl<MailJob>
 			MailJobModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByg",
 			new String[] { Long.class.getName() });
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_GP = new FinderPath(MailJobModelImpl.ENTITY_CACHE_ENABLED,
+			MailJobModelImpl.FINDER_CACHE_ENABLED, MailJobImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findBygp",
+			new String[] {
+				Long.class.getName(), Boolean.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GP = new FinderPath(MailJobModelImpl.ENTITY_CACHE_ENABLED,
+			MailJobModelImpl.FINDER_CACHE_ENABLED, MailJobImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findBygp",
+			new String[] { Long.class.getName(), Boolean.class.getName() },
+			MailJobModelImpl.GROUPID_COLUMN_BITMASK |
+			MailJobModelImpl.PROCESSED_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_GP = new FinderPath(MailJobModelImpl.ENTITY_CACHE_ENABLED,
+			MailJobModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countBygp",
+			new String[] { Long.class.getName(), Boolean.class.getName() });
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_C = new FinderPath(MailJobModelImpl.ENTITY_CACHE_ENABLED,
 			MailJobModelImpl.FINDER_CACHE_ENABLED, MailJobImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByc",
@@ -440,6 +459,27 @@ public class MailJobPersistenceImpl extends BasePersistenceImpl<MailJob>
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_G, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_G,
+					args);
+			}
+
+			if ((mailJobModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GP.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(mailJobModelImpl.getOriginalGroupId()),
+						Boolean.valueOf(mailJobModelImpl.getOriginalProcessed())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GP, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GP,
+					args);
+
+				args = new Object[] {
+						Long.valueOf(mailJobModelImpl.getGroupId()),
+						Boolean.valueOf(mailJobModelImpl.getProcessed())
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_GP, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GP,
 					args);
 			}
 
@@ -1909,6 +1949,405 @@ public class MailJobPersistenceImpl extends BasePersistenceImpl<MailJob>
 	}
 
 	/**
+	 * Returns all the mail jobs where groupId = &#63; and processed = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @return the matching mail jobs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<MailJob> findBygp(long groupId, boolean processed)
+		throws SystemException {
+		return findBygp(groupId, processed, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the mail jobs where groupId = &#63; and processed = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @param start the lower bound of the range of mail jobs
+	 * @param end the upper bound of the range of mail jobs (not inclusive)
+	 * @return the range of matching mail jobs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<MailJob> findBygp(long groupId, boolean processed, int start,
+		int end) throws SystemException {
+		return findBygp(groupId, processed, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the mail jobs where groupId = &#63; and processed = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @param start the lower bound of the range of mail jobs
+	 * @param end the upper bound of the range of mail jobs (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching mail jobs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<MailJob> findBygp(long groupId, boolean processed, int start,
+		int end, OrderByComparator orderByComparator) throws SystemException {
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_GP;
+			finderArgs = new Object[] { groupId, processed };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_GP;
+			finderArgs = new Object[] {
+					groupId, processed,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<MailJob> list = (List<MailJob>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (MailJob mailJob : list) {
+				if ((groupId != mailJob.getGroupId()) ||
+						(processed != mailJob.getProcessed())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(4 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(3);
+			}
+
+			query.append(_SQL_SELECT_MAILJOB_WHERE);
+
+			query.append(_FINDER_COLUMN_GP_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_GP_PROCESSED_2);
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(processed);
+
+				list = (List<MailJob>)QueryUtil.list(q, getDialect(), start, end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(finderPath, finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(finderPath, finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching mail job
+	 * @throws com.tls.liferaylms.mail.NoSuchMailJobException if a matching mail job could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MailJob findBygp_First(long groupId, boolean processed,
+		OrderByComparator orderByComparator)
+		throws NoSuchMailJobException, SystemException {
+		MailJob mailJob = fetchBygp_First(groupId, processed, orderByComparator);
+
+		if (mailJob != null) {
+			return mailJob;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", processed=");
+		msg.append(processed);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchMailJobException(msg.toString());
+	}
+
+	/**
+	 * Returns the first mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching mail job, or <code>null</code> if a matching mail job could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MailJob fetchBygp_First(long groupId, boolean processed,
+		OrderByComparator orderByComparator) throws SystemException {
+		List<MailJob> list = findBygp(groupId, processed, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching mail job
+	 * @throws com.tls.liferaylms.mail.NoSuchMailJobException if a matching mail job could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MailJob findBygp_Last(long groupId, boolean processed,
+		OrderByComparator orderByComparator)
+		throws NoSuchMailJobException, SystemException {
+		MailJob mailJob = fetchBygp_Last(groupId, processed, orderByComparator);
+
+		if (mailJob != null) {
+			return mailJob;
+		}
+
+		StringBundler msg = new StringBundler(6);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("groupId=");
+		msg.append(groupId);
+
+		msg.append(", processed=");
+		msg.append(processed);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchMailJobException(msg.toString());
+	}
+
+	/**
+	 * Returns the last mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching mail job, or <code>null</code> if a matching mail job could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MailJob fetchBygp_Last(long groupId, boolean processed,
+		OrderByComparator orderByComparator) throws SystemException {
+		int count = countBygp(groupId, processed);
+
+		List<MailJob> list = findBygp(groupId, processed, count - 1, count,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the mail jobs before and after the current mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	 *
+	 * @param idJob the primary key of the current mail job
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next mail job
+	 * @throws com.tls.liferaylms.mail.NoSuchMailJobException if a mail job with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public MailJob[] findBygp_PrevAndNext(long idJob, long groupId,
+		boolean processed, OrderByComparator orderByComparator)
+		throws NoSuchMailJobException, SystemException {
+		MailJob mailJob = findByPrimaryKey(idJob);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			MailJob[] array = new MailJobImpl[3];
+
+			array[0] = getBygp_PrevAndNext(session, mailJob, groupId,
+					processed, orderByComparator, true);
+
+			array[1] = mailJob;
+
+			array[2] = getBygp_PrevAndNext(session, mailJob, groupId,
+					processed, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected MailJob getBygp_PrevAndNext(Session session, MailJob mailJob,
+		long groupId, boolean processed, OrderByComparator orderByComparator,
+		boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_MAILJOB_WHERE);
+
+		query.append(_FINDER_COLUMN_GP_GROUPID_2);
+
+		query.append(_FINDER_COLUMN_GP_PROCESSED_2);
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(groupId);
+
+		qPos.add(processed);
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(mailJob);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<MailJob> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Returns all the mail jobs where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
@@ -2442,6 +2881,20 @@ public class MailJobPersistenceImpl extends BasePersistenceImpl<MailJob>
 	}
 
 	/**
+	 * Removes all the mail jobs where groupId = &#63; and processed = &#63; from the database.
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeBygp(long groupId, boolean processed)
+		throws SystemException {
+		for (MailJob mailJob : findBygp(groupId, processed)) {
+			remove(mailJob);
+		}
+	}
+
+	/**
 	 * Removes all the mail jobs where companyId = &#63; from the database.
 	 *
 	 * @param companyId the company ID
@@ -2707,6 +3160,65 @@ public class MailJobPersistenceImpl extends BasePersistenceImpl<MailJob>
 	}
 
 	/**
+	 * Returns the number of mail jobs where groupId = &#63; and processed = &#63;.
+	 *
+	 * @param groupId the group ID
+	 * @param processed the processed
+	 * @return the number of matching mail jobs
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countBygp(long groupId, boolean processed)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { groupId, processed };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_GP,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(3);
+
+			query.append(_SQL_COUNT_MAILJOB_WHERE);
+
+			query.append(_FINDER_COLUMN_GP_GROUPID_2);
+
+			query.append(_FINDER_COLUMN_GP_PROCESSED_2);
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(groupId);
+
+				qPos.add(processed);
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_GP, finderArgs,
+					count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
 	 * Returns the number of mail jobs where companyId = &#63;.
 	 *
 	 * @param companyId the company ID
@@ -2851,6 +3363,8 @@ public class MailJobPersistenceImpl extends BasePersistenceImpl<MailJob>
 	private static final String _FINDER_COLUMN_UUID_G_GROUPID_2 = "mailJob.groupId = ?";
 	private static final String _FINDER_COLUMN_U_USERID_2 = "mailJob.userId = ?";
 	private static final String _FINDER_COLUMN_G_GROUPID_2 = "mailJob.groupId = ?";
+	private static final String _FINDER_COLUMN_GP_GROUPID_2 = "mailJob.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_GP_PROCESSED_2 = "mailJob.processed = ?";
 	private static final String _FINDER_COLUMN_C_COMPANYID_2 = "mailJob.companyId = ?";
 	private static final String _ORDER_BY_ENTITY_ALIAS = "mailJob.";
 	private static final String _NO_SUCH_ENTITY_WITH_PRIMARY_KEY = "No MailJob exists with the primary key ";

@@ -92,8 +92,9 @@ public class MailJobModelImpl extends BaseModelImpl<MailJob>
 			true);
 	public static long COMPANYID_COLUMN_BITMASK = 1L;
 	public static long GROUPID_COLUMN_BITMASK = 2L;
-	public static long USERID_COLUMN_BITMASK = 4L;
-	public static long UUID_COLUMN_BITMASK = 8L;
+	public static long PROCESSED_COLUMN_BITMASK = 4L;
+	public static long USERID_COLUMN_BITMASK = 8L;
+	public static long UUID_COLUMN_BITMASK = 16L;
 	public static final long LOCK_EXPIRATION_TIME = GetterUtil.getLong(com.liferay.util.service.ServiceProps.get(
 				"lock.expiration.time.com.tls.liferaylms.mail.model.MailJob"));
 
@@ -433,7 +434,19 @@ public class MailJobModelImpl extends BaseModelImpl<MailJob>
 	}
 
 	public void setProcessed(boolean processed) {
+		_columnBitmask |= PROCESSED_COLUMN_BITMASK;
+
+		if (!_setOriginalProcessed) {
+			_setOriginalProcessed = true;
+
+			_originalProcessed = _processed;
+		}
+
 		_processed = processed;
+	}
+
+	public boolean getOriginalProcessed() {
+		return _originalProcessed;
 	}
 
 	public long getColumnBitmask() {
@@ -550,6 +563,10 @@ public class MailJobModelImpl extends BaseModelImpl<MailJob>
 		mailJobModelImpl._originalUserId = mailJobModelImpl._userId;
 
 		mailJobModelImpl._setOriginalUserId = false;
+
+		mailJobModelImpl._originalProcessed = mailJobModelImpl._processed;
+
+		mailJobModelImpl._setOriginalProcessed = false;
 
 		mailJobModelImpl._columnBitmask = 0;
 	}
@@ -754,6 +771,8 @@ public class MailJobModelImpl extends BaseModelImpl<MailJob>
 	private long _dateShift;
 	private long _teamId;
 	private boolean _processed;
+	private boolean _originalProcessed;
+	private boolean _setOriginalProcessed;
 	private long _columnBitmask;
 	private MailJob _escapedModelProxy;
 }

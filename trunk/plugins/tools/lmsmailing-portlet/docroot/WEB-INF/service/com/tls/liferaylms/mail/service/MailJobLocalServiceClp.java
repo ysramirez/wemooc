@@ -136,6 +136,16 @@ public class MailJobLocalServiceClp implements MailJobLocalService {
 		_methodName23 = "countByGroup";
 
 		_methodParameterTypes23 = new String[] { "java.lang.Long" };
+
+		_methodName24 = "getMailJobsInGroupIdAndProcessed";
+
+		_methodParameterTypes24 = new String[] {
+				"java.lang.Long", "boolean", "int", "int"
+			};
+
+		_methodName25 = "countByGroupAndProcessed";
+
+		_methodParameterTypes25 = new String[] { "java.lang.Long", "boolean" };
 	}
 
 	public com.tls.liferaylms.mail.model.MailJob addMailJob(
@@ -825,6 +835,66 @@ public class MailJobLocalServiceClp implements MailJobLocalService {
 		return (java.lang.Integer)ClpSerializer.translateOutput(returnObj);
 	}
 
+	public java.util.List<com.tls.liferaylms.mail.model.MailJob> getMailJobsInGroupIdAndProcessed(
+		java.lang.Long groupId, boolean processed, int start, int end) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName24,
+					_methodParameterTypes24,
+					new Object[] {
+						ClpSerializer.translateInput(groupId),
+						
+					processed,
+						
+					start,
+						
+					end
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.util.List<com.tls.liferaylms.mail.model.MailJob>)ClpSerializer.translateOutput(returnObj);
+	}
+
+	public java.lang.Integer countByGroupAndProcessed(java.lang.Long groupId,
+		boolean processed) {
+		Object returnObj = null;
+
+		try {
+			returnObj = _invokableLocalService.invokeMethod(_methodName25,
+					_methodParameterTypes25,
+					new Object[] {
+						ClpSerializer.translateInput(groupId),
+						
+					processed
+					});
+		}
+		catch (Throwable t) {
+			t = ClpSerializer.translateThrowable(t);
+
+			if (t instanceof RuntimeException) {
+				throw (RuntimeException)t;
+			}
+			else {
+				throw new RuntimeException(t.getClass().getName() +
+					" is not a valid exception");
+			}
+		}
+
+		return (java.lang.Integer)ClpSerializer.translateOutput(returnObj);
+	}
+
 	private InvokableLocalService _invokableLocalService;
 	private String _methodName0;
 	private String[] _methodParameterTypes0;
@@ -872,4 +942,8 @@ public class MailJobLocalServiceClp implements MailJobLocalService {
 	private String[] _methodParameterTypes22;
 	private String _methodName23;
 	private String[] _methodParameterTypes23;
+	private String _methodName24;
+	private String[] _methodParameterTypes24;
+	private String _methodName25;
+	private String[] _methodParameterTypes25;
 }
