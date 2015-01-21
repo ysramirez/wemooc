@@ -10,6 +10,7 @@ public class MailStringPool {
 	public final static String MODULES = "modules";
 	public final static String ACTIVITIES = "activities";
 	public final static String ACTIVITIES_TEMP = "activitiestemp";
+	public final static String ACTIVITIES_TEMP_REF = "activitiestempref";
 	
 	public final static String ACTIVITY_CON = "groupmailing.activitycondition";
 	public final static String COURSE_CON = "groupmailing.coursecondition";
