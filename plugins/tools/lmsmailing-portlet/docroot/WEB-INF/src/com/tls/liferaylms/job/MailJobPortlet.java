@@ -48,7 +48,7 @@ public class MailJobPortlet extends MVCPortlet {
 	protected String viewJSP;
 	protected String editJSP;
 
-	public void init() throws PortletException {
+	public void init() throws PortletException { 
 		this.viewJSP = getInitParameter("view-template");
 		this.editJSP = getInitParameter("edit-template");
 	}
@@ -107,6 +107,7 @@ public class MailJobPortlet extends MVCPortlet {
 				
 				List<Module> modules = null;
 				List<LearningActivity> tempActivities = null;
+				List<LearningActivity> tempActivitiesReference = null;
 				HashMap<Long, List<LearningActivity>> activities = new HashMap<Long, List<LearningActivity>>();
 				try {
 					modules = ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
@@ -115,8 +116,31 @@ public class MailJobPortlet extends MVCPortlet {
 						for(Module module : modules){
 							List<LearningActivity> learningActivities = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(module.getModuleId());
 							
-							if(tempActivities==null)
-								tempActivities = learningActivities; 
+							if(tempActivities==null){
+								if(condition!=null){
+									for(LearningActivity la : learningActivities){
+										if(la.getPrimaryKey()==condition.getActConditionPK()){
+											tempActivities = learningActivities;
+											break;
+										}
+									}
+								}else{
+									tempActivities = learningActivities;
+								}
+							}
+
+							if(tempActivitiesReference==null){
+								if(reference!=null){
+									for(LearningActivity la : learningActivities){
+										if(la.getPrimaryKey()==reference.getActReferencePK()){
+											tempActivitiesReference = learningActivities;
+											break;
+										}
+									}
+								}else{
+									tempActivitiesReference = learningActivities;
+								}
+							}
 							
 							activities.put(module.getModuleId(), learningActivities);
 						}
@@ -143,6 +167,7 @@ public class MailJobPortlet extends MVCPortlet {
 				renderRequest.setAttribute(MailStringPool.DAYS, days);
 				renderRequest.setAttribute(MailStringPool.TIME, time);
 				renderRequest.setAttribute(MailStringPool.MAIL_JOB, mailJob); 
+				renderRequest.setAttribute(MailStringPool.ACTIVITIES_TEMP_REF, tempActivitiesReference);
 				renderRequest.setAttribute(MailStringPool.ACTIVITIES_TEMP, tempActivities);
 				renderRequest.setAttribute(MailStringPool.ACTIVITIES, activities);
 				renderRequest.setAttribute(MailStringPool.MODULES, modules); 
