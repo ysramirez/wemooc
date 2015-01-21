@@ -29,8 +29,9 @@ if((renderRequest.getParameter("actId")!=null)&&(renderRequest.getParameter("stu
 	    	<%=(SessionErrors.contains(renderRequest, "offlinetaskactivity.grades.result-bad-format"))?
 	    			LanguageUtil.get(pageContext,"offlinetaskactivity.grades.result-bad-format"):StringPool.BLANK %>
 	    </div>
-		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"offlinetaskactivity.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
-			<aui:validator name="range">[0, 70]</aui:validator>
+
+		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"offlinetaskactivity.grades.commentsMessage\")%>"  maxLength="350" rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
+			<aui:validator name="range">[0, 350]</aui:validator>
 		</aui:input>
 	</aui:fieldset>
 	<aui:button-row>

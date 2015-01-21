@@ -172,7 +172,9 @@ String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationtaskactivit
 	    															LanguageUtil.get(pageContext,"evaluationtaskactivity.result.bad-format"):StringPool.BLANK %>
 	    		</div>
 	    <liferay-ui:message key="evaluationtaskactivity.result.percent"  arguments="<%=new Object[]{learningActivity.getPasspuntuation()} %>" />
-		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="evaluationtaskactivity.comments" value='<%=(result.getComments()!=null)?result.getComments():"" %>'>
+
+		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationtaskactivity.grades.commentsMessage\")%>"  maxLength="350" cols="70"  rows="3" name="comments" label="evaluationtaskactivity.comments" value='<%=(result.getComments()!=null)?result.getComments():"" %>'>
+			<aui:validator name="range">[0, 350]</aui:validator>
 		</aui:input>
 		<liferay-ui:message key="evaluationtaskactivity.comments.maxLength" />
 	</aui:fieldset>
