@@ -68,6 +68,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.CharPool;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -1140,10 +1141,18 @@ public class CourseAdmin extends MVCPortlet {
 			}
 			
 			response.setCharacterEncoding("UTF-8");
-			response.setContentType("text/csv;charset=UTF-8");
+			response.setContentType(ContentTypes.TEXT_CSV_UTF8);
 			response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=users.csv");
 			
-			CSVWriter writer = new CSVWriter(new OutputStreamWriter(response.getPortletOutputStream()),';');
+			byte b[] = { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF };
+
+			response.getPortletOutputStream().write(b);
+
+			
+			CSVWriter writer = new CSVWriter(new OutputStreamWriter(
+					response.getPortletOutputStream(), StringPool.UTF8),CharPool.SEMICOLON);
+			
+			
 			
 			for(User user:users){
 				String[] resultados = {String.valueOf(user.getUserId()),user.getFullName()};
