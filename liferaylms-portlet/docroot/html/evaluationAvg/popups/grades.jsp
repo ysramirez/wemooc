@@ -171,7 +171,8 @@ String resultHelpMessage=LanguageUtil.format(pageContext, "evaluationAvg.grades.
 		<% } else { %>
 		    <liferay-ui:message key="evaluationAvg.result.percent.noPass" />
 		<% } %>
-		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationAvg.grades.commentsMessage\")%>"  maxLength="70" cols="70"  rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=(courseResult.getComments()!=null)?courseResult.getComments():"" %>'>
+		<aui:input type="textarea"  helpMessage="<%=LanguageUtil.get(pageContext, \"evaluationAvg.grades.commentsMessage\")%>"  maxLength="350" cols="70"  rows="3" name="comments" label="offlinetaskactivity.comments" value='<%=(courseResult.getComments()!=null)?courseResult.getComments():"" %>'>
+			<aui:validator name="range">[0, 350]</aui:validator>
 		</aui:input>
 		<liferay-ui:message key="evaluationAvg.comments.maxLength" />
 	</aui:fieldset>

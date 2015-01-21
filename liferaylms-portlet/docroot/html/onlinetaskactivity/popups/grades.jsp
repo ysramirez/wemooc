@@ -109,8 +109,8 @@ if(!ownGrade){
 		<aui:input type="hidden" name="studentId" value='<%=renderRequest.getParameter("studentId") %>' />
 	    <aui:input type="text" name="result" helpMessage="<%=LanguageUtil.format(pageContext, \"onlinetaskactivity.grades.resultMessage\", new Object[]{activity.getPasspuntuation()})%>"  label="onlinetaskactivity.grades" value='<%=((result!=null)&&(result.getEndDate()!=null))?Long.toString(result.getResult()):"" %>' />
 	    <liferay-ui:error key="onlinetaskactivity.grades.result-bad-format" message="onlinetaskactivity.grades.result-bad-format" />
-		<aui:input type="textarea" cols="75" rows="6" helpMessage="<%=LanguageUtil.get(pageContext, \"onlinetaskactivity.grades.commentsMessage\")%>"  maxLength="70" name="comments" label="onlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
-			<aui:validator name="range">[0, 70]</aui:validator>
+		<aui:input type="textarea" cols="75" rows="6" helpMessage="<%=LanguageUtil.get(pageContext, \"onlinetaskactivity.grades.commentsMessage\")%>"  maxLength="350" name="comments" label="onlinetaskactivity.comments" value='<%=((result!=null)&&(result.getComments()!=null))?result.getComments():"" %>'>
+			<aui:validator name="range">[0, 350]</aui:validator>
 		</aui:input>
 	</aui:fieldset>
 	<aui:button-row>
