@@ -314,6 +314,18 @@ public class MailJobLocalServiceUtil {
 		return getService().countByGroup(groupId);
 	}
 
+	public static java.util.List<com.tls.liferaylms.mail.model.MailJob> getMailJobsInGroupIdAndProcessed(
+		java.lang.Long groupId, boolean processed, int start, int end) {
+		return getService()
+				   .getMailJobsInGroupIdAndProcessed(groupId, processed, start,
+			end);
+	}
+
+	public static java.lang.Integer countByGroupAndProcessed(
+		java.lang.Long groupId, boolean processed) {
+		return getService().countByGroupAndProcessed(groupId, processed);
+	}
+
 	public static void clearService() {
 		_service = null;
 	}

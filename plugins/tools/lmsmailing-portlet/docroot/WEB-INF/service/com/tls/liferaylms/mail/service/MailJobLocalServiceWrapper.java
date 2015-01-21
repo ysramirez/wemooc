@@ -304,6 +304,17 @@ public class MailJobLocalServiceWrapper implements MailJobLocalService,
 		return _mailJobLocalService.countByGroup(groupId);
 	}
 
+	public java.util.List<com.tls.liferaylms.mail.model.MailJob> getMailJobsInGroupIdAndProcessed(
+		java.lang.Long groupId, boolean processed, int start, int end) {
+		return _mailJobLocalService.getMailJobsInGroupIdAndProcessed(groupId,
+			processed, start, end);
+	}
+
+	public java.lang.Integer countByGroupAndProcessed(java.lang.Long groupId,
+		boolean processed) {
+		return _mailJobLocalService.countByGroupAndProcessed(groupId, processed);
+	}
+
 	/**
 	 * @deprecated Renamed to {@link #getWrappedService}
 	 */

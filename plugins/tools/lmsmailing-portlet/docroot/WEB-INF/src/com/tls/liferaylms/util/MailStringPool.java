@@ -16,8 +16,10 @@ public class MailStringPool {
 	public final static String MODULE_CON = "groupmailing.modulecondition";
 
 	public final static String MAIL_JOBS = "mailjobs";
+	public final static String PENDING_MAIL_JOBS = "pendingMailjobs";
 	public final static String MAIL_JOB = "mailjob";
 	public final static String COUNT = "count";
+	public final static String PENDING_COUNT = "pendingCount";
 	
 	public final static String GROUPMAILING = "groupmailing.";
 	
@@ -49,5 +51,13 @@ public class MailStringPool {
 	
 	public final static String DELTA_MAIL_JOB_PAG = "deltamailJobPag";
 	public final static String MAIL_JOB_PAG = "mailJobPag";
+	public final static String DELTA_MAIL_JOB_PENDING_PAG = "deltamailJobPendinPag";
+	public final static String MAIL_JOB_PENDING_PAG = "mailJobPendinPag";
 	public final static String ID_JOB = "idJob";
+
+	public final static String TAB = "tab";
+	public final static String NON_PROCESSED_PLURAL = "non-processed-plural";
+	public final static String PROCESSED_PLURAL = "processed-plural";
+	
+	public final static String DATE_FORMAT = "dd - MM - yyyy";
 }

@@ -136,6 +136,16 @@ public class MailJobLocalServiceClpInvoker {
 		_methodName58 = "countByGroup";
 
 		_methodParameterTypes58 = new String[] { "java.lang.Long" };
+
+		_methodName59 = "getMailJobsInGroupIdAndProcessed";
+
+		_methodParameterTypes59 = new String[] {
+				"java.lang.Long", "boolean", "int", "int"
+			};
+
+		_methodName60 = "countByGroupAndProcessed";
+
+		_methodParameterTypes60 = new String[] { "java.lang.Long", "boolean" };
 	}
 
 	public Object invokeMethod(String name, String[] parameterTypes,
@@ -272,6 +282,20 @@ public class MailJobLocalServiceClpInvoker {
 			return MailJobLocalServiceUtil.countByGroup((java.lang.Long)arguments[0]);
 		}
 
+		if (_methodName59.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes59, parameterTypes)) {
+			return MailJobLocalServiceUtil.getMailJobsInGroupIdAndProcessed((java.lang.Long)arguments[0],
+				((Boolean)arguments[1]).booleanValue(),
+				((Integer)arguments[2]).intValue(),
+				((Integer)arguments[3]).intValue());
+		}
+
+		if (_methodName60.equals(name) &&
+				Arrays.deepEquals(_methodParameterTypes60, parameterTypes)) {
+			return MailJobLocalServiceUtil.countByGroupAndProcessed((java.lang.Long)arguments[0],
+				((Boolean)arguments[1]).booleanValue());
+		}
+
 		throw new UnsupportedOperationException();
 	}
 
@@ -321,4 +345,8 @@ public class MailJobLocalServiceClpInvoker {
 	private String[] _methodParameterTypes57;
 	private String _methodName58;
 	private String[] _methodParameterTypes58;
+	private String _methodName59;
+	private String[] _methodParameterTypes59;
+	private String _methodName60;
+	private String[] _methodParameterTypes60;
 }

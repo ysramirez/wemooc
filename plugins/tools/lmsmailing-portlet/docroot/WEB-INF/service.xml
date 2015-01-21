@@ -54,6 +54,10 @@
 		<finder name="g" return-type="Collection">
 			<finder-column name="groupId" />
 		</finder>
+		<finder name="gp" return-type="Collection">
+			<finder-column name="groupId" />
+			<finder-column name="processed" />
+		</finder>
 		<finder name="c" return-type="Collection">
 			<finder-column name="companyId" />
 		</finder>

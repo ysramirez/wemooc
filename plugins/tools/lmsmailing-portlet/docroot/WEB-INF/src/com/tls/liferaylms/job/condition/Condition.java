@@ -1,5 +1,6 @@
 package com.tls.liferaylms.job.condition;
 
+import java.util.Date;
 import java.util.Locale;
 import java.util.Set;
 
@@ -38,4 +39,8 @@ public interface Condition {
 	public Long getModReferencePK();
 
 	public Long getModConditionPK();
+
+	public Date getDate();
+
+	public String getFormatDate();
 }

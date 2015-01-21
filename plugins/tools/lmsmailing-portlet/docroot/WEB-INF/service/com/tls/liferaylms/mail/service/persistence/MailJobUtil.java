@@ -640,6 +640,156 @@ public class MailJobUtil {
 	}
 
 	/**
+	* Returns all the mail jobs where groupId = &#63; and processed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @return the matching mail jobs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.tls.liferaylms.mail.model.MailJob> findBygp(
+		long groupId, boolean processed)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findBygp(groupId, processed);
+	}
+
+	/**
+	* Returns a range of all the mail jobs where groupId = &#63; and processed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @param start the lower bound of the range of mail jobs
+	* @param end the upper bound of the range of mail jobs (not inclusive)
+	* @return the range of matching mail jobs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.tls.liferaylms.mail.model.MailJob> findBygp(
+		long groupId, boolean processed, int start, int end)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().findBygp(groupId, processed, start, end);
+	}
+
+	/**
+	* Returns an ordered range of all the mail jobs where groupId = &#63; and processed = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @param start the lower bound of the range of mail jobs
+	* @param end the upper bound of the range of mail jobs (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching mail jobs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static java.util.List<com.tls.liferaylms.mail.model.MailJob> findBygp(
+		long groupId, boolean processed, int start, int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .findBygp(groupId, processed, start, end, orderByComparator);
+	}
+
+	/**
+	* Returns the first mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching mail job
+	* @throws com.tls.liferaylms.mail.NoSuchMailJobException if a matching mail job could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.tls.liferaylms.mail.model.MailJob findBygp_First(
+		long groupId, boolean processed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.tls.liferaylms.mail.NoSuchMailJobException {
+		return getPersistence()
+				   .findBygp_First(groupId, processed, orderByComparator);
+	}
+
+	/**
+	* Returns the first mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching mail job, or <code>null</code> if a matching mail job could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.tls.liferaylms.mail.model.MailJob fetchBygp_First(
+		long groupId, boolean processed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .fetchBygp_First(groupId, processed, orderByComparator);
+	}
+
+	/**
+	* Returns the last mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching mail job
+	* @throws com.tls.liferaylms.mail.NoSuchMailJobException if a matching mail job could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.tls.liferaylms.mail.model.MailJob findBygp_Last(
+		long groupId, boolean processed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.tls.liferaylms.mail.NoSuchMailJobException {
+		return getPersistence()
+				   .findBygp_Last(groupId, processed, orderByComparator);
+	}
+
+	/**
+	* Returns the last mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching mail job, or <code>null</code> if a matching mail job could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.tls.liferaylms.mail.model.MailJob fetchBygp_Last(
+		long groupId, boolean processed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence()
+				   .fetchBygp_Last(groupId, processed, orderByComparator);
+	}
+
+	/**
+	* Returns the mail jobs before and after the current mail job in the ordered set where groupId = &#63; and processed = &#63;.
+	*
+	* @param idJob the primary key of the current mail job
+	* @param groupId the group ID
+	* @param processed the processed
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next mail job
+	* @throws com.tls.liferaylms.mail.NoSuchMailJobException if a mail job with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public static com.tls.liferaylms.mail.model.MailJob[] findBygp_PrevAndNext(
+		long idJob, long groupId, boolean processed,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException,
+			com.tls.liferaylms.mail.NoSuchMailJobException {
+		return getPersistence()
+				   .findBygp_PrevAndNext(idJob, groupId, processed,
+			orderByComparator);
+	}
+
+	/**
 	* Returns all the mail jobs where companyId = &#63;.
 	*
 	* @param companyId the company ID
@@ -873,6 +1023,18 @@ public class MailJobUtil {
 	}
 
 	/**
+	* Removes all the mail jobs where groupId = &#63; and processed = &#63; from the database.
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @throws SystemException if a system exception occurred
+	*/
+	public static void removeBygp(long groupId, boolean processed)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		getPersistence().removeBygp(groupId, processed);
+	}
+
+	/**
 	* Removes all the mail jobs where companyId = &#63; from the database.
 	*
 	* @param companyId the company ID
@@ -940,6 +1102,19 @@ public class MailJobUtil {
 	public static int countByg(long groupId)
 		throws com.liferay.portal.kernel.exception.SystemException {
 		return getPersistence().countByg(groupId);
+	}
+
+	/**
+	* Returns the number of mail jobs where groupId = &#63; and processed = &#63;.
+	*
+	* @param groupId the group ID
+	* @param processed the processed
+	* @return the number of matching mail jobs
+	* @throws SystemException if a system exception occurred
+	*/
+	public static int countBygp(long groupId, boolean processed)
+		throws com.liferay.portal.kernel.exception.SystemException {
+		return getPersistence().countBygp(groupId, processed);
 	}
 
 	/**

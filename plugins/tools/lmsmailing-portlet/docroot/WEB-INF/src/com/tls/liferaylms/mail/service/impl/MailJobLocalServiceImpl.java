@@ -98,4 +98,26 @@ public class MailJobLocalServiceImpl extends MailJobLocalServiceBaseImpl {
 			return 0;
 		}
 	}
+
+	public List<MailJob> getMailJobsInGroupIdAndProcessed(Long groupId, boolean processed, int start, int end){
+		try {
+			return mailJobPersistence.findBygp(groupId, processed, start, end);
+		} catch (SystemException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
+			
+			return null;
+		}
+	}
+
+	public Integer countByGroupAndProcessed(Long groupId, boolean processed){
+		try {
+			return mailJobPersistence.countBygp(groupId, processed);
+		} catch (SystemException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+			if(log.isErrorEnabled())log.error(e.getMessage());
+			
+			return 0;
+		}
+	}
 }

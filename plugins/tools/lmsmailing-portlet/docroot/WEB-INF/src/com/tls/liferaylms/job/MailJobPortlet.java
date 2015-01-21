@@ -162,12 +162,26 @@ public class MailJobPortlet extends MVCPortlet {
 			
 			Integer delta = ParamUtil.getInteger(renderRequest, MailStringPool.DELTA_MAIL_JOB_PAG, 10);
 			Integer pag = ParamUtil.getInteger(renderRequest, MailStringPool.MAIL_JOB_PAG, 1);
+			String tab = ParamUtil.getString(renderRequest, MailStringPool.TAB, MailStringPool.PROCESSED_PLURAL);
 			
-			List<MailJob> mailJobs = MailJobLocalServiceUtil.getMailJobsInGroupId(themeDisplay.getScopeGroupId(), (pag-1)*delta, ((pag-1)*delta)+delta);
-			Integer count = MailJobLocalServiceUtil.countByGroup(themeDisplay.getScopeGroupId());
+			List<MailJob> mailJobs = MailJobLocalServiceUtil.getMailJobsInGroupIdAndProcessed(themeDisplay.getScopeGroupId(), true, (pag-1)*delta, ((pag-1)*delta)+delta);
+			Integer count = MailJobLocalServiceUtil.countByGroupAndProcessed(themeDisplay.getScopeGroupId(),true);
 
 			renderRequest.setAttribute(MailStringPool.MAIL_JOBS, mailJobs);
 			renderRequest.setAttribute(MailStringPool.COUNT, count);
+			
+			delta = ParamUtil.getInteger(renderRequest, MailStringPool.DELTA_MAIL_JOB_PENDING_PAG, 10);
+			pag = ParamUtil.getInteger(renderRequest, MailStringPool.MAIL_JOB_PENDING_PAG, 1);
+
+			mailJobs = MailJobLocalServiceUtil.getMailJobsInGroupIdAndProcessed(themeDisplay.getScopeGroupId(), false, (pag-1)*delta, ((pag-1)*delta)+delta);
+			count = MailJobLocalServiceUtil.countByGroupAndProcessed(themeDisplay.getScopeGroupId(),false);
+
+			renderRequest.setAttribute(MailStringPool.PENDING_MAIL_JOBS, mailJobs);
+			renderRequest.setAttribute(MailStringPool.PENDING_COUNT, count);
+			
+			renderRequest.setAttribute(MailStringPool.TAB, tab);
+			
+			
 			
 			include(viewJSP, renderRequest, renderResponse);
 		}
@@ -276,9 +290,11 @@ public class MailJobPortlet extends MVCPortlet {
 		
 		StringBuffer conditionState = new StringBuffer();
 		
-		for(long lconditionState : alConditionState){
-			conditionState.append(lconditionState);
-			conditionState.append(StringPool.COMMA);
+		if(alConditionState!=null){
+			for(long lconditionState : alConditionState){
+				conditionState.append(lconditionState);
+				conditionState.append(StringPool.COMMA);
+			}
 		}
 		
 		String referenceClassName = ParamUtil.getString(request, MailStringPool.REFERENCE_CLASSNAME, StringPool.BLANK);
