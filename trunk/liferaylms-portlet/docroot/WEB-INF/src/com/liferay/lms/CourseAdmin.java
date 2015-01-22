@@ -10,6 +10,7 @@ import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.Enumeration;
 import java.util.List;
@@ -38,11 +39,15 @@ import com.liferay.lms.learningactivity.courseeval.CourseEval;
 import com.liferay.lms.learningactivity.courseeval.CourseEvalRegistry;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseCompetence;
+import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseCompetenceLocalServiceUtil;
 import com.liferay.lms.service.CourseLocalServiceUtil;
+import com.liferay.lms.service.CourseResultLocalServiceUtil;
+import com.liferay.lms.service.CourseService;
 import com.liferay.lms.service.CourseServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
+import com.liferay.lms.service.base.CourseServiceBaseImpl;
 import com.liferay.mail.service.MailServiceUtil;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
@@ -797,6 +802,10 @@ public class CourseAdmin extends MVCPortlet {
 
 					String[] currLine;
 					int line = 0;
+					SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+					Calendar cal = Calendar.getInstance();
+					Date allowStartDate;
+					Date allowFinishDate;
 
 					while ((currLine = reader.readNext()) != null) {
 
@@ -817,10 +826,40 @@ public class CourseAdmin extends MVCPortlet {
 										System.out.println("      User Name : " + user.getFullName() );
 										if(!GroupLocalServiceUtil.hasUserGroup(userId, course.getGroupCreatedId())){
 											GroupLocalServiceUtil.addUserGroups(userId, new long[] { course.getGroupCreatedId() });
-											sendEmail(user, course);
+											//sendEmail(user, course);
 										}
 	
 										users.add(userId);
+										/**MIGUEL**/
+										String allowStartDateStr = currLine[2];
+										String allowEndDateStr = currLine[3];
+										//System.out.println(allowStartDateStr);
+										//System.out.println(allowEndDateStr);
+										
+										if(allowStartDateStr.trim().length() >0){
+											cal.setTime(sdf.parse(allowStartDateStr));
+											int startMonth = cal.get(Calendar.MONTH);
+											int startYear = cal.get(Calendar.YEAR);
+											int startDay = cal.get(Calendar.DATE);
+											allowStartDate = PortalUtil.getDate(startMonth, startDay, startYear,0, 0, user.getTimeZone(),new EntryDisplayDateException());
+										}else{
+											allowStartDate=null;
+										}
+										if(allowEndDateStr.trim().length() >0){
+											cal.setTime(sdf.parse(allowEndDateStr));
+											int stopMonth = cal.get(Calendar.MONTH);
+											int stopYear = cal.get(Calendar.YEAR);
+											int stopDay = cal.get(Calendar.DATE);
+											 allowFinishDate = PortalUtil.getDate(stopMonth, stopDay, stopYear,0, 0, user.getTimeZone(),new EntryDisplayDateException());
+										
+										}else{
+											allowFinishDate=null;
+										}
+										CourseServiceUtil.editUserInscriptionDates(courseId,userId,allowStartDate,allowFinishDate);
+										/**************/
+										
+
+										
 									}else{
 										System.out.println("      User not exits (userId:"+userId+").");
 									}
@@ -1163,10 +1202,24 @@ public class CourseAdmin extends MVCPortlet {
 			CSVWriter writer = new CSVWriter(new OutputStreamWriter(
 					response.getPortletOutputStream(), StringPool.UTF8),CharPool.SEMICOLON);
 			
-			
-			
+		    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		   
+		    Long courseId = ParamUtil.getLong(request, "courseId");
+			CourseResult courseResult = null;
+			String fechaIni,fechaFin = new String();
 			for(User user:users){
-				String[] resultados = {String.valueOf(user.getUserId()),user.getFullName()};
+				//CourseServiceUtil.getService()				
+				try {
+					courseResult=CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(courseId, user.getUserId());
+				} catch (SystemException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				fechaIni = (courseResult.getAllowStartDate() != null)?sdf.format(courseResult.getAllowStartDate()):StringPool.BLANK;
+				fechaFin = (courseResult.getAllowFinishDate() != null)?sdf.format(courseResult.getAllowFinishDate()):StringPool.BLANK;
+	
+				String[] resultados = {String.valueOf(user.getUserId()),user.getFullName(),fechaIni ,fechaFin};
 				writer.writeNext(resultados);
 			}
 
