@@ -77,7 +77,7 @@ String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyI
 		for(String lspis:lspist)
 		{
 			String checked="";
-			if(ArrayUtils.contains(layusprsel, lspis)||layusprsel.length==0)
+			if(ArrayUtils.contains(layusprsel, lspis))
 			{
 				checked="checked=\"true\"";
 			}
