@@ -199,7 +199,18 @@ public class DraganddropQuestionType extends BaseQuestionType {
 					}
 					else {
 						//feedMessage = (!LanguageUtil.get(themeDisplay.getLocale(),"answer-in-blank").equals(feedMessage))?feedMessage+"<div class=\"questionFeedback\">"+sols.get(i).getFeedbacknocorrect()+"</div>":"<div class=\"questionFeedback\">"+sols.get(i).getFeedbacknocorrect()+"</div>";
-						feedMessage = "<div class=\"questionFeedback\">"+sols.get(i).getFeedbacknocorrect()+"</div>";
+						String feedAux = new String();
+						Iterator<TestAnswer> it = tA.iterator();
+						TestAnswer answerAux = null;
+						while (it.hasNext()){
+							answerAux = it.next();
+							if(answersSelectedIds.get(i) == answerAux.getAnswerId()){
+								feedAux = answerAux.getFeedbacknocorrect();
+								break;
+							}
+
+						}
+						feedMessage = "<div class=\"questionFeedback\">"+feedAux+"</div>";
 					}
 					if("true".equals(showCorrectAnswer)) {
 						feedsol = "<div class=\" font_14 color_cuarto negrita\">" + sols.get(i).getAnswer() + "</div>";
