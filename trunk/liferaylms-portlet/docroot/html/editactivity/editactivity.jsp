@@ -713,10 +713,10 @@ Liferay.provide(
 		}
 		if(larntype.isFeedbackNoCorrectConfigurable())
 		{
-			String  feedbacNoCorrect=larntype.getDefaultFeedbackCorrect();
+			String  feedbacNoCorrect=larntype.getDefaultFeedbackNoCorrect();
 			if(learnact!=null)
 			{
-				feedbacNoCorrect=learnact.getFeedbackCorrect();
+				feedbacNoCorrect=learnact.getFeedbackNoCorrect();
 			}
 		%>
 		<aui:input name="feedbackNoCorrect" label="feedbackNoCorrect" value="<%=feedbacNoCorrect %>" helpMessage="feedbackNoCorrect.helpMessage" type="text"  maxLength="<%=ModelHintsUtil.getHints(LearningActivity.class.getName(), \"feedbackNoCorrect\").get(\"max-length\") %>" ></aui:input>	
