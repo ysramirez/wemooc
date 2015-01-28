@@ -35,7 +35,10 @@
 			    <%if(cc.getGenerateCertificate())
 			    	{
 			    	%>
-				<a target="_blank" href="/liferaylms-portlet/certificate/cert?userId=<%=themeDisplay.getUserId()%>&competenceId=<%=cc.getCompetenceId()%>"><%=cc.getTitle(themeDisplay.getLocale()) %></a>
+			    	<portlet:resourceURL var="resourceURL" >
+						<portlet:param name="competenceId" value="<%=String.valueOf(cc.getCompetenceId())%>" />
+					</portlet:resourceURL>
+				<a target="_blank" href="<%=resourceURL %>" ><%=cc.getTitle(themeDisplay.getLocale()) %></a>
 				<%
 				}
 			    else

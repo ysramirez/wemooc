@@ -444,6 +444,107 @@ public interface CompetenceModel extends BaseModel<Competence>, WorkflowedModel 
 	public void setGenerateCertificate(boolean generateCertificate);
 
 	/**
+	 * Returns the diploma template of this competence.
+	 *
+	 * @return the diploma template of this competence
+	 */
+	public String getDiplomaTemplate();
+
+	/**
+	 * Returns the localized diploma template of this competence in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the locale of the language
+	 * @return the localized diploma template of this competence
+	 */
+	@AutoEscape
+	public String getDiplomaTemplate(Locale locale);
+
+	/**
+	 * Returns the localized diploma template of this competence in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param locale the local of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized diploma template of this competence. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	 */
+	@AutoEscape
+	public String getDiplomaTemplate(Locale locale, boolean useDefault);
+
+	/**
+	 * Returns the localized diploma template of this competence in the language. Uses the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @return the localized diploma template of this competence
+	 */
+	@AutoEscape
+	public String getDiplomaTemplate(String languageId);
+
+	/**
+	 * Returns the localized diploma template of this competence in the language, optionally using the default language if no localization exists for the requested language.
+	 *
+	 * @param languageId the ID of the language
+	 * @param useDefault whether to use the default language if no localization exists for the requested language
+	 * @return the localized diploma template of this competence
+	 */
+	@AutoEscape
+	public String getDiplomaTemplate(String languageId, boolean useDefault);
+
+	@AutoEscape
+	public String getDiplomaTemplateCurrentLanguageId();
+
+	@AutoEscape
+	public String getDiplomaTemplateCurrentValue();
+
+	/**
+	 * Returns a map of the locales and localized diploma templates of this competence.
+	 *
+	 * @return the locales and localized diploma templates of this competence
+	 */
+	public Map<Locale, String> getDiplomaTemplateMap();
+
+	/**
+	 * Sets the diploma template of this competence.
+	 *
+	 * @param diplomaTemplate the diploma template of this competence
+	 */
+	public void setDiplomaTemplate(String diplomaTemplate);
+
+	/**
+	 * Sets the localized diploma template of this competence in the language.
+	 *
+	 * @param diplomaTemplate the localized diploma template of this competence
+	 * @param locale the locale of the language
+	 */
+	public void setDiplomaTemplate(String diplomaTemplate, Locale locale);
+
+	/**
+	 * Sets the localized diploma template of this competence in the language, and sets the default locale.
+	 *
+	 * @param diplomaTemplate the localized diploma template of this competence
+	 * @param locale the locale of the language
+	 * @param defaultLocale the default locale
+	 */
+	public void setDiplomaTemplate(String diplomaTemplate, Locale locale,
+		Locale defaultLocale);
+
+	public void setDiplomaTemplateCurrentLanguageId(String languageId);
+
+	/**
+	 * Sets the localized diploma templates of this competence from the map of locales and localized diploma templates.
+	 *
+	 * @param diplomaTemplateMap the locales and localized diploma templates of this competence
+	 */
+	public void setDiplomaTemplateMap(Map<Locale, String> diplomaTemplateMap);
+
+	/**
+	 * Sets the localized diploma templates of this competence from the map of locales and localized diploma templates, and sets the default locale.
+	 *
+	 * @param diplomaTemplateMap the locales and localized diploma templates of this competence
+	 * @param defaultLocale the default locale
+	 */
+	public void setDiplomaTemplateMap(Map<Locale, String> diplomaTemplateMap,
+		Locale defaultLocale);
+
+	/**
 	 * @deprecated Renamed to {@link #isApproved()}
 	 */
 	public boolean getApproved();

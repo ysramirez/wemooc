@@ -83,9 +83,10 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 			{ "statusDate", Types.TIMESTAMP },
 			{ "title", Types.VARCHAR },
 			{ "description", Types.VARCHAR },
-			{ "generateCertificate", Types.BOOLEAN }
+			{ "generateCertificate", Types.BOOLEAN },
+			{ "diplomaTemplate", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_Competence (uuid_ VARCHAR(75) null,competenceId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,generateCertificate BOOLEAN)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_Competence (uuid_ VARCHAR(75) null,competenceId LONG not null primary key,companyId LONG,groupId LONG,userId LONG,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,title STRING null,description STRING null,generateCertificate BOOLEAN,diplomaTemplate STRING null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_Competence";
 	public static final String DATA_SOURCE = "liferayDataSource";
 	public static final String SESSION_FACTORY = "liferaySessionFactory";
@@ -128,6 +129,7 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		model.setTitle(soapModel.getTitle());
 		model.setDescription(soapModel.getDescription());
 		model.setGenerateCertificate(soapModel.getGenerateCertificate());
+		model.setDiplomaTemplate(soapModel.getDiplomaTemplate());
 
 		return model;
 	}
@@ -198,6 +200,7 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("generateCertificate", getGenerateCertificate());
+		attributes.put("diplomaTemplate", getDiplomaTemplate());
 
 		return attributes;
 	}
@@ -275,6 +278,12 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 
 		if (generateCertificate != null) {
 			setGenerateCertificate(generateCertificate);
+		}
+
+		String diplomaTemplate = (String)attributes.get("diplomaTemplate");
+
+		if (diplomaTemplate != null) {
+			setDiplomaTemplate(diplomaTemplate);
 		}
 	}
 
@@ -602,6 +611,98 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		_generateCertificate = generateCertificate;
 	}
 
+	public String getDiplomaTemplate() {
+		if (_diplomaTemplate == null) {
+			return StringPool.BLANK;
+		}
+		else {
+			return _diplomaTemplate;
+		}
+	}
+
+	public String getDiplomaTemplate(Locale locale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDiplomaTemplate(languageId);
+	}
+
+	public String getDiplomaTemplate(Locale locale, boolean useDefault) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDiplomaTemplate(languageId, useDefault);
+	}
+
+	public String getDiplomaTemplate(String languageId) {
+		return LocalizationUtil.getLocalization(getDiplomaTemplate(), languageId);
+	}
+
+	public String getDiplomaTemplate(String languageId, boolean useDefault) {
+		return LocalizationUtil.getLocalization(getDiplomaTemplate(),
+			languageId, useDefault);
+	}
+
+	public String getDiplomaTemplateCurrentLanguageId() {
+		return _diplomaTemplateCurrentLanguageId;
+	}
+
+	@JSON
+	public String getDiplomaTemplateCurrentValue() {
+		Locale locale = getLocale(_diplomaTemplateCurrentLanguageId);
+
+		return getDiplomaTemplate(locale);
+	}
+
+	public Map<Locale, String> getDiplomaTemplateMap() {
+		return LocalizationUtil.getLocalizationMap(getDiplomaTemplate());
+	}
+
+	public void setDiplomaTemplate(String diplomaTemplate) {
+		_diplomaTemplate = diplomaTemplate;
+	}
+
+	public void setDiplomaTemplate(String diplomaTemplate, Locale locale) {
+		setDiplomaTemplate(diplomaTemplate, locale, LocaleUtil.getDefault());
+	}
+
+	public void setDiplomaTemplate(String diplomaTemplate, Locale locale,
+		Locale defaultLocale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
+
+		if (Validator.isNotNull(diplomaTemplate)) {
+			setDiplomaTemplate(LocalizationUtil.updateLocalization(
+					getDiplomaTemplate(), "DiplomaTemplate", diplomaTemplate,
+					languageId, defaultLanguageId));
+		}
+		else {
+			setDiplomaTemplate(LocalizationUtil.removeLocalization(
+					getDiplomaTemplate(), "DiplomaTemplate", languageId));
+		}
+	}
+
+	public void setDiplomaTemplateCurrentLanguageId(String languageId) {
+		_diplomaTemplateCurrentLanguageId = languageId;
+	}
+
+	public void setDiplomaTemplateMap(Map<Locale, String> diplomaTemplateMap) {
+		setDiplomaTemplateMap(diplomaTemplateMap, LocaleUtil.getDefault());
+	}
+
+	public void setDiplomaTemplateMap(Map<Locale, String> diplomaTemplateMap,
+		Locale defaultLocale) {
+		if (diplomaTemplateMap == null) {
+			return;
+		}
+
+		Locale[] locales = LanguageUtil.getAvailableLocales();
+
+		for (Locale locale : locales) {
+			String diplomaTemplate = diplomaTemplateMap.get(locale);
+
+			setDiplomaTemplate(diplomaTemplate, locale, defaultLocale);
+		}
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -706,6 +807,8 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 			defaultImportLocale);
 		setDescription(getDescription(defaultImportLocale),
 			defaultImportLocale, defaultImportLocale);
+		setDiplomaTemplate(getDiplomaTemplate(defaultImportLocale),
+			defaultImportLocale, defaultImportLocale);
 	}
 
 	@Override
@@ -735,6 +838,7 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		competenceImpl.setTitle(getTitle());
 		competenceImpl.setDescription(getDescription());
 		competenceImpl.setGenerateCertificate(getGenerateCertificate());
+		competenceImpl.setDiplomaTemplate(getDiplomaTemplate());
 
 		competenceImpl.resetOriginalValues();
 
@@ -861,12 +965,20 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 
 		competenceCacheModel.generateCertificate = getGenerateCertificate();
 
+		competenceCacheModel.diplomaTemplate = getDiplomaTemplate();
+
+		String diplomaTemplate = competenceCacheModel.diplomaTemplate;
+
+		if ((diplomaTemplate != null) && (diplomaTemplate.length() == 0)) {
+			competenceCacheModel.diplomaTemplate = null;
+		}
+
 		return competenceCacheModel;
 	}
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -892,13 +1004,15 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 		sb.append(getDescription());
 		sb.append(", generateCertificate=");
 		sb.append(getGenerateCertificate());
+		sb.append(", diplomaTemplate=");
+		sb.append(getDiplomaTemplate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Competence");
@@ -952,6 +1066,10 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 			"<column><column-name>generateCertificate</column-name><column-value><![CDATA[");
 		sb.append(getGenerateCertificate());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>diplomaTemplate</column-name><column-value><![CDATA[");
+		sb.append(getDiplomaTemplate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -983,6 +1101,8 @@ public class CompetenceModelImpl extends BaseModelImpl<Competence>
 	private String _description;
 	private String _descriptionCurrentLanguageId;
 	private boolean _generateCertificate;
+	private String _diplomaTemplate;
+	private String _diplomaTemplateCurrentLanguageId;
 	private long _columnBitmask;
 	private Competence _escapedModelProxy;
 }

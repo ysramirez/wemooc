@@ -57,6 +57,7 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("generateCertificate", getGenerateCertificate());
+		attributes.put("diplomaTemplate", getDiplomaTemplate());
 
 		return attributes;
 	}
@@ -133,6 +134,12 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 
 		if (generateCertificate != null) {
 			setGenerateCertificate(generateCertificate);
+		}
+
+		String diplomaTemplate = (String)attributes.get("diplomaTemplate");
+
+		if (diplomaTemplate != null) {
+			setDiplomaTemplate(diplomaTemplate);
 		}
 	}
 
@@ -635,6 +642,134 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 	*/
 	public void setGenerateCertificate(boolean generateCertificate) {
 		_competence.setGenerateCertificate(generateCertificate);
+	}
+
+	/**
+	* Returns the diploma template of this competence.
+	*
+	* @return the diploma template of this competence
+	*/
+	public java.lang.String getDiplomaTemplate() {
+		return _competence.getDiplomaTemplate();
+	}
+
+	/**
+	* Returns the localized diploma template of this competence in the language. Uses the default language if no localization exists for the requested language.
+	*
+	* @param locale the locale of the language
+	* @return the localized diploma template of this competence
+	*/
+	public java.lang.String getDiplomaTemplate(java.util.Locale locale) {
+		return _competence.getDiplomaTemplate(locale);
+	}
+
+	/**
+	* Returns the localized diploma template of this competence in the language, optionally using the default language if no localization exists for the requested language.
+	*
+	* @param locale the local of the language
+	* @param useDefault whether to use the default language if no localization exists for the requested language
+	* @return the localized diploma template of this competence. If <code>useDefault</code> is <code>false</code> and no localization exists for the requested language, an empty string will be returned.
+	*/
+	public java.lang.String getDiplomaTemplate(java.util.Locale locale,
+		boolean useDefault) {
+		return _competence.getDiplomaTemplate(locale, useDefault);
+	}
+
+	/**
+	* Returns the localized diploma template of this competence in the language. Uses the default language if no localization exists for the requested language.
+	*
+	* @param languageId the ID of the language
+	* @return the localized diploma template of this competence
+	*/
+	public java.lang.String getDiplomaTemplate(java.lang.String languageId) {
+		return _competence.getDiplomaTemplate(languageId);
+	}
+
+	/**
+	* Returns the localized diploma template of this competence in the language, optionally using the default language if no localization exists for the requested language.
+	*
+	* @param languageId the ID of the language
+	* @param useDefault whether to use the default language if no localization exists for the requested language
+	* @return the localized diploma template of this competence
+	*/
+	public java.lang.String getDiplomaTemplate(java.lang.String languageId,
+		boolean useDefault) {
+		return _competence.getDiplomaTemplate(languageId, useDefault);
+	}
+
+	public java.lang.String getDiplomaTemplateCurrentLanguageId() {
+		return _competence.getDiplomaTemplateCurrentLanguageId();
+	}
+
+	public java.lang.String getDiplomaTemplateCurrentValue() {
+		return _competence.getDiplomaTemplateCurrentValue();
+	}
+
+	/**
+	* Returns a map of the locales and localized diploma templates of this competence.
+	*
+	* @return the locales and localized diploma templates of this competence
+	*/
+	public java.util.Map<java.util.Locale, java.lang.String> getDiplomaTemplateMap() {
+		return _competence.getDiplomaTemplateMap();
+	}
+
+	/**
+	* Sets the diploma template of this competence.
+	*
+	* @param diplomaTemplate the diploma template of this competence
+	*/
+	public void setDiplomaTemplate(java.lang.String diplomaTemplate) {
+		_competence.setDiplomaTemplate(diplomaTemplate);
+	}
+
+	/**
+	* Sets the localized diploma template of this competence in the language.
+	*
+	* @param diplomaTemplate the localized diploma template of this competence
+	* @param locale the locale of the language
+	*/
+	public void setDiplomaTemplate(java.lang.String diplomaTemplate,
+		java.util.Locale locale) {
+		_competence.setDiplomaTemplate(diplomaTemplate, locale);
+	}
+
+	/**
+	* Sets the localized diploma template of this competence in the language, and sets the default locale.
+	*
+	* @param diplomaTemplate the localized diploma template of this competence
+	* @param locale the locale of the language
+	* @param defaultLocale the default locale
+	*/
+	public void setDiplomaTemplate(java.lang.String diplomaTemplate,
+		java.util.Locale locale, java.util.Locale defaultLocale) {
+		_competence.setDiplomaTemplate(diplomaTemplate, locale, defaultLocale);
+	}
+
+	public void setDiplomaTemplateCurrentLanguageId(java.lang.String languageId) {
+		_competence.setDiplomaTemplateCurrentLanguageId(languageId);
+	}
+
+	/**
+	* Sets the localized diploma templates of this competence from the map of locales and localized diploma templates.
+	*
+	* @param diplomaTemplateMap the locales and localized diploma templates of this competence
+	*/
+	public void setDiplomaTemplateMap(
+		java.util.Map<java.util.Locale, java.lang.String> diplomaTemplateMap) {
+		_competence.setDiplomaTemplateMap(diplomaTemplateMap);
+	}
+
+	/**
+	* Sets the localized diploma templates of this competence from the map of locales and localized diploma templates, and sets the default locale.
+	*
+	* @param diplomaTemplateMap the locales and localized diploma templates of this competence
+	* @param defaultLocale the default locale
+	*/
+	public void setDiplomaTemplateMap(
+		java.util.Map<java.util.Locale, java.lang.String> diplomaTemplateMap,
+		java.util.Locale defaultLocale) {
+		_competence.setDiplomaTemplateMap(diplomaTemplateMap, defaultLocale);
 	}
 
 	/**
