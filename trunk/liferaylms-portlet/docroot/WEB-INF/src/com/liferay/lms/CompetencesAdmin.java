@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.User;
@@ -36,6 +37,7 @@ import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.sun.corba.se.spi.orb.StringPair;
 
 /**
  * Portlet implementation class CompetencesAdmin
@@ -114,6 +116,8 @@ public class CompetencesAdmin extends MVCPortlet{
 		String description = actionRequest.getParameter("description");
 		long competenceId = ParamUtil.getLong(actionRequest, "competenceId", 0);
 		boolean generateCertificate= ParamUtil.getBoolean(actionRequest, "generateCertificate", false);
+		String template= ParamUtil.getString(actionRequest, "template", StringPool.BLANK);
+		
 		Competence competence=null;
 		if(competenceId==0)
 		{
@@ -134,9 +138,11 @@ public class CompetencesAdmin extends MVCPortlet{
 			} catch (SystemException e) {
 				e.printStackTrace();
 			}
+			
 			competence.setTitle(title);
 			competence.setDescription(description);
 			competence.setGenerateCertificate(generateCertificate);
+			competence.setDiplomaTemplate(template);
 			try {
 				CompetenceLocalServiceUtil.updateCompetence(competence, serviceContext);
 			} catch (PortalException e) {

@@ -1,27 +1,51 @@
 package com.liferay.lms;
 
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletException;
 import javax.portlet.PortletRequestDispatcher;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
+import javax.portlet.ResourceRequest;
+import javax.portlet.ResourceResponse;
+
+import org.xhtmlrenderer.pdf.ITextRenderer;
 
 import com.liferay.lms.inscriptionadmin.InscriptionAdminPortlet;
 import com.liferay.lms.model.Competence;
+import com.liferay.lms.model.Course;
+import com.liferay.lms.model.LmsPrefs;
+import com.liferay.lms.model.Module;
 import com.liferay.lms.model.UserCompetence;
 import com.liferay.lms.service.CompetenceLocalServiceUtil;
+import com.liferay.lms.service.CourseLocalServiceUtil;
+import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
+import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.UserCompetenceLocalServiceUtil;
 import com.liferay.lms.views.CompetenceView;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
+import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.util.VelocityUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.lowagie.text.DocumentException;
 
 
 public class UserCompetencePortlet extends MVCPortlet {
@@ -85,6 +109,122 @@ public class UserCompetencePortlet extends MVCPortlet {
 		renderRequest.setAttribute("totale", String.valueOf(totale));
 		renderRequest.setAttribute("delta", String.valueOf(delta));
 		include(viewJSP, renderRequest, renderResponse);
+	}
+
+	public void serveResource(ResourceRequest request, ResourceResponse response) throws PortletException,IOException{
+		
+		Long competenceId = ParamUtil.getLong(request, "competenceId", 0);
+		
+		response.setContentType("application/pdf");
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
+		if(themeDisplay.isSignedIn()&&competenceId>0){
+			try {
+				UserCompetence userCompetence = UserCompetenceLocalServiceUtil.findByUserIdCompetenceId(themeDisplay.getUserId(), competenceId);
+				
+				if(userCompetence!=null&&userCompetence.getUserId()==themeDisplay.getUserId()){
+					Competence competence = CompetenceLocalServiceUtil.getCompetence(userCompetence.getCompetenceId());
+					User user = themeDisplay.getUser();
+					Course course=CourseLocalServiceUtil.getCourse(userCompetence.getCourseId());
+					
+					if(user!=null&&competence!=null&&course!=null){
+						if(log.isDebugEnabled())log.debug("Enter:"+user.getLocale());
+
+						ITextRenderer renderer = new ITextRenderer();
+						Map<String, Object> variables = new HashMap<String, Object>();
+						variables.put("user", user);
+						variables.put("competence", competence);
+						variables.put("course", course);						
+						variables.put("uuid", userCompetence.getUuid());
+						variables.put("courseName", course.getTitle(user.getLocale()));
+						variables.put("competenceName", competence.getTitle(user.getLocale()));
+						variables.put("userName", user.getFullName());
+						
+						LmsPrefs lmsprefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+						long teacherRoleId=lmsprefs.getTeacherRole();
+						List<UserGroupRole> teachersGroups=UserGroupRoleLocalServiceUtil.getUserGroupRolesByGroupAndRole(course.getGroupCreatedId(),teacherRoleId);
+						
+						StringBuffer teachersNames = new StringBuffer(StringPool.BLANK);
+						List<User> teachers = new ArrayList<User>();
+						if(teachersGroups!=null){
+							if(log.isDebugEnabled())log.debug(teachersGroups.size());
+							teachersNames.append("<ul>");
+							for(UserGroupRole userGroupRole : teachersGroups){
+								User teacher = UserLocalServiceUtil.getUser(userGroupRole.getUserId()); 
+								if(teacher!=null){
+									teachersNames.append("<li>");
+									teachersNames.append(teacher.getFullName());
+									teachers.add(teacher);
+									teachersNames.append("</li>");
+								}
+							}
+							teachersNames.append("</ul>");
+						}
+
+						StringBuffer modulesNames = new StringBuffer(StringPool.BLANK);
+						List<Module> modules= ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
+						if(modules!=null){
+							modulesNames.append("<ul>");
+							if(log.isDebugEnabled())log.debug(modules.size());
+							for(Module module : modules){
+								modulesNames.append("<li>");
+								modulesNames.append(module.getTitle(user.getLocale()));
+								modulesNames.append("</li>");
+							} 
+							modulesNames.append("</ul>");
+						}
+
+						variables.put("modules", modules);
+						variables.put("modulesNames", modulesNames);
+						variables.put("teachers", teachers);
+						variables.put("teachersNames", teachersNames);
+						
+						String template = StringPool.BLANK;
+						try {
+							template = VelocityUtil.evaluate(competence.getDiplomaTemplate(user.getLocale()).replaceAll("&nbsp;", StringPool.BLANK), variables);
+						} catch (Exception e) {
+							if(log.isDebugEnabled())e.printStackTrace();
+						}
+						String imageurl =CompetenceLocalServiceUtil.getBGImageURL( competence, PortalUtil.getHttpServletRequest(request));
+						
+						StringBuffer html = new StringBuffer("<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><style type=\"text/css\">@page { size: A4 landscape ;");
+						html.append(" background: url('");
+						html.append(imageurl);
+						html.append("') no-repeat center center fixed; background-size: cover;");
+						html.append("}</style></head><body>");
+						html.append(template); 
+						html.append("</body></html>");
+
+						
+						OutputStream out = response.getPortletOutputStream();
+						
+						if(log.isDebugEnabled())log.debug(html);
+
+						renderer.setDocumentFromString(html.toString());
+
+						renderer.layout(); 
+						
+						try {
+							renderer.createPDF(out, false);
+						} catch (DocumentException e) {
+							if(log.isDebugEnabled())e.printStackTrace();
+						}
+						
+						renderer.layout(); 
+						
+						renderer.finishPDF();
+						
+						out.close();
+						
+					}
+				}
+				
+			} catch (PortalException e) {
+				if(log.isDebugEnabled())e.printStackTrace();
+			} catch (SystemException e) {
+				if(log.isDebugEnabled())e.printStackTrace();
+			}
+		}
 	}
  
 

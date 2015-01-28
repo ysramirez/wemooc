@@ -35,7 +35,7 @@ public class CompetenceCacheModel implements CacheModel<Competence>,
 	Serializable {
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(uuid);
@@ -61,6 +61,8 @@ public class CompetenceCacheModel implements CacheModel<Competence>,
 		sb.append(description);
 		sb.append(", generateCertificate=");
 		sb.append(generateCertificate);
+		sb.append(", diplomaTemplate=");
+		sb.append(diplomaTemplate);
 		sb.append("}");
 
 		return sb.toString();
@@ -113,6 +115,13 @@ public class CompetenceCacheModel implements CacheModel<Competence>,
 
 		competenceImpl.setGenerateCertificate(generateCertificate);
 
+		if (diplomaTemplate == null) {
+			competenceImpl.setDiplomaTemplate(StringPool.BLANK);
+		}
+		else {
+			competenceImpl.setDiplomaTemplate(diplomaTemplate);
+		}
+
 		competenceImpl.resetOriginalValues();
 
 		return competenceImpl;
@@ -130,4 +139,5 @@ public class CompetenceCacheModel implements CacheModel<Competence>,
 	public String title;
 	public String description;
 	public boolean generateCertificate;
+	public String diplomaTemplate;
 }

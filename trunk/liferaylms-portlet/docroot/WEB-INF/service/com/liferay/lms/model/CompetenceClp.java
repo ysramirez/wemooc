@@ -87,6 +87,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
 		attributes.put("generateCertificate", getGenerateCertificate());
+		attributes.put("diplomaTemplate", getDiplomaTemplate());
 
 		return attributes;
 	}
@@ -164,6 +165,12 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 
 		if (generateCertificate != null) {
 			setGenerateCertificate(generateCertificate);
+		}
+
+		String diplomaTemplate = (String)attributes.get("diplomaTemplate");
+
+		if (diplomaTemplate != null) {
+			setDiplomaTemplate(diplomaTemplate);
 		}
 	}
 
@@ -471,6 +478,109 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		_generateCertificate = generateCertificate;
 	}
 
+	public String getDiplomaTemplate() {
+		return _diplomaTemplate;
+	}
+
+	public String getDiplomaTemplate(Locale locale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDiplomaTemplate(languageId);
+	}
+
+	public String getDiplomaTemplate(Locale locale, boolean useDefault) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+
+		return getDiplomaTemplate(languageId, useDefault);
+	}
+
+	public String getDiplomaTemplate(String languageId) {
+		return LocalizationUtil.getLocalization(getDiplomaTemplate(), languageId);
+	}
+
+	public String getDiplomaTemplate(String languageId, boolean useDefault) {
+		return LocalizationUtil.getLocalization(getDiplomaTemplate(),
+			languageId, useDefault);
+	}
+
+	public String getDiplomaTemplateCurrentLanguageId() {
+		return _diplomaTemplateCurrentLanguageId;
+	}
+
+	public String getDiplomaTemplateCurrentValue() {
+		Locale locale = getLocale(_diplomaTemplateCurrentLanguageId);
+
+		return getDiplomaTemplate(locale);
+	}
+
+	public Map<Locale, String> getDiplomaTemplateMap() {
+		return LocalizationUtil.getLocalizationMap(getDiplomaTemplate());
+	}
+
+	public void setDiplomaTemplate(String diplomaTemplate) {
+		_diplomaTemplate = diplomaTemplate;
+	}
+
+	public void setDiplomaTemplate(String diplomaTemplate, Locale locale) {
+		setDiplomaTemplate(diplomaTemplate, locale, LocaleUtil.getDefault());
+	}
+
+	public void setDiplomaTemplate(String diplomaTemplate, Locale locale,
+		Locale defaultLocale) {
+		String languageId = LocaleUtil.toLanguageId(locale);
+		String defaultLanguageId = LocaleUtil.toLanguageId(defaultLocale);
+
+		if (Validator.isNotNull(diplomaTemplate)) {
+			setDiplomaTemplate(LocalizationUtil.updateLocalization(
+					getDiplomaTemplate(), "DiplomaTemplate", diplomaTemplate,
+					languageId, defaultLanguageId));
+		}
+		else {
+			setDiplomaTemplate(LocalizationUtil.removeLocalization(
+					getDiplomaTemplate(), "DiplomaTemplate", languageId));
+		}
+	}
+
+	public void setDiplomaTemplateCurrentLanguageId(String languageId) {
+		_diplomaTemplateCurrentLanguageId = languageId;
+	}
+
+	public void setDiplomaTemplateMap(Map<Locale, String> diplomaTemplateMap) {
+		setDiplomaTemplateMap(diplomaTemplateMap, LocaleUtil.getDefault());
+	}
+
+	public void setDiplomaTemplateMap(Map<Locale, String> diplomaTemplateMap,
+		Locale defaultLocale) {
+		if (diplomaTemplateMap == null) {
+			return;
+		}
+
+		ClassLoader portalClassLoader = PortalClassLoaderUtil.getClassLoader();
+
+		Thread currentThread = Thread.currentThread();
+
+		ClassLoader contextClassLoader = currentThread.getContextClassLoader();
+
+		try {
+			if (contextClassLoader != portalClassLoader) {
+				currentThread.setContextClassLoader(portalClassLoader);
+			}
+
+			Locale[] locales = LanguageUtil.getAvailableLocales();
+
+			for (Locale locale : locales) {
+				String diplomaTemplate = diplomaTemplateMap.get(locale);
+
+				setDiplomaTemplate(diplomaTemplate, locale, defaultLocale);
+			}
+		}
+		finally {
+			if (contextClassLoader != portalClassLoader) {
+				currentThread.setContextClassLoader(contextClassLoader);
+			}
+		}
+	}
+
 	/**
 	 * @deprecated {@link #isApproved}
 	 */
@@ -574,6 +684,8 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 			defaultImportLocale);
 		setDescription(getDescription(defaultImportLocale),
 			defaultImportLocale, defaultImportLocale);
+		setDiplomaTemplate(getDiplomaTemplate(defaultImportLocale),
+			defaultImportLocale, defaultImportLocale);
 	}
 
 	@Override
@@ -598,6 +710,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		clone.setTitle(getTitle());
 		clone.setDescription(getDescription());
 		clone.setGenerateCertificate(getGenerateCertificate());
+		clone.setDiplomaTemplate(getDiplomaTemplate());
 
 		return clone;
 	}
@@ -648,7 +761,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(27);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -674,13 +787,15 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		sb.append(getDescription());
 		sb.append(", generateCertificate=");
 		sb.append(getGenerateCertificate());
+		sb.append(", diplomaTemplate=");
+		sb.append(getDiplomaTemplate());
 		sb.append("}");
 
 		return sb.toString();
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(40);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Competence");
@@ -734,6 +849,10 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 			"<column><column-name>generateCertificate</column-name><column-value><![CDATA[");
 		sb.append(getGenerateCertificate());
 		sb.append("]]></column-value></column>");
+		sb.append(
+			"<column><column-name>diplomaTemplate</column-name><column-value><![CDATA[");
+		sb.append(getDiplomaTemplate());
+		sb.append("]]></column-value></column>");
 
 		sb.append("</model>");
 
@@ -756,5 +875,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 	private String _description;
 	private String _descriptionCurrentLanguageId;
 	private boolean _generateCertificate;
+	private String _diplomaTemplate;
+	private String _diplomaTemplateCurrentLanguageId;
 	private BaseModel<?> _competenceRemoteModel;
 }

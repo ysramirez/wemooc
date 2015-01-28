@@ -38,6 +38,7 @@
 			<hint name="max-length">500000</hint>
 		</field>
 		<field name="generateCertificate" type="boolean" />
+		<field name="diplomaTemplate" type="String" localized="true" />
 	</model>
 	<model name="com.liferay.lms.model.Course">
 		<field name="uuid" type="String" />

@@ -68,11 +68,6 @@
     <load-on-startup>0</load-on-startup>
   </servlet>
   <servlet>
-    <servlet-name>certificateservlet</servlet-name>
-    <servlet-class>com.liferay.lms.servlet.CompetenceCertificateServlet</servlet-class>
-    <load-on-startup>0</load-on-startup>
-  </servlet>
-  <servlet>
     <servlet-name>exportedcourseservlet</servlet-name>
     <servlet-class>com.liferay.lms.servlet.ExportedCourseServlet</servlet-class>
     <load-on-startup>0</load-on-startup>
@@ -89,10 +84,6 @@
   <servlet-mapping>
     <servlet-name>exportedcourseservlet</servlet-name>
     <url-pattern>/exports/courses/*</url-pattern>
-  </servlet-mapping>
-  <servlet-mapping>
-    <servlet-name>certificateservlet</servlet-name>
-    <url-pattern>/certificate/*</url-pattern>
   </servlet-mapping>
   <servlet-mapping>
     <servlet-name>scormfileservlet</servlet-name>

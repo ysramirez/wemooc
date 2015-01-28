@@ -58,8 +58,11 @@
 			<basic name="title" />
 			<basic name="description" />
 			<basic name="generateCertificate" />
+			<basic name="diplomaTemplate" />
 			<transient name="descriptionCurrentLanguageId" />
 			<transient name="descriptionMap" />
+			<transient name="diplomaTemplateCurrentLanguageId" />
+			<transient name="diplomaTemplateMap" />
 			<transient name="modelAttributes" />
 			<transient name="primaryKey" />
 			<transient name="primaryKeyObj" />

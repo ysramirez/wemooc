@@ -75,7 +75,7 @@ public class LearningActivityTryModelImpl extends BaseModelImpl<LearningActivity
 			{ "tryResultData", Types.VARCHAR },
 			{ "comments", Types.VARCHAR }
 		};
-	public static final String TABLE_SQL_CREATE = "create table Lms_LearningActivityTry (uuid_ VARCHAR(75) null,latId LONG not null primary key,actId LONG,userId LONG,startDate DATE null,result LONG,endDate DATE null,tryData VARCHAR(75) null,tryResultData TEXT null,comments VARCHAR(75) null)";
+	public static final String TABLE_SQL_CREATE = "create table Lms_LearningActivityTry (uuid_ VARCHAR(75) null,latId LONG not null primary key,actId LONG,userId LONG,startDate DATE null,result LONG,endDate DATE null,tryData VARCHAR(75) null,tryResultData TEXT null,comments TEXT null)";
 	public static final String TABLE_SQL_DROP = "drop table Lms_LearningActivityTry";
 	public static final String ORDER_BY_JPQL = " ORDER BY learningActivityTry.latId ASC";
 	public static final String ORDER_BY_SQL = " ORDER BY Lms_LearningActivityTry.latId ASC";

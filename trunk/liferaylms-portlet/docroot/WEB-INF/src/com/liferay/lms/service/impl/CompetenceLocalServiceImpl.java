@@ -24,6 +24,7 @@ import java.util.Locale;
 import javax.servlet.http.HttpServletRequest;
 
 import com.liferay.lms.model.Competence;
+import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.service.base.CompetenceLocalServiceBaseImpl;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -32,10 +33,13 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexable;
 import com.liferay.portal.kernel.search.IndexableType;
 import com.liferay.portal.kernel.util.ContentTypes;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
+import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.util.LmsLocaleUtil;
 
 /**
  * The implementation of the competence local service.
@@ -75,6 +79,7 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 		Competence competence = competencePersistence.create(counterLocalService.increment(Competence.class.getName()));	
 			competence.setCompanyId(serviceContext.getCompanyId());
 			competence.setGroupId(serviceContext.getScopeGroupId());
+			competence.setDiplomaTemplate(ParamUtil.getString(serviceContext.getRequest(),"template",StringPool.BLANK ),serviceContext.getLocale());
 			competence.setGenerateCertificate(generateCertificate);
 			competence.setUserId(userId);
 			competence.setDescription(description,serviceContext.getLocale());
@@ -82,6 +87,11 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			competence.setStatus(WorkflowConstants.STATUS_APPROVED);
 			competence.setExpandoBridgeAttributes(serviceContext);
 			competencePersistence.update(competence, true);
+			
+
+			competence = LmsLocaleUtil.checkDefaultLocale(Competence.class, competence, "title");
+			competence = LmsLocaleUtil.checkDefaultLocale(Competence.class, competence, "description");
+			
 			try
 			{
 			resourceLocalService.addResources(serviceContext.getCompanyId(), serviceContext.getScopeGroupId(),
@@ -105,8 +115,13 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 
 	@Indexable(type=IndexableType.REINDEX)
 	public Competence updateCompetence(Competence competence, ServiceContext serviceContext) throws SystemException, PortalException {
+
+		competence = LmsLocaleUtil.checkDefaultLocale(Competence.class, competence, "title");
+		competence = LmsLocaleUtil.checkDefaultLocale(Competence.class, competence, "description");
+		
 		Competence competenceReturn = competencePersistence.update(competence, true);
 		Locale locale=new Locale(serviceContext.getLanguageId());
+		
 		long userId=serviceContext.getUserId();
 		AssetEntryLocalServiceUtil.updateEntry(
 				userId, competence.getGroupId(), Competence.class.getName(),
@@ -119,10 +134,12 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 	}
 
 	@Indexable(type=IndexableType.REINDEX)
-	public Competence modCompetence (Competence competence,
-			ServiceContext serviceContext)
-			throws SystemException, PortalException {
+	public Competence modCompetence (Competence competence, ServiceContext serviceContext) throws SystemException, PortalException {
 			competence.setExpandoBridgeAttributes(serviceContext);
+
+			competence = LmsLocaleUtil.checkDefaultLocale(Competence.class, competence, "title");
+			competence = LmsLocaleUtil.checkDefaultLocale(Competence.class, competence, "description");
+			
 			Locale locale=new Locale(serviceContext.getLanguageId());
 			competencePersistence.update(competence, true);
 			long userId=serviceContext.getUserId();
@@ -175,8 +192,7 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			try {
 				return imageFile.toURL().toString();
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(log.isDebugEnabled())e.printStackTrace();
 			}
 		}
 		imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+".jpeg");
@@ -185,8 +201,7 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			try {
 				return imageFile.toURL().toString();
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(log.isDebugEnabled())e.printStackTrace();
 			}
 		}
 		imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+".jpg");
@@ -195,8 +210,7 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			try {
 				return imageFile.toURL().toString();
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(log.isDebugEnabled())e.printStackTrace();
 			}
 		}
 		imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+".gif");
@@ -205,8 +219,7 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			try {
 				return imageFile.toURL().toString();
 			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				if(log.isDebugEnabled())e.printStackTrace();
 			}
 		}
 		}

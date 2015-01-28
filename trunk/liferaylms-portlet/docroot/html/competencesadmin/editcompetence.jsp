@@ -27,9 +27,11 @@ else
 	}
 }	
 String description="";
+String template="";
 if(competence!=null)
 {
 	description=competence.getDescription(themeDisplay.getLocale(),true);
+	template=competence.getDiplomaTemplate(themeDisplay.getLocale(),true);
 	
 	%>
 	<aui:model-context bean="<%= competence %>" model="<%= Competence.class %>" />
@@ -42,6 +44,19 @@ else
 	<%
 }
 %>
+
+<script type="text/javascript">
+	function generateCertificate(){
+		var divTemplate = document.getElementById("<portlet:namespace />templateContainer");
+		
+		if(divTemplate.style.display==='none'){
+			divTemplate.style.display='block';
+		}else{
+			divTemplate.style.display='none';
+		}
+	}
+</script>
+
 <aui:form name="fm" action="<%=savecompetenceURL%>"  method="post" >
 
 	<aui:input name="redirect" type="hidden" value="<%= redirect %>" />
@@ -49,17 +64,29 @@ else
 	<aui:input name="referringPortletResource" type="hidden" value="<%= referringPortletResource %>" />
 	<aui:input name="competenceId" type="hidden" value="<%=competenceId %>"/>
 	<aui:input name="title" label="title">
-	<aui:validator name="required" errorMessage="title-required"></aui:validator>
-	</aui:input>
-	<aui:input name="generateCertificate" label="competence.generatecertificate">
+		<aui:validator name="required" errorMessage="title-required"></aui:validator>
 	</aui:input>
 	<aui:field-wrapper label="description">
-			<liferay-ui:input-editor name="description" width="100%" />
+			<liferay-ui:input-editor name="description" width="100%" initMethod="initEditorDescription" />
 			<aui:input name="description" type="hidden" />
 				<script type="text/javascript">
-        function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
-    </script>
+        			function <portlet:namespace />initEditorDescription() { return "<%= UnicodeFormatter.toString(description) %>"; }
+   				</script>
+	</aui:field-wrapper>
+	<aui:input type="checkbox" value="<%= competence.getGenerateCertificate() %>" name="generateCertificate" label="competence.generatecertificate" onChange="generateCertificate()">
+	</aui:input>
+	<div id="<portlet:namespace />templateContainer" <c:if test="<%= !competence.getGenerateCertificate() %>">style="display:none"</c:if> >
+		<aui:field-wrapper label="competence.diplomaTemplate">
+				<liferay-ui:input-editor name="template" width="100%" initMethod="initEditorTemplate" />
+				<aui:input name="/>template" type="hidden" />
+					<script type="text/javascript">
+	        			function <portlet:namespace />initEditorTemplate() { return "<%= UnicodeFormatter.toString(template) %>"; }
+	   				</script>
 		</aui:field-wrapper>
+		<div>
+			<liferay-ui:message key="competence.helpcertificate" />
+		</div>
+	</div>
 		<liferay-ui:panel-container>
 		<liferay-ui:panel title="categorization" extended="false">
 	<liferay-ui:custom-attributes-available className="<%= Competence.class.getName() %>">
