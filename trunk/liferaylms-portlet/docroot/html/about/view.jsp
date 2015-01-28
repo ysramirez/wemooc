@@ -6,28 +6,29 @@
 
 <%@ include file="/init.jsp"%>
 
-<%
 
-	Properties prop = new Properties();
-	long buildNumber = 0;
-	Date date = new Date(0);
-	try {
-		
-		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		prop.load(classLoader.getResourceAsStream("service.properties"));
-	
-		buildNumber = Long.valueOf(prop.getProperty("build.date",""));
-		
-		date = new Date(buildNumber);
-		
-	} catch (FileNotFoundException e) {
-		e.printStackTrace();
-	} catch (IOException e) {
-		e.printStackTrace();
-	}
-
-%>
-<h2 class="description-title"><%=LanguageUtil.get(pageContext,"about")%></span></h2>
-<div><span class="label"><%= LanguageUtil.get(pageContext,"build-date")%>: </span><%= date.toString() %></div>
-<div><span class="label"><%= LanguageUtil.get(pageContext,"build-number")%>: </span><%= prop.getProperty("build.number","") %></div>
-<div><span class="label"><%= LanguageUtil.get(pageContext,"auto-upgrade")%>: </span><%= prop.getProperty("build.auto.upgrade","") %></div>
+<c:forEach items="${names}" var="name" >
+	<h1 class="description-title">
+		<span>${name}</span>
+	</h1>
+	<h2 class="description-title">
+		<c:set var="props" value="${liferay[name]}" />
+		<c:if test="${not empty props}">
+			<c:if test="${not empty props['liferay-versions']}">
+				Liferay: ${props['liferay-versions']}
+			</c:if>
+			<c:if test="${not empty props['module-incremental-version']}">
+				Ver: ${props['module-incremental-version']}
+			</c:if>
+		</c:if>
+	</h2>
+	<c:set var="props" value="${properties[name]}" />
+	<c:if test="${not empty props}">
+		<liferay-ui:message key="database"/>
+		<c:if test="${not empty props['build.date']}">
+			<div><span class="label"><liferay-ui:message key="build-date"/>:${props['build.date']}</span></div>
+			<div><span class="label"><liferay-ui:message key="build-number"/>:${props['build.number']}</span></div>
+			<div><span class="label"><liferay-ui:message key="build-upgrade"/>:${props['build.auto.upgrade']}</span></div>
+		</c:if>
+	</c:if> 
+</c:forEach>

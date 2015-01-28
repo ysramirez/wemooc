@@ -1993,7 +1993,7 @@
 	<portlet>
 		<portlet-name>about</portlet-name>
 		<display-name>about</display-name>
-		<portlet-class>com.liferay.lms.about</portlet-class>
+		<portlet-class>com.liferay.lms.About</portlet-class>
 		<init-param>
 			<name>view-template</name>
 			<value>/html/about/view.jsp</value>
