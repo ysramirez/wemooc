@@ -69,6 +69,7 @@ import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.model.AssetRendererFactory;
 import com.liferay.util.bridges.mvc.MVCPortlet;
+import com.tls.lms.util.LiferaylmsUtil;
 
 
 /**
@@ -274,12 +275,37 @@ public class SurveyActivity extends MVCPortlet {
 				CSVReader reader = null;
 				try {
 					boolean allCorrect=true;
-					reader = new CSVReader(new InputStreamReader(csvFile, StringPool.UTF8),CharPool.SEMICOLON);
+					
+					
 					int line = 0;
 					String questionText="";
 					String[] currLine; 
+					
+					/*Cosas de Miguel*/
+					
+					byte[] buf = new byte[16384];
+					String type = LiferaylmsUtil.getEncodingTypeOfFile(buf, 0, csvFile.read(buf));
+					csvFile.reset();
+					/*Cosas de Miguel*/		
+					
+					if(type.equals(LiferaylmsUtil.CHARSET_UTF_8 ) || type.equals(LiferaylmsUtil.CHARSET_UTF_16LE )|| type.equals(LiferaylmsUtil.CHARSET_UTF_32BE )
+							|| type.equals(LiferaylmsUtil.CHARSET_UTF_32LE )){
+						//System.out.println("UTF-8");
+						reader = new CSVReader(new InputStreamReader(csvFile, StringPool.UTF8),CharPool.SEMICOLON);
+
+					}else{
+						//System.out.println("ISO");
+						reader = new CSVReader(new InputStreamReader(csvFile, StringPool.ISO_8859_1),CharPool.SEMICOLON);
+
+					}
+					
+
 					while ((currLine = reader.readNext()) != null) {
-						if (line == 0) { line++; continue; }
+						if (line == 0) {
+							line++; 
+							continue; 
+						}
+						
 						boolean correct = true;
 						line++;
 						if (currLine.length == 2) {
@@ -327,6 +353,7 @@ public class SurveyActivity extends MVCPortlet {
 								allCorrect=false;
 						}
 					}//while
+					System.out.println("Se acabo");
 					if(allCorrect){
 						actionResponse.setRenderParameter("jspPage", "/html/surveyactivity/admin/editquestions.jsp");
 						SessionMessages.add(actionRequest, "questions-added-successfully");
