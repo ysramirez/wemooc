@@ -63,6 +63,7 @@ else
 }
 
 %>
+
 <liferay-ui:error key="scormadmin.error.notitle" message="scormadmin.error.notitle"/>
 <liferay-ui:error key="scormadmin.error.nodescription" message="scormadmin.error.nodescription"/>
 <liferay-ui:error key="scormadmin.error.nozip" message="scormadmin.error.nozip"/>
@@ -84,6 +85,7 @@ else
 				<script type="text/javascript">
         function <portlet:namespace />initEditor() { return "<%= UnicodeFormatter.toString(description) %>"; }
     </script>
+    <br />
     </aui:field-wrapper>
     <c:if test="<%=scormId==0%>">
 
@@ -93,6 +95,7 @@ else
 		  	<aui:validator name="required"></aui:validator>
 		  	<aui:validator name="acceptFiles">'zip'</aui:validator>
 		  	</aui:input>
+		  	<br />
 </aui:field-wrapper>	
 <aui:field-wrapper name="permissions">
 		<liferay-ui:input-permissions modelName="<%= SCORMContent.class.getName() %>">

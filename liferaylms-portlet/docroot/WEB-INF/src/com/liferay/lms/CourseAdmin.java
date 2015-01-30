@@ -691,8 +691,8 @@ public class CourseAdmin extends MVCPortlet {
 		int stopMonth = ParamUtil.getInteger(actionRequest, "stopMon");
 		int stopYear = ParamUtil.getInteger(actionRequest, "stopYear");
 		int stopDay = ParamUtil.getInteger(actionRequest, "stopDay");
-		boolean startDateEnabled=ParamUtil.getBoolean(actionRequest,"startdate",false);
-		boolean stopDateEnabled=ParamUtil.getBoolean(actionRequest,"stopdate",false);
+		boolean startDateEnabled=ParamUtil.getBoolean(actionRequest,"startdate-enabled",false);
+		boolean stopDateEnabled=ParamUtil.getBoolean(actionRequest,"stopdate-enabled",false);
 		Date allowStartDate = PortalUtil.getDate(startMonth, startDay, startYear,
 				0, 0, user.getTimeZone(),
 				new EntryDisplayDateException());

@@ -139,8 +139,6 @@ public class SCORMAdmin extends MVCPortlet
 				response.setRenderParameter("description", description);
 				response.setRenderParameter("ciphered",	new Boolean(ciphered).toString());
 				response.setRenderParameter("redirect", redirect);
-				response.setRenderParameter("tags", serviceContext.getAssetTagNames());
-				response.setRenderParameter("categories", ArrayUtil.toStringArray(serviceContext.getAssetCategoryIds()));
 				response.setRenderParameter("mvcPath", "/html/scormadmin/editscorm.jsp");
 				response.setRenderParameter("jspPage", "/html/scormadmin/editscorm.jsp");
 				return;
