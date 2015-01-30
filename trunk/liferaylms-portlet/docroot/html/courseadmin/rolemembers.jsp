@@ -120,7 +120,7 @@ modelVar="user">
 <liferay-ui:icon-menu>
 <%if(roleId==commmanager.getRoleId())
 {%>
-<liferay-portlet:renderURL  var="editInscriptionDatesURL"  windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+<liferay-portlet:renderURL  var="editInscriptionDatesURL"  windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<liferay-portlet:param name="jspPage" value="/html/courseadmin/editinscriptiondates.jsp"/>
 	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"/>
 	<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"/>

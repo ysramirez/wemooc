@@ -1,3 +1,4 @@
+<%@page import="com.liferay.taglib.ui.LanguageTag"%>
 <%@page import="java.text.SimpleDateFormat"%>
 <%@page import="com.tls.lms.util.LiferaylmsUtil"%>
 <%@page import="com.liferay.lms.model.CourseResult"%>
@@ -47,7 +48,7 @@ if(courseResult!=null)
 }
 %>
 
-<portlet:actionURL var="editInscriptionDatesURL" name="editInscriptionDates" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">
+<portlet:actionURL var="editInscriptionDatesURL" name="editInscriptionDates" windowState="<%=LiferayWindowState.POP_UP.toString() %>">
 <portlet:param name="jspPage" value="/html/courseadmin/editinscriptiondates.jsp"/>
 </portlet:actionURL>
 
@@ -55,13 +56,15 @@ if(courseResult!=null)
 <aui:form name="fm" action="<%=editInscriptionDatesURL%>"  method="post">
 <aui:button-row>
 <aui:field-wrapper label="start-date">
-<aui:input id="startdate" name="startdate-enabled" checked="<%=startdateenabled %>" disabled="false"  type="checkbox" label="editActivity.startdate.enabled"  ignoreRequestValue="true" />
+<aui:input name="courseId" type="hidden" value="<%=courseId %>" />
+<aui:input name="userId" type="hidden" value="<%=userId %>" />
+<aui:input id="startdate" name="startdate-enabled" checked="<%=startdateenabled %>"  type="checkbox" label="editActivity.startdate.enabled"  />
 					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>"  dayParam="startDay" monthParam="startMon" 
 					 yearParam="startYear"  yearNullable="false" dayNullable="false" monthNullable="false" yearValue="<%=startYear %>" monthValue="<%=startMonth %>" dayValue="<%=startDay %>"></liferay-ui:input-date>
 					 </aui:field-wrapper>
 					 
 					 <aui:field-wrapper label="end-date">
-<aui:input id="stopdate" name="stopdate-enabled" checked="<%=stopdateenabled %>" disabled="false" type="checkbox" label="editActivity.stopdate.enabled"  ignoreRequestValue="true" />
+<aui:input id="stopdate" name="stopdate-enabled" checked="<%=stopdateenabled %>"  type="checkbox" label="editActivity.stopdate.enabled" />
 					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="stopDay" monthParam="stopMon"
 					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 					 </aui:field-wrapper>
