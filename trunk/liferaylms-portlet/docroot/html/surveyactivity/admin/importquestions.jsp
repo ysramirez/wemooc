@@ -3,6 +3,7 @@
 <%@page import="com.liferay.lms.service.TestQuestionLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
+<%@page import="com.liferay.lms.service.ClpSerializer"%>
 <%@page import="com.liferay.portal.kernel.util.ListUtil"%>
 <%@ include file="/init.jsp" %>
 <%
@@ -13,6 +14,8 @@
 	backUrl.setParameter("jspPage", "/html/surveyactivity/admin/editquestions.jsp");
 	backUrl.setParameter("actionEditingDetails",StringPool.TRUE);
 	request.setAttribute("backUrl", backUrl.toString());
+	String urlExample = "<a href=\"/"+ClpSerializer.getServletContextName()+"/html/surveyactivity/examples/document.csv\">"+LanguageUtil.get(themeDisplay.getLocale(),"example")+"</a>";
+
 %>
 <liferay-util:include page="/html/surveyactivity/admin/editHeader.jsp" servletContext="<%=this.getServletContext() %>" />
 <%
@@ -32,6 +35,11 @@ else
 	<portlet:param name="actionEditingDetails" value="<%=StringPool.TRUE %>" />	
 	<portlet:param name="jspPage" value="/html/surveyactivity/admin/editquestions.jsp"></portlet:param>
 </portlet:actionURL>
+
+<span>
+	<%=LanguageUtil.get(pageContext,"surveyactivity.editquestions.importquestions.fileHelp") +"<br>"+ urlExample%>
+</span>
+
 <aui:form name="fm" action="<%=importQuestionsURL%>"  method="post" enctype="multipart/form-data">
 	<aui:fieldset>
 		<aui:field-wrapper label="file" helpMessage="surveyactivity.editquestions.importquestions.fileHelp">
