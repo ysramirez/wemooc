@@ -178,7 +178,7 @@
 						    	} else if (e.srcElement) {
 						    		targ = e.srcElement.blur();
 						    	}
-						    	<%= renderResponse.getNamespace() %>popConfirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "execativity.test.questions.without.response")) %>', e.srcElement);
+						    	<%= renderResponse.getNamespace() %>popConfirm('<%=JavaScriptUtil.markupToStringLiteral(LanguageUtil.get(pageContext, "surveyactivity.survey.without.response.text")) %>', e.srcElement);
 				    		}
 						    
 							if (!returnValue && e.preventDefault) {
