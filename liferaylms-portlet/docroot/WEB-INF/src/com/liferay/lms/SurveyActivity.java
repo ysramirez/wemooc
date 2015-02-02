@@ -318,7 +318,7 @@ public class SurveyActivity extends MVCPortlet {
 								questionText= currLine[0].trim();
 							}
 							String allAnswers = currLine[1].trim();
-							String[] answers = allAnswers.split(",");
+							String[] answers = allAnswers.split("\\|");
 							for(String a:answers){
 								if(a.equalsIgnoreCase("")){
 									SessionErrors.add(actionRequest, "surveyactivity.csvError.bad-answer",line);
@@ -595,6 +595,7 @@ public class SurveyActivity extends MVCPortlet {
 			try {
 
 				//Necesario para crear el fichero csv.
+				String separator = "|";
 				response.setCharacterEncoding(StringPool.UTF8);
 				response.setContentType(ContentTypes.TEXT_CSV_UTF8);
 				response.addProperty(HttpHeaders.CONTENT_DISPOSITION,"attachment; fileName=data.csv");
@@ -607,8 +608,8 @@ public class SurveyActivity extends MVCPortlet {
 				String[] cabeceras = new String[2];
 				
 				//En las columnas extra ponemos la cabecera
-				cabeceras[0]="Q";
-				cabeceras[1]="A";
+				cabeceras[0]="Pregunta";
+				cabeceras[1]="Respuestas";
 				
 				writer.writeNext(cabeceras);
 
@@ -624,15 +625,24 @@ public class SurveyActivity extends MVCPortlet {
 					String[] resultados = new String[2];
 					
 					List<TestAnswer> answers = TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
-					String[] answerTitles = new String[answers.size()];
+					//String[] answerTitles = new String[answers.size()];
 					
 					resultados[0] = question.getText();
+					
+					StringBuilder strbld = new StringBuilder();
 
-					for(int i = 0; i < answers.size(); i++) {
-						answerTitles[i] = answers.get(i).getAnswer();
+					for(int i = 0; i < answers.size()-1; i++) {
+						strbld.append(answers.get(i).getAnswer() + separator);
+						//answerTitles[i] = answers.get(i).getAnswer();
+						//System.out.println(answerTitles[i]);
 					}
-					resultados[1] = StringUtil.merge(answerTitles);
-
+					
+					strbld.append(answers.get(answers.size()-1).getAnswer());
+					
+					
+					//resultados[1] = StringUtil.merge(answerTitles);
+					resultados[1] = strbld.toString();
+					
 					//Escribimos las respuestas obtenidas para el intento en el csv.
 					writer.writeNext(resultados);
 				}
