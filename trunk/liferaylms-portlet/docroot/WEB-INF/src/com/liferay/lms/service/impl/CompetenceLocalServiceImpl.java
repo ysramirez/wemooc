@@ -241,6 +241,20 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 		}
 		String fileExtension=name.substring(name.lastIndexOf('.'));
 		File imageFile=new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+fileExtension.toLowerCase());
+		/* Cambios de Miguel que borra imagenes */
+		 String [] nameOfFiles = baseDirFile.list();
+		 String [] aux = null;
+		 File fileToDelete = null;
+		 for (int i=0; i<nameOfFiles.length; i++){
+			 aux = nameOfFiles[i].split("\\.");
+			 if(aux[0].equals(Long.toString(groupId))){
+				 fileToDelete = new File(baseDirFile.getAbsolutePath()+"/"+Long.toString(groupId)+"."+aux[1]);
+				 fileToDelete.delete();
+				 fileExtension = null;
+			 }
+		 }
+		/* Fin de cambios de Miguel */
+		
 		imageFile.createNewFile();
 		FileOutputStream fos=new FileOutputStream(imageFile);
 		fos.write(data);
