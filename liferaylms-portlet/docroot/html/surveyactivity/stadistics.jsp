@@ -21,7 +21,8 @@
 <%@ include file="/init.jsp"%>
 
 <%
-	if (ParamUtil.getLong(request, "actId", 0) == 0) {
+	if (ParamUtil.getLong(request, "actId", 0) == 0) 
+	{
 		renderRequest.setAttribute( WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 	} 
 	else
@@ -44,20 +45,17 @@
 			for(TestQuestion question:questions)
 			{
 			%>
-
 			<div class="question">
 				<div  class="questiontext">
 					<p><%=question.getText() %></p>
 				</div>
-				<span class="total color_tercero"><liferay-ui:message key="surveyactivity.stadistics.total" />: <%=SurveyResultLocalServiceUtil.getTotalAnswersByQuestionId(question.getQuestionId()) %></span>
-			
-			
+				<span class="total color_tercero"><liferay-ui:message key="surveyactivity.stadistics.total" />: <%=SurveyResultLocalServiceUtil.getTotalAnswersByQuestionId(question.getQuestionId()) %></span>		
 				<%
 				List<TestAnswer> testAnswers= TestAnswerLocalServiceUtil.getTestAnswersByQuestionId(question.getQuestionId());
 				for(TestAnswer answer:testAnswers)
 				{
-					String textoAux = answer.getAnswer().replaceAll("&lt;.+?&gt;|<.+?>","");
-					textoAux = textoAux.replaceAll("&nbsp;"," ");
+					String textoAux = answer.getAnswer();
+					textoAux = HtmlUtil.extractText(answer.getAnswer());
 					String texto = textoAux.length() > 50 ? textoAux.substring(0,50)+"..." : textoAux;
 					DecimalFormat df = new DecimalFormat("###.##");
 					String percent = df.format(SurveyResultLocalServiceUtil.getPercentageByQuestionIdAndAnswerId(question.getQuestionId(), answer.getAnswerId()));
@@ -70,11 +68,9 @@
 				}
 				%>
 			</div>
-		
 			<%
 			} 
-			%>
-				
+			%>		
 			<a href="<%=backToQuestionsURL.toString() %>" ><liferay-ui:message key="back" /></a>
 		</div>
 		
