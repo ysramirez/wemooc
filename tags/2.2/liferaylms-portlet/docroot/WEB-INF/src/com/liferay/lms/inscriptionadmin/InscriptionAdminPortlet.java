@@ -75,7 +75,7 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 		
 		PermissionChecker permissionChecker = PermissionThreadLocal.getPermissionChecker();
 		
-		if(!permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.ASSIGN_MEMBERS)){
+		if(!permissionChecker.hasPermission(course.getGroupCreatedId(),  Course.class.getName(),course.getCourseId(),ActionKeys.ASSIGN_MEMBERS)){
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		}
 				
