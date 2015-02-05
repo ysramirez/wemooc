@@ -177,6 +177,9 @@ public class SCORMFileServerServlet extends HttpServlet {
 					if (archivo.getName().toLowerCase().endsWith(".swf")) {
 						mime_type = "application/x-shockwave-flash";
 					}
+					if (archivo.getName().toLowerCase().endsWith(".mp4")) {
+						mime_type = "video/mp4";
+					}
 					if (archivo.getName().toLowerCase().endsWith(".flv")) {
 						mime_type = "video/x-flv";
 					}
@@ -209,13 +212,18 @@ public class SCORMFileServerServlet extends HttpServlet {
 					out.flush();
 					out.close();
 				} else {
-					java.io.OutputStream out = response.getOutputStream();
-					out.write(uri.getBytes());
+					//java.io.OutputStream out = response.getOutputStream();
+					response.sendError(404);
+					//out.write(uri.getBytes());
 				}
-			} else {
-				// Sin permiso
+			} 
+			else 
+			{
+				response.sendError(401);
 			}
-		} catch (Exception e) {
+		}
+		catch (Exception e) 
+		{
 			System.out
 					.println("Error en el processRequest() de ServidorArchivos: "
 							+ e.getMessage());
