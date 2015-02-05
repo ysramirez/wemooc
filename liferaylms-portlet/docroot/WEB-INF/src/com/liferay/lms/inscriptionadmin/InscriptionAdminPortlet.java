@@ -49,6 +49,7 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 	}
 	
 	public void doView(RenderRequest renderRequest,RenderResponse renderResponse) throws IOException, PortletException {
+		if(log.isDebugEnabled())log.debug(this.getClass().getName());
 		ThemeDisplay themeDisplay = (ThemeDisplay)renderRequest.getAttribute(WebKeys.THEME_DISPLAY);
 		List<MembershipRequest> memberships = null;
 		
@@ -75,7 +76,8 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 		
 		PermissionChecker permissionChecker = PermissionThreadLocal.getPermissionChecker();
 		
-		if(!permissionChecker.hasPermission(course.getGroupId(),  Course.class.getName(),course.getCourseId(),ActionKeys.ASSIGN_MEMBERS)){
+		if(!permissionChecker.hasPermission(course.getGroupCreatedId(),  Course.class.getName(),course.getCourseId(),ActionKeys.ASSIGN_MEMBERS)){
+			if(log.isDebugEnabled())log.debug(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY+"-"+Boolean.FALSE);
 			renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 		}
 				
