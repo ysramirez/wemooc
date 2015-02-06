@@ -174,7 +174,7 @@ public class UserCompetencePortlet extends MVCPortlet {
 							modulesNames.append("</ul>");
 						}
 
-						variables.put("modules", modules);
+						variables.put("modules", modules); 
 						variables.put("modulesNames", modulesNames);
 						variables.put("teachers", teachers);
 						variables.put("teachersNames", teachersNames);
@@ -190,11 +190,10 @@ public class UserCompetencePortlet extends MVCPortlet {
 						StringBuffer html = new StringBuffer("<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><style type=\"text/css\">@page { size: A4 landscape ;");
 						html.append(" background: url('");
 						html.append(imageurl);
-						html.append("') no-repeat center center fixed; background-size: cover;");
+						html.append("') repeat-y top center");
 						html.append("}</style></head><body>");
 						html.append(template); 
 						html.append("</body></html>");
-
 						
 						OutputStream out = response.getPortletOutputStream();
 						

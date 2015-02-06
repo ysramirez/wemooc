@@ -28,6 +28,7 @@ import com.liferay.portal.model.ResourceAction;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.Role;
 import com.liferay.portal.model.RoleConstants;
+import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.service.LayoutLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.ResourceActionLocalServiceUtil;
@@ -204,17 +205,21 @@ public class StartupAction extends SimpleAction {
 			titleMap.put(LocaleUtil.getDefault(), "Profesor");
 			descriptionMap.put(LocaleUtil.getDefault(), "Editors can Edit a course.");
 			courseEditor= RoleLocalServiceUtil.addRole(defaultUserId, companyId, "courseEditor",titleMap, descriptionMap, RoleConstants.TYPE_SITE);
-			actions= ResourceActionLocalServiceUtil.getResourceActions(Module.class.getName());
+			actions= ResourceActionLocalServiceUtil.getResourceActions(Module.class.getName()); 
 			setRolePermissions(courseEditor,Module.class.getName(),actions);
 			actions= ResourceActionLocalServiceUtil.getResourceActions("com.liferay.lms.model");
 			setRolePermissions(courseEditor,"com.liferay.lms.model",actions);
 			actions= ResourceActionLocalServiceUtil.getResourceActions(LearningActivity.class.getName());
 			setRolePermissions(courseEditor,LearningActivity.class.getName(),actions);
+			
+			//Add permission ASSIGN_MEMBERS by default
+			ResourcePermissionLocalServiceUtil.setResourcePermissions(companyId, Course.class.getName(), ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId), 
+					courseEditor.getRoleId(), new String[]{ActionKeys.ASSIGN_MEMBERS});
 		}
 		
 		courseTeacher = RoleLocalServiceUtil.fetchRole(companyId, "courseTeacher");
 		if(courseTeacher == null){
-			descriptionMap = new HashMap<Locale, String>();
+			descriptionMap = new HashMap<Locale, String>(); 
 			titleMap = new HashMap<Locale, String>();
 			titleMap.put(LocaleUtil.getDefault(),"Profesor sustituto");
 			descriptionMap.put(LocaleUtil.getDefault(), "Teachers.");
