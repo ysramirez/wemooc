@@ -213,8 +213,7 @@ public class StartupAction extends SimpleAction {
 			setRolePermissions(courseEditor,LearningActivity.class.getName(),actions);
 			
 			//Add permission ASSIGN_MEMBERS by default
-			ResourcePermissionLocalServiceUtil.setResourcePermissions(companyId, Course.class.getName(), ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId), 
-					courseEditor.getRoleId(), new String[]{ActionKeys.ASSIGN_MEMBERS});
+			ResourcePermissionLocalServiceUtil.setResourcePermissions(0L, Course.class.getName(), ResourceConstants.SCOPE_GROUP_TEMPLATE, String.valueOf(companyId), courseEditor.getRoleId(), new String[]{ActionKeys.ASSIGN_MEMBERS});
 		}
 		
 		courseTeacher = RoleLocalServiceUtil.fetchRole(companyId, "courseTeacher");
