@@ -864,7 +864,7 @@ public class LmsActivitiesList extends MVCPortlet {
 					renderRequest.setAttribute(paramExt,renderRequest.getPortletSession().getAttribute(paramExt));
 					renderRequest.getPortletSession().removeAttribute(paramExt);
 				}
-				if(renderRequest.getPortletSession().getAttribute(paramSize)!=null){
+				if(renderRequest.getPortletSession().getAttribute(paramSize)!=null){ 
 					renderRequest.setAttribute(paramSize,renderRequest.getPortletSession().getAttribute(paramSize));
 					renderRequest.getPortletSession().removeAttribute(paramSize);
 				}

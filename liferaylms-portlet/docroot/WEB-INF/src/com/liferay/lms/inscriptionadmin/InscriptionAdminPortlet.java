@@ -58,6 +58,7 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 		int numberUsers = 0;
 		int total = 0;
 		long maxUsers = 0;
+		
 		try {
 			group = GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
 			course = CourseLocalServiceUtil.getCourseByGroupCreatedId(themeDisplay.getScopeGroupId());
