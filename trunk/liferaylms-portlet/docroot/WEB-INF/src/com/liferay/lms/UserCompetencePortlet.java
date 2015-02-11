@@ -150,7 +150,7 @@ public class UserCompetencePortlet extends MVCPortlet {
 							if(log.isDebugEnabled())log.debug(teachersGroups.size());
 							teachersNames.append("<ul>");
 							for(UserGroupRole userGroupRole : teachersGroups){
-								User teacher = UserLocalServiceUtil.getUser(userGroupRole.getUserId()); 
+								User teacher = UserLocalServiceUtil.getUser(userGroupRole.getUserId());
 								if(teacher!=null){
 									teachersNames.append("<li>");
 									teachersNames.append(teacher.getFullName());
@@ -180,15 +180,18 @@ public class UserCompetencePortlet extends MVCPortlet {
 						variables.put("teachersNames", teachersNames);
 						
 						String template = StringPool.BLANK;
+						
 						try {
 							template = VelocityUtil.evaluate(competence.getDiplomaTemplate(user.getLocale()).replaceAll("&nbsp;", StringPool.BLANK), variables);
 						} catch (Exception e) {
 							if(log.isDebugEnabled())e.printStackTrace();
 						}
-						String imageurl =CompetenceLocalServiceUtil.getBGImageURL( competence, PortalUtil.getHttpServletRequest(request));
 						
-						StringBuffer html = new StringBuffer("<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><style type=\"text/css\">@page { size: A4 landscape ;");
-						html.append(" background: url('");
+						String imageurl =CompetenceLocalServiceUtil.getBGImageURL( competence, PortalUtil.getHttpServletRequest(request));
+												
+						StringBuffer html = new StringBuffer("<html xmlns=\"http://www.w3.org/1999/xhtml\"><head><style type=\"text/css\">@page { size: ");
+						html.append(competence.getPage()); 
+						html.append(" ; background: url('");
 						html.append(imageurl);
 						html.append("') repeat-y top center");
 						html.append("}</style></head><body>");

@@ -86,6 +86,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		attributes.put("statusDate", getStatusDate());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
+		attributes.put("page", getPage());
 		attributes.put("generateCertificate", getGenerateCertificate());
 		attributes.put("diplomaTemplate", getDiplomaTemplate());
 
@@ -158,6 +159,12 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 
 		if (description != null) {
 			setDescription(description);
+		}
+
+		String page = (String)attributes.get("page");
+
+		if (page != null) {
+			setPage(page);
 		}
 
 		Boolean generateCertificate = (Boolean)attributes.get(
@@ -466,6 +473,14 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		}
 	}
 
+	public String getPage() {
+		return _page;
+	}
+
+	public void setPage(String page) {
+		_page = page;
+	}
+
 	public boolean getGenerateCertificate() {
 		return _generateCertificate;
 	}
@@ -709,6 +724,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		clone.setStatusDate(getStatusDate());
 		clone.setTitle(getTitle());
 		clone.setDescription(getDescription());
+		clone.setPage(getPage());
 		clone.setGenerateCertificate(getGenerateCertificate());
 		clone.setDiplomaTemplate(getDiplomaTemplate());
 
@@ -761,7 +777,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(27);
+		StringBundler sb = new StringBundler(29);
 
 		sb.append("{uuid=");
 		sb.append(getUuid());
@@ -785,6 +801,8 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		sb.append(getTitle());
 		sb.append(", description=");
 		sb.append(getDescription());
+		sb.append(", page=");
+		sb.append(getPage());
 		sb.append(", generateCertificate=");
 		sb.append(getGenerateCertificate());
 		sb.append(", diplomaTemplate=");
@@ -795,7 +813,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 	}
 
 	public String toXmlString() {
-		StringBundler sb = new StringBundler(43);
+		StringBundler sb = new StringBundler(46);
 
 		sb.append("<model><model-name>");
 		sb.append("com.liferay.lms.model.Competence");
@@ -846,6 +864,10 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 		sb.append(getDescription());
 		sb.append("]]></column-value></column>");
 		sb.append(
+			"<column><column-name>page</column-name><column-value><![CDATA[");
+		sb.append(getPage());
+		sb.append("]]></column-value></column>");
+		sb.append(
 			"<column><column-name>generateCertificate</column-name><column-value><![CDATA[");
 		sb.append(getGenerateCertificate());
 		sb.append("]]></column-value></column>");
@@ -874,6 +896,7 @@ public class CompetenceClp extends BaseModelImpl<Competence>
 	private String _titleCurrentLanguageId;
 	private String _description;
 	private String _descriptionCurrentLanguageId;
+	private String _page;
 	private boolean _generateCertificate;
 	private String _diplomaTemplate;
 	private String _diplomaTemplateCurrentLanguageId;

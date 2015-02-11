@@ -42,6 +42,7 @@ public class CompetenceSoap implements Serializable {
 		soapModel.setStatusDate(model.getStatusDate());
 		soapModel.setTitle(model.getTitle());
 		soapModel.setDescription(model.getDescription());
+		soapModel.setPage(model.getPage());
 		soapModel.setGenerateCertificate(model.getGenerateCertificate());
 		soapModel.setDiplomaTemplate(model.getDiplomaTemplate());
 
@@ -184,6 +185,14 @@ public class CompetenceSoap implements Serializable {
 		_description = description;
 	}
 
+	public String getPage() {
+		return _page;
+	}
+
+	public void setPage(String page) {
+		_page = page;
+	}
+
 	public boolean getGenerateCertificate() {
 		return _generateCertificate;
 	}
@@ -215,6 +224,7 @@ public class CompetenceSoap implements Serializable {
 	private Date _statusDate;
 	private String _title;
 	private String _description;
+	private String _page;
 	private boolean _generateCertificate;
 	private String _diplomaTemplate;
 }

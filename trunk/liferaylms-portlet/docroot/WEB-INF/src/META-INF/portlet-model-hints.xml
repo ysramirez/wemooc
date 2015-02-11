@@ -37,6 +37,7 @@
 		<field name="description" type="String" localized="true">
 			<hint name="max-length">500000</hint>
 		</field>
+		<field name="page" type="String" />
 		<field name="generateCertificate" type="boolean" />
 		<field name="diplomaTemplate" type="String" localized="true" />
 	</model>

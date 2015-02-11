@@ -423,6 +423,21 @@ public interface CompetenceModel extends BaseModel<Competence>, WorkflowedModel 
 		Locale defaultLocale);
 
 	/**
+	 * Returns the page of this competence.
+	 *
+	 * @return the page of this competence
+	 */
+	@AutoEscape
+	public String getPage();
+
+	/**
+	 * Sets the page of this competence.
+	 *
+	 * @param page the page of this competence
+	 */
+	public void setPage(String page);
+
+	/**
 	 * Returns the generate certificate of this competence.
 	 *
 	 * @return the generate certificate of this competence

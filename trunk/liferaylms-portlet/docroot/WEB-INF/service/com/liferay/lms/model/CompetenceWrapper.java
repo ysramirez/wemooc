@@ -56,6 +56,7 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 		attributes.put("statusDate", getStatusDate());
 		attributes.put("title", getTitle());
 		attributes.put("description", getDescription());
+		attributes.put("page", getPage());
 		attributes.put("generateCertificate", getGenerateCertificate());
 		attributes.put("diplomaTemplate", getDiplomaTemplate());
 
@@ -127,6 +128,12 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 
 		if (description != null) {
 			setDescription(description);
+		}
+
+		String page = (String)attributes.get("page");
+
+		if (page != null) {
+			setPage(page);
 		}
 
 		Boolean generateCertificate = (Boolean)attributes.get(
@@ -615,6 +622,24 @@ public class CompetenceWrapper implements Competence, ModelWrapper<Competence> {
 		java.util.Map<java.util.Locale, java.lang.String> descriptionMap,
 		java.util.Locale defaultLocale) {
 		_competence.setDescriptionMap(descriptionMap, defaultLocale);
+	}
+
+	/**
+	* Returns the page of this competence.
+	*
+	* @return the page of this competence
+	*/
+	public java.lang.String getPage() {
+		return _competence.getPage();
+	}
+
+	/**
+	* Sets the page of this competence.
+	*
+	* @param page the page of this competence
+	*/
+	public void setPage(java.lang.String page) {
+		_competence.setPage(page);
 	}
 
 	/**

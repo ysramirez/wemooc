@@ -86,6 +86,7 @@ public class CompetenceLocalServiceImpl extends CompetenceLocalServiceBaseImpl {
 			competence.setTitle(title,serviceContext.getLocale());
 			competence.setStatus(WorkflowConstants.STATUS_APPROVED);
 			competence.setExpandoBridgeAttributes(serviceContext);
+			competence.setPage((String)serviceContext.getAttribute("page"));
 			competencePersistence.update(competence, true);
 			
 
