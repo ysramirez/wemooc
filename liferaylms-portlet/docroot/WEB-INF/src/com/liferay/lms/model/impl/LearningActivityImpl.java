@@ -58,7 +58,21 @@ public class LearningActivityImpl extends LearningActivityBaseImpl {
 
 	@Override
 	public boolean isNullStartDate() {
-		return Validator.isNull(super.getStartdate());
+		try {
+			if(super.getStartdate()==null){
+				return true;
+			}
+			
+			Module module = ModuleLocalServiceUtil.fetchModule(getModuleId());
+			if(Validator.isNotNull(module)) {
+				return module.getStartDate().equals(super.getStartdate());
+			}else{
+				return true;
+			}
+		}
+		catch(SystemException systemException) {
+			return true;
+		}
 	}
 
 	@Override
@@ -82,7 +96,21 @@ public class LearningActivityImpl extends LearningActivityBaseImpl {
 
 	@Override
 	public boolean isNullEndDate() {
-		return Validator.isNull(super.getEnddate());
+		try {
+			if(super.getEnddate()==null){
+				return true;
+			}
+			
+			Module module = ModuleLocalServiceUtil.fetchModule(getModuleId());
+			if(Validator.isNotNull(module)) {
+				return module.getEndDate().equals(super.getEnddate());
+			}else{
+				return true;
+			}
+		}
+		catch(SystemException systemException) {
+			return true;
+		}
 	}
 
 }
