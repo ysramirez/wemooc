@@ -91,7 +91,7 @@ public class CommunityInscription extends MVCPortlet {
 				try {
 					permissionChecker = PermissionCheckerFactoryUtil.create(userTmp);
 					if(log.isDebugEnabled())log.debug(userTmp.getFullName());
-					if(permissionChecker.hasPermission(course.getGroupId(),Course.class.getName(),course.getCourseId(),ActionKeys.ASSIGN_MEMBERS)){
+					if(permissionChecker.hasPermission(course.getGroupCreatedId(),Course.class.getName(),course.getCourseId(),ActionKeys.ASSIGN_MEMBERS)){
 						if(log.isDebugEnabled())log.debug(userTmp.getFullName());
 
 				    	String fromName = PrefsPropsUtil.getString(themeDisplay.getCompanyId(),

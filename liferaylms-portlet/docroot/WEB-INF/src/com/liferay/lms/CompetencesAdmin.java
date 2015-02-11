@@ -117,10 +117,12 @@ public class CompetencesAdmin extends MVCPortlet{
 		long competenceId = ParamUtil.getLong(actionRequest, "competenceId", 0);
 		boolean generateCertificate= ParamUtil.getBoolean(actionRequest, "generateCertificate", false);
 		String template= ParamUtil.getString(actionRequest, "template", StringPool.BLANK);
+		String page = ParamUtil.getString(actionRequest, "page", StringPool.BLANK);
 		
 		Competence competence=null;
 		if(competenceId==0)
 		{
+			serviceContext.setAttribute("page", page);
 			 try {
 				competence=CompetenceLocalServiceUtil.addCompetence(title, description,generateCertificate, serviceContext);
 			} catch (PortalException e) {
@@ -143,6 +145,7 @@ public class CompetencesAdmin extends MVCPortlet{
 			competence.setDescription(description);
 			competence.setGenerateCertificate(generateCertificate);
 			competence.setDiplomaTemplate(template);
+			competence.setPage(page);
 			try {
 				CompetenceLocalServiceUtil.updateCompetence(competence, serviceContext);
 			} catch (PortalException e) {

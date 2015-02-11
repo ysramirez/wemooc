@@ -288,6 +288,7 @@
 		<column name="statusDate" type="Date" />	
 		<column name="title" type="String" localized="true"/>
 		<column name="description" type="String" localized="true"/>
+		<column name="page" type="String" />
         <column name="generateCertificate" type="boolean"></column>
 		<column name="diplomaTemplate" type="String" localized="true"/>
 		<finder name="GroupId" return-type="Collection">

@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
+<%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@page import="com.liferay.lms.service.CompetenceLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.Competence"%>
@@ -9,6 +11,9 @@
 <liferay-ui:error key="title-empty" message="title-empty" />
 <liferay-ui:error key="title-repeated" message="title-repeated" />
 <%
+
+String[] pages = PrefsPropsUtil.getString("lms.competences.pages", "A4").split(StringPool.COMMA);
+
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
 
@@ -73,9 +78,14 @@ else
         			function <portlet:namespace />initEditorDescription() { return "<%= UnicodeFormatter.toString(description) %>"; }
    				</script>
 	</aui:field-wrapper>
-	<aui:input type="checkbox" value="<%= competence.getGenerateCertificate() %>" name="generateCertificate" label="competence.generatecertificate" onChange="generateCertificate()">
+	<aui:input type="checkbox" value="<%= competence!=null?competence.getGenerateCertificate():StringPool.BLANK %>" name="generateCertificate" label="competence.generatecertificate" onChange="generateCertificate()">
 	</aui:input>
-	<div id="<portlet:namespace />templateContainer" <c:if test="<%= !competence.getGenerateCertificate() %>">style="display:none"</c:if> >
+	<div id="<portlet:namespace />templateContainer" <c:if test="<%= competence!=null?!competence.getGenerateCertificate():true %>">style="display:none"</c:if> >
+		<aui:select name="page">
+			<% for(String pagei : pages){ %>
+				<aui:option value="<%=pagei%>" label="<%=LanguageUtil.get(themeDisplay.getLocale(), pagei.replaceAll(StringPool.SPACE, StringPool.BLANK)) %>" selected="<%= competence!=null?false:(pagei.equals(competence.getPage())) %>" ></aui:option>
+			<%} %>
+		</aui:select>
 		<aui:field-wrapper label="competence.diplomaTemplate">
 				<liferay-ui:input-editor name="template" width="100%" initMethod="initEditorTemplate" />
 				<aui:input name="/>template" type="hidden" />

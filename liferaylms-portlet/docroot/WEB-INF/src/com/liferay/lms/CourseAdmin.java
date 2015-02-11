@@ -1247,7 +1247,7 @@ public class CourseAdmin extends MVCPortlet {
 			cc.setCompetenceId(competenceId);
 			cc.setCachedModel(condition);
 			cc.setCondition(condition);
-			CourseCompetenceLocalServiceUtil.updateCourseCompetence(cc);
+			CourseCompetenceLocalServiceUtil.updateCourseCompetence(cc, true);
 		}
 		
 		actionResponse.setRenderParameter("jspPage","/html/courseadmin/competencetab.jsp");
@@ -1275,7 +1275,12 @@ public class CourseAdmin extends MVCPortlet {
 
 			//auditing
 			AuditingLogFactory.audit(themeDisplay.getCompanyId(), themeDisplay.getScopeGroupId(), Course.class.getName(), courseId, themeDisplay.getUserId(), AuditConstants.CLOSE, null);
-			CourseCompetenceLocalServiceUtil.deleteCourseCompetence(cc.getCourcompetenceId());
+			
+			try{
+				CourseCompetenceLocalServiceUtil. deleteCourseCompetence(cc.getPrimaryKey());
+			}catch(Exception e){
+				if(log.isDebugEnabled())e.printStackTrace();
+			}
 		}
 		
 		actionResponse.setRenderParameter("jspPage","/html/courseadmin/competencetab.jsp");
