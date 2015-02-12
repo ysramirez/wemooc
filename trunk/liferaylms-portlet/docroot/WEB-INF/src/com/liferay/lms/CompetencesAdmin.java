@@ -4,20 +4,35 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Enumeration;
+import java.util.List;
 import java.util.Locale;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
+import javax.portlet.PortletPreferences;
 import javax.portlet.ProcessAction;
+import javax.portlet.ReadOnlyException;
+import javax.portlet.ValidatorException;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
 
 import com.liferay.lms.model.Competence;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseCompetence;
+import com.liferay.lms.model.LearningActivityResult;
+import com.liferay.lms.model.UserCompetence;
+import com.liferay.lms.service.ClpSerializer;
 import com.liferay.lms.service.CompetenceLocalServiceUtil;
+import com.liferay.lms.service.CourseCompetenceLocalServiceUtil;
+import com.liferay.lms.service.UserCompetenceLocalServiceUtil;
 import com.liferay.lms.service.impl.CompetenceLocalServiceImpl;
+import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
+import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
@@ -36,6 +51,7 @@ import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 import com.sun.corba.se.spi.orb.StringPair;
 
@@ -75,6 +91,40 @@ public class CompetencesAdmin extends MVCPortlet{
 		}
 		
 	}
+	
+	@ProcessAction(name="savePages")
+	public void savePages(ActionRequest actionRequest,ActionResponse actionResponse) throws FileNotFoundException, IOException {
+
+		PortletPreferences preferences = null;
+		String pages=ParamUtil.getString(actionRequest, "pages", "A4"); 
+
+		String portletResource = ParamUtil.getString(actionRequest, "portletResource");	
+		if (Validator.isNotNull(portletResource)) {
+			try {
+				preferences = PortletPreferencesFactoryUtil.getPortletSetup(actionRequest, portletResource);
+			} catch (PortalException e) {
+				preferences = actionRequest.getPreferences();
+			} catch (SystemException e) {
+				preferences = actionRequest.getPreferences();
+			}
+		}
+		else{
+			preferences = actionRequest.getPreferences();
+		}
+		
+		try {
+			preferences.setValue("pages", pages);
+			preferences.store();
+		} catch (ReadOnlyException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+		} catch (ValidatorException e) {
+			if(log.isDebugEnabled())e.printStackTrace();
+		}
+	}
+	
+	
+	
+	
 	@ProcessAction(name="saveCompetence")
 	public void saveCompetence(ActionRequest actionRequest,ActionResponse actionResponse) {
 
@@ -192,6 +242,26 @@ public class CompetencesAdmin extends MVCPortlet{
 		long id = ParamUtil.getLong(request, "competenceId");
 		if (Validator.isNotNull(id)) {
 			if(log.isDebugEnabled())log.debug("deleteCompetence");
+			ClassLoader classLoader = (ClassLoader) PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),"portletClassLoader");
+			DynamicQuery dq = DynamicQueryFactoryUtil.forClass(CourseCompetence.class,classLoader)
+					.add(PropertyFactoryUtil.forName("competenceId").eq(id));
+			
+			List<CourseCompetence> courseCompetences = CourseCompetenceLocalServiceUtil.dynamicQuery(dq);
+			
+			if(courseCompetences!=null&&courseCompetences.size()>0){
+				SessionErrors.add(request, "competence.courseCompetence-in-use");
+				return;
+			}
+
+			dq = DynamicQueryFactoryUtil.forClass(UserCompetence.class,classLoader)
+					.add(PropertyFactoryUtil.forName("competenceId").eq(id));
+			List<UserCompetence> userCompetences = UserCompetenceLocalServiceUtil.dynamicQuery(dq);
+
+			if(userCompetences!=null&&userCompetences.size()>0){
+				SessionErrors.add(request, "competence.userCompetence-in-use");
+				return;
+			}
+			
 			CompetenceLocalServiceUtil.deleteCompetence(id);
 		}
 	}

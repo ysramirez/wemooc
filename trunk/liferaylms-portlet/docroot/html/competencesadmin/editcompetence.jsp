@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
+<%@page import="javax.portlet.PortletPreferences"%>
 <%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
@@ -12,7 +14,29 @@
 <liferay-ui:error key="title-repeated" message="title-repeated" />
 <%
 
-String[] pages = PrefsPropsUtil.getString("lms.competences.pages", "A4").split(StringPool.COMMA);
+	PortletPreferences preferences = null;
+	
+	String portletResource = ParamUtil.getString(request, "portletResource");
+	
+	if (Validator.isNotNull(portletResource)) {
+		preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+	}
+	else{
+		preferences = renderRequest.getPreferences();
+	}
+	
+	String[] pages = null;
+	
+	if(preferences!=null&&preferences.getValue("pages",null)!=null){
+		String pagesb = preferences.getValue("pages",null);
+		if(pagesb!=null){
+			pages = pagesb.split(StringPool.COMMA);
+		}
+	}
+
+	if(pages==null){
+		pages = PrefsPropsUtil.getString("lms.competences.pages", "A4").split(StringPool.COMMA);
+	}
 
 String redirect = ParamUtil.getString(request, "redirect");
 String backURL = ParamUtil.getString(request, "backURL");
@@ -83,7 +107,7 @@ else
 	<div id="<portlet:namespace />templateContainer" <c:if test="<%= competence!=null?!competence.getGenerateCertificate():true %>">style="display:none"</c:if> >
 		<aui:select name="page">
 			<% for(String pagei : pages){ %>
-				<aui:option value="<%=pagei%>" label="<%=LanguageUtil.get(themeDisplay.getLocale(), pagei.replaceAll(StringPool.SPACE, StringPool.BLANK)) %>" selected="<%= competence!=null?false:(pagei.equals(competence.getPage())) %>" ></aui:option>
+				<aui:option value="<%=pagei%>" label="<%=pagei %>" selected="<%= competence!=null?false:(pagei.equals(competence.getPage())) %>" ></aui:option>
 			<%} %>
 		</aui:select>
 		<aui:field-wrapper label="competence.diplomaTemplate">
