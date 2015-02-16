@@ -65,6 +65,19 @@ public class SCORMAdmin extends MVCPortlet
 		String redirect=ParamUtil.getString(request, "redirect","");
 		long scormId=ParamUtil.getLong(request, "scormId",0);
 		ServiceContext serviceContext =  ServiceContextFactory.getInstance(SCORMContent.class.getName(), request);
+		
+		if(Validator.isNull(title)&&Validator.isNull(description)&&Validator.isNull(ParamUtil.getString(request, "scormId"))){
+			SessionErrors.add(actRequest, "maximum-file-size");
+			PortalUtil.copyRequestParameters(actRequest, response);
+			response.setRenderParameter("title", title);
+			response.setRenderParameter("scormId", String.valueOf(scormId));
+			response.setRenderParameter("description", description);
+			response.setRenderParameter("ciphered",	new Boolean(ciphered).toString());
+			response.setRenderParameter("redirect", redirect);
+			response.setRenderParameter("mvcPath", "/html/scormadmin/editscorm.jsp");
+			response.setRenderParameter("jspPage", "/html/scormadmin/editscorm.jsp");
+			return;
+		}
 
 		if(scormId==0)	
 		{
@@ -110,9 +123,7 @@ public class SCORMAdmin extends MVCPortlet
 						ZipFile zipFile= new ZipFile(file);
 						if (zipFile.getEntry("imsmanifest.xml") == null) {
 							SessionErrors.add(actRequest, "scormadmin.error.nomanifest");
-						}
-						else
-						{
+						}else{
 							ZipEntry manifest=zipFile.getEntry("imsmanifest.xml");
 							InputStream manfiestStream=zipFile.getInputStream(manifest);
 							Document imsdocument = SAXReaderUtil.read(manfiestStream);
