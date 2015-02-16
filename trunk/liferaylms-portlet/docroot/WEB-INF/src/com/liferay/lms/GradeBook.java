@@ -85,10 +85,11 @@ public class GradeBook extends MVCPortlet {
 		        //M�dulo
 		        writer.writeNext(new String[]{module.getTitle(themeDisplay.getLocale())});
 		        
-		        String[] cabeceras = new String[learningActivities.size()+1];
+		        String[] cabeceras = new String[learningActivities.size()+2];
 		        
-		        int column=1;
+		        int column=2;
 		        cabeceras[0]="User";
+		        cabeceras[1]="Email";
 		        for(LearningActivity learningActivity:learningActivities){
 		        	cabeceras[column++]=learningActivity.getTitle(themeDisplay.getLocale());
 		        }
@@ -108,11 +109,13 @@ public class GradeBook extends MVCPortlet {
 					usus  = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), "", 0, userParams, 0, 1000, obc);	
 				}
 		        for(User usuario:usus){
-		        	String[] resultados = new String[learningActivities.size()+1];
+		        	String[] resultados = new String[learningActivities.size()+2];
 		        	
-		        	column=1;
+		        	column=2;
 		        	resultados[0]=usuario.getFullName()+"("+usuario.getUserId()+")";
+		        	resultados[1]=usuario.getEmailAddress();
 		        	
+
 			        for(LearningActivity learningActivity:learningActivities){
 						LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), usuario.getUserId());
 						
