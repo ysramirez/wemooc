@@ -106,8 +106,8 @@ else
 	</aui:input>
 	<div id="<portlet:namespace />templateContainer" <c:if test="<%= competence!=null?!competence.getGenerateCertificate():true %>">style="display:none"</c:if> >
 		<aui:select name="page">
-			<% for(String pagei : pages){ %>
-				<aui:option value="<%=pagei%>" label="<%=pagei %>" selected="<%= competence!=null?false:(pagei.equals(competence.getPage())) %>" ></aui:option>
+			<%for(String pagei : pages){ %>
+				<aui:option value="<%=pagei%>" label="<%=pagei %>" selected="<%= competence==null?false:(pagei.equals(competence.getPage())) %>" ></aui:option>
 			<%} %>
 		</aui:select>
 		<aui:field-wrapper label="competence.diplomaTemplate">
@@ -132,7 +132,7 @@ else
 	</liferay-ui:panel>
 	</liferay-ui:panel-container>
 	<aui:button-row>
-		<aui:button type="submit"></aui:button>							
+		<aui:button type="submit"></aui:button>	
 		<aui:button onClick="<%=cancel %>" type="cancel" />
 	</aui:button-row>
 </aui:form>
