@@ -1897,6 +1897,7 @@
 			<mime-type>text/html</mime-type>
 			<portlet-mode>view</portlet-mode>
 		</supports>
+		<resource-bundle>content/inscriptionadmin/Language</resource-bundle>
 		<portlet-info>
 			<title>Inscription Admin Portlet</title>
 			<short-title>Inscription Admin Portlet</short-title>
