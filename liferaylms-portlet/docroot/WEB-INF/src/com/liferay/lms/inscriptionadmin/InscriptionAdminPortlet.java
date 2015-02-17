@@ -62,8 +62,14 @@ public class InscriptionAdminPortlet extends MVCPortlet {
 		try {
 			group = GroupLocalServiceUtil.getGroup(themeDisplay.getScopeGroupId());
 			course = CourseLocalServiceUtil.getCourseByGroupCreatedId(themeDisplay.getScopeGroupId());
-			maxUsers = course.getMaxusers();
-			numberUsers = UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId());
+			
+			if(course==null){
+				renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
+				return;
+			}else{
+				maxUsers = course.getMaxusers();
+				numberUsers = UserLocalServiceUtil.getGroupUsersCount(themeDisplay.getScopeGroupId());
+			}
 		} catch (PortalException e) {
 			if(log.isDebugEnabled()){
 				e.printStackTrace();
