@@ -122,19 +122,19 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 		// Si el Weight es mayor que cero (obligatoria) entonces calcula, sino
 		// no.
 		// Se elimina la restricci�n de calcular solo en las obligatorias, se
-		// calcula ent todas las que se aprueben.
+		// calcula ent todas las que se terminen.
 		if (learningActivity.getModuleId() > 0 && /*
 												 * learningActivity.
 												 * getWeightinmodule()>0 &&
-												 */lactr.getPassed()) {
+												 */lactr.getEndDate()!=null) 
+		{
 			long moduleId = learningActivity.getModuleId();
-			if (moduleResultPersistence.countBymu(userId, moduleId) > 0) {
+			if (moduleResultPersistence.countBymu(userId, moduleId) > 0) 
+			{
 				moduleResult = moduleResultPersistence.fetchBymu(userId, moduleId, false);
-				if (moduleResult.getPassed()) {
-					return;
-				}
 			}
-			else {
+			else 
+			{
 				moduleResult = moduleResultPersistence.create(counterLocalService.increment(ModuleResult.class.getName()));
 				moduleResult.setModuleId(moduleId);
 				moduleResult.setPassed(false);
@@ -168,7 +168,7 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 				moduleResult.setPassedDate(lactr.getEndDate());
 			}
 			moduleResultPersistence.update(moduleResult, true);
-
+			courseResultLocalService.update(moduleResult);
 			//auditing
 			ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
 			if(serviceContext!=null){
@@ -185,10 +185,10 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 				
 			}
 			
-			courseResultLocalService.update(moduleResult);
+			
 		}
+		
 	}
-	
 	public int updateAllUsers(long groupId, long moduleId) throws PortalException, SystemException {
 		
 		//Obtenemos la lista de users del curso.

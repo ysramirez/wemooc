@@ -1,3 +1,4 @@
+<%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="java.io.IOException"%>
 <%@page import="java.net.URL"%>
@@ -21,7 +22,10 @@ if (Validator.isNotNull(scorm.getDescription()) && request.getAttribute("learnin
 <div class="asset-description"><%=scorm.getDescription() %></div>
 
 <% } 
-String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
+String scoshow= ParamUtil.getString(request, "scoshow","");
+
+String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+
+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
 
 String iconsDir = "/liferaylms-portlet";
 String conTema = PropsUtil.get("scorm.icons.theme");

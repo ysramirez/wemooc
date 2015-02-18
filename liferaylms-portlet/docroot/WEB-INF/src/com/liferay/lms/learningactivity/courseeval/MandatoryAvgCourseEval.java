@@ -51,42 +51,78 @@ public class MandatoryAvgCourseEval extends BaseCourseEval {
 				//auditing
 				AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), CourseResult.class.getName(), courseResult.getPrimaryKey(), userId, AuditConstants.CREATE, null);
 			}
+			
 			List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
 			boolean passed=true;
-			long cuantospasados=0;
-			for(Module thmodule:modules)
-			{
-				if(!ModuleLocalServiceUtil.isUserPassed(thmodule.getModuleId(), userId))
-				{
-					passed=false;
-					
-				}
-				else
-				{
-					cuantospasados++;
-				}
-			}
 			long result=0;
 			List<LearningActivity> learningActivities=LearningActivityLocalServiceUtil.getMandatoryLearningActivitiesOfGroup(course.getGroupCreatedId());
+			boolean isFired=false;
 			for(LearningActivity activity:learningActivities)
 			{
 				if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(activity.getActId(), userId))
 				{
 					LearningActivityResult learningActivityResult=LearningActivityResultLocalServiceUtil.getByActIdAndUserId(activity.getActId(), userId);
+					if(learningActivityResult.getEndDate()!=null&&!learningActivityResult.isPassed())
+					{
+						isFired=true;
+					}
+					else
+					{
+						if(learningActivityResult.getEndDate()==null)
+						{
+							passed=false;
+						}
+					}
 					result+=learningActivityResult.getResult();
+				}
+				else
+				{
+					passed=false;
 				}
 			}
 			if(learningActivities.size()>0)
 			{
 				result=result/learningActivities.size();
 			}
-				courseResult.setResult(result);
-				if(courseResult.getPassed()!=passed) {
-					courseResult.setPassedDate(new Date());
+				if(isFired)
+				{
+					if(courseResult.getPassedDate()==null)
+					{
+						courseResult.setPassed(false);
+						courseResult.setPassedDate(new Date());
+					}
+					courseResult.setResult(result);
+					CourseResultLocalServiceUtil.update(courseResult);
+					return true;
 				}
-				courseResult.setPassed(passed);
-				CourseResultLocalServiceUtil.update(courseResult);
-				return true;
+				else
+				{
+					if(passed) 
+					{
+						if(courseResult.getPassedDate()==null)
+						{
+							courseResult.setPassedDate(new Date());
+							courseResult.setPassed(passed);
+						}
+						else
+						{
+							if(!courseResult.getPassed())
+							{
+								courseResult.setPassedDate(new Date());
+								courseResult.setPassed(passed);
+							}
+						}
+					
+					}
+					else
+					{
+						courseResult.setPassedDate(null);
+						courseResult.setPassed(false);
+					}
+					courseResult.setResult(result);
+					CourseResultLocalServiceUtil.update(courseResult);
+					return true;
+				}
 	}
 
 	@Override
