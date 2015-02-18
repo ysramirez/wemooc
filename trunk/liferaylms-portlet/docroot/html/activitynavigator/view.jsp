@@ -144,3 +144,9 @@
 	}// fin for activities
 
 %>
+<script type="text/javascript">
+function updateActivityNavigation()
+{
+	Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+}
+</script>

@@ -124,10 +124,8 @@ public class LearningActivityResultLocalServiceImpl
 			learningActivityResult.setComments(learningActivityTry.getComments());
 		}
 		learningActivityResultPersistence.update(learningActivityResult, true);
-		if(learningActivityResult.getPassed()==true)
-		{
-			ModuleResultLocalServiceUtil.update(learningActivityResult);
-		}
+		ModuleResultLocalServiceUtil.update(learningActivityResult);
+		
 
 		//auditing
 		ServiceContext serviceContext = ServiceContextThreadLocal.getServiceContext();
@@ -393,17 +391,30 @@ public class LearningActivityResultLocalServiceImpl
 			learningActivityTryLocalService.updateLearningActivityTry(learningActivityTry);
 			
 			// If SCO says that the activity has been passed, then the learning activity result has to be marked as passed
-			if ("passed".equals(total_lesson_status)) {
-				LearningActivityResult laresult = learningActivityResultLocalService.getByActIdAndUserId(learningActivityTry.getActId(), userId);
-				if (!laresult.getPassed()) {
-					laresult.setPassed(true);
-					learningActivityResultLocalService.updateLearningActivityResult(laresult);
-					if(laresult.getPassed())
-					{
-						moduleResultLocalService.update(laresult);
-					}
-				}
-			}
+						if ("passed".equals(total_lesson_status)) {
+							LearningActivityResult laresult = learningActivityResultLocalService.getByActIdAndUserId(learningActivityTry.getActId(), userId);
+							if (!laresult.getPassed()) {
+								laresult.setPassed(true);
+								laresult.setEndDate(new Date(System.currentTimeMillis()));
+								learningActivityResultLocalService.updateLearningActivityResult(laresult);
+								if(laresult.getPassed())
+								{
+									moduleResultLocalService.update(laresult);
+								}
+							}
+						}
+						// If SCO says that the activity has been failed, then the learning activity result has to be marked as failed
+						
+						if ("failed".equals(total_lesson_status)) {
+							LearningActivityResult laresult = learningActivityResultLocalService.getByActIdAndUserId(learningActivityTry.getActId(), userId);
+							if (!laresult.getPassed()) {
+								laresult.setPassed(false);
+								laresult.setEndDate(new Date(System.currentTimeMillis()));
+								learningActivityResultLocalService.updateLearningActivityResult(laresult);
+								moduleResultLocalService.update(laresult);
+								
+							}
+						}
 			
 		}
 		
@@ -655,11 +666,24 @@ public class LearningActivityResultLocalServiceImpl
 				LearningActivityResult laresult = learningActivityResultLocalService.getByActIdAndUserId(learningActivityTry.getActId(), userId);
 				if (!laresult.getPassed()) {
 					laresult.setPassed(true);
+					laresult.setEndDate(new Date(System.currentTimeMillis()));
 					learningActivityResultLocalService.updateLearningActivityResult(laresult);
 					if(laresult.getPassed())
 					{
 						moduleResultLocalService.update(laresult);
 					}
+				}
+			}
+			// If SCO says that the activity has been failed, then the learning activity result has to be marked as failed
+			
+			if ("failed".equals(total_lesson_status)) {
+				LearningActivityResult laresult = learningActivityResultLocalService.getByActIdAndUserId(learningActivityTry.getActId(), userId);
+				if (laresult.getEndDate()==null) {
+					laresult.setPassed(false);
+					laresult.setEndDate(new Date(System.currentTimeMillis()));
+					learningActivityResultLocalService.updateLearningActivityResult(laresult);
+					moduleResultLocalService.update(laresult);
+					
 				}
 			}
 			

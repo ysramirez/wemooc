@@ -16,6 +16,7 @@ if (learningTry == null) {
 	learningTry = LearningActivityTryLocalServiceUtil.getLearningActivityTry(latId);
 }
 request.setAttribute("learningTry", learningTry);
+String scoshow= GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "sco"), "");
 
 long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(actId, "assetEntry"), 0);
 			
@@ -37,7 +38,10 @@ if(entryId != 0)
 		localStorage.setItem('scormpool', tryResultDataOld);
 	}
 </script>
-<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>"></liferay-util:include>
+<liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>">
+<liferay-util:param name="scoshow" value="<%=scoshow%>" />
+</liferay-util:include>
+
 <script type="text/javascript">
 
 	var update_scorm = function(e) {
@@ -92,13 +96,15 @@ if(entryId != 0)
 		if (!exception) {
 			// Process Success - A LearningActivityResult returned
 			if (message.passed) {
-				Liferay.Portlet.refresh('#p_p_id<portlet:namespace />');
+				if (typeof updateActivityNavigation == 'function') { 
+					updateActivityNavigation(); 
+				}
 			}
 		} else {
 			// Process Exception
 		}
 		finishedscorm=true;
-    	}
+	  	}
 
 	};
 	window.onbeforeunload= function(e)

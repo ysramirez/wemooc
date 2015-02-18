@@ -9,9 +9,13 @@ import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.model.Course;
 import com.liferay.lms.model.CourseResult;
+import com.liferay.lms.model.LearningActivity;
+import com.liferay.lms.model.LearningActivityResult;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.ModuleResult;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -33,48 +37,7 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 	public void updateCourse(Course course, ModuleResult mresult) throws SystemException 
 	{
 		
-		CourseResult courseResult=CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), mresult.getUserId());
-				//.fetchByuc(mresult.getUserId(), course.getCourseId());
-		if(courseResult==null)
-		{
-			courseResult=CourseResultLocalServiceUtil.create(course.getCourseId(), mresult.getUserId());
-
-			//auditing
-			AuditingLogFactory.audit(course.getCompanyId(), course.getGroupId(), CourseResult.class.getName(), courseResult.getPrimaryKey(), mresult.getUserId(), AuditConstants.CREATE, null);
-		}
-		if(mresult.isPassed())
-		{
-			List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(course.getGroupCreatedId());
-			boolean passed=true;
-			long cuantospasados=0;
-			for(Module thmodule:modules)
-			{
-				if(!ModuleLocalServiceUtil.isUserPassed(thmodule.getModuleId(), mresult.getUserId()))
-				{
-					passed=false;
-					
-				}
-				else
-				{
-					cuantospasados++;
-				}
-			}
-			long result=0;
-			if(modules.size()>0)
-			{
-				result=100*cuantospasados/modules.size();
-			}
-
-			courseResult.setResult(result);
-
-			if(courseResult.getPassed()!=passed) {
-				courseResult.setPassedDate(new Date());
-			}
-			courseResult.setPassed(passed);
-
-			CourseResultLocalServiceUtil.update(courseResult);
-
-		}
+		updateCourse(course, mresult.getUserId());	
 
 	}
 	
@@ -108,16 +71,74 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 			result=100*cuantospasados/modules.size();
 		}
 
-		courseResult.setResult(result);
-		courseResult.setPassed(passed);
-
-		if(courseResult.getPassed()!=passed) {
-			courseResult.setPassedDate(new Date());
+		List<LearningActivity> learningActivities=LearningActivityLocalServiceUtil.getMandatoryLearningActivitiesOfGroup(course.getGroupCreatedId());
+		boolean isFired=false;
+		for(LearningActivity activity:learningActivities)
+		{
+			if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(activity.getActId(), userId))
+			{
+				LearningActivityResult learningActivityResult=LearningActivityResultLocalServiceUtil.getByActIdAndUserId(activity.getActId(), userId);
+				if(learningActivityResult.getEndDate()!=null&&!learningActivityResult.isPassed())
+				{
+					isFired=true;
+				}
+				else
+				{
+					if(learningActivityResult.getEndDate()==null)
+					{
+						passed=false;
+					}
+				}
+				result+=learningActivityResult.getResult();
+			}
+			else
+			{
+				passed=false;
+			}
 		}
-		courseResult.setPassed(passed);
-
-		CourseResultLocalServiceUtil.update(courseResult);
-		return true;	
+		if(learningActivities.size()>0)
+		{
+			result=result/learningActivities.size();
+		}
+			if(isFired)
+			{
+				if(courseResult.getPassedDate()==null)
+				{
+					courseResult.setPassed(false);
+					courseResult.setPassedDate(new Date());
+				}
+				courseResult.setResult(result);
+				CourseResultLocalServiceUtil.update(courseResult);
+				return true;
+			}
+			else
+			{
+				if(passed) 
+				{
+					if(courseResult.getPassedDate()==null)
+					{
+						courseResult.setPassedDate(new Date());
+						courseResult.setPassed(passed);
+					}
+					else
+					{
+						if(!courseResult.getPassed())
+						{
+							courseResult.setPassedDate(new Date());
+							courseResult.setPassed(passed);
+						}
+					}
+				
+				}
+				else
+				{
+					courseResult.setPassedDate(null);
+					courseResult.setPassed(false);
+				}
+				courseResult.setResult(result);
+				CourseResultLocalServiceUtil.update(courseResult);
+				return true;
+			}
 	}
 	
 	@Override
