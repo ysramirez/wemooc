@@ -123,25 +123,27 @@ public class ModuleResultLocalServiceImpl extends ModuleResultLocalServiceBaseIm
 		// no.
 		// Se elimina la restricci�n de calcular solo en las obligatorias, se
 		// calcula ent todas las que se terminen.
+		long moduleId = learningActivity.getModuleId();
+		if (moduleResultPersistence.countBymu(userId, moduleId) > 0) 
+		{
+			moduleResult = moduleResultPersistence.fetchBymu(userId, moduleId, false);
+		}
+		else 
+		{
+			moduleResult = moduleResultPersistence.create(counterLocalService.increment(ModuleResult.class.getName()));
+			moduleResult.setModuleId(moduleId);
+			moduleResult.setPassed(false);
+			moduleResult.setUserId(userId);
+			moduleResult.setResult(0);
+			moduleResultPersistence.update(moduleResult, true);
+
+		}
 		if (learningActivity.getModuleId() > 0 && /*
 												 * learningActivity.
 												 * getWeightinmodule()>0 &&
 												 */lactr.getEndDate()!=null) 
 		{
-			long moduleId = learningActivity.getModuleId();
-			if (moduleResultPersistence.countBymu(userId, moduleId) > 0) 
-			{
-				moduleResult = moduleResultPersistence.fetchBymu(userId, moduleId, false);
-			}
-			else 
-			{
-				moduleResult = moduleResultPersistence.create(counterLocalService.increment(ModuleResult.class.getName()));
-				moduleResult.setModuleId(moduleId);
-				moduleResult.setPassed(false);
-				moduleResult.setUserId(userId);
-				moduleResult.setResult(0);
-
-			}
+			
 			DynamicQuery dynamicQuery = DynamicQueryFactoryUtil.forClass(LearningActivity.class, (ClassLoader)PortletBeanLocatorUtil.locate(ClpSerializer.getServletContextName(),
 					"portletClassLoader"));
 			Criterion crit;

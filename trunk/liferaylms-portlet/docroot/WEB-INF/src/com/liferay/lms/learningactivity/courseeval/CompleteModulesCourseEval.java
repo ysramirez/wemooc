@@ -89,16 +89,11 @@ public class CompleteModulesCourseEval extends BaseCourseEval {
 						passed=false;
 					}
 				}
-				result+=learningActivityResult.getResult();
 			}
 			else
 			{
 				passed=false;
 			}
-		}
-		if(learningActivities.size()>0)
-		{
-			result=result/learningActivities.size();
 		}
 			if(isFired)
 			{
