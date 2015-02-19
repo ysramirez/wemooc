@@ -169,14 +169,28 @@ else
 		<liferay-ui:search-container-column-text>
 			<%			
 			CourseResult courseResult=CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(courseId, user.getUserId());
-			long result=0;
+			String result="-";
+			String status="not-started";
 			if(courseResult!=null)
 			{
-				result=courseResult.getResult();
+				status="started";
+				result=Long.toString(courseResult.getResult());
+				if(courseResult.getPassedDate()!=null){
+					status="not-passed"	;
+				}
+				if(courseResult.isPassed()){
+					status="passed"	;
+				}
 			}
 			%>
 			<%=result %>
-			
+			<% if(status.equals("passed")){%>
+							 	<liferay-ui:icon image="checked" alt="passed"></liferay-ui:icon>
+							<%} else if(status.equals("not-passed")){%>
+							 	<liferay-ui:icon image="close" alt="not-passed"></liferay-ui:icon>
+							<%} else if(status.equals("started")){%>
+						 		<liferay-ui:icon image="unchecked" alt="unchecked"></liferay-ui:icon>
+						 	<%}%>
 		</liferay-ui:search-container-column-text>
 		<liferay-ui:search-container-column-text>
 			<liferay-portlet:renderURL var="viewGradeURL">
