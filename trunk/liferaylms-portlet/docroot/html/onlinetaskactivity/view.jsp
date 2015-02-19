@@ -225,6 +225,9 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 	<h5><liferay-ui:message key="studentsearch"/></h5>
 	<aui:form name="studentsearch" action="<%=buscarURL %>" method="post">
 		<aui:fieldset>
+			<%if(isTablet){ %>
+				<aui:input name="isTablet" type="hidden" value="true" ></aui:input>
+			<% } %>
 			<aui:column>
 				<aui:input label="studentsearch.text.criteria" name="criteria" size="20" value="<%=criteria %>" />	
 			</aui:column>
