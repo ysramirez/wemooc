@@ -7,7 +7,7 @@ import com.liferay.lms.model.Competence;
 import com.liferay.lms.model.UserCompetence;
 
 public class CompetenceView {
-	final static SimpleDateFormat sdf = new SimpleDateFormat("dd MM yyyy");
+	final static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
 	private Competence competence = null;
 	private UserCompetence userCompetence = null;
