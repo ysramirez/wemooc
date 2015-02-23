@@ -1,4 +1,10 @@
 
+<%@page import="com.liferay.portal.kernel.xml.Element"%>
+<%@page import="com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil"%>
+<%@page import="com.liferay.portlet.documentlibrary.model.DLFileEntry"%>
+<%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
+<%@page import="com.liferay.portal.kernel.xml.Node"%>
+<%@page import="java.util.Iterator"%>
 <%@page import="com.liferay.portal.model.Team"%>
 <%@page import="com.liferay.portal.service.TeamLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.dao.orm.QueryUtil"%>
@@ -89,11 +95,13 @@ else
 
 <portlet:renderURL var="viewUrlPopGrades" windowState="<%= LiferayWindowState.POP_UP.toString() %>">   
 	<portlet:param name="actId" value="<%=String.valueOf(activity.getActId()) %>" />      
+	<portlet:param name="isTablet" value="<%=String.valueOf(isTablet) %>" />      
     <portlet:param name="jspPage" value="/html/onlinetaskactivity/popups/grades.jsp" />           
 </portlet:renderURL>
 
 <portlet:renderURL var="setGradesURL" windowState="<%= LiferayWindowState.EXCLUSIVE.toString() %>">   
-	<portlet:param name="actId" value="<%=String.valueOf(activity.getActId()) %>" /> 
+	<portlet:param name="actId" value="<%=String.valueOf(activity.getActId()) %>" />      
+	<portlet:param name="isTablet" value="<%=String.valueOf(isTablet) %>" /> 
 	<portlet:param name="ajaxAction" value="setGrades" />      
    	<portlet:param name="jspPage" value="/html/onlinetaskactivity/popups/grades.jsp" />           
 </portlet:renderURL>
@@ -109,6 +117,7 @@ else
 			renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
 			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
 			renderUrl.setParameter('actId', '<%=String.valueOf(activity.getActId()) %>');
+			renderUrl.setParameter('isTablet', '<%=String.valueOf(isTablet) %>');
 			<%
 			if(isTeacher){
 			%>
@@ -147,6 +156,7 @@ else
 			renderUrl.setWindowState('<%= LiferayWindowState.POP_UP.toString() %>');
 			renderUrl.setPortletId('<%=portletDisplay.getId()%>');
 			renderUrl.setParameter('actId', '<%=String.valueOf(activity.getActId()) %>');
+			renderUrl.setParameter('isTablet', '<%=String.valueOf(isTablet) %>');
 			<%
 			if(isTeacher){
 			%>
@@ -316,8 +326,41 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 					   }
 			   }else {
 					   %><liferay-ui:message key="onlinetaskactivity.student.without.qualification" /><% 
-               } %>
-			<p class="see-more">
+               }
+
+			 	if(isTablet){
+			 		LearningActivityTry lATry = LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, user.getUserId()); 
+			 		if(lATry!=null){
+			 			String urlFile = null;
+			 			String titleFile = null;
+			 			long sizeKbFile=0;
+			 			Iterator<Node> nodeItr = SAXReaderUtil.read(lATry.getTryResultData()).getRootElement().nodeIterator();		
+			 			while(nodeItr.hasNext()) {
+			 		         Node element = nodeItr.next();
+			 		         if(OnlineActivity.FILE_XML.equals(element.getName())) {
+			 	        		try{
+			 		        	 	DLFileEntry dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(Long.parseLong(((Element)element).attributeValue("id")));
+			 		    			urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid();
+			 		    			titleFile = dlfile.getTitle();
+			 		    			sizeKbFile = dlfile.getSize()/1024;
+			 	        		}
+			 	        		catch(Throwable a){
+			 	        		}
+			 		         }
+			 		    }
+
+			 			if(urlFile!=null){
+			%>		
+					<p class="see-more">
+							<a class="verMas2" href="<%=urlFile%>"><%=titleFile+"&nbsp;("+ sizeKbFile +"Kb)&nbsp;"%> <liferay-ui:message key="onlinetaskactivity.grades.download"/></a>
+					</p>
+            		<!-- Very ugly -->
+					<br /><br />
+			<%			}
+					}
+				}
+			%>
+            <p class="see-more">
 				<a href="javascript:<portlet:namespace />showPopupGradesTeacher(<%=Long.toString(user.getUserId()) %>);"><liferay-ui:message key="onlinetaskactivity.set.grades"/></a>
 			</p>
 		</liferay-ui:search-container-column-text>
