@@ -82,18 +82,22 @@ else
 			
 			long entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learnact.getActId(),"assetEntry"),0);
 			
-			if(entryId!=0)
-			{
+			if(entryId!=0){
 				AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(entryId);
 				AssetRendererFactory assetRendererFactory=AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName());			
 				AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 				String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
 				
-			%>
-			<!-- <%=path%> -->
-				<liferay-util:include  page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
+				if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), entry.getClassName(), entry.getClassPK(), ActionKeys.VIEW)){ %>
+					<liferay-util:include  page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
 				<%
-				
+				}else{
+					%>
+					<div class="portlet-msg-error">
+						<liferay-ui:message key="you-do-not-have-permission-to-access-the-requested-resource"/>
+					</div>
+					<%
+				}
 			}
 		}
 	}

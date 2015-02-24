@@ -4,7 +4,7 @@
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@ include file="/init.jsp" %>
 
-<aui:select label="bloquing-activity" name="precedence" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
+<aui:select cssClass="lms-inpprecendence" label="bloquing-activity" name="precedence" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
 <%
 	renderResponse.setProperty(
 			"clear-request-parameters", Boolean.TRUE.toString());
