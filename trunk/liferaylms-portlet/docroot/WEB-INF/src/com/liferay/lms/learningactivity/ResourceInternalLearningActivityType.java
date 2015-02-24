@@ -36,6 +36,7 @@ import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.model.AssetEntry;
 import com.liferay.portlet.asset.model.AssetRenderer;
 import com.liferay.portlet.asset.service.AssetEntryLocalServiceUtil;
+import com.liferay.portlet.documentlibrary.DuplicateFileException;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
 import com.liferay.portlet.documentlibrary.model.DLFolder;
 import com.liferay.portlet.documentlibrary.service.DLAppLocalServiceUtil;
@@ -117,16 +118,33 @@ public class ResourceInternalLearningActivityType extends BaseLearningActivityTy
 				Folder folder = createFoldersForLearningActivity(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), learningActivity.getActId(), learningActivity.getTitle(themeDisplay.getLocale()), serviceContext);
 				FileEntry newFile = null;
 				//Recupero el archivo asociado a la actividad si ya existia y lo limpio para crear el nuevo
-				java.util.List<FileEntry> files = DLAppLocalServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), folder.getFolderId());
+				//This block of code should be removed 
+				/*java.util.List<FileEntry> files = DLAppLocalServiceUtil.getFileEntries(themeDisplay.getScopeGroupId(), folder.getFolderId());
+				
 				if(files != null && files.size()>0){
 					int i=0;
 					for(FileEntry file:files){
 						if(i==0)
-							newFile = DLAppLocalServiceUtil.updateFileEntry(themeDisplay.getUserId(), file.getFileEntryId(), Long.toString(learningActivity.getActId()), docfile.getMimeType(), docfile.getTitle(), docfile.getDescription(), "", false, docfile.getContentStream(),docfile.getSize(), serviceContext);
+							newFile = DLAppLocalServiceUtil.updateFileEntry(themeDisplay.getUserId(), file.getFileEntryId(), docfile.getTitle()+StringPool.PERIOD+docfile.getExtension(), docfile.getMimeType(), docfile.getTitle(), docfile.getDescription(), "", false, docfile.getContentStream(),docfile.getSize(), serviceContext);
 						else DLAppLocalServiceUtil.deleteFileEntry(file.getFileEntryId());
 					}
-				}else
-					newFile = DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), folder.getFolderId(), Long.toString(learningActivity.getActId()), docfile.getMimeType(), docfile.getTitle(), docfile.getDescription(), "", docfile.getContentStream(), docfile.getSize(), serviceContext);
+				}else*/
+
+				boolean created = false;	
+				int counter = 0;
+				while(!created){
+					try{
+						if(counter==0){
+							newFile = DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), folder.getFolderId(), docfile.getTitle()+StringPool.PERIOD+docfile.getExtension(), docfile.getMimeType(), docfile.getTitle(), docfile.getDescription(), "", docfile.getContentStream(), docfile.getSize(), serviceContext);
+						}else{
+							newFile = DLAppLocalServiceUtil.addFileEntry(themeDisplay.getUserId(), themeDisplay.getScopeGroupId(), folder.getFolderId(), docfile.getTitle()+counter+StringPool.PERIOD+docfile.getExtension(), docfile.getMimeType(), docfile.getTitle()+counter, docfile.getDescription(), "", docfile.getContentStream(), docfile.getSize(), serviceContext);
+						}
+						created = true;
+					}catch (DuplicateFileException e){
+						counter++;
+					}
+				}
+								
 				//Recupero el asset asociado al nuevo archivo local del curso.
 				AssetEntry newAsset = AssetEntryLocalServiceUtil.getEntry(docAsset.getClassName(), newFile.getFileEntryId());
 				//Actualizo el extraContentTmp para que apunte al recurso local y no al global

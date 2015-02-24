@@ -173,7 +173,7 @@ AUI().ready('node','event','aui-io-request','aui-parse-content','liferay-portlet
 
 
 	
-<aui:input type="text" size="3" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" disabled="<%=disabled %>" 
+<aui:input type="text" size="3" cssClass="lms-inpnumval" name="numValidaciones" label="p2ptaskactivity.edit.numvalidations" value="<%=numEvaluaciones%>" disabled="<%=disabled %>" 
 	ignoreRequestValue="true"></aui:input>
 	
 <div id="<portlet:namespace />numValidacionesError" class="<%=((SessionErrors.contains(renderRequest, "p2ptaskactivity.editActivity.numValidaciones.required"))||
