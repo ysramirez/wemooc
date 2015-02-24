@@ -1,6 +1,7 @@
 package com.liferay.lms.views;
 
 import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Locale;
 
 import com.liferay.lms.model.Competence;
@@ -31,7 +32,10 @@ public class CompetenceView {
 			return "";
 		return sdf.format(userCompetence.getCompDate());
 	}
-	
+	public Date getDate()
+	{
+		return userCompetence.getCompDate();
+	}
 	public Long getCompetenceId(){
 		return competence.getCompetenceId();
 	}
