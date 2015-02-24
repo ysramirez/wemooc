@@ -119,7 +119,8 @@ modelVar="user">
 
 <liferay-ui:icon-menu>
 <%if(roleId==commmanager.getRoleId())
-{%>
+{
+%>
 <liferay-portlet:renderURL  var="editInscriptionDatesURL"  windowState="<%= LiferayWindowState.POP_UP.toString() %>">
 	<liferay-portlet:param name="jspPage" value="/html/courseadmin/editinscriptiondates.jsp"/>
 	<liferay-portlet:param name="courseId" value="<%=Long.toString(courseId) %>"/>
@@ -127,10 +128,72 @@ modelVar="user">
 </liferay-portlet:renderURL>
 
 <%
-String inscrURL="javascript:"+renderResponse.getNamespace() + "showPopupInsctiptionDates('"+editInscriptionDatesURL+"');";
+String inscrURL="javascript:AUI().use(function(A){ "+
+"	var	resizeInterval; "+
+"	Liferay.Util.openWindow( "+
+"		{ "+
+"			id: '" + renderResponse.getNamespace() + "showPopupInsctiptionDates', "+ 
+"			title: '" + LanguageUtil.get(pageContext, "edit") + "', "+
+"			dialog: { "+
+"				width: 550, "+
+"               height:400, "+
+"				modal:true, "+
+"				centered:true, "+
+"				after: { "+
+"					visibleChange: function(evt){ "+
+"						var instance = evt.target; "+
+"						if(instance.get('visible')){ "+
+"							instance.centered(); "+
+"						} "+	
+"						else { "+	
+"							delete Liferay.Util.Window._map['" + renderResponse.getNamespace() + "showPopupInsctiptionDates']; "+
+"							Liferay.Portlet.refresh(A.one('#p_p_id"+
+								renderResponse.getNamespace()+"'),{'p_t_lifecycle':0}); "+
+"						} "+								
+"					}, "+
+"					init: function(evt){ "+
+"						var instance = evt.target; "+
+"						resizeInterval = A.setInterval(function(){ "+ 
+"							if(instance.get('y')<0){ "+
+"								instance.set('y',0); "+
+"							} "+
+"						}, 100); "+
+"					}, "+
+"					bodyContentChange: function(evt){ "+
+"						var instance = evt.target, "+
+"							bodyContent = instance.get('bodyContent'); "+
+"						if(!bodyContent.item) { "+
+"							if((!!bodyContent.get('tagName').toLowerCase)&&(bodyContent.get('tagName').toLowerCase()=='iframe')){ "+
+"								bodyContent.on('load',function(evt){ "+
+"									var messageDiv = evt.target.get('contentWindow.document').one('.portlet-msg-success'); "+
+"									if(messageDiv!=null){ "+
+"										var portlet = A.one('#p_p_id"+renderResponse.getNamespace()+"'); "+
+"										Liferay.onceAfter(portlet.portletId + ':portletRefreshed', "+
+"											function(evt){ "+
+"												evt.portlet.one('.portlet-body * .portlet-body'). "+
+"													prepend('<div class=\"portlet-msg-success\">'+messageDiv.getContent()+'</div>'); "+
+"										}); "+
+"										instance.close(); "+
+"									} "+
+"								}); "+
+"							} "+
+"						} "+
+"					}, "+
+"					destroy: function(evt){ "+
+"						A.clearInterval(resizeInterval); "+
+"					} "+
+"				} "+ 
+"			}, "+ 
+"			uri: '" + editInscriptionDatesURL + "' "+
+"		} "+
+"	); "+
+"})";
+
 %>
+
 <liferay-ui:icon image="calendar" url='<%=inscrURL %>' label="dates"></liferay-ui:icon>
-<%}
+<%
+}
 %>
 <liferay-portlet:actionURL name="removeUserRole" var="removeUserRoleURL">
 	<liferay-portlet:param name="jspPage" value="/html/courseadmin/rolememberstab.jsp"/>
@@ -150,33 +213,4 @@ String inscrURL="javascript:"+renderResponse.getNamespace() + "showPopupInsctipt
 <liferay-ui:search-iterator />
 
 </liferay-ui:search-container>
-<script type="text/javascript">
-<!--
 
-	function <portlet:namespace/>showPopupInsctiptionDates(inscurl)
-    {
-		AUI().use('node','aui-dialog', function(A){
-			new A.Dialog({
-				id:'<portlet:namespace />showPopupInsctiptionDates',
-	            title: '<liferay-ui:message key="dates" />',
-	            modal: true,
-	            centered: true,
-	            resizable: true,
-	            width: 600,
-	            height: 400,
-	            destroyOnClose: false,
-	            after: {   
-		          	close: function(event){
-		          		Liferay.Portlet.refresh(A.one('#p_p_id<portlet:namespace />'),{'p_t_lifecycle':0});
-	            	}
-	            }
-	        }).plug(A.Plugin.IO, {
-	            uri: inscurl,
-	            parseContent: true
-	        }).render().show();   
-		}); 
-
-    }
-    
-//-->
-</script>
