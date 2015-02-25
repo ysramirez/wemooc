@@ -30,6 +30,7 @@ PortletURL portletURL= renderResponse.createRenderURL();
 portletURL.setParameter("className",className);
 portletURL.setParameter("jspPage","/html/scormactivity/admin/searchresults.jsp");
 portletURL.setParameter("groupId",Long.toString(groupIdSelected));
+portletURL.setParameter("assetCategoryIds",assetCategoryIds);
 portletURL.setParameter("actionEditing","true");
 
 %>
