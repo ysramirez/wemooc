@@ -212,12 +212,26 @@ public class UserCompetencePortlet extends MVCPortlet {
 							if(log.isDebugEnabled())e.printStackTrace();
 						}
 						
+						
 						renderer.layout(); 
 						
 						renderer.finishPDF();
 						
 						out.close();
 						
+					}else{
+						if(log.isDebugEnabled())log.debug("Nodata!");
+
+						ITextRenderer renderer = new ITextRenderer();
+						OutputStream out = response.getPortletOutputStream();
+
+						renderer.setDocumentFromString(StringPool.BLANK);
+
+						renderer.layout(); 
+						
+						renderer.finishPDF();
+						
+						out.close();
 					}
 				}
 				
