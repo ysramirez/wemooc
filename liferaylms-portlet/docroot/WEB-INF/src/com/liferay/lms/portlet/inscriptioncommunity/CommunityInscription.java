@@ -148,7 +148,7 @@ public class CommunityInscription extends MVCPortlet {
 		}
 	}
 	
-	@ProcessAction(name = "inscribir")
+	@ProcessAction(name = "inscribir") 
 	public void inscribir(ActionRequest request, ActionResponse response) throws Exception{
 
 		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(WebKeys.THEME_DISPLAY);
@@ -186,7 +186,7 @@ public class CommunityInscription extends MVCPortlet {
 			groupName = groupId[0] + "[" + GroupLocalServiceUtil.getGroup(groupId[0]).getName() + "]";
 		}
 		catch (Exception e) {}
-    	_log.info("INSCRIBIR: "+userName +" se ha incrito de la comunidad "+groupName+" el "+hoy.toString());
+    	if(log.isDebugEnabled())log.debug("INSCRIBIR: "+userName +" se ha incrito de la comunidad "+groupName+" el "+hoy.toString());
     	
     	// Enviar un email al usuario cuando se inscribe al curso.
     	
@@ -233,7 +233,7 @@ public class CommunityInscription extends MVCPortlet {
 			}
 			catch(Exception ex)
 			{
-				ex.printStackTrace();
+				if(log.isDebugEnabled())ex.printStackTrace();
 			}		
 		}else{
 	    	String subject = LanguageUtil.format(themeDisplay.getLocale(),"inscriptioncommunity.mail.inscripcion.subject", new String[]{curso});
@@ -256,10 +256,10 @@ public class CommunityInscription extends MVCPortlet {
 				}
 				catch(Exception ex)
 				{
-					ex.printStackTrace();
+					if(log.isDebugEnabled())ex.printStackTrace();
 				}		
 	    	}else{
-	    		System.out.println(" ERROR: No se ha encontrado el contenido del correo.");
+	    		if(log.isDebugEnabled())log.debug(" ERROR: No se ha encontrado el contenido del correo.");
 	    	}
 		}
 	}
@@ -303,7 +303,7 @@ public class CommunityInscription extends MVCPortlet {
 		}
 		catch (Exception e) {}
 		
-		_log.warn("DESINSCRIBIR: "+userName +" se ha desincrito de la comunidad "+groupName+" el "+hoy.toString());
+		if(log.isDebugEnabled())log.debug("DESINSCRIBIR: "+userName +" se ha desincrito de la comunidad "+groupName+" el "+hoy.toString());
 		
     	// Enviar un email al usuario cuando se desinscribe al curso.
     	
@@ -351,14 +351,12 @@ public class CommunityInscription extends MVCPortlet {
 			}
 			catch(Exception ex)
 			{
-				ex.printStackTrace();
+				if(log.isDebugEnabled())ex.printStackTrace();
 			}		
     	}else{
-    		System.out.println(" ERROR: No se ha encontrado el contenido del correo.");
+    		if(log.isDebugEnabled())log.debug(" ERROR: No se ha encontrado el contenido del correo.");
     	}
 		
 	}
-	
-	private static Log _log = LogFactoryUtil.getLog(CommunityInscription.class);
 
 }
