@@ -46,6 +46,7 @@
 <liferay-ui:error key="title-empty" message="title-empty" />
 <liferay-ui:error key="title-repeated" message="title-repeated" />
 <liferay-ui:error key="max-users-violated" message="max-users-violated" />
+<liferay-ui:error key="duplicate-course" message="duplicate-course" />
 	
 	<%
 	

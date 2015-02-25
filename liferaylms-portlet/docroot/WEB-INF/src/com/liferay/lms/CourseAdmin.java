@@ -49,6 +49,7 @@ import com.liferay.lms.service.CourseServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.base.CourseServiceBaseImpl;
 import com.liferay.mail.service.MailServiceUtil;
+import com.liferay.portal.DuplicateGroupException;
 import com.liferay.portal.LARFileException;
 import com.liferay.portal.LARTypeException;
 import com.liferay.portal.LayoutImportException;
@@ -386,6 +387,9 @@ public class CourseAdmin extends MVCPortlet {
 						courseCalificationType,maxusers,serviceContext);
 			}catch(PortalException pe){
 				if(log.isDebugEnabled())log.debug("Error:"+pe.getMessage());
+				if(pe instanceof DuplicateGroupException){
+					SessionErrors.add(actionRequest, "duplicate-course");
+				}
 				if((Validator.isNotNull(pe.getMessage()))&&(pe.getMessage().startsWith("maxUsers "))){					
 					
 					actionResponse.setRenderParameter("maxUsersError", String.valueOf(LanguageUtil.format(themeDisplay.getLocale(),"max-users-violated", pe.getMessage().replaceAll("maxUsers ", StringPool.BLANK))));
