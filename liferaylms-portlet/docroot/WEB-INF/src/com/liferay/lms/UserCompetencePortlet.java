@@ -139,6 +139,7 @@ public class UserCompetencePortlet extends MVCPortlet {
 						variables.put("courseName", course.getTitle(user.getLocale()));
 						variables.put("competenceName", competence.getTitle(user.getLocale()));
 						variables.put("userName", user.getFullName());
+						variables.put("themeDisplay", themeDisplay);
 						
 						LmsPrefs lmsprefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
 						long teacherRoleId=lmsprefs.getTeacherRole();
