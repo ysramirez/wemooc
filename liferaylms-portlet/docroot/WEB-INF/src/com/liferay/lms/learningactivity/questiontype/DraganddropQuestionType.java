@@ -230,15 +230,8 @@ public class DraganddropQuestionType extends BaseQuestionType {
 			}
 			rightCol += "</div>";
 
-			if(feedback) {
-				html += "<div class=\"content_answer\">" + leftCol + rightCol + "</div>";
-//				if (!"".equals(feedMessage)) {
-//					//html += "<div class=\"questionFeedback\">" + feedMessage + "</div>";
-//					html += feedMessage;
-//				}
-			}
-			else html += leftCol + rightCol;
-			html+=	"</div>";
+
+			html += "<div class=\"content_answer\">" + leftCol + rightCol + "</div></div>";
 
 		} catch (SystemException e) {
 			e.printStackTrace();
