@@ -1211,17 +1211,15 @@ public class CourseAdmin extends MVCPortlet {
 		    Long courseId = ParamUtil.getLong(request, "courseId");
 			CourseResult courseResult = null;
 			String fechaIni,fechaFin = new String();
-			for(User user:users){
-				//CourseServiceUtil.getService()				
+			for(User user:users){			
 				try {
 					courseResult=CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(courseId, user.getUserId());
 				} catch (SystemException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+					if(log.isDebugEnabled())e.printStackTrace();
 				}
 				
-				fechaIni = (courseResult.getAllowStartDate() != null)?sdf.format(courseResult.getAllowStartDate()):StringPool.BLANK;
-				fechaFin = (courseResult.getAllowFinishDate() != null)?sdf.format(courseResult.getAllowFinishDate()):StringPool.BLANK;
+				fechaIni = (courseResult!=null&&courseResult.getAllowStartDate() != null)?sdf.format(courseResult.getAllowStartDate()):StringPool.BLANK;
+				fechaFin = (courseResult!=null&&courseResult.getAllowFinishDate() != null)?sdf.format(courseResult.getAllowFinishDate()):StringPool.BLANK;
 	
 				String[] resultados = {String.valueOf(user.getUserId()),user.getFullName(),fechaIni ,fechaFin};
 				writer.writeNext(resultados);
