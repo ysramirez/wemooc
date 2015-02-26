@@ -72,6 +72,28 @@ else
 <div class="container-toolbar" >
 	<%@ include file="inc/toolbar.jspf" %>
 </div>
+<script>
+function changedates(theURI)
+{
+AUI().use(function(A)
+		{ var resizeInterval; 
+		Liferay.Util.openWindow( 
+				{ 
+					id: '_courseadmin_WAR_liferaylmsportlet_showPopupInsctiptionDates', 
+					title: 'Edit',
+					dialog: 
+					{
+					   width: 550,
+					  height:400, modal:true,
+					  centered:true, 
+					  after: 
+					  { visibleChange: function(evt){ var instance = evt.target; if(instance.get('visible')){ instance.centered(); } else { delete Liferay.Util.Window._map['_courseadmin_WAR_liferaylmsportlet_showPopupInsctiptionDates']; Liferay.Portlet.refresh(A.one('#p_p_id_courseadmin_WAR_liferaylmsportlet_'),{'p_t_lifecycle':0}); } }, init: function(evt){ var instance = evt.target; resizeInterval = A.setInterval(function(){ if(instance.get('y')<0){ instance.set('y',0); } }, 100); }, bodyContentChange: function(evt){ var instance = evt.target, bodyContent = instance.get('bodyContent'); if(!bodyContent.item) { if((!!bodyContent.get('tagName').toLowerCase)&&(bodyContent.get('tagName').toLowerCase()=='iframe')){ bodyContent.on('load',function(evt){ var messageDiv = evt.target.get('contentWindow.document').one('.portlet-msg-success'); if(messageDiv!=null){ var portlet = A.one('#p_p_id_courseadmin_WAR_liferaylmsportlet_'); Liferay.onceAfter(portlet.portletId + ':portletRefreshed', function(evt){ evt.portlet.one('.portlet-body * .portlet-body'). prepend('<div class="portlet-msg-success">'+messageDiv.getContent()+'</div>'); }); instance.close(); } }); } } }, destroy: function(evt){ A.clearInterval(resizeInterval); } } },
+					  uri: theURI 
+					  } 
+				);
+		});
+}
+--></script>
 <%
 PortletURL portletURL = renderResponse.createRenderURL();
 portletURL.setParameter("jspPage","/html/courseadmin/rolememberstab.jsp");
@@ -128,66 +150,7 @@ modelVar="user">
 </liferay-portlet:renderURL>
 
 <%
-String inscrURL="javascript:AUI().use(function(A){ "+
-"	var	resizeInterval; "+
-"	Liferay.Util.openWindow( "+
-"		{ "+
-"			id: '" + renderResponse.getNamespace() + "showPopupInsctiptionDates', "+ 
-"			title: '" + LanguageUtil.get(pageContext, "edit") + "', "+
-"			dialog: { "+
-"				width: 550, "+
-"               height:400, "+
-"				modal:true, "+
-"				centered:true, "+
-"				after: { "+
-"					visibleChange: function(evt){ "+
-"						var instance = evt.target; "+
-"						if(instance.get('visible')){ "+
-"							instance.centered(); "+
-"						} "+	
-"						else { "+	
-"							delete Liferay.Util.Window._map['" + renderResponse.getNamespace() + "showPopupInsctiptionDates']; "+
-"							Liferay.Portlet.refresh(A.one('#p_p_id"+
-								renderResponse.getNamespace()+"'),{'p_t_lifecycle':0}); "+
-"						} "+								
-"					}, "+
-"					init: function(evt){ "+
-"						var instance = evt.target; "+
-"						resizeInterval = A.setInterval(function(){ "+ 
-"							if(instance.get('y')<0){ "+
-"								instance.set('y',0); "+
-"							} "+
-"						}, 100); "+
-"					}, "+
-"					bodyContentChange: function(evt){ "+
-"						var instance = evt.target, "+
-"							bodyContent = instance.get('bodyContent'); "+
-"						if(!bodyContent.item) { "+
-"							if((!!bodyContent.get('tagName').toLowerCase)&&(bodyContent.get('tagName').toLowerCase()=='iframe')){ "+
-"								bodyContent.on('load',function(evt){ "+
-"									var messageDiv = evt.target.get('contentWindow.document').one('.portlet-msg-success'); "+
-"									if(messageDiv!=null){ "+
-"										var portlet = A.one('#p_p_id"+renderResponse.getNamespace()+"'); "+
-"										Liferay.onceAfter(portlet.portletId + ':portletRefreshed', "+
-"											function(evt){ "+
-"												evt.portlet.one('.portlet-body * .portlet-body'). "+
-"													prepend('<div class=\"portlet-msg-success\">'+messageDiv.getContent()+'</div>'); "+
-"										}); "+
-"										instance.close(); "+
-"									} "+
-"								}); "+
-"							} "+
-"						} "+
-"					}, "+
-"					destroy: function(evt){ "+
-"						A.clearInterval(resizeInterval); "+
-"					} "+
-"				} "+ 
-"			}, "+ 
-"			uri: '" + editInscriptionDatesURL + "' "+
-"		} "+
-"	); "+
-"})";
+String inscrURL="javascript:changedates('" + editInscriptionDatesURL + "')";
 
 %>
 
