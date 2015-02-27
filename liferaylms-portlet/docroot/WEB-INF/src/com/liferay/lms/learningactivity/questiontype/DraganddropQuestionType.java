@@ -202,13 +202,12 @@ public class DraganddropQuestionType extends BaseQuestionType {
 						String feedAux = new String();
 						Iterator<TestAnswer> it = tA.iterator();
 						TestAnswer answerAux = null;
-						while (it.hasNext()){
+						while (it.hasNext()){ 
 							answerAux = it.next();
 							if(answersSelectedIds.get(i) == answerAux.getAnswerId()){
 								feedAux = answerAux.getFeedbacknocorrect();
 								break;
 							}
-
 						}
 						feedMessage = "<div class=\"questionFeedback\">"+feedAux+"</div>";
 					}
@@ -230,8 +229,15 @@ public class DraganddropQuestionType extends BaseQuestionType {
 			}
 			rightCol += "</div>";
 
-
-			html += "<div class=\"content_answer\">" + leftCol + rightCol + "</div></div>";
+			if(feedback) {
+				html += "<div class=\"content_answer\">" + leftCol + rightCol + "</div>";
+//				if (!"".equals(feedMessage)) {
+//					//html += "<div class=\"questionFeedback\">" + feedMessage + "</div>";
+//					html += feedMessage;
+//				}
+			}
+			else html += leftCol + rightCol;
+			html+=	"</div>";
 
 		} catch (SystemException e) {
 			e.printStackTrace();
