@@ -23,6 +23,29 @@
 
 <%@include file="/init.jsp" %>
 
+
+
+<script type="text/javascript">
+function actionDiv(element){
+	childs = element.parentNode.getElementsByClassName("collapsable2");
+	if(childs.length>0){
+		for (var i = 0; i < childs.length; i++) {
+			if (childs[i].style.display == 'none') {
+				childs[i].style.display = 'block';
+			}else{
+				childs[i].style.display = 'none';
+			}
+		}
+		
+		if(element.parentNode.className == 'option-more2'){
+			element.parentNode.className="option-less2";
+		}else{
+			element.parentNode.className="option-more2";
+		}
+	}
+}
+</script>
+
 <liferay-ui:error key="p2ptask-no-empty-answer" message="p2ptask-no-empty-answer" />
 <liferay-ui:error key="error-p2ptask-correction" message="error-p2ptask-correction" />
 <liferay-ui:error key="p2ptaskactivity-error-file-type" message="p2ptaskactivity.error.file.type" />
@@ -435,9 +458,9 @@ if(!p2pActList.isEmpty()){
 
 				allCorrected = false;
 				%>
-				<div class="option-more">
+				<div class="option-more2">
 					
-					<span class="label-col"><liferay-ui:message key="p2ptask-exercise" /> 
+					<span class="label-col2" onclick="actionDiv(this);" ><liferay-ui:message key="p2ptask-exercise" /> 
 						<c:if test="<%=!anonimous %>">
 							<span class="name">
 								<liferay-ui:message key="of" /> 
@@ -451,7 +474,7 @@ if(!p2pActList.isEmpty()){
 						</span>
 						</c:if>
 					</span>
-					<div class="collapsable">
+					<div class="collapsable2" style="display:none">
 						<form enctype="multipart/form-data" method="post" action="<portlet:actionURL name="saveCorrection"></portlet:actionURL>" name="<portlet:namespace />f1_<%=cont%>" id="<portlet:namespace />f1_<%=cont%>">
 							<input type="hidden" name="actId" value="<%=actId%>"  />
 							<input type="hidden" name="latId" value="<%=latId%>"  />
@@ -543,8 +566,8 @@ if(!p2pActList.isEmpty()){
 	
 				%>
 	
-				<div class="option-more">
-					<span class="label-col">
+				<div class="option-more2">
+					<span class="label-col2" onclick="actionDiv(this);">
 						<liferay-ui:message key="p2ptask-exercise" />
 						<c:if test="<%=!anonimous %>">
 							<span class="name">
@@ -557,7 +580,7 @@ if(!p2pActList.isEmpty()){
 							<%=cont%>
 						</span>
 					</span>
-					<div class="collapsable">
+					<div class="collapsable2" style="display:none">
 
 						<div class="description">
 							<%=descriptionFile %>
