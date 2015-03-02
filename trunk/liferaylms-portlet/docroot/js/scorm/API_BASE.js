@@ -169,7 +169,7 @@ API_BASE.BaseActivityTreeNodeEventArgs.createClass(
 API_BASE.BaseUtils.createClass('API_BASE.BaseUtils');
 API_BASE.LogEventArgs.createClass('API_BASE.LogEventArgs', EventArgs);
 API_BASE.LOG.createClass('API_BASE.LOG');
-API_BASE.BaseUtils.ncName = '[A-Za-z_][\\w\\\\.\\\\-]*';
+API_BASE.BaseUtils.ncName = '[0-9A-Za-z_][\\w\\\\.\\\\-]*';
 API_BASE.LOG.silent = false;
 API_BASE.LOG.$0 = new API_BASE.LogEventArgs();
 API_BASE.LOG.$1 = null;
