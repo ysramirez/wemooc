@@ -1,3 +1,4 @@
+<%@page import="com.liferay.portal.kernel.util.PrefsPropsUtil"%>
 <%@page import="com.liferay.portal.kernel.util.PropsUtil"%>
 <%@page import="com.liferay.portal.service.ServiceContextFactory"%>
 <%@page import="com.liferay.portal.model.RoleConstants"%>
@@ -70,6 +71,9 @@ else
 <liferay-ui:error key="scormadmin.error.nomanifest" message="scormadmin.error.nomanifest"/>
 <liferay-ui:error key="scormadmin.error.requiredcategories" message="scormadmin.error.requiredcategories"/>
 <liferay-ui:error key="maximum-file-size" message="maximum-file-size"/>
+
+<div class="portlet-msg-error"><%= LanguageUtil.format (themeDisplay.getLocale(), "upload-documents-no-larger-than-x-k", new String[]{ PrefsPropsUtil.getString("dl.file.max.size") }) %></div>
+
 <aui:form name="fm" action="<%=savescormURL%>"  method="post" enctype="multipart/form-data" >
 
 	<aui:input type="hidden" name="scormId" value="<%=scormId %>" />
