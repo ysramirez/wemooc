@@ -15,6 +15,7 @@
 package com.liferay.lms.service.impl;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -34,6 +35,7 @@ import com.liferay.lms.service.base.CourseLocalServiceBaseImpl;
 import com.liferay.portal.kernel.bean.PortletBeanLocatorUtil;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
 import com.liferay.portal.kernel.dao.orm.DynamicQueryFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.ProjectionFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -50,11 +52,13 @@ import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.FriendlyURLNormalizerUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
+import com.liferay.portal.model.ClassName;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.GroupConstants;
 import com.liferay.portal.model.LayoutSet;
@@ -64,6 +68,7 @@ import com.liferay.portal.model.ModelHintsUtil;
 import com.liferay.portal.model.ResourceConstants;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.service.GroupLocalServiceUtil;
 import com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
@@ -150,6 +155,37 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 		}
 		return results;
 
+	}
+	
+	public List<Course> getPublicCoursesByCompanyId(Long companyId){
+		
+		Long classNameId = ClassNameLocalServiceUtil.getClassNameId(Course.class.getName());
+		
+		if(classNameId!=null){
+			try {
+				DynamicQuery dq = DynamicQueryFactoryUtil.forClass(AssetEntry.class);
+				dq.add(PropertyFactoryUtil.forName("companyId").eq(companyId));
+				dq.add(PropertyFactoryUtil.forName("classNameId").eq(classNameId));
+				dq.add(PropertyFactoryUtil.forName("visible").eq(true));
+				dq.setProjection(ProjectionFactoryUtil.distinct(ProjectionFactoryUtil.property("classPK")));
+				List<Long> results = (List<Long>)assetEntryLocalService.dynamicQuery(dq);
+
+				List<Course> courses = new ArrayList<Course>();
+				for(Long courseId : results){
+					System.out.println(courseId);
+					Course course = coursePersistence.fetchByPrimaryKey(courseId);
+					if(course!=null)
+						courses.add(course);
+				}
+				
+				return courses;
+				
+			} catch (SystemException e) {
+				if(log.isDebugEnabled())e.printStackTrace();
+			}
+		}
+		
+		return null;
 	}
 
 	public Course addCourse (String title, String description,String summary,String friendlyURL, Locale locale,
