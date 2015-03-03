@@ -54,7 +54,6 @@ if(courseResult!=null)
 
 <portlet:renderURL var="cancel" />
 <aui:form name="fm" action="<%=editInscriptionDatesURL%>"  method="post">
-<aui:button-row>
 <aui:field-wrapper label="start-date">
 <aui:input name="courseId" type="hidden" value="<%=courseId %>" />
 <aui:input name="userId" type="hidden" value="<%=userId %>" />
@@ -68,6 +67,7 @@ if(courseResult!=null)
 					<liferay-ui:input-date yearRangeEnd="<%=LiferaylmsUtil.defaultEndYear %>" yearRangeStart="<%=LiferaylmsUtil.defaultStartYear %>" dayParam="stopDay" monthParam="stopMon"
 					 yearParam="stopYear"  yearNullable="false" dayNullable="false" monthNullable="false"  yearValue="<%=endYear %>" monthValue="<%=endMonth %>" dayValue="<%=endDay %>"></liferay-ui:input-date>
 					 </aui:field-wrapper>
+	<aui:button-row>
 		<aui:button type="submit"></aui:button>							
 		<aui:button onClick="<%=cancel %>" type="cancel" />
 	</aui:button-row>
