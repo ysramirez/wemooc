@@ -660,9 +660,7 @@ public class CourseAdmin extends MVCPortlet {
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 	}
 
-	public void addUserRole(ActionRequest actionRequest,
-			ActionResponse actionResponse) throws Exception 
-		{
+	public void addUserRole(ActionRequest actionRequest, ActionResponse actionResponse) throws Exception{
 
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		long roleId = ParamUtil.getLong(actionRequest, "roleId", 0);
@@ -672,8 +670,9 @@ public class CourseAdmin extends MVCPortlet {
 				course.getGroupCreatedId())) {
 			GroupLocalServiceUtil.addUserGroups(userId,	new long[] { course.getGroupCreatedId() });
 			
-			User user = UserLocalServiceUtil.getUser(userId);
-			sendEmail(user, course);
+			//The application only send one mail at listener
+			//User user = UserLocalServiceUtil.getUser(userId);
+			//sendEmail(user, course);
 		}
 		UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { userId },
 				course.getGroupCreatedId(), roleId);
@@ -1342,53 +1341,5 @@ public class CourseAdmin extends MVCPortlet {
 	    }
 	    return igRecordFolderId;
 	  }
-	
-	private void sendEmail(User user, Course course){
-		if(course.isWelcome()&&user!=null&&course!=null){
-			if(course.getWelcomeMsg()!=null&&course.getWelcomeMsg()!=null&&!StringPool.BLANK.equals(course.getWelcomeMsg())){
-				
-				try{
-					String emailTo = user.getEmailAddress();
-					String nameTo = user.getFullName();
-					InternetAddress to = new InternetAddress(emailTo, nameTo);
-
-					String fromName = PrefsPropsUtil.getString(course.getCompanyId(),
-						PropsKeys.ADMIN_EMAIL_FROM_NAME);
-					String fromAddress = PrefsPropsUtil.getString(course.getCompanyId(),
-						PropsKeys.ADMIN_EMAIL_FROM_ADDRESS);
-					InternetAddress from = new InternetAddress(fromAddress, fromName);
-					
-					Company company = null;
-					try {
-						company = CompanyLocalServiceUtil.getCompany(course.getCompanyId());
-					} catch (PortalException e) {
-						if(log.isErrorEnabled())log.error(e.getMessage());
-						if(log.isDebugEnabled())e.printStackTrace();
-					}
-					
-					if(company!=null){
-						String url = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(false), false);
-						String urlcourse = url+"/web"+course.getFriendlyURL();
-						
-						String subject = LanguageUtil.format(user.getLocale(),"welcome-subject", new String[]{course.getTitle(user.getLocale())});
-				    	String body = StringUtil.replace(
-				    			course.getWelcomeMsg(),
-				    			new String[] {"[$FROM_ADDRESS$]", "[$FROM_NAME$]", "[$PAGE_URL$]","[$PORTAL_URL$]","[$TO_ADDRESS$]","[$TO_NAME$]"},
-				    			new String[] {fromAddress, fromName, urlcourse, url, emailTo, nameTo});
-				    	
-						MailMessage mailm = new MailMessage(from, to, subject, body, true);
-						MailServiceUtil.sendEmail(mailm);
-					}
-					
-				}catch(UnsupportedEncodingException e){
-					if(log.isErrorEnabled())log.error(e.getMessage());
-					if(log.isDebugEnabled())e.printStackTrace();
-				}catch(SystemException e){
-					if(log.isErrorEnabled())log.error(e.getMessage());
-					if(log.isDebugEnabled())e.printStackTrace();
-				}
-			}
-		}
-	}
 }
 
