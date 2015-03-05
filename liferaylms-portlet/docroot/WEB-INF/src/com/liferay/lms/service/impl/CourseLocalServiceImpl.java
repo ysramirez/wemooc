@@ -82,6 +82,7 @@ import com.liferay.portlet.social.model.SocialActivityDefinition;
 import com.liferay.portlet.social.model.SocialActivitySetting;
 import com.liferay.portlet.social.service.SocialActivitySettingLocalServiceUtil;
 import com.liferay.portlet.social.service.SocialActivitySettingServiceUtil;
+import com.liferay.util.LmsLocaleUtil;
 
 
 
@@ -241,6 +242,8 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setCourseEvalId(CourseEvalId);
 			course.setCalificationType(calificationType);
 			course.setMaxusers(maxUsers);
+			
+			course = LmsLocaleUtil.checkDefaultLocale(Course.class, course, "description");
 
 			//creating group
 			Group group = groupLocalService.addGroup(userLocalService.getDefaultUser(serviceContext.getCompanyId()).getUserId(),
