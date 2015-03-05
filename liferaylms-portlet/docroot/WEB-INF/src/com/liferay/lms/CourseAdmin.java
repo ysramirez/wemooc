@@ -876,6 +876,17 @@ public class CourseAdmin extends MVCPortlet {
 									errors.add(LanguageUtil.get(getPortletConfig(), themeDisplay.getLocale(),"courseadmin.importuserrole.csvError"));
 								}
 							}
+						}else{
+							if((!Validator.isNotNull(currLine[0]))){
+								errors.add(LanguageUtil.format(getPortletConfig(),themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.user-id-bad-format", new Object[] { currLine[0] }, false));
+
+							}
+							
+							if(!Validator.isNumber(currLine[0])){
+								errors.add(LanguageUtil.format(getPortletConfig(),themeDisplay.getLocale(),"courseadmin.importuserrole.csvError.user-id-bad-format", new Object[] { currLine[0] }, false));
+
+							}
+									
 						}
 					}
 
