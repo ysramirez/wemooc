@@ -14,16 +14,22 @@
 
 package com.liferay.lms.service.impl;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
+
+import sun.security.krb5.internal.LocalSeqNumber;
 
 import com.liferay.lms.auditing.AuditConstants;
 import com.liferay.lms.auditing.AuditingLogFactory;
 import com.liferay.lms.learningactivity.LearningActivityTypeRegistry;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseModel;
 import com.liferay.lms.model.LearningActivity;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.service.ClpSerializer;
@@ -41,6 +47,7 @@ import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.search.Indexable;
@@ -51,6 +58,7 @@ import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -68,6 +76,13 @@ import com.liferay.portal.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.service.RoleLocalServiceUtil;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.UserLocalServiceUtil;
+import com.liferay.portal.theme.ThemeDisplay;
+import com.liferay.portal.util.PortalUtil;
+import com.liferay.portlet.announcements.model.AnnouncementsEntry;
+import com.liferay.portlet.announcements.model.AnnouncementsFlagConstants;
+import com.liferay.portlet.announcements.service.AnnouncementsEntryServiceUtil;
+import com.liferay.portlet.announcements.service.AnnouncementsFlagLocalServiceUtil;
+import com.liferay.portlet.announcements.service.persistence.AnnouncementsEntryUtil;
 import com.liferay.portlet.social.service.SocialActivityLocalServiceUtil;
 import com.liferay.util.LmsLocaleUtil;
 
@@ -286,8 +301,12 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 					throws SystemException, 
 					PortalException {
 
+		
 		long userId=serviceContext.getUserId();
 		LearningActivity larn =this.getLearningActivity(actId);
+		
+		String titleAux = larn.getTitle(serviceContext.getLocale());
+		
 		larn.setCompanyId(serviceContext.getCompanyId());
 		larn.setGroupId(serviceContext.getScopeGroupId());
 		larn.setUserId(userId);
@@ -307,7 +326,10 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		learningActivityPersistence.update(larn, true);
 		try
 		{
-
+			
+			
+			
+			
 
 			assetEntryLocalService.updateEntry(
 					userId, larn.getGroupId(), LearningActivity.class.getName(),
@@ -328,6 +350,30 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		//auditing
 		AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.UPDATE, null);
 
+		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(larn.getCompanyId(), "lms.notifications.active");
+
+		if(isNotificationActivated){
+			List<User> listaUsuarios = userService.getGroupUsers(larn.getGroupId());
+			Iterator<User> it = listaUsuarios.iterator();
+			while(it.hasNext()){
+				User u = it.next();
+				try {
+					
+					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(larn.getGroupId(), "com.liferay.lms.model", larn.getGroupId(), "VIEW_RESULTS")){
+
+						String courseTitle = courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).getTitle(u.getLocale());
+						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.larn.title", null);
+						String body =LanguageUtil.format(u.getLocale(),"notif.modification.larn.body", new String[]{titleAux,courseTitle});
+						sendNotification(subject, body, "", "announcements.type.general", 1,serviceContext, startDate, endDate,u.getUserId());
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	
 		return larn;
 	}
 	public LearningActivity modLearningActivity (LearningActivity larn, 
@@ -822,6 +868,58 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		learningActivity = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, learningActivity, "description");
 		
 		return super.updateLearningActivity(learningActivity);
+	}
+	
+private void sendNotification(String title, String content, String url, String type, int priority,ServiceContext serviceContext, java.util.Date startDate,java.util.Date endDate, Long userId){
+		
+		//ThemeDisplay themeDisplay = (ThemeDisplay) serviceContext.getAttribute(WebKeys.THEME_DISPLAY);	
+		//serviceContext.getA
+		SimpleDateFormat formatDay = new SimpleDateFormat("dd");
+		//formatDay.setTimeZone(themeDisplay.getTimeZone());
+		SimpleDateFormat formatMonth = new SimpleDateFormat("MM");
+		//formatMonth.setTimeZone(themeDisplay.getTimeZone());
+		SimpleDateFormat formatYear = new SimpleDateFormat("yyyy");
+		//formatYear.setTimeZone(themeDisplay.getTimeZone());
+		SimpleDateFormat formatHour = new SimpleDateFormat("HH");
+		//formatHour.setTimeZone(themeDisplay.getTimeZone());
+		SimpleDateFormat formatMin = new SimpleDateFormat("mm");
+		//formatMin.setTimeZone(themeDisplay.getTimeZone());
+		
+		Date today=new Date(System.currentTimeMillis());
+		
+		int displayDateDay=Integer.parseInt(formatDay.format(today));
+		int displayDateMonth=Integer.parseInt(formatMonth.format(today))-1;
+		int displayDateYear=Integer.parseInt(formatYear.format(today));
+		int displayDateHour=Integer.parseInt(formatHour.format(today));
+		int displayDateMinute=Integer.parseInt(formatMin.format(today));
+		
+		int expirationDateDay=Integer.parseInt(formatDay.format(today));
+		int expirationDateMonth=Integer.parseInt(formatMonth.format(today))-1;
+		int expirationDateYear=Integer.parseInt(formatYear.format(today))+1;
+		int expirationDateHour=Integer.parseInt(formatHour.format(today));
+		int expirationDateMinute=Integer.parseInt(formatMin.format(today));
+
+		long classNameId=PortalUtil.getClassNameId(User.class.getName());
+		//long classPK=serviceContext.getUserId();
+
+		AnnouncementsEntry ae;
+		try {
+			//themeDisplay.getPli
+			ae = AnnouncementsEntryServiceUtil.addEntry(
+					serviceContext.getPlid(), 0, userId, title, content, url, type, 
+			                            displayDateMonth, displayDateDay, displayDateYear, displayDateHour, displayDateMinute,
+			                            expirationDateMonth, expirationDateDay, expirationDateYear, expirationDateHour, expirationDateMinute,
+			                            priority, false);
+			
+			AnnouncementsFlagLocalServiceUtil.addFlag(userId,ae.getEntryId(),AnnouncementsFlagConstants.UNREAD);
+		} catch (PortalException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (SystemException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		                            
 	}
 
 	
