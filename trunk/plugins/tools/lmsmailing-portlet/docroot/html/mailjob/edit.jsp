@@ -78,7 +78,9 @@
 		</select>
 	</div>
 	 
-	<liferay-ui:panel id="panel_tags" title="condition" collapsible="false">  
+<div class="editMailJob">
+	<h2><liferay-ui:message key="condition" /></h2>
+	<div>
 		<liferay-ui:message key="groupmailing.condition" />
 		<div>
 			<liferay-ui:message key="groupmailing.condition-class" />
@@ -129,9 +131,10 @@
 				 value="3"><liferay-ui:message key="passed" /></option>
 			</select>
 		</div>
-	</liferay-ui:panel>
+	</div>
 
-	<liferay-ui:panel id="panel_tags" title="reference" collapsible="false">  
+	<h2><liferay-ui:message key="reference" /></h2>
+	<div>
 		<liferay-ui:message key="groupmailing.reference" />
 		<div>
 			<liferay-ui:message key="groupmailing.reference-class" />
@@ -173,9 +176,11 @@
 				<option <c:if test="${time eq 1}"> selected="selected"</c:if> value="1"><liferay-ui:message key="after" /></option>
 			</select>
 		</div>
-	</liferay-ui:panel>
-	<div>
-		<input type="submit" name="<liferay-ui:message key="submit" />">
 	</div>
+</div>
+	
+<aui:button-row>
+		<input type="submit" name="<liferay-ui:message key="submit" />">
 	<aui:button onClick="${cancel}" type="cancel" />
+</aui:button-row>
 </form>
