@@ -450,7 +450,6 @@ public class LearningActivityResultLocalServiceImpl
 					}
 					manifestResources.put(identifier, type3);
 				}
-				
 				List<Element> items = new ArrayList<Element>();
 				items.addAll(imsdocument.getRootElement().element("organizations").elements("organization").get(0).elements("item"));
 				for (int i = 0; i < items.size(); i++) {
@@ -484,7 +483,7 @@ public class LearningActivityResultLocalServiceImpl
 		List<Long> scores = new ArrayList<Long>();
 		
 		String total_completion_status = "not attempted";
-		String total_lesson_status = "unknown";
+		String total_lesson_status = "";
 		Double total_score = 0.0;
 		
 		if (cmis.length() == 0) { // Asset
@@ -501,7 +500,7 @@ public class LearningActivityResultLocalServiceImpl
 			}
 		} else {
 			for (int i = 0; i < cmiNames.length(); i++) {
-				JSONObject cmi = cmis.getJSONObject(cmiNames.getString(0));
+				JSONObject cmi = cmis.getJSONObject(cmiNames.getString(i));
 				String typeCmi = manifestResources.get(recursos.get(cmiNames.getString(i)));
 				
 				String completion_status = null;
@@ -565,7 +564,8 @@ public class LearningActivityResultLocalServiceImpl
 			}
 		}
 		
-		if (!isPureAsset) {
+		if (!isPureAsset) 
+		{
 			if (manifestItems.size() <= 1) {
 				if (completion_statuses.size() == 1) {
 					total_completion_status = completion_statuses.get(0);
@@ -573,8 +573,11 @@ public class LearningActivityResultLocalServiceImpl
 				if (success_statuses.size() == 1) {
 					total_lesson_status = success_statuses.get(0);
 				}
-			} else {
-				if (success_statuses.size() < manifestItems.size()) {
+			} 
+			else 
+			{
+				if (success_statuses.size() < manifestItems.size()) 
+				{
 					total_lesson_status = "unknown";
 				} else if (success_statuses.size() == manifestItems.size()) {
 					for (int i = 0; i < success_statuses.size(); i++) {
@@ -583,7 +586,7 @@ public class LearningActivityResultLocalServiceImpl
 							break;
 						}
 						if ("passed".equals(success_statuses.get(i))) {
-							if ("passed".equals(total_lesson_status)) {
+							if ("passed".equals(total_lesson_status)||"".equals(total_lesson_status)) {
 								total_lesson_status = "passed";
 							}
 							if ("failed".equals(total_lesson_status)) {
@@ -610,7 +613,7 @@ public class LearningActivityResultLocalServiceImpl
 					}
 				} else if (completion_statuses.size() == manifestItems.size()) {
 					for (int i = 0; i < completion_statuses.size(); i++) {
-						total_score += scores.get(i);
+						//total_score += scores.get(i);
 						if ("incomplete".equals(completion_statuses.get(i))) {
 							total_completion_status = "incomplete";
 							break;
