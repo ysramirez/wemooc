@@ -53,7 +53,7 @@ import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.util.bridges.mvc.MVCPortlet;
-import com.sun.corba.se.spi.orb.StringPair;
+
 
 /**
  * Portlet implementation class CompetencesAdmin
