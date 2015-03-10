@@ -140,7 +140,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 				learningActivity.getStartdate(), learningActivity.getEnddate(), learningActivity.getTypeId(),
 				learningActivity.getTries(), learningActivity.getPasspuntuation(), learningActivity.getModuleId(), learningActivity.getExtracontent(),
 				learningActivity.getFeedbackCorrect(), learningActivity.getFeedbackNoCorrect(), serviceContext);
-		//retorno.setPrecedence(learningActivity.setPrecedence(precedence))
+		retorno.setPrecedence(learningActivity.getPrecedence());
 		retorno.setPriority(learningActivity.getPriority());
 		retorno.setWeightinmodule(learningActivity.getWeightinmodule());
 		learningActivityPersistence.update(retorno, true);
