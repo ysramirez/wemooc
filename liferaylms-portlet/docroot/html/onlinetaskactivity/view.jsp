@@ -358,6 +358,8 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 					<br /><br />
 			<%			}
 					}
+				}else{
+					
 				}
 			%>
             <p class="see-more">

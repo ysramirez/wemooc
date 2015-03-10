@@ -47,8 +47,7 @@ long sizeKbFile=0;
 String text=null;
 String richtext=null;
 
-
-if(lATry!=null&&ParamUtil.getBoolean(renderRequest, "isTablet", false)){
+if(lATry!=null&&!ParamUtil.getBoolean(renderRequest, "isTablet", false)){
 	try {
 		Iterator<Node> nodeItr = SAXReaderUtil.read(lATry.getTryResultData()).getRootElement().nodeIterator();
 		while(nodeItr.hasNext()) {
