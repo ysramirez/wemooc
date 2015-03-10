@@ -21,11 +21,13 @@ import org.xhtmlrenderer.pdf.ITextRenderer;
 import com.liferay.lms.inscriptionadmin.InscriptionAdminPortlet;
 import com.liferay.lms.model.Competence;
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.model.Module;
 import com.liferay.lms.model.UserCompetence;
 import com.liferay.lms.service.CompetenceLocalServiceUtil;
 import com.liferay.lms.service.CourseLocalServiceUtil;
+import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.UserCompetenceLocalServiceUtil;
@@ -129,13 +131,20 @@ public class UserCompetencePortlet extends MVCPortlet {
 					
 					if(user!=null&&competence!=null&&course!=null){
 						if(log.isDebugEnabled())log.debug("Enter:"+user.getLocale());
+						
+						CourseResult courseResult = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(), user.getUserId());
 
 						ITextRenderer renderer = new ITextRenderer();
 						Map<String, Object> variables = new HashMap<String, Object>();
 						variables.put("user", user);
 						variables.put("competence", competence);
-						variables.put("course", course);						
+						variables.put("course", course);
 						variables.put("uuid", userCompetence.getUuid());
+						variables.put("userCompetence", userCompetence);
+						
+						if(courseResult!=null)
+							variables.put("courseResult", courseResult);
+						
 						variables.put("courseName", course.getTitle(user.getLocale()));
 						variables.put("competenceName", competence.getTitle(user.getLocale()));
 						variables.put("userName", user.getFullName());
