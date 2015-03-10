@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.TimeUnit;
@@ -279,12 +280,14 @@ public class CloneCourse implements MessageListener {
 				cloneTraceStr += "  Module: " + newModule.getTitle(Locale.getDefault()) +"("+newModule.getModuleId()+")";
 				
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 				continue;
 			}
 			
 			List<LearningActivity> activities = LearningActivityLocalServiceUtil.getLearningActivitiesOfModule(module.getModuleId());
+			HashMap<Long,Long> correlationActivities = new HashMap<Long, Long>();
+			HashMap<Long, Long> pending = new HashMap<Long, Long>();
+			
 			for(LearningActivity activity:activities){
 				
 				LearningActivity newLearnActivity;
@@ -299,6 +302,17 @@ public class CloneCourse implements MessageListener {
 					newLearnActivity.setTries(activity.getTries());
 					newLearnActivity.setPasspuntuation(activity.getPasspuntuation());
 					newLearnActivity.setPriority(newLearnActivity.getActId());
+					
+					boolean actPending = false;
+					if(activity.getPrecedence()>0){
+						if(correlationActivities.get(activity.getPrecedence())==null){
+							actPending = true;
+						}else{
+							newLearnActivity.setPrecedence(correlationActivities.get(activity.getPrecedence()));
+						}
+					}
+					
+					newLearnActivity.setWeightinmodule(activity.getWeightinmodule());
 					
 					newLearnActivity.setGroupId(newModule.getGroupId());
 					newLearnActivity.setModuleId(newModule.getModuleId());
@@ -335,6 +349,8 @@ public class CloneCourse implements MessageListener {
 					
 					long actId = nuevaLarn.getActId();
 					
+					correlationActivities.put(activity.getActId(), actId);
+					
 					boolean visible = ResourcePermissionLocalServiceUtil.hasResourcePermission(siteMemberRole.getCompanyId(), LearningActivity.class.getName(), 
 							ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), ActionKeys.VIEW);
 					
@@ -343,6 +359,9 @@ public class CloneCourse implements MessageListener {
 								ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(actId),siteMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
 					}
 					
+					if(actPending){
+						pending.put(actId, activity.getPrecedence());
+					}
 				} catch (Exception e) {
 					e.printStackTrace();
 					continue;
@@ -393,6 +412,26 @@ public class CloneCourse implements MessageListener {
 
 				}
 
+			}
+			
+			if(pending.size()>0){
+				for(Long id : pending.keySet()){
+					LearningActivity la = LearningActivityLocalServiceUtil.getLearningActivity(id);
+					
+					if(log.isDebugEnabled())log.debug(la);
+					if(la!=null){
+						Long idAsig = pending.get(id);
+
+						if(log.isDebugEnabled())log.debug(idAsig);
+						if(idAsig!=null){
+							Long other = correlationActivities.get(idAsig);
+							if(log.isDebugEnabled())log.debug(other);
+							la.setPrecedence(other);
+							
+							LearningActivityLocalServiceUtil.updateLearningActivity(la);
+						}
+					}
+				}
 			}
 			
 		}

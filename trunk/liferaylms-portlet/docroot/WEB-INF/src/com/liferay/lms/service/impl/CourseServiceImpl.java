@@ -549,7 +549,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 					}
 					
 					if(company!=null){
-						String url = PortalUtil.getPortalURL(company.getVirtualHostname(), PortalUtil.getPortalPort(false), false);
+						String url = PortalUtil.getPortalURL(company.getVirtualHostname(), 80, false);
 						String urlcourse = url+"/web"+course.getFriendlyURL();
 						
 						String subject = LanguageUtil.format(user.getLocale(),"welcome-subject", new String[]{course.getTitle(user.getLocale())});
