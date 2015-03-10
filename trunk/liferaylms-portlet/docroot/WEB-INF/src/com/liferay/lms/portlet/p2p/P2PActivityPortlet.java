@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.Enumeration;
 import java.util.List;
 
 import javax.mail.internet.InternetAddress;
@@ -39,6 +40,7 @@ import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.lms.service.ModuleResultLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityCorrectionsLocalServiceUtil;
 import com.liferay.lms.service.P2pActivityLocalServiceUtil;
+import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -53,7 +55,11 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PrefsPropsUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.xml.Document;
+import com.liferay.portal.kernel.xml.Element;
+import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.Company;
 import com.liferay.portal.model.Group;
 import com.liferay.portal.model.Layout;
@@ -84,6 +90,7 @@ import com.liferay.util.mail.MailEngineException;
  * Portlet implementation class P2PActivityPortlet
  */
 public class P2PActivityPortlet extends MVCPortlet {
+	Log log = LogFactoryUtil.getLog(P2PActivityPortlet.class);
 	
 
 	@ProcessAction(name = "addP2PActivity")
@@ -100,6 +107,16 @@ public class P2PActivityPortlet extends MVCPortlet {
 				e1.printStackTrace();
 			} catch (SystemException e1) {
 				e1.printStackTrace();
+			} 
+
+
+			if(log.isDebugEnabled()){
+				Enumeration<String> parNam = uploadRequest.getParameterNames();
+
+				while (parNam.hasMoreElements()) {
+					String parName = parNam.nextElement();
+					log.debug(parName+"::"+uploadRequest.getParameter(parName));
+				}
 			}
 						
 			//Obtenemos los campos necesarios.
@@ -112,8 +129,20 @@ public class P2PActivityPortlet extends MVCPortlet {
 			
 			String fileName = uploadRequest.getFileName("fileName");
 			String title = fileName;
+			
 			File file = uploadRequest.getFile("fileName");
 			String mimeType = uploadRequest.getContentType("fileName");
+			
+			if(log.isDebugEnabled()){
+				log.debug(groupId);
+				log.debug(description);
+				log.debug(actId);
+				log.debug(p2pActivityId);
+				log.debug(fileName);
+				log.debug(title);
+				log.debug(mimeType);
+			}
+			
 			
 			//Evitamos que se suban ficheros con las extensiones siguientes.
 			if(	file.getName().endsWith(".bat") 
@@ -224,6 +253,122 @@ public class P2PActivityPortlet extends MVCPortlet {
 			if(_log.isDebugEnabled())e.printStackTrace();
 			SessionErrors.add(request, "error-subir-p2p");
 		}
+	}
+	
+
+	//This is for the tablet
+	@ProcessAction(name = "setActivity")
+	public void setActivity(ActionRequest actionRequest,ActionResponse actionResponse) throws IOException, NestableException {
+		final String TEXT_XML= "text";
+		final String RICH_TEXT_XML = "richText";
+		final String FILE_XML = "file";	
+		
+		if(log.isDebugEnabled())log.debug("setActivity");
+		
+		long actId = ParamUtil.getLong(actionRequest, "actId");
+		UploadPortletRequest uploadRequest = PortalUtil.getUploadPortletRequest(actionRequest);
+
+		if(log.isDebugEnabled()){
+			Enumeration<String> parNam = actionRequest.getParameterNames();
+
+			while (parNam.hasMoreElements()) {
+				String parName = parNam.nextElement();
+				log.debug(parName+"::"+actionRequest.getParameter(parName));
+			}
+			
+			parNam = uploadRequest.getParameterNames();
+
+			while (parNam.hasMoreElements()) {
+				String parName = parNam.nextElement();
+				log.debug(parName+"::"+uploadRequest.getParameter(parName));
+			}
+		}
+		
+		String text = ParamUtil.getString(uploadRequest, "text");
+		ThemeDisplay themeDisplay = (ThemeDisplay) actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
+		
+		Long userId = ParamUtil.getLong(uploadRequest, "userId",0L);
+		
+		User user = null;
+		if(userId>0L){
+			user = UserLocalServiceUtil.getUser(userId);
+		}else{
+			user = UserLocalServiceUtil.getUser(themeDisplay.getUserId());
+		}
+
+		boolean isSetTextoEnr =  StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"textoenr"));
+		boolean isSetFichero =  StringPool.TRUE.equals(LearningActivityLocalServiceUtil.getExtraContentValue(actId,"fichero"));
+
+		LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+		LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId, user.getUserId());
+
+		if((learningActivity.getTries()!=0)&&(learningActivity.getTries()<=LearningActivityTryLocalServiceUtil.getTriesCountByActivityAndUser(actId, user.getUserId()))) {
+			SessionErrors.add(actionRequest, "onlineActivity.max-tries");	
+		}
+		else {
+
+			//ServiceContext serviceContext = ServiceContextFactory.getInstance(actionRequest);
+
+			Element resultadosXML=SAXReaderUtil.createElement("results");
+			Document resultadosXMLDoc=SAXReaderUtil.createDocument(resultadosXML);
+
+			if(isSetFichero) {
+				String fileName = uploadRequest.getFileName("fileName");
+				File file = uploadRequest.getFile("fileName");
+				String mimeType = uploadRequest.getContentType("fileName");
+				if (Validator.isNull(fileName)) {
+					SessionErrors.add(actionRequest, "onlineActivity.mandatory.file");
+					actionRequest.setAttribute("actId", actId);
+					actionResponse.setRenderParameter("text", text);
+					return;
+				}
+				if(	file.getName().endsWith(".bat") 
+						|| file.getName().endsWith(".com")
+						|| file.getName().endsWith(".exe")
+						|| file.getName().endsWith(".msi") ){
+
+					SessionErrors.add(actionRequest, "onlineActivity.not.allowed.file.type");
+					actionResponse.setRenderParameter("text", text);
+					actionRequest.setAttribute("actId", actId);
+					return;
+				}
+
+				long repositoryId = DLFolderConstants.getDataRepositoryId(themeDisplay.getScopeGroupId(), DLFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+				long folderId = createDLFolders(user.getUserId(), repositoryId, actionRequest);
+
+				//Subimos el Archivo en la Document Library
+				ServiceContext serviceContext= ServiceContextFactory.getInstance( DLFileEntry.class.getName(), actionRequest);
+				//Damos permisos al archivo para usuarios de comunidad.
+				serviceContext.setAddGroupPermissions(true);
+				FileEntry document = DLAppLocalServiceUtil.addFileEntry(
+						user.getUserId(), repositoryId , folderId , fileName, mimeType, fileName, StringPool.BLANK, StringPool.BLANK, file , serviceContext ) ;
+
+				Element fileXML=SAXReaderUtil.createElement(FILE_XML);
+				fileXML.addAttribute("id", Long.toString(document.getFileEntryId()));
+				resultadosXML.add(fileXML);
+			}
+
+			if(isSetTextoEnr){
+				Element richTextXML=SAXReaderUtil.createElement(RICH_TEXT_XML);
+				richTextXML.setText(text);
+				resultadosXML.add(richTextXML);				
+			}
+			else {
+				Element textXML=SAXReaderUtil.createElement(TEXT_XML);
+				textXML.setText(text);
+				resultadosXML.add(textXML);				
+			}
+
+			ServiceContext sc = ServiceContextFactory.getInstance(actionRequest);
+			sc.setUserId(user.getUserId());
+			LearningActivityTry learningActivityTry =  LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,sc);
+			learningActivityTry.setTryResultData(resultadosXMLDoc.formattedString());	
+			//learningActivityTry.setEndDate(new Date());
+			//learningActivityTry.setResult(0);
+			LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+			SessionMessages.add(actionRequest, "onlinetaskactivity.updating");
+		}
+
 	}
 		
 	@ProcessAction(name = "saveCorrection")
