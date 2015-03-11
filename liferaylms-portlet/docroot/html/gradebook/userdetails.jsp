@@ -41,11 +41,13 @@
 	<liferay-ui:search-container-row className="com.liferay.lms.model.LearningActivity" keyProperty="actId" modelVar="learningActivity">
 	<%
 				String score= "-";
-				String status="not-started";
+				String status="not-started";	
+				String comments =" ";
 				if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(learningActivity.getActId(), usuario.getUserId())){
 					status="started";
 					LearningActivityResult learningActivityResult=LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivity.getActId(), usuario.getUserId());
 					score=(learningActivityResult!=null)?LearningActivityResultLocalServiceUtil.translateResult(themeDisplay.getLocale(), learningActivityResult.getResult(), learningActivity.getGroupId()):"";
+					comments=learningActivityResult.getComments();
 					if(learningActivityResult.getEndDate()!=null){
 							status="not-passed"	;
 					}
@@ -54,15 +56,13 @@
 					}
 				}
 				%>
-	<liferay-ui:search-container-column-text cssClass="number-column" name = "activity">
+			<liferay-ui:search-container-column-text cssClass="number-column" name = "activity">
 				<%=learningActivity.getTitle(themeDisplay.getLocale()) %>
-				</liferay-ui:search-container-column-text>
-				<liferay-ui:search-container-column-text cssClass="number-column" name = "result">
-	
-				
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text cssClass="number-column" name = "result">
 				<%=score %>
-				</liferay-ui:search-container-column-text>
-				<liferay-ui:search-container-column-text cssClass="number-column" name = "status">
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text cssClass="number-column" name = "status">
 	
 				<%if(status.equals("passed")){%>
 					<liferay-ui:icon image="checked" alt="passed"></liferay-ui:icon>
@@ -73,6 +73,9 @@
 				if(status.equals("started")){%>
 					<liferay-ui:icon image="unchecked" alt="unchecked"></liferay-ui:icon>
 				<%}%>
+			</liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text cssClass="number-column" name = "comments">
+				<%=comments %>
 			</liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
 <liferay-ui:search-iterator></liferay-ui:search-iterator>
