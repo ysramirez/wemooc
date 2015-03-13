@@ -173,7 +173,6 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 
 				List<Course> courses = new ArrayList<Course>();
 				for(Long courseId : results){
-					System.out.println(courseId);
 					Course course = coursePersistence.fetchByPrimaryKey(courseId);
 					if(course!=null)
 						courses.add(course);
