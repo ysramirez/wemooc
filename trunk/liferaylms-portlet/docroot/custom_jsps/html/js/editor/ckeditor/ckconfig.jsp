@@ -68,6 +68,12 @@ CKEDITOR.config.stylesCombo_stylesSet = 'liferayStyles';
 
 CKEDITOR.config.extraAllowedContent = 'iframe[*]';
 
+// CKEDITOR.config.pasteFromWordPromptCleanup = true;
+CKEDITOR.config.pasteFromWordRemoveFontStyles = false;
+CKEDITOR.config.pasteFromWordRemoveStyles = false;
+
+CKEDITOR.config.extraPlugins = 'texttransform';
+
 CKEDITOR.config.toolbar_editInPlace = [
 	['Styles'],
 	['Bold', 'Italic', 'Underline', 'Strike'],
@@ -100,7 +106,8 @@ CKEDITOR.config.toolbar_liferay = [
 	'/',
 	['Source'],
 	['Link', 'Unlink', 'Anchor'],
-	['Image', 'Flash', 'Table', '-', 'Smiley', 'SpecialChar']
+	['Image', 'Flash', 'Table', '-', 'Smiley', 'SpecialChar'],
+	['TransformTextToUppercase', 'TransformTextToLowercase', 'TransformTextCapitalize', 'TransformTextSwitcher']
 ];
 
 CKEDITOR.config.toolbar_liferayArticle = [
@@ -115,7 +122,8 @@ CKEDITOR.config.toolbar_liferayArticle = [
 	'/',
 	['Source'],
 	['Link', 'Unlink', 'Anchor'],
-	['Image', 'Flash', 'Table', '-', 'Smiley', 'SpecialChar', 'LiferayPageBreak']
+	['Image', 'Flash', 'Table', '-', 'Smiley', 'SpecialChar', 'LiferayPageBreak'],
+	['TransformTextToUppercase', 'TransformTextToLowercase', 'TransformTextCapitalize', 'TransformTextSwitcher']
 ];
 
 CKEDITOR.config.toolbar_slimmer = [
@@ -150,5 +158,6 @@ CKEDITOR.config.toolbar_actliferay = [
 	'/',
 	['Source'],
 	['Link', 'Unlink', 'Anchor'],
-	['Image', 'Flash', 'Table', '-', 'Smiley', 'SpecialChar']
+	['Image', 'Flash', 'Table', '-', 'Smiley', 'SpecialChar'],
+	['TransformTextToUppercase', 'TransformTextToLowercase', 'TransformTextCapitalize', 'TransformTextSwitcher']
 ];
