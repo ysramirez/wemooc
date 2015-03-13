@@ -1,6 +1,6 @@
 @import "compass";
 
-html body{background: #fff;font-family:Nunito, Arial,Helvetica,Verdana,sans-serif;}
+html body{background: #fff;font-family:Nunito, Arial,Helvetica,Verdana,sans-serif;font-size:14px;color:#2d2849;}
 
 .color_principal{color:#00b5cb;}
 .color_secundario{color:#00b5cc;}
@@ -56,6 +56,11 @@ ol, ul{list-style-position:inside;}
 	width: 100px;
 	margin-left: 840px;
 }
+
+.lfr-header-row .lfr-actions.lfr-extended, .lfr-header-row .lfr-search-combobox{border:0 none;}
+
+/* ---------- HTML Editor ---------- */
+body.html-editor {font-size:14px;}
 
 /*Estilo para ocultar los portlets que no se quieren ver cuando se esta logado.*/
 .signed-in .control_acceso_visibilidad { display:none; }
@@ -215,11 +220,11 @@ a:hover{color:#1ed1e7;text-decoration:none;}
 	background:#e4701e url("/wemoocdemo-theme/images/custom/bg_buttom2.jpg") repeat-x top left;
 	border:#f3e7cc solid 1px; 
     color: #FFFFFF;
-    font: 11px Nunito, Arial, Helvetica, Verdana, sans-serif;
+    font-family: Nunito, Arial, Helvetica, Verdana, sans-serif;
     text-shadow: none;
-   padding: 5px;
-   padding-top:2px;
-   padding-bottom:2px;
+	padding: 5px;
+	padding-top:2px;
+	padding-bottom:2px;
 }
 
 #p_p_id_npalanguage_WAR_npanavportlet_ .portlet-body{width:400px;}
@@ -313,7 +318,6 @@ div.bajo_caja {
 
 .friends_text{
 	color: #C9DA12;
-	font-size: 11px;
 }
 
 .vertical_align{
@@ -393,7 +397,6 @@ font-size:1.1em;
 #table_list_online_users .txt_online_users{
 	font-weight: normal;
 	font-family:Nunito, Arial,Helvetica,sans-serif;
-    font-size: 11px;
     padding-left: 0;
     padding-right: 10px;
     white-space: nowrap;
@@ -408,7 +411,6 @@ font-size:1.1em;
 #table_list_online_users .link_see_user{
 	color: #00C6D7;
 	font-family:Nunito, Arial,Helvetica,sans-serif;
-    font-size: 11px;
     white-space: nowrap;
 }
 
@@ -423,7 +425,7 @@ font-size:1.1em;
 #breadcrumbs h1 {display:none;}    /* ELIMINAMOS EL TEXTO */ 
 #breadcrumbs ul li {display:inline;float:left;padding:3px;font-family:Nunito, Arial, Helvetica, sans-serif;background:url(/wemoocdemo-theme/images/custom/bullet.png) center left no-repeat;}   /* ELIMINAMOS EL TEXTO */
 #breadcrumbs ul li:first-child + li {background:none;padding-left:0;margin-left:-3px;}   /* ELIMINAMOS EL TEXTO */
-#breadcrumbs ul li span {FONT-SIZE: 11px;padding-left:5px}   /* ELIMINAMOS EL TEXTO */
+#breadcrumbs ul li span {padding-left:5px}   /* ELIMINAMOS EL TEXTO */
 #breadcrumbs ul li a {color:#007FB5;text-decoration:none;}   /* ELIMINAMOS EL TEXTO */
 #breadcrumbs ul li.last a {color:#004250;text-decoration:none;cursor:default;}   /* ELIMINAMOS EL TEXTO */
 
@@ -651,14 +653,14 @@ font-size:1.1em;
 	border:0px;
 	background-repeat:no-repeat;
 }
-.lfr-actions .lfr-trigger strong a {text-decoration:none; padding: 0px;vertical-align: middle; font-size:11px; color:#FFF; text-shadow:none;}
+.lfr-actions .lfr-trigger strong a {text-decoration:none; padding: 0px;vertical-align: middle; color:#FFF; text-shadow:none;}
 .lfr-actions, .lfr-actions ul {background:#e4701e url("/wemoocdemo-theme/images/custom/bg_buttom2.jpg") repeat-x top left;border:#f3e7cc solid 1px;color: #FFFFFF; text-shadow: none;}
-.lfr-actions:hover, .lfr-actions:hover{background:#e4701e url("/wemoocdemo-theme/images/custom/bg_buttom2.jpg") repeat-x top left;border:#f3e7cc solid 1px;color: #FFFFFF; text-shadow: none;}
+.lfr-actions:hover, .lfr-actions:hover{background:#e4701e url("/wemoocdemo-theme/images/custom/bg_buttom2.jpg") repeat-x top left;border:0 none;color: #FFFFFF; text-shadow: none;}
 .lfr-actions .lfr-trigger {padding:0px;border:0px;}
 .aui-menu-content, .lfr-menu-list ul{background-image:none;background-color:#FFF;}
 .aui-menu-content, .lfr-menu-list ul li{background-color:#FFF;border:0px;border-bottom: 1px solid #BCBBBB;padding:0px;color:#34b5d0;}
 .lfr-menu-list li a {padding:0px;display: block;font-weight: normal;text-decoration: none;}
-.aui-menu-content a, .lfr-menu-list li a, .lfr-actions .lfr-trigger, .lfr-actions .lfr-trigger strong {text-shadow:none;font-weight:normal;font-size:11px;}
+.aui-menu-content a, .lfr-menu-list li a, .lfr-actions .lfr-trigger, .lfr-actions .lfr-trigger strong {text-shadow:none;font-weight:normal;}
 .aui-menu-content li a.aui-focus, .lfr-menu-list ul a.aui-focus, .lfr-menu-expanded li a:focus {background-color: #34b5d0;color: white;text-shadow:none;}
 .lfr-actions, .lfr-actions ul {border:0px;}
 /* COLOR ERRORES PROPIOS GLOBAL */
@@ -1118,6 +1120,10 @@ span.rating-desactivado-down{background: url("/wemoocdemo-theme/images/custom/co
 
 .portlet-msg-info a, .portlet-msg-error a, .portlet-msg-alert a, .portlet-msg-success a{color:#f2f1f1;}
 .portlet-msg-info a:hover, .portlet-msg-error a:hover, .portlet-msg-alert a:hover, .portlet-msg-success a:hover{color:#fff;}
+
+.portlet-msg-info, .portlet-msg-help, .lfr-message-help, .portlet-msg-progress, .lfr-message-progress, .portlet-msg-help, .lfr-message-help, .portlet-msg-progress, .lfr-message-progress, .lfr-message-info, .portlet-msg-success{
+	clear:both;
+}
 /* */
 
 /*Pagina Curso Inicio*/
@@ -1829,7 +1835,6 @@ font-weight:bold;
 /* Buscador */
 input.input_search{
 	background: #EEECE0;
-	font-size: 11px;
 	color: #999;
 	padding: 2px;
 	border: #aaa9a1 solid 1px;	
@@ -1953,6 +1958,49 @@ img.avatar{vertical-align:middle;margin-right:15px;}
 .newitem2 a.taglib-icon{display:inline-block;background:#e4701e;color:#fff;padding:7px 35px;font:300 16px Nunito, Arial;@include border-radius(4px);}
 .newitem2 a.taglib-icon:hover{background:#fcb034;}
 .newitem2 a.taglib-icon img{display:none;}
-.newitem2 a.taglib-icon .taglib-text{font:300 16px Nunito, Arial;}
+.newitem2 a.taglib-icon .taglib-text{font:300 16px Nunito, Arial;text-decoration:none;}
 a.newitem2{display:inline;background:#e4701e;color:#fff;padding:7px 35px;font:300 16px Nunito, Arial;}
 a.newitem2:hover{background:#fcb034;}
+
+/* Administrador de usuario usermanagement-portlet */
+.bt_newuser{padding:20px 0;background:url(/wemoocdemo-theme/images/custom/icons/add_user.png) no-repeat 0 50%;padding-left:54px;}
+.bt_removeuser{padding:20px 0;background:url(/wemoocdemo-theme/images/custom/icons/remove_user.png) no-repeat 0 50%;padding-left:54px;}
+
+.courseadmin-portlet .bt_removeuser{float:left;margin-left:20px;}
+.communityadmin-portlet .bt_removeuser{float:left;margin-left:20px;}
+
+.bt_new{padding:20px 0;background:url(/wemoocdemo-theme/images/custom/icons/add_activity.png) no-repeat 0 50%;padding-left:54px;float:left;}
+.bt_new li .taglib-text{color:#37aebd;font-weight:600;}
+.bt_new li img{display:none;}
+.bt_new .taglib-icon .taglib-text{text-decoration:none;}
+.usermanagement-portlet .bt_newuser{float:left;}
+.courseadmin-portlet .bt_newuser{float: left;}
+.communityadmin-portlet .bt_newuser{float: left;}
+.bt_importexport{display:block;padding:20px 0;background:url(/wemoocdemo-theme/images/custom/icons/add_impotexport.png) no-repeat 0 50%;padding-left:54px;}
+.bt_importexport:hover{background:url(/wemoocdemo-theme/images/custom/icons/add_impotexport.png) no-repeat 0 50%;}
+.bt_importexport li a.aui-focus, .bt_importexport .lfr-menu-list ul .taglib-icon.aui-focus, .bt_importexport .lfr-menu-expanded li a:focus{background:#37aebd;}
+.bt_importexport li .taglib-text{color:#37aebd;font-weight:600;}
+.bt_importexport li a:hover .taglib-text{color:#45c3d3;}
+.bt_importexport li img{display:none;}
+.portal-popup .bt_importexport{background:url(/wemoocdemo-theme/images/custom/icons/add_impotexport.png) no-repeat 0 50%;}
+.portal-popup .bt_new{background:url(/wemoocdemo-theme/images/custom/icons/add_activity.png) no-repeat 0 50%;}
+
+/* submenu */
+.aui-tabview-list{background:transparent none;border:0 none;}
+.aui-tabview-list .aui-tab{border-left:#00b5cb solid 2px;}
+.aui-tabview-list .first, .aui-tabview-list .aui-tab:first-child{border-left:0 none;}
+.aui-tabview-list .first .aui-tab-content .aui-tab-label,  .aui-tabview-list .aui-tab:first-child .aui-tab-content .aui-tab-label{padding-left:0;}
+.aui-tabview-list .last, .aui-tabview-list .aui-tab:last-child{border-right:0 none;}
+.aui-tab-active .aui-tab-content, .aui-tab-active .aui-tab-content:hover{background:transparent none;border:0 none;}
+.aui-tab-active .aui-tab-content{
+	-moz-box-shadow:  0 0 0 #575757 inset, 0 0 0 #575757 inset;
+	-webkit-box-shadow: 0 0 0 #575757 insett, 0 0 0 #575757 inset;
+	box-shadow: 0 0 0 #575757 inset, 0 0 0 #575757 inset;
+}
+.aui-tab-content{background:transparent none;border:0 none;}
+.aui-tab-content .aui-tab-label{font:normal 16px Lato;color:#00b5cb;padding:0 10px;}
+.aui-tab-content .aui-tab-label:hover{text-decoration:underline;color:#1ed1e7;}
+.aui-tab-active .aui-tab-label{text-shadow:#3a3a3a 0 0 0;text-decoration:underline;color:#1ed1e7;}
+.aui-tab-active .aui-tab-label:hover{text-shadow:#3a3a3a 0 0 0;}
+.aui-tab-active .aui-tab-label strong{font-weight:normal}
+/* */
