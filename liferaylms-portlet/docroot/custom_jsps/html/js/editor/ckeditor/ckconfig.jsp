@@ -66,6 +66,8 @@ CKEDITOR.config.language = '<%= HtmlUtil.escapeJS(languageId) %>';
 
 CKEDITOR.config.stylesCombo_stylesSet = 'liferayStyles';
 
+CKEDITOR.config.extraAllowedContent = 'iframe[*]';
+
 CKEDITOR.config.toolbar_editInPlace = [
 	['Styles'],
 	['Bold', 'Italic', 'Underline', 'Strike'],
