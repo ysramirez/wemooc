@@ -236,8 +236,7 @@ input.aui-form-validator-error, textarea.aui-form-validator-error, select.aui-fo
 }
 
 .lfr-actions li .taglib-text {
-	font:300 16px Nunito;
 	color: #fff;
 }
 
-textarea{width:96%;}
+textarea, textarea.aui-field-input{width:96%;max-width:96%;}

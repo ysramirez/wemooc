@@ -37,7 +37,7 @@
 .portlet-blogs .taglib-header span  {
 	color:#000;
 }
-/*desde aquí*/
+/*desde aquï¿½*/
 .portlet-blogs .lista_blogs {
 	overflow: hidden;
 	padding-bottom: 10px;
@@ -53,7 +53,7 @@
 .portlet-blogs .lista_blogs .limpio div {
 	padding: 1px 0;
 }
-/*hasta aquí*/
+/*hasta aquï¿½*/
 .portlet-blogs .entry  {
 	clear: left !important;
 	display: block;
@@ -116,13 +116,11 @@
 	color: #000;	
 }
 .portlet-blogs .aui-rating-label-element {
-	font-size:11px;
 	float:left;
 	padding-right:5px;
 	display:block;
 }
 .portlet-blogs .entry-author {
-	/*font-size:11px;*/
 	font-family:Nunito; 
 	font-size: 1.1em; 
 	font-weight: bold; 
@@ -134,7 +132,7 @@
 	margin-right:0px;
 	border:0;
 }
-.portlet-blogs .stats {/*font-size:11px;*/
+.portlet-blogs .stats {
 	font-family:Nunito;
 	font-size: 1.1em;
 	color: #000;
@@ -143,13 +141,11 @@
     left: 40%;
     padding-bottom:10px;
     position: relative;
-    font-size: 11px;
     font-weight: bold;
     display:none;
 }
 .portlet-blogs .taglib-page-iterator{
 	clear: both;
-	font-size:11px;
 }
 .portlet-blogs .page-links { 
     clear:both;
@@ -241,9 +237,8 @@
 	padding-top: 5px;
 	float: right;	
 }	
-.portlet-blogs .written-by {/*font-size:11px;*/
+.portlet-blogs .written-by {
 	font-family:Nunito;
-	font-size: 1.1em;
 	color: #000;
 	font-weight: normal;
 }
@@ -280,7 +275,6 @@
 }
 
 .portlet-blogs .taglib-social-bookmarks a{
-	font-size:11px; 
 	font-weight:bold; 
 	color:#d48a0f;
 }
@@ -336,7 +330,6 @@
 
 #portlet_20 .results-row td a, #portlet_20 .results-row-hover td a {
     color: #000000;
-    font-size: 11px;
     font-weight: normal !important;
 }
 #portlet_20 .taglib-page-iterator .search-results {
@@ -370,11 +363,9 @@
 .portlet-wiki .lfr-menu-list li a {width:100%}
 .portlet-wiki .results-row td a, .portlet-wiki .results-row-hover td a {
     color: #000000;
-    font-size: 11px;
     font-weight: normal !important;
 }
 .portlet-wiki .taglib-page-iterator .search-results {
-    font-size: 11px;
     font-weight: bold;
     left: 40%;
     padding-bottom: 10px;

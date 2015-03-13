@@ -83,11 +83,11 @@
 <!-- PIE -->
 	<footer id="footer" role="contentinfo">
 		<div class="logos">
-			<img src="/wemooc-theme/images/custom/logos-pie.png" /></a>
+			<img src="/wemoocdemo-theme/images/custom/logos-pie.png" /></a>
 		</div>
 		<div class="powered-by">
 			<ul>
-				<li class="last"><span>&copy; Copyright 2014 Wemooc</span></li>
+				<li class="last"><span>&copy; Copyright $the_year Wemooc</span></li>
 			</ul>
 		</div>
 	</footer>
