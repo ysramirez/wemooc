@@ -128,6 +128,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 	@Override
 	public LearningActivity addLearningActivity(LearningActivity learningActivity,ServiceContext serviceContext) throws SystemException, PortalException {
 
+
 		LearningActivity retorno=this.addLearningActivity(learningActivity.getTitle(),
 				learningActivity.getDescription(), learningActivity.getCreateDate(),
 				learningActivity.getStartdate(), learningActivity.getEnddate(), learningActivity.getTypeId(),
@@ -140,7 +141,29 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 
 		//auditing
 		AuditingLogFactory.audit(retorno.getCompanyId(), retorno.getGroupId(), LearningActivity.class.getName(), retorno.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
+		
+		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(retorno.getCompanyId(), "lms.notifications.active");
+		if(isNotificationActivated){
+			List<User> listaUsuarios = userService.getGroupUsers(retorno.getGroupId());
+			Iterator<User> it = listaUsuarios.iterator();
+			while(it.hasNext()){
+				User u = it.next();
+				try {
+					
+					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(retorno.getGroupId(), "com.liferay.lms.model", retorno.getGroupId(), "VIEW_RESULTS")){
 
+						String courseTitle = courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).getTitle(u.getLocale());
+						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.new.title", null);
+						String body =LanguageUtil.format(u.getLocale(),"notif.modification.new.body", new String[]{retorno.getTitle(u.getLocale()),courseTitle});
+						sendNotification(subject, body, "", "announcements.type.general", 1,serviceContext, retorno.getStartdate(), retorno.getEnddate(),u.getUserId());
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
 		return retorno;
 	}
 	public LearningActivity addLearningActivity (String title, String description, 
@@ -150,6 +173,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 					throws SystemException, 
 					PortalException {
 
+		String titleAux = title;
 		long userId=serviceContext.getUserId();
 		LearningActivity larn = learningActivityPersistence.create(counterLocalService.increment(LearningActivity.class.getName()));
 		larn.setCompanyId(serviceContext.getCompanyId());
@@ -197,6 +221,30 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		//auditing
 		AuditingLogFactory.audit(larn.getCompanyId(), larn.getGroupId(), LearningActivity.class.getName(), larn.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
 
+		
+		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(larn.getCompanyId(), "lms.notifications.active");
+		if(isNotificationActivated){
+			List<User> listaUsuarios = userService.getGroupUsers(larn.getGroupId());
+			Iterator<User> it = listaUsuarios.iterator();
+			while(it.hasNext()){
+				User u = it.next();
+				try {
+					
+					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(larn.getGroupId(), "com.liferay.lms.model", larn.getGroupId(), "VIEW_RESULTS")){
+
+						String courseTitle = courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).getTitle(u.getLocale());
+						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.new.title", null);
+						String body =LanguageUtil.format(u.getLocale(),"notif.modification.new.body", new String[]{titleAux,courseTitle});
+						sendNotification(subject, body, "", "announcements.type.general", 1,serviceContext, startDate, endDate,u.getUserId());
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
 		return larn;
 
 	}
@@ -210,8 +258,8 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 			long weightinmodule, long teamId, ServiceContext serviceContext) throws PortalException, SystemException{
 		
 		User user = userLocalService.getUser(userId);
-		Date now = new Date();
-		
+		String titleAux = title.get(user.getLocale());
+		Date now = new Date();		
 		LearningActivity learningActivity = learningActivityPersistence.create(counterLocalService.increment(LearningActivity.class.getName()));
 		learningActivity.setCompanyId(user.getCompanyId());
 		learningActivity.setGroupId(groupId);
@@ -286,6 +334,29 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		//auditing
 		AuditingLogFactory.audit(learningActivity.getCompanyId(), learningActivity.getGroupId(), LearningActivity.class.getName(), learningActivity.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
 
+		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(learningActivity.getCompanyId(), "lms.notifications.active");
+		if(isNotificationActivated){
+			List<User> listaUsuarios = userService.getGroupUsers(learningActivity.getGroupId());
+			Iterator<User> it = listaUsuarios.iterator();
+			while(it.hasNext()){
+				User u = it.next();
+				try {
+					
+					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(learningActivity.getGroupId(), "com.liferay.lms.model", learningActivity.getGroupId(), "VIEW_RESULTS")){
+
+						String courseTitle = courseLocalService.getCourseByGroupCreatedId(learningActivity.getGroupId()).getTitle(u.getLocale());
+						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.new.title", null);
+						String body =LanguageUtil.format(u.getLocale(),"notif.modification.new.body", new String[]{titleAux,courseTitle});
+						sendNotification(subject, body, "", "announcements.type.general", 1,serviceContext, startdate, enddate,u.getUserId());
+					}
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+		
+		
 		return learningActivity;
 	}
 
@@ -402,7 +473,6 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "title");
 		larn = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, larn, "description");
 		learningActivityPersistence.update(larn, false);
-
 		return larn;
 	}
 
