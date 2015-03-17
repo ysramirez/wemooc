@@ -50,7 +50,7 @@
 				%>
 			</liferay-ui:search-container-column-text>
 			<liferay-ui:search-container-column-text name="date" >
-				<%=cc.getFormatDate() %>
+				<%=cc.getFormatDate(cc.getDate(),themeDisplay.getLocale(), themeDisplay.getTimeZone()) %>
 			</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		<liferay-ui:search-iterator />

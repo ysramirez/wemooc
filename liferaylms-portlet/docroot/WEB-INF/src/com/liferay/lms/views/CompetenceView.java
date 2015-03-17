@@ -1,15 +1,16 @@
 package com.liferay.lms.views;
 
+import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
+import java.util.TimeZone;
 
 import com.liferay.lms.model.Competence;
 import com.liferay.lms.model.UserCompetence;
+import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
 
 public class CompetenceView {
-	final static SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-
 	private Competence competence = null;
 	private UserCompetence userCompetence = null;
 	
@@ -27,11 +28,19 @@ public class CompetenceView {
     {
     	return competence.getGenerateCertificate();
     }
-	public String getFormatDate() {
-		if(userCompetence.getCompDate()==null)
+	public String getFormatDate(Date date, Locale locale, TimeZone timeZone) {
+		System.out.println(locale);
+		Format dateFormatDate = FastDateFormatFactoryUtil.getDate(locale, timeZone);
+		
+		
+		if(userCompetence.getCompDate()==null){
 			return "";
-		return sdf.format(userCompetence.getCompDate());
+		}else{
+			return dateFormatDate.format(date);
+		}		
 	}
+	
+	
 	public Date getDate()
 	{
 		return userCompetence.getCompDate();
