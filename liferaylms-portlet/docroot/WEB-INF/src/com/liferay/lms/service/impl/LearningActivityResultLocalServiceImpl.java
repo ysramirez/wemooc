@@ -433,6 +433,7 @@ public class LearningActivityResultLocalServiceImpl
 		
 		Map<String, String> manifestResources = new HashMap<String, String>();
 		boolean isPureAsset = false;
+		long scos=0;
 		
 		try {
 			if (Validator.isNotNull(imsmanifest)) {
@@ -447,6 +448,7 @@ public class LearningActivityResultLocalServiceImpl
 					String type3 = type != null ? type : type2 != null ? type2 : "asset";
 					if (!"asset".equalsIgnoreCase(type3)) {
 						isPureAsset = false;
+						scos++;
 					}
 					manifestResources.put(identifier, type3);
 				}
@@ -605,13 +607,13 @@ public class LearningActivityResultLocalServiceImpl
 						}
 					}
 				}
-				if (completion_statuses.size() < manifestItems.size()) {
+				if (completion_statuses.size() < scos) {
 					if (completion_statuses.size() <= 1) {
 						total_completion_status = completion_statuses.get(0).equals("completed") ? "incomplete" : completion_statuses.get(0);
 					} else {
 						total_completion_status = "incomplete";
 					}
-				} else if (completion_statuses.size() == manifestItems.size()) {
+				} else if (completion_statuses.size() == scos) {
 					for (int i = 0; i < completion_statuses.size(); i++) {
 						//total_score += scores.get(i);
 						if ("incomplete".equals(completion_statuses.get(i))) {
@@ -653,7 +655,7 @@ public class LearningActivityResultLocalServiceImpl
 		for (int i = 0; i < scores.size(); i++) {
 			total_score += scores.get(i);
 		}
-		total_score = total_score / (manifestItems.size() > 0 ? manifestItems.size() : 1);
+		total_score = total_score / (scos > 0 ? scos : 1);
 		
 		if ("incomplete".equals(total_completion_status) || "completed".equals(total_completion_status)) {
 			learningActivityTry.setTryResultData(tryResultData);
