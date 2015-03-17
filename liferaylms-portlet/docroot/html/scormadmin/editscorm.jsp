@@ -64,13 +64,13 @@ else
 }
 
 %>
-
+<liferay-ui:error key="maximum-file-size" message="maximum-file-size"/>
 <liferay-ui:error key="scormadmin.error.notitle" message="scormadmin.error.notitle" />
 <liferay-ui:error key="scormadmin.error.nodescription" message="scormadmin.error.nodescription"/>
 <liferay-ui:error key="scormadmin.error.nozip" message="scormadmin.error.nozip"/>
 <liferay-ui:error key="scormadmin.error.nomanifest" message="scormadmin.error.nomanifest"/>
+<liferay-ui:error key="scormadmin.error.nomanifestincorrect" message="scormadmin.error.nomanifestincorrect"/>
 <liferay-ui:error key="scormadmin.error.requiredcategories" message="scormadmin.error.requiredcategories"/>
-<liferay-ui:error key="maximum-file-size" message="maximum-file-size"/>
 
 <div class="portlet-msg-error"><%= LanguageUtil.format (themeDisplay.getLocale(), "upload-documents-no-larger-than-x-k", new String[]{ PrefsPropsUtil.getString("dl.file.max.size") }) %></div>
 
