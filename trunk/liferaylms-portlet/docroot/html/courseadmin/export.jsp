@@ -101,8 +101,8 @@ Liferay.provide(
 	<liferay-ui:error key="courseadmin.delete.exported.confirmation.error" message="courseadmin.delete.exported.confirmation.error"></liferay-ui:error>
 	<liferay-ui:success key="courseadmin.delete.exported.confirmation.success" message="courseadmin.delete.exported.confirmation.success"></liferay-ui:success>
 	<liferay-ui:success key="courseadmin.export.confirmation.success" message="courseadmin.export.confirmation.success"></liferay-ui:success>
-
-	<aui:input label="export-the-selected-data-to-the-given-lar-file-name" name="exportFileName" size="50" value='<%= HtmlUtil.escape(StringUtil.replace(name, " ", "_")) + "-" + Time.getShortTimestamp() + ".lar" %>' />
+	
+	<aui:input label="export-the-selected-data-to-the-given-lar-file-name" name="exportFileName" size="50" value='<%= HtmlUtil.escape(StringUtil.replace( StringUtil.replace(name, " ", "_"),"/",""   )) + "-" + Time.getShortTimestamp() + ".lar" %>' />
 	
 	<aui:input type="hidden" name="key" value=""/>
 	
