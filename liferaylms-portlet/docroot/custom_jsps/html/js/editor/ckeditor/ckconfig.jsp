@@ -66,7 +66,7 @@ CKEDITOR.config.language = '<%= HtmlUtil.escapeJS(languageId) %>';
 
 CKEDITOR.config.stylesCombo_stylesSet = 'liferayStyles';
 
-CKEDITOR.config.extraAllowedContent = 'iframe[*]';
+CKEDITOR.config.allowedContent = true;
 
 // CKEDITOR.config.pasteFromWordPromptCleanup = true;
 CKEDITOR.config.pasteFromWordRemoveFontStyles = false;
