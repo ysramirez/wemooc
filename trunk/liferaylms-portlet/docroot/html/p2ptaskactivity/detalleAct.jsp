@@ -120,6 +120,9 @@ if(actId!=0)
 		String title = "";
 		DLFileEntry dlfile = null;
 		String urlFile = null;
+		
+
+		
 		try{
 			
 			dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myp2pActivity.getFileEntryId());
@@ -170,18 +173,24 @@ if(actId!=0)
 					}
 					
 					size=0; sizeKb=0; title = ""; dlfile = null;
-					try{
+					if( myp2pActivity.getFileEntryId() != 0){
+						try{
 						
-						dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myp2pActivity.getFileEntryId());
+							
+							dlfile = DLFileEntryLocalServiceUtil.getDLFileEntry(myp2pActivity.getFileEntryId());
+							
+							title = dlfile.getTitle();
+							
+							size = Integer.parseInt(String.valueOf(dlfile.getSize()));
+							sizeKb = size/1024; //Lo paso a Kilobytes
 						
-						title = dlfile.getTitle();
 						
-						size = Integer.parseInt(String.valueOf(dlfile.getSize()));
-						sizeKb = size/1024; //Lo paso a Kilobytes
 						
-					}catch(Exception e){}
+						
+						}catch(Exception e){}
 
-					urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid(); 
+						urlFile = themeDisplay.getPortalURL()+"/documents/"+dlfile.getGroupId()+"/"+dlfile.getUuid(); 
+					}
 					
 					%>
 					<div class="option-more">
