@@ -198,7 +198,7 @@
 			<%} %>
 		</div>
 	<div class="container-buttons">
-		<a href="#" id="add_attachment" style="<%=(elements.size()>=maxfile)?"display:none":"" %>" class="add_attachment bt_new" onclick="addFileInput(); return false;">Añadir otro fichero</a>		
+		<a href="#" id="add_attachment" style="<%=(elements.size()>=maxfile)?"display:none":"" %>" class="add_attachment bt_new" onclick="addFileInput(); return false;"><liferay-ui:message key="resource.external.add.other" /></a>		
 	</div>	
 </aui:field-wrapper>
 </c:if>
