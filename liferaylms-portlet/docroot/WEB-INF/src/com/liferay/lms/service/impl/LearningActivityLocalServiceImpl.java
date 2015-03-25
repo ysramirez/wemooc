@@ -144,13 +144,21 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		
 		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(retorno.getCompanyId(), "lms.notifications.active");
 		if(isNotificationActivated){
+			
 			List<User> listaUsuarios = userService.getGroupUsers(retorno.getGroupId());
 			Iterator<User> it = listaUsuarios.iterator();
 			while(it.hasNext()){
 				User u = it.next();
 				try {
 					
-					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(retorno.getGroupId(), "com.liferay.lms.model", retorno.getGroupId(), "VIEW_RESULTS")){
+					if(u.isActive() 
+							&& !(PermissionCheckerFactoryUtil.create(u)).hasPermission(retorno.getGroupId(), "com.liferay.lms.model", retorno.getGroupId(), "VIEW_RESULTS")
+							&& !retorno.isInactive()
+							&& !retorno.isExpired()
+							&& !moduleService.isLocked(retorno.getModuleId())
+							&& !courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).isInactive()
+							&& !courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).isExpired()
+							&& !courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).isClosed()){
 
 						String courseTitle = courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).getTitle(u.getLocale());
 						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.new.title", null);
@@ -230,8 +238,14 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 				User u = it.next();
 				try {
 					
-					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(larn.getGroupId(), "com.liferay.lms.model", larn.getGroupId(), "VIEW_RESULTS")){
-
+					if(u.isActive() 
+							&& !(PermissionCheckerFactoryUtil.create(u)).hasPermission(larn.getGroupId(), "com.liferay.lms.model", larn.getGroupId(), "VIEW_RESULTS")
+							&& !larn.isInactive()
+							&& !larn.isExpired()
+							&& !moduleService.isLocked(larn.getModuleId())
+							&& !courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).isInactive()
+							&& !courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).isExpired()
+							&& !courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).isClosed()){
 						String courseTitle = courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).getTitle(u.getLocale());
 						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.new.title", null);
 						String body =LanguageUtil.format(u.getLocale(),"notif.modification.new.body", new String[]{titleAux,courseTitle});
@@ -342,8 +356,14 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 				User u = it.next();
 				try {
 					
-					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(learningActivity.getGroupId(), "com.liferay.lms.model", learningActivity.getGroupId(), "VIEW_RESULTS")){
-
+					if(u.isActive() 
+							&& !(PermissionCheckerFactoryUtil.create(u)).hasPermission(learningActivity.getGroupId(), "com.liferay.lms.model", learningActivity.getGroupId(), "VIEW_RESULTS")
+							&& !learningActivity.isInactive()
+							&& !learningActivity.isExpired()
+							&& !moduleService.isLocked(learningActivity.getModuleId())
+							&& !courseLocalService.getCourseByGroupCreatedId(learningActivity.getGroupId()).isInactive()
+							&& !courseLocalService.getCourseByGroupCreatedId(learningActivity.getGroupId()).isExpired()
+							&& !courseLocalService.getCourseByGroupCreatedId(learningActivity.getGroupId()).isClosed()){
 						String courseTitle = courseLocalService.getCourseByGroupCreatedId(learningActivity.getGroupId()).getTitle(u.getLocale());
 						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.new.title", null);
 						String body =LanguageUtil.format(u.getLocale(),"notif.modification.new.body", new String[]{titleAux,courseTitle});
@@ -423,8 +443,14 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 				User u = it.next();
 				try {
 					
-					if(u.isActive() && !(PermissionCheckerFactoryUtil.create(u)).hasPermission(larn.getGroupId(), "com.liferay.lms.model", larn.getGroupId(), "VIEW_RESULTS")){
-
+					if(u.isActive() 
+							&& !(PermissionCheckerFactoryUtil.create(u)).hasPermission(larn.getGroupId(), "com.liferay.lms.model", larn.getGroupId(), "VIEW_RESULTS")
+							&& !larn.isInactive()
+							&& !larn.isExpired()
+							&& !moduleService.isLocked(larn.getModuleId())
+							&& !courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).isInactive()
+							&& !courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).isExpired()
+							&& !courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).isClosed()){
 						String courseTitle = courseLocalService.getCourseByGroupCreatedId(larn.getGroupId()).getTitle(u.getLocale());
 						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.larn.title", null);
 						String body =LanguageUtil.format(u.getLocale(),"notif.modification.larn.body", new String[]{titleAux,courseTitle});
