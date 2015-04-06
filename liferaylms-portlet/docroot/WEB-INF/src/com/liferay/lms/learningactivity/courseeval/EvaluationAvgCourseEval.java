@@ -374,10 +374,11 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 	@Override
 	public void setExtraContent(Course course, String actionId, ServiceContext serviceContext)
 			throws PortalException, SystemException {
-		if((Validator.isNumber(PropsUtil.get("lms.course.default.evaluations")))&&(Constants.ADD.equals(actionId))) {
+		if((Validator.isNumber(PropsUtil.get("lms.course.default.evaluations")))&&("ADD_COURSE".equals(actionId))) {
 			ServiceContext evaluationServiceContext = ServiceContextFactory.getInstance(serviceContext.getRequest());
 			long numOfEvaluations = _numOfEvaluations.get();
 			Locale locale = LocaleThreadLocal.getThemeDisplayLocale();
+			
 			if(locale==null) {
 				if(Validator.isNotNull(serviceContext.getLanguageId())){
 					locale = LocaleUtil.fromLanguageId(serviceContext.getLanguageId());
@@ -386,14 +387,25 @@ public class EvaluationAvgCourseEval extends BaseCourseEval {
 					locale = LocaleUtil.getDefault();
 				}
 			}
-	
+			long[] assetCategoryIds=new long[0];
+			evaluationServiceContext.setAssetCategoryIds(assetCategoryIds);
+			evaluationServiceContext.setAssetLinkEntryIds(assetCategoryIds);
+			String[] emptyArray=new String[0];
+			
+			evaluationServiceContext.setAssetTagNames(emptyArray);
+			evaluationServiceContext.setGroupPermissions(emptyArray);
+			evaluationServiceContext.setGuestPermissions(emptyArray);
+			evaluationServiceContext.setDeriveDefaultPermissions(true);
+		
+			
 			for(int currentEvaluation=1;currentEvaluation<=numOfEvaluations;currentEvaluation++) {
-	
+				
 				Map<Locale,String> evaluationTitle = new HashMap<Locale, String>(1);
 				evaluationTitle.put(locale, LanguageUtil.format(locale, "evaluation.number", new Object[]{currentEvaluation}));
+	
 				LearningActivityLocalServiceUtil.addLearningActivity(course.getUserId(), course.getGroupCreatedId(), WorkflowConstants.STATUS_APPROVED, 
 						evaluationTitle, evaluationTitle, 8 /* Evaluation */, null, null, 0, 0, 0, 0, null, null, null, 0, 0, evaluationServiceContext);
-			}		
+			}	
 		}
 	}
 	
