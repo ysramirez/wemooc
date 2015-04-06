@@ -224,7 +224,6 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 					}
 				}				
 			}
-			
 			course.setCompanyId(serviceContext.getCompanyId());
 			course.setGroupId(serviceContext.getScopeGroupId());
 			course.setUserId(userId);
@@ -243,7 +242,6 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 			course.setMaxusers(maxUsers);
 			
 			course = LmsLocaleUtil.checkDefaultLocale(Course.class, course, "description");
-
 			//creating group
 			Group group = groupLocalService.addGroup(userLocalService.getDefaultUser(serviceContext.getCompanyId()).getUserId(),
 					null, 0, title,summary,typesite,friendlyURL,true,true,serviceContext);
@@ -279,20 +277,18 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 				userGroupRoleLocalService.addUserGroupRoles(usuarios,
 						course.getGroupCreatedId(), lmsPrefs.getEditorRole());
 			}			
-
 			LayoutSetPrototype lsProto=layoutSetPrototypeLocalService.getLayoutSetPrototype(layoutSetPrototypeId);
 			importLayouts(getAdministratorUser(serviceContext.getCompanyId()).getUserId(), group, lsProto);
-
+			
 			CourseEval courseEval = new CourseEvalRegistry().getCourseEval(CourseEvalId);
 			if(courseEval!=null) {
-				courseEval.setExtraContent(course, Constants.ADD, serviceContext);
+				courseEval.setExtraContent(course, "ADD_COURSE", serviceContext);
 			}
 
 			/* activamos social activity para la comunidad creada */ 		
 			List<SocialActivitySetting> actSettings=SocialActivitySettingLocalServiceUtil.getActivitySettings(lsProto.getGroup().getGroupId());
 			for(SocialActivitySetting actSetting:actSettings)
 			{
-			
 			//Activamos las activity settings que est�n activadas en la plantilla
 				SocialActivitySettingLocalServiceUtil.updateActivitySetting(group.getGroupId(), actSetting.getClassName(), true);	
 				List<SocialActivityDefinition> sads=SocialActivitySettingServiceUtil.getActivityDefinitions(lsProto.getGroup().getGroupId(), actSetting.getClassName());
@@ -321,6 +317,7 @@ public class CourseLocalServiceImpl extends CourseLocalServiceBaseImpl {
 				log.info("CourseLocalServiceImpl.addCourse(): " + e + "message: " + e.getMessage());
 			}
 			throw new PortalException(e.getMessage());
+			
 		}
 		
 		//auditing
