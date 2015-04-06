@@ -128,7 +128,6 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 	@Override
 	public LearningActivity addLearningActivity(LearningActivity learningActivity,ServiceContext serviceContext) throws SystemException, PortalException {
 
-
 		LearningActivity retorno=this.addLearningActivity(learningActivity.getTitle(),
 				learningActivity.getDescription(), learningActivity.getCreateDate(),
 				learningActivity.getStartdate(), learningActivity.getEnddate(), learningActivity.getTypeId(),
@@ -141,11 +140,10 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 
 		//auditing
 		AuditingLogFactory.audit(retorno.getCompanyId(), retorno.getGroupId(), LearningActivity.class.getName(), retorno.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
-		
 		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(retorno.getCompanyId(), "lms.notifications.active");
-		if(isNotificationActivated){
-			
+		if(isNotificationActivated && learningActivity.getTypeId()!=8){
 			List<User> listaUsuarios = userService.getGroupUsers(retorno.getGroupId());
+			if(!listaUsuarios.isEmpty()){
 			Iterator<User> it = listaUsuarios.iterator();
 			while(it.hasNext()){
 				User u = it.next();
@@ -159,7 +157,6 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 							&& !courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).isInactive()
 							&& !courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).isExpired()
 							&& !courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).isClosed()){
-
 						String courseTitle = courseLocalService.getCourseByGroupCreatedId(retorno.getGroupId()).getTitle(u.getLocale());
 						String subject = LanguageUtil.format(u.getLocale(),"notif.modification.new.title", null);
 						String body =LanguageUtil.format(u.getLocale(),"notif.modification.new.body", new String[]{retorno.getTitle(u.getLocale()),courseTitle});
@@ -169,6 +166,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+			}
 			}
 		}
 		
@@ -180,7 +178,6 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 			String feedbackCorrect, String feedbackNoCorrect,ServiceContext serviceContext)
 					throws SystemException, 
 					PortalException {
-
 		String titleAux = title;
 		long userId=serviceContext.getUserId();
 		LearningActivity larn = learningActivityPersistence.create(counterLocalService.increment(LearningActivity.class.getName()));
@@ -231,7 +228,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 
 		
 		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(larn.getCompanyId(), "lms.notifications.active");
-		if(isNotificationActivated){
+		if(isNotificationActivated && larn.getTypeId()!=8){
 			List<User> listaUsuarios = userService.getGroupUsers(larn.getGroupId());
 			Iterator<User> it = listaUsuarios.iterator();
 			while(it.hasNext()){
@@ -304,7 +301,6 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 		learningActivity = LmsLocaleUtil.checkDefaultLocale(LearningActivity.class, learningActivity, "description");
 		learningActivityPersistence.update(learningActivity, true);
 		resourceLocalService.addModelResources(learningActivity, serviceContext);
-
 		assetEntryLocalService.updateEntry(
 				userId, learningActivity.getGroupId(), LearningActivity.class.getName(),
 				learningActivity.getActId(), learningActivity.getUuid(),typeId, serviceContext.getAssetCategoryIds(),
@@ -320,7 +316,6 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 				LearningActivity.class.getName(), learningActivity.getActId(),
 				0, StringPool.BLANK, 0);
 
-		
 		Role siteMemberRole = RoleLocalServiceUtil.getRole(serviceContext.getCompanyId(), RoleConstants.SITE_MEMBER);
 		
 		if(Validator.isNull(teamId)){
@@ -344,12 +339,12 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 						ResourceConstants.SCOPE_INDIVIDUAL,	Long.toString(learningActivity.getActId()),teamMemberRole.getRoleId(), new String[] {ActionKeys.VIEW});
 			}
 		}
-		
+	
 		//auditing
 		AuditingLogFactory.audit(learningActivity.getCompanyId(), learningActivity.getGroupId(), LearningActivity.class.getName(), learningActivity.getPrimaryKey(), serviceContext.getUserId(), AuditConstants.ADD, null);
-
+	
 		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(learningActivity.getCompanyId(), "lms.notifications.active");
-		if(isNotificationActivated){
+		if(isNotificationActivated && learningActivity.getTypeId()!=8){
 			List<User> listaUsuarios = userService.getGroupUsers(learningActivity.getGroupId());
 			Iterator<User> it = listaUsuarios.iterator();
 			while(it.hasNext()){
@@ -369,13 +364,13 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 						String body =LanguageUtil.format(u.getLocale(),"notif.modification.new.body", new String[]{titleAux,courseTitle});
 						sendNotification(subject, body, "", "announcements.type.general", 1,serviceContext, startdate, enddate,u.getUserId());
 					}
+					
 				} catch (Exception e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+						e.printStackTrace();
 				}
 			}
 		}
-		
 		
 		return learningActivity;
 	}
@@ -436,7 +431,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 
 		boolean isNotificationActivated = PrefsPropsUtil.getBoolean(larn.getCompanyId(), "lms.notifications.active");
 
-		if(isNotificationActivated){
+		if(isNotificationActivated && larn.getTypeId()!=8){
 			List<User> listaUsuarios = userService.getGroupUsers(larn.getGroupId());
 			Iterator<User> it = listaUsuarios.iterator();
 			while(it.hasNext()){
