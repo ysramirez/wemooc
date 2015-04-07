@@ -18,6 +18,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -706,6 +707,35 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 
 		return "";
 	}
+	
+	public List<String> getExtraContentValues(long actId, String key) throws SystemException{
+		List<String> extraContentValues = new LinkedList<String>();
+		try {
+			LearningActivity activity = learningActivityPersistence.fetchByPrimaryKey(actId);
+
+			HashMap<String, String> hashMap = new HashMap<String, String>();
+
+			if(activity != null){
+
+				hashMap = convertXMLExtraContentToHashMap(actId);
+				//Para evitar que retorne null si no existe la clave.
+				
+				
+				Iterator<Map.Entry<String,String>> it = hashMap.entrySet().iterator();
+			    while (it.hasNext()) {
+			        Map.Entry<String,String> pair = (Map.Entry<String, String>)it.next();
+			        System.out.println(pair.getKey() + " = " + pair.getValue());
+			        extraContentValues.add(pair.getValue());
+			        it.remove(); // avoids a ConcurrentModificationException
+			    }
+				
+				
+			}
+		} catch (Exception e) {
+		}
+
+		return extraContentValues;
+	}
 
 
 	public void setExtraContentValue(long actId, String name, String val) throws SystemException{
@@ -747,7 +777,7 @@ public class LearningActivityLocalServiceImpl extends LearningActivityLocalServi
 
 			for(Element key:rootElement.elements()){
 
-				if(key.getName().equals("document")){
+				if(key.getName().contains("document")){
 					hashMap.put(key.getName(), key.attributeValue("id") );
 				}else{
 					hashMap.put(key.getName(), key.getText());

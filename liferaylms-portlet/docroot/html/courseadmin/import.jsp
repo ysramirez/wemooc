@@ -3,6 +3,8 @@
 <%@ page import="com.liferay.portal.LARFileException" %>
 <%@ page import="com.liferay.portal.LARTypeException" %>
 <%@ page import="com.liferay.portal.LayoutImportException" %>
+<%@page import="com.liferay.portal.model.LayoutSetPrototype"%>
+<%@page import="com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil"%>
 
 <%@ page import="com.liferay.portal.kernel.lar.PortletDataException" %>
 <%@ page import="com.liferay.portal.kernel.lar.PortletDataHandler" %>
@@ -11,6 +13,7 @@
 <%@ page import="com.liferay.portal.kernel.lar.PortletDataHandlerControl" %>
 <%@ page import="com.liferay.portal.kernel.lar.PortletDataHandlerKeys" %>
 <%@ page import="com.liferay.portal.kernel.lar.UserIdStrategy" %>
+<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
 
 <%@ include file="/init.jsp" %>	
 
@@ -47,7 +50,47 @@
 		
 		<aui:input checked="<%= true %>" label="data" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" onchange="<%= taglibOnChange %>" />
 		
-	</div>	
+	</div>
+	
+	<%
+	String[] layusprsel=null;
+		if(renderRequest.getPreferences().getValue("courseTemplates", null)!=null&&renderRequest.getPreferences().getValue("courseTemplates", null).length()>0)
+		{
+				layusprsel=renderRequest.getPreferences().getValue("courseTemplates", "").split(",");
+		}
+
+		String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
+		if(layusprsel!=null &&layusprsel.length>0)
+		{
+			lspist=layusprsel;
+
+		}
+		if(lspist.length>1){
+		%>
+			<aui:select name="courseTemplate" label="course-template">
+			<%
+			for(String lspis:lspist)
+			{
+				LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
+				%>
+				<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+				<%
+			}
+			%>
+			</aui:select>
+		<%
+		}
+		else{
+			LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspist[0]));
+		%>
+			<aui:input name="courseTemplate" value="<%=lsp.getLayoutSetPrototypeId()%>" type="hidden"/>
+		<%}%>
+	
+	
+	
+	
+	
+	
 		
 	<aui:button-row>
 		<aui:button type="submit" value="import" />

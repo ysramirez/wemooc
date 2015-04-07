@@ -922,7 +922,11 @@ public class CourseAdmin extends MVCPortlet {
 
 			long groupId = ParamUtil.getLong(uploadRequest, "groupId");
 			File file = uploadRequest.getFile("importFileName");
+			
+			long courseTemplateId=ParamUtil.getLong(uploadRequest,"courseTemplate",0);
+			//System.out.println("Template: "+courseTemplateId);
 
+			//System.out.println("TemplateII: "+uploadRequest.getParameterMap().get("courseTemplate")[0]);
 			//System.out.println("groupId: "+groupId+", privateLayout:"+privateLayout+", file: "+file.getName());
 
 			//System.out.println("actionRequest.getParameterMap().size: "+actionRequest.getParameterMap().size());
