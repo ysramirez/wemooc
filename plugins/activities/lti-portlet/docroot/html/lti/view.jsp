@@ -4,7 +4,7 @@
 	<h2 id="h2" class="description-title">${learningActivity.getTitle(themeDisplay.locale)}</h2>
 	<div id="resourcedescription">${learningActivity.getDescription(themeDisplay.locale)}</div>
 	<c:choose>
-		<c:when test="${times >= learningActivity.tries}">
+		<c:when test="${times >= learningActivity.tries  || learningActivity.tries==0}">
 			<div class="ltistate"><liferay-ui:message key="learningactivity.lti.blocked" /></div>
 			<c:if test="${not empty result}">
 				<c:choose>				

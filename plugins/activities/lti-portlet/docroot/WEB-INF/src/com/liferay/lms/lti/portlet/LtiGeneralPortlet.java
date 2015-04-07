@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.theme.ThemeDisplay;
@@ -107,15 +108,24 @@ public class LtiGeneralPortlet extends MVCPortlet {
 					st.append("-");
 					st.append(themeDisplay.getUser().getUserId());
 					
+					
 					postProp.put(BasicLTIConstants.RESOURCE_LINK_ID, PortalUtil.getCurrentCompleteURL(PortalUtil.getHttpServletRequest(renderRequest))); 					 
-					postProp.put(BasicLTIConstants.USER_ID,String.valueOf(themeDisplay.getUser().getUserId()));
+					postProp.put(BasicLTIConstants.USER_ID,themeDisplay.getUser().getUuid());
 					//CONTEXT_ID is optional, but recomended, this is a unique value
 					postProp.put(BasicLTIConstants.CONTEXT_ID,st.toString());
-					postProp.put(BasicLTIConstants.CONTEXT_TITLE,ltiItem.getName());
-					postProp.put(BasicLTIConstants.CONTEXT_LABEL,ltiItem.getDescription());
-					postProp.put(BasicLTIConstants.CONTEXT_TYPE, ltiItem.getContenType());
+					postProp.put(BasicLTIConstants.CONTEXT_TITLE,learningActivity.getTitle(LocaleUtil.getDefault().toString(), true));
+					postProp.put(BasicLTIConstants.CONTEXT_LABEL,learningActivity.getTitle(LocaleUtil.getDefault().toString(), true));
+					//postProp.put(BasicLTIConstants.CONTEXT_TYPE, ltiItem.getContenType());
 					//Roles ar defines in standard: http://www.imsglobal.org/LTI/v1p1/ltiIMGv1p1.html#_Toc319560471
-					postProp.put(BasicLTIConstants.ROLES, ltiItem.getRol().isEmpty()?"Student":ltiItem.getRol());
+					boolean isTeacher=themeDisplay.getPermissionChecker().hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");	
+					if(isTeacher)
+					{
+						postProp.put(BasicLTIConstants.ROLES,"Instructor");
+					}
+					else
+					{
+						postProp.put(BasicLTIConstants.ROLES,"Student");
+					}
 					postProp.put(BasicLTIConstants.LIS_PERSON_NAME_GIVEN, themeDisplay.getUser().getFirstName());
 					postProp.put(BasicLTIConstants.LIS_PERSON_NAME_FAMILY, themeDisplay.getUser().getLastName());
 					postProp.put(BasicLTIConstants.LIS_PERSON_NAME_FULL, themeDisplay.getUser().getFullName());
@@ -127,6 +137,9 @@ public class LtiGeneralPortlet extends MVCPortlet {
 					postProp.put(BasicLTIConstants.LIS_OUTCOME_SERVICE_URL, PortalUtil.getPortalURL(PortalUtil.getHttpServletRequest(renderRequest))+"/lti-portlet/ltiservice");
 					//This identificator from notification
 					postProp.put(BasicLTIConstants.LIS_RESULT_SOURCEDID, st.toString());
+					postProp.put(BasicLTIConstants.TOOL_CONSUMER_INSTANCE_GUID, themeDisplay.getCompany().getWebId());
+					postProp.put(BasicLTIConstants.TOOL_CONSUMER_INSTANCE_NAME, themeDisplay.getCompany().getWebId());
+					
 					
 					//TODO change id
 					/*Map<String,String> props =  BasicLTIUtil.signProperties(postProp, ltiItem.getUrl(), "POST", String.valueOf(ltiItem.getLtiItemId()), ltiItem.getSecret(), 
