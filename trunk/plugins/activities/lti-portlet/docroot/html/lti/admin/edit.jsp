@@ -42,10 +42,6 @@
 			alert("<liferay-ui:message key='learningactivity.lti.error.secret' />");
 			return;
 		}
-		if(document.getElementById('rol').value==null||document.getElementById('rol').value==""){
-			alert("<liferay-ui:message key='learningactivity.lti.error.rol' />");
-			return;
-		}
 		if(document.getElementById('note').value==null||document.getElementById('note').value==""){
 			alert("<liferay-ui:message key='learningactivity.lti.error.note' />");
 			return;
@@ -72,7 +68,7 @@
 				<liferay-ui:message key="learningactivity.lti.url" />:<br/><input type="text" name="url" id="url" value="${ltiItem.url}" ><br/>
 				<liferay-ui:message key="learningactivity.lti.key" />:<br/><input type="text" name="id" id="id" value="${ltiItem.id}" ><br/>
 				<liferay-ui:message key="learningactivity.lti.secret" />:<br/><input type="text" name="secret" id="secret" value="${ltiItem.secret}" ><br/>
-				<liferay-ui:message key="learningactivity.lti.rol" />:<br/><input type="text" name="rol" id="rol" value="${ltiItem.rol}" ><br/>
+				<input type="hidden" name="rol" id="rol" value="Student" >
 				<liferay-ui:message key="learningactivity.lti.note" />:<br/><input type="text" name="note" id="note" value="${ltiItem.note}" ><br/>
 				<liferay-ui:message key="learningactivity.lti.iframe" />:<input type="checkbox" name="iframe" id="iframe" <c:if test="${ltiItem.iframe}">checked="checked"</c:if> ><br/>
 			</c:when>
@@ -80,7 +76,7 @@
 				<liferay-ui:message key="learningactivity.lti.url" />:<br/><input type="text" name="url" id="url" value="" ><br/>
 				<liferay-ui:message key="learningactivity.lti.key" />:<br/><input type="text" name="id" id="id" value="" ><br/>
 				<liferay-ui:message key="learningactivity.lti.secret" />:<br/><input type="text" name="secret" id="secret" value="" ><br/>
-				<liferay-ui:message key="learningactivity.lti.rol" />:<br/><input type="text" name="rol" id="rol" value="Learner" ><br/>
+				<input type="hidden" name="rol" id="rol" value="Student" >
 				<liferay-ui:message key="learningactivity.lti.note" />:<br/><input type="text" name="note" id="note" value="0" ><br/>
 				<liferay-ui:message key="learningactivity.lti.iframe" />:<input type="checkbox" name="iframe" id="iframe" ><br/>
 			</c:otherwise>

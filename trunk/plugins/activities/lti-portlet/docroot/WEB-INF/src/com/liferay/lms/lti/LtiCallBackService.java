@@ -57,6 +57,29 @@ public class LtiCallBackService extends HttpServlet{
 		"<replaceResultResponse/>"+
 		"</imsx_POXBody>"+
 		"</imsx_POXEnvelopeResponse>";
+	private static final String P6 = "</imsx_operationRefIdentifier>"+
+			"</imsx_statusInfo>"+
+			"</imsx_POXResponseHeaderInfo>"+
+			"</imsx_POXHeader>"+
+			"<imsx_POXBody>"+
+			"<readResultResponse><result>"+
+			"<resultScore>"+
+            "<language>en</language>"+
+            "<textString>";
+	private static final String P7 = "</textString>"+
+       " </resultScore>"+
+       "</result>"+
+       "</readResultResponse>"+
+			"</imsx_POXBody>"+
+			"</imsx_POXEnvelopeResponse>";
+	private static final String P8 = "</imsx_operationRefIdentifier>"+
+			"</imsx_statusInfo>"+
+			"</imsx_POXResponseHeaderInfo>"+
+			"</imsx_POXHeader>"+
+			"<imsx_POXBody>"+
+			"<replaceResultResponse/>"+
+			"</imsx_POXBody>"+
+			"</imsx_POXEnvelopeResponse>";
 
 	public void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
 		doGet(request, response);
@@ -76,13 +99,10 @@ public class LtiCallBackService extends HttpServlet{
 			
 			imspoxRequest.parsePostBody();
 			Map<String,String> results = imspoxRequest.getBodyMap();
-			
-			//String language = results.get("/resultRecord/result/resultScore/language");
 			String grade = results.get("/resultRecord/result/resultScore/textString");
 			String id = results.get("/resultRecord/sourcedGUID/sourcedId");
 			String identifier = imspoxRequest.getHeaderMessageIdentifier();
 
-			Long lGrade = new Double((Double.valueOf(grade)*100)).longValue();
 			String[] ids = id.split("-");
 			
 			Long actId = null;
@@ -91,6 +111,77 @@ public class LtiCallBackService extends HttpServlet{
 				actId = Long.parseLong(ids[0]);
 				userId = Long.parseLong(ids[1]);
 			}
+			for(String key:results.keySet())
+			{
+				System.out.println(key+": "+results.get(key));
+			}
+			if(imspoxRequest.bodyElement.getNodeName().equals("readResultRequest"))
+			{
+				LearningActivity la = null;
+				StringBuffer out = new StringBuffer(P1);
+				out.append(identifier);
+				out.append(P2);
+				if(actId!=null)
+				{
+					la = LearningActivityLocalServiceUtil.getLearningActivity(actId);
+				    grade="0.0";
+				
+					if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(actId, userId))
+					{
+						LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+						 grade=new Double((new Double(learningActivityResult.getResult())/100.0)).toString();
+						 
+					}
+					out.append(SUCCESS);
+					out.append(P3);
+					out.append(identifier);
+					out.append(P4);
+					out.append(new Date().getTime());
+					out.append(P6);
+					out.append(grade);
+					out.append(P7);
+					
+				}
+				else
+				{
+					out.append(FAILURE);
+					out.append(P3);
+					out.append(identifier);
+					out.append(P4);
+					out.append(new Date().getTime());
+					out.append(P5);
+				}
+				response.setContentType("application/x-www-form-urlencoded");
+				PrintWriter res = response.getWriter();
+				res.print(out.toString());
+				res.flush();
+				res.close();
+				
+			}
+			if(imspoxRequest.bodyElement.getNodeName().equals("deleteResultRequest"))
+			{
+				StringBuffer out = new StringBuffer(P1);
+				out.append(identifier);
+				out.append(P2);
+				out.append(FAILURE);
+				out.append(P3);
+				out.append(identifier);
+				out.append(P4);
+				out.append(new Date().getTime());
+				out.append(P8);
+				response.setContentType("application/x-www-form-urlencoded");
+				PrintWriter res = response.getWriter();
+				res.print(out.toString());
+				res.flush();
+				res.close();
+			}
+			if(imspoxRequest.bodyElement.getNodeName().equals("replaceResultRequest"))
+			{
+				
+			
+			
+			
+			Long lGrade = new Double((Double.valueOf(grade)*100)).longValue();
 			boolean ctry = true;
 			StringBuffer out = new StringBuffer(P1);
 			out.append(identifier);
@@ -197,6 +288,7 @@ public class LtiCallBackService extends HttpServlet{
 			res.print(out.toString());
 			res.flush();
 			res.close();
+			}
 			
 		}catch(Exception e){
 			if(log.isDebugEnabled())e.printStackTrace();
