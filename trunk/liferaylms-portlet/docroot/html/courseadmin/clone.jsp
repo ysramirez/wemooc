@@ -7,6 +7,7 @@
 <%@page import="com.liferay.portal.model.LayoutSetPrototype"%>
 <%@page import="com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 
 <%@ include file="/init.jsp" %>	
 
@@ -70,7 +71,6 @@
 		{
 				layusprsel=renderRequest.getPreferences().getValue("courseTemplates", "").split(",");
 		}
-
 		String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
 		if(layusprsel!=null &&layusprsel.length>0)
 		{
@@ -79,14 +79,20 @@
 		}
 		if(lspist.length>1){
 		%>
-			<aui:select name="courseTemplate" label="course-template">
+			<aui:select name="courseTemplate" label="course-template" onChange="showAlert(this);">
 			<%
 			for(String lspis:lspist)
 			{
 				LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
-				%>
-				<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
-				<%
+				if(GroupLocalServiceUtil.getGroup(Long.parseLong(groupId)).getPublicLayoutSet().getLayoutSetPrototypeId() == lsp.getLayoutSetPrototypeId()){
+					%>
+					<aui:option selected="true" value="<%=lsp.getLayoutSetPrototypeId() %>"><%=lsp.getName(themeDisplay.getLocale()) %> </aui:option>
+					<%
+				}else{
+					%>
+					<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+					<%
+				}
 			}
 			%>
 			</aui:select>
@@ -97,6 +103,17 @@
 		%>
 			<aui:input name="courseTemplate" value="<%=lsp.getLayoutSetPrototypeId()%>" type="hidden"/>
 		<%}%>
+		
+		
+<script type="text/javascript">
+	function showAlert(ele){
+		console.log(ele);
+		if(<%=GroupLocalServiceUtil.getGroup(Long.parseLong(groupId)).getPublicLayoutSet().getLayoutSetPrototypeId()%> != ele.options[ele.selectedIndex].value){
+			alert("<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "template-not-equals")) %>");
+		}
+		
+	}
+</script>
 	
 					
 				

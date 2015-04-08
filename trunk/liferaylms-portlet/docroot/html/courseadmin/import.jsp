@@ -1,3 +1,5 @@
+<%@page import="com.liferay.portal.service.GroupServiceUtil"%>
+<%@page import="com.liferay.lms.service.CourseServiceUtil"%>
 <%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@ page import="com.liferay.portal.LARFileException" %>
@@ -5,7 +7,7 @@
 <%@ page import="com.liferay.portal.LayoutImportException" %>
 <%@page import="com.liferay.portal.model.LayoutSetPrototype"%>
 <%@page import="com.liferay.portal.service.LayoutSetPrototypeLocalServiceUtil"%>
-
+<%@page import="com.liferay.portal.kernel.util.UnicodeFormatter"%>
 <%@ page import="com.liferay.portal.kernel.lar.PortletDataException" %>
 <%@ page import="com.liferay.portal.kernel.lar.PortletDataHandler" %>
 <%@ page import="com.liferay.portal.kernel.lar.PortletDataHandlerBoolean" %>
@@ -58,7 +60,7 @@
 		{
 				layusprsel=renderRequest.getPreferences().getValue("courseTemplates", "").split(",");
 		}
-
+		
 		String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
 		if(layusprsel!=null &&layusprsel.length>0)
 		{
@@ -67,14 +69,21 @@
 		}
 		if(lspist.length>1){
 		%>
-			<aui:select name="courseTemplate" label="course-template">
+			<aui:select name="courseTemplate" label="course-template" onChange="showAlert(this);">
 			<%
 			for(String lspis:lspist)
 			{
 				LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
-				%>
-				<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
-				<%
+				if(GroupLocalServiceUtil.getGroup(Long.parseLong(groupId)).getPublicLayoutSet().getLayoutSetPrototypeId() == lsp.getLayoutSetPrototypeId()){
+					%>
+					<aui:option selected="true" value="<%=lsp.getLayoutSetPrototypeId() %>"><%=lsp.getName(themeDisplay.getLocale()) %> </aui:option>
+					<%
+				}else{
+					%>
+					<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
+					<%
+				}
+				
 			}
 			%>
 			</aui:select>
@@ -87,7 +96,15 @@
 		<%}%>
 	
 	
-	
+	<script type="text/javascript">
+	function showAlert(ele){
+		console.log(ele);
+		if(<%=GroupLocalServiceUtil.getGroup(Long.parseLong(groupId)).getPublicLayoutSet().getLayoutSetPrototypeId()%> != ele.options[ele.selectedIndex].value){
+			alert("<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "template-not-equals")) %>");
+		}
+		
+	}
+</script>
 	
 	
 	
