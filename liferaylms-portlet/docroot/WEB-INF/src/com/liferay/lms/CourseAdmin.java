@@ -922,26 +922,12 @@ public class CourseAdmin extends MVCPortlet {
 
 			long groupId = ParamUtil.getLong(uploadRequest, "groupId");
 			File file = uploadRequest.getFile("importFileName");
-			
-			long courseTemplateId=ParamUtil.getLong(uploadRequest,"courseTemplate",0);
-			//System.out.println("Template: "+courseTemplateId);
-
-			//System.out.println("TemplateII: "+uploadRequest.getParameterMap().get("courseTemplate")[0]);
-			//System.out.println("groupId: "+groupId+", privateLayout:"+privateLayout+", file: "+file.getName());
-
-			//System.out.println("actionRequest.getParameterMap().size: "+actionRequest.getParameterMap().size());
-
 			if (!file.exists()) {
 				//	System.out.println("Import file does not exist");
 				throw new LARFileException("Import file does not exist");
 			}
-			//System.out.println("importLayouts 1, portletId"+themeDisplay.getPortletDisplay().getId());
-
 			String portletId = (String) actionRequest.getAttribute(WebKeys.PORTLET_ID);
 			LayoutServiceUtil.importPortletInfo(themeDisplay.getLayout().getPlid(), groupId,portletId, uploadRequest.getParameterMap(), file);
-
-			//System.out.println("importLayouts 2");
-
 			addSuccessMessage(actionRequest, actionResponse);
 
 		}

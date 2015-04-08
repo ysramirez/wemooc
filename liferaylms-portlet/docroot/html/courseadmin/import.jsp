@@ -53,61 +53,6 @@
 		<aui:input checked="<%= true %>" label="data" name="<%= PortletDataHandlerKeys.PORTLET_DATA %>" type="checkbox" onchange="<%= taglibOnChange %>" />
 		
 	</div>
-	
-	<%
-	String[] layusprsel=null;
-		if(renderRequest.getPreferences().getValue("courseTemplates", null)!=null&&renderRequest.getPreferences().getValue("courseTemplates", null).length()>0)
-		{
-				layusprsel=renderRequest.getPreferences().getValue("courseTemplates", "").split(",");
-		}
-		
-		String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyId()).getLmsTemplates().split(",");
-		if(layusprsel!=null &&layusprsel.length>0)
-		{
-			lspist=layusprsel;
-
-		}
-		if(lspist.length>1){
-		%>
-			<aui:select name="courseTemplate" label="course-template" onChange="showAlert(this);">
-			<%
-			for(String lspis:lspist)
-			{
-				LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
-				if(GroupLocalServiceUtil.getGroup(Long.parseLong(groupId)).getPublicLayoutSet().getLayoutSetPrototypeId() == lsp.getLayoutSetPrototypeId()){
-					%>
-					<aui:option selected="true" value="<%=lsp.getLayoutSetPrototypeId() %>"><%=lsp.getName(themeDisplay.getLocale()) %> </aui:option>
-					<%
-				}else{
-					%>
-					<aui:option value="<%=lsp.getLayoutSetPrototypeId() %>" ><%=lsp.getName(themeDisplay.getLocale()) %></aui:option>
-					<%
-				}
-				
-			}
-			%>
-			</aui:select>
-		<%
-		}
-		else{
-			LayoutSetPrototype lsp=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspist[0]));
-		%>
-			<aui:input name="courseTemplate" value="<%=lsp.getLayoutSetPrototypeId()%>" type="hidden"/>
-		<%}%>
-	
-	
-	<script type="text/javascript">
-	function showAlert(ele){
-		console.log(ele);
-		if(<%=GroupLocalServiceUtil.getGroup(Long.parseLong(groupId)).getPublicLayoutSet().getLayoutSetPrototypeId()%> != ele.options[ele.selectedIndex].value){
-			alert("<%=UnicodeFormatter.toString(LanguageUtil.get(pageContext, "template-not-equals")) %>");
-		}
-		
-	}
-</script>
-	
-	
-	
 		
 	<aui:button-row>
 		<aui:button type="submit" value="import" />
