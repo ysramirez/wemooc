@@ -1,10 +1,12 @@
+<%@page import="com.liferay.lms.service.ModuleLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
 <%@page import="java.util.ArrayList"%>
 <%@page import="java.util.List"%>
 <%@page import="com.liferay.lms.model.LearningActivity"%>
 <%@ include file="/init.jsp" %>
 
-<aui:select cssClass="lms-inpprecendence" label="bloquing-activity" name="precedence" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
+
+<aui:select cssClass="lms-inpprecendence" inlineLabel="true" label="activity" name="precedence" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
 <%
 	renderResponse.setProperty(
 			"clear-request-parameters", Boolean.TRUE.toString());
@@ -12,7 +14,16 @@
 	long actId=ParamUtil.getLong(request, "resId", 0);
 	long moduleId=ParamUtil.getLong(request, "resModuleId", 0);
 	long precedence=ParamUtil.getLong(request, "precedence", 0);
+	boolean isFirstRun=ParamUtil.getBoolean(request, "firstLoad",true);
+	
+	
+	LearningActivity precedenceAct = LearningActivityLocalServiceUtil.getLearningActivity(precedence);
+	
+	if(precedenceAct.getModuleId()!=0 && isFirstRun){
+		moduleId = precedenceAct.getModuleId();
+	}
 
+	
 	List<LearningActivity> activities=null;
 	if(moduleId>0)
 	{
