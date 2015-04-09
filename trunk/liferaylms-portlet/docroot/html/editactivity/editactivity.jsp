@@ -833,17 +833,21 @@ Liferay.provide(
 			</aui:field-wrapper>
 		</div>
 		
-		<aui:field-wrapper label="bloquing-activity">
+		<aui:field-wrapper label="bloquing-activity" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
 		
 		
 		<c:if test="<%=!ParamUtil.getBoolean(renderRequest,\"noModule\",false) %>">
 		<aui:select id="resModuleId2" label="module"  name="resModuleId2" inlineLabel="true" onChange="<%=renderResponse.getNamespace()+\"reloadComboActivities(this.options[this.selectedIndex].value);\" %>">
 		<%
+			if(actId == 0){%>
+				<aui:option selected="true" value="0" ><%=LanguageUtil.get(pageContext,"none")%></aui:option>
+
+			<%}
 			java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
 			for(Module theModule:modules){
 				boolean selected = false;
 
-				if (learnact.getPrecedence() != 0) {
+				if (learnact != null && learnact.getPrecedence() != 0) {
 					LearningActivity larnPrecedence = LearningActivityLocalServiceUtil.getLearningActivity(learnact.getPrecedence());
 					long modulePrecedenceId = larnPrecedence.getModuleId();
 					
@@ -859,10 +863,16 @@ Liferay.provide(
 						}
 					}
 			}
+				
+				if(actId!=0){
 		%>
 					<aui:option value="<%=theModule.getModuleId() %>" selected="<%=selected %>"><%=theModule.getTitle(themeDisplay.getLocale()) %></aui:option>
 				<% 
-				
+				}else{
+					%>
+					<aui:option value="<%=theModule.getModuleId() %>"><%=theModule.getTitle(themeDisplay.getLocale()) %></aui:option>
+				<%
+				}
 			}
 		%>
 

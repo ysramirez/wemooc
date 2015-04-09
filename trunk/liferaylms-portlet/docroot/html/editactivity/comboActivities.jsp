@@ -6,7 +6,7 @@
 <%@ include file="/init.jsp" %>
 
 
-<aui:select cssClass="lms-inpprecendence" inlineLabel="true" label="activity" name="precedence" helpMessage="<%=LanguageUtil.get(pageContext,\"helpmessage.precedence\")%>">
+<aui:select cssClass="lms-inpprecendence" inlineLabel="true" label="activity" name="precedence" >
 <%
 	renderResponse.setProperty(
 			"clear-request-parameters", Boolean.TRUE.toString());
@@ -16,12 +16,14 @@
 	long precedence=ParamUtil.getLong(request, "precedence", 0);
 	boolean isFirstRun=ParamUtil.getBoolean(request, "firstLoad",true);
 	
-	
-	LearningActivity precedenceAct = LearningActivityLocalServiceUtil.getLearningActivity(precedence);
-	
-	if(precedenceAct.getModuleId()!=0 && isFirstRun){
-		moduleId = precedenceAct.getModuleId();
+	if(precedence != 0){
+		LearningActivity precedenceAct = LearningActivityLocalServiceUtil.getLearningActivity(precedence);
+		
+		if(precedenceAct.getModuleId()!=0 && isFirstRun){
+			moduleId = precedenceAct.getModuleId();
+		}
 	}
+	
 
 	
 	List<LearningActivity> activities=null;
