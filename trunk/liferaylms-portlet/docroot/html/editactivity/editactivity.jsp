@@ -500,6 +500,7 @@ Liferay.provide(
 			renderUrl.setParameter('jspPage','/html/editactivity/comboActivities.jsp');
 			renderUrl.setParameter('resId','<%=Long.toString(actId) %>');
 			renderUrl.setParameter('resModuleId',moduleId);
+			renderUrl.setParameter('firstLoad',false);
 			renderUrl.setParameter('precedence','<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>');
 
 			A.io.request(renderUrl.toString(),
@@ -738,7 +739,6 @@ Liferay.provide(
 
 		
 		<% if(larntype.getExpecificContentPage()!=null) { %>
-		
 			<liferay-util:include page="<%=larntype.getExpecificContentPage() %>" servletContext="<%=getServletContext() %>" portletId="<%= larntype.getPortletId() %>">
 				<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
 				<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
@@ -832,7 +832,44 @@ Liferay.provide(
 				<% } %>
 			</aui:field-wrapper>
 		</div>
-			<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
+		
+		<aui:field-wrapper label="bloquing-activity">
+		
+		
+		<c:if test="<%=!ParamUtil.getBoolean(renderRequest,\"noModule\",false) %>">
+		<aui:select id="resModuleId2" label="module"  name="resModuleId2" inlineLabel="true" onChange="<%=renderResponse.getNamespace()+\"reloadComboActivities(this.options[this.selectedIndex].value);\" %>">
+		<%
+			java.util.List<Module> modules=ModuleLocalServiceUtil.findAllInGroup(themeDisplay.getScopeGroupId());
+			for(Module theModule:modules){
+				boolean selected = false;
+
+				if (learnact.getPrecedence() != 0) {
+					LearningActivity larnPrecedence = LearningActivityLocalServiceUtil.getLearningActivity(learnact.getPrecedence());
+					long modulePrecedenceId = larnPrecedence.getModuleId();
+					
+					if (larnPrecedence != null && modulePrecedenceId == theModule.getModuleId()) {
+						selected = true;
+					} 
+				} else {
+					if (learnact != null && learnact.getModuleId() == theModule.getModuleId()) {
+						selected = true;
+					} else {
+						if (theModule.getModuleId() == moduleId) {
+							selected = true;
+						}
+					}
+			}
+		%>
+					<aui:option value="<%=theModule.getModuleId() %>" selected="<%=selected %>"><%=theModule.getTitle(themeDisplay.getLocale()) %></aui:option>
+				<% 
+				
+			}
+		%>
+
+		</aui:select>
+	</c:if>
+		</aui:field-wrapper>
+		<liferay-util:include page="/html/editactivity/comboActivities.jsp" servletContext="<%=getServletContext() %>">
 			<liferay-util:param name="resId" value="<%=Long.toString(actId) %>" />
 			<liferay-util:param name="resModuleId" value="<%=Long.toString(moduleId) %>" />
 			<liferay-util:param name="precedence" value="<%=Long.toString((learnact!=null)?learnact.getPrecedence():0) %>" />
