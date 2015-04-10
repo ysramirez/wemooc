@@ -200,7 +200,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 
 			//auditing
 			AuditingLogFactory.audit(theModule.getCompanyId(), theModule.getGroupId(), Module.class.getName(), 
-					moduleId, theModule.getUserId(), AuditConstants.UPDATE, null);
+					moduleId, theModule.getUserId(), AuditConstants.UPDATE, "MODULE_UP");
 		}
 		
 	}
@@ -221,7 +221,7 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 
 			//auditing
 			AuditingLogFactory.audit(theModule.getCompanyId(), theModule.getGroupId(), Module.class.getName(), 
-					moduleId, theModule.getUserId(), AuditConstants.UPDATE, null);
+					moduleId, theModule.getUserId(), AuditConstants.UPDATE, "MODULE_DOWN");
 		}
 		
 	}
@@ -230,7 +230,6 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 		Module actualMod = (modId>0)?modulePersistence.fetchByPrimaryKey(modId):null;
 		Module finalPrevMod = (previusMod>0)?modulePersistence.fetchByPrimaryKey(previusMod):null;
 		Module finalNextMod = (nextMod>0)?modulePersistence.fetchByPrimaryKey(nextMod):null;
-
 		//Elemento subido
 		if(finalNextMod!=null && actualMod.getOrdern() > finalNextMod.getOrdern()){
 			Module prevAct = getPreviusModule(actualMod);
@@ -239,6 +238,9 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 				actualMod = modulePersistence.fetchByPrimaryKey(modId);
 				prevAct = getPreviusModule(actualMod);
 			}
+			//auditing
+			AuditingLogFactory.audit(actualMod.getCompanyId(), actualMod.getGroupId(), Module.class.getName(), 
+					modId, actualMod.getUserId(), AuditConstants.UPDATE, "MODULE_UP");
 		//Elemento bajado
 		}else if(finalPrevMod!=null && actualMod.getOrdern() < finalPrevMod.getOrdern()){
 			Module nexMod = getNextModule(actualMod);
@@ -247,6 +249,10 @@ public class ModuleLocalServiceImpl extends ModuleLocalServiceBaseImpl {
 				actualMod = modulePersistence.fetchByPrimaryKey(modId);
 				nexMod = getNextModule(actualMod);
 			}
+			
+			//auditing
+			AuditingLogFactory.audit(actualMod.getCompanyId(), actualMod.getGroupId(), Module.class.getName(), 
+					modId, actualMod.getUserId(), AuditConstants.UPDATE, "MODULE_DOWN");
 		}
 
 	}
