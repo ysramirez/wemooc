@@ -839,7 +839,7 @@ Liferay.provide(
 		<c:if test="<%=!ParamUtil.getBoolean(renderRequest,\"noModule\",false) %>">
 		<aui:select id="resModuleId2" label="module"  name="resModuleId2" inlineLabel="true" onChange="<%=renderResponse.getNamespace()+\"reloadComboActivities(this.options[this.selectedIndex].value);\" %>">
 		<%
-			if(actId == 0){%>
+			if(actId == 0 || learnact.getPrecedence()<= 0){%>
 				<aui:option selected="true" value="0" ><%=LanguageUtil.get(pageContext,"none")%></aui:option>
 
 			<%}
@@ -864,7 +864,7 @@ Liferay.provide(
 					}
 			}
 				
-				if(actId!=0){
+				if(actId>0 && learnact.getPrecedence()>0){
 		%>
 					<aui:option value="<%=theModule.getModuleId() %>" selected="<%=selected %>"><%=theModule.getTitle(themeDisplay.getLocale()) %></aui:option>
 				<% 
