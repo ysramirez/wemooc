@@ -43,12 +43,12 @@
 		User usert = UserLocalServiceUtil.getUser(membershipRequest.getUserId());
 		%>
 		<liferay-ui:search-container-column-text
-			name="User"
+			name="inscriptionadmin.user"
 		    value="<%= usert.getFullName() %>"
 			align="left"
 		/>
 		<liferay-ui:search-container-column-text
-			name="Date"
+			name="inscriptionadmin.date"
 		    value="<%= sdf.format(membershipRequest.getCreateDate()) %>"
 			align="left"
 		/>
