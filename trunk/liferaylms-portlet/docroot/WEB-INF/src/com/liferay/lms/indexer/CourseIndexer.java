@@ -46,6 +46,12 @@ public class CourseIndexer extends BaseIndexer {
 	} 
 
 	
+	@Override
+	public boolean isPermissionAware() {
+		return true;
+	}
+
+
 	public Summary getSummary(Document document, String snippet, PortletURL portletURL) {
 		if(log.isDebugEnabled())log.debug("getSummary");
 		String title = document.get(Field.TITLE);
