@@ -166,8 +166,8 @@ if(theTeam!=null)
 				</liferay-ui:search-container-results>
 				<liferay-ui:search-container-row className="com.liferay.portal.model.User" keyProperty="userId" modelVar="usuario">
 					<liferay-portlet:renderURL var="userDetailsURL">
-					<liferay-portlet:param name="jspPage" value="/html/gradebook/userdetails.jsp"></liferay-portlet:param>
-					<liferay-portlet:param name="userId" value="<%=Long.toString(usuario.getUserId()) %>"></liferay-portlet:param>
+						<liferay-portlet:param name="jspPage" value="/html/gradebook/userdetails.jsp"></liferay-portlet:param>
+						<liferay-portlet:param name="userId" value="<%=Long.toString(usuario.getUserId()) %>"></liferay-portlet:param>
 					</liferay-portlet:renderURL>
 					<liferay-ui:search-container-column-text name="student-name">
 						<liferay-ui:user-display userId="<%=usuario.getUserId() %>" url = "<%=userDetailsURL%>"/>
@@ -285,7 +285,9 @@ if(theTeam!=null)
 					                	success : function() { 
 					                    	A.one('.aui-dialog-bd').set('innerHTML',this.get('responseData'));	
 					                    	window.<portlet:namespace />popupGrades.close();
-					                    	document.location.reload();
+					                    	// No se muy bien por qué se realizaba una recarga de la página. 
+					                    	// Parece que no afecta al funcionamiento del portlet a peor, sino a mejor.
+					                    	// document.location.reload();
 					                    },
 						                cancel : function() { 
 					                    	window.<portlet:namespace />popupGrades.close();
