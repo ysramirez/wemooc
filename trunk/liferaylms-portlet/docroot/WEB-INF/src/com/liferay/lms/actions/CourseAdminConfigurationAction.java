@@ -54,6 +54,11 @@ public class CourseAdminConfigurationAction implements ConfigurationAction {
 		portletPreferences.setValue("showSearchTags",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showSearchTags",	false)));
 		portletPreferences.setValue("showWelcomeMsg",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showWelcomeMsg",	true)));
 		
+		
+		portletPreferences.setValue("showOnlyOrganizationUsers",Boolean.toString(ParamUtil.getBoolean(actionRequest, "showOnlyOrganizationUsers",	true)));
+
+		
+		
 		portletPreferences.store();
 		SessionMessages.add( 
 				actionRequest, portletConfig.getPortletName() + ".doConfigure"); 

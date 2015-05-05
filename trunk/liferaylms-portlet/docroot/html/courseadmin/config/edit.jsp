@@ -39,6 +39,7 @@
 	boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
 	boolean showSearchTags = preferences.getValue("showSearchTags", "false").equals("true");
 	boolean showWelcomeMsg = preferences.getValue("showWelcomeMsg", "true").equals("true");
+	boolean showOnlyOrganizationUsers = preferences.getValue("showOnlyOrganizationUsers", "true").equals("true");
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>
@@ -90,8 +91,10 @@ String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyI
 		}
 		%>
 		</aui:field-wrapper>
-		<%
-		%>
+
+		<aui:input type="checkbox" name="showOnlyOrganizationUsers" label="modulenavigation.organizationMode" value="<%=showOnlyOrganizationUsers %>" checked="<%=showOnlyOrganizationUsers %>"/>
+	
+
 	<aui:button-row>
 		<aui:button type="submit" value="save" />
 	</aui:button-row>

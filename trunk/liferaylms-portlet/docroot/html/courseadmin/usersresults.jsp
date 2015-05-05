@@ -1,3 +1,7 @@
+<%@page import="java.util.LinkedList"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
+<%@page import="javax.portlet.PortletPreferences"%>
 <%@include file="/init.jsp" %>
 <%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
 <%@page import="com.liferay.lms.model.LmsPrefs"%>
@@ -15,7 +19,14 @@
 <%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%
+PortletPreferences preferences = null;
+String portletResource = ParamUtil.getString(request, "portletResource");
 
+if (Validator.isNotNull(portletResource)) {
+preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+}else{
+preferences = renderRequest.getPreferences();
+}
 long courseId=ParamUtil.getLong(request, "courseId",0);
 long roleId=ParamUtil.getLong(request, "roleId",0);
 Role role=RoleLocalServiceUtil.getRole(roleId);
@@ -126,12 +137,48 @@ if(backToEdit) {
 	            "  WHERE UserGroupRole.roleId = ?)", new Long[]{roleId}));
 		}
 	*/
+	boolean showOnlyOrganizationUsers = preferences.getValue("showOnlyOrganizationUsers", "true").equals("true");
 
-	List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
-	int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
+		if (showOnlyOrganizationUsers) {
+			
+			if (organization != null) {
+				//System.out.println("Muestro los usuarios de la organización");
+				//System.out.println(organization.getOrganizationId());
+				//System.out.println(organization.getName());
+				List<User> listaUsuariosEnOrganizacion = UserLocalServiceUtil.getOrganizationUsers(organization.getOrganizationId());
+				pageContext.setAttribute("results", listaUsuariosEnOrganizacion);
+		    		pageContext.setAttribute("total", listaUsuariosEnOrganizacion.size());	
+			} else {
+				List <User> listaFinalUsuarios = new LinkedList<User>();
+				List<Organization> organizationsOfUerList = themeDisplay.getUser().getOrganizations();
+				Iterator<Organization> it = organizationsOfUerList.iterator();
+				List<User> listaUsuariosEnOrganizacion = null;
+				while (it.hasNext()) {
+					Organization org = it.next();
+					listaUsuariosEnOrganizacion = UserLocalServiceUtil.getOrganizationUsers(org.getOrganizationId());
+					Iterator<User> it2 = listaUsuariosEnOrganizacion.iterator();
+					while (it2.hasNext()) {
+						
+						listaFinalUsuarios.add(it2.next());
+					}
+				}
+				pageContext.setAttribute("results", listaFinalUsuarios);
+	    			pageContext.setAttribute("total", listaFinalUsuarios.size());
+			
+			}
 
-	pageContext.setAttribute("results", userListPage);
-    pageContext.setAttribute("total", userCount);
+			//OrganizationLocalServiceUtil.getOrganization(companyId, name);
+		} else {
+			List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch, searchContainer.getStart(), searchContainer.getEnd(), obc);
+			int userCount =  UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), firstName, middleName, lastName, screenName, emailAddress, 0, params, andSearch);
+			pageContext.setAttribute("results", userListPage);
+		    	pageContext.setAttribute("total", userCount);
+			
+		}
+	
+
+	
+
 
 %>
 	</liferay-ui:search-container-results>
