@@ -1,3 +1,8 @@
+<%@page import="com.liferay.portal.service.UserGroupRoleLocalServiceUtil"%>
+<%@page import="com.liferay.portal.model.UserGroupRole"%>
+<%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
+<%@page import="com.liferay.lms.service.LmsPrefsLocalService"%>
+<%@page import="com.liferay.lms.model.LmsPrefs"%>
 <%@page import="java.util.Locale"%>
 <%@page import="java.text.DecimalFormat"%>
 <%@page import="com.liferay.lms.service.LearningActivityLocalServiceUtil"%>
@@ -85,8 +90,28 @@ String scourseIds=ListUtil.toString(courses,"courseId");
 	<liferay-ui:search-container-row className="com.liferay.lms.model.Course" keyProperty="courseId" modelVar="course">
 	<%
 		
+	
+		LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+		java.util.List<User> users=new java.util.ArrayList<User>();
+
+		java.util.List<User> userst = UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId());
+		for (User usert : userst) {
+			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(
+					usert.getUserId(), course.getGroupCreatedId());
+			boolean remove = false;
+			for (UserGroupRole ugr : userGroupRoles) {
+				if (ugr.getRoleId() == prefs.getEditorRole() || ugr.getRoleId() == prefs.getTeacherRole()) {
+					remove = true;
+					break;
+				}
+			}
+			if (!remove) {
+				users.add(usert);
+			}
+		}
+	
 		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
-		long registered=UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId(),0);
+		long registered=users.size();
 		
 		
 		long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);

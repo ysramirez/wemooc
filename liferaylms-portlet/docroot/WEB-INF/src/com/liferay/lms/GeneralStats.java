@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.nio.charset.Charset;
 import java.text.DecimalFormat;
+import java.util.List;
 
 import javax.portlet.PortletException;
 import javax.portlet.ResourceRequest;
@@ -12,9 +13,11 @@ import javax.portlet.ResourceResponse;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityLocalServiceUtil;
+import com.liferay.lms.service.LmsPrefsLocalServiceUtil;
 import com.liferay.lms.service.ModuleLocalServiceUtil;
 import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -25,7 +28,10 @@ import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.model.Group;
+import com.liferay.portal.model.User;
+import com.liferay.portal.model.UserGroupRole;
 import com.liferay.portal.service.GroupLocalServiceUtil;
+import com.liferay.portal.service.UserGroupRoleLocalServiceUtil;
 import com.liferay.portal.service.UserLocalServiceUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
@@ -73,7 +79,28 @@ public class GeneralStats extends MVCPortlet {
 	        linea=new String[8];
 	        linea[0]=course.getTitle(themeDisplay.getLocale());
 	        Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
-			long registered=UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId(),0);
+			//long registered=UserLocalServiceUtil.getGroupUsersCount(course.getGroupCreatedId(),0);
+	        
+	        LmsPrefs prefs=LmsPrefsLocalServiceUtil.getLmsPrefs(themeDisplay.getCompanyId());
+			java.util.List<User> users=new java.util.ArrayList<User>();
+
+			java.util.List<User> userst = UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId());
+			for (User usert : userst) {
+				List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(
+						usert.getUserId(), course.getGroupCreatedId());
+				boolean remove = false;
+				for (UserGroupRole ugr : userGroupRoles) {
+					if (ugr.getRoleId() == prefs.getEditorRole() || ugr.getRoleId() == prefs.getTeacherRole()) {
+						remove = true;
+						break;
+					}
+				}
+				if (!remove) {
+					users.add(usert);
+				}
+			}
+		
+			long registered=users.size();
 			
 			
 			long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
