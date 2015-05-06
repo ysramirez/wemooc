@@ -27,9 +27,11 @@
 	boolean showCorrectAnswerOnlyOnFinalTry= false;
 	boolean improve=false;
 	boolean disabled = false;
+	long tries = 0;
 	
 	LearningActivity learningActivity=(LearningActivity)request.getAttribute("activity");
 	if(learningActivity != null) {
+		tries = learningActivity.getTries();
 		if(!LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random").equals(""))
 			random = Long.parseLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"random"));		
 		
@@ -245,10 +247,13 @@ window.<portlet:namespace />validate_execactivity={
 	</aui:field-wrapper>
 	
 	<aui:input type="checkbox" name="showCorrectAnswer" label="exectactivity.edit.showcorrect" checked="<%=showCorrectAnswer %>"
-		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrect.helpMessage" onClick='<%= renderResponse.getNamespace() + "showAnswer1(event)" %>'></aui:input>
-		
-	<aui:input type="checkbox" name="showCorrectAnswerOnlyOnFinalTry" label="exectactivity.edit.showcorrectonlyonfinaltry" checked="<%=showCorrectAnswerOnlyOnFinalTry %>"
-		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrectonlyonfinaltry.helpMessage" onClick='<%= renderResponse.getNamespace() + "showAnswer2(event)" %>'></aui:input>
+		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrect.helpMessage" onClick='<%= renderResponse.getNamespace() + "showAnswer2(event)" %>'></aui:input>
+	
+	<%if(tries>0){ %>
+		<aui:input type="checkbox" name="showCorrectAnswerOnlyOnFinalTry" label="exectactivity.edit.showcorrectonlyonfinaltry" checked="<%=showCorrectAnswerOnlyOnFinalTry %>"
+		ignoreRequestValue="true" helpMessage="exectactivity.edit.showcorrectonlyonfinaltry.helpMessage" onClick='<%= renderResponse.getNamespace() + "showAnswer1(event)" %>'></aui:input>
+	<%} %>	
+	
 		
 	<aui:input type="checkbox" name="improve" label="exectactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
 		ignoreRequestValue="true" helpMessage="exectactivity.edit.improve.helpMessage"></aui:input>
