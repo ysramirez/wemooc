@@ -456,12 +456,11 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<liferay-ui:message key="onlinetaskactivity.updating"/>
 	<%}
 	//if(isTeacher){
-		System.out.println(isTeacher);
 
 	%>
 <div class="nota"> 
 
-<% System.out.println(result); if (result!=null && !isTablet){ %>
+<%if (result!=null && !isTablet){ %>
 	<p class="doc_descarga"><a class="verMas" href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></p>
 	<%
 	if(result.getEndDate()!= null){
@@ -478,7 +477,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<%}
 	}
 }else {
-	System.out.println(activity.getTries());
+	
 	if(activity.getTries()!=0 && !isTablet && !isTeacher) {
 %>
 	<p class="doc_descarga"><span><liferay-ui:message key="onlinetaskactivity.not.qualificated.activity" /></span> <a class="verMas" href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></p>
