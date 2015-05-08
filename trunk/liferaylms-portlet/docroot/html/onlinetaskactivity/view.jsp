@@ -1,4 +1,5 @@
 
+<%@page import="com.liferay.portal.security.permission.PermissionChecker"%>
 <%@page import="com.liferay.portal.kernel.xml.Element"%>
 <%@page import="com.liferay.portlet.documentlibrary.service.DLFileEntryLocalServiceUtil"%>
 <%@page import="com.liferay.portlet.documentlibrary.model.DLFileEntry"%>
@@ -385,8 +386,7 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 
 	<% } 
 	
-	
-	if(isTablet!=true||isTeacher!=true){ %>
+	if(isTablet==false && isTeacher==false){ %>
 	
 		<aui:form name="fm" action="<%=setActivity%>"  method="post" enctype="multipart/form-data" cssClass='<%=(result!=null)?((result.getEndDate()!= null)?"aui-helper-hidden":""):""%>' >
 			<aui:fieldset>
@@ -451,14 +451,17 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 			</aui:button-row>
 		</aui:form>
 	<%} %>
-	<liferay-ui:message key="onlinetaskactivity.updating"/>
 	<% } if(!isTeacher && isTablet) { 
 	%>
 		<liferay-ui:message key="onlinetaskactivity.updating"/>
-	
+	<%}
+	//if(isTeacher){
+		System.out.println(isTeacher);
+
+	%>
 <div class="nota"> 
 
-<% if (result!=null && !isTablet){ %>
+<% System.out.println(result); if (result!=null && !isTablet){ %>
 	<p class="doc_descarga"><a class="verMas" href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></p>
 	<%
 	if(result.getEndDate()!= null){
@@ -475,7 +478,8 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 		<%}
 	}
 }else {
-	if(activity.getTries()!=0 && !isTablet) {
+	System.out.println(activity.getTries());
+	if(activity.getTries()!=0 && !isTablet && !isTeacher) {
 %>
 	<p class="doc_descarga"><span><liferay-ui:message key="onlinetaskactivity.not.qualificated.activity" /></span> <a class="verMas" href="javascript:<portlet:namespace />showPopupGradesStudent(<%=Long.toString(user.getUserId()) %>,true);"><liferay-ui:message key="onlineActivity.view.last" /></a></p>
 <% 
@@ -484,5 +488,6 @@ if((PermissionCheckerFactoryUtil.create(themeDisplay.getUser())).hasPermission(t
 
 </div>
 
-<% }}} %>
+<%//}
+	}} %>
 </div>
