@@ -39,7 +39,7 @@
 	boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
 	boolean showSearchTags = preferences.getValue("showSearchTags", "false").equals("true");
 	boolean showWelcomeMsg = preferences.getValue("showWelcomeMsg", "true").equals("true");
-	boolean showOnlyOrganizationUsers = preferences.getValue("showOnlyOrganizationUsers", "true").equals("true");
+	boolean showOnlyOrganizationUsers = preferences.getValue("showOnlyOrganizationUsers", "false").equals("true");
 %>
 
 <liferay-portlet:actionURL var="saveConfigurationURL"  portletConfiguration="true"/>
