@@ -76,7 +76,7 @@ try {
 	%>
  		<div id="placeholder_navigationContainer"></div>
  	<%}else{%>
- 		<div id="placeholder_navigationContainer" class="scorm-button-popup" style="display:none;"></div> 	
+ 		<div id="placeholder_navigationContainer" class="scorm-button-popup"></div> 	
  	<%}%>
  	<div id="placeholder_treeContainer"></div>
   </div>
