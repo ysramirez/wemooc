@@ -194,10 +194,16 @@ public class CloneCourse implements MessageListener {
 		//Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(), "", themeDisplay.getLocale() , today, startDate, endDate, serviceContext, course.getCalificationType());
 		
 		//when lmsprefs has more than one lmstemplate selected the addcourse above throws an error.
+		
+		
 		int typeSite = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId()).getType();
 		Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(), "", "", themeDisplay.getLocale(), today, startDate, endDate, layoutSetPrototypeId, typeSite, serviceContext, course.getCalificationType(), 0,true);
-
+		newCourse.setExpandoBridgeAttributes(serviceContext);
+		
+		newCourse.getExpandoBridge().setAttributes(course.getExpandoBridge().getAttributes());
 		//Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(), "", "", themeDisplay.getLocale(), today, today, today, layoutSetPrototypeId, serviceContext);
+		
+		
 		
 		Group newGroup = GroupLocalServiceUtil.getGroup(newCourse.getGroupCreatedId());
 		serviceContext.setScopeGroupId(newCourse.getGroupCreatedId());
@@ -257,6 +263,9 @@ public class CloneCourse implements MessageListener {
 				newModule.setGroupId(newCourse.getGroupCreatedId());
 				newModule.setUserId(newCourse.getUserId());
 				newModule.setOrdern(newModule.getModuleId());
+				
+				//Icono
+				newModule.setIcon(module.getIcon());
 				
 				/*
 				Calendar start = Calendar.getInstance();
