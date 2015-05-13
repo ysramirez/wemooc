@@ -177,7 +177,7 @@ function validate(){
 <% 
 	}
 	else {
-		%>	<aui:model-context model="<%= Module.class %>"/>
+		%>	<aui:model-context bean="<%= module %>" model="<%= Module.class %>"/>
 	<% 
 	}
 %>
@@ -279,7 +279,28 @@ function validate(){
 		}
 	}
 %>
-	</aui:select>    
+	</aui:select>
+	
+<liferay-ui:panel-container extended="false"  persistState="false">
+	
+	<liferay-ui:panel title="categorization" collapsible="true" defaultState="closed">
+	<liferay-ui:custom-attributes-available className="<%= Module.class.getName() %>">
+	<liferay-ui:custom-attribute-list 
+		className="<%=com.liferay.lms.model.Module.class.getName()%>" classPK="<%=(moduleId==0)?0:moduleId %>" editable="true" label="true"></liferay-ui:custom-attribute-list>
+	</liferay-ui:custom-attributes-available>
+	</liferay-ui:panel>
+</liferay-ui:panel-container>	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	<script type="text/javascript">
 	<!--

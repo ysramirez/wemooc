@@ -57,6 +57,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
 import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.service.ServiceContextFactory;
+import com.liferay.portal.service.ServiceContextThreadLocal;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.documentlibrary.model.DLFileEntry;
@@ -80,6 +81,8 @@ public static String SEPARATOR = "_";
 	public static String IMAGEGALLERY_PORTLETFOLDER = "module";
 	public static String IMAGEGALLERY_MAINFOLDER_DESCRIPTION = "Module Image Uploads";
 	public static String IMAGEGALLERY_PORTLETFOLDER_DESCRIPTION = "";
+	
+	private ServiceContext sc;
 	
 	//private long igFolderId;
 
@@ -272,7 +275,9 @@ public static String SEPARATOR = "_";
 			}
 			
 			Module module = ModuleLocalServiceUtil.getModule(moduleId);
+			//System.out.println("Paso por aqui: "+moduleId);
 			String title = module.getTitle();
+			//renderRequest.setAttribute(arg0, arg1);
 			renderRequest.setAttribute("title", title);
 			String description = module.getDescription(themeDisplay.getLocale())+"";
 			renderRequest.setAttribute("description", description);
@@ -406,6 +411,7 @@ public static String SEPARATOR = "_";
 
 	@ProcessAction(name = "addmodule")
 	public void addmodule(ActionRequest request, ActionResponse response) throws Exception {
+		System.out.println("addmodule");
             Module module = moduleFromRequest(request);
             ArrayList<String> errors = moduleValidator.validatemodule(module, request);
             ThemeDisplay themeDisplay = (ThemeDisplay) request
@@ -413,7 +419,10 @@ public static String SEPARATOR = "_";
 
             if (errors.isEmpty()) {
 				try {
-					ModuleLocalServiceUtil.addmodule(module);
+					ServiceContext serviceContext = ServiceContextFactory.getInstance(
+							Module.class.getName(), request);
+					//module.setExpandoBridgeAttributes(serviceContext);
+					Module modcreated = ModuleLocalServiceUtil.addmodule(module);
                 	
                 	response.setRenderParameter("view", "");
                 	SessionMessages.add(request, "module-added-successfully");
@@ -445,14 +454,26 @@ public static String SEPARATOR = "_";
 	}
 	
 	private void addmodulePopUp(RenderRequest request, RenderResponse response) throws IOException, PortalException, SystemException  {
-        Module module = moduleFromRequest(request);
+        //System.out.println("addmodulePopUp");
+        //ServiceContext serviceContext = ServiceContextFactory.getInstance( Module.class.getName(), request);
+
+		Module module = moduleFromRequest(request);
         ArrayList<String> errors = moduleValidator.validatemodule(module, request);
         ThemeDisplay themeDisplay = (ThemeDisplay) request
 		.getAttribute(WebKeys.THEME_DISPLAY);
 
+
         if (errors.isEmpty()) {
 			try {
+				
+				
+				//module=ModuleLocalServiceUtil.addmodule(module,this.sc);
 				module=ModuleLocalServiceUtil.addmodule(module);
+				//ServiceContext serviceContext = ServiceContextFactory.getInstance( Module.class.getName(), request);
+				module.setExpandoBridgeAttributes(this.sc);
+				
+				ModuleLocalServiceUtil.updateModule(module);
+				
    				request.setAttribute("moduleId",module.getModuleId());
 				request.setAttribute("view", "editmodule");
 				request.setAttribute("editType", "edit");
@@ -553,6 +574,7 @@ public static String SEPARATOR = "_";
 
 	@ProcessAction(name = "updatemodule")
 	public void updatemodule(ActionRequest request, ActionResponse response) throws Exception {
+		//System.out.println("dentro de updatemodule");
             Module module = moduleFromRequest(request);
             ArrayList<String> errors = moduleValidator.validatemodule(module, request);
             ThemeDisplay themeDisplay = (ThemeDisplay) request
@@ -594,11 +616,11 @@ public static String SEPARATOR = "_";
         }
 	
 	private void updatemodulePopUp(RenderRequest request, RenderResponse response) throws PortalException, SystemException, IOException {
-        Module module = moduleFromRequest(request);
+        //System.out.println("Dentro de updatemodulePopUp");
+		Module module = moduleFromRequest(request);
 		request.setAttribute("moduleId",module.getModuleId());
 		request.setAttribute("view", "editmodule");
 		request.setAttribute("editType", "edit");
-		
         ArrayList<String> errors = moduleValidator.validatemodule(module, request);
         ThemeDisplay themeDisplay = (ThemeDisplay) request
 		.getAttribute(WebKeys.THEME_DISPLAY);
@@ -659,14 +681,21 @@ public static String SEPARATOR = "_";
 
 		Module module = null;
         long moduleId=ParamUtil.getLong(request, "resourcePrimKey",0);
-        
+        ServiceContext  serviceContext = ServiceContextFactory.getInstance( Module.class.getName(), request);
         if(moduleId>0)
         {
         	 module=ModuleLocalServiceUtil.getModule(ParamUtil.getLong(request, "resourcePrimKey",0));
+        	 
+        	  module.setExpandoBridgeAttributes(serviceContext);
         }
         else
         {
         	module=new ModuleImpl();
+        	this.sc = serviceContext;
+        
+        	 //serviceContext = ServiceContextFactory.getInstance( Module.class.getName(), request);
+        	//module.setExpandoBridgeAttributes(serviceContext);
+        	
         }
         module.setTitle(StringPool.BLANK); 
 		Enumeration<String> parNames= request.getParameterNames();
@@ -682,7 +711,7 @@ public static String SEPARATOR = "_";
 		}
         module.setDescription(StringPool.BLANK);
 		module.setDescription(ParamUtil.getString(request, "description"),themeDisplay.getLocale());
-      
+		
         try {
             module.setIcon(ParamUtil.getLong(request, "icon"));
         } catch (Exception nfe) {
@@ -725,8 +754,7 @@ public static String SEPARATOR = "_";
 		module.setGroupId(themeDisplay.getScopeGroupId());
 		module.setUserId(themeDisplay.getUserId());
 		module.setPrecedence(precedence);
-		//module.setExpandoBridgeAttributes(serviceContext);	
-		//Saving image
+		
 		String fileName = request.getFileName("fileName");
 		String title = fileName;// + " uploaded by " + user.getFullName();
 		File file = request.getFile("fileName");
