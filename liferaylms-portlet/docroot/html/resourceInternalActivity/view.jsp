@@ -88,7 +88,8 @@ else
 				AssetRenderer assetRenderer= AssetRendererFactoryRegistryUtil.getAssetRendererFactoryByClassName(entry.getClassName()).getAssetRenderer(entry.getClassPK());
 				String path = assetRenderer.render(renderRequest, renderResponse, AssetRenderer.TEMPLATE_FULL_CONTENT);
 				
-				if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), entry.getClassName(), entry.getClassPK(), ActionKeys.VIEW)){ %>
+				if(permissionChecker.hasPermission(entry.getGroupId(), entry.getClassName(), entry.getClassPK(), ActionKeys.VIEW))
+				{ %>
 					<liferay-util:include  page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>" />
 				<%
 				}else{
