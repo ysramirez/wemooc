@@ -137,7 +137,7 @@ if(backToEdit) {
 	            "  WHERE UserGroupRole.roleId = ?)", new Long[]{roleId}));
 		}
 	*/
-	boolean showOnlyOrganizationUsers = preferences.getValue("showOnlyOrganizationUsers", "true").equals("true");
+	boolean showOnlyOrganizationUsers = preferences.getValue("showOnlyOrganizationUsers", "false").equals("true");
 
 		if (showOnlyOrganizationUsers) {
 			
