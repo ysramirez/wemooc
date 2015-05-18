@@ -1,3 +1,6 @@
+<%@page import="com.liferay.lms.model.CourseResult"%>
+<%@page import="com.liferay.lms.service.CourseResultService"%>
+<%@page import="com.liferay.lms.service.CourseResultLocalService"%>
 <%@page import="com.liferay.portal.service.UserGroupRoleLocalServiceUtil"%>
 <%@page import="com.liferay.portal.model.UserGroupRole"%>
 <%@page import="com.liferay.lms.service.LmsPrefsLocalServiceUtil"%>
@@ -95,6 +98,7 @@ String scourseIds=ListUtil.toString(courses,"courseId");
 		java.util.List<User> users=new java.util.ArrayList<User>();
 
 		java.util.List<User> userst = UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId());
+		int numTeachers = 0;
 		for (User usert : userst) {
 			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(
 					usert.getUserId(), course.getGroupCreatedId());
@@ -102,6 +106,13 @@ String scourseIds=ListUtil.toString(courses,"courseId");
 			for (UserGroupRole ugr : userGroupRoles) {
 				if (ugr.getRoleId() == prefs.getEditorRole() || ugr.getRoleId() == prefs.getTeacherRole()) {
 					remove = true;
+					CourseResult teacherResult = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(), usert.getUserId());
+					if(teacherResult!=null){
+						numTeachers++;
+						//System.out.println(teacherResult.getResult());
+						//System.out.println(teacherResult.getCourseId());
+
+					}
 					break;
 				}
 			}
@@ -109,13 +120,17 @@ String scourseIds=ListUtil.toString(courses,"courseId");
 				users.add(usert);
 			}
 		}
-	
+		//System.out.println("NumTeachers: "+numTeachers);
 		Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());
 		long registered=users.size();
 		
+		//CourseResultLocalServiceUtil.c
+		long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true)-numTeachers;
+		long iniciados = (CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados)-numTeachers;
 		
-		long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
-		long iniciados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados;
+		//long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
+		//long iniciados = (CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados);
+		
 		double avgResult=0;
 		if(finalizados>0)
 		{
