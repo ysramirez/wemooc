@@ -54,10 +54,10 @@
 				 <fmt:setLocale value="<%= themeDisplay.getLocale()%>"/> 
 				 	<%
 				 	if(!themeDisplay.getLocale().toString().equals("en_US")){%>
-						<fmt:formatDate value="<%=  cc.getDate()%>" type="date" pattern="dd-MM-yyyy"  />
+						<fmt:formatDate value="<%=  cc.getDate()%>" type="date" pattern="dd/MM/yyyy"  />
 
 				 	<%}else{%>
-				 		<fmt:formatDate value="<%=  cc.getDate()%>" type="date" pattern="MM-dd-yyyy"  />
+				 		<fmt:formatDate value="<%=  cc.getDate()%>" type="date" pattern="MM/dd/yyyy"  />
 				 	<%} %>
 				 
 				
