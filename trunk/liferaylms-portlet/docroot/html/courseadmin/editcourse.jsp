@@ -635,7 +635,7 @@ else
 				
 				<div id="containerWelcomeMsg" style='display:<%=active?"block":"none"%>'>
 				
-					<aui:input name="welcomeSubject" type="text" label="welcome-subject" value="<%=welcomeSubject%>"/>
+					<aui:input name="welcomeSubject" size="100"  type="text" label="welcome-subject" value="<%=welcomeSubject%>"/>
 				
 					<aui:field-wrapper label="welcome-msg" name="welcome-msg">
 					
