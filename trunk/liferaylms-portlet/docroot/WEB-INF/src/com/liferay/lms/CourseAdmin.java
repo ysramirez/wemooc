@@ -669,18 +669,23 @@ public class CourseAdmin extends MVCPortlet {
 
 		long courseId = ParamUtil.getLong(actionRequest, "courseId", 0);
 		long roleId = ParamUtil.getLong(actionRequest, "roleId", 0);
-		long userId = ParamUtil.getLong(actionRequest, "userId", 0);
+//		long userId = ParamUtil.getLong(actionRequest, "userId", 0);
+		// Multiusuario
+		long[] to = ParamUtil.getLongValues(actionRequest, "to");
+//		long[] userIds=new long[1];
+//		userIds[0]=ParamUtil.getLong(actionRequest, "userId");
+		// Fin Multiusuario
 		Course course = CourseLocalServiceUtil.getCourse(courseId);
-		if (!GroupLocalServiceUtil.hasUserGroup(userId,
-				course.getGroupCreatedId())) {
-			GroupLocalServiceUtil.addUserGroups(userId,	new long[] { course.getGroupCreatedId() });
-			
+		for (long userId : to) {
+			if (!GroupLocalServiceUtil.hasUserGroup(userId, course.getGroupCreatedId())) {
+				GroupLocalServiceUtil.addUserGroups(userId,	new long[] { course.getGroupCreatedId() });
 			//The application only send one mail at listener
 			//User user = UserLocalServiceUtil.getUser(userId);
 			//sendEmail(user, course);
-		}
-		UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { userId },
-				course.getGroupCreatedId(), roleId);
+			}
+			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { userId }, course.getGroupCreatedId(), roleId);
+		}		
+		
 		actionResponse.setRenderParameters(actionRequest.getParameterMap());
 	}
 	
