@@ -674,7 +674,6 @@ public class CourseAdmin extends MVCPortlet {
 		long[] to = ParamUtil.getLongValues(actionRequest, "to");
 //		long[] userIds=new long[1];
 //		userIds[0]=ParamUtil.getLong(actionRequest, "userId");
-		// Fin Multiusuario
 		Course course = CourseLocalServiceUtil.getCourse(courseId);
 		for (long userId : to) {
 			if (!GroupLocalServiceUtil.hasUserGroup(userId, course.getGroupCreatedId())) {
