@@ -1,5 +1,0 @@
-/* Los import hay que ponerlos antes que las reglas sino son ignorados y Liferay necesita el ; al final */
-@import url(custom/custom_globals.css);
-@import url(custom/custom_globals_general.css);
-@import url(custom/custom_globals_portlets_1.css);
-@import url(custom/custom_globals_schools.css);
