@@ -24,9 +24,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.util.bridges.mvc.MVCPortlet;
 
-/**
- * Portlet implementation class MandatoryPonderatedConfPortlet
- */
+
 public class PonderatedEvalConfPortlet extends MVCPortlet 
 {
  static String evalclassNam="com.liferay.lms.learningactivity.courseeval.PonderatedCourseEval";
@@ -58,53 +56,6 @@ public class PonderatedEvalConfPortlet extends MVCPortlet
 				}
 			}
 			if(param.startsWith("weigth_"))
-			{
-				String actIds=param.substring(7);
-				long score=ParamUtil.getLong(actionRequest, param,0);
-				if(score>0)
-				{
-					Element weight=rootElement.addElement("weight");
-					weight.addAttribute("actId", actIds);
-					weight.addAttribute("ponderation",Long.toString(score));
-				}
-			}
-		}
-		course.setCourseExtraData(document.formattedString());
-		CourseLocalServiceUtil.updateCourse(course);
-		
-	}
-}
-public class PonderatedEvalConfPortlet extends MVCPortlet 
-{
- static String evalclassNam="com.liferay.lms.learningactivity.courseeval.PonderatedCourseEval";
-	public void savePonderation(ActionRequest actionRequest, ActionResponse actionResponse)  throws PortletException, IOException, SystemException 
-	{
-		ThemeDisplay themeDisplay  =(ThemeDisplay)actionRequest.getAttribute(WebKeys.THEME_DISPLAY);
-		Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
-		Enumeration<String> paramse=actionRequest.getParameterNames();
-		java.util.List<String> paramsl=Collections.list(paramse);
-		paramsl=ListUtil.sort(paramsl);
-		Document document = SAXReaderUtil.createDocument();
-		Element rootElement = document.addElement("eval");
-		long passpuntuation=ParamUtil.getLong(actionRequest, "passpuntuation", 0);
-		Element passElement=rootElement.addElement("score");
-		passElement.addAttribute("value", Long.toString(passpuntuation));
-		
-		rootElement.addElement("courseEval").setText(evalclassNam);		
-		
-		for(String param:paramsl)
-		{
-			if(param.startsWith("required_")&&!param.endsWith("ox"))
-			{
-				boolean required=ParamUtil.getBoolean(actionRequest, param,false);
-				if(required)
-				{
-					String actIds=param.substring(9);
-					Element requi=rootElement.addElement("required");
-					requi.addAttribute("actId", actIds);
-				}
-			}
-			if(param.startsWith("weight_"))
 			{
 				String actIds=param.substring(7);
 				long score=ParamUtil.getLong(actionRequest, param,0);
