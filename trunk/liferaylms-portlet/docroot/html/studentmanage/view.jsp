@@ -1,3 +1,6 @@
+<%@page import="com.liferay.portal.security.permission.PermissionCheckerFactoryUtil"%>
+<%@page import="java.util.Iterator"%>
+<%@page import="java.util.LinkedList"%>
 <%@page import="com.liferay.portal.model.Role"%>
 <%@page import="com.liferay.portal.service.RoleLocalServiceUtil"%>
 <%@page import="com.liferay.portal.model.Team"%>
@@ -142,10 +145,25 @@ else
 				OrderByComparator obc = null;
 				
 				List<User> userListPage = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, 0, params, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, params);
+				
+				List<User> finalUserList = new LinkedList<User>();
+				
+				Iterator<User> ituserlistpage = userListPage.iterator();
+				
+				while(ituserlistpage.hasNext()){
+					User u = ituserlistpage.next();
+					
+					boolean isStudent = !(PermissionCheckerFactoryUtil.create(u).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS"));
+					//System.out.println("User "+u.getFullName()+" isStudent "+ isStudent);
+					if(isStudent)finalUserList.add(u);
+				}
+				
+				//int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, params);
+				int userCount = finalUserList.size();
 						
-				pageContext.setAttribute("results", userListPage);
-			    pageContext.setAttribute("total", userCount);
+				//pageContext.setAttribute("results", userListPage);
+				pageContext.setAttribute("results", finalUserList);
+			    	pageContext.setAttribute("total", userCount);
 			}
 			else
 			{
