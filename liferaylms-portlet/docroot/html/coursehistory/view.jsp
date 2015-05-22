@@ -17,10 +17,66 @@ for(Group groupCourse:groups)
 {
 	
 	Course course=CourseLocalServiceUtil.fetchByGroupCreatedId(groupCourse.getGroupId());
-	if(course!=null&&course.isClosed())
+	if(course!=null)
 	{
-	
-		courses.add(course);
+		if(course.isClosed())
+		{
+			courses.add(course);
+		} else {
+			Group groupsel= GroupLocalServiceUtil.getGroup(course.getGroupCreatedId());	
+	     	CourseResult courseResult=CourseResultLocalServiceUtil.getByUserAndCourse(course.getCourseId(), themeDisplay.getUserId());
+			String status="course.status.notstarted";
+			boolean personalFinish=false;
+			Date finishDate=null;
+			if(courseResult!=null)
+			{
+				if(courseResult.getAllowFinishDate()!=null)
+				{
+					finishDate=courseResult.getAllowFinishDate();
+				}
+			}
+			Date lastModuleDate=null;
+			for(Module module:ModuleLocalServiceUtil.findAllInGroup(groupsel.getGroupId()))
+			{
+				if(lastModuleDate==null)
+				{
+					lastModuleDate=module.getEndDate();
+				}
+				else
+				{
+					if(module.getEndDate()!=null)
+					{
+						if(lastModuleDate.before(module.getEndDate()))
+						{
+							lastModuleDate=module.getEndDate();
+						}
+					}
+				}
+			}
+			if(finishDate==null)
+			{
+				finishDate=lastModuleDate;
+			}
+			else
+			{
+				if(lastModuleDate!=null)
+				{
+					if(lastModuleDate.before(finishDate))
+					{
+						finishDate=lastModuleDate;
+					}
+				}
+			}
+			
+			if(finishDate!=null)
+			{
+				if(finishDate.before(new Date()))
+				{					
+		
+					courses.add(course);
+				}
+			}
+		}
 				
 		
 	}
