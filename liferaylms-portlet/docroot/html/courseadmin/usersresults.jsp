@@ -94,20 +94,26 @@ if(backToEdit) {
 	    });
 	
 	}, '' ,{requires:['model-list']});
-
-	function <portlet:namespace />addUser(userId, userName){
+	
+	function <portlet:namespace />addUser(userId, userName, todos){
 		AUI().use('node-base','<portlet:namespace />user-model', function(A) {
 			var existingUser=window.<portlet:namespace />selectedUsers.getById(userId);
 			if(existingUser!=null){
 				window.<portlet:namespace />selectedUsers.remove(existingUser);
 			}
 			window.<portlet:namespace />selectedUsers.add(
-					new A.<portlet:namespace />UserModel({id:userId,name:'<li class="yui3-widget aui-component aui-textboxlistentry aui-textboxlistentry-focused" tabindex="0"><span class="aui-textboxlistentry-content"><span class="aui-textboxlistentry-text">'+userName+'<span class="aui-icon aui-icon-close aui-textboxlistentry-close" onClick="<portlet:namespace />deleteUser('+userId+')" /></span></span></li>'}));
+					new A.<portlet:namespace />UserModel({id:userId,name:'<li class="yui3-widget aui-component aui-textboxlistentry aui-textboxlistentry-focused" tabindex="0"><span class="aui-textboxlistentry-content"><span class="aui-textboxlistentry-text">'+userName+'<span class="aui-icon aui-icon-close aui-textboxlistentry-close" onClick="<portlet:namespace />deleteUser('+userId+','+todos+')" /></span></span></li>'}));
 			
 			
 			var selectedUsers = '';
 			window.<portlet:namespace />selectedUsers.each(function(value){selectedUsers+=value.get('name'); });
-			A.one('#<portlet:namespace />selected_users').setContent(selectedUsers);
+			if(todos) {
+				/* A.one('#<portlet:namespace />selected_users').setContent("TODOS"); */
+				A.one('#<portlet:namespace />selected_users').setContent('<li class="yui3-widget aui-component aui-textboxlistentry aui-textboxlistentry-focused" tabindex="0"><span class="aui-textboxlistentry-content"><span class="aui-textboxlistentry-text">&nbsp;&nbsp;&nbsp;&nbsp;Todos</span></span></li>');
+			} else {
+				A.one('#<portlet:namespace />selected_users').setContent(selectedUsers);
+			}
+			
 			A.one('#<portlet:namespace />to').val(window.<portlet:namespace />selectedUsers.get('id').toString());
 			A.all('#<portlet:namespace />addUser_'+userId).each(function(addUserDiv){ addUserDiv.hide(); });  
 			A.all('#<portlet:namespace />deleteUser_'+userId).each(function(deleteUserDiv){ deleteUserDiv.show(); });		
@@ -126,7 +132,7 @@ if(backToEdit) {
 		});			
 	}
 	
-	function <portlet:namespace />deleteUser(userId){
+	function <portlet:namespace />deleteUser(userId,todos){
 		AUI().use('node-base','<portlet:namespace />user-model', function(A) {
 			var existingUser=window.<portlet:namespace />selectedUsers.getById(userId);
 			if(existingUser!=null){
@@ -135,7 +141,7 @@ if(backToEdit) {
 			
 			var selectedUsers = '';
 			window.<portlet:namespace />selectedUsers.each(function(value){selectedUsers+=value.get('name');});
-			A.one('#<portlet:namespace />selected_users').setContent(selectedUsers);	
+			A.one('#<portlet:namespace />selected_users').setContent(selectedUsers);
 			A.one('#<portlet:namespace />to').val(window.<portlet:namespace />selectedUsers.get('id').toString());
 			A.all('#<portlet:namespace />addUser_'+userId).each(function(addUserDiv){ addUserDiv.show(); });  
 			A.all('#<portlet:namespace />deleteUser_'+userId).each(function(deleteUserDiv){ deleteUserDiv.hide(); });
@@ -333,9 +339,9 @@ if(backToEdit) {
 	<liferay-ui:user-display userId="<%=user.getUserId() %>"></liferay-ui:user-display>
 	</liferay-ui:search-container-column-text> 
 	<liferay-ui:search-container-column-text>
-		<a id="<portlet:namespace />addUser_<%=user.getUserId() %>" onClick="<portlet:namespace />addUser(<%=user.getUserId() %>, '<%=user.getFullName() %>')" style="Cursor:pointer;" >
+		<a id="<portlet:namespace />addUser_<%=user.getUserId() %>" onClick="<portlet:namespace />addUser(<%=user.getUserId() %>, '<%=user.getFullName() %>', false)" style="Cursor:pointer;" >
 		<liferay-ui:message key="select" /></a>
-		<a id="<portlet:namespace />deleteUser_<%=user.getUserId() %>" class="aui-helper-hidden" onClick="<portlet:namespace />deleteUser(<%=user.getUserId() %>)" style="Cursor:pointer;" >
+		<a id="<portlet:namespace />deleteUser_<%=user.getUserId() %>" class="aui-helper-hidden" onClick="<portlet:namespace />deleteUser(<%=user.getUserId() %>, false)" style="Cursor:pointer;" >
 		<liferay-ui:message key="groupmailing.deselect" /></a>	
 	</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
@@ -414,12 +420,14 @@ if(backToEdit) {
 		function setAllStudents(){
 			var allUsers = document.getElementsByName("studentIdNameHidden");
 			var allSelected =new String(document.getElementById("allSelected").value);
-			if(allSelected=="false"){
+			var todos = true;
+			if(allSelected=="false"){				
 				for(var i = 0; i < allUsers.length; i++) {
 				    var userData = allUsers[i].value.split(",");
 				    var userId = userData[0];
 				    var userName = userData[1];
-					<portlet:namespace />addUser(userId,userName);
+				    /* <portlet:namespace />addUser(userId,userName); */
+					<portlet:namespace />addUser(userId,userName,todos);
 				};
 				document.getElementById("allSelected").value='true';
 			}
@@ -429,7 +437,8 @@ if(backToEdit) {
 				    var userData = allUsers[i].value.split(",");
 				    var userId = userData[0];
 				    var userName = userData[1];
-					<portlet:namespace />deleteUser(userId,userName);
+				    /* <portlet:namespace />deleteUser(userId,userName); */
+					<portlet:namespace />deleteUser(userId,todos);
 				};
 				document.getElementById("allSelected").value='false';			
 			}
