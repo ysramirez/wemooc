@@ -520,6 +520,11 @@
 			<finder-column name="userId" />
 			<finder-column name="groupId" />
 		</finder>
+			<finder name="U_G_c" return-type="Collection">
+			<finder-column name="userId" />
+			<finder-column name="groupId" />
+			<finder-column name="classname" />
+		</finder>
 		<finder name="CN_CP" return-type="Collection">
 			<finder-column name="classname" />
 			<finder-column name="classPK" />

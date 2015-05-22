@@ -21,6 +21,7 @@ import com.liferay.lms.model.AuditEntry;
 import com.liferay.lms.service.base.AuditEntryLocalServiceBaseImpl;
 import com.liferay.portal.kernel.dao.orm.Criterion;
 import com.liferay.portal.kernel.dao.orm.DynamicQuery;
+import com.liferay.portal.kernel.dao.orm.OrderFactoryUtil;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -78,7 +79,7 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 		}
 		if(userId>0)
 		{
-			criterion=PropertyFactoryUtil.forName("userId").eq(groupId);
+			criterion=PropertyFactoryUtil.forName("userId").eq(userId);
 			dq.add(criterion);
 		}
 		if(startDate!=null)
@@ -93,7 +94,7 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 		}
 		if(className!=null)
 		{
-			criterion=PropertyFactoryUtil.forName("className").eq(className);
+			criterion=PropertyFactoryUtil.forName("classname").eq(className);
 			dq.add(criterion);
 			if(classPK>0)
 			{
@@ -101,6 +102,7 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 				dq.add(criterion);
 			}
 		}
+		dq.addOrder(OrderFactoryUtil.desc("auditDate"));
 		return ((List<AuditEntry>)auditEntryLocalService.dynamicQuery(dq, start, end));
 	}
 	public long searchCount(long companyId, long groupId,String className,long classPK, long userId, Date startDate,Date endDate, int start, int end) throws SystemException
@@ -115,7 +117,7 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 		}
 		if(userId>0)
 		{
-			criterion=PropertyFactoryUtil.forName("userId").eq(groupId);
+			criterion=PropertyFactoryUtil.forName("userId").eq(userId);
 			dq.add(criterion);
 		}
 		if(startDate!=null)
@@ -130,7 +132,7 @@ public class AuditEntryLocalServiceImpl extends AuditEntryLocalServiceBaseImpl {
 		}
 		if(className!=null)
 		{
-			criterion=PropertyFactoryUtil.forName("className").eq(className);
+			criterion=PropertyFactoryUtil.forName("classname").eq(className);
 			dq.add(criterion);
 			if(classPK>0)
 			{

@@ -48,6 +48,7 @@ import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.xml.Document;
 import com.liferay.portal.kernel.xml.DocumentException;
@@ -253,7 +254,7 @@ public class LearningActivityResultLocalServiceImpl
 					success_status = "failed";
 					completion_status = "completed";
 				} else if ("completed".equals(lesson_status)) { 
-					success_status = "unknown"; // or passed
+					success_status = "passed"; // or passed
 					completion_status = "completed";
 				} else if ("browsed".equals(lesson_status)) {
 					success_status = "passed";
@@ -427,7 +428,8 @@ public class LearningActivityResultLocalServiceImpl
 		}
 		
 		LearningActivity learningActivity = learningActivityLocalService.getLearningActivity(learningActivityTry.getActId());
-				
+		boolean completedAsPassed = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivityTry.getActId(), "completedAsPassed"), false);
+		long passPuntuation=learningActivity.getPasspuntuation();
 		List<String> manifestItems = new ArrayList<String>();
 		Map<String, String> recursos = new HashMap<String, String>();
 		
@@ -458,8 +460,11 @@ public class LearningActivityResultLocalServiceImpl
 					Element item = items.get(i);
 					String identifier = item.attributeValue("identifier");
 					String identifierref = item.attributeValue("identifierref");
-					manifestItems.add(identifier);
-					recursos.put(identifier, identifierref);
+					if(identifier!=null && !"".equals(identifier)&&identifierref!=null && !"".equals(identifierref))
+					{
+							manifestItems.add(identifier);
+							recursos.put(identifier, identifierref);
+					}
 					items.addAll(item.elements("item"));
 				}
 			}
@@ -524,7 +529,14 @@ public class LearningActivityResultLocalServiceImpl
 						success_status = "failed";
 						completion_status = "completed";
 					} else if ("completed".equals(lesson_status)) { 
-						success_status = "unknown"; // or passed
+						if(completedAsPassed)
+						{
+							success_status = "passed"; // or passed
+						}
+						else
+						{
+							success_status = "unknown";
+						}
 						completion_status = "completed";
 					} else if ("browsed".equals(lesson_status)) {
 						success_status = "passed";
@@ -545,7 +557,11 @@ public class LearningActivityResultLocalServiceImpl
 					}
 					max_score = cmi.getJSONObject("cmi.core.score.max").getDouble("value", 100);
 					min_score = cmi.getJSONObject("cmi.core.score.min").getDouble("value", 0);
-					raw_score = cmi.getJSONObject("cmi.core.score.raw").getDouble("value", "asset".equals(typeCmi) ? 100 : 0);
+					raw_score = cmi.getJSONObject("cmi.core.score.raw").getDouble("value", "asset".equals(typeCmi) ? max_score : 0);
+					if(success_status == "passed" && raw_score==0)
+					{
+						raw_score=(double) passPuntuation;
+					}
 					scaled_score = new Double(Math.round((raw_score * 100) / (max_score - min_score)));
 					scaled_score_long = Math.round(scaled_score);
 				} else { // 1.3

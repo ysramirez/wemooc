@@ -37,14 +37,20 @@ if(entryId != 0)
 	{
 		localStorage.setItem('scormpool', tryResultDataOld);
 	}
+	var showscorm=true;
 </script>
 <liferay-util:include page="<%= path %>" portletId="<%= assetRendererFactory.getPortletId() %>">
 <liferay-util:param name="scoshow" value="<%=scoshow%>" />
 </liferay-util:include>
 
 <script type="text/javascript">
+if(typeof scormembededmode == 'undefined')
+{
+	scormembededmode=false;
+}
 
-	var update_scorm = function(e) {
+	var update_scorm = function(e) 
+	{
         	
 		var scormpool = localStorage['scormpool'];
 		
@@ -71,44 +77,77 @@ if(entryId != 0)
 			// Process Exception
 		}
 	};
+	
 	var finishedscorm=false;
-	var finish_scorm = function(e) {
-	if(!finishedscorm)
-   	{
-		var scormpool = localStorage['scormpool'];
-		var serviceParameterTypes = [
-	     	'long',
-	    	'java.lang.String',
-	    	'java.lang.String'
-	    ];
-		
-	    var message = Liferay.Service.Lms.LearningActivityResult.updateFinishTry(
-	    	{
-	   			latId: <%= learningTry.getLatId() %>,
-	   			tryResultData: scormpool,
-	   			imsmanifest: Run.$1.xml,
-	   			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
-	    	}
-	    );
-	      	
-	    var exception = message.exception;
-	            
-		if (!exception) {
-			// Process Success - A LearningActivityResult returned
-			if (message.passed) {
-				if (typeof updateActivityNavigation == 'function') { 
-					updateActivityNavigation(); 
+	var finish_scorm = function(e) 
+	{
+		if(!finishedscorm)
+	   	{
+			var scormpool = localStorage['scormpool'];
+			var serviceParameterTypes = [
+		     	'long',
+		    	'java.lang.String',
+		    	'java.lang.String'
+		    ];
+			
+		    var message = Liferay.Service.Lms.LearningActivityResult.updateFinishTry(
+		    	{
+		   			latId: <%= learningTry.getLatId() %>,
+		   			tryResultData: scormpool,
+		   			imsmanifest: Run.$1.xml,
+		   			serviceParameterTypes: JSON.stringify(serviceParameterTypes)
+		    	}
+		    );
+		      	
+		    var exception = message.exception;
+		            
+			if (!exception) {
+				// Process Success - A LearningActivityResult returned
+				if (message.passed) {
+					if (typeof updateActivityNavigation == 'function') { 
+						updateActivityNavigation(); 
+					}
 				}
+			} else {
+				// Process Exception
 			}
-		} else {
-			// Process Exception
-		}
-		finishedscorm=true;
+			finishedscorm=true;
+			if(scormembededmode==false)
+			{
+				window.close();
+			}
 	  	}
 
 	};
+	function msieversion() {
+
+        var ua = window.navigator.userAgent;
+        var msie = ua.indexOf("MSIE ");
+
+        if (msie > 0 || !!navigator.userAgent.match(/Trident.*rv\:11\./))  
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
+   return false;
+}
+		
 	window.onbeforeunload= function(e)
 			{ 
+				scormembededmode=true;
+				finish_scorm();
+				if(!msiversion())
+				{
+					return null;
+				}
+			};
+			window.onunload= function(e)
+			{ 
+				scormembededmode=true;
 				finish_scorm();
 			};
 </script>

@@ -111,7 +111,28 @@ public class SCORMLearningActivityType extends BaseLearningActivityType {
 		assetEntry.setText(ParamUtil.getString(uploadRequest, "assetEntryId",
 				"0"));
 		rootElement.add(assetEntry);
-
+		Element completedAsPassed = rootElement.element("completedAsPassed");
+		if (completedAsPassed != null) {
+			completedAsPassed.detach();
+			rootElement.remove(completedAsPassed);
+		}
+		completedAsPassed = SAXReaderUtil.createElement("completedAsPassed");
+		completedAsPassed.setText(ParamUtil.getString(uploadRequest, "completedAsPassed",
+				"false"));
+		rootElement.add(completedAsPassed);
+		
+		
+		Element sco = rootElement.element("sco");
+		if (sco != null) {
+			sco.detach();
+			rootElement.remove(sco);
+		}
+		sco = SAXReaderUtil.createElement("sco");
+		sco.setText(ParamUtil.getString(uploadRequest, "sco",
+				""));
+		rootElement.add(sco);
+		
+		
 		Element openWindow = rootElement.element("openWindow");
 		if (openWindow != null) {
 			openWindow.detach();

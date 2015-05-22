@@ -231,9 +231,25 @@ else
 			<liferay-portlet:param name="jspPage" value="/html/gradebook/userdetails.jsp"></liferay-portlet:param>
 			<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
 			<liferay-portlet:param name="returnurl" value="<%=returnurl %>"></liferay-portlet:param>
-			
 			</liferay-portlet:renderURL>
-			<a href="<%=viewGradeURL %>" ><liferay-ui:message key="searchresults.viewresults" /></a>
+			
+			<liferay-portlet:renderURL var="viewactivityURL">
+			<liferay-portlet:param name="jspPage" value="/html/studentmanage/lastsocialactivity.jsp"></liferay-portlet:param>
+			<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
+			<liferay-portlet:param name="returnurl" value="<%=returnurl %>"></liferay-portlet:param>	
+			</liferay-portlet:renderURL>
+			
+			<liferay-portlet:renderURL var="viewtriesURL">
+			<liferay-portlet:param name="jspPage" value="/html/studentmanage/lastactivitytries.jsp"></liferay-portlet:param>
+			<liferay-portlet:param name="userId" value="<%=Long.toString(user.getUserId()) %>"></liferay-portlet:param>
+			<liferay-portlet:param name="returnurl" value="<%=returnurl %>"></liferay-portlet:param>	
+			</liferay-portlet:renderURL>
+			
+			<liferay-ui:icon-menu>
+			<liferay-ui:icon image="edit" message="searchresults.viewresults" url="<%=viewGradeURL%>" />
+			<liferay-ui:icon image="group" message="social" url="<%=viewactivityURL%>" />
+			<liferay-ui:icon image="group" message="audit" url="<%=viewtriesURL%>" />
+			</liferay-ui:icon-menu>
 		</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
 		

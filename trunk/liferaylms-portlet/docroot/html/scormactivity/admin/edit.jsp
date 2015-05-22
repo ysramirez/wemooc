@@ -20,14 +20,18 @@
 	long assetId=ParamUtil.getLong(request, "assertId");
 	boolean openWindow = false, editDetails = false, improve = true; 
 	String assetTitle=StringPool.BLANK;
+	String sco=ParamUtil.getString(request, "sco","");
 	long typeId=ParamUtil.getLong(request, "type");
-	LearningActivity learningActivity=null;
+	boolean completedAsPassed =ParamUtil.getBoolean(request, "completedAsPassed",false); 
+
+ LearningActivity learningActivity=null;
 	if(assetId!=0){
 		try{
 			AssetEntry entry=AssetEntryLocalServiceUtil.getEntry(assetId);
 			assetId=entry.getEntryId();
 			assetTitle=entry.getTitle(renderRequest.getLocale());
 			editDetails = GetterUtil.getBoolean(PropsUtil.get("lms.scorm.editable."+entry.getClassName()),false);	
+			
 		}
 		catch(NestableException e)
 		{
@@ -39,7 +43,7 @@
 	if(request.getAttribute("activity")!=null) {	
 		learningActivity=(LearningActivity)request.getAttribute("activity");
 		typeId=learningActivity.getTypeId();
-	
+	  
 		if ((learningActivity.getExtracontent()!=null)&&(learningActivity.getExtracontent().trim().length()!=0)) {
 			try{
 				if(assetId==0){
@@ -50,10 +54,12 @@
 					editDetails = GetterUtil.getBoolean(PropsUtil.get("lms.scorm.editable."+entry.getClassName()),false);
 				}	
 				openWindow = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "openWindow"));
+				sco=LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"sco","");
 				String improveString = LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve");
 				 windowWith=LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"windowWith","1024");
 				 height=LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"height","768");
-				
+					completedAsPassed= GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "completedAsPassed"), false);
+
 				if (improveString != null && !"".equals(improveString)) {
 					improve = GetterUtil.getBoolean(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(),"improve"), true);
 				}
@@ -144,7 +150,14 @@ function <portlet:namespace />load(source) {
 			A.one('#<portlet:namespace/>fm').show();
 			A.one('#<portlet:namespace/>assetEntryId').set('value',params['<portlet:namespace />assertId']);		
 			A.one('#<portlet:namespace/>assetEntryName').set('value',params['<portlet:namespace />assertTitle']);
-			
+			if(A.Lang.isString(params['<portlet:namespace />sco']))
+			{
+				A.one('#<portlet:namespace/>sco').set('value',params['<portlet:namespace />sco']);
+			}
+			else
+			{
+				A.one('#<portlet:namespace/>sco').set('value','');
+			}
 			if(params['<portlet:namespace />assertWindowable']=='true') {
 				document.getElementById("<portlet:namespace/>openWindow").value = "true";
 				document.getElementById("<portlet:namespace/>openWindowCheckbox").checked = true;
@@ -215,16 +228,19 @@ function <portlet:namespace />back() {
 		    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 		    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 		</button>
+		<aui:input  name="sco" value="<%=sco %>" />
 	</c:if>
+			
 </aui:field-wrapper>
 <aui:field-wrapper name="activity.edit.openwindow.options">
 	<aui:input type="checkbox" name="openWindow" label="activity.edit.openwindow" value="<%= String.valueOf(openWindow) %>" />
 	<aui:input name="windowWith" label="width" value="<%= windowWith %>" />
 	<aui:input  name="height" label="height" value="<%= height %>" />
 </aui:field-wrapper>
-
 <aui:input type="checkbox" name="improve" label="scormactivity.edit.improve" checked="<%=improve %>" disabled="<%=!edit %>" 
 		ignoreRequestValue="true" helpMessage="scormactivity.edit.improve.helpMessage"></aui:input>
+<aui:input type="checkbox" name="completedAsPassed" label="scormactivity.edit.completedAsPassed" checked="<%=completedAsPassed %>" disabled="<%=!edit %>" 
+		 helpMessage="scormactivity.edit.completedAsPassed.helpMessage"></aui:input>
 		
 <div id="<portlet:namespace/>backButton" style="display:none;">
 	<liferay-ui:icon image="back" message="back" url="<%=\"javascript:\"+renderResponse.getNamespace()+\"back();\" %>" label="true"  />

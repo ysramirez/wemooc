@@ -2179,6 +2179,39 @@
         <supported-public-render-parameter>moduleId</supported-public-render-parameter>
         <supported-public-render-parameter>actionEditing</supported-public-render-parameter>
 	</portlet>
+	<portlet>
+		<portlet-name>ponderatedevalconf</portlet-name>
+		<display-name>Ponderated Conf Portlet</display-name>
+		<portlet-class>
+			com.liferay.lms.PonderatedEvalConfPortlet
+		</portlet-class>
+		<init-param>
+			<name>view-template</name>
+			<value>/html/ponderatedevalconf/view.jsp</value>
+		</init-param>
+		<expiration-cache>0</expiration-cache>
+		<supports>
+			<mime-type>text/html</mime-type>
+			<portlet-mode>view</portlet-mode>
+		</supports>
+		<portlet-info>
+			<title>Mandatory Ponderated Conf Portlet</title>
+			<short-title>Mandatory Ponderated Conf Portlet</short-title>
+			<keywords></keywords>
+		</portlet-info>
+		<security-role-ref>
+			<role-name>administrator</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>guest</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>power-user</role-name>
+		</security-role-ref>
+		<security-role-ref>
+			<role-name>user</role-name>
+		</security-role-ref>
+	</portlet>
 	<event-definition>
         <qname xmlns:x="http://www.wemooc.com/">x:themeId</qname>
     </event-definition>
@@ -2202,6 +2235,7 @@
 		<identifier>categoryId</identifier>
 		<qname xmlns:x="http://www.liferay.com/public-render-parameters">x:categoryId</qname>
 	</public-render-parameter>
+
 
 
 

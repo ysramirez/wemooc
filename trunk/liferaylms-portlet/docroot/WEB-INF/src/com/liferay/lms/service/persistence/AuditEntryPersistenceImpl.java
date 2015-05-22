@@ -155,6 +155,33 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 			AuditEntryModelImpl.FINDER_CACHE_ENABLED, Long.class,
 			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByU_G",
 			new String[] { Long.class.getName(), Long.class.getName() });
+	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_U_G_C = new FinderPath(AuditEntryModelImpl.ENTITY_CACHE_ENABLED,
+			AuditEntryModelImpl.FINDER_CACHE_ENABLED, AuditEntryImpl.class,
+			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByU_G_c",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName(),
+				
+			"java.lang.Integer", "java.lang.Integer",
+				"com.liferay.portal.kernel.util.OrderByComparator"
+			});
+	public static final FinderPath FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G_C = new FinderPath(AuditEntryModelImpl.ENTITY_CACHE_ENABLED,
+			AuditEntryModelImpl.FINDER_CACHE_ENABLED, AuditEntryImpl.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "findByU_G_c",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName()
+			},
+			AuditEntryModelImpl.USERID_COLUMN_BITMASK |
+			AuditEntryModelImpl.GROUPID_COLUMN_BITMASK |
+			AuditEntryModelImpl.CLASSNAME_COLUMN_BITMASK);
+	public static final FinderPath FINDER_PATH_COUNT_BY_U_G_C = new FinderPath(AuditEntryModelImpl.ENTITY_CACHE_ENABLED,
+			AuditEntryModelImpl.FINDER_CACHE_ENABLED, Long.class,
+			FINDER_CLASS_NAME_LIST_WITHOUT_PAGINATION, "countByU_G_c",
+			new String[] {
+				Long.class.getName(), Long.class.getName(),
+				String.class.getName()
+			});
 	public static final FinderPath FINDER_PATH_WITH_PAGINATION_FIND_BY_CN_CP = new FinderPath(AuditEntryModelImpl.ENTITY_CACHE_ENABLED,
 			AuditEntryModelImpl.FINDER_CACHE_ENABLED, AuditEntryImpl.class,
 			FINDER_CLASS_NAME_LIST_WITH_PAGINATION, "findByCN_CP",
@@ -463,6 +490,31 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 
 				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_G, args);
 				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G,
+					args);
+			}
+
+			if ((auditEntryModelImpl.getColumnBitmask() &
+					FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G_C.getColumnBitmask()) != 0) {
+				Object[] args = new Object[] {
+						Long.valueOf(auditEntryModelImpl.getOriginalUserId()),
+						Long.valueOf(auditEntryModelImpl.getOriginalGroupId()),
+						
+						auditEntryModelImpl.getOriginalClassname()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_G_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G_C,
+					args);
+
+				args = new Object[] {
+						Long.valueOf(auditEntryModelImpl.getUserId()),
+						Long.valueOf(auditEntryModelImpl.getGroupId()),
+						
+						auditEntryModelImpl.getClassname()
+					};
+
+				FinderCacheUtil.removeResult(FINDER_PATH_COUNT_BY_U_G_C, args);
+				FinderCacheUtil.removeResult(FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G_C,
 					args);
 			}
 
@@ -2167,6 +2219,466 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 	}
 
 	/**
+	 * Returns all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @return the matching audit entries
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<AuditEntry> findByU_G_c(long userId, long groupId,
+		String classname) throws SystemException {
+		return findByU_G_c(userId, groupId, classname, QueryUtil.ALL_POS,
+			QueryUtil.ALL_POS, null);
+	}
+
+	/**
+	 * Returns a range of all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @param start the lower bound of the range of audit entries
+	 * @param end the upper bound of the range of audit entries (not inclusive)
+	 * @return the range of matching audit entries
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<AuditEntry> findByU_G_c(long userId, long groupId,
+		String classname, int start, int end) throws SystemException {
+		return findByU_G_c(userId, groupId, classname, start, end, null);
+	}
+
+	/**
+	 * Returns an ordered range of all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * <p>
+	 * Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	 * </p>
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @param start the lower bound of the range of audit entries
+	 * @param end the upper bound of the range of audit entries (not inclusive)
+	 * @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	 * @return the ordered range of matching audit entries
+	 * @throws SystemException if a system exception occurred
+	 */
+	public List<AuditEntry> findByU_G_c(long userId, long groupId,
+		String classname, int start, int end,
+		OrderByComparator orderByComparator) throws SystemException {
+		FinderPath finderPath = null;
+		Object[] finderArgs = null;
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS) &&
+				(orderByComparator == null)) {
+			finderPath = FINDER_PATH_WITHOUT_PAGINATION_FIND_BY_U_G_C;
+			finderArgs = new Object[] { userId, groupId, classname };
+		}
+		else {
+			finderPath = FINDER_PATH_WITH_PAGINATION_FIND_BY_U_G_C;
+			finderArgs = new Object[] {
+					userId, groupId, classname,
+					
+					start, end, orderByComparator
+				};
+		}
+
+		List<AuditEntry> list = (List<AuditEntry>)FinderCacheUtil.getResult(finderPath,
+				finderArgs, this);
+
+		if ((list != null) && !list.isEmpty()) {
+			for (AuditEntry auditEntry : list) {
+				if ((userId != auditEntry.getUserId()) ||
+						(groupId != auditEntry.getGroupId()) ||
+						!Validator.equals(classname, auditEntry.getClassname())) {
+					list = null;
+
+					break;
+				}
+			}
+		}
+
+		if (list == null) {
+			StringBundler query = null;
+
+			if (orderByComparator != null) {
+				query = new StringBundler(5 +
+						(orderByComparator.getOrderByFields().length * 3));
+			}
+			else {
+				query = new StringBundler(5);
+			}
+
+			query.append(_SQL_SELECT_AUDITENTRY_WHERE);
+
+			query.append(_FINDER_COLUMN_U_G_C_USERID_2);
+
+			query.append(_FINDER_COLUMN_U_G_C_GROUPID_2);
+
+			if (classname == null) {
+				query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_1);
+			}
+			else {
+				if (classname.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_2);
+				}
+			}
+
+			if (orderByComparator != null) {
+				appendOrderByComparator(query, _ORDER_BY_ENTITY_ALIAS,
+					orderByComparator);
+			}
+
+			else {
+				query.append(AuditEntryModelImpl.ORDER_BY_JPQL);
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(userId);
+
+				qPos.add(groupId);
+
+				if (classname != null) {
+					qPos.add(classname);
+				}
+
+				list = (List<AuditEntry>)QueryUtil.list(q, getDialect(), start,
+						end);
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (list == null) {
+					FinderCacheUtil.removeResult(finderPath, finderArgs);
+				}
+				else {
+					cacheResult(list);
+
+					FinderCacheUtil.putResult(finderPath, finderArgs, list);
+				}
+
+				closeSession(session);
+			}
+		}
+
+		return list;
+	}
+
+	/**
+	 * Returns the first audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching audit entry
+	 * @throws com.liferay.lms.NoSuchAuditEntryException if a matching audit entry could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AuditEntry findByU_G_c_First(long userId, long groupId,
+		String classname, OrderByComparator orderByComparator)
+		throws NoSuchAuditEntryException, SystemException {
+		AuditEntry auditEntry = fetchByU_G_c_First(userId, groupId, classname,
+				orderByComparator);
+
+		if (auditEntry != null) {
+			return auditEntry;
+		}
+
+		StringBundler msg = new StringBundler(8);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("userId=");
+		msg.append(userId);
+
+		msg.append(", groupId=");
+		msg.append(groupId);
+
+		msg.append(", classname=");
+		msg.append(classname);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchAuditEntryException(msg.toString());
+	}
+
+	/**
+	 * Returns the first audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the first matching audit entry, or <code>null</code> if a matching audit entry could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AuditEntry fetchByU_G_c_First(long userId, long groupId,
+		String classname, OrderByComparator orderByComparator)
+		throws SystemException {
+		List<AuditEntry> list = findByU_G_c(userId, groupId, classname, 0, 1,
+				orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the last audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching audit entry
+	 * @throws com.liferay.lms.NoSuchAuditEntryException if a matching audit entry could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AuditEntry findByU_G_c_Last(long userId, long groupId,
+		String classname, OrderByComparator orderByComparator)
+		throws NoSuchAuditEntryException, SystemException {
+		AuditEntry auditEntry = fetchByU_G_c_Last(userId, groupId, classname,
+				orderByComparator);
+
+		if (auditEntry != null) {
+			return auditEntry;
+		}
+
+		StringBundler msg = new StringBundler(8);
+
+		msg.append(_NO_SUCH_ENTITY_WITH_KEY);
+
+		msg.append("userId=");
+		msg.append(userId);
+
+		msg.append(", groupId=");
+		msg.append(groupId);
+
+		msg.append(", classname=");
+		msg.append(classname);
+
+		msg.append(StringPool.CLOSE_CURLY_BRACE);
+
+		throw new NoSuchAuditEntryException(msg.toString());
+	}
+
+	/**
+	 * Returns the last audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the last matching audit entry, or <code>null</code> if a matching audit entry could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AuditEntry fetchByU_G_c_Last(long userId, long groupId,
+		String classname, OrderByComparator orderByComparator)
+		throws SystemException {
+		int count = countByU_G_c(userId, groupId, classname);
+
+		List<AuditEntry> list = findByU_G_c(userId, groupId, classname,
+				count - 1, count, orderByComparator);
+
+		if (!list.isEmpty()) {
+			return list.get(0);
+		}
+
+		return null;
+	}
+
+	/**
+	 * Returns the audit entries before and after the current audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * @param auditId the primary key of the current audit entry
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	 * @return the previous, current, and next audit entry
+	 * @throws com.liferay.lms.NoSuchAuditEntryException if a audit entry with the primary key could not be found
+	 * @throws SystemException if a system exception occurred
+	 */
+	public AuditEntry[] findByU_G_c_PrevAndNext(long auditId, long userId,
+		long groupId, String classname, OrderByComparator orderByComparator)
+		throws NoSuchAuditEntryException, SystemException {
+		AuditEntry auditEntry = findByPrimaryKey(auditId);
+
+		Session session = null;
+
+		try {
+			session = openSession();
+
+			AuditEntry[] array = new AuditEntryImpl[3];
+
+			array[0] = getByU_G_c_PrevAndNext(session, auditEntry, userId,
+					groupId, classname, orderByComparator, true);
+
+			array[1] = auditEntry;
+
+			array[2] = getByU_G_c_PrevAndNext(session, auditEntry, userId,
+					groupId, classname, orderByComparator, false);
+
+			return array;
+		}
+		catch (Exception e) {
+			throw processException(e);
+		}
+		finally {
+			closeSession(session);
+		}
+	}
+
+	protected AuditEntry getByU_G_c_PrevAndNext(Session session,
+		AuditEntry auditEntry, long userId, long groupId, String classname,
+		OrderByComparator orderByComparator, boolean previous) {
+		StringBundler query = null;
+
+		if (orderByComparator != null) {
+			query = new StringBundler(6 +
+					(orderByComparator.getOrderByFields().length * 6));
+		}
+		else {
+			query = new StringBundler(3);
+		}
+
+		query.append(_SQL_SELECT_AUDITENTRY_WHERE);
+
+		query.append(_FINDER_COLUMN_U_G_C_USERID_2);
+
+		query.append(_FINDER_COLUMN_U_G_C_GROUPID_2);
+
+		if (classname == null) {
+			query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_1);
+		}
+		else {
+			if (classname.equals(StringPool.BLANK)) {
+				query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_3);
+			}
+			else {
+				query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_2);
+			}
+		}
+
+		if (orderByComparator != null) {
+			String[] orderByConditionFields = orderByComparator.getOrderByConditionFields();
+
+			if (orderByConditionFields.length > 0) {
+				query.append(WHERE_AND);
+			}
+
+			for (int i = 0; i < orderByConditionFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByConditionFields[i]);
+
+				if ((i + 1) < orderByConditionFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN_HAS_NEXT);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(WHERE_GREATER_THAN);
+					}
+					else {
+						query.append(WHERE_LESSER_THAN);
+					}
+				}
+			}
+
+			query.append(ORDER_BY_CLAUSE);
+
+			String[] orderByFields = orderByComparator.getOrderByFields();
+
+			for (int i = 0; i < orderByFields.length; i++) {
+				query.append(_ORDER_BY_ENTITY_ALIAS);
+				query.append(orderByFields[i]);
+
+				if ((i + 1) < orderByFields.length) {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC_HAS_NEXT);
+					}
+					else {
+						query.append(ORDER_BY_DESC_HAS_NEXT);
+					}
+				}
+				else {
+					if (orderByComparator.isAscending() ^ previous) {
+						query.append(ORDER_BY_ASC);
+					}
+					else {
+						query.append(ORDER_BY_DESC);
+					}
+				}
+			}
+		}
+
+		else {
+			query.append(AuditEntryModelImpl.ORDER_BY_JPQL);
+		}
+
+		String sql = query.toString();
+
+		Query q = session.createQuery(sql);
+
+		q.setFirstResult(0);
+		q.setMaxResults(2);
+
+		QueryPos qPos = QueryPos.getInstance(q);
+
+		qPos.add(userId);
+
+		qPos.add(groupId);
+
+		if (classname != null) {
+			qPos.add(classname);
+		}
+
+		if (orderByComparator != null) {
+			Object[] values = orderByComparator.getOrderByConditionValues(auditEntry);
+
+			for (Object value : values) {
+				qPos.add(value);
+			}
+		}
+
+		List<AuditEntry> list = q.list();
+
+		if (list.size() == 2) {
+			return list.get(1);
+		}
+		else {
+			return null;
+		}
+	}
+
+	/**
 	 * Returns all the audit entries where classname = &#63; and classPK = &#63;.
 	 *
 	 * @param classname the classname
@@ -2767,6 +3279,21 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 	}
 
 	/**
+	 * Removes all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63; from the database.
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @throws SystemException if a system exception occurred
+	 */
+	public void removeByU_G_c(long userId, long groupId, String classname)
+		throws SystemException {
+		for (AuditEntry auditEntry : findByU_G_c(userId, groupId, classname)) {
+			remove(auditEntry);
+		}
+	}
+
+	/**
 	 * Removes all the audit entries where classname = &#63; and classPK = &#63; from the database.
 	 *
 	 * @param classname the classname
@@ -3009,6 +3536,82 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 	}
 
 	/**
+	 * Returns the number of audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	 *
+	 * @param userId the user ID
+	 * @param groupId the group ID
+	 * @param classname the classname
+	 * @return the number of matching audit entries
+	 * @throws SystemException if a system exception occurred
+	 */
+	public int countByU_G_c(long userId, long groupId, String classname)
+		throws SystemException {
+		Object[] finderArgs = new Object[] { userId, groupId, classname };
+
+		Long count = (Long)FinderCacheUtil.getResult(FINDER_PATH_COUNT_BY_U_G_C,
+				finderArgs, this);
+
+		if (count == null) {
+			StringBundler query = new StringBundler(4);
+
+			query.append(_SQL_COUNT_AUDITENTRY_WHERE);
+
+			query.append(_FINDER_COLUMN_U_G_C_USERID_2);
+
+			query.append(_FINDER_COLUMN_U_G_C_GROUPID_2);
+
+			if (classname == null) {
+				query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_1);
+			}
+			else {
+				if (classname.equals(StringPool.BLANK)) {
+					query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_3);
+				}
+				else {
+					query.append(_FINDER_COLUMN_U_G_C_CLASSNAME_2);
+				}
+			}
+
+			String sql = query.toString();
+
+			Session session = null;
+
+			try {
+				session = openSession();
+
+				Query q = session.createQuery(sql);
+
+				QueryPos qPos = QueryPos.getInstance(q);
+
+				qPos.add(userId);
+
+				qPos.add(groupId);
+
+				if (classname != null) {
+					qPos.add(classname);
+				}
+
+				count = (Long)q.uniqueResult();
+			}
+			catch (Exception e) {
+				throw processException(e);
+			}
+			finally {
+				if (count == null) {
+					count = Long.valueOf(0);
+				}
+
+				FinderCacheUtil.putResult(FINDER_PATH_COUNT_BY_U_G_C,
+					finderArgs, count);
+
+				closeSession(session);
+			}
+		}
+
+		return count.intValue();
+	}
+
+	/**
 	 * Returns the number of audit entries where classname = &#63; and classPK = &#63;.
 	 *
 	 * @param classname the classname
@@ -3199,6 +3802,11 @@ public class AuditEntryPersistenceImpl extends BasePersistenceImpl<AuditEntry>
 	private static final String _FINDER_COLUMN_USERID_USERID_2 = "auditEntry.userId = ?";
 	private static final String _FINDER_COLUMN_U_G_USERID_2 = "auditEntry.userId = ? AND ";
 	private static final String _FINDER_COLUMN_U_G_GROUPID_2 = "auditEntry.groupId = ?";
+	private static final String _FINDER_COLUMN_U_G_C_USERID_2 = "auditEntry.userId = ? AND ";
+	private static final String _FINDER_COLUMN_U_G_C_GROUPID_2 = "auditEntry.groupId = ? AND ";
+	private static final String _FINDER_COLUMN_U_G_C_CLASSNAME_1 = "auditEntry.classname IS NULL";
+	private static final String _FINDER_COLUMN_U_G_C_CLASSNAME_2 = "auditEntry.classname = ?";
+	private static final String _FINDER_COLUMN_U_G_C_CLASSNAME_3 = "(auditEntry.classname IS NULL OR auditEntry.classname = ?)";
 	private static final String _FINDER_COLUMN_CN_CP_CLASSNAME_1 = "auditEntry.classname IS NULL AND ";
 	private static final String _FINDER_COLUMN_CN_CP_CLASSNAME_2 = "auditEntry.classname = ? AND ";
 	private static final String _FINDER_COLUMN_CN_CP_CLASSNAME_3 = "(auditEntry.classname IS NULL OR auditEntry.classname = ?) AND ";

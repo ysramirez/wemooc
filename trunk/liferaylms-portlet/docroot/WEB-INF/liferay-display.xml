@@ -60,5 +60,6 @@
 		<portlet id="modulenavigation"></portlet>
 		<portlet id="activityViewer"></portlet>
 		<portlet id="moduleselector"></portlet>
+		<portlet id="ponderatedevalconf"></portlet>
 	</category>
 </display>
