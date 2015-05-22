@@ -171,10 +171,26 @@ else
 				userParams.put("usersGroups", theTeam.getGroupId());
 				userParams.put("usersTeams", theTeam.getTeamId());
 				OrderByComparator obc = null;
-				total=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, userParams);
-				results  = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, 0, userParams, searchContainer.getStart(), searchContainer.getEnd(), obc);
-				pageContext.setAttribute("results", results);
-			    pageContext.setAttribute("total", total);
+				//total=UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, userParams);
+				List<User> userListPage  = UserLocalServiceUtil.search(themeDisplay.getCompanyId(), criteria, 0, userParams, searchContainer.getStart(), searchContainer.getEnd(), obc);
+				List<User> finalUserList = new LinkedList<User>();
+				
+				Iterator<User> ituserlistpage = userListPage.iterator();
+				
+				while(ituserlistpage.hasNext()){
+					User u = ituserlistpage.next();
+					
+					boolean isStudent = !(PermissionCheckerFactoryUtil.create(u).hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model", themeDisplay.getScopeGroupId(), "VIEW_RESULTS"));
+					//System.out.println("User "+u.getFullName()+" isStudent "+ isStudent);
+					if(isStudent)finalUserList.add(u);
+				}
+				
+				//int userCount = UserLocalServiceUtil.searchCount(themeDisplay.getCompanyId(), criteria, 0, params);
+				int userCount = finalUserList.size();
+						
+				//pageContext.setAttribute("results", userListPage);
+				pageContext.setAttribute("results", finalUserList);
+			    	pageContext.setAttribute("total", userCount);
 			}
 			    	
 			%>
