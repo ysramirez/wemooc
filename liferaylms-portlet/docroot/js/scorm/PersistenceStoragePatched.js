@@ -168,7 +168,7 @@ SCORM_1_2.API_LIB.prototype.LMSFinish = function(param) {
 			}
 			API_BASE.LOG.displayMessage('LMSFinish with param: \'' + param
 					+ '\'', this.$23, this.$25(this.$23));
-			if(this.$1F.$2.$1.length==1)
+			if(this.$1F.$2.$1.length==1&& this.$1F.$0==1 && this.$1F.$1.length==0)
 			{
 				finish_scorm();
 			}
@@ -414,77 +414,77 @@ Player.ContentPlayer.prototype.$1D = function() {
 };
 
 Player.ContentPlayer.prototype.toggleScorm = function() {
-	 var evt = window.event;
-	 document.getElementById('treeContainer').style.display = 'block';
-	 var A = AUI();
-	 var menuA = A.one('#open-close-scorm-menu');
-	 A.use('anim', 'anim-easing', function() {
-	  var coapagar = new A.Anim(
-	       {
-	      node: '#treeContainer',
-	      to: {
-	          opacity: 0.0
-	      },
-	      duration: 0.3,
-	      easing:   A.Easing.easeIn
-	    }
-	  );
-	  var apagar = new A.Anim(
-	    {
-	      node: '#placeholder_treeContainer',
-	      to: {
-	          height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2          
-	      },
-	      duration: 0.8,
-	      easing:   A.Easing.easeIn,
-	      on: {
-	       start: function() {
-	        menuA.setAttribute('class', 'open-scorm-menu');
-	        coapagar.run();
-	       }
-	      }
-	    }
-	  );
-	  var coencender = new A.Anim(
-	       {
-	      node: '#treeContainer',
-	      to: {
-	          opacity: 1.0
-	      },
-	      duration: 1.0,
-	      easing:   A.Easing.easeIn
-	    }
-	  );
-	  var encender = new A.Anim(
-	    {
-	      node: '#placeholder_treeContainer',
-	      to: {
-	       height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11
-	       
-	      },
-	      duration: 0.5,
-	      easing:   A.Easing.easeIn,
-	      on: {
-	       start: function() {
-	        menuA.setAttribute('class', 'close-scorm-menu');
-	        coencender.run();
-	       }
-	      }
-	    }
-	  );
-	  if (menuA.getAttribute('class') != 'open-scorm-menu') {
-	   apagar.run();
-	   document.getElementById('treeContainer').style.display = 'none';
-	  } else {
-	   document.getElementById('treeContainer').style.display = 'block';
-	   encender.run();
-	  }
-	 });
-	 if (evt.preventDefault) {
-	  evt.preventDefault();
-	 }
-	 evt.returnValue = false;
-	};
+	var evt = window.event;
+	document.getElementById('treeContainer').style.display = 'block';
+	var A = AUI();
+	var menuA = A.one('#open-close-scorm-menu');
+	A.use('anim', 'anim-easing', function() {
+		var coapagar = new A.Anim(
+	      {
+		    node: '#treeContainer',
+		    to: {
+		        opacity: 0.0
+		    },
+		    duration: 0.3,
+		    easing:   A.Easing.easeIn
+		  }
+		);
+		var apagar = new A.Anim(
+		  {
+		    node: '#placeholder_treeContainer',
+		    to: {
+		        height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2		        
+		    },
+		    duration: 0.8,
+		    easing:   A.Easing.easeIn,
+		    on: {
+		    	start: function() {
+		    		menuA.setAttribute('class', 'open-scorm-menu');
+		    		coapagar.run();
+		    	}
+		    }
+		  }
+		);
+		var coencender = new A.Anim(
+	      {
+		    node: '#treeContainer',
+		    to: {
+		        opacity: 1.0
+		    },
+		    duration: 1.0,
+		    easing:   A.Easing.easeIn
+		  }
+		);
+		var encender = new A.Anim(
+		  {
+		    node: '#placeholder_treeContainer',
+		    to: {
+		    	height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11
+		    	
+		    },
+		    duration: 0.5,
+		    easing:   A.Easing.easeIn,
+		    on: {
+		    	start: function() {
+		    		menuA.setAttribute('class', 'close-scorm-menu');
+		    		coencender.run();
+		    	}
+		    }
+		  }
+		);
+		if (menuA.getAttribute('class') != 'open-scorm-menu') {
+			apagar.run();
+			document.getElementById('treeContainer').style.display = 'none';
+		} else {
+			document.getElementById('treeContainer').style.display = 'block';
+			encender.run();
+		}
+	});
+	if (evt.preventDefault) {
+		evt.preventDefault();
+	}
+	evt.returnValue = false;
+};
 
 Player.ContentPlayer.prototype.$1E = function() {
 	this.$5 = document.getElementById('treeContainer');

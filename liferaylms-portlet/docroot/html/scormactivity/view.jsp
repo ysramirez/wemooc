@@ -252,6 +252,9 @@
 			} else {
 				request.setAttribute("learningTry", learningTry);
 				%>
+				<script>
+				var scormembededmode=true;
+				</script>
 			<liferay-util:include page="/html/scormactivity/window.jsp" servletContext="<%=this.getServletContext() %>"></liferay-util:include>
 			<%
 		}

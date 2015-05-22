@@ -54,6 +54,8 @@ else
 <%=asset.getSummary() %>
 </div>
 <%
+out.println(university.getGroupId());
+out.println(themeDisplay.getScopeGroupId());
 String uniurl="#";
 if(university.getPublicLayoutsPageCount()>0&&university.getGroupId()!=themeDisplay.getScopeGroupId())
 {

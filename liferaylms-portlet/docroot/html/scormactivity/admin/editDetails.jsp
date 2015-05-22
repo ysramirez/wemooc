@@ -19,10 +19,13 @@
 	request.setAttribute("activity", learningActivity);
 	
 	long entryId=ParamUtil.getLong(request, "assertId");
+	String sco=ParamUtil.getString(request, "sco","");
 	if(entryId==0){
 		entryId = GetterUtil.getLong(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "assetEntry"), 0);
 	}
-	
+	if(sco.equals("")){
+		sco = GetterUtil.getString(LearningActivityLocalServiceUtil.getExtraContentValue(learningActivity.getActId(), "assetEntry"), "");
+	}
 	LiferayPortletURL backUrl = PortletURLFactoryUtil.create(request, PortalUtil.getJsSafePortletId("lmsactivitieslist"+
 				PortletConstants.WAR_SEPARATOR+portletConfig.getPortletContext().getPortletContextName()), themeDisplay.getPlid(), PortletRequest.RENDER_PHASE);
 	backUrl.setWindowState(LiferayWindowState.POP_UP);

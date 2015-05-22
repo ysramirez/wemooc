@@ -574,6 +574,142 @@ public interface AuditEntryPersistence extends BasePersistence<AuditEntry> {
 			com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Returns all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @return the matching audit entries
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.AuditEntry> findByU_G_c(
+		long userId, long groupId, java.lang.String classname)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns a range of all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @param start the lower bound of the range of audit entries
+	* @param end the upper bound of the range of audit entries (not inclusive)
+	* @return the range of matching audit entries
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.AuditEntry> findByU_G_c(
+		long userId, long groupId, java.lang.String classname, int start,
+		int end) throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns an ordered range of all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* <p>
+	* Useful when paginating results. Returns a maximum of <code>end - start</code> instances. <code>start</code> and <code>end</code> are not primary keys, they are indexes in the result set. Thus, <code>0</code> refers to the first result in the set. Setting both <code>start</code> and <code>end</code> to {@link com.liferay.portal.kernel.dao.orm.QueryUtil#ALL_POS} will return the full result set.
+	* </p>
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @param start the lower bound of the range of audit entries
+	* @param end the upper bound of the range of audit entries (not inclusive)
+	* @param orderByComparator the comparator to order the results by (optionally <code>null</code>)
+	* @return the ordered range of matching audit entries
+	* @throws SystemException if a system exception occurred
+	*/
+	public java.util.List<com.liferay.lms.model.AuditEntry> findByU_G_c(
+		long userId, long groupId, java.lang.String classname, int start,
+		int end,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching audit entry
+	* @throws com.liferay.lms.NoSuchAuditEntryException if a matching audit entry could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.AuditEntry findByU_G_c_First(long userId,
+		long groupId, java.lang.String classname,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchAuditEntryException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the first audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the first matching audit entry, or <code>null</code> if a matching audit entry could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.AuditEntry fetchByU_G_c_First(long userId,
+		long groupId, java.lang.String classname,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching audit entry
+	* @throws com.liferay.lms.NoSuchAuditEntryException if a matching audit entry could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.AuditEntry findByU_G_c_Last(long userId,
+		long groupId, java.lang.String classname,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchAuditEntryException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the last audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the last matching audit entry, or <code>null</code> if a matching audit entry could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.AuditEntry fetchByU_G_c_Last(long userId,
+		long groupId, java.lang.String classname,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the audit entries before and after the current audit entry in the ordered set where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* @param auditId the primary key of the current audit entry
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @param orderByComparator the comparator to order the set by (optionally <code>null</code>)
+	* @return the previous, current, and next audit entry
+	* @throws com.liferay.lms.NoSuchAuditEntryException if a audit entry with the primary key could not be found
+	* @throws SystemException if a system exception occurred
+	*/
+	public com.liferay.lms.model.AuditEntry[] findByU_G_c_PrevAndNext(
+		long auditId, long userId, long groupId, java.lang.String classname,
+		com.liferay.portal.kernel.util.OrderByComparator orderByComparator)
+		throws com.liferay.lms.NoSuchAuditEntryException,
+			com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Returns all the audit entries where classname = &#63; and classPK = &#63;.
 	*
 	* @param classname the classname
@@ -780,6 +916,18 @@ public interface AuditEntryPersistence extends BasePersistence<AuditEntry> {
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**
+	* Removes all the audit entries where userId = &#63; and groupId = &#63; and classname = &#63; from the database.
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @throws SystemException if a system exception occurred
+	*/
+	public void removeByU_G_c(long userId, long groupId,
+		java.lang.String classname)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
 	* Removes all the audit entries where classname = &#63; and classPK = &#63; from the database.
 	*
 	* @param classname the classname
@@ -836,6 +984,19 @@ public interface AuditEntryPersistence extends BasePersistence<AuditEntry> {
 	* @throws SystemException if a system exception occurred
 	*/
 	public int countByU_G(long userId, long groupId)
+		throws com.liferay.portal.kernel.exception.SystemException;
+
+	/**
+	* Returns the number of audit entries where userId = &#63; and groupId = &#63; and classname = &#63;.
+	*
+	* @param userId the user ID
+	* @param groupId the group ID
+	* @param classname the classname
+	* @return the number of matching audit entries
+	* @throws SystemException if a system exception occurred
+	*/
+	public int countByU_G_c(long userId, long groupId,
+		java.lang.String classname)
 		throws com.liferay.portal.kernel.exception.SystemException;
 
 	/**

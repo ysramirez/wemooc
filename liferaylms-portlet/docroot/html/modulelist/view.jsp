@@ -199,7 +199,7 @@ if(!ismobile){
 %>
 									<img src="<%= DLUtil.getPreviewURL(image, image.getFileVersion(), themeDisplay, "&imageThumbnail=1") %>" />
 <%
-								}
+								}	
 							}
 %>
 						</td>

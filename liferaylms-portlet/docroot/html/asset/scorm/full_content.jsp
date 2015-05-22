@@ -16,17 +16,21 @@ if (request.getAttribute("learningTry") == null) { %>
 </script>
 <% }
 
-if (Validator.isNotNull(scorm.getDescription()) && request.getAttribute("learningTry") == null) { %>
+if (Validator.isNotNull(scorm.getDescription()) && request.getAttribute("learningTry") == null) 
+{
+%>
 
 
 <div class="asset-description"><%=scorm.getDescription() %></div>
 
-<% } 
+<%
+} 
+if(request.getAttribute("learningTry") != null)
+{
 String scoshow= ParamUtil.getString(request, "scoshow","");
 
 String urlIndex=themeDisplay.getPortalURL()+this.getServletContext().getContextPath()+
-"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml";
-
+"/scorm/"+Long.toString(scorm.getCompanyId())+"/"+Long.toString(scorm.getGroupId())+"/"+scorm.getUuid()+"/imsmanifest.xml?scoshow="+scoshow;
 String iconsDir = "/liferaylms-portlet";
 String conTema = PropsUtil.get("scorm.icons.theme");
 try {
@@ -70,14 +74,7 @@ try {
 
   <div id="placeholder_clicker" style="display: none"></div>
   <div style="width: 99%;">
-  	<%
-	if(renderRequest.getWindowState().toString().equals("normal"))
-	{
-	%>
- 		<div id="placeholder_navigationContainer"></div>
- 	<%}else{%>
- 		<div id="placeholder_navigationContainer" class="scorm-button-popup"></div> 	
- 	<%}%>
+   		<div id="placeholder_navigationContainer"></div>
  	<div id="placeholder_treeContainer"></div>
   </div>
 <div id="placeholder_treecontentContainer">
@@ -119,4 +116,6 @@ try {
     	%>
 </div>
 <div id="placeholder_navigationContainer2"></div>
-
+<%
+}
+%>
