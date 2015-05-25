@@ -18,7 +18,7 @@ portletURL.setParameter("userId",Long.toString(userId));
 %>
 
 <liferay-ui:header title="<%= title %>" backURL="<%=returnurl %>"></liferay-ui:header>
-<liferay-ui:search-container emptyResultsMessage="none" delta="20" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
+<liferay-ui:search-container emptyResultsMessage="studentmanagment.none.audit" delta="20" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
 <liferay-ui:search-container-results>
 <%
 
