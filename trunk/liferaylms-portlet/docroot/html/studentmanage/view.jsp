@@ -10,6 +10,8 @@
 <%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
 <%@page import="com.liferay.lms.service.CourseResultLocalServiceUtil"%>
 <%@page import="com.liferay.portal.kernel.util.OrderByComparator"%>
+<%@page import="com.liferay.portlet.PortletPreferencesFactoryUtil"%>
+<%@page import="javax.portlet.PortletPreferences"%>
 <%@include file="/init.jsp" %>
 
 <%
@@ -46,14 +48,23 @@
 		userTeams=TeamLocalServiceUtil.getGroupTeams(themeDisplay.getScopeGroupId());
 		hasNullTeam=true;
 	}
-
+	
+	
+	PortletPreferences preferences = null;
+	String portletResource = ParamUtil.getString(request, "portletResource");
+	if (Validator.isNotNull(portletResource)) {
+		preferences = PortletPreferencesFactoryUtil.getPortletSetup(request, portletResource);
+	}else{
+		preferences = renderRequest.getPreferences();
+	}
+	boolean showActionSocial = GetterUtil.getBoolean(preferences.getValue("showActionSocial", StringPool.FALSE),true);
+	boolean showActionAudit = GetterUtil.getBoolean(preferences.getValue("showActionAudit", StringPool.FALSE),true);
 %>
 
 <liferay-portlet:renderURL var="returnurl">
-<liferay-portlet:param name="jspPage" value="/html/studentmanage/view.jsp"></liferay-portlet:param>
-
-			
+	<liferay-portlet:param name="jspPage" value="/html/studentmanage/view.jsp"></liferay-portlet:param>
 </liferay-portlet:renderURL>
+
 <div class="student_search"> 
 
 	<portlet:renderURL var="buscarURL">
@@ -247,8 +258,12 @@ else
 			
 			<liferay-ui:icon-menu>
 			<liferay-ui:icon image="edit" message="searchresults.viewresults" url="<%=viewGradeURL%>" />
-			<liferay-ui:icon image="group" message="social" url="<%=viewactivityURL%>" />
-			<liferay-ui:icon image="group" message="audit" url="<%=viewtriesURL%>" />
+			<c:if test="<%= showActionSocial %>">
+				<liferay-ui:icon image="group" message="studentsearch.result.actions.social" url="<%=viewactivityURL%>" />
+			</c:if>
+			<c:if test="<%= showActionAudit %>">
+				<liferay-ui:icon image="group" message="studentsearch.result.actions.audit" url="<%=viewtriesURL%>" />
+			</c:if>
 			</liferay-ui:icon-menu>
 		</liferay-ui:search-container-column-text>
 		</liferay-ui:search-container-row>
