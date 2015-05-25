@@ -28,7 +28,7 @@ User theUser=UserLocalServiceUtil.getUser(userId);
 %>
 
 <liferay-ui:header title="<%= title %>" backURL="<%=returnurl %>"></liferay-ui:header>
-<liferay-ui:search-container emptyResultsMessage="none" delta="20" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
+<liferay-ui:search-container emptyResultsMessage="studentmanagment.none.socialactivity" delta="20" deltaConfigurable="true" iteratorURL="<%=portletURL%>">
 <liferay-ui:search-container-results>
 <%
 List<SocialActivity> activities = SocialActivityLocalServiceUtil.getUserActivities(userId,searchContainer.getStart(), searchContainer.getEnd());
