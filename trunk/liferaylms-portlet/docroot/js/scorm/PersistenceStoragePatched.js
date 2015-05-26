@@ -433,7 +433,8 @@ Player.ContentPlayer.prototype.toggleScorm = function() {
 		  {
 		    node: '#placeholder_treeContainer',
 		    to: {
-		        height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2		        
+		        /*height:  A.one('#placeholder_barContainer').get('offsetHeight') + 2*/
+		    	width:  A.one('#placeholder_barContainer').get('offsetWidth') + 2
 		    },
 		    duration: 0.8,
 		    easing:   A.Easing.easeIn,
@@ -459,7 +460,7 @@ Player.ContentPlayer.prototype.toggleScorm = function() {
 		  {
 		    node: '#placeholder_treeContainer',
 		    to: {
-		    	height:  A.one('#placeholder_barContainer').get('offsetHeight') + A.one('#treeContainer').get('offsetHeight') + 11
+		    	width:  A.one('#placeholder_barContainer').get('offsetWidth') + A.one('#treeContainer').get('offsetWidth')
 		    	
 		    },
 		    duration: 0.5,
