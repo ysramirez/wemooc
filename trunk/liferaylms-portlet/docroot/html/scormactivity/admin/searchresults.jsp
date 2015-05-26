@@ -101,11 +101,11 @@ pageContext.setAttribute("total", total);
 	 <liferay-portlet:param value="<%=GetterUtil.getString(PropsUtil.get(\"lms.scorm.editable.\"+assetEntry.getClassName()),\"false\") %>" name="assertEditable"/>
 	 <liferay-portlet:param value="<%=GetterUtil.getString(PropsUtil.get(\"lms.scorm.windowable.\"+assetEntry.getClassName()),\"true\") %>" name="assertWindowable"/>
 	</liferay-portlet:renderURL>
-	<liferay-ui:search-container-column-text name="scormactivity.complete">
-		<liferay-ui:icon image="add" label="false" message="select" url="<%=selectResourceURL.toString() %>" ></liferay-ui:icon>
+	<liferay-ui:search-container-column-text>
+		<liferay-ui:icon image="add" label="false" message="scormactivity.complete" url="<%=selectResourceURL.toString() %>"><liferay-ui:message key="scormactivity.complete" /></liferay-ui:icon>
 	</liferay-ui:search-container-column-text>
-	<liferay-ui:search-container-column-text name="scormactivity.selection">
-		<liferay-ui:icon image="select" label="specificsco" message="select" url="<%=selectSCOURL.toString() %>" ></liferay-ui:icon>
+	<liferay-ui:search-container-column-text>
+		<liferay-ui:icon image="select" label="specificsco" message="scormactivity.selection" url="<%=selectSCOURL.toString() %>"><liferay-ui:message key="scormactivity.selection" /></liferay-ui:icon>
 	</liferay-ui:search-container-column-text>
 </liferay-ui:search-container-row>
 <liferay-ui:search-iterator />
