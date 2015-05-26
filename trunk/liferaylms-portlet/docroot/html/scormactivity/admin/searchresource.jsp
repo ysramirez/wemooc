@@ -60,6 +60,11 @@ for(String className:allowedAssetTypes)
 <aui:field-wrapper label="categories" helpMessage="scormactivity.categories.helpmessage">
 	<%@ include file="/html/scormactivity/admin/catselector.jspf" %>
 </aui:field-wrapper>
+
+<liferay-ui:panel id="panel_tags" title="tags" collapsible="true" defaultState="closed">
+	<liferay-ui:asset-tags-selector ></liferay-ui:asset-tags-selector>
+</liferay-ui:panel>
+
 <aui:button-row>
 	<aui:button type="submit" value="search" />
 </aui:button-row>
