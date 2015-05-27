@@ -22,7 +22,7 @@
 	String assetTitle=StringPool.BLANK;
 	String sco=ParamUtil.getString(request, "sco","");
 	long typeId=ParamUtil.getLong(request, "type");
-	boolean completedAsPassed =ParamUtil.getBoolean(request, "completedAsPassed",false); 
+	boolean completedAsPassed =ParamUtil.getBoolean(request, "completedAsPassed",false);
 
  LearningActivity learningActivity=null;
 	if(assetId!=0){
@@ -105,6 +105,13 @@ if(learningActivity!=null){  %>
 %>
 
 <script type="text/javascript">
+
+	AUI().ready(function(A) {
+		if(!(A.one('#<portlet:namespace/>sco').get('value').lenght > 0 )) {		
+			A.one("label[for='_lmsactivitieslist_WAR_liferaylmsportlet_sco']").hide();
+			A.one('#<portlet:namespace/>sco').hide();			
+		}
+	}); 
 <!--
 
 <% if(editDetails){ %>
@@ -153,11 +160,16 @@ function <portlet:namespace />load(source) {
 			if(A.Lang.isString(params['<portlet:namespace />sco']))
 			{
 				A.one('#<portlet:namespace/>sco').set('value',params['<portlet:namespace />sco']);
+				A.one('#<portlet:namespace/>sco').show();
+				A.one("label[for='_lmsactivitieslist_WAR_liferaylmsportlet_sco']").show();
 			}
 			else
 			{
 				A.one('#<portlet:namespace/>sco').set('value','');
+				A.one('#<portlet:namespace/>sco').hide();				
+				A.one("label[for='_lmsactivitieslist_WAR_liferaylmsportlet_sco']").hide();
 			}
+			
 			if(params['<portlet:namespace />assertWindowable']=='true') {
 				document.getElementById("<portlet:namespace/>openWindow").value = "true";
 				document.getElementById("<portlet:namespace/>openWindowCheckbox").checked = true;
@@ -220,7 +232,7 @@ function <portlet:namespace />back() {
 	<aui:validator name="required"></aui:validator>
 </aui:input>
 <aui:field-wrapper name="activity.edit.asserts" cssClass="search-button-container">
-	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50">
+	<aui:input type="text" name="assetEntryName" ignoreRequestValue="true" value="<%=assetTitle %>" label="" inlineField="true" disabled="true"  size="50" >
 		<aui:validator name="required"></aui:validator>
 	</aui:input>
 	<c:if test="<%=!disabled %>" >
@@ -228,9 +240,7 @@ function <portlet:namespace />back() {
 		    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 		    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 		</button>
-		<c:if test="<%=sco != null && sco.length()>0 %>" >
-			<aui:input  name="sco" value="<%=sco %>" label="Sco" disabled="true"/>
-		</c:if>
+		<aui:input name="sco" disabled="true" label="Sco" />
 	</c:if>
 			
 </aui:field-wrapper>
