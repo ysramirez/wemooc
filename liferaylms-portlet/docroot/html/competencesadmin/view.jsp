@@ -65,7 +65,7 @@
 					.add(PropertyFactoryUtil.forName("competenceId").eq(competence.getCompetenceId()));
 			List<CourseCompetence> courseCompetences = CourseCompetenceLocalServiceUtil.dynamicQuery(dq);
 			%>
-			<liferay-ui:search-container-column-text>
+			<liferay-ui:search-container-column-text name="competence.title">
 				<%=competence.getTitle(themeDisplay.getLocale()) %>
 			</liferay-ui:search-container-column-text>
 			
