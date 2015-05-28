@@ -125,6 +125,10 @@ if(backToEdit) {
 			
 			var checkIfEmpty = A.one('#_courseadmin_WAR_liferaylmsportlet_to').val();
  			if (checkIfEmpty != "") {
+ 				var x = document.getElementsByClassName("assign-form");
+ 				if(x[0].style.display == "none"){
+ 					x[0].style.display = ""
+ 				}
  				A.one('.assign-form').show();
 			} else {
 				A.one('.assign-form').hide();
