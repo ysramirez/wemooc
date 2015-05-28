@@ -436,6 +436,7 @@ public class LearningActivityResultLocalServiceImpl
 		Map<String, String> manifestResources = new HashMap<String, String>();
 		boolean isPureAsset = false;
 		long scos=0;
+		long assets=0;
 		
 		try {
 			if (Validator.isNotNull(imsmanifest)) {
@@ -451,6 +452,10 @@ public class LearningActivityResultLocalServiceImpl
 					if (!"asset".equalsIgnoreCase(type3)) {
 						isPureAsset = false;
 						scos++;
+					}
+					else
+					{
+						assets++;
 					}
 					manifestResources.put(identifier, type3);
 				}
@@ -671,8 +676,7 @@ public class LearningActivityResultLocalServiceImpl
 		for (int i = 0; i < scores.size(); i++) {
 			total_score += scores.get(i);
 		}
-		total_score = total_score / (scos > 0 ? scos : 1);
-		
+		total_score = total_score / ((scos+assets) > 0 ? (scos+assets) : 1);
 		if ("incomplete".equals(total_completion_status) || "completed".equals(total_completion_status)) {
 			learningActivityTry.setTryResultData(tryResultData);
 			learningActivityTry.setResult(Math.round(total_score));
