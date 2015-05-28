@@ -144,7 +144,7 @@ portletURL.setParameter("tabs1",tabs1);
 		<liferay-ui:search-container-column-text name="competence.label" >
 			<%=LocalizationUtil.getLocalization(doc.get(Field.TITLE),themeDisplay.getLanguageId()) %>
 		</liferay-ui:search-container-column-text> 
-		<liferay-ui:search-container-column-text name="competence.label" >
+		<liferay-ui:search-container-column-text name="description" >
 			<%=LocalizationUtil.getLocalization(doc.get(Field.CONTENT),themeDisplay.getLanguageId()) %>
 		</liferay-ui:search-container-column-text> 
 		<liferay-ui:search-container-column-text name="options" >
