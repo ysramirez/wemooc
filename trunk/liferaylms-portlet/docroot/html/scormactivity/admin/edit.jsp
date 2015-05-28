@@ -240,7 +240,7 @@ function <portlet:namespace />back() {
 		    <span class="aui-buttonitem-icon aui-icon aui-icon-search"></span>
 		    <span class="aui-buttonitem-label"><%= LanguageUtil.get(pageContext, "search") %></span>
 		</button>
-		<aui:input name="sco" disabled="true" label="Sco" />
+		<aui:input  name="sco" value="<%=sco %>" label="Sco"/>
 	</c:if>
 			
 </aui:field-wrapper>
