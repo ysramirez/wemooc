@@ -44,8 +44,13 @@ boolean showImport	= preferences.getValue("showImport", "true").equals("true");
 boolean showClone 	= preferences.getValue("showClone",  "true").equals("true");
 boolean showGo 		= preferences.getValue("showGo", 	 "true").equals("true");
 boolean showPermission = preferences.getValue("showPermission", "true").equals("true");
-
 %>
+
+<portlet:actionURL name="closeCourse" var="closeURL">
+	<portlet:param name="courseId" value="<%= primKey %>" />
+	<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
+</portlet:actionURL>
+
 <liferay-ui:icon-menu>
 <portlet:renderURL var="editURL">
 	<portlet:param name="courseId" value="<%=primKey %>" />
@@ -57,19 +62,16 @@ if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.clas
 {
 %>
 <liferay-ui:icon image="edit" message="edit" url="<%=editURL.toString() %>" />
-
 <%
 }
 %>
-<portlet:actionURL name="closeCourse" var="closeURL">
-<portlet:param name="courseId" value="<%= primKey %>" />
-<portlet:param name="redirect" value='<%= ParamUtil.getString(request, "redirect", currentURL) %>'/>
-</portlet:actionURL>
+
 <%
 if( permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)&& ! myCourse.isClosed() && showClose)
 {
 %>
-	<liferay-ui:icon image="close" message="close" url="<%=closeURL.toString() %>" />
+	<%-- <liferay-ui:icon image="close" message="close" url="<%=closeURL.toString() %>"  /> --%> 
+	<liferay-ui:icon image="close" message="close" url="javascript:confirmClose()" />
 <%
 }else if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class.getName(),primKey,ActionKeys.UPDATE)&& myCourse.isClosed()){
 %>
@@ -151,3 +153,14 @@ if(permissionChecker.hasPermission(themeDisplay.getScopeGroupId(),  Course.class
 
 
 </liferay-ui:icon-menu>
+
+<script type="text/javascript">
+	function confirmClose() {
+		msg = '<%=LanguageUtil.get(themeDisplay.getLocale(), "courseadmin.confirm.close") %>'
+		if(confirm(msg)) {
+			window.location.href = '<%=closeURL.toString()%>'
+		} else {
+			return false;
+		}
+	}
+</script>
