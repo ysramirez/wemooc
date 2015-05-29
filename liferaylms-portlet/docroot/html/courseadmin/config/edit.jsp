@@ -75,25 +75,23 @@ String[] lspist=LmsPrefsLocalServiceUtil.getLmsPrefsIni(themeDisplay.getCompanyI
 		%>
 		<aui:field-wrapper  label="allowed-site-templates" >
 		<%
-		for(String lspis:lspist)
-		{
-			String checked="";
-			if(ArrayUtils.contains(layusprsel, lspis))
-			{
-				checked="checked=\"true\"";
+		for(String lspis:lspist){
+			boolean checked=false;
+			if(ArrayUtils.contains(layusprsel, lspis)){
+				checked=true;
 			}
 			LayoutSetPrototype layoutsetproto=LayoutSetPrototypeLocalServiceUtil.getLayoutSetPrototype(Long.parseLong(lspis));
 			%>
-				<input type="checkbox" name="<portlet:namespace/>courseTemplates" 
-	<%=checked %> value="<%=layoutsetproto.getLayoutSetPrototypeId()%>"/> <label><%=layoutsetproto.getName(themeDisplay.getLocale())%></label><br />
+				<aui:input type="checkbox" name="<portlet:namespace/>courseTemplates"  checked="<%=checked %>" value="<%=layoutsetproto.getLayoutSetPrototypeId()%>" label="<%=layoutsetproto.getName(themeDisplay.getLocale())%>"/>
 			
 			<%
 		}
 		%>
 		</aui:field-wrapper>
 
+	<aui:field-wrapper  label="modulenavigation.Mode" >
 		<aui:input type="checkbox" name="showOnlyOrganizationUsers" label="modulenavigation.organizationMode" value="<%=showOnlyOrganizationUsers %>" checked="<%=showOnlyOrganizationUsers %>"/>
-	
+	</aui:field-wrapper>
 
 	<aui:button-row>
 		<aui:button type="submit" value="save" />
