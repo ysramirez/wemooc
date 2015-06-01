@@ -5,6 +5,7 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -38,6 +39,7 @@ import com.liferay.lms.service.LearningActivityResultLocalServiceUtil;
 import com.liferay.lms.service.LearningActivityTryLocalServiceUtil;
 import com.liferay.lms.service.TestAnswerLocalServiceUtil;
 import com.liferay.lms.service.TestQuestionLocalServiceUtil;
+import com.liferay.portal.kernel.exception.NestableException;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
 import com.liferay.portal.kernel.language.LanguageUtil;
@@ -63,6 +65,7 @@ import com.liferay.portal.kernel.xml.SAXReaderUtil;
 import com.liferay.portal.model.User;
 import com.liferay.portal.security.permission.ActionKeys;
 import com.liferay.portal.security.permission.PermissionChecker;
+import com.liferay.portal.service.ServiceContext;
 import com.liferay.portal.theme.ThemeDisplay;
 import com.liferay.portal.util.PortalUtil;
 import com.liferay.portlet.asset.AssetRendererFactoryRegistryUtil;
@@ -421,7 +424,7 @@ public class ExecActivity extends MVCPortlet
 
 		String action = ParamUtil.getString(request, "action");
 		long actId = ParamUtil.getLong(request, "resId",0);
-		
+		System.out.println(action);
 		response.setCharacterEncoding(StringPool.UTF8);
 		try {
 			if(action.equals("exportResultsCsv")){
@@ -703,6 +706,59 @@ public class ExecActivity extends MVCPortlet
 			{
 				TestQuestionLocalServiceUtil.goDownTestQuestion(testQuestionId);
 			}
+		}
+	}
+	
+	public void setGrades(ActionRequest renderRequest, ActionResponse actionResponse) throws IOException, PortletException {
+		
+		boolean correct=true;
+		long actId = ParamUtil.getLong(renderRequest,"actId"); 
+		long studentId = ParamUtil.getLong(renderRequest,"studentId");
+						
+		String comments = renderRequest.getParameter("comments");
+		long result=0;
+		try {
+			result=Long.parseLong(renderRequest.getParameter("result"));
+			if(result<0 || result>100){
+				correct=false;
+				SessionErrors.add(renderRequest, "offlinetaskactivity.grades.result-bad-format");
+			}
+		} catch (NumberFormatException e) {
+			correct=false;
+			SessionErrors.add(renderRequest, "offlinetaskactivity.grades.result-bad-format");
+		}
+		
+		if(correct) {
+			try {
+				LearningActivityTry  learningActivityTry =  LearningActivityTryLocalServiceUtil.getLastLearningActivityTryByActivityAndUser(actId, studentId);
+				if(learningActivityTry==null){
+					ServiceContext serviceContext = new ServiceContext();
+					serviceContext.setUserId(studentId);
+					learningActivityTry =  LearningActivityTryLocalServiceUtil.createLearningActivityTry(actId,serviceContext);
+				}
+				learningActivityTry.setEndDate(new Date());
+				learningActivityTry.setResult(result);
+				learningActivityTry.setComments(comments);
+				updateLearningActivityTryAndResult(learningActivityTry);
+				
+				SessionMessages.add(renderRequest, "offlinetaskactivity.grades.updating");
+			} catch (NestableException e) {
+				SessionErrors.add(renderRequest, "offlinetaskactivity.grades.bad-updating");
+			}
+		}
+	}
+	
+	private void updateLearningActivityTryAndResult(
+			LearningActivityTry learningActivityTry) throws PortalException,
+			SystemException {
+		LearningActivityTryLocalServiceUtil.updateLearningActivityTry(learningActivityTry);
+		
+		LearningActivityResult learningActivityResult = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(learningActivityTry.getActId(), learningActivityTry.getUserId());
+		if(learningActivityResult.getResult() != learningActivityTry.getResult()) {
+			LearningActivity learningActivity = LearningActivityLocalServiceUtil.getLearningActivity(learningActivityTry.getActId());
+			learningActivityResult.setResult(learningActivityTry.getResult());
+			learningActivityResult.setPassed(learningActivityTry.getResult()>=learningActivity.getPasspuntuation());
+			LearningActivityResultLocalServiceUtil.updateLearningActivityResult(learningActivityResult);
 		}
 	}
 }

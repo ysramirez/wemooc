@@ -38,6 +38,9 @@
 
 	<div class="container-activity">
 <%
+
+		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");
+		boolean hasFreeQuestion = false;
 		long actId=ParamUtil.getLong(request,"actId",0);
 		boolean improve =ParamUtil.getBoolean(request, "improve",false);
 		long userId = themeDisplay.getUserId();
@@ -66,11 +69,30 @@
 			if( typeId==0 && (!LearningActivityLocalServiceUtil.islocked(actId,userId)
 				|| permissionChecker.hasPermission( activity.getGroupId(),LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
 				|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"))){
-%>
-				<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-				<%--<h3 class="description-h3"><liferay-ui:message key="description" /></h3> --%>
-				<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
-<%
+
+				
+				List<TestQuestion> questionList = TestQuestionLocalServiceUtil.getQuestions(activity.getActId());
+				Iterator<TestQuestion> questionListIt = questionList.iterator();
+				while(questionListIt.hasNext()){
+					TestQuestion q = questionListIt.next();
+					if(q.getQuestionType() == 2){
+						hasFreeQuestion = true;
+						break;
+					}
+				}
+				
+				if(isTeacher){
+					String popupcorrection="javascript:"+renderResponse.getNamespace() + "showPopupGetReport();";
+				%>
+					<portlet:renderURL var="goToCorrection" >
+	<portlet:param name="jspPage" value="/html/execactivity/test/correction.jsp" />
+	<portlet:param name="actId" value="<%=Long.toString(activity.getActId() )%>" />
+	<portlet:param name="courseId" value="<%=Long.toString(course.getCourseId() )%>" />
+</portlet:renderURL>
+					<aui:button name="importButton" type="button" value="Corregir"  last="true" href="<%= goToCorrection.toString() %>" ></aui:button>
+					
+				<%}
+				
 				if((!LearningActivityLocalServiceUtil.islocked(actId,userId)
 					|| permissionChecker.hasPermission( activity.getGroupId(), LearningActivity.class.getName(), actId, ActionKeys.UPDATE)
 					|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK"))){		
@@ -86,7 +108,12 @@
 					} else if (LearningActivityTryLocalServiceUtil.canUserDoANewTry(actId, userId) 
 						|| permissionChecker.hasPermission(activity.getGroupId(), LearningActivity.class.getName(),actId, ActionKeys.UPDATE)
 						|| permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(),"ACCESSLOCK")
-			    		|| improving ){
+			    		|| improving ){%>
+			    		<h2 class="description-title"><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+				<%--<h3 class="description-h3"><liferay-ui:message key="description" /></h3> --%>
+				<div class="description"><%=activity.getDescription(themeDisplay.getLocale()) %></div>
+				<%
+						
 						
 						String navigateParam = ParamUtil.getString(renderRequest, "navigate");
 						String passwordParam = ParamUtil.getString(renderRequest, "password",StringPool.BLANK).trim();
@@ -552,18 +579,29 @@
 			}
 		} 
 		//Si no ha pasado el test, ni tiene mas intentos.
-		else 
-		{
-			//LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
-			Object  [] arguments =  new Object[]{result.getResult()};
-			Object  [] arg =  new Object[]{activity.getPasspuntuation()};
-			%>
-			<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
-			<p><liferay-ui:message key="test-done" /></p>
-			<p><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></p>
-			<p class="color_tercero negrita"><liferay-ui:message key="your-result-dont-pass"  arguments="<%=arg %>" /></p>
-			<p><liferay-ui:message key="your-result-no-more-tries" /></p>
-			<%
+		else{
+			if(hasFreeQuestion){
+				Object  [] arguments =  new Object[]{result.getResult()};
+				Object  [] arg =  new Object[]{activity.getPasspuntuation()};
+				%>
+				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+				<p><liferay-ui:message key="test-done" /></p>
+				<p>Esperar la corrección del profesor</p>
+				<%
+			}else{
+				//LearningActivityResult result = LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, userId);
+				Object  [] arguments =  new Object[]{result.getResult()};
+				Object  [] arg =  new Object[]{activity.getPasspuntuation()};
+				%>
+				<h2><%=activity.getTitle(themeDisplay.getLocale()) %></h2>
+				<p><liferay-ui:message key="test-done" /></p>
+				<p><liferay-ui:message key="your-result" arguments="<%=arguments %>" /></p>
+				<p class="color_tercero negrita"><liferay-ui:message key="your-result-dont-pass"  arguments="<%=arg %>" /></p>
+				<p><liferay-ui:message key="your-result-no-more-tries" /></p>
+				<%
+			}
+			
+			
 		}
 		
 		}
