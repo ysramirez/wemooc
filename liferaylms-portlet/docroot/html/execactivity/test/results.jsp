@@ -1,3 +1,5 @@
+<%@page import="com.liferay.lms.service.CourseLocalServiceUtil"%>
+<%@page import="com.liferay.lms.model.Course"%>
 <%@page import="com.liferay.portal.kernel.xml.Document"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionTypeRegistry"%>
 <%@page import="com.liferay.lms.learningactivity.questiontype.QuestionType"%>
@@ -17,15 +19,37 @@
 <%@page import="java.util.Map"%>
 <%@page import="com.liferay.portal.kernel.xml.SAXReaderUtil"%>
 
-<%@ include file="/init.jsp" %>				
+<%@ include file="/init.jsp" %>
 
 <%
 	if(ParamUtil.getLong(request,"actId",0 )==0) renderRequest.setAttribute(WebKeys.PORTLET_CONFIGURATOR_VISIBILITY, Boolean.FALSE);
 	else{
+		
+		
+		
 		LearningActivity learningActivity=(LearningActivity)request.getAttribute("learningActivity");
 		if(learningActivity==null) learningActivity=LearningActivityLocalServiceUtil.getLearningActivity(ParamUtil.getLong(request,"actId" ));	
 		request.setAttribute("actId",learningActivity.getActId());
 		request.setAttribute("learningActivity",learningActivity);
+		
+		boolean isTeacher=permissionChecker.hasPermission(themeDisplay.getScopeGroupId(), "com.liferay.lms.model",themeDisplay.getScopeGroupId(), "VIEW_RESULTS");
+		Course course = CourseLocalServiceUtil.fetchByGroupCreatedId(themeDisplay.getScopeGroupId());
+	
+		if (isTeacher) {
+			String popupcorrection = "javascript:" + renderResponse.getNamespace() + "showPopupGetReport();";
+%>
+<portlet:renderURL var="goToCorrection">
+	<portlet:param name="jspPage"
+		value="/html/execactivity/test/correction.jsp" />
+	<portlet:param name="actId"
+		value="<%=Long.toString(learningActivity.getActId())%>" />
+	<portlet:param name="courseId"
+		value="<%=Long.toString(course.getCourseId())%>" />
+</portlet:renderURL>
+<aui:button name="importButton" type="button" value="action.CORRECT"
+	last="true" href="<%=goToCorrection.toString()%>"></aui:button>
+
+<%}
 	
 		LearningActivityTry larntry=(LearningActivityTry)request.getAttribute("larntry");
 		
@@ -53,7 +77,7 @@
 			//Cuando estamos mejorando la nota no mostramos el popup.
 			//if(oldResult <= 0){
 %>
-				<jsp:include page="/html/shared/popResult.jsp" />
+<jsp:include page="/html/shared/popResult.jsp" />
 <%
 			//}
 %>
