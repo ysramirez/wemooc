@@ -125,7 +125,7 @@ while(ituserlistpage.hasNext()){
 
 %>
 
-<table class="mycourses-table" border="0">
+<table class="taglib-search-iterator mycourses-table" border="0">
 <thead>
 <tr class="results-header">
 <th>
@@ -179,19 +179,10 @@ while(ituserlistpage.hasNext()){
 				break;
 			}
 		}
-		%>
-		<td>
-		<%if(hasFreeQuestion){ %>
-			<liferay-ui:message key = "editactivity.mandatory.yes"/>
-		<%}else{%>
-			<liferay-ui:message key = "editactivity.mandatory.no"/>
-		<%}%>
 		
-		 </td>
 		
-		<%
 		
-			LearningActivityResult laResult =  LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, u.getUserId());
+		LearningActivityResult laResult =  LearningActivityResultLocalServiceUtil.getByActIdAndUserId(actId, u.getUserId());
 		String result= "-";
 		String status="not-started";
 		if(LearningActivityResultLocalServiceUtil.existsLearningActivityResult(actId, u.getUserId())){
@@ -209,7 +200,33 @@ while(ituserlistpage.hasNext()){
 				status="passed"	;
 			}
 		}
+		
+		
+		
 		%>
+		<td>
+		<%if(hasFreeQuestion){
+			if(status.equals("not-started")){
+		%>
+			<liferay-ui:message key = "editactivity.mandatory.yes"/><liferay-ui:message key = "not-started"/>
+			
+			<%}else{%>
+			<liferay-ui:message key = "editactivity.mandatory.yes"/>
+		<%}%>
+		
+		
+		
+		<%}else{
+			if(status.equals("not-started")){%>
+				<liferay-ui:message key = "editactivity.mandatory.no"/><liferay-ui:message key = "not-started"/>
+				<%}else{%>
+			<liferay-ui:message key = "editactivity.mandatory.no"/>
+			<%}%>
+		
+		<%}%>
+		
+		 </td>
+
 		<td> 
 			<%=result %>
 							<%

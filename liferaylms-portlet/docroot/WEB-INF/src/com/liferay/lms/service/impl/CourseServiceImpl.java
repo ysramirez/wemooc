@@ -228,7 +228,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = userLocalService.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
-				sendEmail(user,course);
+				//sendEmail(user,course);
 			}
 			
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
@@ -250,7 +250,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = userLocalService.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
-				sendEmail(user,course);
+				//sendEmail(user,course);
 			}
 			
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
@@ -314,7 +314,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
-				sendEmail(user,course);
+				//sendEmail(user,course);
 			}
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getTeacherRole());
@@ -336,7 +336,7 @@ public class CourseServiceImpl extends CourseServiceBaseImpl {
 			User user = UserLocalServiceUtil.getUserByScreenName(serviceContext.getCompanyId(), login);
 			if (!GroupLocalServiceUtil.hasUserGroup(user.getUserId(), course.getGroupCreatedId())) {
 				GroupLocalServiceUtil.addUserGroups(user.getUserId(), new long[] { course.getGroupCreatedId() });
-				sendEmail(user,course);
+				//sendEmail(user,course);
 			}
 			UserGroupRoleLocalServiceUtil.addUserGroupRoles(new long[] { user.getUserId() },
 					course.getGroupCreatedId(), LmsPrefsLocalServiceUtil.getLmsPrefs(serviceContext.getCompanyId()).getEditorRole());
