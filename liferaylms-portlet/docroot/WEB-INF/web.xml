@@ -101,8 +101,6 @@
     <servlet-name>JSON Web Service Servlet</servlet-name>
     <url-pattern>/api/secure/jsonws/*</url-pattern>
   </servlet-mapping>
-  <welcome-file-list>
-  </welcome-file-list>
   <jsp-config>
     <taglib>
       <taglib-uri>http://java.sun.com/portlet_2_0</taglib-uri>
