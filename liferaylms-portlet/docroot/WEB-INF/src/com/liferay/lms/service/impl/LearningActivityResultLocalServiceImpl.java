@@ -511,6 +511,11 @@ public class LearningActivityResultLocalServiceImpl
 				throw new PortalException();
 			}
 		} else {
+			for (int i = 0; i < assets; i++) {
+				completion_statuses.add("completed");
+				success_statuses.add("passed");
+				//scores.add(new Long(100));
+			}
 			for (int i = 0; i < cmiNames.length(); i++) {
 				JSONObject cmi = cmis.getJSONObject(cmiNames.getString(i));
 				String typeCmi = manifestResources.get(recursos.get(cmiNames.getString(i)));
@@ -628,13 +633,14 @@ public class LearningActivityResultLocalServiceImpl
 						}
 					}
 				}
-				if (completion_statuses.size() < scos) {
+				if (completion_statuses.size() < manifestItems.size()) 
+				{
 					if (completion_statuses.size() <= 1) {
 						total_completion_status = completion_statuses.get(0).equals("completed") ? "incomplete" : completion_statuses.get(0);
 					} else {
 						total_completion_status = "incomplete";
 					}
-				} else if (completion_statuses.size() == scos) {
+				} else if (completion_statuses.size() == manifestItems.size()) {
 					for (int i = 0; i < completion_statuses.size(); i++) {
 						//total_score += scores.get(i);
 						if ("incomplete".equals(completion_statuses.get(i))) {
@@ -676,7 +682,14 @@ public class LearningActivityResultLocalServiceImpl
 		for (int i = 0; i < scores.size(); i++) {
 			total_score += scores.get(i);
 		}
-		total_score = total_score / ((scos+assets) > 0 ? (scos+assets) : 1);
+		if(scos>0)
+		{
+			total_score = total_score / (scos);			
+		}
+		else
+		{
+			total_score = total_score / ((scos+assets) > 0 ? (scos+assets) : 1);
+		}
 		if ("incomplete".equals(total_completion_status) || "completed".equals(total_completion_status)) {
 			learningActivityTry.setTryResultData(tryResultData);
 			learningActivityTry.setResult(Math.round(total_score));
