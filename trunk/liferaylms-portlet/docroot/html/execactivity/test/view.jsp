@@ -89,7 +89,7 @@
 	<portlet:param name="actId" value="<%=Long.toString(activity.getActId() )%>" />
 	<portlet:param name="courseId" value="<%=Long.toString(course.getCourseId() )%>" />
 </portlet:renderURL>
-					<aui:button name="importButton" type="button" value="Corregir"  last="true" href="<%= goToCorrection.toString() %>" ></aui:button>
+					<aui:button name="importButton" type="button" value="action.CORRECT"  last="true" href="<%= goToCorrection.toString() %>" ></aui:button>
 					
 				<%}
 				

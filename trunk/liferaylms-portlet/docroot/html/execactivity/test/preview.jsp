@@ -66,7 +66,7 @@
 		<portlet:param name="courseId"
 			value="<%=Long.toString(course.getCourseId())%>" />
 	</portlet:renderURL>
-	<aui:button name="importButton" type="button" value="Corregir"
+	<aui:button name="importButton" type="button" value="action.CORRECT"
 		last="true" href="<%=goToCorrection.toString()%>"></aui:button>
 
 	<%}
