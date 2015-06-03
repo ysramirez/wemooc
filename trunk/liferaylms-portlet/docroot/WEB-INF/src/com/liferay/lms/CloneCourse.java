@@ -197,7 +197,8 @@ public class CloneCourse implements MessageListener {
 		
 		
 		int typeSite = GroupLocalServiceUtil.getGroup(course.getGroupCreatedId()).getType();
-		Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(), "", "", themeDisplay.getLocale(), today, startDate, endDate, layoutSetPrototypeId, typeSite, serviceContext, course.getCalificationType(), 0,true);
+		//course.getDescription(locale)
+		Course newCourse = CourseLocalServiceUtil.addCourse(newCourseName, course.getDescription(themeDisplay.getLocale()), "", "", themeDisplay.getLocale(), today, startDate, endDate, layoutSetPrototypeId, typeSite, serviceContext, course.getCalificationType(), 0,true);
 		newCourse.setExpandoBridgeAttributes(serviceContext);
 		
 		newCourse.getExpandoBridge().setAttributes(course.getExpandoBridge().getAttributes());
@@ -311,7 +312,6 @@ public class CloneCourse implements MessageListener {
 					newLearnActivity.setTries(activity.getTries());
 					newLearnActivity.setPasspuntuation(activity.getPasspuntuation());
 					newLearnActivity.setPriority(newLearnActivity.getActId());
-					
 					boolean actPending = false;
 					if(activity.getPrecedence()>0){
 						if(correlationActivities.get(activity.getPrecedence())==null){
@@ -614,8 +614,18 @@ public class CloneCourse implements MessageListener {
 			}
 			
 			if(!entryIdStr.equals("")){
+			
+				AssetEntry docAsset = AssetEntryLocalServiceUtil.getAssetEntry(Long.valueOf(entryIdStr));
+				long entryId = 0;
+				if(docAsset.getUrl()!=null||docAsset.getUrl().trim().length()>0){
+					entryId = Long.valueOf(entryIdStr);
+				}else{
+					entryId = cloneFile(Long.valueOf(entryIdStr), actNew, userId, serviceContext);
+
+				}
 				
-				long entryId = cloneFile(Long.valueOf(entryIdStr), actNew, userId, serviceContext);
+				
+				
 				
 				if(actNew.getTypeId() == 2){
 					LearningActivityLocalServiceUtil.setExtraContentValue(actNew.getActId(), "document", String.valueOf(entryId));
@@ -638,8 +648,11 @@ public class CloneCourse implements MessageListener {
 		boolean addGroupPermissions = serviceContext.isAddGroupPermissions();
 		
 		try {
-			
+			System.out.println("EntryId: "+entryId);
 			AssetEntry docAsset = AssetEntryLocalServiceUtil.getAssetEntry(entryId);
+			//docAsset.getUrl()!=""
+			//DLFileEntryLocalServiceUtil.getDLFileEntry(fileEntryId)
+			System.out.println(docAsset.getClassPK());
 			DLFileEntry docfile = DLFileEntryLocalServiceUtil.getDLFileEntry(docAsset.getClassPK());
 			InputStream is = DLFileEntryLocalServiceUtil.getFileAsStream(userId, docfile.getFileEntryId(), docfile.getVersion());
 			
