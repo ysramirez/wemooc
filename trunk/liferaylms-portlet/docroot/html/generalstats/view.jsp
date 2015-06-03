@@ -99,16 +99,22 @@ String scourseIds=ListUtil.toString(courses,"courseId");
 
 		java.util.List<User> userst = UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId());
 		int numTeachers = 0;
+		int teachersFinished=0;
 		for (User usert : userst) {
 			List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(
 					usert.getUserId(), course.getGroupCreatedId());
 			boolean remove = false;
+			
 			for (UserGroupRole ugr : userGroupRoles) {
 				if (ugr.getRoleId() == prefs.getEditorRole() || ugr.getRoleId() == prefs.getTeacherRole()) {
 					remove = true;
 					CourseResult teacherResult = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(), usert.getUserId());
 					if(teacherResult!=null){
 						numTeachers++;
+						if(teacherResult.getPassedDate()!=null)
+						{
+							teachersFinished++;
+						}
 						//System.out.println(teacherResult.getResult());
 						//System.out.println(teacherResult.getCourseId());
 
@@ -125,8 +131,9 @@ String scourseIds=ListUtil.toString(courses,"courseId");
 		long registered=users.size();
 		
 		//CourseResultLocalServiceUtil.c
-		long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true)-numTeachers;
-		long iniciados = (CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados)-numTeachers;
+		long todosLosFinalizados=CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
+		long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true)-teachersFinished;
+		long iniciados = (CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + todosLosFinalizados)-numTeachers;
 		
 		//long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
 		//long iniciados = (CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados);

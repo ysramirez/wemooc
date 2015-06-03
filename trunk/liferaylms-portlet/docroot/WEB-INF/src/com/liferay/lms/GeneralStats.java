@@ -13,6 +13,7 @@ import javax.portlet.ResourceResponse;
 import au.com.bytecode.opencsv.CSVWriter;
 
 import com.liferay.lms.model.Course;
+import com.liferay.lms.model.CourseResult;
 import com.liferay.lms.model.LmsPrefs;
 import com.liferay.lms.service.CourseLocalServiceUtil;
 import com.liferay.lms.service.CourseResultLocalServiceUtil;
@@ -85,13 +86,27 @@ public class GeneralStats extends MVCPortlet {
 			java.util.List<User> users=new java.util.ArrayList<User>();
 
 			java.util.List<User> userst = UserLocalServiceUtil.getGroupUsers(course.getGroupCreatedId());
+			int numTeachers = 0;
+			int teachersFinished=0;
 			for (User usert : userst) {
 				List<UserGroupRole> userGroupRoles = UserGroupRoleLocalServiceUtil.getUserGroupRoles(
 						usert.getUserId(), course.getGroupCreatedId());
 				boolean remove = false;
+				
 				for (UserGroupRole ugr : userGroupRoles) {
 					if (ugr.getRoleId() == prefs.getEditorRole() || ugr.getRoleId() == prefs.getTeacherRole()) {
 						remove = true;
+						CourseResult teacherResult = CourseResultLocalServiceUtil.getCourseResultByCourseAndUser(course.getCourseId(), usert.getUserId());
+						if(teacherResult!=null){
+							numTeachers++;
+							if(teacherResult.getPassedDate()!=null)
+							{
+								teachersFinished++;
+							}
+							//System.out.println(teacherResult.getResult());
+							//System.out.println(teacherResult.getCourseId());
+
+						}
 						break;
 					}
 				}
@@ -99,12 +114,13 @@ public class GeneralStats extends MVCPortlet {
 					users.add(usert);
 				}
 			}
-		
+			//System.out.println("NumTeachers: "+numTeachers);
 			long registered=users.size();
 			
-			
-			long finalizados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
-			long iniciados = CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + finalizados;
+			//CourseResultLocalServiceUtil.c
+			long todosLosFinalizados=CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), true);
+			long finalizados = todosLosFinalizados-teachersFinished;
+			long iniciados = (CourseResultLocalServiceUtil.countByCourseId(course.getCourseId(), false) + todosLosFinalizados)-numTeachers;
 			double avgResult=0;
 			if(finalizados>0)
 			{
